@@ -1,0 +1,156 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API",
+    "description": "Public URIs that return HTML",
+    "version": "0.0.1"
+  },
+  "host": "localhost:8888",
+  "basePath": "/",
+  "securityDefinitions": {
+    "key": {
+      "type": "apiKey",
+      "in": "query",
+      "name": "access_token"
+    }
+  },
+  "security": [
+    {
+      "key": []
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "consumes": [
+    "application/json",
+    "multipart/form-data",
+    "application/x-www-form-urlencoded"
+  ],
+  "produces": [
+    "application/json",
+    "text/plain"
+  ],
+  "paths": {
+    "/home": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the homepage",
+        "description": "",
+        "operationId": "getHomePage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return HTML for homepage",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the login page",
+        "description": "",
+        "operationId": "getLoginPage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return HTML for login page",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/login/forgot": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the forgot password page",
+        "description": "",
+        "operationId": "getForgotPasswordPage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return HTML for forgot password page",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the registration page",
+        "description": "",
+        "operationId": "getRegistrationPage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return HTML for registration page",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/user/verify/{verificationIdentifier}": {
+      "get": {
+        "tags": [],
+        "summary": "Verify user email address",
+        "description": "",
+        "operationId": "getUserVerifiedHtml",
+        "parameters": [
+          {
+            "name": "verificationIdentifier",
+            "in": "path",
+            "description": "Identifier to verify that the user is who it claims it is",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return HTML for the verification page",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/user/reset/{verificationIdentifier}": {
+      "get": {
+        "tags": [],
+        "summary": "Change password",
+        "description": "",
+        "operationId": "getPasswordChangeHtml",
+        "parameters": [
+          {
+            "name": "verificationIdentifier",
+            "in": "path",
+            "description": "Identifier to verify that the user is who it claims it is",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return HTML for the verification page",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {}
+}

@@ -1,0 +1,14 @@
+{
+  "name": "codegen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "generate": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "swagger-tools": "^0.10.4"
+  }
+}

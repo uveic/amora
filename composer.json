@@ -1,0 +1,12 @@
+{
+  "require": {
+    "geoip2/geoip2": "^2.0",
+    "league/plates": "3.*",
+    "ext-json": "*",
+    "ext-simplexml": "*",
+    "ext-dom": "*",
+    "ext-pdo": "*",
+    "ext-ctype": "*",
+    "ext-mbstring": "*"
+  }
+}

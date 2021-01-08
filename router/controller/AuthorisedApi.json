@@ -1,0 +1,388 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API",
+    "description": "Accessed directly from the web/browser",
+    "version": "0.0.1"
+  },
+  "host": "localhost:8888",
+  "basePath": "/",
+  "securityDefinitions": {
+    "key": {
+      "type": "apiKey",
+      "in": "query",
+      "name": "access_token"
+    }
+  },
+  "security": [
+    {
+      "key": []
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "consumes": [
+    "application/json",
+    "multipart/form-data",
+    "application/x-www-form-urlencoded"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/image": {
+      "post": {
+        "tags": [],
+        "summary": "Store a new image",
+        "description": "",
+        "operationId": "storeImage",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "formData",
+            "description": "Article ID to link the image to an article",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image stored",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success",
+                "images"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "images": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Image ID"
+                      },
+                      "url": {
+                        "type": "string",
+                        "description": "Image URI"
+                      },
+                      "caption": {
+                        "type": "string",
+                        "description": "Image caption"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "url",
+                      "caption"
+                    ]
+                  }
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "enum": [
+                    "INVALID_PARAMETERS"
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message"
+                },
+                "errorCode": {
+                  "type": "string",
+                  "enum": [
+                    "NOT_AUTHORISED"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/image/{imageId}": {
+      "delete": {
+        "tags": [],
+        "summary": "Destroy an image",
+        "description": "Delete an image",
+        "operationId": "destroyImage",
+        "parameters": [
+          {
+            "name": "imageId",
+            "in": "path",
+            "description": "Image ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "eventId": {
+                  "description": "Event ID",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image deleted",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message if any"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/{userId}": {
+      "put": {
+        "tags": [],
+        "summary": "Update user account",
+        "description": "",
+        "operationId": "updateUserAccount",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "name": {
+                  "description": "User name",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "User email address",
+                  "type": "string"
+                },
+                "languageId": {
+                  "description": "User language ID",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "timezone": {
+                  "description": "User timezone",
+                  "type": "string"
+                },
+                "currentPassword": {
+                  "description": "Current password",
+                  "type": "string"
+                },
+                "newPassword": {
+                  "description": "New password",
+                  "type": "string"
+                },
+                "repeatPassword": {
+                  "description": "Repeat password",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "enum": [
+                    "NOT_AUTHORISED"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/{userId}/verification-email": {
+      "post": {
+        "tags": [],
+        "summary": "Send verification email",
+        "description": "",
+        "operationId": "sendVerificationEmail",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User verified",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "enum": [
+                    "NOT_AUTHORISED"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {}
+}

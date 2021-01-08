@@ -1,0 +1,702 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API",
+    "description": "Accessed directly from the web/browser",
+    "version": "0.0.1"
+  },
+  "host": "localhost:8888",
+  "basePath": "/",
+  "securityDefinitions": {
+    "key": {
+      "type": "apiKey",
+      "in": "query",
+      "name": "access_token"
+    }
+  },
+  "security": [
+    {
+      "key": []
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "consumes": [
+    "application/json",
+    "multipart/form-data",
+    "application/x-www-form-urlencoded"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/back/user": {
+      "post": {
+        "tags": [],
+        "summary": "Store/create new user",
+        "description": "",
+        "operationId": "storeUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "name": {
+                  "description": "User name",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "User email address",
+                  "type": "string"
+                },
+                "bio": {
+                  "description": "User bio",
+                  "type": "string"
+                },
+                "languageId": {
+                  "description": "Language ID",
+                  "type": "integer"
+                },
+                "roleId": {
+                  "description": "User role ID",
+                  "type": "integer"
+                },
+                "timezone": {
+                  "description": "PHP timezone name",
+                  "type": "string"
+                },
+                "isEnabled": {
+                  "description": "Is the user enabled?",
+                  "type": "boolean"
+                },
+                "newPassword": {
+                  "description": "New password",
+                  "type": "string"
+                },
+                "repeatPassword": {
+                  "description": "Repeat password",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "email",
+                "languageId",
+                "roleId",
+                "timezone",
+                "isEnabled"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "403": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "errorMessage"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/user/{userId}": {
+      "put": {
+        "tags": [],
+        "summary": "Update user",
+        "description": "",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "name": {
+                  "description": "User name",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "User email address",
+                  "type": "string"
+                },
+                "bio": {
+                  "description": "User bio",
+                  "type": "string"
+                },
+                "languageId": {
+                  "description": "Language ID",
+                  "type": "integer"
+                },
+                "roleId": {
+                  "description": "User role ID",
+                  "type": "integer"
+                },
+                "timezone": {
+                  "description": "PHP timezone name",
+                  "type": "string"
+                },
+                "isEnabled": {
+                  "description": "Is the user enabled?",
+                  "type": "boolean"
+                },
+                "currentPassword": {
+                  "description": "Current password",
+                  "type": "string"
+                },
+                "newPassword": {
+                  "description": "New password",
+                  "type": "string"
+                },
+                "repeatPassword": {
+                  "description": "Repeat password",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "403": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "errorMessage"
+              ]
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "summary": "Delete user",
+        "description": "",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/article": {
+      "post": {
+        "tags": [],
+        "summary": "Store article",
+        "description": "Store article",
+        "operationId": "storeArticle",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "statusId": {
+                  "description": "Article status ID",
+                  "type": "integer"
+                },
+                "typeId": {
+                  "description": "Article type ID",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Article title",
+                  "type": "string"
+                },
+                "content": {
+                  "description": "Article content",
+                  "type": "string"
+                },
+                "uri": {
+                  "description": "Article URI",
+                  "type": "string"
+                },
+                "mainImageSrc": {
+                  "description": "Article main image source",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "statusId",
+                "typeId",
+                "title",
+                "content",
+                "uri"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "enum": [
+                    "INVALID_PARAMETERS"
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "errorMessage"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/article/{articleId}": {
+      "put": {
+        "tags": [],
+        "summary": "Update existing article",
+        "description": "Update existing article",
+        "operationId": "updateArticle",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "description": "Article ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "statusId": {
+                  "description": "Article status ID",
+                  "type": "integer"
+                },
+                "typeId": {
+                  "description": "Article type ID",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Article title",
+                  "type": "string"
+                },
+                "content": {
+                  "description": "Article content",
+                  "type": "string"
+                },
+                "uri": {
+                  "description": "Article URI",
+                  "type": "string"
+                },
+                "mainImageSrc": {
+                  "description": "Article main image source",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "enum": [
+                    "INVALID_PARAMETERS"
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "errorMessage"
+              ]
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "description": "Delete an article",
+        "operationId": "destroyArticle",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "description": "Article ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "enum": [
+                    "INVALID_PARAMETERS"
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "errorMessage"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {}
+}

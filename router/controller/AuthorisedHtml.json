@@ -1,0 +1,94 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API",
+    "description": "Public URIs for admin that return HTML",
+    "version": "0.0.1"
+  },
+  "host": "localhost:8888",
+  "basePath": "/",
+  "securityDefinitions": {
+    "key": {
+      "type": "apiKey",
+      "in": "query",
+      "name": "access_token"
+    }
+  },
+  "security": [
+    {
+      "key": []
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "consumes": [
+    "application/json",
+    "multipart/form-data",
+    "application/x-www-form-urlencoded"
+  ],
+  "produces": [
+    "application/json",
+    "text/plain"
+  ],
+  "paths": {
+    "/logout": {
+      "get": {
+        "tags": [],
+        "summary": "Logout and redirect to the homepage",
+        "description": "",
+        "operationId": "logout",
+        "parameters": [],
+        "responses": {
+          "307": {
+            "description": "Redirect to the homepage after logout"
+          }
+        }
+      }
+    },
+    "/account": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the user's account page",
+        "description": "",
+        "operationId": "getUserAccountHtml",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "HTML",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/account/{settingsPage}": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the user's settings page",
+        "description": "",
+        "operationId": "getUserAccountSettingsHtml",
+        "parameters": [
+          {
+            "name": "settingsPage",
+            "in": "path",
+            "description": "Settings page",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {}
+}
