@@ -12,7 +12,7 @@ $images = $article ? $article->getImages() : [];
 $this->layout('base', ['responseData' => $responseData]);
 
 $updatedAtContent = $article
-    ? 'Updated <span title="' .
+    ? 'Updated <span class="articleUpdatedAt" title="' .
     $this->e(DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
     '">' . $this->e(DateUtil::getElapsedTimeString($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
     : '';
@@ -42,9 +42,10 @@ $statusName = $article
       </div>
     </div>
     <div class="form-control-bar-header m-b-3">
-      <input style="width: revert;" type="submit" class="button" value="<?=$article ? 'Update' : 'Save'?>">
+      <input style="width: revert;" type="submit" class="button m-r-1" value="<?=$article ? 'Update' : 'Save'?>">
+      <input style="width: revert;" type="submit" class="button" data-close="1" value="<?=$article ? 'Update & Close' : 'Save & Close'?>">
       <div style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
-      <div id="isPublished" data-enabled="<?=$isPublished ? '1' : ''?>" class="enabled-icon-big <?=$isPublished ? 'enabled-icon-yes' : 'enabled-icon-no-light' ?>"> <?=$statusName?></div>
+      <div data-enabled="<?=$isPublished ? '1' : ''?>" class="article-status enabled-icon-big <?=$isPublished ? 'enabled-icon-yes' : 'enabled-icon-no-light' ?>"> <?=$statusName?></div>
     </div>
     <div class="content-medium-width">
       <form id="article" action="#">
@@ -91,7 +92,7 @@ $statusName = $article
           </div>
         </div>
     </div>
-    <div class="content-max content-images">
+    <div class="content-images">
       <div class="field m-t-0 m-b-0">
         <div id="upload-images">
           <div id="upload-images-info">
@@ -119,9 +120,10 @@ $statusName = $article
 
     </div>
     <div class="form-control-bar-header m-b-3">
-      <input style="width: revert;" type="submit" class="button" value="<?=$article ? 'Update' : 'Save'?>">
+      <input style="width: revert;" type="submit" class="button m-r-1" value="<?=$article ? 'Update' : 'Save'?>">
+      <input style="width: revert;" type="submit" class="button" data-close="1" value="<?=$article ? 'Update & Close' : 'Save & Close'?>">
       <div style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
-      <div id="isPublished" data-enabled="<?=$isPublished ? '1' : ''?>" class="enabled-icon-big <?=$isPublished ? 'enabled-icon-yes' : 'enabled-icon-no-light' ?>"> <?=$statusName?></div>
+      <div data-enabled="<?=$isPublished ? '1' : ''?>" class="article-status enabled-icon-big <?=$isPublished ? 'enabled-icon-yes' : 'enabled-icon-no-light' ?>"> <?=$statusName?></div>
     </div>
     <div class="control m-t-6 m-b-6" style="text-align: center;">
 <?php if (!empty($article)) { ?>

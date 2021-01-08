@@ -1,10 +1,20 @@
-import {cleanTextForUrl} from './util.js';
+import {cleanTextForUrl, getUpdatedAtTime} from './util.js';
 import {xhr} from './xhr.js';
 import {feedbackDiv} from './authorised.js';
 
 document.querySelectorAll('#form-article').forEach(el => {
   el.addEventListener('submit', e => {
     e.preventDefault();
+
+    const afterApiCall = function() {
+      if (e.submitter.dataset.close) {
+        window.location = '/backoffice/articles'
+      } else {
+        document.querySelectorAll('span.articleUpdatedAt').forEach(s => {
+          s.textContent = getUpdatedAtTime(s.dataset.lang);
+        });
+      }
+    };
 
     const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
     const title = document.querySelector('div#article-title');
@@ -27,10 +37,10 @@ document.querySelectorAll('#form-article').forEach(el => {
 
     if (articleIdEl) {
       xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv)
-        .then(() => window.location = '/backoffice/articles');
+        .then(afterApiCall);
     } else {
       xhr.post(url, payload, feedbackDiv)
-        .then(() => window.location = '/backoffice/articles');
+        .then(afterApiCall);
     }
   });
 });
