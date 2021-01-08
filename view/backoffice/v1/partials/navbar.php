@@ -19,7 +19,7 @@ $baseLinkUrl = StringUtil::getBaseLinkUrl($responseData->getSiteLanguage());
 <?php } ?>
       <li>
         <label for="user-nav-toggle" class="nav-item user-nav-toggle-label">
-            <?=$this->e($responseData->getUserName())?>
+          <?=$this->e($responseData->getUserName())?>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256"><rect width="20" height="20" fill="none"></rect><polyline points="208 96 128 176 48 96" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline></svg>
         </label>
         <ul class="user-nav-menu">

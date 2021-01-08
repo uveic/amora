@@ -82,17 +82,6 @@
   font-size: 0.9rem;
 }
 
-.enabled-icon-big {
-  border-radius: 60px;
-  width: auto;
-  color: #fff;
-  text-align: center;
-  flex-grow: 0 !important;
-  margin-left: 1rem;
-  padding: 0.6rem 1.5rem !important;
-  cursor: pointer;
-}
-
 .enabled-icon {
   display: block;
   width: 10px;
@@ -100,15 +89,7 @@
   border-radius: 5px;
 }
 
-.enabled-icon-yes {
-  background-color: var(--feedback-success-color);
-}
-
-.enabled-icon-no {
-  background-color: var(--feedback-failure-color);
-}
-
-.enabled-icon-no-light {
+.background-light-color {
   background-color: var(--light-text-color);
 }
 

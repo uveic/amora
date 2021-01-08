@@ -87,6 +87,14 @@ p > svg {
   margin-right: 0.4rem;
 }
 
+.img-svg {
+  display: inline-block;
+  max-width: 20px;
+  height: auto;
+  vertical-align: middle;
+  margin: 0 0.5rem 0 0;
+}
+
 /* Nav style starts here */
 header {
   background: var(--main-text-color);
@@ -277,6 +285,59 @@ ul.user-nav-menu a:hover {
   display: block;
 }
 /* Nav style ends here */
+.dropdown-menu {
+  display: none;
+}
+
+.dropdown-menu-label {
+  font-weight: normal;
+  color: var(--main-bg-color);
+  padding: 0.6rem 1.5rem;
+  border: none;
+  cursor: pointer;
+  margin: 0 !important;
+}
+
+.dropdown-menu-option {
+  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
+  text-decoration: none;
+  padding: 1em;
+  margin-left: 0.5rem;
+  display: block;
+  position: relative;
+}
+
+.dropdown-container {
+  position: relative;
+  flex-grow: 0 !important;
+}
+
+.dropdown-menu ~ div > ul {
+  display: none;
+}
+
+.dropdown-menu:checked ~ div > ul {
+  display: block;
+}
+
+.dropdown-menu ~ div > ul {
+  list-style: none;
+  position: absolute;
+  left: 0;
+  top: 35px;
+  padding: 0.5rem;
+  z-index: 999;
+}
+
+.dropdown-menu ~ div > ul a {
+  color: var(--main-bg-color);
+}
+
+.dropdown-menu ~ div > ul a:hover {
+  opacity: 0.9;
+}
+/* Dropdown style ends here */
 
 /* Form style starts here */
 .content-account-left {

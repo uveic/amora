@@ -36,7 +36,7 @@ foreach ($responseData->getListOfUsers() as $user) {
         <div class="table-row">
           <div class="table-item edit flex-no-grow"><a href="/backoffice/users/<?=$this->e($user->getId()); ?>"><img class="img-svg no-margin" width="20" height="20" src="/img/assets/pencil.svg" alt="<?=$responseData->getLocalValue('formGuestModifyAction')?>"></a></div>
           <div class="table-item flex-no-grow"><?=$this->e($user->getId())?></div>
-          <div class="table-item flex-no-grow"><span class="enabled-icon <?=$this->e($user->isEnabled() ? 'enabled-icon-yes' : 'enabled-icon-no'); ?>"></span></div>
+          <div class="table-item flex-no-grow"><span class="enabled-icon <?=$this->e($user->isEnabled() ? 'feedback-success' : 'feedback-error'); ?>"></span></div>
           <div class="table-item flex-grow-2"><?=$this->e($user->getName()); ?></div>
           <div class="table-item flex-grow-4"><?=$this->e($user->getEmail()); ?></div>
           <div class="table-item width-1"><?=$this->e($user->getLanguageName()); ?></div>

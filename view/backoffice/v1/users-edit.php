@@ -36,7 +36,7 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
       <div class="form-control-bar-header m-b-3">
         <input style="width: revert;" type="submit" class="button" value="<?=$userToEdit ? 'Update' : 'Save'?>">
         <div style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
-        <div id="isEnabled" data-enabled="<?=$isEnabled ? '1' : ''?>" class="enabled-icon-big <?=$isEnabled ? 'enabled-icon-yes' : 'enabled-icon-no' ?>"> <?=$isEnabled ? 'Enabled' : 'Disabled' ?></div>
+        <div id="isEnabled" data-enabled="<?=$isEnabled ? '1' : ''?>" class="enabled-icon-big <?=$isEnabled ? 'feedback-success' : 'feedback-error' ?>"> <?=$isEnabled ? 'Enabled' : 'Disabled' ?></div>
       </div>
       <div class="content-small-width">
 <?php if ($userToEdit) { ?>
@@ -114,7 +114,7 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
       <div class="form-control-bar-header m-t-3 m-b-3">
         <input style="width: revert;" type="submit" class="button" value="<?=$userToEdit ? 'Update' : 'Save'?>">
         <div style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
-        <div id="isEnabled" data-enabled="<?=$isEnabled ? '1' : ''?>" class="enabled-icon-big <?=$isEnabled ? 'enabled-icon-yes' : 'enabled-icon-no' ?>"> <?=$isEnabled ? 'Enabled' : 'Disabled' ?></div>
+        <div id="isEnabled" data-enabled="<?=$isEnabled ? '1' : ''?>" class="enabled-icon-big <?=$isEnabled ? 'feedback-success' : 'feedback-error' ?>"> <?=$isEnabled ? 'Enabled' : 'Disabled' ?></div>
       </div>
     </form>
   </section>

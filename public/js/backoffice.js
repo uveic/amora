@@ -20,17 +20,14 @@ document.querySelectorAll('#form-article').forEach(el => {
     const title = document.querySelector('div#article-title');
     const uri = document.querySelector('#form-article input[name="uri"]');
     const content = document.querySelector('div#content-html');
-    const status = document.querySelector('#form-article select[name="statusId"]');
-    const statusId = Number.parseInt(status.options[status.selectedIndex].value);
-    const type = document.querySelector('#form-article select[name="typeId"]');
-    const typeId = Number.parseInt(type.options[type.selectedIndex].value);
+    const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
+    const statusId = Number.parseInt(status.dataset.articleStatusId);
 
     const payload = JSON.stringify({
       'title': title.textContent,
       'uri': uri.value,
       'content': content.textContent,
-      'statusId': statusId,
-      'typeId': typeId
+      'statusId': statusId
     });
 
     const url = '/back/article';
@@ -244,10 +241,40 @@ if (toggleEnableUser) {
 
     xhr.put('/back/user/' + userId, payload, feedbackDiv)
       .then(() => {
-        toggleEnableUser.classList.toggle('enabled-icon-yes');
-        toggleEnableUser.classList.toggle('enabled-icon-no');
+        toggleEnableUser.classList.toggle('feedback-success');
+        toggleEnableUser.classList.toggle('feedback-error');
         toggleEnableUser.dataset.enabled = enabled ? '1' : '';
         toggleEnableUser.textContent = enabled ? 'Enabled' : 'Disabled';
       });
   });
 }
+
+document.querySelectorAll('.article-status-option').forEach(op => {
+  op.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    document.querySelectorAll('.dropdown-menu-label').forEach(d => {
+      if (op.dataset.articleStatusId === '1') {
+        d.classList.add('feedback-success');
+        d.classList.remove('background-light-color');
+      } else {
+        d.classList.remove('feedback-success');
+        d.classList.add('background-light-color');
+      }
+    });
+
+    document.querySelectorAll('.dropdown-menu-label > span').forEach(sp => {
+      sp.textContent = op.textContent;
+    });
+
+    document.querySelectorAll('.dropdown-menu').forEach(d => {
+      d.checked = false;
+    });
+
+    document.querySelectorAll('.article-status-option').forEach(o => {
+      o.dataset.checked = o.dataset.articleStatusId === op.dataset.articleStatusId
+        ? '1'
+        : '0';
+    });
+  });
+});
