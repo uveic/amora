@@ -33,7 +33,7 @@ $this->layout('base', ['responseData' => $responseData]);
           <div class="pell-content" contenteditable="true"><?=$article ? $article->getContent() : ''?></div>
         </div>
         <article class="article-content">
-          <section id="content-html" class="null article-section-text">
+          <section id="content-html" class="null article-section article-section-text">
               <?=$article ? $article->getContent() : ''?>
           </section>
         </article>

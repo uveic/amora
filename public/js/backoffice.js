@@ -20,14 +20,18 @@ document.querySelectorAll('#form-article').forEach(el => {
     const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
     const title = document.querySelector('div#article-title');
     const uri = document.querySelector('#form-article input[name="uri"]');
-    const content = document.querySelector('#content-html');
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
     const statusId = Number.parseInt(status.dataset.articleStatusId);
+
+    let html = '';
+    document.querySelectorAll('section.article-section').forEach(section => {
+      html += section.innerHTML;
+    });
 
     const payload = JSON.stringify({
       'title': title.textContent,
       'uri': uri.value,
-      'content': content.innerHTML,
+      'content': html,
       'statusId': statusId
     });
 
@@ -302,7 +306,7 @@ if (inputArticleImages) {
       const reader = new FileReader();
       reader.addEventListener('load', function () {
         let articleSectionImage = document.createElement('section');
-        articleSectionImage.className = 'article-section-image';
+        articleSectionImage.className = 'article-section article-section-image';
 
         let imageCaption = document.createElement('p');
         imageCaption.className = 'article-section-image-caption';
