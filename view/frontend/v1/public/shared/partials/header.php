@@ -15,5 +15,5 @@ if ($responseData->getUserFeedback()) {
   <div id="feedback-banner" class="<?=$class?>"><?=$responseData->getUserFeedback()->getMessage()?></div>
 <?php } ?>
 <section>
-  <p class="m-l-1"><a href="<?=$this->e($baseLinkUrl)?>">< <?=$this->e($responseData->getSiteName())?></a></p>
+  <p class="m-l-1"><a href="<?=$this->e($baseLinkUrl)?>">‹ <?=$this->e($responseData->getSiteName())?></a></p>
 </section>

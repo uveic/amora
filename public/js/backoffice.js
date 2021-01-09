@@ -1,6 +1,7 @@
 import {cleanTextForUrl, getUpdatedAtTime} from './util.js';
 import {xhr} from './xhr.js';
 import {feedbackDiv} from './authorised.js';
+import {uploadImage} from './imageUploader.js';
 
 document.querySelectorAll('#form-article').forEach(el => {
   el.addEventListener('submit', e => {
@@ -19,14 +20,14 @@ document.querySelectorAll('#form-article').forEach(el => {
     const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
     const title = document.querySelector('div#article-title');
     const uri = document.querySelector('#form-article input[name="uri"]');
-    const content = document.querySelector('div#content-html');
+    const content = document.querySelector('#content-html');
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
     const statusId = Number.parseInt(status.dataset.articleStatusId);
 
     const payload = JSON.stringify({
       'title': title.textContent,
       'uri': uri.value,
-      'content': content.textContent,
+      'content': content.innerHTML,
       'statusId': statusId
     });
 
@@ -100,9 +101,8 @@ if (inputFileImages) {
   inputFileImages.addEventListener('change', e => {
     e.preventDefault();
 
-    const userFeedback = document.querySelector('#feedback');
     const articleImagesDiv = document.querySelector('#images-list');
-    const files = document.querySelector('[type=file]').files;
+    const files = inputFileImages.files;
     const articleIdInput = document.querySelector('#form-article input[name="articleId"]');
     const eventIdInput = document.querySelector('form#invitation input[name="eventId"]');
     const eventId = eventIdInput ? eventIdInput.value : null;
@@ -128,7 +128,7 @@ if (inputFileImages) {
         image.title = file.name;
         image.src = String(reader.result);
         let imgLoading = new Image();
-        imgLoading.className = 'centered';
+        imgLoading.className = 'justify-center';
         imgLoading.alt = 'Loading...';
         imgLoading.src = '/img/loading.gif';
 
@@ -176,12 +176,12 @@ if (inputFileImages) {
             });
           }).catch((error) => {
           articleImageDiv.classList.add('null');
-          userFeedback.textContent = 'Something went wrong, please try again';
-          userFeedback.classList.remove('feedback-success');
-          userFeedback.classList.add('feedback-failure');
-          userFeedback.classList.remove('null');
+          feedbackDiv.textContent = 'Something went wrong, please try again';
+          feedbackDiv.classList.remove('feedback-success');
+          feedbackDiv.classList.add('feedback-failure');
+          feedbackDiv.classList.remove('null');
           setTimeout(() => {
-            userFeedback.classList.add('null')
+            feedbackDiv.classList.add('null')
           }, 5000);
           console.log(error);
         });
@@ -278,3 +278,87 @@ document.querySelectorAll('.article-status-option').forEach(op => {
     });
   });
 });
+
+const inputArticleImages = document.querySelector('input[name="article-add-image-input"]');
+if (inputArticleImages) {
+  inputArticleImages.addEventListener('change', e => {
+    e.preventDefault();
+
+    const articleImagesDiv = document.querySelector('article.article-content');
+    const files = inputArticleImages.files;
+    const articleIdInput = document.querySelector('#form-article input[name="articleId"]');
+
+    for (let i = 0; i < files.length; i++) {
+      let formData = new FormData();
+      let file = files[i]
+
+      if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
+        return alert(file.name + " is not an image");
+      }
+
+      formData.append('files[]', file);
+      formData.append('articleId', articleIdInput ? Number.parseInt(articleIdInput.value) : null);
+
+      const reader = new FileReader();
+      reader.addEventListener('load', function () {
+        let articleSectionImage = document.createElement('section');
+        articleSectionImage.className = 'article-section-image';
+
+        let imageCaption = document.createElement('p');
+        imageCaption.className = 'article-section-image-caption';
+        imageCaption.contentEditable = 'true';
+
+        let image = new Image();
+        image.className = 'opacity preview';
+        image.title = file.name;
+        image.src = String(reader.result);
+
+        let imgLoading = new Image();
+        imgLoading.className = 'justify-center';
+        imgLoading.alt = 'Loading...';
+        imgLoading.src = '/img/loading.gif';
+
+        articleSectionImage.appendChild(image);
+        articleSectionImage.appendChild(imgLoading);
+        articleSectionImage.appendChild(imageCaption);
+        articleImagesDiv.appendChild(articleSectionImage);
+
+        fetch(
+          '/api/image',
+          {
+            method: 'POST',
+            body: formData
+          }
+        ).then(response => response.json())
+          .then(data => {
+            if (!data.success || !data.images || data.images.length <= 0) {
+              throw new Error(
+                data.errorMessage ?? 'Something went wrong, please try again: ' + image.title
+              );
+            }
+
+            data.images.forEach((i) => {
+              let imageId = i.id;
+
+              image.classList.remove('opacity');
+              image.src = i.url;
+              image.dataset.imageId = imageId;
+              imageCaption.textContent = i.url;
+              articleSectionImage.removeChild(imgLoading);
+            });
+          }).catch((error) => {
+            articleImagesDiv.removeChild(articleSectionImage);
+            feedbackDiv.textContent = error.message;
+            feedbackDiv.classList.remove('feedback-success');
+            feedbackDiv.classList.add('feedback-failure');
+            feedbackDiv.classList.remove('null');
+            setTimeout(() => {
+              feedbackDiv.classList.add('null')
+            }, 5000);
+            console.log(error);
+          });
+      });
+      reader.readAsDataURL(file);
+    }
+  });
+}

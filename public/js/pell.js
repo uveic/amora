@@ -175,7 +175,7 @@ const init = (settings) => {
 
 init({
   element: document.getElementById('pell'),
-  onChange: (html) => {document.querySelector('div#content-html').textContent = html},
+  onChange: (html) => {document.querySelector('#content-html').textContent = html},
   defaultParagraphSeparator: 'p',
   actions: [
     'bold',

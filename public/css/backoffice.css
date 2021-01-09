@@ -132,20 +132,28 @@ input.is-light {
   line-height: 1.4em;
 }
 
-label {
-  color: #363636;
-  display: block;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-label:not(:last-child) {
-  margin-bottom: .5em;
-}
-
 .admin-menu-button {
   width: revert;
   padding: 0.5rem;
+}
+
+.article-add-sections {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.article-add-sections label {
+  flex-grow: 0;
+  display: inline-block;
+  background-color: var(--main-text-color);
+  color: var(--main-bg-color);
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.article-add-sections label:hover {
+  opacity: 0.9;
 }
 
 /* Form style ends here */
@@ -404,7 +412,7 @@ label:not(:last-child) {
   flex-grow: 0;
 }
 
-[type="file"] + label {
+.input-file-label {
   background: var(--main-bg-color);
   border: none;
   color: var(--main-text-color);
@@ -420,7 +428,7 @@ label:not(:last-child) {
   width: 100%;
 }
 
-[type="file"] + label:hover {
+.input-file-label:hover {
   background-color: #f2f2f2;
 }
 
@@ -505,7 +513,7 @@ label:not(:last-child) {
     min-width: 370px;
   }
 
-  [type="file"] + label {
+  .input-file-label {
     width: initial;
   }
 }

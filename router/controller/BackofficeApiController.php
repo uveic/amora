@@ -257,7 +257,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $now,
                 $now,
                 $title,
-                $content,
+                html_entity_decode($content),
                 $mainImageSrc,
                 $uri,
                 []
@@ -299,6 +299,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 false,
                 'Article not found'
             );
+        }
+
+        if ($content) {
+            $content = html_entity_decode($content);
         }
 
         $this->articleService->updateArticle(
