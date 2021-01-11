@@ -4,6 +4,7 @@
 namespace uve\app\bin\core;
 
 use Throwable;
+use uve\core\module\article\value\ArticleSectionType;
 use uve\core\module\mailer\value\MailerTemplate;
 use uve\core\module\user\value\UserJourneyStatus;
 use uve\core\Core;
@@ -30,6 +31,7 @@ require_once Core::getPathRoot() . '/core/module/user/value/UserRole.php';
 require_once Core::getPathRoot() . '/core/module/user/value/VerificationType.php';
 require_once Core::getPathRoot() . '/core/module/article/value/ArticleType.php';
 require_once Core::getPathRoot() . '/core/module/article/value/ArticleStatus.php';
+require_once Core::getPathRoot() . '/core/module/article/value/ArticleSectionType.php';
 require_once Core::getPathRoot() . '/core/module/mailer/value/MailerTemplate.php';
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -71,6 +73,11 @@ $lookupTables = [
     [
         'table_fields_to_values' => array_values(VerificationType::getAll()),
         'table_name' => 'user_verification_type',
+        'db' => Core::getCoreDb()
+    ],
+    [
+        'table_fields_to_values' => array_values(ArticleSectionType::getAll()),
+        'table_name' => 'article_section_type',
         'db' => Core::getCoreDb()
     ]
 ];

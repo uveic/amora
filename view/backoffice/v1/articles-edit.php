@@ -1,10 +1,11 @@
 <?php
 
-use uve\core\module\article\model\Image;
 use uve\core\model\response\HtmlResponseDataAuthorised;
+use uve\core\module\article\model\ArticleSection;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
+$articleSections = $responseData->getArticleSections();
 $images = [];
 
 $this->layout('base', ['responseData' => $responseData]);
@@ -35,6 +36,13 @@ $this->layout('base', ['responseData' => $responseData]);
         <section id="content-html" class="null article-section article-section-text">
             <?=$article ? $article->getContent() : ''?>
         </section>
+<?php
+    /** @var ArticleSection $articleSection */
+    foreach ($articleSections as $articleSection) { ?>
+        <section id="">
+            <?=$articleSection->getContentHtml()?>
+        </section>
+<?php } ?>
       </article>
     </div>
     <div class="article-add-sections">

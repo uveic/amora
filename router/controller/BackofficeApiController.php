@@ -7,6 +7,7 @@ use uve\core\Logger;
 use uve\core\model\Response;
 use uve\core\module\action\service\ActionService;
 use uve\core\module\article\model\Article;
+use uve\core\module\article\model\ArticleSection;
 use uve\core\module\article\service\ArticleService;
 use uve\core\module\article\service\ImageService;
 use uve\core\module\article\value\ArticleStatus;
@@ -274,23 +275,25 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Method: PUT
      *
      * @param int $articleId
-     * @param int|null $statusId
+     * @param int $statusId
      * @param int|null $typeId
      * @param string|null $title
      * @param string|null $content
-     * @param string|null $uri
+     * @param string $uri
      * @param string|null $mainImageSrc
+     * @param array $sections
      * @param Request $request
      * @return Response
      */
     public function updateArticle(
         int $articleId,
-        ?int $statusId,
+        int $statusId,
         ?int $typeId,
         ?string $title,
         ?string $content,
-        ?string $uri,
+        string $uri,
         ?string $mainImageSrc,
+        array $sections,
         Request $request
     ): Response {
         $existingArticle = $this->articleService->getArticleForId($articleId);
@@ -316,9 +319,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $title ?? $existingArticle->getTitle(),
                 $content ?? $existingArticle->getContent(),
                 $mainImageSrc ?? $existingArticle->getMainImageSrc(),
-                $uri,
-                $existingArticle->getImages()
+                $uri
             ),
+            $sections,
             $request->getSourceIp(),
             $request->getUserAgent()
         );
@@ -355,8 +358,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $existingArticle->getTitle(),
                 $existingArticle->getContent(),
                 $existingArticle->getMainImageSrc(),
-                $existingArticle->getUri(),
-                $existingArticle->getImages()
+                $existingArticle->getUri()
             ),
             $request->getSourceIp(),
             $request->getUserAgent()

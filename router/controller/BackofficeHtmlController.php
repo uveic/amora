@@ -187,13 +187,18 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             );
         }
 
+        $articleSections = $this->articleService->getSectionsForArticleId($articleId);
         return Response::createBackofficeHtmlResponse(
             'articles-edit',
             new HtmlResponseDataAuthorised(
                 $request,
                 'Edit Article',
                 null,
-                [$article]
+                [$article],
+                [],
+                [],
+                [],
+                $articleSections
             )
         );
     }

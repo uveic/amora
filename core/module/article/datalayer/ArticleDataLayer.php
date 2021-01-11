@@ -5,24 +5,26 @@ namespace uve\core\module\article\datalayer;
 use uve\core\database\MySqlDb;
 use uve\core\Logger;
 use uve\core\module\article\model\Article;
+use uve\core\module\article\model\ArticleSection;
 use uve\core\module\user\datalayer\UserDataLayer;
 use uve\core\module\article\value\ArticleStatus;
 
 class ArticleDataLayer
 {
     const ARTICLE_TABLE_NAME = 'article';
+    const ARTICLE_SECTION_TABLE_NAME = 'article_section';
     const ARTICLE_HISTORY_TABLE_NAME = 'article_history';
     const ARTICLE_IMAGE_RELATION_TABLE_NAME = 'article_image_relation';
 
-    private MySqlDb $db;
-    private Logger $logger;
-    private ImageDataLayer $imageDataLayer;
+    public function __construct(
+        private MySqlDb $db,
+        private Logger $logger,
+        private ImageDataLayer $imageDataLayer
+    ) {}
 
-    public function __construct(MySqlDb $db, Logger $logger, ImageDataLayer $imageDataLayer)
+    public function getDb(): MySqlDb
     {
-        $this->db = $db;
-        $this->logger = $logger;
-        $this->imageDataLayer = $imageDataLayer;
+        return $this->db;
     }
 
     private function getArticles(
@@ -117,35 +119,20 @@ class ArticleDataLayer
         return $this->getArticles(null, $statusId);
     }
 
-    public function updateArticle(Article $article, ?string $userIp, ?string $userAgent): Article
+    public function updateArticle(Article $article): bool
     {
-        $resTransaction = $this->db->withTransaction(
-            function () use ($article, $userIp, $userAgent) {
-                $articleArray = $article->asArray();
-                unset($articleArray['created_at']);
-                unset($articleArray['user_id']); // Keep the user ID that originally created it
-                $articleId = $article->getId();
-                $resUpdate = $this->db->update(self::ARTICLE_TABLE_NAME, $articleId, $articleArray);
+        $articleArray = $article->asArray();
+        unset($articleArray['created_at']);
+        unset($articleArray['user_id']); // Keep the user ID that originally created it
+        $articleId = $article->getId();
+        $resUpdate = $this->db->update(self::ARTICLE_TABLE_NAME, $articleId, $articleArray);
 
-                if (empty($resUpdate)) {
-                    $this->logger->logError('Error updating article. Article ID: ' . $articleId);
-                    return ['success' => false];
-                }
+        if (empty($resUpdate)) {
+            $this->logger->logError('Error updating article. Article ID: ' . $articleId);
+            return false;
+        }
 
-                $resHistory = $this->insertArticleHistory($article, $userIp, $userAgent);
-                if (empty($resHistory)) {
-                    $this->logger->logError('Error inserting article history');
-                    return ['success' => false];
-                }
-
-                return [
-                    'success' => true,
-                    'article' => $article
-                ];
-            }
-        );
-
-        return $resTransaction['article'];
+        return true;
     }
 
     public function createNewArticle(
@@ -180,7 +167,7 @@ class ArticleDataLayer
         return $resTransaction['article'];
     }
 
-    private function insertArticleHistory(Article $article, ?string $userIp, ?string $userAgent): bool
+    public function insertArticleHistory(Article $article, ?string $userIp, ?string $userAgent): bool
     {
         $data = [
             'article_id' => $article->getId(),
@@ -237,5 +224,97 @@ class ArticleDataLayer
         );
 
         return empty($resTransaction['success']) ? false : true;
+    }
+
+    private function getArticleSections(
+        ?int $articleSectionId = null,
+        ?int $articleId = null,
+        ?int $sectionTypeId = null,
+    ): array {
+        $params = [];
+        $sql = '
+            SELECT
+                aSec.id,
+                aSec.article_id,
+                aSec.article_section_type_id,
+                aSec.content_html,
+                aSec.order,
+                aSec.created_at,
+                aSec.updated_at
+            FROM ' . self::ARTICLE_SECTION_TABLE_NAME . ' AS aSec
+            WHERE 1
+        ';
+
+        if (isset($articleSectionId)) {
+            $sql .= ' AND aSec.id = :articleSectionId';
+            $params[':articleSectionId'] = $articleSectionId;
+        }
+
+        if (isset($articleId)) {
+            $sql .= ' AND aSec.article_id = :articleId';
+            $params[':articleId'] = $articleId;
+        }
+
+        if (isset($sectionTypeId)) {
+            $sql .= ' AND aSec.article_section_type_id = :articleSectionTypeId';
+            $params[':articleSectionTypeId'] = $sectionTypeId;
+        }
+
+        $sql .= ' ORDER BY aSec.`order` ASC, aSec.id DESC';
+
+        $res = $this->db->fetchAll($sql, $params);
+
+        $output = [];
+        foreach ($res as $item) {
+            $output[] = ArticleSection::fromArray($item);
+        }
+
+        return $output;
+    }
+
+    public function getSectionsForArticleId(int $articleId): array
+    {
+        return $this->getArticleSections(null, $articleId);
+    }
+
+    public function createArticleSection(ArticleSection $articleSection): ?ArticleSection
+    {
+        $resInsert = $this->db->insert(
+            self::ARTICLE_SECTION_TABLE_NAME, $articleSection->asArray()
+        );
+
+        if (empty($resInsert)) {
+            $this->logger->logError('Error inserting article');
+            return null;
+        }
+
+        $articleSection->setId((int)$resInsert);
+
+        return $articleSection;
+    }
+
+    public function updateArticleSection(ArticleSection $articleSection): bool
+    {
+        $array = $articleSection->asArray();
+        unset($array['created_at']);
+        $resUpdate = $this->db->update(
+            self::ARTICLE_SECTION_TABLE_NAME,
+            $articleSection->getId(),
+            $array
+        );
+
+        if (empty($resUpdate)) {
+            $this->logger->logError(
+                'Error updating article section. Article Section ID: ' . $articleSection->getId()
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    public function deleteArticleSection(int $articleSectionId): bool
+    {
+        return $this->db->delete(self::ARTICLE_SECTION_TABLE_NAME, ['id' => $articleSectionId]);
     }
 }

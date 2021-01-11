@@ -26,8 +26,10 @@ document.querySelectorAll('#form-article').forEach(el => {
     let html = '';
     let order = 1;
     document.querySelectorAll('section.article-section').forEach(section => {
-      const sectionType = section.classList.contains('article-section-image') ? 'image' : 'text';
-      let sectionContent = section.outerHTML.trim();
+      const sectionTypeId = section.classList.contains('article-section-image')
+        ? 2
+        : section.classList.contains('article-section-text') ? 1 : 3;
+      let sectionContent = section.innerHTML.trim();
 
       // Hacky but it does de work for now
       sectionContent = sectionContent.replace('contenteditable="true"', '');
@@ -35,12 +37,12 @@ document.querySelectorAll('#form-article').forEach(el => {
       html += sectionContent;
       let currentSection = {
         id: section.dataset.sectionId ?? null,
-        type: sectionType,
-        content: sectionContent,
+        sectionTypeId: sectionTypeId,
+        contentHtml: sectionContent,
         order: order++
       };
 
-      if (sectionType === 'image') {
+      if (sectionTypeId === 2) {
         const imageCaption = section.getElementsByClassName('article-section-image-caption');
         currentSection.caption = imageCaption.length > 0 ? imageCaption[0].textContent : null;
       }

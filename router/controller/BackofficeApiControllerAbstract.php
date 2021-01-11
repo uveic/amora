@@ -129,23 +129,25 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Method: PUT
      *
      * @param int $articleId
-     * @param int|null $statusId
+     * @param int $statusId
      * @param int|null $typeId
      * @param string|null $title
      * @param string|null $content
-     * @param string|null $uri
+     * @param string $uri
      * @param string|null $mainImageSrc
+     * @param array $sections
      * @param Request $request
      * @return Response
      */
     abstract protected function updateArticle(
         int $articleId,
-        ?int $statusId,
+        int $statusId,
         ?int $typeId,
         ?string $title,
         ?string $content,
-        ?string $uri,
+        string $uri,
         ?string $mainImageSrc,
+        array $sections,
         Request $request
     ): Response;
 
@@ -549,12 +551,46 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
-        $statusId = $bodyParams['statusId'] ?? null;
+        $statusId = null;
+        if (!isset($bodyParams['statusId'])) {
+            $errors[] = [
+                'field' => 'statusId',
+                'message' => 'required'
+            ];
+        } else {
+            $statusId = isset($bodyParams['statusId'])
+                ? $bodyParams['statusId']
+                : null;
+        }
+
         $typeId = $bodyParams['typeId'] ?? null;
         $title = $bodyParams['title'] ?? null;
         $content = $bodyParams['content'] ?? null;
-        $uri = $bodyParams['uri'] ?? null;
+        $uri = null;
+        if (!isset($bodyParams['uri'])) {
+            $errors[] = [
+                'field' => 'uri',
+                'message' => 'required'
+            ];
+        } else {
+            $uri = isset($bodyParams['uri'])
+                ? $bodyParams['uri']
+                : null;
+        }
+
         $mainImageSrc = $bodyParams['mainImageSrc'] ?? null;
+        $sections = null;
+        if (!isset($bodyParams['sections'])) {
+            $errors[] = [
+                'field' => 'sections',
+                'message' => 'required'
+            ];
+        } else {
+            $sections = isset($bodyParams['sections'])
+                ? $bodyParams['sections']
+                : null;
+        }
+
 
         if (count($errors)) {
             return Response::createBadRequestResponse(
@@ -575,6 +611,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $content,
                 $uri,
                 $mainImageSrc,
+                $sections,
                 $request
             );
         } catch (Throwable $t) {
