@@ -1,4 +1,4 @@
-import {cleanTextForUrl, getUpdatedAtTime} from './util.js';
+import {cleanTextForUrl, getUpdatedAtTime, getYoutubeVideoIdFromUrl} from './util.js';
 import {xhr} from './xhr.js';
 import {feedbackDiv} from './authorised.js';
 
@@ -27,7 +27,7 @@ document.querySelectorAll('#form-article').forEach(el => {
     let order = 1;
     document.querySelectorAll('section.article-section').forEach(section => {
       const sectionType = section.classList.contains('article-section-image') ? 'image' : 'text';
-      let sectionContent = section.innerHTML.trim();
+      let sectionContent = section.outerHTML.trim();
 
       // Hacky but it does de work for now
       sectionContent = sectionContent.replace('contenteditable="true"', '');
@@ -316,7 +316,29 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
   bu.addEventListener('click', e => {
     e.preventDefault();
 
-    alert('ToDo');
+    const articleImagesDiv = document.querySelector('article.article-content');
+
+    // ToDo: Implement popup to get the video URL
+    const videoUrl = window.prompt('Video URL? (Only YouTube)');
+    if (videoUrl) {
+      const ytVideoId = getYoutubeVideoIdFromUrl(videoUrl);
+      if (!ytVideoId) {
+        return;
+      }
+
+      let articleSectionVideo = document.createElement('section');
+      articleSectionVideo.className = 'article-section article-section-video';
+      let articleSectionIframe = document.createElement('iframe');
+      articleSectionIframe.width = '560';
+      articleSectionIframe.height = '315';
+      articleSectionIframe.src = 'https://www.youtube-nocookie.com/embed/' + ytVideoId;
+      articleSectionIframe.frameBorder = '0';
+      articleSectionIframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      articleSectionIframe.allowFullscreen = true;
+
+      articleSectionVideo.appendChild(articleSectionIframe);
+      articleImagesDiv.appendChild(articleSectionVideo);
+    }
   });
 })
 

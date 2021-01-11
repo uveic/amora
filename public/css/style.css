@@ -613,6 +613,28 @@ svg {
   line-height: 2.5rem;
 }
 
+/* Video iFrame style starts here */
+.article-section-video {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.article-section-video::after {
+  display: block;
+  content: "";
+  padding-top: 56.25%;
+}
+
+.article-section-video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+/* Video iFrame style ends here */
+
 @media screen and (min-width: 600px) {
 
 }
