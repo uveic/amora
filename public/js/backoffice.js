@@ -304,6 +304,22 @@ document.querySelectorAll('.article-status-option').forEach(op => {
   });
 });
 
+document.querySelectorAll('.article-add-section-text').forEach(bu => {
+  bu.addEventListener('click', e => {
+    e.preventDefault();
+
+    alert('ToDo');
+  });
+})
+
+document.querySelectorAll('.article-add-section-video').forEach(bu => {
+  bu.addEventListener('click', e => {
+    e.preventDefault();
+
+    alert('ToDo');
+  });
+})
+
 const inputArticleImages = document.querySelector('input[name="article-add-image-input"]');
 if (inputArticleImages) {
   inputArticleImages.addEventListener('change', e => {

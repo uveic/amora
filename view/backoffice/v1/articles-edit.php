@@ -40,9 +40,11 @@ $this->layout('base', ['responseData' => $responseData]);
     </div>
     <div class="article-add-sections">
       <input class="null" type="file" id="article-add-image-input" name="article-add-image-input" multiple="" accept="image/*">
-      <label class="article-add-item-image" for="article-add-image-input">
-        <span class="m-r-05"><svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="#fcfcfc" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><rect x="32" y="48" width="192" height="160" rx="8" stroke-width="16" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" fill="none"></rect><path d="M32,167.99982l50.343-50.343a8,8,0,0,1,11.31371,0l44.68629,44.6863a8,8,0,0,0,11.31371,0l20.68629-20.6863a8,8,0,0,1,11.31371,0L223.99982,184" fill="none" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><circle cx="156" cy="100" r="12"></circle></svg></span> Add image(s)
+      <label class="article-add-section-image article-add-section" for="article-add-image-input">
+        <img class="img-svg" src="/img/assets/image.svg" alt="Add video">Add image(s)
       </label>
+      <button class="article-add-section article-add-section-text"><img class="img-svg" src="/img/assets/article.svg" alt="Add video">Add text</button>
+      <button class="article-add-section article-add-section-video"><img class="img-svg" src="/img/assets/youtube-logo.svg" alt="Add video">Add video</button>
     </div>
     <div class="content-images">
       <div class="field m-t-0 m-b-0">

@@ -141,21 +141,27 @@ input.is-light {
   padding: 2rem;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
-.article-add-sections label {
+.article-add-section {
   flex-grow: 0;
   display: inline-block;
   background-color: var(--main-text-color);
   color: var(--main-bg-color);
   padding: 1rem;
   cursor: pointer;
+  font-size: 1rem;
+  font-weight: 400;
+  min-height: revert;
+  border: none;
+  margin: 0.5rem;
+  width: auto;
 }
 
-.article-add-sections label:hover {
+.article-add-section:hover {
   opacity: 0.9;
 }
-
 /* Form style ends here */
 
 /* Skeleton style starts here */
