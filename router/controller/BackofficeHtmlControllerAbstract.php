@@ -20,6 +20,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeHtmlControllerGetArticlesPageSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeHtmlControllerGetNewArticlePageSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeHtmlControllerGetEditArticlePageSuccessResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/BackofficeHtmlControllerGetImagesPageSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -97,6 +98,15 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function getEditArticlePage(int $articleId, Request $request): Response;
+
+    /**
+     * Endpoint: /backoffice/images
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getImagesPage(Request $request): Response;
 
     private function validateAndCallGetPhpInfoPage(Request $request)
     {
@@ -367,6 +377,34 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallGetImagesPage(Request $request)
+    {
+        $errors = [];
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getImagesPage(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getImagesPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): Response
     {
@@ -457,6 +495,16 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetEditArticlePage($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['backoffice', 'images'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetImagesPage($request);
         }
 
         return Response::createNotFoundResponse();

@@ -20,6 +20,7 @@ return [
     'navDeleteAccount' => 'Eliminar cuenta',
     'navAdminDashboard' => 'Dashboard',
     'navAdminUsers' => 'Usuarios',
+    'navAdminImages' => 'Imágenes',
     'navAdminArticles' => 'Artículos',
     'navAdminEvents' => 'Eventos',
 

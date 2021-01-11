@@ -9,6 +9,7 @@ use uve\core\model\Request;
 use uve\core\model\Response;
 use uve\core\module\action\service\ActionService;
 use uve\core\module\article\service\ArticleService;
+use uve\core\module\article\service\ImageService;
 use uve\core\module\user\service\SessionService;
 use uve\core\module\user\service\UserService;
 
@@ -20,6 +21,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         private SessionService $sessionService,
         private UserService $userService,
         private ArticleService $articleService,
+        private ImageService $imageService,
     ) {
         parent::__construct();
     }
@@ -192,6 +194,31 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 'Edit Article',
                 null,
                 [$article]
+            )
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/images
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getImagesPage(Request $request): Response
+    {
+        $images = $this->imageService->getAllImages();
+
+        return Response::createBackofficeHtmlResponse(
+            'images',
+            new HtmlResponseDataAuthorised(
+                $request,
+                'Images',
+                null,
+                [],
+                [],
+                [],
+                $images
             )
         );
     }

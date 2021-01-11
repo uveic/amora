@@ -130,6 +130,10 @@ abstract class HtmlResponseDataAbstract
                     'uri' => '/backoffice/dashboard'
                 ],
                 [
+                    'description' => $this->getLocalValue('navAdminImages'),
+                    'uri' => '/backoffice/images'
+                ],
+                [
                     'description' => $this->getLocalValue('navAdminArticles'),
                     'uri' => '/backoffice/articles'
                 ],

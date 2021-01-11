@@ -18,6 +18,7 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         ?array $articles = [],
         protected ?array $usersList = [],
         protected ?array $events = [],
+        protected ?array $images = [],
     ) {
         $this->usersList = $usersList ?? [];
 
@@ -49,9 +50,14 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         return $this->usersList ?? [];
     }
 
-    public function getListOfEvents(): array
+    public function getEvents(): array
     {
         return $this->events ?? [];
+    }
+
+    public function getImages(): array
+    {
+        return $this->images;
     }
 
     public function getUserToEdit(): ?User

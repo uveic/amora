@@ -89,7 +89,6 @@ class ArticleDataLayer
 
         $output = [];
         foreach ($res as $item) {
-            $item['images'] = $this->imageDataLayer->getImagesForArticleId($item['article_id']);
             $output[] = Article::fromArray($item);
         }
 

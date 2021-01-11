@@ -93,6 +93,7 @@ class RouterCore extends Core
         $sessionService = UserCore::getSessionService();
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
+        $imageService = ArticleCore::getImageService();
 
         return self::getInstance(
             'BackofficeHtmlController',
@@ -101,7 +102,8 @@ class RouterCore extends Core
                 $actionService,
                 $sessionService,
                 $userService,
-                $articleService
+                $articleService,
+                $imageService
             ) {
                 require_once self::getPathRoot() . '/router/controller/AbstractController.php';
                 require_once self::getPathRoot() . '/router/controller/BackofficeHtmlControllerAbstract.php';
@@ -111,7 +113,8 @@ class RouterCore extends Core
                     $actionService,
                     $sessionService,
                     $userService,
-                    $articleService
+                    $articleService,
+                    $imageService
                 );
             },
             true

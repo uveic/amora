@@ -5,7 +5,7 @@ use uve\core\model\response\HtmlResponseDataAuthorised;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
-$images = $article ? $article->getImages() : [];
+$images = [];
 
 $this->layout('base', ['responseData' => $responseData]);
 
@@ -40,37 +40,10 @@ $this->layout('base', ['responseData' => $responseData]);
     <div class="article-add-sections">
       <input class="null" type="file" id="article-add-image-input" name="article-add-image-input" multiple="" accept="image/*">
       <label class="article-add-section-image article-add-section" for="article-add-image-input">
-        <img class="img-svg" src="/img/assets/image.svg" alt="Add video">Add image(s)
+        <img class="img-svg" src="/img/assets/image.svg" alt="Add image">Add image(s)
       </label>
-      <button class="article-add-section article-add-section-text"><img class="img-svg" src="/img/assets/article.svg" alt="Add video">Add text</button>
+      <button class="article-add-section article-add-section-text"><img class="img-svg" src="/img/assets/article.svg" alt="Add text">Add text</button>
       <button class="article-add-section article-add-section-video"><img class="img-svg" src="/img/assets/youtube-logo.svg" alt="Add video">Add video</button>
-    </div>
-    <div class="content-images">
-      <div class="field m-t-0 m-b-0">
-        <div id="upload-images">
-          <div id="upload-images-info">
-            <h1>Images</h1>
-          </div>
-          <div id="upload-images-control">
-            <input class="null" type="file" id="images" name="images" multiple="" accept="image/*">
-            <label for="images" class="input-file-label"> ⇪ Upload image(s)</label>
-          </div>
-        </div>
-      </div>
-      <div id="images-list">
-<?php
-    /** @var Image $image */
-    foreach ($images as $image) {
-?>
-        <div class="image-item" data-image-id="<?=$this->e($image->getId())?>">
-          <img src="<?=$image->getFullUrlBig()?>" title="<?=$this->e($image->getCaption())?>" alt="<?=$this->e($image->getCaption())?>" data-image-id="<?=$image->getId()?>">
-          <div id="image-options-<?=$this->e($image->getId())?>" class="options null">
-            <a class="image-delete" href="#">&#10006;</a>
-          </div>
-        </div>
-<?php } ?>
-      </div>
-
     </div>
 <?=$this->insert('partials/article-control-bar', ['responseData' => $responseData])?>
     <div class="control m-t-6 m-b-6" style="text-align: center;">
