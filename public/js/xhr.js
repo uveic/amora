@@ -44,7 +44,7 @@ function request(url, stringPayload, method = 'POST', feedbackDivEl = null, succ
     if (successMessage && successMessage) {
       feedbackDivEl.classList.remove('null');
       feedbackDivEl.textContent = successMessage;
-      feedbackDivEl.classList.remove('feedback-failure');
+      feedbackDivEl.classList.remove('feedback-error');
       feedbackDivEl.classList.add('feedback-success');
     }
 
@@ -53,7 +53,7 @@ function request(url, stringPayload, method = 'POST', feedbackDivEl = null, succ
     if (feedbackDivEl) {
       feedbackDivEl.classList.remove('null');
       feedbackDivEl.classList.remove('feedback-success');
-      feedbackDivEl.classList.add('feedback-failure');
+      feedbackDivEl.classList.add('feedback-error');
       feedbackDivEl.textContent = error.message;
     }
 

@@ -62,7 +62,7 @@ async function uploadImage(file, containerToAppendImages, userFeedbackDiv, paylo
       articleImageDiv.classList.add('null');
       userFeedbackDiv.textContent = error.message;
       userFeedbackDiv.classList.remove('feedback-success');
-      userFeedbackDiv.classList.add('feedback-failure');
+      userFeedbackDiv.classList.add('feedback-error');
       userFeedbackDiv.classList.remove('null');
       setTimeout(() => {
         userFeedbackDiv.classList.add('null')

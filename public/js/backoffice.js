@@ -1,7 +1,6 @@
 import {cleanTextForUrl, getUpdatedAtTime} from './util.js';
 import {xhr} from './xhr.js';
 import {feedbackDiv} from './authorised.js';
-import {uploadImage} from './imageUploader.js';
 
 document.querySelectorAll('#form-article').forEach(el => {
   el.addEventListener('submit', e => {
@@ -23,16 +22,38 @@ document.querySelectorAll('#form-article').forEach(el => {
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
     const statusId = Number.parseInt(status.dataset.articleStatusId);
 
+    let sections = [];
     let html = '';
+    let order = 1;
     document.querySelectorAll('section.article-section').forEach(section => {
-      html += section.innerHTML;
+      const sectionType = section.classList.contains('article-section-image') ? 'image' : 'text';
+      let sectionContent = section.innerHTML.trim();
+
+      // Hacky but it does de work for now
+      sectionContent = sectionContent.replace('contenteditable="true"', '');
+
+      html += sectionContent;
+      let currentSection = {
+        id: section.dataset.sectionId ?? null,
+        type: sectionType,
+        content: sectionContent,
+        order: order++
+      };
+
+      if (sectionType === 'image') {
+        const imageCaption = section.getElementsByClassName('article-section-image-caption');
+        currentSection.caption = imageCaption.length > 0 ? imageCaption[0].textContent : null;
+      }
+
+      sections.push(currentSection);
     });
 
     const payload = JSON.stringify({
       'title': title.textContent,
       'uri': uri.value,
       'content': html,
-      'statusId': statusId
+      'statusId': statusId,
+      'sections': sections
     });
 
     const url = '/back/article';
@@ -182,7 +203,7 @@ if (inputFileImages) {
           articleImageDiv.classList.add('null');
           feedbackDiv.textContent = 'Something went wrong, please try again';
           feedbackDiv.classList.remove('feedback-success');
-          feedbackDiv.classList.add('feedback-failure');
+          feedbackDiv.classList.add('feedback-error');
           feedbackDiv.classList.remove('null');
           setTimeout(() => {
             feedbackDiv.classList.add('null')
@@ -354,7 +375,7 @@ if (inputArticleImages) {
             articleImagesDiv.removeChild(articleSectionImage);
             feedbackDiv.textContent = error.message;
             feedbackDiv.classList.remove('feedback-success');
-            feedbackDiv.classList.add('feedback-failure');
+            feedbackDiv.classList.add('feedback-error');
             feedbackDiv.classList.remove('null');
             setTimeout(() => {
               feedbackDiv.classList.add('null')
