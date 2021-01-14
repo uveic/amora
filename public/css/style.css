@@ -353,7 +353,7 @@ ul.user-nav-menu a:hover {
   width: 100%;
   max-width: var(--content-medium-width);
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0;
 }
 
 .content-small-width {
@@ -509,7 +509,7 @@ label:not(:last-child) {
 /* Article styles starts here */
 .article-title {
   margin: 1rem 0 0.3rem;
-  padding: 0;
+  padding: 0 1rem;
   font-size: 1.5rem;
   font-family: var(--font-h1-title);
   font-weight: bold;
@@ -518,7 +518,7 @@ label:not(:last-child) {
 }
 
 .article-info {
-  padding: 0;
+  padding: 0 1rem;
   margin: 0;
   font-size: 0.85rem;
   font-weight: normal;
@@ -541,6 +541,30 @@ label:not(:last-child) {
   font-size: 0.8rem;
   color: var(--light-text-color);
   outline: 0;
+}
+
+p.article-section-text {
+  padding: 0 1rem;
+}
+
+.article-section-video {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.article-section-video::after {
+  display: block;
+  content: "";
+  padding-top: 56.25%;
+}
+
+.article-section-video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 a.black,
@@ -613,28 +637,6 @@ svg {
   margin-right: 1.5rem;
   line-height: 2.5rem;
 }
-
-/* Video iFrame style starts here */
-.article-section-video {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-
-.article-section-video::after {
-  display: block;
-  content: "";
-  padding-top: 56.25%;
-}
-
-.article-section-video iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-/* Video iFrame style ends here */
 
 @media screen and (min-width: 600px) {
 
