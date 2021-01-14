@@ -114,7 +114,7 @@ class ArticleService
                 $newSectionId,
                 $articleId,
                 (int)$section['sectionTypeId'],
-                $section['contentHtml'],
+                html_entity_decode($section['contentHtml']),
                 isset($section['order']) ? (int)$section['order'] : null,
                 $newSectionId && isset($articleSectionsById[$newSectionId])
                     ? $articleSectionsById[$newSectionId]->getUpdatedAt()

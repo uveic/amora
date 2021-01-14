@@ -37,9 +37,20 @@ const managePlaceholderForEditableElements = function(event) {
   }
 }
 
+const generateRandomString = function(length = 10) {
+  const dec2hex = function (dec) {
+    return dec.toString(16).padStart(2, "0");
+  }
+
+  const arr = new Uint8Array((length || 40) / 2);
+  window.crypto.getRandomValues(arr);
+  return Array.from(arr, dec2hex).join('');
+}
+
 export {
   getUpdatedAtTime,
   cleanTextForUrl,
   getYoutubeVideoIdFromUrl,
-  managePlaceholderForEditableElements
+  managePlaceholderForEditableElements,
+  generateRandomString
 };

@@ -518,7 +518,7 @@ label:not(:last-child) {
 }
 
 .article-info {
-  padding: 0 1rem;
+  padding: 0;
   margin: 0;
   font-size: 0.85rem;
   font-weight: normal;
@@ -543,8 +543,9 @@ label:not(:last-child) {
   outline: 0;
 }
 
-p.article-section-text {
-  padding: 0 1rem;
+.content-medium-width p {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .article-section-video {

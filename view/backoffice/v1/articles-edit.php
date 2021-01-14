@@ -8,6 +8,7 @@ use uve\core\module\article\value\ArticleSectionType;
 $article = $responseData->getFirstArticle();
 $articleSections = $responseData->getArticleSections();
 $images = [];
+$editorIds = [];
 
 $this->layout('base', ['responseData' => $responseData]);
 
@@ -41,19 +42,22 @@ function getClassName(int $sectionTypeId): string
 <?php
     /** @var ArticleSection $articleSection */
     foreach ($articleSections as $articleSection) {
+        $editorId = getClassName($articleSection->getArticleSectionTypeId()) . '-' . $articleSection->getId();
         $class = 'article-section ' . getClassName($articleSection->getArticleSectionTypeId());
-        $contentEditable = $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT
-            ? ' contenteditable="true"'
-            : '';
-        $placeholder = $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT
-            ? ' data-placeholder="Type something..."'
-            : '';
-        $class .= $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT
-            ? ' placeholder'
-            : '';
+        $contentEditable = '';
+        $placeholder = '';
+        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT) {
+            $editorIds[] = $editorId;
+            $placeholder =' data-placeholder="Type something..."';
+            $class .= ' placeholder null';
 ?>
-        <section class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>"<?=$contentEditable?><?=$placeholder?>>
+        <div id="<?=$editorId?>">
+          <div class="pell-content" contenteditable="true"><?=$articleSection->getContentHtml()?></div>
+        </div>
+<?php } ?>
+        <section id="<?=$editorId?>-html" class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>"<?=$placeholder?>>
           <?=$articleSection->getContentHtml()?>
+
         </section>
 <?php } ?>
       </article>
@@ -69,4 +73,11 @@ function getClassName(int $sectionTypeId): string
 <?=$this->insert('partials/article-control-bar', ['responseData' => $responseData])?>
   </form>
 </section>
-<script src="/js/pell.js"></script>
+<script src="/js/editor.js"></script>
+<script>
+<?php
+    foreach ($editorIds as $editorId) {
+        echo "loadEditor('" . $editorId . "');" . PHP_EOL;
+    }
+?>
+</script>

@@ -105,7 +105,7 @@ const defaultClasses = {
   selected: 'pell-button-selected'
 };
 
-const init = (settings) => {
+const init = function(settings) {
   const actions = settings.actions
     ? (
       settings.actions.map(action => {
@@ -173,22 +173,26 @@ const init = (settings) => {
   return settings.element;
 };
 
-init({
-  element: document.getElementById('pell'),
-  onChange: (html) => {document.querySelector('#content-html').textContent = html},
-  defaultParagraphSeparator: 'p',
-  actions: [
-    'bold',
-    'italic',
-    'underline',
-    'strikethrough',
-    'olist',
-    'ulist',
-    'heading1',
-    'heading2',
-    'paragraph',
-    'link',
-    'image',
-    'eraser'
-  ]
-});
+function loadEditor(elementId, elementHtmlId = null) {
+  elementHtmlId = elementHtmlId ?? elementId + '-html';
+
+  init({
+    element: document.querySelector('#' + elementId),
+    onChange: (html) => {document.querySelector('#' + elementHtmlId).textContent = html},
+    defaultParagraphSeparator: 'p',
+    actions: [
+      'bold',
+      'italic',
+      'underline',
+      'strikethrough',
+      'olist',
+      'ulist',
+      'heading1',
+      'heading2',
+      'paragraph',
+      'link',
+      'image',
+      'eraser'
+    ]
+  });
+}

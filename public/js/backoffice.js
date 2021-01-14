@@ -2,7 +2,8 @@ import {
   cleanTextForUrl,
   getUpdatedAtTime,
   getYoutubeVideoIdFromUrl,
-  managePlaceholderForEditableElements
+  managePlaceholderForEditableElements,
+  generateRandomString
 } from './util.js';
 import {xhr} from './xhr.js';
 import {feedbackDiv} from './authorised.js';
@@ -58,7 +59,7 @@ document.querySelectorAll('#form-article').forEach(el => {
 
       html += sectionContent;
       let currentSection = {
-        id: section.dataset.sectionId ?? null,
+        id: section.dataset.sectionId ? Number.parseInt(section.dataset.sectionId) : null,
         sectionTypeId: sectionTypeId,
         contentHtml: sectionContent,
         order: order++
@@ -339,17 +340,25 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
     e.preventDefault();
 
     const articleContentDiv = document.querySelector('article.article-content');
+    const sectionId = 'article-section-text-' + generateRandomString(5);
 
     let articleSectionText = document.createElement('section');
-    articleSectionText.className = 'article-section article-section-text';
+    articleSectionText.id = sectionId + '-html';
+    articleSectionText.className = 'article-section article-section-text placeholder null';
+    articleSectionText.dataset.placeholder = 'Type something...';
 
-    let paragraph = document.createElement('p');
-    paragraph.contentEditable = 'true';
-    paragraph.className = 'article-section article-section-text placeholder';
-    paragraph.dataset.placeholder = 'Type something...';
-    articleSectionText.appendChild(paragraph);
+    let divSection = document.createElement('div');
+    divSection.id = sectionId;
 
+    let divEditor = document.createElement('div');
+    divEditor.className = 'pell-content';
+    divEditor.contentEditable = 'true';
+    divSection.appendChild(divEditor);
+
+    articleContentDiv.appendChild(divSection);
     articleContentDiv.appendChild(articleSectionText);
+
+    loadEditor(sectionId);
 
     const pPlaceholders = document.querySelectorAll('.placeholder');
     pPlaceholders[pPlaceholders.length - 1]
