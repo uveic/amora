@@ -54,11 +54,6 @@ $this->layout('base', ['responseData' => $responseData]);
       <button class="article-add-section article-add-section-video"><img class="img-svg" src="/img/assets/youtube-logo.svg" alt="Add video">Add video</button>
     </div>
 <?=$this->insert('partials/article-control-bar', ['responseData' => $responseData])?>
-    <div class="control m-t-6 m-b-6" style="text-align: center;">
-<?php if (!empty($article)) { ?>
-      <a href="#" class="is-danger">Delete</a>
-<?php } ?>
-    </div>
   </form>
 </section>
 <script src="/js/pell.js"></script>

@@ -29,6 +29,24 @@
 #feedback-banner > p {
   color: var(--color-red);
 }
+
+.article-saving {
+  display: flex;
+  justify-content: center;
+  flex-grow: 0 !important;
+}
+
+.article-saving img {
+  width: 25px;
+  height: auto;
+  flex-grow: 0;
+}
+
+.article-saving span {
+  margin-left: 0.5rem;
+  justify-content: center;
+}
+
 /* Feedback style ends here */
 
 /* Form style starts here */

@@ -10,6 +10,7 @@ document.querySelectorAll('#form-article').forEach(el => {
       if (e.submitter.dataset.close) {
         window.location = '/backoffice/articles'
       } else {
+        document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         document.querySelectorAll('span.articleUpdatedAt').forEach(s => {
           s.textContent = getUpdatedAtTime(s.dataset.lang);
         });
@@ -21,6 +22,7 @@ document.querySelectorAll('#form-article').forEach(el => {
     const uri = document.querySelector('#form-article input[name="uri"]');
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
     const statusId = Number.parseInt(status.dataset.articleStatusId);
+    document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
 
     let sections = [];
     let html = '';

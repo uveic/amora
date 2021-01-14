@@ -32,6 +32,10 @@ $random = StringUtil::getRandomString(5);
     <input style="width: revert;" type="submit" class="button m-r-1" value="<?=$article ? 'Update' : 'Save'?>">
     <input style="width: revert;" type="submit" class="button" data-close="1" value="<?=$article ? 'Update & Close' : 'Save & Close'?>">
     <div style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
+    <div class="article-saving null">
+      <img src="/img/loading.gif" class="" alt="Saving...">
+      <span>Saving...</span>
+    </div>
     <input type="checkbox" id="dropdown-menu-<?=$random?>" class="dropdown-menu">
     <div class="dropdown-container">
       <ul>
