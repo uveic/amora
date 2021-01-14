@@ -2,6 +2,7 @@
 
 use uve\core\model\response\HtmlResponseDataAuthorised;
 use uve\core\module\article\model\ArticleSection;
+use uve\core\module\article\value\ArticleSectionType;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
@@ -9,6 +10,15 @@ $articleSections = $responseData->getArticleSections();
 $images = [];
 
 $this->layout('base', ['responseData' => $responseData]);
+
+function getClassName(int $sectionTypeId): string
+{
+  return match ($sectionTypeId) {
+      ArticleSectionType::TEXT => 'article-section-text',
+      ArticleSectionType::IMAGE => 'article-section-image',
+      ArticleSectionType::YOUTUBE_VIDEO => 'article-section-video'
+  };
+}
 
 ?>
 <section>
@@ -22,25 +32,28 @@ $this->layout('base', ['responseData' => $responseData]);
     </div>
 <?=$this->insert('partials/article-control-bar', ['responseData' => $responseData])?>
     <div class="content-medium-width">
-<?php if (!empty($article)) { ?>
-      <input name="articleId" type="hidden" value="<?=$this->e($article->getId()); ?>">
-<?php } ?>
+      <input name="articleId" type="hidden" value="<?=$article ? $this->e($article->getId()) : ''?>">
       <div id="article-title" class="article-title input-div<?=$article && $article->getTitle() ? ' input-div-clean' : ''?>" contenteditable="true"><?=$this->e($article ? $article->getTitle() : ''); ?></div>
       <div class="article-edit-uri"><?=$this->e(trim($responseData->getBaseUrl(), ' /') . '/')?>
         <input name="uri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->getUri() : ''); ?>">
       </div>
-      <div id="pell" class="pell article-pell">
-        <div class="pell-content" contenteditable="true"><?=$article ? $article->getContent() : ''?></div>
-      </div>
       <article class="article-content">
-        <section id="content-html" class="null article-section article-section-text">
-            <?=$article ? $article->getContent() : ''?>
-        </section>
 <?php
     /** @var ArticleSection $articleSection */
-    foreach ($articleSections as $articleSection) { ?>
-        <section id="">
-            <?=$articleSection->getContentHtml()?>
+    foreach ($articleSections as $articleSection) {
+        $class = 'article-section ' . getClassName($articleSection->getArticleSectionTypeId());
+        $contentEditable = $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT
+            ? ' contenteditable="true"'
+            : '';
+        $placeholder = $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT
+            ? ' data-placeholder="Type something..."'
+            : '';
+        $class .= $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT
+            ? ' placeholder'
+            : '';
+?>
+        <section class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>"<?=$contentEditable?><?=$placeholder?>>
+          <?=$articleSection->getContentHtml()?>
         </section>
 <?php } ?>
       </article>

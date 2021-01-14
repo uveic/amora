@@ -584,6 +584,7 @@ a.black:focus {
 .bg-color-dark {background-color: var(--main-text-color);}
 
 .null {display: none !important;}
+.hidden {visibility: hidden;}
 
 svg {
   display: inline-block;

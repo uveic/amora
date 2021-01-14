@@ -30,4 +30,16 @@ function getYoutubeVideoIdFromUrl(url) {
   return match && match[7].length === 11 ? match[7] : false;
 }
 
-export {getUpdatedAtTime, cleanTextForUrl, getYoutubeVideoIdFromUrl};
+const managePlaceholderForEditableElements = function(event) {
+  const element = event.currentTarget;
+  if (!element.textContent.trim().length) {
+    element.innerHTML = '';
+  }
+}
+
+export {
+  getUpdatedAtTime,
+  cleanTextForUrl,
+  getYoutubeVideoIdFromUrl,
+  managePlaceholderForEditableElements
+};

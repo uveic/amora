@@ -11,6 +11,7 @@ use uve\core\module\article\model\ArticleSection;
 use uve\core\module\article\service\ArticleService;
 use uve\core\module\article\service\ImageService;
 use uve\core\module\article\value\ArticleStatus;
+use uve\core\module\article\value\ArticleType;
 use uve\core\module\user\model\User;
 use uve\core\module\user\service\UserService;
 use uve\core\model\Request;
@@ -240,7 +241,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     public function storeArticle(
         int $statusId,
-        int $typeId,
+        ?int $typeId,
         string $title,
         string $content,
         string $uri,
@@ -249,12 +250,12 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     ): Response {
         $now = DateUtil::getCurrentDateForMySql();
 
-        $this->articleService->createNewArticle(
+        $res = $this->articleService->createNewArticle(
             new Article(
                 null,
                 $request->getSession()->getUser(),
                 $statusId,
-                $typeId,
+                $typeId ?? ArticleType::HOME,
                 $now,
                 $now,
                 $title,
@@ -267,7 +268,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $request->getUserAgent()
         );
 
-        return new BackofficeApiControllerStoreArticleSuccessResponse(true);
+        return new BackofficeApiControllerStoreArticleSuccessResponse(
+            $res ? true : false,
+            $res ? $res->getId() : null
+        );
     }
 
     /**
@@ -308,7 +312,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $content = html_entity_decode($content);
         }
 
-        $this->articleService->updateArticle(
+        $res = $this->articleService->updateArticle(
             new Article(
                 $articleId,
                 $request->getSession()->getUser(),
@@ -326,7 +330,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $request->getUserAgent()
         );
 
-        return new BackofficeApiControllerUpdateArticleSuccessResponse(true);
+        return new BackofficeApiControllerUpdateArticleSuccessResponse(
+            $res,
+            $res ? $articleId : null
+        );
     }
 
     /**

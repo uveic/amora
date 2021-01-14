@@ -9,17 +9,17 @@ use uve\core\util\StringUtil;
 
 $article = $responseData->getFirstArticle();
 
-$updatedAtContent = $article
-    ? 'Updated <span class="articleUpdatedAt" title="' .
+$updatedAtContent = 'Updated ' . ($article
+    ? '<span class="article-updated-at" title="' .
     $this->e(DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
     '">' . $this->e(DateUtil::getElapsedTimeString($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
-    : '';
+    : '<span class="article-updated-at" title=""></span>');
 
-$createdAtContent = $article
-    ? 'Created <span title="' .
+$createdAtContent = 'Created ' . ($article
+    ? '<span title="' .
     $this->e(DateUtil::formatUtcDate($article->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
     '">' . $this->e(DateUtil::getElapsedTimeString($article->getCreatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
-    : '';
+    : '<span class="article-created-at" title=""></span>');
 
 $articleStatusId = $article ? $article->getStatusId() : ArticleStatus::DRAFT;
 $articleStatusName = ArticleStatus::getNameForId($articleStatusId);
@@ -29,9 +29,9 @@ $random = StringUtil::getRandomString(5);
 
 ?>
   <div class="form-control-bar-header m-b-3">
-    <input style="width: revert;" type="submit" class="button m-r-1" value="<?=$article ? 'Update' : 'Save'?>">
-    <input style="width: revert;" type="submit" class="button" data-close="1" value="<?=$article ? 'Update & Close' : 'Save & Close'?>">
-    <div style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
+    <input style="width: revert;" type="submit" class="article-save button m-r-1" value="<?=$article ? 'Update' : 'Save'?>">
+    <input style="width: revert;" type="submit" class="article-save-close button" data-close="1" value="<?=$article ? 'Update & Close' : 'Save & Close'?>">
+    <div class="article-creation<?=$article ? '' : ' hidden'?>" style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
     <div class="article-saving null">
       <img src="/img/loading.gif" class="" alt="Saving...">
       <span>Saving...</span>

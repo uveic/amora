@@ -420,7 +420,6 @@
               },
               "required": [
                 "statusId",
-                "typeId",
                 "title",
                 "content",
                 "uri"
@@ -441,6 +440,10 @@
                     true,
                     false
                   ]
+                },
+                "articleId": {
+                  "type": "integer",
+                  "description": "New article ID"
                 }
               },
               "required": [
@@ -597,6 +600,10 @@
                     true,
                     false
                   ]
+                },
+                "articleId": {
+                  "type": "integer",
+                  "description": "New article ID"
                 }
               },
               "required": [

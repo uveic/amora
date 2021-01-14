@@ -105,6 +105,7 @@ class RouterCore extends Core
                 $articleService,
                 $imageService
             ) {
+                require_once self::getPathRoot() . '/core/module/article/value/ArticleSectionType.php';
                 require_once self::getPathRoot() . '/router/controller/AbstractController.php';
                 require_once self::getPathRoot() . '/router/controller/BackofficeHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/router/controller/BackofficeHtmlController.php';

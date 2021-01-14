@@ -180,6 +180,24 @@ input.is-light {
 .article-add-section:hover {
   opacity: 0.9;
 }
+
+.article-creation {
+  text-align: right;
+}
+
+.placeholder:focus {
+  background-color: var(--light-bg-color);
+  outline: 0;
+}
+
+.placeholder:empty:before {
+  content: attr(data-placeholder);
+  color: var(--light-bg-color-3);
+}
+
+.placeholder:empty:focus:before {
+  content: "";
+}
 /* Form style ends here */
 
 /* Skeleton style starts here */

@@ -106,7 +106,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Method: POST
      *
      * @param int $statusId
-     * @param int $typeId
+     * @param int|null $typeId
      * @param string $title
      * @param string $content
      * @param string $uri
@@ -116,7 +116,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      */
     abstract protected function storeArticle(
         int $statusId,
-        int $typeId,
+        ?int $typeId,
         string $title,
         string $content,
         string $uri,
@@ -437,18 +437,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 : null;
         }
 
-        $typeId = null;
-        if (!isset($bodyParams['typeId'])) {
-            $errors[] = [
-                'field' => 'typeId',
-                'message' => 'required'
-            ];
-        } else {
-            $typeId = isset($bodyParams['typeId'])
-                ? $bodyParams['typeId']
-                : null;
-        }
-
+        $typeId = $bodyParams['typeId'] ?? null;
         $title = null;
         if (!isset($bodyParams['title'])) {
             $errors[] = [

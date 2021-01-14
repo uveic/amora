@@ -1,4 +1,9 @@
-import {cleanTextForUrl, getUpdatedAtTime, getYoutubeVideoIdFromUrl} from './util.js';
+import {
+  cleanTextForUrl,
+  getUpdatedAtTime,
+  getYoutubeVideoIdFromUrl,
+  managePlaceholderForEditableElements
+} from './util.js';
 import {xhr} from './xhr.js';
 import {feedbackDiv} from './authorised.js';
 
@@ -6,18 +11,33 @@ document.querySelectorAll('#form-article').forEach(el => {
   el.addEventListener('submit', e => {
     e.preventDefault();
 
-    const afterApiCall = function() {
+    const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
+
+    const afterApiCall = function(response) {
       if (e.submitter.dataset.close) {
         window.location = '/backoffice/articles'
       } else {
-        document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
-        document.querySelectorAll('span.articleUpdatedAt').forEach(s => {
+        if (response.articleId) {
+          articleIdEl.value = response.articleId;
+          history.pushState("", document.title, '/backoffice/articles/' + response.articleId);
+        }
+        document.querySelector('.article-creation').classList.remove('hidden');
+        document.querySelectorAll('span.article-updated-at').forEach(s => {
           s.textContent = getUpdatedAtTime(s.dataset.lang);
+        });
+        document.querySelectorAll('span.article-created-at').forEach(s => {
+          if (!s.textContent.trim().length) {
+            s.textContent = getUpdatedAtTime(s.dataset.lang);
+          }
+        });
+
+        document.querySelectorAll('input.article-save').forEach(b => b.value = 'Update');
+        document.querySelectorAll('input.article-save-close').forEach(b => {
+          b.value = 'Update & Close'
         });
       }
     };
 
-    const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
     const title = document.querySelector('div#article-title');
     const uri = document.querySelector('#form-article input[name="uri"]');
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
@@ -62,12 +82,18 @@ document.querySelectorAll('#form-article').forEach(el => {
 
     const url = '/back/article';
 
-    if (articleIdEl) {
-      xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv)
-        .then(afterApiCall);
+    if (articleIdEl && articleIdEl.value) {
+      xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, 'Updated')
+        .then((response) => afterApiCall(response))
+        .finally(() => {
+          document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
+        });
     } else {
-      xhr.post(url, payload, feedbackDiv)
-        .then(afterApiCall);
+      xhr.post(url, payload, feedbackDiv, 'Saved')
+        .then((response) => afterApiCall(response))
+        .finally(() => {
+          document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
+        });
     }
   });
 });
@@ -312,7 +338,24 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
   bu.addEventListener('click', e => {
     e.preventDefault();
 
-    alert('ToDo');
+    const articleContentDiv = document.querySelector('article.article-content');
+
+    let articleSectionText = document.createElement('section');
+    articleSectionText.className = 'article-section article-section-text';
+
+    let paragraph = document.createElement('p');
+    paragraph.contentEditable = 'true';
+    paragraph.className = 'article-section article-section-text placeholder';
+    paragraph.dataset.placeholder = 'Type something...';
+    articleSectionText.appendChild(paragraph);
+
+    articleContentDiv.appendChild(articleSectionText);
+
+    const pPlaceholders = document.querySelectorAll('.placeholder');
+    pPlaceholders[pPlaceholders.length - 1]
+      .addEventListener('focus', managePlaceholderForEditableElements);
+
+    pPlaceholders[pPlaceholders.length - 1].focus();
   });
 })
 
@@ -320,10 +363,10 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
   bu.addEventListener('click', e => {
     e.preventDefault();
 
-    const articleImagesDiv = document.querySelector('article.article-content');
+    const articleContentDiv = document.querySelector('article.article-content');
 
     // ToDo: Implement popup to get the video URL
-    const videoUrl = window.prompt('Video URL? (Only YouTube)');
+    const videoUrl = window.prompt('Video URL? (Only YouTube for now)');
     if (videoUrl) {
       const ytVideoId = getYoutubeVideoIdFromUrl(videoUrl);
       if (!ytVideoId) {
@@ -341,7 +384,7 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
       articleSectionIframe.allowFullscreen = true;
 
       articleSectionVideo.appendChild(articleSectionIframe);
-      articleImagesDiv.appendChild(articleSectionVideo);
+      articleContentDiv.appendChild(articleSectionVideo);
     }
   });
 })
@@ -351,7 +394,7 @@ if (inputArticleImages) {
   inputArticleImages.addEventListener('change', e => {
     e.preventDefault();
 
-    const articleImagesDiv = document.querySelector('article.article-content');
+    const articleContentDiv = document.querySelector('article.article-content');
     const files = inputArticleImages.files;
     const articleIdInput = document.querySelector('#form-article input[name="articleId"]');
 
@@ -388,7 +431,7 @@ if (inputArticleImages) {
         articleSectionImage.appendChild(image);
         articleSectionImage.appendChild(imgLoading);
         articleSectionImage.appendChild(imageCaption);
-        articleImagesDiv.appendChild(articleSectionImage);
+        articleContentDiv.appendChild(articleSectionImage);
 
         fetch(
           '/api/image',
@@ -414,7 +457,7 @@ if (inputArticleImages) {
               articleSectionImage.removeChild(imgLoading);
             });
           }).catch((error) => {
-            articleImagesDiv.removeChild(articleSectionImage);
+            articleContentDiv.removeChild(articleSectionImage);
             feedbackDiv.textContent = error.message;
             feedbackDiv.classList.remove('feedback-success');
             feedbackDiv.classList.add('feedback-error');
@@ -429,3 +472,7 @@ if (inputArticleImages) {
     }
   });
 }
+
+document.querySelectorAll('.placeholder').forEach(el => {
+  el.addEventListener('focus', managePlaceholderForEditableElements)
+})
