@@ -34,12 +34,12 @@ const defaultActions = {
     result: () => exec('strikeThrough')
   },
   heading1: {
-    icon: '<b>H<sub>1</sub></b>',
+    icon: '<b>H1</b>',
     title: 'Heading 1',
     result: () => exec(formatBlock, '<h1>')
   },
   heading2: {
-    icon: '<b>H<sub>2</sub></b>',
+    icon: '<b>H2</b>',
     title: 'Heading 2',
     result: () => exec(formatBlock, '<h2>')
   },

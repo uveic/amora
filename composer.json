@@ -7,6 +7,7 @@
     "ext-dom": "*",
     "ext-pdo": "*",
     "ext-ctype": "*",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-gd": "*"
   }
 }

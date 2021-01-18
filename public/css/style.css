@@ -543,7 +543,11 @@ label:not(:last-child) {
   outline: 0;
 }
 
-.content-medium-width p {
+.content-medium-width > h1,
+.content-medium-width > h2,
+.content-medium-width > h3,
+.content-medium-width > div,
+.content-medium-width > p {
   padding-left: 1rem;
   padding-right: 1rem;
 }

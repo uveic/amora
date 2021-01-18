@@ -46,6 +46,15 @@ function getClassName(int $sectionTypeId): string
         $class = 'article-section ' . getClassName($articleSection->getArticleSectionTypeId());
         $contentEditable = '';
         $placeholder = '';
+        $contentHtml = $articleSection->getContentHtml();
+        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::IMAGE) {
+            $contentHtml = str_replace(
+                'class="article-section-image-caption"',
+                'class="article-section-image-caption" contenteditable="true"',
+                $contentHtml
+            );
+        }
+
         if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT) {
             $editorIds[] = $editorId;
             $placeholder =' data-placeholder="Type something..."';
@@ -56,8 +65,7 @@ function getClassName(int $sectionTypeId): string
         </div>
 <?php } ?>
         <section id="<?=$editorId?>-html" class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>"<?=$placeholder?>>
-          <?=$articleSection->getContentHtml()?>
-
+          <?=$contentHtml . PHP_EOL?>
         </section>
 <?php } ?>
       </article>
