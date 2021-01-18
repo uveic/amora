@@ -32,7 +32,7 @@ function request(url, stringPayload, method = 'POST', feedbackDivEl = null, succ
     }
   ).then((response) => {
     if (!response.ok) {
-      throw new Error(response.statusText);
+      throw new Error(response.status + ': ' + response.statusText);
     }
 
     return response.json();
