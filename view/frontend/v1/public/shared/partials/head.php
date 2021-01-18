@@ -24,7 +24,5 @@ use uve\core\model\response\HtmlResponseDataAbstract;
   <meta name="twitter:description" content="<?=$this->e($responseData->getPageDescription())?>">
   <meta name="twitter:image" content="<?=$this->e($responseData->getSiteImageUri())?>">
   <title><?=$this->e($responseData->getPageTitle())?></title>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat&display=swap" rel="stylesheet">
   <link href="/css/style.css" rel="stylesheet" type="text/css">
-  <link rel="preload" href="/js/xhr.js" as="script">
 </head>

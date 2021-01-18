@@ -25,8 +25,8 @@
   --content-max-width: 1200px;
   --content-medium-width: 800px;
 
-  --font-h1-title: Anton, sans-serif;
-  --font-paragraph: 'Montserrat', sans-serif;
+  --font-h1-title: monospace;
+  --font-paragraph: monospace;
 }
 
 *, *:before, *:after {
@@ -543,12 +543,23 @@ label:not(:last-child) {
   outline: 0;
 }
 
+.article-content > h1,
+.article-content > h2,
+.article-content > h3,
+.article-content > div,
+.article-content > p,
 .content-medium-width > h1,
 .content-medium-width > h2,
 .content-medium-width > h3,
 .content-medium-width > div,
 .content-medium-width > p {
   padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.article-content > ol,
+.content-medium-width > ol {
+  padding-left: 4rem;
   padding-right: 1rem;
 }
 
@@ -578,6 +589,12 @@ a.black:active,
 a.black:visited,
 a.black:focus {
   color: var(--main-text-color);
+}
+
+.article-section-image-caption,
+.article-section-image,
+.article-section-text {
+  overflow: hidden;
 }
 /* Article styles ends here */
 
