@@ -357,7 +357,7 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
     divSection.id = sectionId;
 
     let divEditor = document.createElement('div');
-    divEditor.className = 'pell-content';
+    divEditor.className = 'pell-content ' + sectionId;
     divEditor.contentEditable = 'true';
     divSection.appendChild(divEditor);
 
@@ -366,11 +366,10 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
 
     loadEditor(sectionId);
 
-    const pPlaceholders = document.querySelectorAll('.placeholder');
-    pPlaceholders[pPlaceholders.length - 1]
-      .addEventListener('focus', managePlaceholderForEditableElements);
-
-    pPlaceholders[pPlaceholders.length - 1].focus();
+    document.querySelector('.' + sectionId).focus();
+    // ToDo: Add placeholder ('Type something...') when text editor is empty
+    // pPlaceholders[pPlaceholders.length - 1]
+    //   .addEventListener('focus', managePlaceholderForEditableElements);
   });
 })
 

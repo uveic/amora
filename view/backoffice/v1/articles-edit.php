@@ -61,7 +61,7 @@ function getClassName(int $sectionTypeId): string
             $class .= ' placeholder null';
 ?>
         <div id="<?=$editorId?>">
-          <div class="pell-content" contenteditable="true"><?=$articleSection->getContentHtml()?></div>
+          <div class="<?=$editorId?>" contenteditable="true"><?=$articleSection->getContentHtml()?></div>
         </div>
 <?php } ?>
         <section id="<?=$editorId?>-html" class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>"<?=$placeholder?>>

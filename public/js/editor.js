@@ -127,7 +127,7 @@ const init = function(settings) {
   actionbar.className = classes.actionbar;
   appendChild(settings.element, actionbar);
 
-  let content = document.querySelector('div.' + classes.content);
+  let content = document.querySelector('div.' + classes.editorId);
   if (!content) {
     content = settings.element.content = createElement('div');
     content.contentEditable = true;
@@ -193,6 +193,9 @@ function loadEditor(elementId, elementHtmlId = null) {
       'link',
       'image',
       'eraser'
-    ]
+    ],
+    classes: {
+      editorId: elementId
+    }
   });
 }
