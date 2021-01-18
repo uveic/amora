@@ -34,7 +34,7 @@ document.querySelectorAll('#form-article').forEach(el => {
 
         document.querySelectorAll('input.article-save').forEach(b => b.value = 'Update');
         document.querySelectorAll('input.article-save-close').forEach(b => {
-          b.value = 'Update & Close'
+          b.value = 'U&C'
         });
       }
     };

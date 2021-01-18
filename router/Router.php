@@ -10,6 +10,7 @@ use uve\core\model\Response;
 use uve\core\model\response\HtmlResponseData;
 use uve\core\module\article\ArticleCore;
 use uve\core\module\article\value\ArticleStatus;
+use uve\core\util\StringUtil;
 
 class Router
 {
@@ -116,7 +117,19 @@ class Router
     private function getArticlePage(string $articleUri, Request $request): Response
     {
         $article = ArticleCore::getArticleService()->getArticleForUri($articleUri);
-        if (empty($article) || $article->getStatusId() !== ArticleStatus::PUBLISHED) {
+        if (empty($article)) {
+            return Response::createFrontendPublicHtmlResponse(
+                'shared/404',
+                new HtmlResponseData($request)
+            );
+        }
+
+        $preview = $request->getGetParam('preview');
+        if (!$request->getSession()
+            || (!$request->getSession()->isAdmin()
+                && $article->getStatusId() === ArticleStatus::PUBLISHED
+            ) || !StringUtil::isTrue($preview)
+        ) {
             return Response::createFrontendPublicHtmlResponse(
                 'shared/404',
                 new HtmlResponseData($request)
