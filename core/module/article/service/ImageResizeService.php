@@ -2,6 +2,7 @@
 
 namespace uve\core\module\article\service;
 
+use GdImage;
 use uve\core\Logger;
 use uve\core\module\article\model\Image;
 use uve\core\module\article\model\ImagePath;
@@ -254,6 +255,8 @@ class ImageResizeService
             $originalHeight
         );
 
+        $outputImage = $this->checkExifAndRotateIfNecessary($outputImage, $sourceFullPath);
+
         return imagejpeg($outputImage, $outputFullPath, 85);
     }
 
@@ -307,5 +310,27 @@ class ImageResizeService
         );
 
         return imagepng($outputImage, $outputFullPath, 85);
+    }
+
+    private function checkExifAndRotateIfNecessary(GdImage $image, string $imagePath): GdImage|bool
+    {
+        $exif = exif_read_data($imagePath, 0, true);
+
+        $orientation = $exif['Orientation'] ?? ($exif['IFD0']['Orientation'] ?? null);
+
+        if(!isset($orientation)) {
+            return $image;
+        }
+
+        switch($orientation) {
+            case 8:
+                return imagerotate($image, 90, 0);
+            case 3:
+                return imagerotate($image, 180, 0);
+            case 6:
+                return imagerotate($image, -90, 0);
+        }
+
+        return $image;
     }
 }

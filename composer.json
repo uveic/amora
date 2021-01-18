@@ -8,6 +8,7 @@
     "ext-pdo": "*",
     "ext-ctype": "*",
     "ext-mbstring": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "ext-exif": "*"
   }
 }
