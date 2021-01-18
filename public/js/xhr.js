@@ -35,7 +35,11 @@ function request(url, stringPayload, method = 'POST', feedbackDivEl = null, succ
       throw new Error(response.status + ': ' + response.statusText);
     }
 
-    return response.json();
+    try {
+      return response.json();
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }).then((json) => {
     if (!json.success) {
       throw new Error(json.errorMessage ?? 'Something went wrong, please try again.');

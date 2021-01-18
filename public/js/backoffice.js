@@ -459,7 +459,11 @@ if (inputArticleImages) {
             throw new Error(response.status + ': ' + response.statusText);
           }
 
-          return response.json();
+          try {
+            return response.json();
+          } catch (error) {
+            throw new Error(error.message);
+          }
         })
           .then(data => {
             if (!data.success || !data.images || data.images.length <= 0) {
