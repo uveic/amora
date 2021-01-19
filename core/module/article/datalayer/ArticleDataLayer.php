@@ -2,6 +2,7 @@
 
 namespace uve\core\module\article\datalayer;
 
+use Throwable;
 use uve\core\database\MySqlDb;
 use uve\core\Logger;
 use uve\core\module\article\model\Article;
@@ -12,8 +13,11 @@ use uve\core\module\article\value\ArticleStatus;
 class ArticleDataLayer
 {
     const ARTICLE_TABLE_NAME = 'article';
-    const ARTICLE_SECTION_TABLE_NAME = 'article_section';
     const ARTICLE_HISTORY_TABLE_NAME = 'article_history';
+
+    const ARTICLE_SECTION_TABLE_NAME = 'article_section';
+    const ARTICLE_SECTION_IMAGE_TABLE_NAME = 'article_section_image';
+
     const ARTICLE_IMAGE_RELATION_TABLE_NAME = 'article_image_relation';
 
     public function __construct(
@@ -139,32 +143,24 @@ class ArticleDataLayer
         Article $article,
         ?string $userIp,
         ?string $userAgent
-    ): Article {
-        $resTransaction = $this->db->withTransaction(
-            function () use ($article, $userIp, $userAgent) {
-                $resInsert = $this->db->insert(self::ARTICLE_TABLE_NAME, $article->asArray());
+    ): ?Article {
 
-                if (empty($resInsert)) {
-                    $this->logger->logError('Error inserting article');
-                    return ['success' => false];
-                }
+        $resInsert = $this->db->insert(self::ARTICLE_TABLE_NAME, $article->asArray());
 
-                $article->setId((int)$resInsert);
+        if (empty($resInsert)) {
+            $this->logger->logError('Error inserting article');
+            return null;
+        }
 
-                $resHistory = $this->insertArticleHistory($article, $userIp, $userAgent);
-                if (empty($resHistory)) {
-                    $this->logger->logError('Error inserting article history');
-                    return ['success' => false];
-                }
+        $article->setId((int)$resInsert);
 
-                return [
-                    'success' => true,
-                    'article' => $article
-                ];
-            }
-        );
+        $resHistory = $this->insertArticleHistory($article, $userIp, $userAgent);
+        if (empty($resHistory)) {
+            $this->logger->logError('Error inserting article history');
+            return null;
+        }
 
-        return $resTransaction['article'];
+        return $article;
     }
 
     public function insertArticleHistory(Article $article, ?string $userIp, ?string $userAgent): bool
@@ -239,9 +235,13 @@ class ArticleDataLayer
                 aSec.article_section_type_id,
                 aSec.content_html,
                 aSec.order,
+                aSecI.image_id,
+                aSecI.caption AS image_caption,
                 aSec.created_at,
                 aSec.updated_at
             FROM ' . self::ARTICLE_SECTION_TABLE_NAME . ' AS aSec
+                LEFT JOIN ' . self::ARTICLE_SECTION_IMAGE_TABLE_NAME . ' AS aSecI
+                    ON aSec.id = aSecI.article_section_id
             WHERE 1
         ';
 
@@ -316,5 +316,75 @@ class ArticleDataLayer
     public function deleteArticleSection(int $articleSectionId): bool
     {
         return $this->db->delete(self::ARTICLE_SECTION_TABLE_NAME, ['id' => $articleSectionId]);
+    }
+
+    public function createArticleSectionImage(
+        int $articleSectionId,
+        int $imageId,
+        ?string $imageCaption
+    ): bool {
+        try {
+            $this->db->insert(
+                ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE_NAME,
+                [
+                    'image_id' => $imageId,
+                    'article_section_id' => $articleSectionId,
+                    'caption' => $imageCaption
+                ]
+            );
+        } catch (Throwable $t) {
+            $this->logger->logError(
+                'Error inserting entry into ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE_NAME .
+                ' - ImageId: ' . $imageId .
+                ' - ArticleSectionId: ' . $articleSectionId .
+                ' - Error message: ' . $t->getMessage()
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    public function updateArticleSectionImage(
+        int $articleSectionId,
+        int $imageId,
+        ?string $imageCaption
+    ): bool {
+        try {
+            $this->db->execute(
+                'UPDATE ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE_NAME .
+                ' SET caption = :caption' .
+                ' WHERE image_id = :imageId
+                    AND article_section_id = :articleSectionId',
+                [
+                    ':imageId' => $imageId,
+                    ':articleSectionId' => $articleSectionId,
+                    ':caption' => $imageCaption
+                ]
+            );
+        } catch (Throwable $t) {
+            $this->logger->logError(
+                'Error updating entry into ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE_NAME .
+                ' - ImageId: ' . $imageId .
+                ' - ArticleSectionId: ' . $articleSectionId .
+                ' - Error message: ' . $t->getMessage()
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    public function deleteArticleSectionImage(int $articleSectionId, int $imageId): bool
+    {
+        return $this->db->execute(
+            'DELETE FROM ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE_NAME .
+            ' WHERE image_id = :imageId
+                AND article_section_id = :articleSectionId',
+            [
+                ':imageId' => $imageId,
+                ':articleSectionId' => $articleSectionId
+            ]
+        );
     }
 }

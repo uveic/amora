@@ -116,6 +116,8 @@ class ArticleService
                 (int)$section['sectionTypeId'],
                 html_entity_decode($section['contentHtml']),
                 isset($section['order']) ? (int)$section['order'] : null,
+                isset($section['imageId']) ? (int)$section['imageId'] : null,
+                $section['imageCaption'] ?? null,
                 $newSectionId && isset($articleSectionsById[$newSectionId])
                     ? $articleSectionsById[$newSectionId]->getUpdatedAt()
                     : $now,
@@ -126,7 +128,7 @@ class ArticleService
         /** @var ArticleSection $section */
         foreach ($newSections as $nSection) {
             if ($nSection->getId() && $articleSectionsById[$nSection->getId()]) {
-                $res = $this->articleDataLayer->updateArticleSection($nSection);
+                $res = $this->updateArticleSection($nSection);
 
                 if (empty($res)) {
                     $this->logger->logError(
@@ -137,7 +139,7 @@ class ArticleService
 
                 unset($articleSectionsById[$nSection->getId()]);
             } else {
-                $res = $this->articleDataLayer->createArticleSection($nSection);
+                $res = $this->createArticleSection($nSection);
 
                 if (empty($res)) {
                     $this->logger->logError(
@@ -149,6 +151,12 @@ class ArticleService
         }
 
         foreach ($articleSectionsById as $articleSection) {
+            if ($articleSection->getImageId()) {
+                $this->articleDataLayer->deleteArticleSectionImage(
+                    $articleSection->getId(),
+                    $articleSection->getImageId()
+                );
+            }
             $this->articleDataLayer->deleteArticleSection($articleSection->getId());
         }
 
@@ -162,14 +170,95 @@ class ArticleService
 
     public function createNewArticle(
         Article $article,
+        ?array $sections,
         ?string $userIp,
         ?string $userAgent
-    ): Article {
-        return $this->articleDataLayer->createNewArticle($article, $userIp, $userAgent);
+    ): ?Article {
+        $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
+            function () use ($article, $sections, $userIp, $userAgent) {
+                $article = $this->articleDataLayer->createNewArticle(
+                    $article,
+                    $userIp,
+                    $userAgent
+                );
+
+                if (empty($article)) {
+                    $this->logger->logError(
+                        'Error creating article. Article ID: ' . $article->getId()
+                    );
+                    return ['success' => false];
+                }
+
+                $resSections = $this->updateCreateOrDeleteArticleSections(
+                    $article->getId(),
+                    $sections
+                );
+
+                if (empty($resSections)) {
+                    $this->logger->logError(
+                        'Error updating article sections. Article ID: ' . $article->getId()
+                    );
+                    return ['success' => false];
+                }
+
+                return [
+                    'success' => true,
+                    'article' => $article
+                ];
+            }
+        );
+
+        return $resTransaction['article'] ?? null;
     }
 
     public function getArticlesForHome(): array
     {
         return $this->articleDataLayer->getArticlesWithStatus(ArticleStatus::PUBLISHED);
+    }
+
+    private function createArticleSection(ArticleSection $section): bool
+    {
+        $res = $this->articleDataLayer->createArticleSection($section);
+
+        if (empty($res)) {
+            return false;
+        }
+
+        if ($section->getImageId()) {
+            $resImage = $this->articleDataLayer->createArticleSectionImage(
+                $section->getId(),
+                $section->getImageId(),
+                $section->getImageCaption()
+            );
+
+            if (empty($resImage)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function updateArticleSection(ArticleSection $section): bool
+    {
+        $res = $this->articleDataLayer->updateArticleSection($section);
+
+        if (empty($res)) {
+            return false;
+        }
+
+        if ($section->getImageId()) {
+            $resImage = $this->articleDataLayer->updateArticleSectionImage(
+                $section->getId(),
+                $section->getImageId(),
+                $section->getImageCaption()
+            );
+
+            if (empty($resImage)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

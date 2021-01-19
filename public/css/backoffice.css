@@ -190,6 +190,23 @@ input.is-light {
   text-align: right;
 }
 
+.article-section-image-delete {
+  position: absolute;
+  background-color: white;
+  color: black;
+  z-index: 999;
+  top: 0;
+  right: 0;
+  padding: 0.5rem 1rem;
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+.article-section-image-delete:hover {
+  opacity: 0.9;
+  color: black;
+}
+
 .placeholder:focus {
   background-color: var(--light-bg-color);
   outline: 0;
@@ -542,8 +559,11 @@ input.is-light {
 .pell-content {
   font-family: var(--font-paragraph);
   height: auto;
-  min-height: 200px;
   padding: 0;
+}
+
+.pell-content:focus {
+  background-color: var(--light-bg-color);
 }
 
 .pell-content h1, .pell-content h2 {

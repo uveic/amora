@@ -231,11 +231,12 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Method: POST
      *
      * @param int $statusId
-     * @param int $typeId
+     * @param int|null $typeId
      * @param string $title
      * @param string $content
      * @param string $uri
      * @param string|null $mainImageSrc
+     * @param array $sections
      * @param Request $request
      * @return Response
      */
@@ -246,6 +247,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         string $content,
         string $uri,
         ?string $mainImageSrc,
+        array $sections,
         Request $request
     ): Response {
         $now = DateUtil::getCurrentDateForMySql();
@@ -264,6 +266,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $uri,
                 []
             ),
+            $sections,
             $request->getSourceIp(),
             $request->getUserAgent()
         );

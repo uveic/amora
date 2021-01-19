@@ -416,13 +416,52 @@
                 "mainImageSrc": {
                   "description": "Article main image source",
                   "type": "string"
+                },
+                "sections": {
+                  "description": "Array with article's sections",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Article's section",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Section ID"
+                      },
+                      "sectionTypeId": {
+                        "type": "integer",
+                        "description": "Section Type ID"
+                      },
+                      "contentHtml": {
+                        "type": "string",
+                        "description": "Content HTML"
+                      },
+                      "order": {
+                        "type": "integer",
+                        "description": "Section order"
+                      },
+                      "imageId": {
+                        "type": "integer",
+                        "description": "Image ID"
+                      },
+                      "imageCaption": {
+                        "type": "string",
+                        "description": "Image caption"
+                      }
+                    },
+                    "required": [
+                      "sectionTypeId",
+                      "contentHtml"
+                    ]
+                  }
                 }
               },
               "required": [
                 "statusId",
                 "title",
                 "content",
-                "uri"
+                "uri",
+                "sections"
               ]
             }
           }
@@ -567,14 +606,18 @@
                         "type": "integer",
                         "description": "Section order"
                       },
-                      "caption": {
+                      "imageId": {
+                        "type": "integer",
+                        "description": "Image ID"
+                      },
+                      "imageCaption": {
                         "type": "string",
                         "description": "Image caption"
                       }
                     },
                     "required": [
                       "sectionTypeId",
-                      "content_html"
+                      "contentHtml"
                     ]
                   }
                 }

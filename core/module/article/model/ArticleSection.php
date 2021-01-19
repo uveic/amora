@@ -10,6 +10,8 @@ class ArticleSection
         private int $articleSectionTypeId,
         private string $contentHtml,
         private ?int $order,
+        private ?int $imageId,
+        private ?string $imageCaption,
         private string $createdAt,
         private string $updatedAt,
     ) {}
@@ -34,6 +36,8 @@ class ArticleSection
             $articleSection['article_section_type_id'],
             $articleSection['content_html'],
             $articleSection['order'],
+            $articleSection['image_id'],
+            $articleSection['image_caption'],
             $createdAt,
             $updatedAt,
         );
@@ -47,6 +51,8 @@ class ArticleSection
             'article_section_type_id' => $this->getArticleSectionTypeId(),
             'content_html' => $this->getContentHtml(),
             'order' => $this->getOrder(),
+            'image_id' => $this->getImageId(),
+            'image_caption' => $this->getImageCaption(),
             'created_at' => $this->getCreatedAt(),
             'updated_at' => $this->getUpdatedAt()
         ];
@@ -80,6 +86,16 @@ class ArticleSection
     public function getOrder(): ?int
     {
         return $this->order;
+    }
+
+    public function getImageId(): ?int
+    {
+        return $this->imageId;
+    }
+
+    public function getImageCaption(): ?string
+    {
+        return $this->imageCaption;
     }
 
     public function getCreatedAt(): string

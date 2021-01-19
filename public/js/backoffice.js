@@ -52,6 +52,12 @@ document.querySelectorAll('#form-article').forEach(el => {
       const sectionTypeId = section.classList.contains('article-section-image')
         ? 2
         : section.classList.contains('article-section-text') ? 1 : 3;
+
+      // Hacky - ToDo: Move remove link outside section content
+      if (sectionTypeId === 2) {
+        section.removeChild(section.lastElementChild);
+      }
+
       let sectionContent = section.innerHTML.trim();
 
       // Hacky but it does de work for now
@@ -67,7 +73,9 @@ document.querySelectorAll('#form-article').forEach(el => {
 
       if (sectionTypeId === 2) {
         const imageCaption = section.getElementsByClassName('article-section-image-caption');
-        currentSection.caption = imageCaption.length > 0 ? imageCaption[0].textContent : null;
+        currentSection.imageCaption = imageCaption.length > 0 ? imageCaption[0].textContent : null;
+        const image = section.getElementsByClassName('article-image');
+        currentSection.imageId = image[0] ? Number.parseInt(image[0].dataset.imageId) : null;
       }
 
       sections.push(currentSection);
@@ -403,6 +411,22 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
   });
 })
 
+const removeImageFromArticle = function(e, imageId) {
+  e.preventDefault();
+
+  const delRes = confirm('Are you sure you want to delete this image?');
+  if (!delRes) {
+    return;
+  }
+
+  const article = document.querySelector('.article-content');
+  document.querySelectorAll('.article-image').forEach(i => {
+    if (Number.parseInt(i.dataset.imageId) === imageId) {
+      article.removeChild(i.parentElement);
+    }
+  });
+};
+
 const inputArticleImages = document.querySelector('input[name="article-add-image-input"]');
 if (inputArticleImages) {
   inputArticleImages.addEventListener('change', e => {
@@ -433,7 +457,7 @@ if (inputArticleImages) {
         imageCaption.contentEditable = 'true';
 
         let image = new Image();
-        image.className = 'opacity preview';
+        image.className = 'opacity article-image';
         image.title = file.name;
         image.src = String(reader.result);
 
@@ -479,6 +503,15 @@ if (inputArticleImages) {
               image.dataset.imageId = imageId;
               imageCaption.textContent = i.url;
               articleSectionImage.removeChild(imgLoading);
+
+              let deleteButton = document.createElement('a');
+              deleteButton.dataset.imageId = imageId;
+              deleteButton.className = 'article-section-image-delete';
+              deleteButton.textContent = 'Remove from article';
+              articleSectionImage.appendChild(deleteButton);
+
+              document.querySelector(".article-section-image-delete[data-image-id='" + imageId + "']")
+                .addEventListener('click', e => removeImageFromArticle(e, imageId));
             });
           }).catch((error) => {
             articleContentDiv.removeChild(articleSectionImage);
@@ -500,3 +533,10 @@ if (inputArticleImages) {
 document.querySelectorAll('.placeholder').forEach(el => {
   el.addEventListener('focus', managePlaceholderForEditableElements)
 })
+
+document.querySelectorAll('.article-section-image-delete').forEach(el => {
+  el.addEventListener('click', e => {
+    const imageId = Number.parseInt(el.dataset.imageId);
+    removeImageFromArticle(e, imageId);
+  });
+});

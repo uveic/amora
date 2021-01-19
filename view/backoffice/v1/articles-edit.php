@@ -53,6 +53,8 @@ function getClassName(int $sectionTypeId): string
                 'class="article-section-image-caption" contenteditable="true"',
                 $contentHtml
             );
+
+            $contentHtml .= '<a href="#" class="article-section-image-delete" data-image-id="' . $articleSection->getImageId() . '">Remove from article</a>';
         }
 
         if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT) {
@@ -61,7 +63,7 @@ function getClassName(int $sectionTypeId): string
             $class .= ' placeholder null';
 ?>
         <div id="<?=$editorId?>">
-          <div class="<?=$editorId?>" contenteditable="true"><?=$articleSection->getContentHtml()?></div>
+          <div class="<?=$editorId?> pell-content" contenteditable="true"><?=$articleSection->getContentHtml()?></div>
         </div>
 <?php } ?>
         <section id="<?=$editorId?>-html" class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>"<?=$placeholder?>>

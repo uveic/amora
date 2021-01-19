@@ -111,6 +111,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string $content
      * @param string $uri
      * @param string|null $mainImageSrc
+     * @param array $sections
      * @param Request $request
      * @return Response
      */
@@ -121,6 +122,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         string $content,
         string $uri,
         ?string $mainImageSrc,
+        array $sections,
         Request $request
     ): Response;
 
@@ -475,6 +477,18 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         $mainImageSrc = $bodyParams['mainImageSrc'] ?? null;
+        $sections = null;
+        if (!isset($bodyParams['sections'])) {
+            $errors[] = [
+                'field' => 'sections',
+                'message' => 'required'
+            ];
+        } else {
+            $sections = isset($bodyParams['sections'])
+                ? $bodyParams['sections']
+                : null;
+        }
+
 
         if (count($errors)) {
             return Response::createBadRequestResponse(
@@ -494,6 +508,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $content,
                 $uri,
                 $mainImageSrc,
+                $sections,
                 $request
             );
         } catch (Throwable $t) {
