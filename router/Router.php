@@ -125,10 +125,11 @@ class Router
         }
 
         $preview = $request->getGetParam('preview');
-        if (!$request->getSession()
-            || (!$request->getSession()->isAdmin()
-                && $article->getStatusId() === ArticleStatus::PUBLISHED
-            ) || !StringUtil::isTrue($preview)
+        if ($article->getStatusId() !== ArticleStatus::PUBLISHED
+            && (!$request->getSession()
+                || !$request->getSession()->isAdmin()
+                || !StringUtil::isTrue($preview)
+            )
         ) {
             return Response::createFrontendPublicHtmlResponse(
                 'shared/404',
