@@ -45,7 +45,7 @@ function request(url, stringPayload, method = 'POST', feedbackDivEl = null, succ
       throw new Error(json.errorMessage ?? 'Something went wrong, please try again.');
     }
 
-    if (successMessage && successMessage) {
+    if (successMessage && feedbackDivEl) {
       feedbackDivEl.classList.remove('null');
       feedbackDivEl.textContent = successMessage;
       feedbackDivEl.classList.remove('feedback-error');
