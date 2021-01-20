@@ -521,7 +521,7 @@ if (inputArticleImages) {
 
               let deleteButton = document.createElement('a');
               deleteButton.dataset.imageId = imageId;
-              deleteButton.className = 'article-section-image-delete';
+              deleteButton.className = 'article-section-image-delete article-section-image-control-button';
               deleteButton.textContent = 'Remove from article';
               articleSectionImage.appendChild(deleteButton);
 
@@ -551,7 +551,28 @@ document.querySelectorAll('.placeholder').forEach(el => {
 
 document.querySelectorAll('.article-section-image-delete').forEach(el => {
   el.addEventListener('click', e => {
+    e.preventDefault();
+
     const imageId = Number.parseInt(el.dataset.imageId);
     removeImageFromArticle(e, imageId);
+  });
+});
+
+document.querySelectorAll('.article-image-control-up').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+
+    const imageId = Number.parseInt(el.dataset.imageId);
+
+    alert('UP: ToDo: ' + imageId);
+  });
+});
+
+document.querySelectorAll('.article-image-control-down').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+
+    const imageId = Number.parseInt(el.dataset.imageId);
+    alert('DOWN: ToDo: ' + imageId);
   });
 });

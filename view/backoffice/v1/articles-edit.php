@@ -54,7 +54,11 @@ function getClassName(int $sectionTypeId): string
                 $contentHtml
             );
 
-            $contentHtml .= '<a href="#" class="article-section-image-delete" data-image-id="' . $articleSection->getImageId() . '">Remove from article</a>';
+            $contentHtml .= '<div class="article-section-image-control">';
+            $contentHtml .= '<a href="#" class="article-section-image-control-button article-image-control-up" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/assets/arrow-fat-up.svg" class="img-svg" alt="Move image up"></a>';
+            $contentHtml .= '<a href="#" class="article-section-image-control-button article-image-control-down" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/assets/arrow-fat-down.svg" class="img-svg" alt="Move image down"></a>';
+            $contentHtml .= '<a href="#" class="article-section-image-control-button article-section-image-delete" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/assets/trash.svg" class="img-svg" alt="Remove image from article"></a>';
+            $contentHtml .= '</div>';
         }
 
         if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT) {
@@ -75,10 +79,10 @@ function getClassName(int $sectionTypeId): string
     <div class="article-add-sections">
       <input class="null" type="file" id="article-add-image-input" name="article-add-image-input" multiple="" accept="image/*">
       <label class="article-add-section-image article-add-section" for="article-add-image-input">
-        <img class="img-svg" src="/img/assets/image.svg" alt="Add image">Add image(s)
+        <img class="img-svg m-r-05" src="/img/assets/image.svg" alt="Add image">Add image(s)
       </label>
-      <button class="article-add-section article-add-section-text"><img class="img-svg" src="/img/assets/article.svg" alt="Add text">Add text</button>
-      <button class="article-add-section article-add-section-video"><img class="img-svg" src="/img/assets/youtube-logo.svg" alt="Add video">Add video</button>
+      <button class="article-add-section article-add-section-text"><img class="img-svg m-r-05" src="/img/assets/article.svg" alt="Add text">Add text</button>
+      <button class="article-add-section article-add-section-video"><img class="img-svg m-r-05" src="/img/assets/youtube-logo.svg" alt="Add video">Add video</button>
     </div>
 <?=$this->insert('partials/article-control-bar', ['responseData' => $responseData])?>
   </form>

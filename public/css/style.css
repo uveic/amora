@@ -89,14 +89,6 @@ p > svg {
   margin-right: 0.4rem;
 }
 
-.img-svg {
-  display: inline-block;
-  max-width: 20px;
-  height: auto;
-  vertical-align: middle;
-  margin: 0 0.5rem 0 0;
-}
-
 footer {
   text-align: center;
   padding: 2rem;
@@ -643,7 +635,8 @@ a.black:focus {
 .null {display: none !important;}
 .hidden {visibility: hidden;}
 
-svg {
+svg,
+.img-svg {
   display: inline-block;
   max-width: 20px;
   height: auto;
