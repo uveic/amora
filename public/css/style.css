@@ -533,6 +533,10 @@ label:not(:last-child) {
   color: var(--light-text-color);
 }
 
+.article-image {
+  margin-top: 1rem;
+}
+
 .article-section-image {
   position: relative;
 }

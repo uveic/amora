@@ -375,9 +375,6 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
     loadEditor(sectionId);
 
     document.querySelector('.' + sectionId).focus();
-    // ToDo: Add placeholder ('Type something...') when text editor is empty
-    // pPlaceholders[pPlaceholders.length - 1]
-    //   .addEventListener('focus', managePlaceholderForEditableElements);
   });
 })
 
@@ -453,7 +450,8 @@ if (inputArticleImages) {
         articleSectionImage.className = 'article-section article-section-image';
 
         let imageCaption = document.createElement('p');
-        imageCaption.className = 'article-section-image-caption';
+        imageCaption.className = 'placeholder article-section-image-caption';
+        imageCaption.dataset.placeholder = 'Type something...';
         imageCaption.contentEditable = 'true';
 
         let image = new Image();
@@ -470,6 +468,10 @@ if (inputArticleImages) {
         articleSectionImage.appendChild(imgLoading);
         articleSectionImage.appendChild(imageCaption);
         articleContentDiv.appendChild(articleSectionImage);
+
+        const pPlaceholders = document.querySelectorAll('.placeholder');
+        pPlaceholders[pPlaceholders.length - 1]
+          .addEventListener('focus', managePlaceholderForEditableElements);
 
         fetch(
           '/api/image',
@@ -501,7 +503,6 @@ if (inputArticleImages) {
               image.classList.remove('opacity');
               image.src = i.url;
               image.dataset.imageId = imageId;
-              imageCaption.textContent = i.url;
               articleSectionImage.removeChild(imgLoading);
 
               let deleteButton = document.createElement('a');
@@ -531,7 +532,7 @@ if (inputArticleImages) {
 }
 
 document.querySelectorAll('.placeholder').forEach(el => {
-  el.addEventListener('focus', managePlaceholderForEditableElements)
+  el.addEventListener('focus', managePlaceholderForEditableElements);
 })
 
 document.querySelectorAll('.article-section-image-delete').forEach(el => {

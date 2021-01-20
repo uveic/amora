@@ -49,8 +49,8 @@ function getClassName(int $sectionTypeId): string
         $contentHtml = $articleSection->getContentHtml();
         if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::IMAGE) {
             $contentHtml = str_replace(
-                'class="article-section-image-caption"',
-                'class="article-section-image-caption" contenteditable="true"',
+                'article-section-image-caption"',
+                'article-section-image-caption" contenteditable="true"',
                 $contentHtml
             );
 
