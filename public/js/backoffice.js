@@ -14,7 +14,7 @@ document.querySelectorAll('#form-article').forEach(el => {
 
     const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
 
-    const afterApiCall = function(response) {
+    const afterApiCall = function(response, articleUri) {
       if (e.submitter.dataset.close) {
         window.location = '/backoffice/articles'
       } else {
@@ -22,7 +22,14 @@ document.querySelectorAll('#form-article').forEach(el => {
           articleIdEl.value = response.articleId;
           history.pushState("", document.title, '/backoffice/articles/' + response.articleId);
         }
-        document.querySelector('.article-creation').classList.remove('hidden');
+        const controlBarButtons = document.querySelector('.article-control-bar-buttons');
+        const previewLink = document.createElement('a');
+        previewLink.href = '/' + articleUri + '?preview=true';
+        previewLink.target = '_blank';
+        previewLink.className = 'm-l-1';
+        previewLink.textContent = 'Preview';
+        controlBarButtons.appendChild(previewLink);
+        document.querySelectorAll('.article-creation').forEach(a => a.classList.remove('hidden'));
         document.querySelectorAll('span.article-updated-at').forEach(s => {
           s.textContent = getUpdatedAtTime(s.dataset.lang);
         });
@@ -93,13 +100,13 @@ document.querySelectorAll('#form-article').forEach(el => {
 
     if (articleIdEl && articleIdEl.value) {
       xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, 'Updated')
-        .then((response) => afterApiCall(response))
+        .then((response) => afterApiCall(response, uri.value))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
     } else {
       xhr.post(url, payload, feedbackDiv, 'Saved')
-        .then((response) => afterApiCall(response))
+        .then((response) => afterApiCall(response, uri.value))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });

@@ -29,10 +29,14 @@ $random = StringUtil::getRandomString(5);
 
 ?>
   <div class="form-control-bar-header m-b-3">
-    <input style="width: revert;" type="submit" class="article-save button m-r-1" value="<?=$article ? 'Update' : 'Save'?>">
-    <input style="width: revert;" type="submit" class="article-save-close button" data-close="1" value="<?=$article ? 'U&C' : 'S&C'?>">
-    <a class="m-l-1" href="/<?=$article ? $article->getUri() : '#'?>?preview=true" target="_blank">Preview</a>
-    <div class="article-creation<?=$article ? '' : ' hidden'?>" style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
+    <div class="article-control-bar-buttons">
+      <input style="width: revert;" type="submit" class="article-save button m-r-1" value="<?=$article ? 'Update' : 'Save'?>">
+      <input style="width: revert;" type="submit" class="article-save-close button" data-close="1" value="<?=$article ? 'U&C' : 'S&C'?>">
+<?php if ($article) {?>
+      <a class="m-l-1" href="/<?=$article->getUri()?>?preview=true" target="_blank">Preview</a>
+<?php } ?>
+    </div>
+    <div class="article-creation<?=$article ? '' : ' hidden'?>"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
     <div class="article-saving null">
       <img src="/img/loading.gif" class="" alt="Saving...">
       <span>Saving...</span>
