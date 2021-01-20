@@ -19,6 +19,7 @@ use uve\core\module\user\service\SessionService;
 use uve\core\module\user\value\UserJourneyStatus;
 use uve\core\util\DateUtil;
 use uve\core\util\StringUtil;
+use uve\router\controller\response\BackofficeApiControllerCheckArticleUriSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerDeleteUserSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerDestroyArticleSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerStoreArticleSuccessResponse;
@@ -224,6 +225,20 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $res,
             $res ? null : 'Something went wrong, please try again.'
         );
+    }
+
+    /**
+     * Endpoint: /back/article/uri
+     * Method: POST
+     *
+     * @param string $uri
+     * @param Request $request
+     * @return Response
+     */
+    protected function checkArticleUri(string $uri, Request $request): Response
+    {
+        $res = $this->articleService->checkUriAndReturnAnAvailableOne($uri);
+        return new BackofficeApiControllerCheckArticleUriSuccessResponse(true, $res);
     }
 
     /**

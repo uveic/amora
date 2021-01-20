@@ -118,13 +118,20 @@ const articleTitleInput = document.querySelector('div#article-title');
 if (articleTitleInput) {
   const articleUriInput = document.querySelector('#form-article input[name="uri"]');
   articleTitleInput.addEventListener('input', () => {
-    articleUriInput.value = cleanTextForUrl(articleTitleInput.innerText);
+    const cleanInput = cleanTextForUrl(articleTitleInput.innerText);
 
-    if (articleTitleInput.innerText.trim().length > 0) {
-      articleTitleInput.classList.add('input-div-clean');
-    } else {
-      articleTitleInput.classList.remove('input-div-clean');
-    }
+    const payload = JSON.stringify({
+      uri: cleanInput
+    });
+
+    xhr.post('/back/article/uri/', payload)
+      .then(response => {
+        articleUriInput.value = response.uri;
+
+        articleTitleInput.innerText.trim().length > 0
+          ? articleTitleInput.classList.add('input-div-clean')
+          : articleTitleInput.classList.remove('input-div-clean');
+      });
   });
 }
 

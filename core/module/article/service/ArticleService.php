@@ -45,6 +45,19 @@ class ArticleService
         return $this->articleDataLayer->getSectionsForArticleId($articleId);
     }
 
+    public function checkUriAndReturnAnAvailableOne(string $uri): string
+    {
+        $count = 0;
+        $validUri = null;
+        do {
+            $validUri = $uri . ($count > 0 ? '-' . $count : '');
+            $res = $this->getArticleForUri($validUri);
+            $count++;
+        } while(!empty($res));
+
+        return $validUri;
+    }
+
     public function updateArticle(
         Article $article,
         array $sections,

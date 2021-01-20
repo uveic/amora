@@ -538,6 +538,103 @@
         }
       }
     },
+    "/back/article/uri": {
+      "post": {
+        "tags": [],
+        "summary": "Check if the uri is available",
+        "description": "Check if the uri is available",
+        "operationId": "checkArticleUri",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "uri": {
+                  "description": "Article URI",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "uri"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "uri": {
+                  "type": "string",
+                  "description": "Valid URI"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "enum": [
+                    "INVALID_PARAMETERS"
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "errorMessage"
+              ]
+            }
+          }
+        }
+      }
+    },
     "/back/article/{articleId}": {
       "put": {
         "tags": [],
