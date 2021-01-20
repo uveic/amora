@@ -1,10 +1,12 @@
 :root {
-  --color-red: #ff625c;
-  --color-red-light: #f7615c;
-  --color-green-light: #2dd770;
   --main-bg-color: #fcfcfc;
   --main-text-color: #212529;
   --main-text-color-hover: #1c1c1c;
+
+  --color-red: #ff625c;
+  --color-red-light: #f7615c;
+  --color-green-light: #2dd770;
+
   --light-bg-color: #f4f4f4;
   --light-bg-color-2: #e8e8e8;
   --light-bg-color-3: #a6a6a6;
@@ -93,6 +95,11 @@ p > svg {
   height: auto;
   vertical-align: middle;
   margin: 0 0.5rem 0 0;
+}
+
+footer {
+  text-align: center;
+  padding: 2rem;
 }
 
 /* Nav style starts here */

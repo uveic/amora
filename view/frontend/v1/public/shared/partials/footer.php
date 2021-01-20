@@ -1,9 +1,15 @@
 <?php
 
-use uve\core\model\response\HtmlResponseData;
+use uve\core\model\response\HtmlResponseDataAuthorised;
 
-/** @var HtmlResponseData $responseData */
+/** @var HtmlResponseDataAuthorised $responseData */
+
+$isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin();
 
 ?>
-<footer></footer>
+<footer>
+<?php if ($isAdmin) { ?>
+  <a href="/backoffice/dashboard">dashboard</a>
+<?php } ?>
+</footer>
 <script type="module" src="/js/main.js"></script>
