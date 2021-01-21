@@ -47,10 +47,15 @@ const generateRandomString = function(length = 10) {
   return Array.from(arr, dec2hex).join('');
 }
 
+const insertAfter = (el, referenceNode) => {
+  referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
+};
+
 export {
   getUpdatedAtTime,
   cleanTextForUrl,
   getYoutubeVideoIdFromUrl,
   managePlaceholderForEditableElements,
-  generateRandomString
+  generateRandomString,
+  insertAfter
 };

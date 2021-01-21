@@ -527,6 +527,7 @@ label:not(:last-child) {
 
 .article-image {
   margin-top: 1rem;
+  width: 100%;
 }
 
 .article-section-image {
