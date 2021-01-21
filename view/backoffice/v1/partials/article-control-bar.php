@@ -33,7 +33,7 @@ $random = StringUtil::getRandomString(5);
       <input style="width: revert;" type="submit" class="article-save button m-r-1" value="<?=$article ? 'Update' : 'Save'?>">
       <input style="width: revert;" type="submit" class="article-save-close button" data-close="1" value="<?=$article ? 'U&C' : 'S&C'?>">
 <?php if ($article) {?>
-      <a class="m-l-1" href="/<?=$article->getUri()?>?preview=true" target="_blank">Preview</a>
+      <a class="article-preview m-l-1" href="/<?=$article->getUri()?>?preview=true" target="_blank">Preview</a>
 <?php } ?>
     </div>
     <div class="article-creation<?=$article ? '' : ' hidden'?>"><?=$updatedAtContent?><br><?=$createdAtContent?></div>

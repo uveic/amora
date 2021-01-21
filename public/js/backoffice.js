@@ -23,13 +23,15 @@ document.querySelectorAll('#form-article').forEach(el => {
           articleIdEl.value = response.articleId;
           history.pushState("", document.title, '/backoffice/articles/' + response.articleId);
         }
-        const controlBarButtons = document.querySelector('.article-control-bar-buttons');
-        const previewLink = document.createElement('a');
-        previewLink.href = '/' + articleUri + '?preview=true';
-        previewLink.target = '_blank';
-        previewLink.className = 'm-l-1';
-        previewLink.textContent = 'Preview';
-        controlBarButtons.appendChild(previewLink);
+        const previewExists = document.querySelector('.article-preview');
+        if (!previewExists) {
+          const previewLink = document.createElement('a');
+          previewLink.href = '/' + articleUri + '?preview=true';
+          previewLink.target = '_blank';
+          previewLink.className = 'article-preview m-l-1';
+          previewLink.textContent = 'Preview';
+          document.querySelectorAll('.article-control-bar-buttons').forEach(b => b.appendChild(previewLink));
+        }
         document.querySelectorAll('.article-creation').forEach(a => a.classList.remove('hidden'));
         document.querySelectorAll('span.article-updated-at').forEach(s => {
           s.textContent = getUpdatedAtTime(s.dataset.lang);
@@ -44,6 +46,9 @@ document.querySelectorAll('#form-article').forEach(el => {
         document.querySelectorAll('input.article-save-close').forEach(b => {
           b.value = 'U&C'
         });
+        document.querySelectorAll('.article-preview').forEach(b => {
+          b.href = response.uri + '?preview=true'
+        });
       }
     };
 
@@ -56,7 +61,8 @@ document.querySelectorAll('#form-article').forEach(el => {
     let sections = [];
     let html = '';
     let order = 1;
-    document.querySelectorAll('section.article-section').forEach(section => {
+    document.querySelectorAll('section.article-section').forEach(sec => {
+      let section = sec.cloneNode(true);
       const sectionTypeId = section.classList.contains('article-section-image')
         ? 2
         : section.classList.contains('article-section-text') ? 1 : 3;

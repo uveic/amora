@@ -483,6 +483,10 @@
                 "articleId": {
                   "type": "integer",
                   "description": "New article ID"
+                },
+                "uri": {
+                  "type": "string",
+                  "description": "Article URI"
                 }
               },
               "required": [
@@ -744,6 +748,10 @@
                 "articleId": {
                   "type": "integer",
                   "description": "New article ID"
+                },
+                "uri": {
+                  "type": "string",
+                  "description": "Article URI"
                 }
               },
               "required": [

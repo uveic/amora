@@ -288,7 +288,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerStoreArticleSuccessResponse(
             $res ? true : false,
-            $res ? $res->getId() : null
+            $res ? $res->getId() : null,
+            $res ? '/' . $res->getUri() : null
         );
     }
 
@@ -350,7 +351,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerUpdateArticleSuccessResponse(
             $res,
-            $res ? $articleId : null
+            $res ? $articleId : null,
+            $res ? '/' . $uri : null
         );
     }
 
