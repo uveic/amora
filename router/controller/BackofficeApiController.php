@@ -231,13 +231,14 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Endpoint: /back/article/uri
      * Method: POST
      *
+     * @param int|null $articleId
      * @param string $uri
      * @param Request $request
      * @return Response
      */
-    protected function checkArticleUri(string $uri, Request $request): Response
+    protected function checkArticleUri(?int $articleId, string $uri, Request $request): Response
     {
-        $res = $this->articleService->checkUriAndReturnAnAvailableOne($uri);
+        $res = $this->articleService->checkUriAndReturnAnAvailableOne($uri, $articleId);
         return new BackofficeApiControllerCheckArticleUriSuccessResponse(true, $res);
     }
 

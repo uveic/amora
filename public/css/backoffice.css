@@ -139,20 +139,11 @@ input.is-light {
   background-color: var(--main-bg-color);
 }
 
-.input-div,
-.input-div:focus {
-  border: 1px solid var(--input-border-color);
-  outline: 0;
-}
-
-.input-div-clean {
-  border: 1px solid transparent;
-}
-
 .article-title {
   margin: 1rem 0;
   padding: 0 1rem;
   line-height: 1.4em;
+  min-height: 33px;
 }
 
 .admin-menu-button {

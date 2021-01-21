@@ -124,21 +124,17 @@ document.querySelectorAll('#form-article').forEach(el => {
 const articleTitleInput = document.querySelector('div#article-title');
 if (articleTitleInput) {
   const articleUriInput = document.querySelector('#form-article input[name="uri"]');
+  const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
   articleTitleInput.addEventListener('input', () => {
     const cleanInput = cleanTextForUrl(articleTitleInput.innerText);
 
     const payload = JSON.stringify({
+      articleId: articleIdEl.value.trim() ? Number.parseInt(articleIdEl.value.trim()) : null,
       uri: cleanInput
     });
 
     xhr.post('/back/article/uri/', payload)
-      .then(response => {
-        articleUriInput.value = response.uri;
-
-        articleTitleInput.innerText.trim().length > 0
-          ? articleTitleInput.classList.add('input-div-clean')
-          : articleTitleInput.classList.remove('input-div-clean');
-      });
+      .then(response => articleUriInput.value = response.uri);
   });
 }
 

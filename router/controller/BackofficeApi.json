@@ -556,6 +556,10 @@
             "required": true,
             "schema": {
               "properties": {
+                "articleId": {
+                  "description": "Article ID",
+                  "type": "integer"
+                },
                 "uri": {
                   "description": "Article URI",
                   "type": "string"

@@ -45,13 +45,16 @@ class ArticleService
         return $this->articleDataLayer->getSectionsForArticleId($articleId);
     }
 
-    public function checkUriAndReturnAnAvailableOne(string $uri): string
+    public function checkUriAndReturnAnAvailableOne(string $uri, int $articleId = null): string
     {
         $count = 0;
         $validUri = null;
         do {
             $validUri = $uri . ($count > 0 ? '-' . $count : '');
             $res = $this->getArticleForUri($validUri);
+            if ($articleId && $res && $res->getId() === $articleId) {
+                $res = null;
+            }
             $count++;
         } while(!empty($res));
 

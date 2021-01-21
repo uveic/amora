@@ -34,7 +34,7 @@ function getClassName(int $sectionTypeId): string
 <?=$this->insert('partials/article-control-bar', ['responseData' => $responseData])?>
     <div class="content-medium-width">
       <input name="articleId" type="hidden" value="<?=$article ? $this->e($article->getId()) : ''?>">
-      <div id="article-title" class="article-title input-div<?=$article && $article->getTitle() ? ' input-div-clean' : ''?>" contenteditable="true"><?=$this->e($article ? $article->getTitle() : ''); ?></div>
+      <div id="article-title" class="article-title placeholder" contenteditable="true" data-placeholder="Title"><?=$this->e($article ? $article->getTitle() : ''); ?></div>
       <div class="article-edit-uri"><?=$this->e(trim($responseData->getBaseUrl(), ' /') . '/')?>
         <input name="uri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->getUri() : ''); ?>">
       </div>
@@ -83,6 +83,7 @@ function getClassName(int $sectionTypeId): string
       </label>
       <button class="article-add-section article-add-section-text"><img class="img-svg m-r-05" src="/img/assets/article.svg" alt="Add text">Add text</button>
       <button class="article-add-section article-add-section-video"><img class="img-svg m-r-05" src="/img/assets/youtube-logo.svg" alt="Add video">Add video</button>
+      <button class="article-add-section article-add-section-html"><img class="img-svg m-r-05" src="/img/assets/code.svg" alt="Add HTML">Add HTML</button>
     </div>
 <?=$this->insert('partials/article-control-bar', ['responseData' => $responseData])?>
   </form>

@@ -132,11 +132,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Endpoint: /back/article/uri
      * Method: POST
      *
+     * @param int|null $articleId
      * @param string $uri
      * @param Request $request
      * @return Response
      */
-    abstract protected function checkArticleUri(string $uri, Request $request): Response;
+    abstract protected function checkArticleUri(
+        ?int $articleId,
+        string $uri,
+        Request $request
+    ): Response;
 
     /**
      * Endpoint: /back/article/{articleId}
@@ -545,6 +550,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
+        $articleId = $bodyParams['articleId'] ?? null;
         $uri = null;
         if (!isset($bodyParams['uri'])) {
             $errors[] = [
@@ -570,6 +576,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         try {
             return $this->checkArticleUri(
+                $articleId,
                 $uri,
                 $request
             );
