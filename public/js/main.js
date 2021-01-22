@@ -170,9 +170,11 @@ document.querySelectorAll('form#form-invite-request').forEach(f => {
     loginFailureFeedback.classList.add('null');
 
     const email = document.querySelector('form#form-invite-request input[name="email"]');
+    const lg = document.querySelector('form#form-invite-request input[name="languageIsoCode"]');
 
     const data = {
-      'email': email.value
+      'email': email.value,
+      'languageIsoCode': lg ? lg.value : null
     };
 
     xhr.post('/papi/invite-request', JSON.stringify(data))

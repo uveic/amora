@@ -223,6 +223,7 @@ final class PublicApiController extends PublicApiControllerAbstract
 
             $existingUser =$this->userService->getUserForEmail($email);
             if (!empty($existingUser)) {
+                // ToDo: Replace $request->getSiteLanguage() with the language sent by the client
                 $siteLanguage = strtolower($request->getSiteLanguage());
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
@@ -299,11 +300,13 @@ final class PublicApiController extends PublicApiControllerAbstract
      * Method: POST
      *
      * @param string $email
+     * @param string|null $languageIsoCode
      * @param Request $request
      * @return Response
      */
     protected function requestRegistrationInvite(
         string $email,
+        ?string $languageIsoCode,
         Request $request
     ): Response {
         $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
@@ -313,7 +316,7 @@ final class PublicApiController extends PublicApiControllerAbstract
 
         $res = $this->userService->storeRegistrationInviteRequest(
             $email,
-            Language::getIdForIsoCode($request->getSiteLanguage())
+            Language::getIdForIsoCode($languageIsoCode)
         );
 
         return new PublicApiControllerRequestRegistrationInviteSuccessResponse(

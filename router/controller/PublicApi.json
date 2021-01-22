@@ -571,6 +571,10 @@
                 "email": {
                   "description": "Email",
                   "type": "string"
+                },
+                "languageIsoCode": {
+                  "description": "Language Iso Code",
+                  "type": "string"
                 }
               },
               "required": [

@@ -138,11 +138,13 @@ abstract class PublicApiControllerAbstract extends AbstractController
      * Method: POST
      *
      * @param string $email
+     * @param string|null $languageIsoCode
      * @param Request $request
      * @return Response
      */
     abstract protected function requestRegistrationInvite(
         string $email,
+        ?string $languageIsoCode,
         Request $request
     ): Response;
 
@@ -566,6 +568,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
                 : null;
         }
 
+        $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
 
         if (count($errors)) {
             return Response::createBadRequestResponse(
@@ -580,6 +583,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
         try {
             return $this->requestRegistrationInvite(
                 $email,
+                $languageIsoCode,
                 $request
             );
         } catch (Throwable $t) {

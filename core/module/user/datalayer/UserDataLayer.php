@@ -264,6 +264,7 @@ class UserDataLayer
             SELECT
                 urr.id,
                 urr.email,
+                urr.language_id,
                 urr.created_at,
                 urr.processed_at,
                 urr.request_code,
