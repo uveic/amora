@@ -3,9 +3,9 @@
 use uve\core\module\user\service\UserService;
 
 return [
-    'siteName' => 'CONVIDADES',
-    'siteTitle' => 'Invitacións de voda dixitais',
-    'siteDescription' => 'Crea e personaliza as túas invitacións de voda no móbil ou ordenador. Envíaas por WhatsApp ou correo electrónico. Recibe confirmacións de asistencia.',
+    'siteName' => 'Victor Gonzalez',
+    'siteTitle' => '',
+    'siteDescription' => 'Son un programador web',
 
     'navDashboard' => 'Escritorio',
     'navCustomiseInvitation' => 'Personalizar invitación',
@@ -40,6 +40,12 @@ return [
     'authenticationPasswordResetSubtitle' => 'Cambia o contrasinal',
     'authenticationPasswordResetActionSuccess' => 'Cambiouse o contrasinal correctamente.',
     'authenticationPasswordResetAlreadyLogin' => 'Queres <a href="%s/login">entrar na túa conta</a> sen cambiar o contrasinal?',
+
+    'authenticationInviteRequest' => 'Consegue unha invitación',
+    'authenticationInviteRequestSubtitle' => 'A web está actualmente nunha beta privada, estamos traballando para asegurarnos de que todo funciona correctamente e con moitas ganas de que estea lista para que a poidas utilizar. Déixanos o teu correo e enviarémosche unha invitación tan pronto como sexa posible. Só utilizaremos o teu correo para enviarche a invitación.<br>Grazas pola túa paciencia!',
+    'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>O teu correo: <b><span id="register-feedback-email"></span></b>.</p><p>Grazas!</p>',
+    'authenticationInviteRequestHomeLink' => 'Volver á páxina principal',
+    'authenticationInviteRequestFormAction' => 'Pedir invitación',
 
     'formPlaceholderUserName' => 'O teu nome',
     'formPlaceholderEmail' => 'O teu correo electrónico',

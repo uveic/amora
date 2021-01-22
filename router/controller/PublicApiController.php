@@ -15,6 +15,7 @@ use uve\router\controller\response\PublicApiControllerForgotPasswordSuccessRespo
 use uve\router\controller\response\PublicApiControllerGetSessionSuccessResponse;
 use uve\router\controller\response\PublicApiControllerLogErrorSuccessResponse;
 use uve\router\controller\response\PublicApiControllerPingSuccessResponse;
+use uve\router\controller\response\PublicApiControllerRequestRegistrationInviteSuccessResponse;
 use uve\router\controller\response\PublicApiControllerUserLoginSuccessResponse;
 use uve\core\model\Request;
 use uve\core\model\Response;
@@ -194,7 +195,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         Request $request
     ): Response {
         try {
-            $isRegistrationEnabled = Core::getConfigValue('registrationActionEnabled');
+            $isRegistrationEnabled = Core::getConfigValue('registrationEnabled');
             if (!$isRegistrationEnabled) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
@@ -290,5 +291,20 @@ final class PublicApiController extends PublicApiControllerAbstract
 
         $res = $this->userService->updatePassword($userId, $password);
         return new PublicApiControllerUserPasswordResetSuccessResponse($res);
+    }
+
+    /**
+     * Endpoint: /papi/invite-register
+     * Method: POST
+     *
+     * @param string $email
+     * @param Request $request
+     * @return Response
+     */
+    protected function requestRegistrationInvite(
+        string $email,
+        Request $request
+    ): Response {
+        return new PublicApiControllerRequestRegistrationInviteSuccessResponse(false);
     }
 }

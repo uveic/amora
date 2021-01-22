@@ -117,13 +117,48 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             return Response::createRedirectResponse('/backoffice/dashboard');
         }
 
-        $isRegistrationEnabled = Core::getConfigValue('registrationActionEnabled');
+        $isRegistrationEnabled = Core::getConfigValue('registrationEnabled');
         if (!$isRegistrationEnabled) {
+            $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
+            if ($isInvitationEnabled) {
+                return Response::createRedirectResponse('/invite-request');
+            }
+
             return Response::createRedirectResponse('/');
         }
 
         return Response::createFrontendPublicHtmlResponse(
             'shared/register',
+            new HtmlResponseData(
+                $request,
+                Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navSignUp')
+            )
+        );
+    }
+
+    /**
+     * Endpoint: /invite-request
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getInviteRequestPage(Request $request): Response
+    {
+        $session = $request->getSession();
+        $isAuthenticated = $session && $session->isAuthenticated();
+        if ($isAuthenticated) {
+            return Response::createRedirectResponse('/backoffice/dashboard');
+        }
+
+
+        $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
+        if (!$isInvitationEnabled) {
+            return Response::createRedirectResponse('/');
+        }
+
+        return Response::createFrontendPublicHtmlResponse(
+            'shared/invite-request',
             new HtmlResponseData(
                 $request,
                 Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navSignUp')

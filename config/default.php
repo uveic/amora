@@ -12,7 +12,8 @@ return [
     'media_base_dir' => '/path/to/your/code/folder/public/uploads',
     'media_base_url' => '/uploads/',
     'action_logger_enabled' => true,
-    'registrationActionEnabled' => false,
+    'registrationEnabled' => false,
+    'invitationEnabled' => true,
     'db' => [
         'core' => [
             'host' => 'localhost',

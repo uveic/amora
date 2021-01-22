@@ -3,9 +3,9 @@
 use uve\core\module\user\service\UserService;
 
 return [
-    'siteName' => 'CONVIDADES',
-    'siteTitle' => 'Invitaciones de boda digitales',
-    'siteDescription' => 'Crea y personaliza invitaciones de boda desde tu móvil u ordenador. Envíalas por WhatsApp o correo electrónico. Recibe confirmaciones de asistencia.',
+    'siteName' => 'Victor Gonzalez',
+    'siteTitle' => '',
+    'siteDescription' => 'Soy un programador web.',
 
     'navDashboard' => 'Escritorio',
     'navCustomiseInvitation' => 'Personalizar invitación',
@@ -40,6 +40,12 @@ return [
     'authenticationPasswordResetSubtitle' => 'Cambia tu contraseña',
     'authenticationPasswordResetActionSuccess' => 'Se ha cambiado la contraseña correctamente.',
     'authenticationPasswordResetAlreadyLogin' => '¿Quieres <a href="%s/login">entrar en tu cuenta</a> sin cambiar tu contraseña?',
+
+    'authenticationInviteRequest' => 'Consigue una invitación',
+    'authenticationInviteRequestSubtitle' => 'La web está actualmente en beta privada, estamos trajando para asegurarnos de que todo funciona correctamente. Tenemos muchas ganas de que esté lista para que la puedas utilizar. Déjanos tu correo y te enviaremos una invitación tan pronto como sea posible. Solo utilizaremos tu correo para enviarte la invitación. <br>¡Gracias por tu paciencia!',
+    'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>Tu correo: <b><span id="register-feedback-email"></span></b>.</p><p>¡Gracias!</p>',
+    'authenticationInviteRequestHomeLink' => 'Volver a la página principal',
+    'authenticationInviteRequestFormAction' => 'Pedir una invitación',
 
     'formPlaceholderUserName' => 'Tu nombre',
     'formPlaceholderEmail' => 'Tu correo electrónico',

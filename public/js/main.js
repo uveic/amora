@@ -163,3 +163,26 @@ document.querySelectorAll('a.language-picker').forEach(el => {
     }
   });
 });
+
+document.querySelectorAll('form#form-invite-request').forEach(f => {
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+    loginFailureFeedback.classList.add('null');
+
+    const email = document.querySelector('form#form-invite-request input[name="email"]');
+
+    const data = {
+      'email': email.value
+    };
+
+    xhr.post('/papi/invite-request', JSON.stringify(data))
+      .then(() => {
+        document.querySelector('span#register-feedback-email').textContent = email.value;
+        document.querySelector('div.div-request-form').classList.add('null');
+        document.querySelector('div#request-form-feedback').classList.remove('null');
+      }).catch((error) => {
+        loginFailureFeedback.textContent = error.message;
+        loginFailureFeedback.classList.remove('null');
+      });
+  });
+});

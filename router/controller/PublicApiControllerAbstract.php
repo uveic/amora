@@ -23,6 +23,8 @@ abstract class PublicApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/router/controller/response/PublicApiControllerUserPasswordResetFailureResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/PublicApiControllerUserRegistrationSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/PublicApiControllerUserRegistrationFailureResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/PublicApiControllerRequestRegistrationInviteSuccessResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/PublicApiControllerRequestRegistrationInviteFailureResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -128,6 +130,19 @@ abstract class PublicApiControllerAbstract extends AbstractController
         string $password,
         string $name,
         int $timezoneOffsetMinutes,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /papi/invite-request
+     * Method: POST
+     *
+     * @param string $email
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function requestRegistrationInvite(
+        string $email,
         Request $request
     ): Response;
 
@@ -526,6 +541,56 @@ abstract class PublicApiControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallRequestRegistrationInvite(Request $request)
+    {
+        $bodyParams = $request->getBodyPayload();
+        $errors = [];
+
+        if (!isset($bodyParams)) {
+            $errors[] = [
+                'field' => 'payload',
+                'message' => 'required'
+            ];
+        }
+
+        $email = null;
+        if (!isset($bodyParams['email'])) {
+            $errors[] = [
+                'field' => 'email',
+                'message' => 'required'
+            ];
+        } else {
+            $email = isset($bodyParams['email'])
+                ? $bodyParams['email']
+                : null;
+        }
+
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->requestRegistrationInvite(
+                $email,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicApiControllerAbstract - Method: requestRegistrationInvite()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): Response
     {
@@ -606,6 +671,16 @@ abstract class PublicApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallUserRegistration($request);
+        }
+
+        if ($method === 'POST' &&
+            $this->pathParamsMatcher(
+                ['papi', 'invite-request'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallRequestRegistrationInvite($request);
         }
 
         return Response::createNotFoundResponse();

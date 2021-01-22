@@ -16,6 +16,7 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetLoginPageSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetForgotPasswordPageSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetRegistrationPageSuccessResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetInviteRequestPageSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetUserVerifiedHtmlSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetPasswordChangeHtmlSuccessResponse.php';
     }
@@ -57,6 +58,15 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function getRegistrationPage(Request $request): Response;
+
+    /**
+     * Endpoint: /invite-request
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getInviteRequestPage(Request $request): Response;
 
     /**
      * Endpoint: /user/verify/{verificationIdentifier}
@@ -189,6 +199,34 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in PublicHtmlControllerAbstract - Method: getRegistrationPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetInviteRequestPage(Request $request)
+    {
+        $errors = [];
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getInviteRequestPage(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicHtmlControllerAbstract - Method: getInviteRequestPage()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -337,6 +375,16 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetRegistrationPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['invite-request'],
+                $pathParts,
+                ['fixed']
+            )
+        ) {
+            return $this->validateAndCallGetInviteRequestPage($request);
         }
 
         if ($method === 'GET' &&
