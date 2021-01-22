@@ -156,8 +156,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 null,
                 null,
                 null,
-                null,
-                null,
+                [],
                 new UserFeedback($isError, $message),
             )
         );
