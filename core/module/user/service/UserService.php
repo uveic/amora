@@ -8,6 +8,7 @@ use uve\core\Logger;
 use uve\core\model\response\UserFeedback;
 use uve\core\module\user\datalayer\UserDataLayer;
 use uve\core\module\user\model\User;
+use uve\core\module\user\model\UserRegistrationRequest;
 use uve\core\module\user\model\UserVerification;
 use uve\core\module\user\value\VerificationType;
 use uve\core\util\DateUtil;
@@ -313,5 +314,39 @@ class UserService
         }
 
         return $validation;
+    }
+
+    public function storeRegistrationInviteRequest(
+        string $email,
+        int $languageId
+    ): UserRegistrationRequest
+    {
+        $res = $this->userDataLayer->getUserRegistrationRequest(null, $email);
+        if ($res) {
+            return $res;
+        }
+
+        $requestCode = $this->getUniqueUserRegistrationRequestCode();
+        return $this->userDataLayer->storeRegistrationInviteRequest(
+            new UserRegistrationRequest(
+                null,
+                $email,
+                $languageId,
+                DateUtil::getCurrentDateForMySql(),
+                null,
+                $requestCode,
+                null
+            )
+        );
+    }
+
+    private function getUniqueUserRegistrationRequestCode(): string
+    {
+        do {
+            $code = StringUtil::getRandomString(64);
+            $res = $this->userDataLayer->getUserRegistrationRequest($code);
+        } while(!empty($res));
+
+        return $code;
     }
 }

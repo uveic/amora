@@ -32,9 +32,9 @@ class UserVerification
 
     public static function fromArray(array $item): self
     {
-        $id = empty($item['id'])
-            ? (empty($item['user_verification_id']) ? null : $item['user_verification_id'])
-            : (int)$item['id'];
+        $id = empty($item['user_verification_id'])
+            ? (empty($item['id']) ? null : (int)$item['id'])
+            : (int)$item['user_verification_id'];
 
         return new self(
             $id,

@@ -232,6 +232,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             }
 
             $languageId = Language::getIdForIsoCode($request->getSiteLanguage());
+            // ToDo
             $user = $this->userService->storeUser(
                 new User(
 
@@ -305,6 +306,18 @@ final class PublicApiController extends PublicApiControllerAbstract
         string $email,
         Request $request
     ): Response {
-        return new PublicApiControllerRequestRegistrationInviteSuccessResponse(false);
+        $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
+        if (!$isInvitationEnabled) {
+            return new PublicApiControllerRequestRegistrationInviteSuccessResponse(false);
+        }
+
+        $res = $this->userService->storeRegistrationInviteRequest(
+            $email,
+            Language::getIdForIsoCode($request->getSiteLanguage())
+        );
+
+        return new PublicApiControllerRequestRegistrationInviteSuccessResponse(
+            $res ? true : false
+        );
     }
 }

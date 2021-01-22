@@ -5,6 +5,7 @@ namespace uve\core\module\user\datalayer;
 use uve\core\database\MySqlDb;
 use uve\core\Logger;
 use uve\core\module\user\model\User;
+use uve\core\module\user\model\UserRegistrationRequest;
 use uve\core\module\user\model\UserVerification;
 use uve\core\util\DateUtil;
 
@@ -12,6 +13,7 @@ class UserDataLayer
 {
     const USER_TABLE_NAME = 'user';
     const USER_VERIFICATION_TABLE_NAME = 'user_verification';
+    const USER_REGISTRATION_REQUEST_TABLE_NAME = 'user_registration_request';
 
     private MySqlDb $db;
     private Logger $logger;
@@ -247,5 +249,59 @@ class UserDataLayer
         ];
 
         return $this->db->execute($sql, $params);
+    }
+
+    public function getUserRegistrationRequest(
+        ?string $code = null,
+        ?string $email = null
+    ): ?UserRegistrationRequest {
+        if (empty($code) && empty($email)) {
+            return null;
+        }
+
+        $params = [];
+        $sql = '
+            SELECT
+                urr.id,
+                urr.email,
+                urr.created_at,
+                urr.processed_at,
+                urr.request_code,
+                urr.user_id
+            FROM ' . self::USER_REGISTRATION_REQUEST_TABLE_NAME . ' AS urr
+            WHERE 1
+        ';
+
+        if ($code) {
+            $sql .= ' AND urr.request_code = :code';
+            $params[':code'] = $code;
+        }
+
+        if ($email) {
+            $sql .= ' AND urr.email = :email';
+            $params[':email'] = $email;
+        }
+
+        $res = $this->db->fetchOne($sql, $params);
+
+        if ($res) {
+            return UserRegistrationRequest::fromArray($res);
+        }
+
+        return null;
+    }
+
+    public function storeRegistrationInviteRequest(
+        UserRegistrationRequest $data
+    ): UserRegistrationRequest {
+        $res = $this->db->insert(self::USER_REGISTRATION_REQUEST_TABLE_NAME, $data->asArray());
+
+        if (empty($res)) {
+            $this->logger->logError('Error inserting user registration request data');
+        }
+
+        $data->setId((int)$res);
+
+        return $data;
     }
 }
