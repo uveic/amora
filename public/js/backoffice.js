@@ -8,6 +8,7 @@ import {
 } from './util.js';
 import {xhr} from './xhr.js';
 import {feedbackDiv} from './authorised.js';
+import {loadEditor} from './editor.js';
 
 document.querySelectorAll('#form-article').forEach(el => {
   el.addEventListener('submit', e => {
@@ -386,7 +387,7 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
     e.preventDefault();
 
     const existingSections = document.querySelectorAll('section.article-section');
-    if (existingSections &&
+    if (existingSections.length &&
       existingSections[existingSections.length - 1].classList.contains('article-section-text')
     ) {
       let id = existingSections[existingSections.length - 1].dataset.sectionId
@@ -453,7 +454,7 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
   });
 })
 
-const removeImageFromArticle = function(e, imageId) {
+const removeSection = function(e, sectionId) {
   e.preventDefault();
 
   const delRes = confirm('Are you sure you want to delete this image?');
@@ -462,11 +463,20 @@ const removeImageFromArticle = function(e, imageId) {
   }
 
   const article = document.querySelector('.article-content');
-  document.querySelectorAll('.article-image').forEach(i => {
-    if (Number.parseInt(i.dataset.imageId) === imageId) {
-      article.removeChild(i.parentElement);
+  const section = document.querySelector('section[data-section-id="' + sectionId + '"]')
+    ?? document.querySelector('section[data-editor-id="' + sectionId + '"]');
+
+  if (article && section) {
+    article.removeChild(section);
+  }
+
+  const sectionHtml = document.querySelector('#article-section-text-' + sectionId + '-html');
+  if (sectionHtml) {
+    const divHtml = document.querySelector('.article-content-text');
+    if (divHtml) {
+      divHtml.removeChild(sectionHtml);
     }
-  });
+  }
 };
 
 const moveSectionUp = function(e, selectedSection) {
@@ -599,7 +609,7 @@ if (inputArticleImages) {
 
               let deleteButton = document.createElement('a');
               deleteButton.dataset.imageId = imageId;
-              deleteButton.className = 'article-section-image-control-button article-section-image-delete';
+              deleteButton.className = 'article-section-control-button article-section-control-delete';
               deleteButton.appendChild(trashImg);
 
               let arrowUpImg = new Image();
@@ -610,7 +620,7 @@ if (inputArticleImages) {
 
               let moveUpButton = document.createElement('a');
               moveUpButton.dataset.imageId = imageId;
-              moveUpButton.className = 'article-section-image-control-button article-image-control-up';
+              moveUpButton.className = 'article-section-control-button article-section-control-up';
               moveUpButton.appendChild(arrowUpImg);
 
               let arrowDownImg = new Image();
@@ -621,7 +631,7 @@ if (inputArticleImages) {
 
               let moveDownButton = document.createElement('a');
               moveDownButton.dataset.imageId = imageId;
-              moveDownButton.className = 'article-section-image-control-button article-image-control-down';
+              moveDownButton.className = 'article-section-control-button article-section-control-down';
               moveDownButton.appendChild(arrowDownImg);
 
               divImageControl.appendChild(moveUpButton);
@@ -632,12 +642,12 @@ if (inputArticleImages) {
               articleSectionImage.id = 'article-section-image-' + randomString + '-html';
               articleSectionImage.dataset.sectionId = randomString;
 
-              document.querySelector(".article-section-image-delete[data-image-id='" + imageId + "']")
-                .addEventListener('click', e => removeImageFromArticle(e, imageId));
+              document.querySelector(".article-section-control-delete[data-image-id='" + imageId + "']")
+                .addEventListener('click', e => removeSection(e, randomString));
               const newSection = document.querySelector('#article-section-image-' + randomString + '-html');
-              document.querySelector(".article-image-control-down[data-image-id='" + imageId + "']")
+              document.querySelector(".article-section-control-down[data-image-id='" + imageId + "']")
                 .addEventListener('click', e => moveSectionDown(e, newSection));
-              document.querySelector(".article-image-control-up[data-image-id='" + imageId + "']")
+              document.querySelector(".article-section-control-up[data-image-id='" + imageId + "']")
                 .addEventListener('click', e => moveSectionUp(e, newSection));
             });
           }).catch((error) => {
@@ -661,19 +671,27 @@ document.querySelectorAll('.placeholder').forEach(el => {
   el.addEventListener('focus', managePlaceholderForEditableElements);
 })
 
-document.querySelectorAll('.article-section-image-delete').forEach(el => {
+document.querySelectorAll('.article-section-control-delete').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
 
-    const imageId = Number.parseInt(el.dataset.imageId);
-    removeImageFromArticle(e, imageId);
+    const sectionId = Number.parseInt(el.parentNode.parentNode.dataset.sectionId);
+    removeSection(e, sectionId);
   });
 });
 
-document.querySelectorAll('.article-image-control-up').forEach(el => {
+document.querySelectorAll('.article-section-control-up').forEach(el => {
   el.addEventListener('click', e => moveSectionUp(e, el.parentNode.parentNode));
 });
 
-document.querySelectorAll('.article-image-control-down').forEach(el => {
+document.querySelectorAll('.article-section-control-down').forEach(el => {
   el.addEventListener('click', e => moveSectionDown(e, el.parentNode.parentNode));
 });
+
+document.querySelectorAll('section.article-section-text').forEach(s => loadEditor(s.id));
+
+export {
+  moveSectionUp,
+  moveSectionDown,
+  removeSection
+};

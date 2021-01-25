@@ -186,6 +186,10 @@ input.is-light {
   min-height: 200px;
 }
 
+.article-section {
+  position: relative;
+}
+
 .article-section-image-caption {
   min-height: 30px;
 }
@@ -197,7 +201,7 @@ input.is-light {
   right: 0;
 }
 
-.article-section-image-control-button {
+.article-section-control-button {
   background-color: white;
   color: black;
   padding: 1rem 1.35rem;
@@ -207,7 +211,7 @@ input.is-light {
   outline: 0;
 }
 
-.article-section-image-control-button:hover {
+.article-section-control-button:hover {
   opacity: 0.9;
   color: black;
 }

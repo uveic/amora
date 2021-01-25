@@ -1,3 +1,5 @@
+import {moveSectionUp, moveSectionDown, removeSection} from './backoffice.js';
+
 const defaultParagraphSeparatorString = 'defaultParagraphSeparator';
 const formatBlock = 'formatBlock';
 const addEventListener = (parent, type, listener) => parent.addEventListener(type, listener);
@@ -95,6 +97,29 @@ const defaultActions = {
     result: () => {
       exec('removeFormat');
     }
+  },
+  moveUp: {
+    icon: 'UP',
+    title: 'Move Section Up',
+    result: (event) => {
+      moveSectionUp(event, event.target.parentNode.parentNode);
+    }
+  },
+  moveDown: {
+    icon: 'DOWN',
+    title: 'Move Section Down',
+    result: (event) => {
+      moveSectionDown(event, event.target.parentNode.parentNode);
+    }
+  },
+  moveToTrash: {
+    icon: 'TRASH',
+    title: 'Remove Section',
+    result: (event) => {
+      const sectionId = event.target.parentNode.parentNode.dataset.sectionId
+        ?? event.target.parentNode.parentNode.dataset.editorId;
+      removeSection(event, sectionId);
+    }
   }
 };
 
@@ -156,7 +181,7 @@ const init = function(settings) {
     button.innerHTML = action.icon;
     button.title = action.title;
     button.setAttribute('type', 'button');
-    button.onclick = () => action.result() && content.focus();
+    button.onclick = (e) => action.result(e) && content.focus();
 
     if (action.state) {
       const handler = () => button.classList[action.state() ? 'add' : 'remove'](classes.selected);
@@ -191,11 +216,17 @@ function loadEditor(elementId, elementHtmlId = null) {
       'heading2',
       'paragraph',
       'link',
-      'image',
-      'eraser'
+      'eraser',
+      'moveUp',
+      'moveDown',
+      'moveToTrash',
     ],
     classes: {
       editorId: elementId
     }
   });
 }
+
+export {
+  loadEditor
+};

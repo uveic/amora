@@ -55,9 +55,9 @@ function getClassName(int $sectionTypeId): string
             );
 
             $contentHtml .= '<div class="article-section-image-control">';
-            $contentHtml .= '<a href="#" class="article-section-image-control-button article-image-control-up" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/assets/arrow-fat-up.svg" class="img-svg" alt="Move image up"></a>';
-            $contentHtml .= '<a href="#" class="article-section-image-control-button article-image-control-down" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/assets/arrow-fat-down.svg" class="img-svg" alt="Move image down"></a>';
-            $contentHtml .= '<a href="#" class="article-section-image-control-button article-section-image-delete" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/assets/trash.svg" class="img-svg" alt="Remove image from article"></a>';
+            $contentHtml .= '<a href="#" class="article-section-control-button article-section-control-up" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/assets/arrow-fat-up.svg" class="img-svg" alt="Move image up"></a>';
+            $contentHtml .= '<a href="#" class="article-section-control-button article-section-control-down" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/assets/arrow-fat-down.svg" class="img-svg" alt="Move image down"></a>';
+            $contentHtml .= '<a href="#" class="article-section-control-button article-section-control-delete" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/assets/trash.svg" class="img-svg" alt="Remove image from article"></a>';
             $contentHtml .= '</div>';
         }
 
@@ -92,11 +92,3 @@ function getClassName(int $sectionTypeId): string
 <?=$this->insert('partials/article-edit/control-bar', ['responseData' => $responseData])?>
   </form>
 </section>
-<script src="/js/editor.js"></script>
-<script>
-<?php
-    foreach ($editorIds as $editorId) {
-        echo "loadEditor('" . $editorId . "');" . PHP_EOL;
-    }
-?>
-</script>
