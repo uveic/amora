@@ -51,6 +51,21 @@ document.querySelectorAll('#form-article').forEach(el => {
         });
       }
     };
+    const getSectionTypeIdFromClassList = function(classList) {
+      if (classList.contains('article-section-text')) {
+        return 1;
+      }
+
+      if (classList.contains('article-section-image')) {
+        return 2;
+      }
+
+      if (classList.contains('article-section-video')) {
+        return 3;
+      }
+
+      return 0;
+    };
 
     const title = document.querySelector('div#article-title');
     const uri = document.querySelector('#form-article input[name="uri"]');
@@ -63,16 +78,16 @@ document.querySelectorAll('#form-article').forEach(el => {
     let order = 1;
     document.querySelectorAll('section.article-section').forEach(sec => {
       let section = sec.cloneNode(true);
-      const sectionTypeId = section.classList.contains('article-section-image')
-        ? 2
-        : section.classList.contains('article-section-text') ? 1 : 3;
+      let editorId = section.dataset.sectionId ?? section.dataset.editorId;
 
       // Hacky - ToDo: Move remove link outside section content
-      if (sectionTypeId === 2) {
+      if (section.classList.contains('article-section-image')) {
         section.removeChild(section.lastElementChild);
       }
 
-      let sectionContent = section.innerHTML.trim();
+      let sectionContent = section.classList.contains('article-section-text')
+        ? document.querySelector('#article-section-text-' + editorId + '-html').innerHTML.trim()
+        : section.innerHTML.trim();
 
       // Hacky but it does de work for now
       sectionContent = sectionContent.replace('contenteditable="true"', '');
@@ -80,12 +95,12 @@ document.querySelectorAll('#form-article').forEach(el => {
       html += sectionContent;
       let currentSection = {
         id: section.dataset.sectionId ? Number.parseInt(section.dataset.sectionId) : null,
-        sectionTypeId: sectionTypeId,
+        sectionTypeId: getSectionTypeIdFromClassList(section.classList),
         contentHtml: sectionContent,
         order: order++
       };
 
-      if (sectionTypeId === 2) {
+      if (section.classList.contains('article-section-image')) {
         const imageCaption = section.getElementsByClassName('article-section-image-caption');
         currentSection.imageCaption = imageCaption.length > 0 ? imageCaption[0].textContent : null;
         const image = section.getElementsByClassName('article-image');
@@ -206,7 +221,7 @@ if (inputFileImages) {
         articleImageDiv.className = 'image-item';
         let image = new Image();
         image.className = 'opacity preview';
-        image.title = file.name;
+        image.alt = file.name;
         image.src = String(reader.result);
         let imgLoading = new Image();
         imgLoading.className = 'justify-center';
@@ -233,7 +248,7 @@ if (inputFileImages) {
           .then(data => {
             if (!data.success || !data.images || data.images.length <= 0) {
               throw new Error(
-                data.errorMessage ?? 'Something went wrong, please try again: ' + image.title
+                data.errorMessage ?? 'Something went wrong, please try again: ' + image.src
               );
             }
 
@@ -370,24 +385,27 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
   bu.addEventListener('click', e => {
     e.preventDefault();
 
-    const articleContentDiv = document.querySelector('article.article-content');
-    const sectionId = 'article-section-text-' + generateRandomString(5);
+    const articleContentHtml = document.querySelector('div.article-content-text');
+    const articleContent = document.querySelector('article.article-content');
+    const id = generateRandomString(5);
+    const sectionId = 'article-section-text-' + id;
+
+    let articleSectionTextHtml = document.createElement('div');
+    articleSectionTextHtml.id = sectionId + '-html';
 
     let articleSectionText = document.createElement('section');
-    articleSectionText.id = sectionId + '-html';
-    articleSectionText.className = 'article-section article-section-text placeholder null';
+    articleSectionText.id = sectionId;
+    articleSectionText.dataset.editorId = id;
+    articleSectionText.className = 'article-section article-section-text placeholder';
     articleSectionText.dataset.placeholder = 'Type something...';
-
-    let divSection = document.createElement('div');
-    divSection.id = sectionId;
 
     let divEditor = document.createElement('div');
     divEditor.className = 'pell-content ' + sectionId;
     divEditor.contentEditable = 'true';
-    divSection.appendChild(divEditor);
+    articleSectionText.appendChild(divEditor);
 
-    articleContentDiv.appendChild(divSection);
-    articleContentDiv.appendChild(articleSectionText);
+    articleContent.appendChild(articleSectionText);
+    articleContentHtml.appendChild(articleSectionTextHtml);
 
     loadEditor(sectionId);
 
@@ -510,7 +528,6 @@ if (inputArticleImages) {
 
         let image = new Image();
         image.className = 'opacity article-image';
-        image.title = file.name;
         image.src = String(reader.result);
 
         let imgLoading = new Image();
@@ -547,7 +564,7 @@ if (inputArticleImages) {
           .then(data => {
             if (!data.success || !data.images || data.images.length <= 0) {
               throw new Error(
-                data.errorMessage ?? 'Something went wrong, please try again: ' + image.title
+                data.errorMessage ?? 'Something went wrong, please try again. Image: ' + image.src
               );
             }
 
@@ -558,6 +575,7 @@ if (inputArticleImages) {
               image.classList.remove('opacity');
               image.src = i.url;
               image.dataset.imageId = imageId;
+              image.alt = i.caption ?? i.url;
               articleSectionImage.removeChild(imgLoading);
 
               let divImageControl = document.createElement('div');

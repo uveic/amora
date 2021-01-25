@@ -31,7 +31,7 @@ function getClassName(int $sectionTypeId): string
         <a href="/backoffice/articles" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
       </div>
     </div>
-<?=$this->insert('partials/article-control-bar', ['responseData' => $responseData])?>
+<?=$this->insert('partials/article-edit/control-bar', ['responseData' => $responseData])?>
     <div class="content-medium-width">
       <input name="articleId" type="hidden" value="<?=$article ? $this->e($article->getId()) : ''?>">
       <div id="article-title" class="article-title placeholder" contenteditable="true" data-placeholder="Title"><?=$this->e($article ? $article->getTitle() : ''); ?></div>
@@ -66,26 +66,30 @@ function getClassName(int $sectionTypeId): string
             $placeholder =' data-placeholder="Type something..."';
             $class .= ' placeholder null';
 ?>
-        <div id="<?=$editorId?>">
-          <div class="<?=$editorId?> pell-content" contenteditable="true"><?=$articleSection->getContentHtml()?></div>
-        </div>
-<?php } ?>
-        <section id="<?=$editorId?>-html" class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>"<?=$placeholder?>>
-          <?=$contentHtml . PHP_EOL?>
+        <section id="<?=$editorId?>" class="article-section <?=getClassName($articleSection->getArticleSectionTypeId())?>" data-section-id="<?=$articleSection->getId()?>">
+          <div class="<?=$editorId?> placeholder pell-content" contenteditable="true"><?=$articleSection->getContentHtml()?></div>
+        </section>
+<?php } else { ?>
+        <section class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>">
+            <?=$contentHtml . PHP_EOL?>
         </section>
 <?php } ?>
+<?php } ?>
       </article>
+      <div class="article-content-text null">
+<?php
+    foreach ($articleSections as $articleSection) {
+        $editorId = getClassName($articleSection->getArticleSectionTypeId()) . '-' . $articleSection->getId();
+        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT) {
+?>
+        <div id="<?=$editorId?>-html">
+            <?=$articleSection->getContentHtml() . PHP_EOL?>
+        </div>
+<?php } } ?>
+      </div>
     </div>
-    <div class="article-add-sections">
-      <input class="null" type="file" id="article-add-image-input" name="article-add-image-input" multiple="" accept="image/*">
-      <label class="article-add-section-image article-add-section" for="article-add-image-input">
-        <img class="img-svg m-r-05" src="/img/assets/image.svg" alt="Add image">Add image(s)
-      </label>
-      <button class="article-add-section article-add-section-text"><img class="img-svg m-r-05" src="/img/assets/article.svg" alt="Add text">Add text</button>
-      <button class="article-add-section article-add-section-video"><img class="img-svg m-r-05" src="/img/assets/youtube-logo.svg" alt="Add video">Add video</button>
-      <button class="article-add-section article-add-section-html"><img class="img-svg m-r-05" src="/img/assets/code.svg" alt="Add HTML">Add HTML</button>
-    </div>
-<?=$this->insert('partials/article-control-bar', ['responseData' => $responseData])?>
+<?=$this->insert('partials/article-edit/add-sections', ['responseData' => $responseData])?>
+<?=$this->insert('partials/article-edit/control-bar', ['responseData' => $responseData])?>
   </form>
 </section>
 <script src="/js/editor.js"></script>

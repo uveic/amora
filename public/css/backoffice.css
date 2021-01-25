@@ -561,6 +561,7 @@ input.is-light {
   font-family: var(--font-paragraph);
   height: auto;
   padding: 0;
+  min-height: 50px;
 }
 
 .pell-content:focus {
