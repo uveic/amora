@@ -66,7 +66,7 @@ function getClassName(int $sectionTypeId): string
             $placeholder =' data-placeholder="Type something..."';
             $class .= ' placeholder null';
 ?>
-        <section id="<?=$editorId?>" class="article-section <?=getClassName($articleSection->getArticleSectionTypeId())?>" data-section-id="<?=$articleSection->getId()?>">
+        <section id="<?=$editorId?>" class="article-section article-content <?=getClassName($articleSection->getArticleSectionTypeId())?>" data-section-id="<?=$articleSection->getId()?>">
           <div class="<?=$editorId?> placeholder pell-content" contenteditable="true"><?=$articleSection->getContentHtml()?></div>
         </section>
 <?php } else { ?>

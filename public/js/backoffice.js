@@ -385,6 +385,16 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
   bu.addEventListener('click', e => {
     e.preventDefault();
 
+    const existingSections = document.querySelectorAll('section.article-section');
+    if (existingSections &&
+      existingSections[existingSections.length - 1].classList.contains('article-section-text')
+    ) {
+      let id = existingSections[existingSections.length - 1].dataset.sectionId
+        ?? existingSections[existingSections.length - 1].dataset.editorId;
+      document.querySelector('.article-section-text-' + id).focus();
+      return;
+    }
+
     const articleContentHtml = document.querySelector('div.article-content-text');
     const articleContent = document.querySelector('article.article-content');
     const id = generateRandomString(5);
@@ -396,7 +406,7 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
     let articleSectionText = document.createElement('section');
     articleSectionText.id = sectionId;
     articleSectionText.dataset.editorId = id;
-    articleSectionText.className = 'article-section article-section-text placeholder';
+    articleSectionText.className = 'article-section article-content article-section-text placeholder';
     articleSectionText.dataset.placeholder = 'Type something...';
 
     let divEditor = document.createElement('div');
