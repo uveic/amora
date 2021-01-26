@@ -23,7 +23,7 @@ use uve\core\module\user\service\UserService;
 use uve\router\controller\response\PublicApiControllerUserPasswordResetSuccessResponse;
 use uve\router\controller\response\PublicApiControllerUserRegistrationFailureResponse;
 use uve\router\controller\response\PublicApiControllerUserRegistrationSuccessResponse;
-use uve\value\Language;
+use uve\core\value\Language;
 
 final class PublicApiController extends PublicApiControllerAbstract
 {

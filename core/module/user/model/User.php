@@ -2,7 +2,7 @@
 
 namespace uve\core\module\user\model;
 
-use uve\value\Language;
+use uve\core\value\Language;
 use uve\core\module\user\value\UserRole;
 
 class User

@@ -5,7 +5,7 @@ namespace uve\core\model;
 use uve\core\Core;
 use uve\core\module\user\model\Session;
 use uve\core\module\user\UserCore;
-use uve\value\Language;
+use uve\core\value\Language;
 
 final class Request
 {

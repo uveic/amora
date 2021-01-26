@@ -45,7 +45,7 @@ class Core
         require_once self::getPathRoot() . '/core/util/DateUtil.php';
         require_once self::getPathRoot() . '/core/util/StringUtil.php';
 
-        require_once self::getPathRoot() . '/value/language/Language.php';
+        require_once self::getPathRoot() . '/core/value/language/Language.php';
 
         require_once self::getPathRoot() . '/core/module/user/UserCore.php';
         require_once self::getPathRoot() . '/core/module/article/ArticleCore.php';

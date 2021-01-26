@@ -9,7 +9,7 @@ use uve\core\module\mailer\value\MailerTemplate;
 use uve\core\module\user\value\UserJourneyStatus;
 use uve\core\Core;
 use uve\core\module\user\value\VerificationType;
-use uve\value\Language;
+use uve\core\value\Language;
 use uve\core\module\article\value\ArticleStatus;
 use uve\core\module\article\value\ArticleType;
 use uve\core\module\user\value\UserRole;
@@ -25,7 +25,7 @@ try {
     exit;
 }
 
-require_once Core::getPathRoot() . '/value/language/Language.php';
+require_once Core::getPathRoot() . '/core/value/language/Language.php';
 require_once Core::getPathRoot() . '/core/module/user/value/UserJourneyStatus.php';
 require_once Core::getPathRoot() . '/core/module/user/value/UserRole.php';
 require_once Core::getPathRoot() . '/core/module/user/value/VerificationType.php';

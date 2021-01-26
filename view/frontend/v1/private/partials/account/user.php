@@ -1,7 +1,7 @@
 <?php
 
 use uve\core\model\response\HtmlResponseData;
-use uve\value\Language;
+use uve\core\value\Language;
 
 /** @var HtmlResponseData $responseData */
 

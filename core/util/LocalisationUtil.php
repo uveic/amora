@@ -4,31 +4,26 @@ namespace uve\core\util;
 
 use uve\core\Core;
 use uve\core\Logger;
-use uve\value\Language;
+use uve\core\value\Language;
 
 final class LocalisationUtil
 {
-    private Logger $logger;
-    private string $defaultLocalisationIsoCode;
-    private string $languageIsoCode;
     private array $values;
 
     public function __construct(
-        Logger $logger,
-        string $defaultSiteLanguage,
-        string $languageIsoCode
+        private Logger $logger,
+        private string $defaultLocalisationIsoCode,
+        private string $languageIsoCode
     ) {
-        $this->logger = $logger;
-        $this->defaultLocalisationIsoCode = $defaultSiteLanguage;
-        $languageIsoCode = strtoupper($languageIsoCode);
+        $this->defaultLocalisationIsoCode = strtoupper($this->defaultLocalisationIsoCode);
+        $this->languageIsoCode = strtoupper($this->languageIsoCode);
         $availableLanguagesIsoCodes = array_column(Language::getAvailableLanguages(), 'iso_code');
 
-        if (!in_array($languageIsoCode, $availableLanguagesIsoCodes)) {
-            $this->logger->logError('Localisation language not found: ' . $languageIsoCode);
-            $languageIsoCode = $this->defaultLocalisationIsoCode;
+        if (!in_array($this->languageIsoCode, $availableLanguagesIsoCodes)) {
+            $this->logger->logError('Localisation language not found: ' . $this->languageIsoCode);
+            $this->languageIsoCode = $this->defaultLocalisationIsoCode;
         }
 
-        $this->languageIsoCode = $languageIsoCode;
         $this->values = $this->loadValues($this->languageIsoCode);
     }
 
@@ -57,7 +52,7 @@ final class LocalisationUtil
     }
 
     private function loadValues(string $languageIsoCode): array {
-        $filePath = Core::getPathRoot() . '/value/localisation/' . $languageIsoCode . '.php';
+        $filePath = Core::getPathRoot() . '/core/value/localisation/' . $languageIsoCode . '.php';
 
         if (!file_exists($filePath)) {
             $this->logger->logError('Localisation file not found: ' . $filePath);

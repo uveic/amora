@@ -1,6 +1,6 @@
 <?php
 
-namespace uve\value;
+namespace uve\core\value;
 
 final class Language
 {

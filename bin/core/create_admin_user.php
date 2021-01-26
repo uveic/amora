@@ -10,7 +10,7 @@ use uve\core\module\user\model\User;
 use uve\core\module\user\UserCore;
 use uve\core\util\DateUtil;
 use uve\core\util\StringUtil;
-use uve\value\Language;
+use uve\core\value\Language;
 use uve\core\module\user\value\UserRole;
 
 // change working directory
@@ -28,7 +28,7 @@ try {
 require_once Core::getPathRoot() . '/core/module/user/value/UserJourneyStatus.php';
 require_once Core::getPathRoot() . '/core/module/user/value/UserRole.php';
 require_once Core::getPathRoot() . '/core/util/DateUtil.php';
-require_once Core::getPathRoot() . '/value/language/Language.php';
+require_once Core::getPathRoot() . '/core/value/language/Language.php';
 
 $logger = Core::getLogger('create_user');
 
