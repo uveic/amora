@@ -14,7 +14,7 @@ $this->layout('base', ['responseData' => $responseData,])
       <div class="form-header m-r-1 m-l-1">
         <h1>Users</h1>
         <div class="links">
-          <a href="/backoffice/users/new" class="button is-link admin-menu-button">New</a>
+          <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users/new" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
         </div>
       </div>
     </section>
@@ -24,17 +24,17 @@ $this->layout('base', ['responseData' => $responseData,])
           <div class="table-item edit flex-no-grow"></div>
           <div class="table-item flex-no-grow">#</div>
           <div class="table-item flex-no-grow"></div>
-          <div class="table-item flex-grow-2">Name</div>
-          <div class="table-item flex-grow-4">Email</div>
-          <div class="table-item width-1">Language</div>
-          <div class="table-item width-1">Role</div>
+          <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalName')?></div>
+          <div class="table-item flex-grow-4"><?=$responseData->getLocalValue('globalEmail')?></div>
+          <div class="table-item width-1"><?=$responseData->getLocalValue('globalLanguage')?></div>
+          <div class="table-item width-1"><?=$responseData->getLocalValue('globalRole')?></div>
         </div>
 <?php
 /** @var User $user */
 foreach ($responseData->getListOfUsers() as $user) {
 ?>
         <div class="table-row">
-          <div class="table-item edit flex-no-grow"><a href="/backoffice/users/<?=$this->e($user->getId()); ?>"><img class="img-svg no-margin" width="20" height="20" src="/img/assets/pencil.svg" alt="<?=$responseData->getLocalValue('formGuestModifyAction')?>"></a></div>
+          <div class="table-item edit flex-no-grow"><a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users/<?=$this->e($user->getId()); ?>"><img class="img-svg no-margin" width="20" height="20" src="/img/assets/pencil.svg" alt="<?=$responseData->getLocalValue('formGuestModifyAction')?>"></a></div>
           <div class="table-item flex-no-grow"><?=$this->e($user->getId())?></div>
           <div class="table-item flex-no-grow"><span class="enabled-icon <?=$this->e($user->isEnabled() ? 'feedback-success' : 'feedback-error'); ?>"></span></div>
           <div class="table-item flex-grow-2"><?=$this->e($user->getName()); ?></div>

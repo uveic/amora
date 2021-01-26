@@ -14,7 +14,7 @@ if ($article) {
     <p class="article-info">
       <?=$this->e(DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true))?>
 <?php if ($canEdit) { ?>
- <a href="/backoffice/articles/<?=$article->getId()?>">edit</a>
+ <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/articles/<?=$article->getId()?>"><?=strtolower($responseData->getLocalValue('globalEdit'))?></a>
 <?php } ?>
     </p>
     <?=$article->getContent()?>

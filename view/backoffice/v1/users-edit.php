@@ -30,40 +30,36 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
       <div class="form-header m-t-1 m-l-1 m-r-1">
         <h1><?=$this->e($userToEdit ? 'Edit' : 'New')?> User</h1>
         <div class="links">
-          <a href="/backoffice/users" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
+          <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
         </div>
       </div>
-      <div class="form-control-bar-header m-b-3">
-        <input style="width: revert;" type="submit" class="button" value="<?=$userToEdit ? 'Update' : 'Save'?>">
-        <div style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
-        <div id="isEnabled" data-enabled="<?=$isEnabled ? '1' : ''?>" class="enabled-icon-big <?=$isEnabled ? 'feedback-success' : 'feedback-error' ?>"> <?=$isEnabled ? 'Enabled' : 'Disabled' ?></div>
-      </div>
+<?=$this->insert('partials/users-edit/control-bar', ['responseData' => $responseData])?>
       <div class="content-small-width">
 <?php if ($userToEdit) { ?>
         <input id="userId" class="input" name="userId" type="hidden" value="<?=$this->e($userToEdit->getId()); ?>">
 <?php } ?>
         <div class="field">
-          <label for="name" class="label">Name</label>
+          <label for="name" class="label"><?=$responseData->getLocalValue('globalName')?></label>
           <div class="control">
-            <input class="input" id="name" name="name" type="text" placeholder="Your name" minlength="3" value="<?=$this->e($userToEdit ? $userToEdit->getName() : ''); ?>" required>
+            <input class="input" id="name" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" minlength="3" value="<?=$this->e($userToEdit ? $userToEdit->getName() : ''); ?>" required>
           </div>
-          <p class="help"><span class="is-danger">Obrigatorio</span>Mínimo tres letras.</p>
+          <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span>Mínimo tres letras.</p>
         </div>
         <div class="field">
-          <label for="email" class="label">Email</label>
+          <label for="email" class="label"><?=$responseData->getLocalValue('globalEmail')?></label>
           <div class="control">
-            <input class="input" id="email" name="email" type="email" placeholder="Email address" value="<?=$this->e($userToEdit ? $userToEdit->getEmail() : ''); ?>" required>
+            <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" value="<?=$this->e($userToEdit ? $userToEdit->getEmail() : ''); ?>" required>
           </div>
-          <p class="help"><span class="is-danger">Obrigatorio</span></p>
+          <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
         </div>
         <div class="field">
-          <label for="bio" class="label">Bio</label>
+          <label for="bio" class="label"><?=$responseData->getLocalValue('globalBio')?></label>
           <div class="control">
             <textarea id="bio" name="bio"><?=$this->e($userToEdit ? $userToEdit->getBio() : '')?></textarea>
           </div>
         </div>
         <div class="field">
-          <label for="languageId" class="label">Language</label>
+          <label for="languageId" class="label"><?=$responseData->getLocalValue('globalLanguage')?></label>
           <div class="control">
             <select id="languageId" name="languageId">
 <?php
@@ -76,10 +72,10 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
 ?>
             </select>
           </div>
-          <p class="help"><span class="is-danger">Obrigatorio</span></p>
+          <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
         </div>
         <div class="field">
-          <label for="roleId" class="label">Role</label>
+          <label for="roleId" class="label"><?=$responseData->getLocalValue('globalRole')?></label>
           <div class="control">
             <select id="roleId" name="roleId">
 <?php
@@ -92,10 +88,10 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
 ?>
             </select>
           </div>
-          <p class="help"><span class="is-danger">Obrigatorio</span></p>
+          <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
         </div>
         <div class="field">
-          <label for="timezone" class="label">Hora</label>
+          <label for="timezone" class="label"><?=$responseData->getLocalValue('globalTimezone')?></label>
           <div class="control">
             <select name="timezone" id="timezone">
                 <?php foreach ($timezones as $timezone) { ?>
@@ -103,18 +99,14 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
                 <?php } ?>
             </select>
           </div>
-          <p class="help"><span class="is-danger">Obrigatorio</span></p>
+          <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
         </div>
 <?php if ($userToEdit) { ?>
         <div class="m-t-6 m-b-6">
-          <a href="/backoffice/users/<?=$this->e($userToEdit->getId())?>/delete" class="is-danger">Delete User</a>
+          <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users/<?=$this->e($userToEdit->getId())?>/delete" class="is-danger">Delete User</a>
         </div>
 <?php } ?>
       </div>
-      <div class="form-control-bar-header m-t-3 m-b-3">
-        <input style="width: revert;" type="submit" class="button" value="<?=$userToEdit ? 'Update' : 'Save'?>">
-        <div style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
-        <div id="isEnabled" data-enabled="<?=$isEnabled ? '1' : ''?>" class="enabled-icon-big <?=$isEnabled ? 'feedback-success' : 'feedback-error' ?>"> <?=$isEnabled ? 'Enabled' : 'Disabled' ?></div>
-      </div>
+<?=$this->insert('partials/users-edit/control-bar', ['responseData' => $responseData])?>
     </form>
   </section>

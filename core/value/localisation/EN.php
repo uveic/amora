@@ -56,6 +56,12 @@ return [
     'globalNew' => 'New',
     'globalEdit' => 'Edit',
     'globalTitle' => 'Title',
+    'globalName' => 'Name',
+    'globalEmail' => 'Email',
+    'globalLanguage' => 'Language',
+    'globalRole' => 'Role',
+    'globalTimezone' => 'Timezone',
+    'globalBio' => 'Bio',
     'globalSave' => 'Save',
     'globalUpdate' => 'Update',
     'globalSaveAndClose' => 'S&C',
@@ -64,8 +70,12 @@ return [
     'globalUpdatedAt' => 'Updated At',
     'globalCreated' => 'Created',
     'globalStatus' => 'Status',
-    'globalUploadImage' => 'Upload image(s)',
     'globalPreview' => 'Preview',
-
     'globalArticle' => 'Article',
+
+    'globalUploadImage' => 'Upload image(s)',
+    'globalAddImage' => 'Add image(s)',
+    'globalAddParagraph' => 'Add paragraph',
+    'globalAddVideo' => 'Add video',
+    'globalAddHtml' => 'Add HTML',
 ];

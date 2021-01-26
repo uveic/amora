@@ -33,7 +33,7 @@ $random = StringUtil::getRandomString(5);
       <input style="width: revert;" type="submit" class="article-save button m-r-1" value="<?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
       <input style="width: revert;" type="submit" class="article-save-close button" data-close="1" value="<?=$article ? $responseData->getLocalValue('globalUpdateAndClose') : $responseData->getLocalValue('globalSaveAndClose')?>">
 <?php if ($article) {?>
-      <a class="article-preview m-l-1" href="/<?=$article->getUri()?>?preview=true" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
+      <a class="article-preview m-l-1" href="<?=$responseData->getBaseUrlWithLanguage()?><?=$article->getUri()?>?preview=true" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
 <?php } ?>
     </div>
     <div class="article-creation<?=$article ? '' : ' hidden'?>"><?=$updatedAtContent?><br><?=$createdAtContent?></div>

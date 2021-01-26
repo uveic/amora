@@ -56,6 +56,12 @@ return [
     'globalNew' => 'Novo',
     'globalEdit' => 'Editar',
     'globalTitle' => 'Título',
+    'globalName' => 'Nome',
+    'globalEmail' => 'Correo electrónico',
+    'globalLanguage' => 'Idioma',
+    'globalRole' => 'Rol',
+    'globalTimezone' => 'Zona horaria',
+    'globalBio' => 'Breve biografía',
     'globalSave' => 'Gardar',
     'globalUpdate' => 'Actualizar',
     'globalSaveAndClose' => 'GeC',
@@ -64,8 +70,12 @@ return [
     'globalUpdatedAt' => 'Actualizado',
     'globalCreated' => 'Creado',
     'globalStatus' => 'Estatus',
-    'globalUploadImage' => 'Subir imaxe(s)',
     'globalPreview' => 'Previsualizar',
-
     'globalArticle' => 'artigo',
+
+    'globalUploadImage' => 'Subir imaxe(s)',
+    'globalAddImage' => 'Engadir imaxe(s)',
+    'globalAddParagraph' => 'Engadir párrafo',
+    'globalAddVideo' => 'Engadir vídeo',
+    'globalAddHtml' => 'Engadir HTML',
 ];
