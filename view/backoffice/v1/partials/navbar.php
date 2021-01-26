@@ -6,7 +6,7 @@ use uve\core\model\response\HtmlResponseDataAuthorised;
 
 ?>
 <header>
-  <h1 class="logo"><a class="white" href="<?=$responseData->getBaseUrlWithLanguage()?>/"><?=$this->e($responseData->getSiteName())?></a></h1>
+  <h1 class="logo"><a class="white" href="<?=$responseData->getBaseUrlWithLanguage()?>"><?=$this->e($responseData->getSiteName())?></a></h1>
   <input type="checkbox" id="nav-toggle" class="nav-toggle">
   <input type="checkbox" id="user-nav-toggle" class="user-nav-toggle">
   <nav>

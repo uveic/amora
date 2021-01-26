@@ -5,10 +5,10 @@ import {
   managePlaceholderForEditableElements,
   generateRandomString,
   insertAfter
-} from './util.js';
-import {xhr} from './xhr.js';
+} from './module/util.js';
+import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
-import {loadEditor} from './editor.js';
+import {loadEditor} from './module/editor.js';
 
 document.querySelectorAll('#form-article').forEach(el => {
   el.addEventListener('submit', e => {
@@ -90,7 +90,7 @@ document.querySelectorAll('#form-article').forEach(el => {
         ? document.querySelector('#article-section-text-' + editorId + '-html').innerHTML.trim()
         : section.innerHTML.trim();
 
-      // Hacky but it does de work for now
+      // Hacky but it does the work for now
       sectionContent = sectionContent.replace('contenteditable="true"', '');
 
       html += sectionContent;

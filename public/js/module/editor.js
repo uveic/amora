@@ -1,4 +1,4 @@
-import {moveSectionUp, moveSectionDown, removeSection} from './backoffice.js';
+import {moveSectionUp, moveSectionDown, removeSection} from '../backoffice.js';
 
 const defaultParagraphSeparatorString = 'defaultParagraphSeparator';
 const formatBlock = 'formatBlock';

@@ -1,4 +1,4 @@
-import {xhr} from './xhr.js';
+import {xhr} from './module/xhr.js';
 
 const feedbackDiv = document.querySelector('#feedback');
 

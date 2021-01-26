@@ -1,4 +1,4 @@
-import {xhr} from './xhr.js';
+import {xhr} from './module/xhr.js';
 
 const formLogin = document.querySelector('form#form-login');
 const loginFailureFeedback = document.querySelector('#login-failure-message');
