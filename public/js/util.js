@@ -17,11 +17,18 @@ function getUpdatedAtTime (language = 'EN') {
 }
 
 function cleanTextForUrl(text) {
-  return text.trim()
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/á/g, 'a')
+    .replace(/é/g, 'e')
+    .replace(/í/g, 'i')
+    .replace(/ó/g, 'o')
+    .replace(/ú/g, 'u')
+    .replace(/ñ/g, 'n')
     .replace(/\s{2,}/g,' ')
     .replace(/\s/g,'-')
-    .replace(/[^A-Za-z0-9\-]/g,'')
-    .toLowerCase();
+    .replace(/[^A-Za-z0-9\-]/g,'-');
 }
 
 function getYoutubeVideoIdFromUrl(url) {

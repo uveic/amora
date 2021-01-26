@@ -457,7 +457,7 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
 const removeSection = function(e, sectionId) {
   e.preventDefault();
 
-  const delRes = confirm('Are you sure you want to delete this image?');
+  const delRes = confirm('Are you sure you want to delete this section?');
   if (!delRes) {
     return;
   }
