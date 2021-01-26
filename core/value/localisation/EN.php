@@ -7,7 +7,6 @@ return [
     'siteTitle' => '',
     'siteDescription' => 'I am a Web Developer',
 
-    'navDashboard' => 'Dashboard',
     'navAccount' => 'Account',
     'navSignOut' => 'Sign Out',
     'navSignIn' => 'Sign In',
@@ -54,4 +53,19 @@ return [
     'dashboardGoTo' => 'Go to...',
 
     'globalRequired' => 'Required',
+    'globalNew' => 'New',
+    'globalEdit' => 'Edit',
+    'globalTitle' => 'Title',
+    'globalSave' => 'Save',
+    'globalUpdate' => 'Update',
+    'globalSaveAndClose' => 'S&C',
+    'globalUpdateAndClose' => 'U&C',
+    'globalUpdated' => 'Updated',
+    'globalUpdatedAt' => 'Updated At',
+    'globalCreated' => 'Created',
+    'globalStatus' => 'Status',
+    'globalUploadImage' => 'Upload image(s)',
+    'globalPreview' => 'Preview',
+
+    'globalArticle' => 'Article',
 ];

@@ -9,7 +9,7 @@ $this->layout('base', ['responseData' => $responseData])
   <main>
     <section class="content">
       <div id="feedback" class="feedback null"></div>
-      <h1 class="h1-flex"><?=$this->e($responseData->getLocalValue('navDashboard'))?></h1>
+      <h1 class="h1-flex"><?=$this->e($responseData->getLocalValue('navAdminDashboard'))?></h1>
       <div class="content-flex">
         <?=$this->insert('partials/dashboard/links', ['responseData' => $responseData])?>
       </div>

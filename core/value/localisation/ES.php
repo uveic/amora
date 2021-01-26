@@ -7,7 +7,6 @@ return [
     'siteTitle' => '',
     'siteDescription' => 'Soy un programador web.',
 
-    'navDashboard' => 'Escritorio',
     'navAccount' => 'Tus datos',
     'navSignOut' => 'Salir',
     'navSignIn' => 'Entra',
@@ -15,7 +14,7 @@ return [
     'navChangePassword' => 'Cambiar contraseña',
     'navDownloadAccountData' => 'Descargar tus datos',
     'navDeleteAccount' => 'Eliminar cuenta',
-    'navAdminDashboard' => 'Dashboard',
+    'navAdminDashboard' => 'Escritorio',
     'navAdminUsers' => 'Usuarios',
     'navAdminImages' => 'Imágenes',
     'navAdminArticles' => 'Artículos',
@@ -53,5 +52,20 @@ return [
 
     'dashboardGoTo' => 'Ir a...',
 
-    'globalRequired' => 'Obligatorio'
+    'globalRequired' => 'Obligatorio',
+    'globalNew' => 'Nuevo',
+    'globalEdit' => 'Editar',
+    'globalTitle' => 'Título',
+    'globalSave' => 'Guardar',
+    'globalUpdate' => 'Actualizar',
+    'globalSaveAndClose' => 'GyC',
+    'globalUpdateAndClose' => 'AyC',
+    'globalUpdated' => 'Actualizado',
+    'globalUpdatedAt' => 'Actualizado',
+    'globalCreated' => 'Creado',
+    'globalStatus' => 'Estatus',
+    'globalUploadImage' => 'Subir imagen(es)',
+    'globalPreview' => 'Previsualizar',
+
+    'globalArticle' => 'artículo',
 ];

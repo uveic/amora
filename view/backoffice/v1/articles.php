@@ -13,9 +13,9 @@ $this->layout('base', ['responseData' => $responseData,])
   <main>
     <section class="content">
       <div class="form-header m-r-1 m-l-1">
-        <h1>Articles</h1>
+        <h1><?=$responseData->getLocalValue('navAdminArticles')?></h1>
         <div class="links">
-          <a href="/backoffice/articles/new" class="button is-link admin-menu-button">New</a>
+          <a href="/backoffice/articles/new" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
         </div>
       </div>
       <section class="content-flex-block">
@@ -23,9 +23,9 @@ $this->layout('base', ['responseData' => $responseData,])
           <div class="table-row header">
             <div class="table-item edit flex-no-grow"></div>
             <div class="table-item flex-no-grow">#</div>
-            <div class="table-item flex-grow-2">Title</div>
-            <div class="table-item flex-grow-2">Updated</div>
-            <div class="table-item width-1">Status</div>
+            <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalTitle')?></div>
+            <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalUpdatedAt')?></div>
+            <div class="table-item width-1"><?=$responseData->getLocalValue('globalStatus')?></div>
           </div>
 <?php
 /** @var Article $article */

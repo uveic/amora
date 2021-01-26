@@ -57,6 +57,11 @@ abstract class HtmlResponseDataAbstract
         return $this->baseUrl;
     }
 
+    public function getBaseUrlWithLanguage(): string
+    {
+        return $this->getBaseUrl() . strtolower($this->getSiteLanguage()) . '/';
+    }
+
     public function getSiteLanguage(): string
     {
         return $this->siteLanguage;
@@ -127,19 +132,19 @@ abstract class HtmlResponseDataAbstract
             return [
                 [
                     'description' => $this->getLocalValue('navAdminDashboard'),
-                    'uri' => '/backoffice/dashboard'
+                    'uri' => $this->getBaseUrlWithLanguage() . 'backoffice/dashboard'
                 ],
                 [
                     'description' => $this->getLocalValue('navAdminImages'),
-                    'uri' => '/backoffice/images'
+                    'uri' => $this->getBaseUrlWithLanguage() . 'backoffice/images'
                 ],
                 [
                     'description' => $this->getLocalValue('navAdminArticles'),
-                    'uri' => '/backoffice/articles'
+                    'uri' => $this->getBaseUrlWithLanguage() . 'backoffice/articles'
                 ],
                 [
                     'description' => $this->getLocalValue('navAdminUsers'),
-                    'uri' => '/backoffice/users'
+                    'uri' => $this->getBaseUrlWithLanguage() . 'backoffice/users'
                 ]
             ];
         }

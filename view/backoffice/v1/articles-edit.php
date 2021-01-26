@@ -26,7 +26,7 @@ function getClassName(int $sectionTypeId): string
   <div id="feedback" class="feedback null"></div>
   <form id="form-article" action="#">
     <div class="form-header m-t-1 m-l-1 m-r-1">
-      <h1><?=$this->e($article ? 'Edit' : 'New')?> Article</h1>
+      <h1><?=($article ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalArticle')?></h1>
       <div class="links">
         <a href="/backoffice/articles" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
       </div>
@@ -34,7 +34,7 @@ function getClassName(int $sectionTypeId): string
 <?=$this->insert('partials/article-edit/control-bar', ['responseData' => $responseData])?>
     <div class="content-medium-width">
       <input name="articleId" type="hidden" value="<?=$article ? $this->e($article->getId()) : ''?>">
-      <div id="article-title" class="article-title placeholder" contenteditable="true" data-placeholder="Title"><?=$this->e($article ? $article->getTitle() : ''); ?></div>
+      <div id="article-title" class="article-title placeholder" contenteditable="true" data-placeholder="<?=$responseData->getLocalValue('globalTitle')?>"><?=$this->e($article ? $article->getTitle() : ''); ?></div>
       <div class="article-edit-uri"><?=$this->e(trim($responseData->getBaseUrl(), ' /') . '/')?>
         <input name="uri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->getUri() : ''); ?>">
       </div>

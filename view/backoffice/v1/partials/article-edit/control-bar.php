@@ -9,13 +9,13 @@ use uve\core\util\StringUtil;
 
 $article = $responseData->getFirstArticle();
 
-$updatedAtContent = 'Updated ' . ($article
+$updatedAtContent = $responseData->getLocalValue('globalUpdated') . ' ' . ($article
     ? '<span class="article-updated-at" title="' .
     $this->e(DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
     '">' . $this->e(DateUtil::getElapsedTimeString($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
     : '<span class="article-updated-at" title=""></span>');
 
-$createdAtContent = 'Created ' . ($article
+$createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($article
     ? '<span title="' .
     $this->e(DateUtil::formatUtcDate($article->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
     '">' . $this->e(DateUtil::getElapsedTimeString($article->getCreatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
@@ -30,10 +30,10 @@ $random = StringUtil::getRandomString(5);
 ?>
   <div class="form-control-bar-header m-b-3">
     <div class="article-control-bar-buttons">
-      <input style="width: revert;" type="submit" class="article-save button m-r-1" value="<?=$article ? 'Update' : 'Save'?>">
-      <input style="width: revert;" type="submit" class="article-save-close button" data-close="1" value="<?=$article ? 'U&C' : 'S&C'?>">
+      <input style="width: revert;" type="submit" class="article-save button m-r-1" value="<?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
+      <input style="width: revert;" type="submit" class="article-save-close button" data-close="1" value="<?=$article ? $responseData->getLocalValue('globalUpdateAndClose') : $responseData->getLocalValue('globalSaveAndClose')?>">
 <?php if ($article) {?>
-      <a class="article-preview m-l-1" href="/<?=$article->getUri()?>?preview=true" target="_blank">Preview</a>
+      <a class="article-preview m-l-1" href="/<?=$article->getUri()?>?preview=true" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
 <?php } ?>
     </div>
     <div class="article-creation<?=$article ? '' : ' hidden'?>"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
