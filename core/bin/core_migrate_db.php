@@ -9,7 +9,7 @@ use uve\core\Core;
 // change working directory
 chdir(dirname(__FILE__));
 
-require_once '../../core/Core.php';
+require_once '../Core.php';
 
 try {
     Core::initiate(realpath(__DIR__ . '/../..'));

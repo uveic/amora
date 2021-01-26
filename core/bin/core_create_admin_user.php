@@ -16,7 +16,7 @@ use uve\core\module\user\value\UserRole;
 // change working directory
 chdir(dirname(__FILE__));
 
-require_once '../../core/Core.php';
+require_once '../Core.php';
 
 try {
     Core::initiate(realpath(__DIR__ . '/../..'));

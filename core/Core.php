@@ -4,7 +4,7 @@ namespace uve\core;
 
 use Closure;
 use Exception;
-use uve\core\cli\SyncLookupTablesApp;
+use uve\core\app\SyncLookupTablesApp;
 use uve\core\database\migration\MigrationDbApp;
 use uve\core\database\MySqlDb;
 use uve\core\util\LocalisationUtil;
@@ -273,7 +273,7 @@ class Core
         return self::getInstance(
             'SyncLookupTablesApp',
             function () use ($logger) {
-                require_once self::getPathRoot() . '/core/lookup_tables_sync/SyncLookupTablesApp.php';
+                require_once self::getPathRoot() . '/core/app/SyncLookupTablesApp.php';
                 return new SyncLookupTablesApp($logger);
             },
             true

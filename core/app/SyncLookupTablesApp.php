@@ -1,6 +1,6 @@
 <?php
 
-namespace uve\core\cli;
+namespace uve\core\app;
 
 use Exception;
 use uve\core\database\MySqlDb;
