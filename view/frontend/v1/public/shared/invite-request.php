@@ -1,11 +1,8 @@
 <?php
 
 use uve\core\model\response\HtmlResponseData;
-use uve\core\util\StringUtil;
 
 /** @var HtmlResponseData $responseData */
-
-$baseLinkUrl = StringUtil::getBaseLinkUrl($responseData->getSiteLanguage());
 
 ?>
 <!DOCTYPE html>
@@ -17,7 +14,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$this->e($baseLinkUrl)?>">&#10005;</a>
+    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">&#10005;</a>
     <form method="POST" id="form-invite-request">
       <div>
         <div class="div-request-form">
@@ -38,7 +35,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
         <div id="login-failure-message" class="field is-failure null"></div>
         <div id="request-form-feedback" class="field null">
           <p class="m-b-3"><?=$responseData->getLocalValue('authenticationInviteRequestActionSuccess')?></p>
-          <a class="button is-success m-t-3" href="<?=$this->e($baseLinkUrl)?>/"><?=$this->e($responseData->getLocalValue('authenticationInviteRequestHomeLink'))?></a>
+          <a class="button is-success m-t-3" href="<?=$responseData->getBaseUrlWithLanguage()?>/"><?=$this->e($responseData->getLocalValue('authenticationInviteRequestHomeLink'))?></a>
         </div>
       </div>
     </form>

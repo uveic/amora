@@ -2,11 +2,8 @@
 
 use uve\core\model\response\HtmlResponseData;
 use uve\core\module\user\service\UserService;
-use uve\core\util\StringUtil;
 
 /** @var HtmlResponseData $responseData */
-
-$baseLinkUrl = StringUtil::getBaseLinkUrl($responseData->getSiteLanguage());
 
 ?>
 <!DOCTYPE html>
@@ -16,12 +13,12 @@ $baseLinkUrl = StringUtil::getBaseLinkUrl($responseData->getSiteLanguage());
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$this->e($baseLinkUrl)?>">&#10005;</a>
+    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">&#10005;</a>
     <form method="POST" id="form-register">
       <div>
         <h1 id="register-title" class="logo m-b-4"><?=$this->e($responseData->getSiteName())?></h1>
         <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationRegisterSubtitle'))?></h2>
-        <p class="light-text-color m-b-3"><?=$responseData->getLocalValue('authenticationRegisterAlreadyLogin')?> <a href="<?=$this->e($baseLinkUrl)?>/login"><?=$responseData->getLocalValue('navSignIn')?></a>.</p>
+        <p class="light-text-color m-b-3"><?=$responseData->getLocalValue('authenticationRegisterAlreadyLogin')?> <a href="<?=$responseData->getBaseUrlWithLanguage()?>login"><?=$responseData->getLocalValue('navSignIn')?></a>.</p>
         <div class="field">
           <div class="control">
             <input class="input" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" value="" required>

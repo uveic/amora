@@ -1,11 +1,8 @@
 <?php
 
 use uve\core\model\response\HtmlResponseData;
-use uve\core\util\StringUtil;
 
 /** @var HtmlResponseData $responseData */
-
-$baseLinkUrl = StringUtil::getBaseLinkUrl($responseData->getSiteLanguage());
 
 ?>
 <!DOCTYPE html>
@@ -17,7 +14,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$this->e($baseLinkUrl)?>">&#10005;</a>
+    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">&#10005;</a>
     <form method="POST" id="form-login">
       <div>
         <h1 id="register-title" class="logo m-b-4"><?=$this->e($responseData->getSiteName())?></h1>
@@ -40,7 +37,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
           </p>
         </div>
       </div>
-      <p class="register-forgot no-margin"><a href="<?=$this->e($baseLinkUrl)?>/login/forgot"><?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?></a></p>
+      <p class="register-forgot no-margin"><a href="<?=$responseData->getBaseUrlWithLanguage()?>login/forgot"><?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?></a></p>
     </form>
   </div>
 </main>

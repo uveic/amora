@@ -10,6 +10,7 @@ abstract class HtmlResponseDataAbstract
 {
     protected LocalisationUtil $localisationUtil;
     protected string $baseUrl;
+    protected string $baseUrlWithLanguage;
     protected string $siteUrl;
     protected string $sitePath;
     protected string $siteLanguage;
@@ -50,6 +51,8 @@ abstract class HtmlResponseDataAbstract
         $this->pageTitleWithoutSiteName = $this->pageTitle ?? '';
         $this->pageDescription = $pageDescription
             ?? $this->localisationUtil->getValue('siteDescription');
+        $this->baseUrlWithLanguage = $this->getBaseUrl() .
+            strtolower($this->getSiteLanguage()) . '/';
     }
 
     public function getBaseUrl(): string
@@ -59,7 +62,7 @@ abstract class HtmlResponseDataAbstract
 
     public function getBaseUrlWithLanguage(): string
     {
-        return $this->getBaseUrl() . strtolower($this->getSiteLanguage()) . '/';
+        return $this->baseUrlWithLanguage;
     }
 
     public function getSiteLanguage(): string

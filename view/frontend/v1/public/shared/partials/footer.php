@@ -9,7 +9,7 @@ $isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin()
 ?>
 <footer>
 <?php if ($isAdmin) { ?>
-  <a href="/backoffice/dashboard">dashboard</a>
+  <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/dashboard">dashboard</a>
 <?php } ?>
 </footer>
 <script type="module" src="/js/main.js"></script>

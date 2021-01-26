@@ -1,11 +1,8 @@
 <?php
 
 use uve\core\model\response\HtmlResponseData;
-use uve\core\util\StringUtil;
 
 /** @var HtmlResponseData $responseData */
-
-$baseLinkUrl = StringUtil::getBaseLinkUrl($responseData->getSiteLanguage());
 
 ?>
 <!DOCTYPE html>
@@ -15,7 +12,7 @@ $baseLinkUrl = StringUtil::getBaseLinkUrl($responseData->getSiteLanguage());
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$this->e($baseLinkUrl)?>">&#10005;</a>
+    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">&#10005;</a>
     <form method="POST" id="form-login-forgot">
       <div>
         <h1 id="register-title" class="logo m-b-4"><?=$this->e($responseData->getSiteName())?></h1>
@@ -37,7 +34,7 @@ $baseLinkUrl = StringUtil::getBaseLinkUrl($responseData->getSiteLanguage());
       <div id="login-failure-message" class="field is-failure null"></div>
       <div id="register-back-login" class="field null">
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationForgotPasswordActionSuccess')?></p>
-        <a class="button is-success" href="<?=$this->e($baseLinkUrl)?>/login"><?=$this->e($responseData->getLocalValue('authenticationActionHomeLink'))?></a>
+        <a class="button is-success" href="<?=$responseData->getBaseUrlWithLanguage()?>login"><?=$this->e($responseData->getLocalValue('authenticationActionHomeLink'))?></a>
       </div>
     </form>
   </div>
