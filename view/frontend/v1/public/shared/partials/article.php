@@ -17,7 +17,7 @@ if ($article) {
  <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/articles/<?=$article->getId()?>"><?=strtolower($responseData->getLocalValue('globalEdit'))?></a>
 <?php } ?>
     </p>
-    <?=$article->getContent()?>
+    <?=$article->getContentHtml()?>
   </article>
 <?php
 }

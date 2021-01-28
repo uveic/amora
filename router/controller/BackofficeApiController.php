@@ -341,7 +341,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $existingArticle->getCreatedAt(),
                 DateUtil::getCurrentDateForMySql(),
                 $title ?? $existingArticle->getTitle(),
-                $content ?? $existingArticle->getContent(),
+                $content ?? $existingArticle->getContentHtml(),
                 $mainImageSrc ?? $existingArticle->getMainImageSrc(),
                 $uri
             ),
@@ -384,7 +384,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $existingArticle->getCreatedAt(),
                 DateUtil::getCurrentDateForMySql(),
                 $existingArticle->getTitle(),
-                $existingArticle->getContent(),
+                $existingArticle->getContentHtml(),
                 $existingArticle->getMainImageSrc(),
                 $existingArticle->getUri()
             ),

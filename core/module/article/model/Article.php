@@ -16,7 +16,7 @@ class Article
         private string $createdAt,
         private string $updatedAt,
         private string $title,
-        private string $content,
+        private string $contentHtml,
         private ?string $mainImageSrc,
         private string $uri,
         private array $sections = []
@@ -44,7 +44,7 @@ class Article
             $createdAt,
             $updatedAt,
             $article['title'],
-            $article['content'],
+            $article['content_html'],
             empty($article['main_image_src']) ? null : $article['main_image_src'],
             $article['uri']
         );
@@ -61,7 +61,7 @@ class Article
             'created_at' => $this->getCreatedAt(),
             'updated_at' => $this->getUpdatedAt(),
             'title' => $this->getTitle(),
-            'content' => $this->getContent(),
+            'content_html' => $this->getContentHtml(),
             'main_image_src' => $this->getMainImageSrc(),
             'uri' => $this->getUri(),
         ];
@@ -117,9 +117,9 @@ class Article
         return $this->title;
     }
 
-    public function getContent(): string
+    public function getContentHtml(): string
     {
-        return $this->content;
+        return $this->contentHtml;
     }
 
     public function getContentExcerpt(): string
