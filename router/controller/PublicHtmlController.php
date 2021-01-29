@@ -6,13 +6,11 @@ use uve\core\Core;
 use uve\core\model\response\HtmlResponseData;
 use uve\core\model\response\UserFeedback;
 use uve\core\module\action\service\ActionService;
-use uve\core\module\article\ArticleCore;
 use uve\core\module\article\service\ArticleService;
 use uve\core\module\user\service\UserService;
 use uve\core\module\user\service\SessionService;
 use uve\core\model\Request;
 use uve\core\model\Response;
-use uve\router\controller\response\PublicApiControllerUserRegistrationSuccessResponse;
 
 final class PublicHtmlController extends PublicHtmlControllerAbstract
 {
@@ -41,7 +39,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getHomePage(Request $request): Response
     {
-        $articles = $this->articleService->getArticlesForHome();
+        $isAdmin = $request->getSession() && $request->getSession()->isAdmin();
+        $articles = $this->articleService->getArticlesForHome($isAdmin);
         return Response::createFrontendPublicHtmlResponse(
             'shared/home',
             new HtmlResponseData(

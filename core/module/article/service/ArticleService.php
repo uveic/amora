@@ -7,6 +7,7 @@ use uve\core\module\article\datalayer\ArticleDataLayer;
 use uve\core\module\article\model\Article;
 use uve\core\module\article\model\ArticleSection;
 use uve\core\module\article\value\ArticleStatus;
+use uve\core\module\article\value\ArticleType;
 use uve\core\util\DateUtil;
 
 class ArticleService
@@ -227,9 +228,16 @@ class ArticleService
         return $resTransaction['article'] ?? null;
     }
 
-    public function getArticlesForHome(): array
+    public function getArticlesForHome(bool $isAdmin = false): array
     {
-        return $this->articleDataLayer->getArticlesWithStatus(ArticleStatus::PUBLISHED);
+        if ($isAdmin) {
+            return $this->articleDataLayer->filterArticlesBy();
+        }
+
+        return $this->articleDataLayer->filterArticlesBy(
+            ArticleStatus::PUBLISHED,
+            ArticleType::HOME
+        );
     }
 
     private function createArticleSection(ArticleSection $section): bool

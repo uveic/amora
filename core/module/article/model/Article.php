@@ -112,6 +112,11 @@ class Article
         return $this->updatedAt;
     }
 
+    public function getPublishedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
     public function getTitle(): string
     {
         return $this->title;
@@ -135,5 +140,18 @@ class Article
     public function getUri(): string
     {
         return $this->uri;
+    }
+
+    public function isPublished(): bool
+    {
+        if ($this->getStatusId() !== ArticleStatus::PUBLISHED) {
+            return false;
+        }
+
+        if (strtotime($this->getPublishedAt()) > time()) {
+            return false;
+        }
+
+        return true;
     }
 }

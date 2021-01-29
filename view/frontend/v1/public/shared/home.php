@@ -20,7 +20,6 @@ use uve\core\model\response\HtmlResponseData;
     <a target="_blank" href="https://www.linkedin.com/in/victorgonzalezcastro">Linkedin</a>
   </div>
 </section>
-
 <?=$this->insert('shared/partials/footer', ['responseData' => $responseData])?>
 </body>
 </html>

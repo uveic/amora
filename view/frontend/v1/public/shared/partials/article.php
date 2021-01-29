@@ -5,7 +5,7 @@ use uve\core\util\DateUtil;
 
 /** @var HtmlResponseData $responseData */
 $article = $responseData->getFirstArticle();
-$canEdit = $responseData->getSession()->isAdmin();
+$canEdit = $responseData->getSession() && $responseData->getSession()->isAdmin();
 
 if ($article) {
 ?>

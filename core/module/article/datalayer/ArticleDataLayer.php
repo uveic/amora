@@ -35,8 +35,13 @@ class ArticleDataLayer
         ?int $articleId = null,
         ?int $statusId = null,
         ?int $typeId = null,
-        ?string $uri = null
+        ?string $uri = null,
+        ?string $sortDirection = 'DESC'
     ): array {
+        if ($sortDirection && !in_array($sortDirection, ['DESC', 'ASC'])) {
+            $sortDirection = 'DESC';
+        }
+
         $params = [];
         $sql = '
             SELECT
@@ -89,7 +94,7 @@ class ArticleDataLayer
             $params[':uri'] = $uri;
         }
 
-        $sql .= ' ORDER BY a.id DESC';
+        $sql .= ' ORDER BY a.updated_at ' . $sortDirection;
 
         $res = $this->db->fetchAll($sql, $params);
 
@@ -118,9 +123,13 @@ class ArticleDataLayer
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getArticlesWithStatus(int $statusId): array
+    public function filterArticlesBy(
+        int $statusId = null,
+        int $typeId = null,
+        string $sortDirection = 'DESC'
+    ): array
     {
-        return $this->getArticles(null, $statusId);
+        return $this->getArticles(null, $statusId, $typeId, null, $sortDirection);
     }
 
     public function updateArticle(Article $article): bool

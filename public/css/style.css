@@ -672,6 +672,17 @@ svg,
 .opacity {
   opacity: 0.5;
 }
+
+.enabled-icon {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+}
+
+.enabled-icon-failure {
+  background-color: var(--feedback-failure-color);
+}
 /* Classes for generic use */
 
 #home-links a {

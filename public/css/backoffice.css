@@ -103,13 +103,6 @@
   font-size: 0.9rem;
 }
 
-.enabled-icon {
-  display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 5px;
-}
-
 .background-light-color {
   background-color: var(--light-text-color);
 }
