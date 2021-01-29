@@ -37,6 +37,7 @@
 
 img {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -97,6 +98,12 @@ p > svg {
 footer {
   text-align: center;
   padding: 2rem;
+}
+
+blockquote,
+.quote {
+  border-left: 0.5rem solid var(--light-bg-color-2);
+  margin-left: 1.5rem;
 }
 
 /* Nav style starts here */
@@ -530,9 +537,11 @@ label:not(:last-child) {
   color: var(--light-text-color);
 }
 
+article img,
 .article-image {
   margin-top: 1rem;
   width: 100%;
+  height: auto;
 }
 
 .article-section-image {
