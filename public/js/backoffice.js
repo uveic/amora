@@ -422,7 +422,7 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
 
     document.querySelector('.' + sectionId).focus();
   });
-})
+});
 
 document.querySelectorAll('.article-add-section-video').forEach(bu => {
   bu.addEventListener('click', e => {
@@ -452,7 +452,15 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
       articleContentDiv.appendChild(articleSectionVideo);
     }
   });
-})
+});
+
+document.querySelectorAll('.article-add-section-html').forEach(bu => {
+  bu.addEventListener('click', e => {
+    e.preventDefault();
+
+    alert('ToDo');
+  });
+});
 
 const removeSection = function(e, sectionId) {
   e.preventDefault();
