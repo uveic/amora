@@ -3,10 +3,6 @@
 use uve\core\module\user\service\UserService;
 
 return [
-    'siteName' => 'Victor Gonzalez',
-    'siteTitle' => '',
-    'siteDescription' => 'Son un programador web',
-
     'navAccount' => 'Os teus datos',
     'navSignOut' => 'Saír',
     'navSignIn' => 'Entra',

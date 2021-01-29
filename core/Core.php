@@ -2,6 +2,7 @@
 
 namespace uve\core;
 
+use App\AppCore;
 use Closure;
 use Exception;
 use uve\core\app\SyncLookupTablesApp;
@@ -47,6 +48,7 @@ class Core
 
         require_once self::getPathRoot() . '/core/value/language/Language.php';
 
+        require_once self::getPathRoot() . '/app/AppCore.php';
         require_once self::getPathRoot() . '/core/module/user/UserCore.php';
         require_once self::getPathRoot() . '/core/module/article/ArticleCore.php';
         require_once self::getPathRoot() . '/core/module/action_logger/ActionLoggerCore.php';
@@ -67,6 +69,8 @@ class Core
             ini_set('display_startup_errors', 1);
             error_reporting(E_ALL);
         }
+
+        AppCore::initiateApp();
 
         self::$initiated = true; // Done!
     }

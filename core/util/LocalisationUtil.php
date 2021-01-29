@@ -52,13 +52,24 @@ final class LocalisationUtil
     }
 
     private function loadValues(string $languageIsoCode): array {
-        $filePath = Core::getPathRoot() . '/core/value/localisation/' . $languageIsoCode . '.php';
+        $coreFilePath = Core::getPathRoot() . '/core/value/localisation/' . $languageIsoCode . '.php';
 
-        if (!file_exists($filePath)) {
-            $this->logger->logError('Localisation file not found: ' . $filePath);
-            return [];
+        if (!file_exists($coreFilePath)) {
+            $this->logger->logError('Localisation file not found: ' . $coreFilePath);
+            $coreValues = [];
+        } else {
+            $coreValues = require $coreFilePath;
         }
 
-        return require $filePath;
+        $appFilePath = Core::getPathRoot() . '/app/value/localisation/' . $languageIsoCode . '.php';
+
+        if (!file_exists($appFilePath)) {
+            $this->logger->logError('Localisation file not found: ' . $appFilePath);
+            $appValues = [];
+        } else {
+            $appValues = require $appFilePath;
+        }
+
+        return array_merge($coreValues, $appValues);
     }
 }
