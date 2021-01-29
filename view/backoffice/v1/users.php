@@ -34,7 +34,7 @@ $this->layout('base', ['responseData' => $responseData,])
 foreach ($responseData->getListOfUsers() as $user) {
 ?>
         <div class="table-row">
-          <div class="table-item edit flex-no-grow"><a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users/<?=$this->e($user->getId()); ?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('formGuestModifyAction')?>"></a></div>
+          <div class="table-item edit flex-no-grow"><a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users/<?=$this->e($user->getId()); ?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('globalEdit')?>"></a></div>
           <div class="table-item flex-no-grow"><?=$this->e($user->getId())?></div>
           <div class="table-item flex-no-grow"><span class="enabled-icon <?=$this->e($user->isEnabled() ? 'feedback-success' : 'feedback-error'); ?>"></span></div>
           <div class="table-item flex-grow-2"><?=$this->e($user->getName()); ?></div>

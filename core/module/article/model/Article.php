@@ -15,6 +15,7 @@ class Article
         private int $typeId,
         private string $createdAt,
         private string $updatedAt,
+        private ?string $publishedAt,
         private string $title,
         private string $contentHtml,
         private ?string $mainImageSrc,
@@ -43,6 +44,7 @@ class Article
             $article['type_id'],
             $createdAt,
             $updatedAt,
+            $article['published_at'],
             $article['title'],
             $article['content_html'],
             empty($article['main_image_src']) ? null : $article['main_image_src'],
@@ -60,6 +62,7 @@ class Article
             'type_id' => $this->getTypeId(),
             'created_at' => $this->getCreatedAt(),
             'updated_at' => $this->getUpdatedAt(),
+            'published_at' => $this->getPublishedAt(),
             'title' => $this->getTitle(),
             'content_html' => $this->getContentHtml(),
             'main_image_src' => $this->getMainImageSrc(),
@@ -112,9 +115,9 @@ class Article
         return $this->updatedAt;
     }
 
-    public function getPublishedAt(): string
+    public function getPublishedAt(): ?string
     {
-        return $this->updatedAt;
+        return $this->publishedAt;
     }
 
     public function getTitle(): string
@@ -145,6 +148,10 @@ class Article
     public function isPublished(): bool
     {
         if ($this->getStatusId() !== ArticleStatus::PUBLISHED) {
+            return false;
+        }
+
+        if (!$this->getPublishedAt()) {
             return false;
         }
 

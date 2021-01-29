@@ -51,6 +51,7 @@ class ArticleDataLayer
                 a.type_id,
                 a.created_at AS article_created_at,
                 a.updated_at AS article_updated_at,
+                a.published_at,
                 a.title,
                 a.content_html,
                 a.main_image_src,
@@ -94,7 +95,7 @@ class ArticleDataLayer
             $params[':uri'] = $uri;
         }
 
-        $sql .= ' ORDER BY a.updated_at ' . $sortDirection;
+        $sql .= ' ORDER BY a.published_at ' . $sortDirection;
 
         $res = $this->db->fetchAll($sql, $params);
 

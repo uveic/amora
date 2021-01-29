@@ -276,6 +276,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $typeId ?? ArticleType::HOME,
                 $now,
                 $now,
+                $statusId === ArticleStatus::PUBLISHED ? $now : null,
                 $title,
                 html_entity_decode($content),
                 $mainImageSrc,
@@ -332,6 +333,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $content = html_entity_decode($content);
         }
 
+        $now = DateUtil::getCurrentDateForMySql();
+
         $res = $this->articleService->updateArticle(
             new Article(
                 $articleId,
@@ -339,7 +342,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $statusId ?? $existingArticle->getStatusId(),
                 $typeId ?? $existingArticle->getTypeId(),
                 $existingArticle->getCreatedAt(),
-                DateUtil::getCurrentDateForMySql(),
+                $now,
+                $now,
                 $title ?? $existingArticle->getTitle(),
                 $content ?? $existingArticle->getContentHtml(),
                 $mainImageSrc ?? $existingArticle->getMainImageSrc(),
@@ -383,6 +387,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $existingArticle->getTypeId(),
                 $existingArticle->getCreatedAt(),
                 DateUtil::getCurrentDateForMySql(),
+                $existingArticle->getPublishedAt(),
                 $existingArticle->getTitle(),
                 $existingArticle->getContentHtml(),
                 $existingArticle->getMainImageSrc(),
