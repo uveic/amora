@@ -532,13 +532,6 @@ input.is-light {
   background-color: var(--main-bg-color);
 }
 
-.pell-actionbar {
-  /*border-bottom: 2px solid var(--light-bg-color-3);*/
-  /*padding: 0.25rem 0.25rem 0 0.25rem;*/
-  /*border-top: 2px solid var(--light-bg-color-2);*/
-  /*background-color: var(--light-bg-color-2);*/
-}
-
 .pell-button {
   margin: 0;
   height: initial;

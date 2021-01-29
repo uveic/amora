@@ -76,8 +76,8 @@ const defaultActions = {
     result: () => exec('insertHorizontalRule')
   },
   link: {
-    icon: '&#128279;',
-    title: 'Link',
+    icon: '<img src="/img/svg/link.svg" class="img-svg m-t-0" alt="Insert link">',
+    title: 'Insert link',
     result: () => {
       const url = window.prompt('Enter the link URL')
       if (url) exec('createLink', url)
@@ -99,22 +99,25 @@ const defaultActions = {
     }
   },
   moveUp: {
-    icon: 'UP',
+    icon: '<img src="/img/svg/arrow-fat-up.svg" class="img-svg m-t-0" alt="Move image up">',
     title: 'Move Section Up',
+    positionRight: true,
     result: (event) => {
       moveSectionUp(event, event.target.parentNode.parentNode);
     }
   },
   moveDown: {
-    icon: 'DOWN',
+    icon: '<img src="/img/svg/arrow-fat-down.svg" class="img-svg m-t-0" alt="Move image down">',
     title: 'Move Section Down',
+    positionRight: true,
     result: (event) => {
       moveSectionDown(event, event.target.parentNode.parentNode);
     }
   },
   moveToTrash: {
-    icon: 'TRASH',
+    icon: '<img src="/img/svg/trash.svg" class="img-svg m-t-0" alt="Remove image from article">',
     title: 'Remove Section',
+    positionRight: true,
     result: (event) => {
       const sectionId = event.target.parentNode.parentNode.dataset.sectionId
         ?? event.target.parentNode.parentNode.dataset.editorId;
@@ -125,6 +128,8 @@ const defaultActions = {
 
 const defaultClasses = {
   actionbar: 'pell-actionbar',
+  actionbarLeft: 'pell-actionbar-left',
+  actionbarRight: 'pell-actionbar-right',
   button: 'pell-button',
   content: 'pell-content',
   selected: 'pell-button-selected'
@@ -148,9 +153,16 @@ const init = function(settings) {
 
   const defaultParagraphSeparator = settings[defaultParagraphSeparatorString] || 'div';
 
-  const actionbar = createElement('div');
-  actionbar.className = classes.actionbar;
-  appendChild(settings.element, actionbar);
+  const actionbarWrapper = createElement('div');
+  actionbarWrapper.className = classes.actionbar;
+
+  const actionbarLeft = createElement('div');
+  actionbarLeft.className = classes.actionbarLeft;
+  appendChild(actionbarWrapper, actionbarLeft);
+  const actionbarRight = createElement('div');
+  actionbarRight.className = classes.actionbarRight;
+  appendChild(actionbarWrapper, actionbarRight);
+  appendChild(settings.element, actionbarWrapper);
 
   let content = document.querySelector('div.' + classes.editorId);
   if (!content) {
@@ -190,7 +202,9 @@ const init = function(settings) {
       addEventListener(button, 'click', handler);
     }
 
-    appendChild(actionbar, button);
+    action.positionRight
+      ? appendChild(actionbarRight, button)
+      : appendChild(actionbarLeft, button);
   });
 
   exec(defaultParagraphSeparatorString, defaultParagraphSeparator);
