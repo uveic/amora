@@ -605,7 +605,7 @@ if (inputArticleImages) {
               trashImg.className = 'img-svg';
               trashImg.title = 'Remove from article';
               trashImg.alt = 'Remove from article';
-              trashImg.src = '/img/assets/trash.svg';
+              trashImg.src = '/img/svg/trash.svg';
 
               let deleteButton = document.createElement('a');
               deleteButton.dataset.imageId = imageId;
@@ -616,7 +616,7 @@ if (inputArticleImages) {
               arrowUpImg.className = 'img-svg';
               arrowUpImg.title = 'Move Up';
               arrowUpImg.alt = 'Move Up';
-              arrowUpImg.src = '/img/assets/arrow-fat-up.svg';
+              arrowUpImg.src = '/img/svg/arrow-fat-up.svg';
 
               let moveUpButton = document.createElement('a');
               moveUpButton.dataset.imageId = imageId;
@@ -627,7 +627,7 @@ if (inputArticleImages) {
               arrowDownImg.className = 'img-svg';
               arrowDownImg.title = 'Move Down';
               arrowDownImg.alt = 'Move Down';
-              arrowDownImg.src = '/img/assets/arrow-fat-down.svg';
+              arrowDownImg.src = '/img/svg/arrow-fat-down.svg';
 
               let moveDownButton = document.createElement('a');
               moveDownButton.dataset.imageId = imageId;

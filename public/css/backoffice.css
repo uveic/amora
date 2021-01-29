@@ -361,7 +361,7 @@ input.is-light {
 }
 
 .item-more-link {
-  background-image: url('/img/assets/caret-double-down.svg');
+  background-image: url('/img/svg/caret-double-down.svg');
   background-position: center;
   background-size: cover;
   display: inline-block;
@@ -370,7 +370,7 @@ input.is-light {
 }
 
 .item-more-link-up {
-  background-image: url('/img/assets/caret-double-up.svg');
+  background-image: url('/img/svg/caret-double-up.svg');
 }
 
 .item-content {

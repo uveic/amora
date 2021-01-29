@@ -50,7 +50,7 @@ $random = StringUtil::getRandomString(5);
       </ul>
       <label for="dropdown-menu-<?=$random?>" class="dropdown-menu-label <?=$isPublished ? 'feedback-success' : 'background-light-color' ?>">
         <span><?=$articleStatusName?></span>
-        <img class="img-svg no-margin" width="20" height="20" src="/img/assets/caret-down.svg" alt="Change">
+        <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">
       </label>
     </div>
   </div>
