@@ -6,8 +6,8 @@ use Exception;
 
 final class Config
 {
-    const CONFIG_PATH_DEFAULT = '/config/default.php';
-    const CONFIG_PATH_LOCAL = '/config/local.php';
+    const CONFIG_PATH_DEFAULT = '/core/config/default.php';
+    const CONFIG_PATH_LOCAL = '/app/config/local.php';
 
     private string $configFilePath;
     private string $localConfigFilePath;
@@ -21,11 +21,15 @@ final class Config
      */
     public function __construct(?string $defaultConfigPath = null, ?string $localConfigPath = null)
     {
-        $this->configFilePath = $defaultConfigPath ?? Core::getPathRoot() . self::CONFIG_PATH_DEFAULT;
-        $this->localConfigFilePath = $localConfigPath ?? Core::getPathRoot() . self::CONFIG_PATH_LOCAL;
+        $this->configFilePath = $defaultConfigPath
+            ? realpath($defaultConfigPath)
+            : realpath(Core::getPathRoot() . self::CONFIG_PATH_DEFAULT);
+        $this->localConfigFilePath = $localConfigPath
+            ? realpath($localConfigPath)
+            : realpath(Core::getPathRoot() . self::CONFIG_PATH_LOCAL);
 
         if (!file_exists($this->configFilePath)) {
-            $this->configFilePath = Core::getPathRoot() . self::CONFIG_PATH_LOCAL;
+            $this->configFilePath = realpath(Core::getPathRoot() . self::CONFIG_PATH_LOCAL);
         }
 
         if (!file_exists($this->configFilePath)) {
@@ -35,7 +39,7 @@ final class Config
         }
 
         if (!file_exists($this->localConfigFilePath)) {
-            $this->localConfigFilePath = Core::getPathRoot() . self::CONFIG_PATH_LOCAL;
+            $this->localConfigFilePath = realpath(Core::getPathRoot() . self::CONFIG_PATH_LOCAL);
         }
     }
 

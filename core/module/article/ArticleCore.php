@@ -82,13 +82,12 @@ class ArticleCore extends Core
 
     public static function getImageService(): ImageService
     {
-        $config = self::getConfig();
-        if (empty($config['media_base_dir'])) {
+        if (empty(self::getConfigValue('media_base_dir'))) {
             self::getDefaultLogger()->logError("Missing 'media_base_dir' section from config");
             exit;
         }
 
-        if (empty($config['media_base_url'])) {
+        if (empty(self::getConfigValue('media_base_url'))) {
             self::getDefaultLogger()->logError("Missing 'media_base_url' section from config");
             exit;
         }
@@ -96,8 +95,8 @@ class ArticleCore extends Core
         $logger = self::getArticleLogger();
         $imageDataLayer = self::getImageDataLayer();
         $imageResizeService = self::getImageResizeService();
-        $mediaBaseDir = $config['media_base_dir'];
-        $mediaBaseUrl = $config['media_base_url'];
+        $mediaBaseDir = self::getConfigValue('media_base_dir');
+        $mediaBaseUrl = self::getConfigValue('media_base_url');
 
         return self::getInstance(
             'ImageService',
@@ -124,20 +123,19 @@ class ArticleCore extends Core
 
     public static function getImageResizeService(): ImageResizeService
     {
-        $config = Core::getConfig();
-        if (empty($config['media_base_dir'])) {
+        if (empty(self::getConfigValue('media_base_dir'))) {
             self::getDefaultLogger()->logError("Missing 'media_base_dir' section from config");
             exit;
         }
 
-        if (empty($config['media_base_url'])) {
+        if (empty(self::getConfigValue('media_base_url'))) {
             self::getDefaultLogger()->logError("Missing 'media_base_url' section from config");
             exit;
         }
 
         $logger = self::getArticleLogger();
-        $mediaBaseDir = $config['media_base_dir'];
-        $mediaBaseUrl = $config['media_base_url'];
+        $mediaBaseDir = self::getConfigValue('media_base_dir');
+        $mediaBaseUrl = self::getConfigValue('media_base_url');
 
         return self::getInstance(
             'ImageResizeService',
