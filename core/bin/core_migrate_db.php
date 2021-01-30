@@ -28,17 +28,22 @@ if (!Core::isRunningInCli()) {
 try {
     Core::getMigrationDbApp(
         Core::getCoreDb(),
-        Core::getPathRoot() . '/core/database/migration/migrate_files/core'
+        Core::getPathRoot() . '/core/database/migration/files/core'
+    )->run($argv);
+
+    Core::getMigrationDbApp(
+        Core::getCoreDb(),
+        Core::getPathRoot() . '/app/database/files/core'
     )->run($argv);
 
     Core::getMigrationDbApp(
         Core::getActionDb(),
-        Core::getPathRoot() . '/core/database/migration/migrate_files/action'
+        Core::getPathRoot() . '/core/database/migration/files/action'
     )->run($argv);
 
     Core::getMigrationDbApp(
         Core::getMailerDb(),
-        Core::getPathRoot() . '/core/database/migration/migrate_files/mailer'
+        Core::getPathRoot() . '/core/database/migration/files/mailer'
     )->run($argv);
 
 } catch (Throwable $t) {
