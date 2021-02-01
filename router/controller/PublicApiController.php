@@ -156,7 +156,6 @@ final class PublicApiController extends PublicApiControllerAbstract
 
         return new PublicApiControllerUserLoginSuccessResponse(
             true,
-            true,
             $session->isAdmin()
                 ? UrlBuilderUtil::BACKOFFICE_DASHBOARD_URL_PATH
                 : UrlBuilderUtil::APP_DASHBOARD_URL_PATH

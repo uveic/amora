@@ -2,7 +2,6 @@
 
 namespace uve\router;
 
-use uve\core\Core;
 use uve\core\Logger;
 use uve\core\model\response\HtmlResponseDataAuthorised;
 use uve\core\model\Request;
