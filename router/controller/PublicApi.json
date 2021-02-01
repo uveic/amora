@@ -193,6 +193,10 @@
                     false
                   ]
                 },
+                "redirect": {
+                  "type": "string",
+                  "description": "Redirect URL (if any)"
+                },
                 "errorMessage": {
                   "type": "string",
                   "description": "Error message (if any)"
@@ -500,6 +504,10 @@
                     true,
                     false
                   ]
+                },
+                "redirect": {
+                  "type": "string",
+                  "description": "Redirect URL (if any)"
                 },
                 "errorMessage": {
                   "type": "string",

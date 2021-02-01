@@ -32,8 +32,8 @@ if (formLogin) {
     };
 
     xhr.post('/papi/login', JSON.stringify(data))
-      .then(() => {
-        window.location = '/backoffice/dashboard';
+      .then((response) => {
+        window.location = response.redirect;
       }).catch((error) => {
         password.value = '';
         loginFailureFeedback.textContent = error.message;
@@ -68,8 +68,8 @@ if (formRegister) {
     };
 
     xhr.post('/papi/register', JSON.stringify(data))
-      .then(() => {
-        window.location = '/backoffice/dashboard';
+      .then((response) => {
+        window.location = response.redirect;
       }).catch((error) => {
         loginFailureFeedback.innerHTML = error.message;
         loginFailureFeedback.classList.remove('null');

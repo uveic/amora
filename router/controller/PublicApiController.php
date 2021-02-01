@@ -11,6 +11,8 @@ use uve\core\module\user\service\UserMailService;
 use uve\core\module\user\value\UserJourneyStatus;
 use uve\core\module\user\value\UserRole;
 use uve\core\util\StringUtil;
+use uve\core\util\UrlBuilderUtil;
+use uve\core\value\Language;
 use uve\router\controller\response\PublicApiControllerForgotPasswordSuccessResponse;
 use uve\router\controller\response\PublicApiControllerGetSessionSuccessResponse;
 use uve\router\controller\response\PublicApiControllerLogErrorSuccessResponse;
@@ -22,7 +24,6 @@ use uve\core\model\Response;
 use uve\core\module\user\service\UserService;
 use uve\router\controller\response\PublicApiControllerUserPasswordResetSuccessResponse;
 use uve\router\controller\response\PublicApiControllerUserRegistrationSuccessResponse;
-use uve\core\value\Language;
 
 final class PublicApiController extends PublicApiControllerAbstract
 {
@@ -139,21 +140,27 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        $res = $this->sessionService->login(
+        $session = $this->sessionService->login(
             $user,
             $user->getTimezone(),
             $request->getSourceIp(),
             $request->getUserAgent()
         );
 
-        if (empty($res)) {
+        if (empty($session)) {
             return new PublicApiControllerUserLoginSuccessResponse(
                 false,
                 'O correo electrónico e/ou o contrasinal non son válidos.'
             );
         }
 
-        return new PublicApiControllerUserLoginSuccessResponse(true);
+        return new PublicApiControllerUserLoginSuccessResponse(
+            true,
+            true,
+            $session->isAdmin()
+                ? UrlBuilderUtil::BACKOFFICE_DASHBOARD_URL_PATH
+                : UrlBuilderUtil::APP_DASHBOARD_URL_PATH
+        );
     }
 
     /**

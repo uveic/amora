@@ -5,12 +5,19 @@ use uve\core\model\Response;
 
 class PublicApiControllerUserLoginSuccessResponse extends Response
 {
-    public function __construct(bool $success, ?string $errorMessage = null)
-    {
+    public function __construct(
+        bool $success,
+        ?string $redirect = null,
+        ?string $errorMessage = null
+    ) {
         // Required parameters
         $responseData = [
             'success' => $success,
         ];
+
+        $responseData['redirect'] = is_null($redirect)
+            ? null
+            : $redirect;
 
         $responseData['errorMessage'] = is_null($errorMessage)
             ? null

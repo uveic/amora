@@ -48,7 +48,7 @@ class SessionService
         string $timezone,
         ?string $ip = null,
         ?string $userAgent = null
-    ): bool {
+    ): ?Session {
         $now = DateUtil::getCurrentDateForMySql();
         $newValidUntilTimestamp = $this->generateNewValidUntil($now);
         $session = new Session(
@@ -65,9 +65,7 @@ class SessionService
         );
 
         $this->updateBrowserCookie($session->getSessionId(), $newValidUntilTimestamp);
-        $res = $this->dataLayer->createNewSession($session);
-
-        return $res ? true : false;
+        return $this->dataLayer->createNewSession($session);
     }
 
     public function logout(Session $session)

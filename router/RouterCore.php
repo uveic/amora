@@ -229,6 +229,7 @@ class RouterCore extends Core
                 $mailService,
                 $actionService
             ) {
+                require_once self::getPathRoot() . '/core/value/language/Language.php';
                 require_once self::getPathRoot() . '/core/module/user/value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/router/controller/AbstractController.php';
                 require_once self::getPathRoot() . '/router/controller/PublicApiControllerAbstract.php';

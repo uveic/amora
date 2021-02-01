@@ -13,7 +13,6 @@ use uve\core\module\user\model\UserVerification;
 use uve\core\module\user\value\VerificationType;
 use uve\core\util\DateUtil;
 use uve\core\util\StringUtil;
-use uve\router\controller\response\AuthorisedApiControllerUpdateUserAccountSuccessResponse;
 use uve\core\value\Language;
 
 class UserService
