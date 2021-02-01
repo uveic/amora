@@ -16,9 +16,9 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetLoginPageSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetForgotPasswordPageSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetRegistrationPageSuccessResponse.php';
-        require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetInviteRequestPageSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetUserVerifiedHtmlSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetPasswordChangeHtmlSuccessResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/PublicHtmlControllerGetInviteRequestPageSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -60,15 +60,6 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
     abstract protected function getRegistrationPage(Request $request): Response;
 
     /**
-     * Endpoint: /invite-request
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function getInviteRequestPage(Request $request): Response;
-
-    /**
      * Endpoint: /user/verify/{verificationIdentifier}
      * Method: GET
      *
@@ -93,6 +84,15 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         string $verificationIdentifier,
         Request $request
     ): Response;
+
+    /**
+     * Endpoint: /invite-request
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getInviteRequestPage(Request $request): Response;
 
     private function validateAndCallGetHomePage(Request $request)
     {
@@ -206,34 +206,6 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallGetInviteRequestPage(Request $request)
-    {
-        $errors = [];
-
-        if (count($errors)) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->getInviteRequestPage(
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in PublicHtmlControllerAbstract - Method: getInviteRequestPage()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
-
     private function validateAndCallGetUserVerifiedHtml(Request $request)
     {
         $pathParts = explode('/', $request->getPath());
@@ -325,6 +297,34 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallGetInviteRequestPage(Request $request)
+    {
+        $errors = [];
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getInviteRequestPage(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicHtmlControllerAbstract - Method: getInviteRequestPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): Response
     {
@@ -378,16 +378,6 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         }
 
         if ($method === 'GET' &&
-            $this->pathParamsMatcher(
-                ['invite-request'],
-                $pathParts,
-                ['fixed']
-            )
-        ) {
-            return $this->validateAndCallGetInviteRequestPage($request);
-        }
-
-        if ($method === 'GET' &&
             $pathParams = $this->pathParamsMatcher(
                 ['user', 'verify', '{verificationIdentifier}'],
                 $pathParts,
@@ -405,6 +395,16 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetPasswordChangeHtml($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['invite-request'],
+                $pathParts,
+                ['fixed']
+            )
+        ) {
+            return $this->validateAndCallGetInviteRequestPage($request);
         }
 
         return Response::createNotFoundResponse();

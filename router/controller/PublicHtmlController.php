@@ -136,36 +136,6 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     }
 
     /**
-     * Endpoint: /invite-request
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     */
-    protected function getInviteRequestPage(Request $request): Response
-    {
-        $session = $request->getSession();
-        $isAuthenticated = $session && $session->isAuthenticated();
-        if ($isAuthenticated) {
-            return Response::createRedirectResponse('/backoffice/dashboard');
-        }
-
-
-        $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
-        if (!$isInvitationEnabled) {
-            return Response::createRedirectResponse('/');
-        }
-
-        return Response::createFrontendPublicHtmlResponse(
-            'shared/invite-request',
-            new HtmlResponseData(
-                $request,
-                Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navSignUp')
-            )
-        );
-    }
-
-    /**
      * Endpoint: /user/verify/{verificationIdentifier}
      * Method: POST
      *
@@ -237,6 +207,36 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 null,
                 $user->getValidationHash(),
                 $user->getId()
+            )
+        );
+    }
+
+    /**
+     * Endpoint: /invite-request
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getInviteRequestPage(Request $request): Response
+    {
+        $session = $request->getSession();
+        $isAuthenticated = $session && $session->isAuthenticated();
+        if ($isAuthenticated) {
+            return Response::createRedirectResponse('/backoffice/dashboard');
+        }
+
+
+        $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
+        if (!$isInvitationEnabled) {
+            return Response::createRedirectResponse('/');
+        }
+
+        return Response::createFrontendPublicHtmlResponse(
+            'shared/invite-request',
+            new HtmlResponseData(
+                $request,
+                Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navSignUp')
             )
         );
     }

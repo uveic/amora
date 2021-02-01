@@ -101,23 +101,6 @@
         }
       }
     },
-    "/invite-request": {
-      "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the invite request page",
-        "description": "",
-        "operationId": "getInviteRequestPage",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Return HTML for registration page",
-            "schema": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
     "/user/verify/{verificationIdentifier}": {
       "get": {
         "tags": [],
@@ -161,6 +144,23 @@
         "responses": {
           "200": {
             "description": "Return HTML for the verification page",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/invite-request": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the invite request page",
+        "description": "",
+        "operationId": "getInviteRequestPage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return HTML for registration page",
             "schema": {
               "type": "string"
             }
