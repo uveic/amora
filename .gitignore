@@ -2,8 +2,8 @@
 .idea
 .php_cs.cache
 
-# Uve
-config/local.php
+#
+app/config/local.php
 vendor
 public/uploads
 
