@@ -197,7 +197,6 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 [$article],
                 [],
                 [],
-                [],
                 $articleSections
             )
         );
@@ -220,7 +219,6 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 $request,
                 'Images',
                 null,
-                [],
                 [],
                 [],
                 $images
