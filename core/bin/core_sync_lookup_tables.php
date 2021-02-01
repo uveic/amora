@@ -3,90 +3,44 @@
 
 namespace uve\app\bin\core;
 
+require_once '../Core.php';
+
 use Throwable;
-use uve\core\module\article\value\ArticleSectionType;
-use uve\core\module\mailer\value\MailerTemplate;
-use uve\core\module\user\value\UserJourneyStatus;
 use uve\core\Core;
-use uve\core\module\user\value\VerificationType;
-use uve\core\value\Language;
-use uve\core\module\article\value\ArticleStatus;
-use uve\core\module\article\value\ArticleType;
-use uve\core\module\user\value\UserRole;
 
 // change working directory
 chdir(dirname(__FILE__));
 
-require_once '../Core.php';
 try {
     Core::initiate(realpath(__DIR__ . '/../..'));
 } catch (Throwable $t) {
-    echo 'Error initiating application: ' . $t->getMessage() . ' ## Aborting...';
+    echo 'Error initiating application: ' . $t->getMessage() . ' ## Aborting...' . PHP_EOL;
     exit;
 }
 
-require_once Core::getPathRoot() . '/core/value/language/Language.php';
-require_once Core::getPathRoot() . '/core/module/user/value/UserJourneyStatus.php';
-require_once Core::getPathRoot() . '/core/module/user/value/UserRole.php';
-require_once Core::getPathRoot() . '/core/module/user/value/VerificationType.php';
-require_once Core::getPathRoot() . '/core/module/article/value/ArticleType.php';
-require_once Core::getPathRoot() . '/core/module/article/value/ArticleStatus.php';
-require_once Core::getPathRoot() . '/core/module/article/value/ArticleSectionType.php';
-require_once Core::getPathRoot() . '/core/module/mailer/value/MailerTemplate.php';
+$CORE_LOOKUP_TABLE_FILE_PATH = realpath(
+    Core::getPathRoot() . '/core/value/lookup-tables/LookupTables.php'
+);
+$APP_LOOKUP_TABLE_FILE_PATH = realpath(
+    Core::getPathRoot() . '/app/value/lookup-tables/LookupTables.php'
+);
 
-///////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
-/// Lookup tables configuration
+if (!file_exists($CORE_LOOKUP_TABLE_FILE_PATH)) {
+    echo 'Error reading Core lookup tables file: ' . $CORE_LOOKUP_TABLE_FILE_PATH . ' ## Aborting...';
+    exit;
+}
 
+$coreLookupTables = require($CORE_LOOKUP_TABLE_FILE_PATH);
 
-$lookupTables = [
-    [
-        'table_fields_to_values' => array_values(Language::getAll()),
-        'table_name' => 'language',
-        'db' => Core::getCoreDb()
-    ],
-    [
-        'table_fields_to_values' => array_values(UserRole::getAll()),
-        'table_name' => 'user_role',
-        'db' => Core::getCoreDb()
-    ],
-    [
-        'table_fields_to_values' => array_values(ArticleType::getAll()),
-        'table_name' => 'article_type',
-        'db' => Core::getCoreDb()
-    ],
-    [
-        'table_fields_to_values' => array_values(ArticleStatus::getAll()),
-        'table_name' => 'article_status',
-        'db' => Core::getCoreDb()
-    ],
-    [
-        'table_fields_to_values' => array_values(UserJourneyStatus::getAll()),
-        'table_name' => 'user_journey_status',
-        'db' => Core::getCoreDb()
-    ],
-    [
-        'table_fields_to_values' => array_values(MailerTemplate::getAll()),
-        'table_name' => 'mailer_template',
-        'db' => Core::getMailerDb()
-    ],
-    [
-        'table_fields_to_values' => array_values(VerificationType::getAll()),
-        'table_name' => 'user_verification_type',
-        'db' => Core::getCoreDb()
-    ],
-    [
-        'table_fields_to_values' => array_values(ArticleSectionType::getAll()),
-        'table_name' => 'article_section_type',
-        'db' => Core::getCoreDb()
-    ]
-];
+if (file_exists($APP_LOOKUP_TABLE_FILE_PATH)) {
+    $appLookupTables = require($APP_LOOKUP_TABLE_FILE_PATH);
+} else {
+    $appLookupTables = [];
+    echo 'No app lookup tables values found in ' . $APP_LOOKUP_TABLE_FILE_PATH .
+        '. Continuing...' . PHP_EOL;
+}
 
-
-///
-///////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
-
+$lookupTables = array_merge($appLookupTables, $coreLookupTables);
 
 try {
     $App = Core::getSyncLookupTablesApp();
