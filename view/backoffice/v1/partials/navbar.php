@@ -1,5 +1,6 @@
 <?php
 
+use uve\Core\Menu\MenuItem;
 use uve\core\model\response\HtmlResponseDataAuthorised;
 
 /** @var HtmlResponseDataAuthorised $responseData */
@@ -11,8 +12,10 @@ use uve\core\model\response\HtmlResponseDataAuthorised;
   <input type="checkbox" id="user-nav-toggle" class="user-nav-toggle">
   <nav>
     <ul>
-<?php foreach ($responseData->getMenu() as $item) { ?>
-      <li><a href="<?=$item['uri'] ?>" class="nav-item"><?=$item['description']?></a></li>
+<?php
+    /** @var MenuItem $item */
+foreach ($responseData->getMenu() as $item) { ?>
+      <li><a href="<?=$item->getUri()?>" class="nav-item"><?=$item->getText()?></a></li>
 <?php } ?>
       <li>
         <label for="user-nav-toggle" class="nav-item user-nav-toggle-label">

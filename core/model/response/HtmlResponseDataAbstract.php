@@ -2,9 +2,11 @@
 
 namespace uve\core\model\response;
 
+use uve\App\Value\AppMenu;
 use uve\core\Core;
 use uve\core\model\Request;
 use uve\core\util\LocalisationUtil;
+use uve\Core\Value\CoreMenu;
 
 abstract class HtmlResponseDataAbstract
 {
@@ -131,27 +133,22 @@ abstract class HtmlResponseDataAbstract
 
     public function getMenu(): array
     {
+        $output = [];
+
         if ($this->getSession() && $this->getSession()->isAdmin()) {
-            return [
-                [
-                    'description' => $this->getLocalValue('navAdminDashboard'),
-                    'uri' => $this->getBaseUrlWithLanguage() . 'backoffice/dashboard'
-                ],
-                [
-                    'description' => $this->getLocalValue('navAdminImages'),
-                    'uri' => $this->getBaseUrlWithLanguage() . 'backoffice/images'
-                ],
-                [
-                    'description' => $this->getLocalValue('navAdminArticles'),
-                    'uri' => $this->getBaseUrlWithLanguage() . 'backoffice/articles'
-                ],
-                [
-                    'description' => $this->getLocalValue('navAdminUsers'),
-                    'uri' => $this->getBaseUrlWithLanguage() . 'backoffice/users'
-                ]
-            ];
+            $output = array_merge(
+                $output,
+                CoreMenu::getAdminMenu($this->getBaseUrlWithLanguage(), $this->getSiteLanguage())
+            );
         }
 
-        return [];
+        if ($this->getSession() && $this->getSession()->isAdmin()) {
+            $output = array_merge(
+                $output,
+                AppMenu::getAll($this->getBaseUrlWithLanguage(), $this->getSiteLanguage())
+            );
+        }
+
+        return $output;
     }
 }

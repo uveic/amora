@@ -36,6 +36,7 @@ class Core
         require_once self::getPathRoot() . '/core/model/File.php';
         require_once self::getPathRoot() . '/core/model/Request.php';
         require_once self::getPathRoot() . '/core/model/Response.php';
+        require_once self::getPathRoot() . '/core/model/menu/MenuItem.php';
         require_once self::getPathRoot() . '/core/model/response/HtmlResponseDataAbstract.php';
         require_once self::getPathRoot() . '/core/model/response/HtmlResponseData.php';
         require_once self::getPathRoot() . '/core/model/response/HtmlResponseDataAuthorised.php';
@@ -47,6 +48,7 @@ class Core
         require_once self::getPathRoot() . '/core/util/StringUtil.php';
 
         require_once self::getPathRoot() . '/core/value/language/Language.php';
+        require_once self::getPathRoot() . '/core/value/menu/CoreMenu.php';
 
         require_once self::getPathRoot() . '/app/AppCore.php';
         require_once self::getPathRoot() . '/core/module/user/UserCore.php';
