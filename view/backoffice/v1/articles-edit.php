@@ -15,10 +15,23 @@ $this->layout('base', ['responseData' => $responseData]);
 function getClassName(int $sectionTypeId): string
 {
   return match ($sectionTypeId) {
-      ArticleSectionType::TEXT => 'article-section-text',
+      ArticleSectionType::TEXT_PARAGRAPH => 'article-section-paragraph',
+      ArticleSectionType::TEXT_TITLE => 'article-section-title article-title placeholder',
+      ArticleSectionType::TEXT_SUBTITLE => 'article-section-subtitle article-subtitle placeholder',
       ArticleSectionType::IMAGE => 'article-section-image',
       ArticleSectionType::YOUTUBE_VIDEO => 'article-section-video'
   };
+}
+
+function getControlButtonsHtml(bool $smallButton = false): string
+{
+    $divClass = $smallButton ? ' article-section-buttons-small' : '';
+    $buttonClass = $smallButton ? ' article-section-button-small' : '';
+    return '<div class="article-section-buttons' . $divClass . '">'
+        . '<a href="#" class="article-section-button' . $buttonClass . ' article-section-button-up"><img src="/img/svg/arrow-fat-up.svg" class="img-svg" alt="Move image up"></a>'
+        . '<a href="#" class="article-section-button' . $buttonClass . ' article-section-button-down"><img src="/img/svg/arrow-fat-down.svg" class="img-svg" alt="Move image down"></a>'
+        . '<a href="#" class="article-section-button' . $buttonClass . ' article-section-button-delete"><img src="/img/svg/trash.svg" class="img-svg" alt="Remove image from article"></a>'
+        . '</div>';
 }
 
 ?>
@@ -47,6 +60,14 @@ function getClassName(int $sectionTypeId): string
         $contentEditable = '';
         $placeholder = '';
         $contentHtml = $articleSection->getContentHtml();
+        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_TITLE ||
+            $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_SUBTITLE
+        ) {
+            $contentEditable = ' contenteditable="true"';
+            $contentHtml .= getControlButtonsHtml(true);
+            $placeholder =' data-placeholder="Type something..."';
+        }
+
         if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::IMAGE) {
             $contentHtml = str_replace(
                 'article-section-image-caption"',
@@ -54,23 +75,18 @@ function getClassName(int $sectionTypeId): string
                 $contentHtml
             );
 
-            $contentHtml .= '<div class="article-section-image-control">';
-            $contentHtml .= '<a href="#" class="article-section-control-button article-section-control-up" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/svg/arrow-fat-up.svg" class="img-svg" alt="Move image up"></a>';
-            $contentHtml .= '<a href="#" class="article-section-control-button article-section-control-down" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/svg/arrow-fat-down.svg" class="img-svg" alt="Move image down"></a>';
-            $contentHtml .= '<a href="#" class="article-section-control-button article-section-control-delete" data-image-id="' . $articleSection->getImageId() . '"><img src="/img/svg/trash.svg" class="img-svg" alt="Remove image from article"></a>';
-            $contentHtml .= '</div>';
+            $contentHtml .= getControlButtonsHtml();
         }
 
-        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT) {
+        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
             $editorIds[] = $editorId;
-            $placeholder =' data-placeholder="Type something..."';
             $class .= ' placeholder null';
 ?>
         <section id="<?=$editorId?>" class="article-section article-content <?=getClassName($articleSection->getArticleSectionTypeId())?>" data-section-id="<?=$articleSection->getId()?>">
           <div class="<?=$editorId?> placeholder pell-content" contenteditable="true"><?=$articleSection->getContentHtml()?></div>
         </section>
 <?php } else { ?>
-        <section class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>">
+        <section class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>"<?=$contentEditable?><?=$placeholder?>>
             <?=$contentHtml . PHP_EOL?>
         </section>
 <?php } ?>
@@ -80,7 +96,7 @@ function getClassName(int $sectionTypeId): string
 <?php
     foreach ($articleSections as $articleSection) {
         $editorId = getClassName($articleSection->getArticleSectionTypeId()) . '-' . $articleSection->getId();
-        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT) {
+        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
 ?>
         <div id="<?=$editorId?>-html">
             <?=$articleSection->getContentHtml() . PHP_EOL?>

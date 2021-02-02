@@ -53,7 +53,7 @@ document.querySelectorAll('#form-article').forEach(el => {
       }
     };
     const getSectionTypeIdFromClassList = function(classList) {
-      if (classList.contains('article-section-text')) {
+      if (classList.contains('article-section-paragraph')) {
         return 1;
       }
 
@@ -63,6 +63,14 @@ document.querySelectorAll('#form-article').forEach(el => {
 
       if (classList.contains('article-section-video')) {
         return 3;
+      }
+
+      if (classList.contains('article-section-title')) {
+        return 4;
+      }
+
+      if (classList.contains('article-section-subtitle')) {
+        return 5;
       }
 
       return 0;
@@ -86,8 +94,8 @@ document.querySelectorAll('#form-article').forEach(el => {
         section.removeChild(section.lastElementChild);
       }
 
-      let sectionContent = section.classList.contains('article-section-text')
-        ? document.querySelector('#article-section-text-' + editorId + '-html').innerHTML.trim()
+      let sectionContent = section.classList.contains('article-section-paragraph')
+        ? document.querySelector('#article-section-paragraph-' + editorId + '-html').innerHTML.trim()
         : section.innerHTML.trim();
 
       // Hacky but it does the work for now
@@ -382,24 +390,24 @@ document.querySelectorAll('.article-status-option').forEach(op => {
   });
 });
 
-document.querySelectorAll('.article-add-section-text').forEach(bu => {
+document.querySelectorAll('.article-add-section-paragraph').forEach(bu => {
   bu.addEventListener('click', e => {
     e.preventDefault();
 
     const existingSections = document.querySelectorAll('section.article-section');
     if (existingSections.length &&
-      existingSections[existingSections.length - 1].classList.contains('article-section-text')
+      existingSections[existingSections.length - 1].classList.contains('article-section-paragraph')
     ) {
       let id = existingSections[existingSections.length - 1].dataset.sectionId
         ?? existingSections[existingSections.length - 1].dataset.editorId;
-      document.querySelector('.article-section-text-' + id).focus();
+      document.querySelector('.article-section-paragraph-' + id).focus();
       return;
     }
 
     const articleContentHtml = document.querySelector('div.article-content-text');
     const articleContent = document.querySelector('article.article-content');
     const id = generateRandomString(5);
-    const sectionId = 'article-section-text-' + id;
+    const sectionId = 'article-section-paragraph-' + id;
 
     let articleSectionTextHtml = document.createElement('div');
     articleSectionTextHtml.id = sectionId + '-html';
@@ -407,7 +415,7 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
     let articleSectionText = document.createElement('section');
     articleSectionText.id = sectionId;
     articleSectionText.dataset.editorId = id;
-    articleSectionText.className = 'article-section article-content article-section-text placeholder';
+    articleSectionText.className = 'article-section article-content article-section-paragraph placeholder';
     articleSectionText.dataset.placeholder = 'Type something...';
 
     let divEditor = document.createElement('div');
@@ -421,6 +429,46 @@ document.querySelectorAll('.article-add-section-text').forEach(bu => {
     loadEditor(sectionId);
 
     document.querySelector('.' + sectionId).focus();
+  });
+});
+
+document.querySelectorAll('.article-add-section-title').forEach(bu => {
+  bu.addEventListener('click', e => {
+    e.preventDefault();
+
+    const articleContent = document.querySelector('article.article-content');
+    const id = generateRandomString(5);
+    const sectionId = 'article-section-title-' + id;
+
+    let articleSectionTitle = document.createElement('section');
+    articleSectionTitle.id = sectionId;
+    articleSectionTitle.className = 'article-section article-title article-section-title placeholder';
+    articleSectionTitle.dataset.placeholder = 'Title';
+    articleSectionTitle.contentEditable = 'true';
+
+    articleContent.appendChild(articleSectionTitle);
+
+    document.querySelector('#' + sectionId).focus();
+  });
+});
+
+document.querySelectorAll('.article-add-section-subtitle').forEach(bu => {
+  bu.addEventListener('click', e => {
+    e.preventDefault();
+
+    const articleContent = document.querySelector('article.article-content');
+    const id = generateRandomString(5);
+    const sectionId = 'article-section-subtitle-' + id;
+
+    let articleSectionSubtitle = document.createElement('section');
+    articleSectionSubtitle.id = sectionId;
+    articleSectionSubtitle.className = 'article-section article-subtitle article-section-subtitle placeholder';
+    articleSectionSubtitle.dataset.placeholder = 'Subtitle';
+    articleSectionSubtitle.contentEditable = 'true';
+
+    articleContent.appendChild(articleSectionSubtitle);
+
+    document.querySelector('#' + sectionId).focus();
   });
 });
 
@@ -478,7 +526,7 @@ const removeSection = function(e, sectionId) {
     article.removeChild(section);
   }
 
-  const sectionHtml = document.querySelector('#article-section-text-' + sectionId + '-html');
+  const sectionHtml = document.querySelector('#article-section-paragraph-' + sectionId + '-html');
   if (sectionHtml) {
     const divHtml = document.querySelector('.article-content-text');
     if (divHtml) {
@@ -607,7 +655,7 @@ if (inputArticleImages) {
               articleSectionImage.removeChild(imgLoading);
 
               let divImageControl = document.createElement('div');
-              divImageControl.className = 'article-section-image-control';
+              divImageControl.className = 'article-section-buttons';
 
               let trashImg = new Image();
               trashImg.className = 'img-svg';
@@ -617,7 +665,7 @@ if (inputArticleImages) {
 
               let deleteButton = document.createElement('a');
               deleteButton.dataset.imageId = imageId;
-              deleteButton.className = 'article-section-control-button article-section-control-delete';
+              deleteButton.className = 'article-section-button article-section-button-delete';
               deleteButton.appendChild(trashImg);
 
               let arrowUpImg = new Image();
@@ -628,7 +676,7 @@ if (inputArticleImages) {
 
               let moveUpButton = document.createElement('a');
               moveUpButton.dataset.imageId = imageId;
-              moveUpButton.className = 'article-section-control-button article-section-control-up';
+              moveUpButton.className = 'article-section-button article-section-button-up';
               moveUpButton.appendChild(arrowUpImg);
 
               let arrowDownImg = new Image();
@@ -639,7 +687,7 @@ if (inputArticleImages) {
 
               let moveDownButton = document.createElement('a');
               moveDownButton.dataset.imageId = imageId;
-              moveDownButton.className = 'article-section-control-button article-section-control-down';
+              moveDownButton.className = 'article-section-button article-section-button-down';
               moveDownButton.appendChild(arrowDownImg);
 
               divImageControl.appendChild(moveUpButton);
@@ -650,12 +698,12 @@ if (inputArticleImages) {
               articleSectionImage.id = 'article-section-image-' + randomString + '-html';
               articleSectionImage.dataset.sectionId = randomString;
 
-              document.querySelector(".article-section-control-delete[data-image-id='" + imageId + "']")
+              document.querySelector(".article-section-button-delete[data-image-id='" + imageId + "']")
                 .addEventListener('click', e => removeSection(e, randomString));
               const newSection = document.querySelector('#article-section-image-' + randomString + '-html');
-              document.querySelector(".article-section-control-down[data-image-id='" + imageId + "']")
+              document.querySelector(".article-section-button-down[data-image-id='" + imageId + "']")
                 .addEventListener('click', e => moveSectionDown(e, newSection));
-              document.querySelector(".article-section-control-up[data-image-id='" + imageId + "']")
+              document.querySelector(".article-section-button-up[data-image-id='" + imageId + "']")
                 .addEventListener('click', e => moveSectionUp(e, newSection));
             });
           }).catch((error) => {
@@ -679,7 +727,7 @@ document.querySelectorAll('.placeholder').forEach(el => {
   el.addEventListener('focus', managePlaceholderForEditableElements);
 })
 
-document.querySelectorAll('.article-section-control-delete').forEach(el => {
+document.querySelectorAll('.article-section-button-delete').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
 
@@ -688,15 +736,15 @@ document.querySelectorAll('.article-section-control-delete').forEach(el => {
   });
 });
 
-document.querySelectorAll('.article-section-control-up').forEach(el => {
+document.querySelectorAll('.article-section-button-up').forEach(el => {
   el.addEventListener('click', e => moveSectionUp(e, el.parentNode.parentNode));
 });
 
-document.querySelectorAll('.article-section-control-down').forEach(el => {
+document.querySelectorAll('.article-section-button-down').forEach(el => {
   el.addEventListener('click', e => moveSectionDown(e, el.parentNode.parentNode));
 });
 
-document.querySelectorAll('section.article-section-text').forEach(s => loadEditor(s.id));
+document.querySelectorAll('section.article-section-paragraph').forEach(s => loadEditor(s.id));
 
 export {
   moveSectionUp,

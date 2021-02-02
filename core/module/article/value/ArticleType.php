@@ -5,6 +5,7 @@ namespace uve\core\module\article\value;
 final class ArticleType
 {
     const HOME = 1;
+    const ARCHIVED = 2;
 
     public static function getAll(): array
     {
@@ -12,6 +13,10 @@ final class ArticleType
             self::HOME => [
                 'id' => self::HOME,
                 'name' => 'Home'
+            ],
+            self::ARCHIVED => [
+                'id' => self::ARCHIVED,
+                'name' => 'Archived'
             ]
         ];
     }

@@ -71,7 +71,9 @@ return [
 
     'globalUploadImage' => 'Upload image(s)',
     'globalAddImage' => 'Add image(s)',
-    'globalAddParagraph' => 'Add paragraph',
+    'globalAddParagraph' => 'Add text',
+    'globalAddTextTitle' => 'Add title',
+    'globalAddTextSubtitle' => 'Add subtitle',
     'globalAddVideo' => 'Add video',
     'globalAddHtml' => 'Add HTML',
 ];

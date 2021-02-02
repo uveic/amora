@@ -528,6 +528,16 @@ label:not(:last-child) {
   color: var(--main-text-color);
 }
 
+.article-subtitle {
+  margin: 1rem 0;
+  padding: 0 1rem;
+  font-size: 1.2rem;
+  font-family: var(--font-h1-title);
+  font-weight: bold;
+  line-height: 1.4rem;
+  color: var(--main-text-color);
+}
+
 .article-info {
   padding: 0;
   margin: 0;
@@ -611,7 +621,7 @@ a.black:focus {
 
 .article-section-image-caption,
 .article-section-image,
-.article-section-text {
+.article-section-paragraph {
   overflow: hidden;
 }
 /* Article styles ends here */
@@ -656,6 +666,7 @@ svg,
   max-width: 20px;
   height: auto;
   vertical-align: middle;
+  margin: 0;
 }
 
 .justify-center {

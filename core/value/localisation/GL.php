@@ -72,6 +72,8 @@ return [
     'globalUploadImage' => 'Subir imaxe(s)',
     'globalAddImage' => 'Engadir imaxe(s)',
     'globalAddParagraph' => 'Engadir párrafo',
+    'globalAddTextTitle' => 'Engadir título',
+    'globalAddTextSubtitle' => 'Engadir subtítulo',
     'globalAddVideo' => 'Engadir vídeo',
     'globalAddHtml' => 'Engadir HTML',
 ];

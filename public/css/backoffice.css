@@ -151,6 +151,13 @@ input.is-light {
   flex-wrap: wrap;
 }
 
+.article-add-section-group {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
 .article-add-section {
   flex-grow: 0;
   display: inline-block;
@@ -187,14 +194,19 @@ input.is-light {
   min-height: 30px;
 }
 
-.article-section-image-control {
+.article-section-buttons {
   position: absolute;
   z-index: 999;
   top: 1rem;
   right: 0;
 }
 
-.article-section-control-button {
+.article-section-buttons-small {
+  top: 0;
+  right: 1rem;
+}
+
+.article-section-button {
   background-color: white;
   color: black;
   padding: 1rem 1.35rem;
@@ -204,9 +216,17 @@ input.is-light {
   outline: 0;
 }
 
-.article-section-control-button:hover {
+.article-section-button-small {
+  padding: 0 0.5rem;
+  background-color: transparent;
+}
+
+.article-section-button-small:hover {
+  background-color: var(--light-bg-color-2);
+}
+
+.article-section-button:hover {
   opacity: 0.9;
-  color: black;
 }
 
 .placeholder:focus {
