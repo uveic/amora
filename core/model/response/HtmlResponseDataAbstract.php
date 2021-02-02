@@ -133,22 +133,20 @@ abstract class HtmlResponseDataAbstract
 
     public function getMenu(): array
     {
-        $output = [];
-
         if ($this->getSession() && $this->getSession()->isAdmin()) {
-            $output = array_merge(
-                $output,
-                CoreMenu::getAdminMenu($this->getBaseUrlWithLanguage(), $this->getSiteLanguage())
+            return array_merge(
+                CoreMenu::getAdminMenu($this->getBaseUrlWithLanguage(), $this->getSiteLanguage()),
+                AppMenu::getAdminAll($this->getBaseUrlWithLanguage(), $this->getSiteLanguage())
             );
         }
 
-        if ($this->getSession() && $this->getSession()->isAdmin()) {
-            $output = array_merge(
-                $output,
-                AppMenu::getAll($this->getBaseUrlWithLanguage(), $this->getSiteLanguage())
+        if ($this->getSession()) {
+            return AppMenu::getCustomerAll(
+                $this->getBaseUrlWithLanguage(),
+                $this->getSiteLanguage()
             );
         }
 
-        return $output;
+        return [];
     }
 }
