@@ -1,23 +1,32 @@
-.pell{
-  border: 1px solid hsla(0,0%,4%,.1);
-}
-
-.pell,
 .pell-content {
   box-sizing: border-box;
+  outline: 0;
+  overflow-y: auto;
+  font-family: var(--font-paragraph);
+  height: auto;
+  padding: 0 1rem;
+  min-height: 150px;
+  border: 1px solid var(--light-bg-color-2);
 }
 
-.pell-content {
-  height:300px;
-  outline:0;
-  overflow-y:auto;
-  padding:10px
+.pell-content h1, .pell-content h2 {
+  font-family: var(--font-h1-title);
+}
+
+.pell-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.pell-content:focus {
+  border: 1px solid var(--standard-color);
 }
 
 .pell-actionbar{
-  background-color:#fff;
-  border-bottom:1px solid hsla(0,0%,4%,.1);
+  border: 1px solid var(--light-bg-color-2);
+  border-bottom: none;
   display: flex;
+  margin-top: 1rem;
 }
 
 .pell-actionbar-right {
@@ -27,15 +36,20 @@
 }
 
 .pell-button{
-  background-color:transparent;
-  border:none;
-  cursor:pointer;
-  height:30px;
-  outline:0;
-  width:30px;
-  vertical-align:bottom
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  height: auto;
+  outline: 0;
+  width: auto;
+  margin: 0;
+  font-size: 1rem;
+  padding: 0.35rem 0.5rem;
+  min-height: initial;
+  min-width: 35px;
 }
 
-.pell-button-selected{
+.pell-button:hover,
+.pell-button-selected {
   background-color: #f0f0f0;
 }

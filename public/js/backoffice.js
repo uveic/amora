@@ -10,6 +10,154 @@ import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
 import {loadEditor} from './module/editor.js';
 
+const removeSection = function(e, sectionId) {
+  e.preventDefault();
+
+  const delRes = confirm('Are you sure you want to delete this section?');
+  if (!delRes) {
+    return;
+  }
+
+  const article = document.querySelector('.article-content');
+  const section = document.querySelector('#article-section-wrapper-' + sectionId);
+
+  if (article && section) {
+    article.removeChild(section);
+  }
+
+  const sectionHtml = document.querySelector('#article-section-paragraph-' + sectionId + '-html');
+  if (sectionHtml) {
+    const divHtml = document.querySelector('.article-content-text');
+    if (divHtml) {
+      divHtml.removeChild(sectionHtml);
+    }
+  }
+};
+
+const moveSectionUp = function(e, id) {
+  e.preventDefault();
+
+  const selectedSection = document.querySelector('#article-section-wrapper-' + id);
+
+  let previousElement = null;
+
+  let allSections = [];
+  document.querySelectorAll('.article-section-wrapper').forEach(s => {
+    allSections.push({id: s.dataset.sectionId, element: s});
+  });
+
+  for (let i = 0; i < allSections.length; i++) {
+    if (allSections[i].id === id) {
+      if (previousElement) {
+        selectedSection.parentNode.insertBefore(selectedSection, previousElement);
+      }
+      break;
+    }
+
+    previousElement = allSections[i].element;
+  }
+};
+
+const moveSectionDown = function(e, id) {
+  e.preventDefault();
+
+  const selectedSection = document.querySelector('#article-section-wrapper-' + id);
+
+  if (!selectedSection.nextElementSibling) {
+    return;
+  }
+
+  insertAfter(selectedSection, selectedSection.nextElementSibling);
+}
+
+const generateSectionWrapperFor = function(articleSectionElement, id) {
+  const articleContent = document.querySelector('article.article-content');
+
+  let sectionWrapper = document.createElement('div');
+  sectionWrapper.id = 'article-section-wrapper-' + id;
+  sectionWrapper.className = 'article-section-wrapper';
+  sectionWrapper.dataset.sectionId = id;
+
+  let trashImg = new Image();
+  trashImg.className = 'img-svg';
+  trashImg.title = 'Remove from article';
+  trashImg.alt = 'Remove from article';
+  trashImg.src = '/img/svg/trash.svg';
+
+  let deleteButton = document.createElement('a');
+  deleteButton.href = '#';
+  deleteButton.id = 'article-section-button-delete-' + id;
+  deleteButton.className = 'article-section-button article-section-button-delete';
+  deleteButton.appendChild(trashImg);
+
+  let arrowUpImg = new Image();
+  arrowUpImg.className = 'img-svg';
+  arrowUpImg.title = 'Move Up';
+  arrowUpImg.alt = 'Move Up';
+  arrowUpImg.src = '/img/svg/arrow-fat-up.svg';
+
+  let moveUpButton = document.createElement('a');
+  moveUpButton.href = '#';
+  moveUpButton.id = 'article-section-button-up-' + id;
+  moveUpButton.className = 'article-section-button article-section-button-up';
+  moveUpButton.appendChild(arrowUpImg);
+
+  let arrowDownImg = new Image();
+  arrowDownImg.className = 'img-svg';
+  arrowDownImg.title = 'Move Down';
+  arrowDownImg.alt = 'Move Down';
+  arrowDownImg.src = '/img/svg/arrow-fat-down.svg';
+
+  let moveDownButton = document.createElement('a');
+  moveDownButton.href = '#';
+  moveDownButton.id = 'article-section-button-down-' + id;
+  moveDownButton.className = 'article-section-button article-section-button-down';
+  moveDownButton.appendChild(arrowDownImg);
+
+  let sectionControls = document.createElement('div');
+  sectionControls.className = 'article-section-controls';
+
+  sectionControls.appendChild(moveUpButton);
+  sectionControls.appendChild(moveDownButton);
+  sectionControls.appendChild(deleteButton);
+
+  sectionWrapper.appendChild(articleSectionElement);
+  sectionWrapper.appendChild(sectionControls);
+
+  articleContent.appendChild(sectionWrapper);
+
+  document.querySelector("#article-section-button-delete-" + id)
+    .addEventListener('click', e => removeSection(e, id));
+  document.querySelector("#article-section-button-down-" + id)
+    .addEventListener('click', e => moveSectionDown(e, id));
+  document.querySelector("#article-section-button-up-" + id)
+    .addEventListener('click', e => moveSectionUp(e, id));
+};
+
+const getSectionTypeIdFromClassList = function(classList) {
+  if (classList.contains('article-section-paragraph')) {
+    return 1;
+  }
+
+  if (classList.contains('article-section-image')) {
+    return 2;
+  }
+
+  if (classList.contains('article-section-video')) {
+    return 3;
+  }
+
+  if (classList.contains('article-section-title')) {
+    return 4;
+  }
+
+  if (classList.contains('article-section-subtitle')) {
+    return 5;
+  }
+
+  return 0;
+};
+
 document.querySelectorAll('#form-article').forEach(el => {
   el.addEventListener('submit', e => {
     e.preventDefault();
@@ -52,29 +200,6 @@ document.querySelectorAll('#form-article').forEach(el => {
         });
       }
     };
-    const getSectionTypeIdFromClassList = function(classList) {
-      if (classList.contains('article-section-paragraph')) {
-        return 1;
-      }
-
-      if (classList.contains('article-section-image')) {
-        return 2;
-      }
-
-      if (classList.contains('article-section-video')) {
-        return 3;
-      }
-
-      if (classList.contains('article-section-title')) {
-        return 4;
-      }
-
-      if (classList.contains('article-section-subtitle')) {
-        return 5;
-      }
-
-      return 0;
-    };
 
     const title = document.querySelector('div#article-title');
     const uri = document.querySelector('#form-article input[name="uri"]');
@@ -85,14 +210,9 @@ document.querySelectorAll('#form-article').forEach(el => {
     let sections = [];
     let html = '';
     let order = 1;
-    document.querySelectorAll('section.article-section').forEach(sec => {
+    document.querySelectorAll('.article-section').forEach(sec => {
       let section = sec.cloneNode(true);
       let editorId = section.dataset.sectionId ?? section.dataset.editorId;
-
-      // Hacky - ToDo: Move remove link outside section content
-      if (section.classList.contains('article-section-image')) {
-        section.removeChild(section.lastElementChild);
-      }
 
       let sectionContent = section.classList.contains('article-section-paragraph')
         ? document.querySelector('#article-section-paragraph-' + editorId + '-html').innerHTML.trim()
@@ -405,7 +525,6 @@ document.querySelectorAll('.article-add-section-paragraph').forEach(bu => {
     }
 
     const articleContentHtml = document.querySelector('div.article-content-text');
-    const articleContent = document.querySelector('article.article-content');
     const id = generateRandomString(5);
     const sectionId = 'article-section-paragraph-' + id;
 
@@ -423,7 +542,7 @@ document.querySelectorAll('.article-add-section-paragraph').forEach(bu => {
     divEditor.contentEditable = 'true';
     articleSectionText.appendChild(divEditor);
 
-    articleContent.appendChild(articleSectionText);
+    generateSectionWrapperFor(articleSectionText, id);
     articleContentHtml.appendChild(articleSectionTextHtml);
 
     loadEditor(sectionId);
@@ -436,17 +555,16 @@ document.querySelectorAll('.article-add-section-title').forEach(bu => {
   bu.addEventListener('click', e => {
     e.preventDefault();
 
-    const articleContent = document.querySelector('article.article-content');
     const id = generateRandomString(5);
     const sectionId = 'article-section-title-' + id;
 
-    let articleSectionTitle = document.createElement('section');
+    let articleSectionTitle = document.createElement('h1');
     articleSectionTitle.id = sectionId;
     articleSectionTitle.className = 'article-section article-title article-section-title placeholder';
     articleSectionTitle.dataset.placeholder = 'Title';
     articleSectionTitle.contentEditable = 'true';
 
-    articleContent.appendChild(articleSectionTitle);
+    generateSectionWrapperFor(articleSectionTitle, id);
 
     document.querySelector('#' + sectionId).focus();
   });
@@ -456,17 +574,16 @@ document.querySelectorAll('.article-add-section-subtitle').forEach(bu => {
   bu.addEventListener('click', e => {
     e.preventDefault();
 
-    const articleContent = document.querySelector('article.article-content');
     const id = generateRandomString(5);
     const sectionId = 'article-section-subtitle-' + id;
 
-    let articleSectionSubtitle = document.createElement('section');
+    let articleSectionSubtitle = document.createElement('h2');
     articleSectionSubtitle.id = sectionId;
     articleSectionSubtitle.className = 'article-section article-subtitle article-section-subtitle placeholder';
     articleSectionSubtitle.dataset.placeholder = 'Subtitle';
     articleSectionSubtitle.contentEditable = 'true';
 
-    articleContent.appendChild(articleSectionSubtitle);
+    generateSectionWrapperFor(articleSectionSubtitle, id);
 
     document.querySelector('#' + sectionId).focus();
   });
@@ -475,8 +592,6 @@ document.querySelectorAll('.article-add-section-subtitle').forEach(bu => {
 document.querySelectorAll('.article-add-section-video').forEach(bu => {
   bu.addEventListener('click', e => {
     e.preventDefault();
-
-    const articleContentDiv = document.querySelector('article.article-content');
 
     // ToDo: Implement popup to get the video URL
     const videoUrl = window.prompt('Video URL? (Only YouTube for now)');
@@ -497,7 +612,8 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
       articleSectionIframe.allowFullscreen = true;
 
       articleSectionVideo.appendChild(articleSectionIframe);
-      articleContentDiv.appendChild(articleSectionVideo);
+
+      generateSectionWrapperFor(articleSectionVideo, generateRandomString(5));
     }
   });
 });
@@ -509,68 +625,6 @@ document.querySelectorAll('.article-add-section-html').forEach(bu => {
     alert('ToDo');
   });
 });
-
-const removeSection = function(e, sectionId) {
-  e.preventDefault();
-
-  const delRes = confirm('Are you sure you want to delete this section?');
-  if (!delRes) {
-    return;
-  }
-
-  const article = document.querySelector('.article-content');
-  const section = document.querySelector('section[data-section-id="' + sectionId + '"]')
-    ?? document.querySelector('section[data-editor-id="' + sectionId + '"]');
-
-  if (article && section) {
-    article.removeChild(section);
-  }
-
-  const sectionHtml = document.querySelector('#article-section-paragraph-' + sectionId + '-html');
-  if (sectionHtml) {
-    const divHtml = document.querySelector('.article-content-text');
-    if (divHtml) {
-      divHtml.removeChild(sectionHtml);
-    }
-  }
-};
-
-const moveSectionUp = function(e, selectedSection) {
-  e.preventDefault();
-
-  let sectionId = selectedSection.dataset.sectionId;
-
-  let previousElement = null;
-
-  let allSections = [];
-  document.querySelectorAll('.article-section').forEach(s => {
-    allSections.push({id: s.dataset.sectionId, element: s});
-  });
-
-  for (let i = 0; i < allSections.length; i++) {
-    if (allSections[i].id === sectionId) {
-      if (previousElement) {
-        selectedSection.parentNode.insertBefore(selectedSection, previousElement);
-      }
-      break;
-    }
-
-    previousElement = allSections[i].element;
-  }
-
-  selectedSection.scrollIntoView();
-};
-
-const moveSectionDown = function(e, selectedSection) {
-  e.preventDefault();
-
-  if (!selectedSection.nextElementSibling) {
-    return;
-  }
-
-  insertAfter(selectedSection, selectedSection.nextElementSibling);
-  selectedSection.scrollIntoView();
-}
 
 const inputArticleImages = document.querySelector('input[name="article-add-image-input"]');
 if (inputArticleImages) {
@@ -594,6 +648,8 @@ if (inputArticleImages) {
 
       const reader = new FileReader();
       reader.addEventListener('load', function () {
+        let id = generateRandomString(5);
+
         let articleSectionImage = document.createElement('section');
         articleSectionImage.className = 'article-section article-section-image';
 
@@ -614,7 +670,8 @@ if (inputArticleImages) {
         articleSectionImage.appendChild(image);
         articleSectionImage.appendChild(imgLoading);
         articleSectionImage.appendChild(imageCaption);
-        articleContentDiv.appendChild(articleSectionImage);
+
+        generateSectionWrapperFor(articleSectionImage, id);
 
         const pPlaceholders = document.querySelectorAll('.placeholder');
         pPlaceholders[pPlaceholders.length - 1]
@@ -645,66 +702,11 @@ if (inputArticleImages) {
             }
 
             data.images.forEach((i) => {
-              let imageId = i.id;
-              let randomString = generateRandomString(4);
-
               image.classList.remove('opacity');
               image.src = i.url;
-              image.dataset.imageId = imageId;
+              image.dataset.imageId = i.id;
               image.alt = i.caption ?? i.url;
               articleSectionImage.removeChild(imgLoading);
-
-              let divImageControl = document.createElement('div');
-              divImageControl.className = 'article-section-buttons';
-
-              let trashImg = new Image();
-              trashImg.className = 'img-svg';
-              trashImg.title = 'Remove from article';
-              trashImg.alt = 'Remove from article';
-              trashImg.src = '/img/svg/trash.svg';
-
-              let deleteButton = document.createElement('a');
-              deleteButton.dataset.imageId = imageId;
-              deleteButton.className = 'article-section-button article-section-button-delete';
-              deleteButton.appendChild(trashImg);
-
-              let arrowUpImg = new Image();
-              arrowUpImg.className = 'img-svg';
-              arrowUpImg.title = 'Move Up';
-              arrowUpImg.alt = 'Move Up';
-              arrowUpImg.src = '/img/svg/arrow-fat-up.svg';
-
-              let moveUpButton = document.createElement('a');
-              moveUpButton.dataset.imageId = imageId;
-              moveUpButton.className = 'article-section-button article-section-button-up';
-              moveUpButton.appendChild(arrowUpImg);
-
-              let arrowDownImg = new Image();
-              arrowDownImg.className = 'img-svg';
-              arrowDownImg.title = 'Move Down';
-              arrowDownImg.alt = 'Move Down';
-              arrowDownImg.src = '/img/svg/arrow-fat-down.svg';
-
-              let moveDownButton = document.createElement('a');
-              moveDownButton.dataset.imageId = imageId;
-              moveDownButton.className = 'article-section-button article-section-button-down';
-              moveDownButton.appendChild(arrowDownImg);
-
-              divImageControl.appendChild(moveUpButton);
-              divImageControl.appendChild(moveDownButton);
-              divImageControl.appendChild(deleteButton);
-
-              articleSectionImage.appendChild(divImageControl);
-              articleSectionImage.id = 'article-section-image-' + randomString + '-html';
-              articleSectionImage.dataset.sectionId = randomString;
-
-              document.querySelector(".article-section-button-delete[data-image-id='" + imageId + "']")
-                .addEventListener('click', e => removeSection(e, randomString));
-              const newSection = document.querySelector('#article-section-image-' + randomString + '-html');
-              document.querySelector(".article-section-button-down[data-image-id='" + imageId + "']")
-                .addEventListener('click', e => moveSectionDown(e, newSection));
-              document.querySelector(".article-section-button-up[data-image-id='" + imageId + "']")
-                .addEventListener('click', e => moveSectionUp(e, newSection));
             });
           }).catch((error) => {
             articleContentDiv.removeChild(articleSectionImage);
@@ -737,17 +739,11 @@ document.querySelectorAll('.article-section-button-delete').forEach(el => {
 });
 
 document.querySelectorAll('.article-section-button-up').forEach(el => {
-  el.addEventListener('click', e => moveSectionUp(e, el.parentNode.parentNode));
+  el.addEventListener('click', e => moveSectionUp(e, el.parentNode.parentNode.dataset.sectionId));
 });
 
 document.querySelectorAll('.article-section-button-down').forEach(el => {
-  el.addEventListener('click', e => moveSectionDown(e, el.parentNode.parentNode));
+  el.addEventListener('click', e => moveSectionDown(e, el.parentNode.parentNode.dataset.sectionId));
 });
 
 document.querySelectorAll('section.article-section-paragraph').forEach(s => loadEditor(s.id));
-
-export {
-  moveSectionUp,
-  moveSectionDown,
-  removeSection
-};

@@ -8,7 +8,6 @@ use uve\core\module\article\value\ArticleSectionType;
 $article = $responseData->getFirstArticle();
 $articleSections = $responseData->getArticleSections();
 $images = [];
-$editorIds = [];
 
 $this->layout('base', ['responseData' => $responseData]);
 
@@ -23,15 +22,51 @@ function getClassName(int $sectionTypeId): string
   };
 }
 
-function getControlButtonsHtml(bool $smallButton = false): string
+function getControlButtonsHtml(int $sectionId): string
 {
-    $divClass = $smallButton ? ' article-section-buttons-small' : '';
-    $buttonClass = $smallButton ? ' article-section-button-small' : '';
-    return '<div class="article-section-buttons' . $divClass . '">'
-        . '<a href="#" class="article-section-button' . $buttonClass . ' article-section-button-up"><img src="/img/svg/arrow-fat-up.svg" class="img-svg" alt="Move image up"></a>'
-        . '<a href="#" class="article-section-button' . $buttonClass . ' article-section-button-down"><img src="/img/svg/arrow-fat-down.svg" class="img-svg" alt="Move image down"></a>'
-        . '<a href="#" class="article-section-button' . $buttonClass . ' article-section-button-delete"><img src="/img/svg/trash.svg" class="img-svg" alt="Remove image from article"></a>'
-        . '</div>';
+    return PHP_EOL . '<div class="article-section-controls">' . PHP_EOL
+        . '<a href="#" id="article-section-button-up-' . $sectionId . '" class="article-section-button article-section-button-up"><img class="img-svg" title="Move Up" alt="Move Up" src="/img/svg/arrow-fat-up.svg"></a>' . PHP_EOL
+        . '<a href="#" id="article-section-button-down-' . $sectionId . '" class="article-section-button article-section-button-down"><img class="img-svg" title="Move Down" alt="Move Down" src="/img/svg/arrow-fat-down.svg"></a>' . PHP_EOL
+        . '<a href="#" id="article-section-button-delete-' . $sectionId . '" class="article-section-button article-section-button-delete"><img class="img-svg" title="Remove from article" alt="Remove from article" src="/img/svg/trash.svg"></a>' . PHP_EOL
+        . '</div>' . PHP_EOL;
+}
+
+function generateSection(ArticleSection $articleSection): string
+{
+    if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
+        $class = getClassName($articleSection->getArticleSectionTypeId());
+        $id = $class . '-' . $articleSection->getId();
+        return '<section id="' . $id . '" data-editor-id="' . $articleSection->getId() . '" class="article-section article-content article-section-paragraph placeholder" data-placeholder="Type something...">' . PHP_EOL
+            . '<div class="pell-content ' . $id . '" contenteditable="true">' . $articleSection->getContentHtml() . '</div>' . PHP_EOL
+            . '</section>';
+    }
+
+    $class = 'article-section ' . getClassName($articleSection->getArticleSectionTypeId());
+    $contentEditable = '';
+    $placeholder = '';
+    $contentHtml = $articleSection->getContentHtml();
+    if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_TITLE ||
+        $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_SUBTITLE
+    ) {
+        $contentEditable = ' contenteditable="true"';
+        $placeholder =' data-placeholder="Type something..."';
+    }
+
+    if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
+        $class .= ' placeholder null';
+    }
+
+    if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::IMAGE) {
+        $contentHtml = str_replace(
+            'article-section-image-caption"',
+            'article-section-image-caption" contenteditable="true"',
+            $contentHtml
+        );
+    }
+
+  return '<section class="' . $class . '" data-section-id="' . $articleSection->getId() . '"' . $contentEditable . $placeholder . '>'  . PHP_EOL
+      . $contentHtml . PHP_EOL
+      . '</section>';
 }
 
 ?>
@@ -55,48 +90,18 @@ function getControlButtonsHtml(bool $smallButton = false): string
 <?php
     /** @var ArticleSection $articleSection */
     foreach ($articleSections as $articleSection) {
-        $editorId = getClassName($articleSection->getArticleSectionTypeId()) . '-' . $articleSection->getId();
-        $class = 'article-section ' . getClassName($articleSection->getArticleSectionTypeId());
-        $contentEditable = '';
-        $placeholder = '';
-        $contentHtml = $articleSection->getContentHtml();
-        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_TITLE ||
-            $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_SUBTITLE
-        ) {
-            $contentEditable = ' contenteditable="true"';
-            $contentHtml .= getControlButtonsHtml(true);
-            $placeholder =' data-placeholder="Type something..."';
-        }
-
-        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::IMAGE) {
-            $contentHtml = str_replace(
-                'article-section-image-caption"',
-                'article-section-image-caption" contenteditable="true"',
-                $contentHtml
-            );
-
-            $contentHtml .= getControlButtonsHtml();
-        }
-
-        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
-            $editorIds[] = $editorId;
-            $class .= ' placeholder null';
 ?>
-        <section id="<?=$editorId?>" class="article-section article-content <?=getClassName($articleSection->getArticleSectionTypeId())?>" data-section-id="<?=$articleSection->getId()?>">
-          <div class="<?=$editorId?> placeholder pell-content" contenteditable="true"><?=$articleSection->getContentHtml()?></div>
-        </section>
-<?php } else { ?>
-        <section class="<?=$class?>" data-section-id="<?=$articleSection->getId()?>"<?=$contentEditable?><?=$placeholder?>>
-            <?=$contentHtml . PHP_EOL?>
-        </section>
-<?php } ?>
+        <div id="article-section-wrapper-<?=$articleSection->getId()?>" class="article-section-wrapper" data-section-id="<?=$articleSection->getId()?>">
+          <?=generateSection($articleSection)?>
+          <?=getControlButtonsHtml($articleSection->getId())?>
+        </div>
 <?php } ?>
       </article>
       <div class="article-content-text null">
 <?php
     foreach ($articleSections as $articleSection) {
-        $editorId = getClassName($articleSection->getArticleSectionTypeId()) . '-' . $articleSection->getId();
         if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
+            $editorId = getClassName($articleSection->getArticleSectionTypeId()) . '-' . $articleSection->getId();
 ?>
         <div id="<?=$editorId?>-html">
             <?=$articleSection->getContentHtml() . PHP_EOL?>
