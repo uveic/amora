@@ -22,11 +22,11 @@ function getClassName(int $sectionTypeId): string
   };
 }
 
-function getControlButtonsHtml(int $sectionId): string
+function getControlButtonsHtml(int $sectionId, bool $isFirst, bool $isLast): string
 {
     return PHP_EOL . '<div class="article-section-controls">' . PHP_EOL
-        . '<a href="#" id="article-section-button-up-' . $sectionId . '" class="article-section-button article-section-button-up"><img class="img-svg" title="Move Up" alt="Move Up" src="/img/svg/arrow-fat-up.svg"></a>' . PHP_EOL
-        . '<a href="#" id="article-section-button-down-' . $sectionId . '" class="article-section-button article-section-button-down"><img class="img-svg" title="Move Down" alt="Move Down" src="/img/svg/arrow-fat-down.svg"></a>' . PHP_EOL
+        . '<a href="#" id="article-section-button-up-' . $sectionId . '" class="article-section-button article-section-button-up' . ($isFirst ? ' null' : '') . '"><img class="img-svg" title="Move Up" alt="Move Up" src="/img/svg/arrow-fat-up.svg"></a>' . PHP_EOL
+        . '<a href="#" id="article-section-button-down-' . $sectionId . '" class="article-section-button article-section-button-down' . ($isLast ? ' null' : '') . '"><img class="img-svg" title="Move Down" alt="Move Down" src="/img/svg/arrow-fat-down.svg"></a>' . PHP_EOL
         . '<a href="#" id="article-section-button-delete-' . $sectionId . '" class="article-section-button article-section-button-delete"><img class="img-svg" title="Remove from article" alt="Remove from article" src="/img/svg/trash.svg"></a>' . PHP_EOL
         . '</div>' . PHP_EOL;
 }
@@ -88,14 +88,19 @@ function generateSection(ArticleSection $articleSection): string
       </div>
       <article class="article-content">
 <?php
+    $count = 0;
+    $total = count($articleSections);
     /** @var ArticleSection $articleSection */
     foreach ($articleSections as $articleSection) {
 ?>
         <div id="article-section-wrapper-<?=$articleSection->getId()?>" class="article-section-wrapper" data-section-id="<?=$articleSection->getId()?>">
           <?=generateSection($articleSection)?>
-          <?=getControlButtonsHtml($articleSection->getId())?>
+          <?=getControlButtonsHtml($articleSection->getId(), $count === 0, $count === $total - 1)?>
         </div>
-<?php } ?>
+<?php
+        $count++;
+    }
+?>
       </article>
       <div class="article-content-text null">
 <?php

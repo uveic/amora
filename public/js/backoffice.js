@@ -32,6 +32,8 @@ const removeSection = function(e, sectionId) {
       divHtml.removeChild(sectionHtml);
     }
   }
+
+  displayUpAndDownArrows();
 };
 
 const moveSectionUp = function(e, id) {
@@ -56,6 +58,8 @@ const moveSectionUp = function(e, id) {
 
     previousElement = allSections[i].element;
   }
+
+  displayUpAndDownArrows();
 };
 
 const moveSectionDown = function(e, id) {
@@ -68,6 +72,7 @@ const moveSectionDown = function(e, id) {
   }
 
   insertAfter(selectedSection, selectedSection.nextElementSibling);
+  displayUpAndDownArrows();
 }
 
 const generateSectionWrapperFor = function(articleSectionElement, id) {
@@ -132,6 +137,8 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
     .addEventListener('click', e => moveSectionDown(e, id));
   document.querySelector("#article-section-button-up-" + id)
     .addEventListener('click', e => moveSectionUp(e, id));
+
+  displayUpAndDownArrows();
 };
 
 const getSectionTypeIdFromClassList = function(classList) {
@@ -156,6 +163,32 @@ const getSectionTypeIdFromClassList = function(classList) {
   }
 
   return 0;
+};
+
+const displayUpAndDownArrows = function() {
+  let arrowDownAll = document.querySelectorAll('.article-section-button-down');
+  let count = 0;
+
+  arrowDownAll.forEach(d => {
+    if (arrowDownAll.length && count !== arrowDownAll.length - 1) {
+      d.classList.remove('null');
+    } else {
+      d.classList.add('null');
+    }
+    count++;
+  });
+
+  let arrowUpAll = document.querySelectorAll('.article-section-button-up');
+
+  count = 0;
+  arrowUpAll.forEach(u => {
+    if (arrowUpAll.length && count !== 0) {
+      u.classList.remove('null');
+    } else {
+      u.classList.add('null');
+    }
+    count++;
+  });
 };
 
 document.querySelectorAll('#form-article').forEach(el => {
