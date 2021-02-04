@@ -14,6 +14,7 @@ return [
     'navAdminUsers' => 'Users',
     'navAdminImages' => 'Images',
     'navAdminArticles' => 'Articles',
+    'navAdminArticleOptions' => 'Article Options',
 
     'authenticationActionHomeLink' => 'Go back to log in page',
     'authenticationLoginSubtitle' => 'Welcome back.',
@@ -48,6 +49,7 @@ return [
 
     'dashboardGoTo' => 'Go to...',
 
+    'globalFormat' => 'Format',
     'globalRequired' => 'Required',
     'globalNew' => 'New',
     'globalEdit' => 'Edit',
@@ -64,10 +66,14 @@ return [
     'globalUpdateAndClose' => 'U&C',
     'globalUpdated' => 'Updated',
     'globalUpdatedAt' => 'Updated At',
+    'globalPublishAt' => 'Publish At',
     'globalCreated' => 'Created',
     'globalStatus' => 'Status',
     'globalPreview' => 'Preview',
     'globalArticle' => 'Article',
+    'globalCategory' => 'Type',
+    'globalTags' => 'Tags',
+    'globalDateFormat' => 'dd/mm/yyyy',
 
     'globalUploadImage' => 'Upload image(s)',
     'globalAddImage' => 'Add image(s)',

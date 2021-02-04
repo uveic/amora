@@ -780,3 +780,23 @@ document.querySelectorAll('.article-section-button-down').forEach(el => {
 });
 
 document.querySelectorAll('section.article-section-paragraph').forEach(s => loadEditor(s.id));
+
+document.querySelectorAll('a.article-settings').forEach(el => {
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const sideNav = document.getElementById('side-options');
+    sideNav.classList.remove('null');
+    sideNav.classList.add('side-options-open');
+  });
+});
+
+document.querySelectorAll('a.close-button').forEach(el => {
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const sideNav = document.getElementById('side-options');
+    sideNav.classList.add('null');
+    sideNav.classList.remove('side-options-open');
+  });
+});

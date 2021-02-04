@@ -14,6 +14,7 @@ return [
     'navAdminUsers' => 'Usuarios',
     'navAdminImages' => 'Imágenes',
     'navAdminArticles' => 'Artículos',
+    'navAdminArticleOptions' => 'Opciones artículo',
 
     'authenticationActionHomeLink' => 'Volver a la página de entrada',
     'authenticationLoginSubtitle' => '¡Bienvenido/a de nuevo, adelante!',
@@ -48,6 +49,7 @@ return [
 
     'dashboardGoTo' => 'Ir a...',
 
+    'globalFormat' => 'Formato',
     'globalRequired' => 'Obligatorio',
     'globalNew' => 'Nuevo',
     'globalEdit' => 'Editar',
@@ -64,10 +66,14 @@ return [
     'globalUpdateAndClose' => 'AyC',
     'globalUpdated' => 'Actualizado',
     'globalUpdatedAt' => 'Actualizado',
+    'globalPublishAt' => 'Publicar el',
     'globalCreated' => 'Creado',
     'globalStatus' => 'Estatus',
     'globalPreview' => 'Previsualizar',
     'globalArticle' => 'artículo',
+    'globalCategory' => 'Categoría',
+    'globalTags' => 'Etiquetas',
+    'globalDateFormat' => 'dd/mm/aaaa',
 
     'globalUploadImage' => 'Subir imagen(es)',
     'globalAddImage' => 'Añadir imagen(es)',

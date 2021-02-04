@@ -33,6 +33,7 @@
 
 *, *:before, *:after {
   box-sizing: border-box;
+  outline: none;
 }
 
 img {
@@ -111,7 +112,7 @@ header {
   background: var(--main-text-color);
   font-family: var(--font-paragraph);
   position: relative;
-  z-index: 999;
+  z-index: 900;
   width: 100%;
   padding: 0 1.5rem;
 }
@@ -339,7 +340,7 @@ ul.user-nav-menu a:hover {
   left: 0;
   top: 35px;
   padding: 0.5rem;
-  z-index: 999;
+  z-index: 900;
 }
 
 .dropdown-menu ~ div > ul a {
@@ -467,6 +468,7 @@ button.is-link.is-light,
   color: var(--color-red) !important;
 }
 
+.label,
 label {
   color: #363636;
   display: block;
@@ -624,7 +626,7 @@ a.black:focus {
 }
 /* Article styles ends here */
 
-/* Classes for generic use */
+/* Classes for generic use starts here */
 .m-t-0 {margin-top: 0 !important;}
 .m-t-1 {margin-top: 1rem !important;}
 .m-t-2 {margin-top: 2rem !important;}
@@ -675,7 +677,7 @@ svg,
   width: 70px !important;
   height: auto !important;
   opacity: 1;
-  z-index: 999;
+  z-index: 900;
 }
 
 .opacity {
@@ -692,16 +694,14 @@ svg,
 .enabled-icon-failure {
   background-color: var(--feedback-failure-color);
 }
-/* Classes for generic use */
+/* Classes for generic use ends here */
 
 #home-links a {
   margin-right: 1.5rem;
   line-height: 2.5rem;
 }
 
-@media screen and (min-width: 600px) {
-
-}
+@media screen and (min-width: 600px) {}
 
 @media screen and (min-width: 800px) {
   .content-onboarding {
