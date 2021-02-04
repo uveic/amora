@@ -14,9 +14,9 @@ use uve\core\model\response\HtmlResponseData;
   <p>This is my personal site. It is a work in progress. Soon(-ish) you will find here my blog and personal projects.</p>
   <p>Please feel free to say hi anytime.</p>
   <p>Have a great day!</p>
-  <div id="home-links" class="m-t-3">
+  <p id="home-links" class="m-t-3">
     <a target="_blank" href="mailto:victor@victorgonzalez.eu">victor@victorgonzalez.eu</a>
-  </div>
+  </p>
 </section>
 <?=$this->insert('shared/partials/footer', ['responseData' => $responseData])?>
 </body>
