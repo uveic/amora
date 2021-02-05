@@ -15,8 +15,8 @@ function getClassName(int $sectionTypeId): string
 {
   return match ($sectionTypeId) {
       ArticleSectionType::TEXT_PARAGRAPH => 'article-section-paragraph',
-      ArticleSectionType::TEXT_TITLE => 'article-section-title article-title placeholder',
-      ArticleSectionType::TEXT_SUBTITLE => 'article-section-subtitle article-subtitle placeholder',
+      ArticleSectionType::TEXT_TITLE => 'article-section-title',
+      ArticleSectionType::TEXT_SUBTITLE => 'article-section-subtitle',
       ArticleSectionType::IMAGE => 'article-section-image',
       ArticleSectionType::YOUTUBE_VIDEO => 'article-section-video'
   };
@@ -47,14 +47,15 @@ function generateSection(ArticleSection $articleSection): string
     }
 
     $class = 'article-section ' . getClassName($articleSection->getArticleSectionTypeId());
-    $contentEditable = '';
-    $placeholder = '';
     $contentHtml = $articleSection->getContentHtml();
     if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_TITLE ||
         $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_SUBTITLE
     ) {
-        $contentEditable = ' contenteditable="true"';
-        $placeholder =' data-placeholder="Type something..."';
+        $contentHtml = str_replace(
+            ' data-placeholder=',
+            ' contenteditable="true" data-placeholder=',
+            $contentHtml
+        );
     }
 
     if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
@@ -69,7 +70,7 @@ function generateSection(ArticleSection $articleSection): string
         );
     }
 
-  return '<section class="' . $class . '" data-section-id="' . $articleSection->getId() . '"' . $contentEditable . $placeholder . '>'  . PHP_EOL
+  return '<section class="' . $class . '" data-section-id="' . $articleSection->getId() . '">'  . PHP_EOL
       . $contentHtml . PHP_EOL
       . '</section>';
 }

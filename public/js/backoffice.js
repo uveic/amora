@@ -591,15 +591,19 @@ document.querySelectorAll('.article-add-section-title').forEach(bu => {
     const id = generateRandomString(5);
     const sectionId = 'article-section-title-' + id;
 
+    let articleSectionWrapper = document.createElement('section');
+    articleSectionWrapper.id = sectionId;
+    articleSectionWrapper.className = 'article-section article-section-title';
+
     let articleSectionTitle = document.createElement('h1');
-    articleSectionTitle.id = sectionId;
-    articleSectionTitle.className = 'article-section article-title article-section-title placeholder';
+    articleSectionTitle.className = 'article-title placeholder';
     articleSectionTitle.dataset.placeholder = 'Title';
     articleSectionTitle.contentEditable = 'true';
 
-    generateSectionWrapperFor(articleSectionTitle, id);
+    articleSectionWrapper.appendChild(articleSectionTitle);
+    generateSectionWrapperFor(articleSectionWrapper, id);
 
-    document.querySelector('#' + sectionId).focus();
+    document.querySelector('#' + sectionId + ' > h1').focus();
   });
 });
 
@@ -610,13 +614,17 @@ document.querySelectorAll('.article-add-section-subtitle').forEach(bu => {
     const id = generateRandomString(5);
     const sectionId = 'article-section-subtitle-' + id;
 
+    let articleSectionWrapper = document.createElement('section');
+    articleSectionWrapper.id = sectionId;
+    articleSectionWrapper.className = 'article-section article-section-subtitle';
+
     let articleSectionSubtitle = document.createElement('h2');
-    articleSectionSubtitle.id = sectionId;
-    articleSectionSubtitle.className = 'article-section article-subtitle article-section-subtitle placeholder';
+    articleSectionSubtitle.className = 'article-subtitle placeholder';
     articleSectionSubtitle.dataset.placeholder = 'Subtitle';
     articleSectionSubtitle.contentEditable = 'true';
 
-    generateSectionWrapperFor(articleSectionSubtitle, id);
+    articleSectionWrapper.appendChild(articleSectionSubtitle);
+    generateSectionWrapperFor(articleSectionWrapper, id);
 
     document.querySelector('#' + sectionId).focus();
   });
