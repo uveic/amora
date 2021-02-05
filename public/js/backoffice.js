@@ -636,6 +636,8 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
 
       let articleSectionVideo = document.createElement('section');
       articleSectionVideo.className = 'article-section article-section-video';
+      let iframeWrapper = document.createElement('div');
+      iframeWrapper.className = 'article-section-video';
       let articleSectionIframe = document.createElement('iframe');
       articleSectionIframe.width = '560';
       articleSectionIframe.height = '315';
@@ -644,7 +646,8 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
       articleSectionIframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       articleSectionIframe.allowFullscreen = true;
 
-      articleSectionVideo.appendChild(articleSectionIframe);
+      iframeWrapper.appendChild(articleSectionIframe);
+      articleSectionVideo.appendChild(iframeWrapper);
 
       generateSectionWrapperFor(articleSectionVideo, generateRandomString(5));
     }

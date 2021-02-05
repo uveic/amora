@@ -588,19 +588,19 @@ article img,
   padding-right: 1rem;
 }
 
-.article-section-video {
+div.article-section-video {
   position: relative;
   overflow: hidden;
   width: 100%;
 }
 
-.article-section-video::after {
+div.article-section-video::after {
   display: block;
   content: "";
   padding-top: 56.25%;
 }
 
-.article-section-video iframe {
+div.article-section-video iframe {
   position: absolute;
   top: 0;
   left: 0;
