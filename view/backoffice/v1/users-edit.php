@@ -28,7 +28,7 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
     <div id="feedback" class="feedback null"></div>
     <form id="form-user" action="#">
       <div class="form-header m-t-1 m-l-1 m-r-1">
-        <h1><?=$this->e($userToEdit ? 'Edit' : 'New')?> User</h1>
+        <h1><?=($userToEdit ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></h1>
         <div class="links">
           <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
         </div>
@@ -101,11 +101,6 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
           </div>
           <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
         </div>
-<?php if ($userToEdit) { ?>
-        <div class="m-t-6 m-b-6">
-          <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users/<?=$this->e($userToEdit->getId())?>/delete" class="is-danger">Delete User</a>
-        </div>
-<?php } ?>
       </div>
 <?=$this->insert('partials/users-edit/control-bar', ['responseData' => $responseData])?>
     </form>

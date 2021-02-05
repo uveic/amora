@@ -467,7 +467,8 @@ if (formUser) {
     const languageIdEl = document.querySelector('select#languageId');
     const roleIdEl = document.querySelector('select#roleId');
     const timezoneEl = document.querySelector('select#timezone');
-    const isEnabledEl = document.querySelector('div#isEnabled');
+    const isEnabledEl = document.querySelector('.dropdown-menu-option[data-checked="1"]');
+    const isEnabled = Number.parseInt(isEnabledEl.dataset.value) > 0;
 
     const userId = userIdEl && userIdEl.value ? Number.parseInt(userIdEl.value) : null;
 
@@ -478,7 +479,7 @@ if (formUser) {
       'languageId': languageIdEl.value ?? null,
       'roleId': roleIdEl.value ?? null,
       'timezone': timezoneEl.value ?? null,
-      'isEnabled': !!isEnabledEl.dataset.enabled
+      'isEnabled': isEnabled
     });
 
     if (userId) {
@@ -488,28 +489,6 @@ if (formUser) {
       xhr.post('/back/user', payload, feedbackDiv)
         .then(() => window.location = '/backoffice/users');
     }
-  });
-}
-
-const toggleEnableUser = document.querySelector('div#isEnabled');
-if (toggleEnableUser) {
-  const userIdEl = document.querySelector('input#userId');
-  const userId = userIdEl && userIdEl.value ? Number.parseInt(userIdEl.value) : null;
-
-  toggleEnableUser.addEventListener('click', () => {
-    const enabled = !toggleEnableUser.dataset.enabled;
-
-    const payload = JSON.stringify({
-      'isEnabled': enabled
-    });
-
-    xhr.put('/back/user/' + userId, payload, feedbackDiv)
-      .then(() => {
-        toggleEnableUser.classList.toggle('feedback-success');
-        toggleEnableUser.classList.toggle('feedback-error');
-        toggleEnableUser.dataset.enabled = enabled ? '1' : '';
-        toggleEnableUser.textContent = enabled ? 'Enabled' : 'Disabled';
-      });
   });
 }
 
@@ -537,6 +516,36 @@ document.querySelectorAll('.article-status-option').forEach(op => {
 
     document.querySelectorAll('.article-status-option').forEach(o => {
       o.dataset.checked = o.dataset.articleStatusId === op.dataset.articleStatusId
+        ? '1'
+        : '0';
+    });
+  });
+});
+
+document.querySelectorAll('.user-enabled-option').forEach(op => {
+  op.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    document.querySelectorAll('.dropdown-menu-label').forEach(d => {
+      if (op.dataset.value === '1') {
+        d.classList.add('feedback-success');
+        d.classList.remove('background-light-color');
+      } else {
+        d.classList.remove('feedback-success');
+        d.classList.add('background-light-color');
+      }
+    });
+
+    document.querySelectorAll('.dropdown-menu-label > span').forEach(sp => {
+      sp.textContent = op.textContent;
+    });
+
+    document.querySelectorAll('.dropdown-menu').forEach(d => {
+      d.checked = false;
+    });
+
+    document.querySelectorAll('.user-enabled-option').forEach(o => {
+      o.dataset.checked = o.dataset.value === op.dataset.value
         ? '1'
         : '0';
     });

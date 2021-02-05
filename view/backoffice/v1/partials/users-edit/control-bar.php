@@ -2,6 +2,7 @@
 
 use uve\core\model\response\HtmlResponseDataAuthorised;
 use uve\core\util\DateUtil;
+use uve\core\util\StringUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
@@ -21,10 +22,21 @@ $createdAtContent = $userToEdit
     : '';
 
 $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
+$random = StringUtil::getRandomString(5);
 
 ?>
       <div class="form-control-bar-header m-b-3">
         <input style="width: revert;" type="submit" class="button" value="<?=$userToEdit ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
-        <div style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
-        <div id="isEnabled" data-enabled="<?=$isEnabled ? '1' : ''?>" class="enabled-icon-big <?=$isEnabled ? 'feedback-success' : 'feedback-error' ?>"> <?=$isEnabled ? 'Enabled' : 'Disabled' ?></div>
+        <div class="m-r-1" style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
+        <input type="checkbox" id="dropdown-menu-<?=$random?>" class="dropdown-menu">
+        <div class="dropdown-container">
+          <ul>
+            <li><a data-checked="<?=$isEnabled ? '1' : '0'?>" data-value="1" class="dropdown-menu-option user-enabled-option feedback-success" href="#"><?=$responseData->getLocalValue('globalActivated')?></a></li>
+            <li><a data-checked="<?=$isEnabled ? '0' : '1'?>" data-value="0" class="dropdown-menu-option user-enabled-option background-light-color" href="#"><?=$responseData->getLocalValue('globalDeactivated')?></a></li>
+          </ul>
+          <label for="dropdown-menu-<?=$random?>" class="dropdown-menu-label <?=$isEnabled ? 'feedback-success' : 'background-light-color' ?>">
+            <span><?=($isEnabled ? $responseData->getLocalValue('globalActivated') : $responseData->getLocalValue('globalDeactivated'))?></span>
+            <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">
+          </label>
+        </div>
       </div>

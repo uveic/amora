@@ -76,6 +76,9 @@ return [
     'globalCategory' => 'Type',
     'globalTags' => 'Tags',
     'globalDateFormat' => 'dd/mm/yyyy',
+    'globalActivated' => 'Enabled',
+    'globalDeactivated' => 'Disabled',
+    'globalUser' => 'User',
 
     'globalUploadImage' => 'Upload image(s)',
     'globalAddImage' => 'Add image(s)',
