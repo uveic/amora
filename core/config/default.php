@@ -2,11 +2,9 @@
 
 return [
     'env' => 'dev',
-    'site_name' => 'uve',
-    'site_description' => '',
     'site_image_url' => '',
     'timezone' => 'UTC',
-    'php_locale' => 'en',
+    'php_locale' => 'en_GB',
     'default_site_language' => 'en',
     'base_url' => 'http://localhost:8888/',
     'media_base_dir' => '/path/to/your/code/folder/public/uploads',
@@ -18,20 +16,20 @@ return [
         'core' => [
             'host' => 'localhost',
             'user' => 'root',
-            'password' => '',
-            'name' => 'uve'
+            'password' => 'rootpass',
+            'name' => 'victorgonzalez'
         ],
         'action' => [
             'host' => 'localhost',
             'user' => 'root',
-            'password' => '',
-            'name' => 'action'
+            'password' => 'rootpass',
+            'name' => 'victorgonzalez_action'
         ],
         'mailer' => [
             'host' => 'localhost',
             'user' => 'root',
-            'password' => '',
-            'name' => 'mailer'
+            'password' => 'rootpass',
+            'name' => 'victorgonzalez_mailer'
         ]
     ],
     'mailer' => [
@@ -47,10 +45,5 @@ return [
             'base_api_url' => 'https://api.sendgrid.com/v3',
             'api_key' => ''
         ],
-        'gmail' => [
-            'application_name' => 'Gmail API Integration',
-            'credentials_path' => '~/path/to/.credentials/gmail-php-quickstart.json',
-            'client_secret_path' => '/path/to/client_secret.json'
-        ]
     ]
 ];

@@ -3,6 +3,7 @@
 namespace uve\core\module\article\service;
 
 use uve\core\Logger;
+use uve\Core\Model\Util\QueryOptions;
 use uve\core\module\article\datalayer\ArticleDataLayer;
 use uve\core\module\article\model\Article;
 use uve\core\module\article\model\ArticleSection;
@@ -36,9 +37,9 @@ class ArticleService
         return $this->articleDataLayer->getArticleForUri($uri);
     }
 
-    public function getAllArticles(): array
+    public function getAllArticles(?QueryOptions $queryOptions): array
     {
-        return $this->articleDataLayer->getAllArticles();
+        return $this->articleDataLayer->getAllArticles($queryOptions);
     }
 
     public function getSectionsForArticleId(int $articleId): array

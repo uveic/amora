@@ -51,6 +51,7 @@ class ArticleCore extends Core
         return self::getInstance(
             'ArticleService',
             function () use ($logger, $articleDataLayer, $imageService) {
+                require_once self::getPathRoot() . '/core/model/util/QueryOptions.php';
                 require_once self::getPathRoot() . '/core/module/article/value/ArticleStatus.php';
                 require_once self::getPathRoot() . '/core/module/article/value/ArticleType.php';
                 require_once self::getPathRoot() . '/core/module/article/model/Article.php';

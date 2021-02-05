@@ -6,6 +6,7 @@ use uve\core\Logger;
 use uve\core\model\response\HtmlResponseDataAuthorised;
 use uve\core\model\Request;
 use uve\core\model\Response;
+use uve\Core\Model\Util\QueryOptions;
 use uve\core\module\action\service\ActionService;
 use uve\core\module\article\service\ArticleService;
 use uve\core\module\article\service\ImageService;
@@ -140,7 +141,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getArticlesPage(Request $request): Response
     {
-        $articles = $this->articleService->getAllArticles();
+        $articles = $this->articleService->getAllArticles(new QueryOptions(null, 'DESC', 100));
 
         return Response::createBackofficeHtmlResponse(
             'articles',

@@ -13,6 +13,7 @@ use uve\core\module\user\model\UserVerification;
 use uve\core\module\user\value\VerificationType;
 use uve\core\util\DateUtil;
 use uve\core\util\StringUtil;
+use uve\core\value\Language;
 
 class UserMailService
 {
@@ -95,7 +96,8 @@ class UserMailService
 
         $baseUrl = Core::getConfigValue('base_url');
         $linkUrl = $baseUrl . 'user/verify/' . $verificationIdentifier;
-        $siteName = Core::getConfigValue('site_name');
+        $siteName = Core::getLocalisationUtil(Language::getIsoCodeForId($user->getLanguageId()))
+            ->getValue('siteName');
 
         $emailSubject = 'Welcome to ' . $siteName . '! Confirm Your Email';
         $emailContent = '<h2>Welcome!</h2>' .
@@ -121,7 +123,8 @@ class UserMailService
 
         $baseUrl = Core::getConfigValue('base_url');
         $linkUrl = $baseUrl . 'user/reset/' . $verificationIdentifier;
-        $siteName = Core::getConfigValue('site_name');
+        $siteName = Core::getLocalisationUtil(Language::getIsoCodeForId($user->getLanguageId()))
+            ->getValue('siteName');
         $emailSubject = $siteName . ' Password Reset';
         $emailContent = '<p>Hi there,</p>' .
             '<p>We received a request to change the password for your ' . $siteName . ' account.</p>' .

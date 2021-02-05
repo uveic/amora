@@ -5,6 +5,7 @@ namespace uve\core\module\article\datalayer;
 use Throwable;
 use uve\core\database\MySqlDb;
 use uve\core\Logger;
+use uve\Core\Model\Util\QueryOptions;
 use uve\core\module\article\model\Article;
 use uve\core\module\article\model\ArticleSection;
 use uve\core\module\user\datalayer\UserDataLayer;
@@ -36,11 +37,20 @@ class ArticleDataLayer
         ?int $statusId = null,
         ?int $typeId = null,
         ?string $uri = null,
-        ?string $sortDirection = 'DESC'
+        ?QueryOptions $queryOptions = null,
     ): array {
-        if ($sortDirection && !in_array($sortDirection, ['DESC', 'ASC'])) {
-            $sortDirection = 'DESC';
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
         }
+
+        $orderByMapping = [
+            'published_at' => 'a.published_at',
+            'updated_at' => 'a.updated_at',
+        ];
+
+        $orderBy = empty($orderByMapping[$queryOptions->getOrderBy()])
+            ? 'a.updated_at'
+            : $orderByMapping[$queryOptions->getOrderBy()];
 
         $params = [];
         $sql = '
@@ -95,7 +105,8 @@ class ArticleDataLayer
             $params[':uri'] = $uri;
         }
 
-        $sql .= ' ORDER BY a.published_at ' . $sortDirection;
+        $sql .= ' ORDER BY ' . $orderBy . ' ' . $queryOptions->getSortingDirection();
+        $sql .= ' LIMIT ' . $queryOptions->getLimit() . ' OFFSET ' . $queryOptions->getOffset();
 
         $res = $this->db->fetchAll($sql, $params);
 
@@ -107,9 +118,9 @@ class ArticleDataLayer
         return $output;
     }
 
-    public function getAllArticles(): array
+    public function getAllArticles(?QueryOptions $queryOptions): array
     {
-        return $this->getArticles();
+        return $this->getArticles(null, null, null, null, $queryOptions);
     }
 
     public function getArticleForId(int $id): ?Article
@@ -127,10 +138,10 @@ class ArticleDataLayer
     public function filterArticlesBy(
         int $statusId = null,
         int $typeId = null,
-        string $sortDirection = 'DESC'
+        ?QueryOptions $queryOptions = null
     ): array
     {
-        return $this->getArticles(null, $statusId, $typeId, null, $sortDirection);
+        return $this->getArticles(null, $statusId, $typeId, null, $queryOptions);
     }
 
     public function updateArticle(Article $article): bool

@@ -267,6 +267,12 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     ): Response {
         $now = DateUtil::getCurrentDateForMySql();
 
+        if (empty($uri)) {
+            $uri = $this->articleService->checkUriAndReturnAnAvailableOne(
+                StringUtil::getRandomString(32)
+            );
+        }
+
         $res = $this->articleService->createNewArticle(
             new Article(
                 null,
@@ -325,6 +331,12 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             return new BackofficeApiControllerDestroyArticleSuccessResponse(
                 false,
                 'Article not found'
+            );
+        }
+
+        if (empty($uri)) {
+            $uri = $this->articleService->checkUriAndReturnAnAvailableOne(
+                StringUtil::getRandomString(32)
             );
         }
 
