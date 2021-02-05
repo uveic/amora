@@ -29,7 +29,7 @@ $images = $responseData->getImages();
     foreach ($images as $image) {
 ?>
         <div class="image-item" data-image-id="<?=$this->e($image->getId())?>">
-          <img src="<?=$image->getFullUrlBig()?>" title="<?=$this->e($image->getCaption())?>" alt="<?=$this->e($image->getCaption())?>" data-image-id="<?=$image->getId()?>">
+          <img src="<?=$image->getFullUrlMedium()?>" title="<?=$this->e($image->getCaption())?>" alt="<?=$this->e($image->getCaption())?>" data-image-id="<?=$image->getId()?>">
           <div id="image-options-<?=$this->e($image->getId())?>" class="options null">
             <a class="image-delete" href="#">&#10006;</a>
           </div>

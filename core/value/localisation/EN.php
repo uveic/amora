@@ -49,6 +49,8 @@ return [
 
     'dashboardGoTo' => 'Go to...',
 
+    'globalSettings' => 'Settings',
+    'globalClose' => 'Close',
     'globalFormat' => 'Format',
     'globalRequired' => 'Required',
     'globalNew' => 'New',

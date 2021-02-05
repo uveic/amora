@@ -31,7 +31,6 @@ $random = StringUtil::getRandomString(5);
   <div class="form-control-bar-header m-b-3">
     <div class="article-control-bar-buttons">
       <input style="width: revert;" type="submit" class="article-save button m-r-1" value="<?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
-      <input style="width: revert;" type="submit" class="article-save-close button" data-close="1" value="<?=$article ? $responseData->getLocalValue('globalUpdateAndClose') : $responseData->getLocalValue('globalSaveAndClose')?>">
 <?php if ($article) {?>
       <a class="article-preview m-l-1" href="<?=$responseData->getBaseUrlWithLanguage()?><?=$article->getUri()?>?preview=true" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
 <?php } ?>

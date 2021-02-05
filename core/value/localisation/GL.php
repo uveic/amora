@@ -49,6 +49,8 @@ return [
 
     'dashboardGoTo' => 'Ir a...',
 
+    'globalSettings' => 'Configuración',
+    'globalClose' => 'Cerrar',
     'globalFormat' => 'Formato',
     'globalRequired' => 'Obrigatorio',
     'globalNew' => 'Novo',

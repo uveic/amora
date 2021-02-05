@@ -31,15 +31,15 @@ $this->layout('base', ['responseData' => $responseData,])
 /** @var Article $article */
 foreach ($responseData->getArticles() as $article) {
     $articleTitle = $article->getStatusId() === ArticleStatus::PUBLISHED
-        ? '<a href="' . $responseData->getBaseUrl() . $article->getUri() . '">' . $this->e($article->getTitle()) . '</a>'
-        : $this->e($article->getTitle());
+        ? '<a href="' . $responseData->getBaseUrl() . $article->getUri() . '">' . $article->getTitle() . '</a>'
+        : $article->getTitle();
 ?>
               <div class="table-row">
-                <div class="table-item edit flex-no-grow"><a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/articles/<?=$this->e($article->getId()); ?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('globalEdit')?>"></a></div>
-                <div class="table-item flex-no-grow"><?=$this->e($article->getId())?></div>
+                <div class="table-item edit flex-no-grow"><a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/articles/<?=$article->getId()?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('globalEdit')?>"></a></div>
+                <div class="table-item flex-no-grow"><?=$article->getId()?></div>
                 <div class="table-item flex-grow-2"><?=$articleTitle?></div>
-                <div class="table-item flex-grow-2"><?=$this->e(DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true)); ?></div>
-                <div class="table-item width-1"><?=$this->e($article->getStatusName()); ?></div>
+                <div class="table-item flex-grow-2"><?=DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true)?></div>
+                <div class="table-item width-1"><?=$responseData->getLocalValue('articleStatus' . $article->getStatusName()); ?></div>
               </div>
 <?php } ?>
         </div>
