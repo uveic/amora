@@ -95,6 +95,10 @@ class UserService
             return null;
         }
 
+        if (!$res->isEnabled()) {
+            return null;
+        }
+
         return $res;
     }
 

@@ -88,6 +88,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
+        // ToDo: Replace with an email to create first password
         if (empty($newPassword)) {
             $newPassword = 'testuve123';
         }

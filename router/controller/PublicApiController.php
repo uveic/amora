@@ -136,6 +136,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         if (empty($user)) {
             return new PublicApiControllerUserLoginSuccessResponse(
                 false,
+                null,
                 'O correo electrónico e/ou o contrasinal non son válidos.'
             );
         }
@@ -150,6 +151,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         if (empty($session)) {
             return new PublicApiControllerUserLoginSuccessResponse(
                 false,
+                null,
                 'O correo electrónico e/ou o contrasinal non son válidos.'
             );
         }
