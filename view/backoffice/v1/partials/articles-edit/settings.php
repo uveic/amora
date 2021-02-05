@@ -8,7 +8,7 @@ $article = $responseData->getFirstArticle();
 $d = new DateTime();
 $minPublishAt = $d->format('Y-m-d');
 
-$publishAt = $article->getPublishedAt()
+$publishAt = $article && $article->getPublishedAt()
     ? DateUtil::transformFromUtcTo($article->getPublishedAt(), $responseData->getSession()->getTimezone(), 'Y-m-d')
     : '';
 

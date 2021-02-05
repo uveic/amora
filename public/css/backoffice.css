@@ -96,10 +96,6 @@
   margin: 0.5rem;
 }
 
-.article-control-bar-buttons {
-  padding: 1rem;
-}
-
 .form-control-bar-header > div {
   flex-shrink: 1;
   flex-grow: 1;

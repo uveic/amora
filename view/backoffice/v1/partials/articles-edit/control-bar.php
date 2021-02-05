@@ -22,7 +22,7 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
     : '<span class="article-created-at" title=""></span>');
 
 $articleStatusId = $article ? $article->getStatusId() : ArticleStatus::DRAFT;
-$articleStatusName = ArticleStatus::getNameForId($articleStatusId);
+$articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::getNameForId($articleStatusId));
 $isPublished = $article ? $articleStatusId === ArticleStatus::PUBLISHED : false;
 
 $random = StringUtil::getRandomString(5);
@@ -45,7 +45,7 @@ $random = StringUtil::getRandomString(5);
     <div class="dropdown-container">
       <ul>
 <?php foreach ($responseData->getArticleStatuses() as $status) { ?>
-        <li><a data-checked="<?=$status['id'] === $articleStatusId ? '1' : '0'?>" data-article-status-id="<?=$this->e($status['id'])?>" class="dropdown-menu-option article-status-option <?=$status['id'] === ArticleStatus::PUBLISHED ? 'feedback-success' : 'background-light-color' ?>" href="#"><?=$this->e($status['name'])?></a></li>
+        <li><a data-checked="<?=$status['id'] === $articleStatusId ? '1' : '0'?>" data-article-status-id="<?=$this->e($status['id'])?>" class="dropdown-menu-option article-status-option <?=$status['id'] === ArticleStatus::PUBLISHED ? 'feedback-success' : 'background-light-color' ?>" href="#"><?=$responseData->getLocalValue('articleStatus' . $status['name'])?></a></li>
 <?php } ?>
       </ul>
       <label for="dropdown-menu-<?=$random?>" class="dropdown-menu-label <?=$isPublished ? 'feedback-success' : 'background-light-color' ?>">

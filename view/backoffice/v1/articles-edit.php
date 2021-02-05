@@ -22,12 +22,17 @@ function getClassName(int $sectionTypeId): string
   };
 }
 
-function getControlButtonsHtml(int $sectionId, bool $isFirst, bool $isLast): string
+function getControlButtonsHtml(
+    HtmlResponseDataAuthorised $responseData,
+    int $sectionId,
+    bool $isFirst,
+    bool $isLast
+): string
 {
     return PHP_EOL . '<div class="article-section-controls">' . PHP_EOL
-        . '<a href="#" id="article-section-button-up-' . $sectionId . '" class="article-section-button article-section-button-up' . ($isFirst ? ' null' : '') . '"><img class="img-svg" title="Move Up" alt="Move Up" src="/img/svg/arrow-fat-up.svg"></a>' . PHP_EOL
-        . '<a href="#" id="article-section-button-down-' . $sectionId . '" class="article-section-button article-section-button-down' . ($isLast ? ' null' : '') . '"><img class="img-svg" title="Move Down" alt="Move Down" src="/img/svg/arrow-fat-down.svg"></a>' . PHP_EOL
-        . '<a href="#" id="article-section-button-delete-' . $sectionId . '" class="article-section-button article-section-button-delete"><img class="img-svg" title="Remove from article" alt="Remove from article" src="/img/svg/trash.svg"></a>' . PHP_EOL
+        . '<a href="#" id="article-section-button-up-' . $sectionId . '" class="article-section-button article-section-button-up' . ($isFirst ? ' null' : '') . '"><img class="img-svg" title="' . $responseData->getLocalValue('sectionMoveUp') . '" alt="' . $responseData->getLocalValue('sectionMoveUp') . '" src="/img/svg/arrow-fat-up.svg"></a>' . PHP_EOL
+        . '<a href="#" id="article-section-button-down-' . $sectionId . '" class="article-section-button article-section-button-down' . ($isLast ? ' null' : '') . '"><img class="img-svg" title="' . $responseData->getLocalValue('sectionMoveDown') . '" alt="' . $responseData->getLocalValue('sectionMoveDown') . '" src="/img/svg/arrow-fat-down.svg"></a>' . PHP_EOL
+        . '<a href="#" id="article-section-button-delete-' . $sectionId . '" class="article-section-button article-section-button-delete"><img class="img-svg" title="' . $responseData->getLocalValue('sectionRemove') . '" alt="' . $responseData->getLocalValue('sectionRemove') . '" src="/img/svg/trash.svg"></a>' . PHP_EOL
         . '</div>' . PHP_EOL;
 }
 
@@ -91,7 +96,7 @@ function generateSection(ArticleSection $articleSection): string
 ?>
         <div id="article-section-wrapper-<?=$articleSection->getId()?>" class="article-section-wrapper" data-section-id="<?=$articleSection->getId()?>">
           <?=generateSection($articleSection)?>
-          <?=getControlButtonsHtml($articleSection->getId(), $count === 0, $count === $total - 1)?>
+          <?=getControlButtonsHtml($responseData, $articleSection->getId(), $count === 0, $count === $total - 1)?>
         </div>
 <?php
         $count++;

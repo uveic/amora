@@ -82,4 +82,12 @@ return [
     'globalAddTextSubtitle' => 'Engadir subtítulo',
     'globalAddVideo' => 'Engadir vídeo',
     'globalAddHtml' => 'Engadir HTML',
+
+    'articleStatusDraft' => 'Borrador',
+    'articleStatusPublished' => 'Publicado',
+    'articleStatusDeleted' => 'Eliminado',
+
+    'sectionRemove' => 'Eliminar sección',
+    'sectionMoveUp' => 'Mover para arriba',
+    'sectionMoveDown' => 'Mover para abaixo',
 ];
