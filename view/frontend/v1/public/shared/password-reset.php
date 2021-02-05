@@ -20,7 +20,7 @@ use uve\core\model\response\HtmlResponseData;
         <h1 id="register-title" class="m-b-6"><?=$this->e($responseData->getSiteName())?></h1>
         <h2 id="register-subtitle"><?=$responseData->getLocalValue('authenticationPasswordResetSubtitle')?></h2>
         <div id="password-reset-form">
-          <p class="light-text-color m-b-3"><?=sprintf($responseData->getLocalValue('authenticationPasswordResetAlreadyLogin'), $responseData->getBaseUrlWithLanguage())?></p>
+          <p class="light-text-color m-b-3"><?=sprintf($responseData->getLocalValue('authenticationPasswordResetAlreadyLogin'), $responseData->getBaseUrlWithLanguage() . 'login')?></p>
           <div class="field">
             <p class="control has-icons-left">
               <input class="input" type="password" id="password" name="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>" required>

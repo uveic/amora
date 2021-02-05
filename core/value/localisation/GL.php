@@ -30,7 +30,7 @@ return [
 
     'authenticationPasswordResetSubtitle' => 'Cambia o contrasinal',
     'authenticationPasswordResetActionSuccess' => 'Cambiouse o contrasinal correctamente.',
-    'authenticationPasswordResetAlreadyLogin' => 'Queres <a href="%s/login">entrar na túa conta</a> sen cambiar o contrasinal?',
+    'authenticationPasswordResetAlreadyLogin' => 'Queres <a href="%s">entrar na túa conta</a> sen cambiar o contrasinal?',
 
     'authenticationInviteRequest' => 'Consegue unha invitación',
     'authenticationInviteRequestSubtitle' => 'A web está actualmente nunha beta privada, estamos traballando para asegurarnos de que todo funciona correctamente e con moitas ganas de que estea lista para que a poidas utilizar. Déixanos o teu correo e enviarémosche unha invitación tan pronto como sexa posible. Só utilizaremos o teu correo para enviarche a invitación.<br>Grazas pola túa paciencia!',

@@ -15,7 +15,7 @@ $this->layout('base', ['responseData' => $responseData,])
       <div class="form-header m-r-1 m-l-1">
         <h1><?=$responseData->getLocalValue('navAdminArticles')?></h1>
         <div class="links">
-          <a href="/backoffice/articles/new" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
+          <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/articles/new" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
         </div>
       </div>
       <section class="content-flex-block">

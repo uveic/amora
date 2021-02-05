@@ -30,7 +30,7 @@ return [
 
     'authenticationPasswordResetSubtitle' => 'Cambia tu contraseña',
     'authenticationPasswordResetActionSuccess' => 'Se ha cambiado la contraseña correctamente.',
-    'authenticationPasswordResetAlreadyLogin' => '¿Quieres <a href="%s/login">entrar en tu cuenta</a> sin cambiar tu contraseña?',
+    'authenticationPasswordResetAlreadyLogin' => '¿Quieres <a href="%s">entrar en tu cuenta</a> sin cambiar tu contraseña?',
 
     'authenticationInviteRequest' => 'Consigue una invitación',
     'authenticationInviteRequestSubtitle' => 'La web está actualmente en beta privada, estamos trajando para asegurarnos de que todo funciona correctamente. Tenemos muchas ganas de que esté lista para que la puedas utilizar. Déjanos tu correo y te enviaremos una invitación tan pronto como sea posible. Solo utilizaremos tu correo para enviarte la invitación. <br>¡Gracias por tu paciencia!',

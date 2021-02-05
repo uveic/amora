@@ -30,7 +30,7 @@ return [
 
     'authenticationPasswordResetSubtitle' => 'Change your password',
     'authenticationPasswordResetActionSuccess' => 'Password changed successfully.',
-    'authenticationPasswordResetAlreadyLogin' => 'Do you want to <a href="%s/login">log in to your account</a> without changing your password?',
+    'authenticationPasswordResetAlreadyLogin' => 'Do you want to <a href="%s">log in to your account</a> without changing your password?',
 
     'authenticationInviteRequest' => 'Get your invitation',
     'authenticationInviteRequestSubtitle' => 'The site is currently in private beta, we are making sure everything works as expected and looking forward to getting it ready for you. Enter your email address and we\'ll send you an invitation as soon as it\'s ready.<br>Thank you for your patience!',
