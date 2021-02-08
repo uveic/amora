@@ -2,37 +2,6 @@
   --content-medium-width-extended: 840px;
 }
 /* Feedback style starts here */
-.feedback {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  color: var(--link-success-color);
-  padding: 7px 14px;
-  margin-left: 1rem;
-  border-radius: var(--border-radius);
-  z-index: 999;
-}
-
-.feedback-success {
-  background-color: var(--feedback-success-color);
-}
-
-.feedback-error {
-  background-color: var(--feedback-failure-color);
-}
-
-#feedback-banner {
-  width: 100%;
-  text-align: center;
-  color: var(--light-bg-color);
-  padding: 1.5rem;
-  font-size: 0.9rem;
-}
-
-#feedback-banner > p {
-  color: var(--color-red);
-}
-
 .article-saving {
   display: flex;
   justify-content: center;
