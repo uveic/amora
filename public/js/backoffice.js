@@ -9,7 +9,7 @@ import {
 import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
 import {loadEditor} from './module/editor.js';
-import {global} from './module/localisation/global.js';
+import {global} from "./module/localisation.js";
 
 const removeSection = function(e, sectionId) {
   e.preventDefault();

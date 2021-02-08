@@ -1,4 +1,4 @@
-import {global} from './localisation/global.js';
+import {global} from "./localisation.js";
 
 async function logError(errorMessage = null, endpoint = null, method = null, payload = null) {
   const data = {

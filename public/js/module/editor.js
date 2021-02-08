@@ -1,3 +1,5 @@
+import {global} from "./localisation.js";
+
 const defaultParagraphSeparatorString = 'defaultParagraphSeparator';
 const formatBlock = 'formatBlock';
 const addEventListener = (parent, type, listener) => parent.addEventListener(type, listener);
@@ -11,71 +13,76 @@ const exec = (command, value = null) => document.execCommand(command, false, val
 const defaultActions = {
   bold: {
     icon: '<b>B</b>',
-    title: 'Bold',
+    title: global.get('editorBold'),
     state: () => queryCommandState('bold'),
     result: () => exec('bold')
   },
   italic: {
     icon: '<i>I</i>',
-    title: 'Italic',
+    title: global.get('editorItalic'),
     state: () => queryCommandState('italic'),
     result: () => exec('italic')
   },
   underline: {
     icon: '<u>U</u>',
-    title: 'Underline',
+    title: global.get('editorUnderline'),
     state: () => queryCommandState('underline'),
     result: () => exec('underline')
   },
   strikethrough: {
     icon: '<del>S</del>',
-    title: 'Strike-through',
+    title: global.get('editorStrikeThrough'),
     state: () => queryCommandState('strikeThrough'),
     result: () => exec('strikeThrough')
   },
   heading1: {
     icon: '<b>H1</b>',
-    title: 'Heading 1',
+    title: global.get('editorHeading1'),
     result: () => exec(formatBlock, '<h1>')
   },
   heading2: {
     icon: '<b>H2</b>',
-    title: 'Heading 2',
+    title: global.get('editorHeading2'),
     result: () => exec(formatBlock, '<h2>')
+  },
+  heading3: {
+    icon: '<b>H3</b>',
+    title: global.get('editorHeading3'),
+    result: () => exec(formatBlock, '<h3>')
   },
   paragraph: {
     icon: '&#182;',
-    title: 'Paragraph',
+    title: global.get('editorParagraph'),
     result: () => exec(formatBlock, '<p>')
   },
   quote: {
     icon: '&#8220; &#8221;',
-    title: 'Quote',
+    title: global.get('editorQuote'),
     result: () => exec(formatBlock, '<blockquote>')
   },
   olist: {
     icon: '&#35;',
-    title: 'Ordered List',
+    title: global.get('editorOrderedList'),
     result: () => exec('insertOrderedList')
   },
   ulist: {
     icon: '&#8226;',
-    title: 'Unordered List',
+    title: global.get('editorUnorderedList'),
     result: () => exec('insertUnorderedList')
   },
   code: {
     icon: '&lt;/&gt;',
-    title: 'Code',
+    title: global.get('editorCode'),
     result: () => exec(formatBlock, '<pre>')
   },
   line: {
     icon: '&#8213;',
-    title: 'Horizontal Line',
+    title: global.get('editorInsertHorizontalLine'),
     result: () => exec('insertHorizontalRule')
   },
   link: {
     icon: '<img src="/img/svg/link.svg" class="img-svg m-t-0" alt="Insert link">',
-    title: 'Insert link',
+    title: global.get('editorInsertLink'),
     result: () => {
       const url = window.prompt('Enter the link URL')
       if (url) exec('createLink', url)
@@ -83,7 +90,7 @@ const defaultActions = {
   },
   image: {
     icon: '&#128247;',
-    title: 'Image',
+    title: global.get('editorInsertImage'),
     result: () => {
       const url = window.prompt('Enter the image URL')
       if (url) exec('insertImage', url)
@@ -91,7 +98,7 @@ const defaultActions = {
   },
   eraser: {
     icon: '✕',
-    title: 'Clear Format',
+    title: global.get('editorClearFormat'),
     result: () => {
       exec('removeFormat');
     }

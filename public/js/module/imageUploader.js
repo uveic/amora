@@ -1,4 +1,4 @@
-import {global} from './localisation/global.js';
+import {global} from "./localisation.js";
 
 async function uploadImage(file, containerToAppendImages, userFeedbackDiv, payloadData = {}) {
   console.log(-1);
