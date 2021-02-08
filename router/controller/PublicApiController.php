@@ -157,11 +157,12 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
+        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
         return new PublicApiControllerUserLoginSuccessResponse(
             true,
             $session->isAdmin()
-                ? UrlBuilderUtil::BACKOFFICE_DASHBOARD_URL_PATH
-                : UrlBuilderUtil::APP_DASHBOARD_URL_PATH
+                ? $baseLinkUrl . UrlBuilderUtil::BACKOFFICE_DASHBOARD_URL_PATH
+                : $baseLinkUrl . UrlBuilderUtil::APP_DASHBOARD_URL_PATH
         );
     }
 
@@ -235,7 +236,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                 $siteLanguage = strtolower($request->getSiteLanguage());
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
-                    sprintf($localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'), StringUtil::getBaseLinkUrl($siteLanguage) . '/login')
+                    sprintf($localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'), UrlBuilderUtil::getBaseLinkUrl($siteLanguage) . '/login')
                 );
             }
 

@@ -11,6 +11,7 @@ use uve\core\module\user\service\UserService;
 use uve\core\module\user\service\SessionService;
 use uve\core\model\Request;
 use uve\core\model\Response;
+use uve\core\util\UrlBuilderUtil;
 
 final class PublicHtmlController extends PublicHtmlControllerAbstract
 {
@@ -65,7 +66,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $session = $request->getSession();
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
-            return Response::createRedirectResponse('/backoffice/dashboard');
+            $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
+            return Response::createRedirectResponse($baseLinkUrl . '/backoffice/dashboard');
         }
 
         return Response::createFrontendPublicHtmlResponse(
@@ -89,7 +91,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $session = $request->getSession();
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
-            return Response::createRedirectResponse('/backoffice/dashboard');
+            $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
+            return Response::createRedirectResponse($baseLinkUrl . '/backoffice/dashboard');
         }
 
         return Response::createFrontendPublicHtmlResponse(
@@ -113,17 +116,21 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $session = $request->getSession();
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
-            return Response::createRedirectResponse('/backoffice/dashboard');
+            $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
+            return Response::createRedirectResponse($baseLinkUrl . '/backoffice/dashboard');
         }
 
         $isRegistrationEnabled = Core::getConfigValue('registrationEnabled');
         if (!$isRegistrationEnabled) {
             $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
             if ($isInvitationEnabled) {
-                return Response::createRedirectResponse('/invite-request');
+                $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
+                return Response::createRedirectResponse($baseLinkUrl . '/invite-request');
             }
 
-            return Response::createRedirectResponse('/');
+            return Response::createRedirectResponse(
+                UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage())
+            );
         }
 
         return Response::createFrontendPublicHtmlResponse(
@@ -225,13 +232,16 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $session = $request->getSession();
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
-            return Response::createRedirectResponse('/backoffice/dashboard');
+            $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
+            return Response::createRedirectResponse($baseLinkUrl . '/backoffice/dashboard');
         }
 
 
         $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
         if (!$isInvitationEnabled) {
-            return Response::createRedirectResponse('/');
+            return Response::createRedirectResponse(
+                UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage())
+            );
         }
 
         return Response::createFrontendPublicHtmlResponse(

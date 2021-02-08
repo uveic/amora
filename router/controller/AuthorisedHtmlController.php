@@ -9,7 +9,7 @@ use uve\core\model\response\HtmlResponseData;
 use uve\core\module\action\service\ActionService;
 use uve\core\module\article\service\ImageService;
 use uve\core\module\user\service\SessionService;
-use uve\core\util\StringUtil;
+use uve\core\util\UrlBuilderUtil;
 
 final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
 {
@@ -51,7 +51,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     protected function logout(Request $request): Response
     {
         $this->sessionService->logout($request->getSession());
-        $baseLinkUrl = StringUtil::getBaseLinkUrl($request->getSiteLanguage());
+        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
         return Response::createRedirectResponse($baseLinkUrl);
     }
 

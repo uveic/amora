@@ -138,15 +138,4 @@ final class StringUtil
         $text = str_replace('<br/>', ' ', $text);
         return strip_tags($text);
     }
-
-    public static function getBaseLinkUrl(string $siteLanguage): string
-    {
-        $baseUrl = Core::getConfigValue('baseUrl');
-        $defaultSiteLanguage = strtolower(Core::getConfigValue('defaultSiteLanguage'));
-
-        $siteLanguage = strtolower($siteLanguage);
-        $urlLanguagePart = $defaultSiteLanguage === $siteLanguage ? '' : '/' . $siteLanguage;
-
-        return trim($baseUrl, ' /') . $urlLanguagePart;
-    }
 }

@@ -35,6 +35,7 @@ class RouterCore extends Core
                 $articleService,
                 $actionService
             ) {
+                require_once self::getPathRoot() . '/core/util/UrlBuilderUtil.php';
                 require_once self::getPathRoot() . '/core/model/response/UserFeedback.php';
                 require_once self::getPathRoot() . '/router/controller/AbstractController.php';
                 require_once self::getPathRoot() . '/router/controller/PublicHtmlControllerAbstract.php';
@@ -67,6 +68,7 @@ class RouterCore extends Core
                 $imageService,
                 $actionService
             ) {
+                require_once self::getPathRoot() . '/core/util/UrlBuilderUtil.php';
                 require_once self::getPathRoot() . '/core/module/user/service/UserService.php';
                 require_once self::getPathRoot() . '/core/module/user/value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/router/controller/AbstractController.php';
@@ -105,6 +107,7 @@ class RouterCore extends Core
                 $articleService,
                 $imageService
             ) {
+                require_once self::getPathRoot() . '/core/util/UrlBuilderUtil.php';
                 require_once self::getPathRoot() . '/core/module/article/value/ArticleSectionType.php';
                 require_once self::getPathRoot() . '/router/controller/AbstractController.php';
                 require_once self::getPathRoot() . '/router/controller/BackofficeHtmlControllerAbstract.php';

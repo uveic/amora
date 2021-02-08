@@ -7,6 +7,7 @@ use League\Plates\Engine;
 use SimpleXMLElement;
 use uve\core\Core;
 use uve\core\model\response\HtmlResponseDataAbstract;
+use uve\core\util\UrlBuilderUtil;
 
 class Response
 {
@@ -168,9 +169,10 @@ class Response
         );
     }
 
-    public static function createUnauthorisedRedirectLoginResponse(): Response
+    public static function createUnauthorisedRedirectLoginResponse(string $siteLanguage): Response
     {
-        return Response::createRedirectResponse('/login');
+        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($siteLanguage);
+        return Response::createRedirectResponse($baseLinkUrl . '/login');
     }
 
     public static function createUnauthorizedPlainTextResponse(): Response

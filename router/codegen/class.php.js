@@ -337,7 +337,7 @@ function renderNotRequiredParameterIf(varName, type, name) {
 function renderAbstractRouter(jsonFileName, operations) {
   const redirectExceptions = ['BackofficeHtml', 'AuthorisedHtml', 'PublicHtml'];
   const response = redirectExceptions.indexOf(jsonFileName) >= 0
-    ? `Response::createRedirectResponse('/login')`
+    ? `Response::createUnauthorisedRedirectLoginResponse($request->getSiteLanguage())`
     : 'Response::createUnauthorizedPlainTextResponse()';
 
   return [

@@ -410,7 +410,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
     {
         $auth = $this->authenticate($request);
         if ($auth !== true) {
-            return Response::createRedirectResponse('/login');
+            return Response::createUnauthorisedRedirectLoginResponse($request->getSiteLanguage());
         }
 
         $path = $request->getPath();
