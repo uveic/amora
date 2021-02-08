@@ -81,11 +81,12 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         Request $request
     ): Response {
         $now = DateUtil::getCurrentDateForMySql();
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
         if ($newPassword !== $repeatPassword) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
                 false,
-                'Passwords do not match'
+                $localisationUtil->getValue('authenticationPasswordsDoNotMatch')
             );
         }
 
@@ -99,16 +100,14 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         if (!StringUtil::isEmailAddressValid($email)) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
                 false,
-                'Correo electrónico non válido'
+                $localisationUtil->getValue('authenticationEmailNotValid')
             );
         }
 
         if (strlen($newPassword) < UserService::USER_PASSWORD_MIN_LENGTH) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
                 false,
-                'A lonxitude mínima do contrasinal son ' .
-                UserService::USER_PASSWORD_MIN_LENGTH .
-                ' caracteres. Corríxeo e volve a intentalo.'
+                $localisationUtil->getValue('authenticationPasswordTooShort')
             );
         }
 
@@ -116,7 +115,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         if (!empty($existingUser)) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
                 false,
-                'Xa hai outra conta co mesmo email.'
+                $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail')
             );
         }
 
@@ -142,7 +141,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $this->logger->logError('Error creating new user: ' . $t->getMessage());
             return new BackofficeApiControllerStoreUserSuccessResponse(
                 false,
-                'Error creating user'
+                $localisationUtil->getValue('globalGenericError')
             );
         }
 
@@ -181,9 +180,12 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $repeatPassword,
         Request $request
     ): Response {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $existingUser = $this->userService->getUserForId($userId, true);
         if (empty($existingUser)) {
-            return new BackofficeApiControllerUpdateUserFailureResponse('User not found');
+            return new BackofficeApiControllerUpdateUserFailureResponse(
+                $localisationUtil->getValue('globalGenericNotFound')
+            );
         }
 
         $updateRes = $this->userService->workflowUpdateUser(
@@ -215,9 +217,13 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     protected function deleteUser(int $userId, Request $request): Response
     {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $user = $this->userService->getUserForId($userId, true);
         if (empty($user)) {
-            return new BackofficeApiControllerDeleteUserSuccessResponse(false, 'Not found');
+            return new BackofficeApiControllerDeleteUserSuccessResponse(
+                false,
+                $localisationUtil->getValue('globalGenericNotFound')
+            );
         }
 
         $res = $this->userService->deleteUser($user);
@@ -331,10 +337,11 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         Request $request
     ): Response {
         $existingArticle = $this->articleService->getArticleForId($articleId);
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         if (empty($existingArticle)) {
             return new BackofficeApiControllerDestroyArticleSuccessResponse(
                 false,
-                'Article not found'
+                $localisationUtil->getValue('globalGenericNotFound')
             );
         }
 
@@ -386,11 +393,12 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     public function destroyArticle(int $articleId, Request $request): Response
     {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $existingArticle = $this->articleService->getArticleForId($articleId);
         if (empty($existingArticle)) {
             return new BackofficeApiControllerDestroyArticleSuccessResponse(
                 false,
-                'Article not found'
+                $localisationUtil->getValue('globalGenericNotFound')
             );
         }
 

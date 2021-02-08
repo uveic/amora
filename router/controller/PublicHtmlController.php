@@ -147,11 +147,12 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         string $verificationIdentifier,
         Request $request
     ): Response {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $res = $this->userService->validateEmailAddressVerificationPage($verificationIdentifier);
         $isError = !$res;
         $message = $res
-            ? 'Correo electrónico verificado'
-            : 'A ligazón para verificar o correo non é valida.';
+            ? $localisationUtil->getValue('authenticationEmailVerified')
+            : $localisationUtil->getValue('authenticationEmailVerifiedError');
 
         return Response::createFrontendPublicHtmlResponse(
             strtolower($request->getSiteLanguage()) . '/home',
@@ -179,6 +180,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         Request $request
     ): Response {
         $res = $this->userService->validatePasswordResetVerificationPage($verificationIdentifier);
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
         if (empty($res)) {
             return Response::createFrontendPublicHtmlResponse(
@@ -190,7 +192,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                     null,
                     null,
                     null,
-                    new UserFeedback(true, 'A ligazón para cambiar o contrasinal non é válida. Por favor, inicia o proceso de novo.')
+                    new UserFeedback(true, $localisationUtil->getValue('authenticationPasswordResetLinkError'))
                 )
             );
         }
@@ -200,7 +202,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             'shared/password-reset',
             new HtmlResponseData(
                 $request,
-                Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navChangePassword'),
+                $localisationUtil->getValue('navChangePassword'),
                 null,
                 null,
                 null,

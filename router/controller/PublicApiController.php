@@ -132,12 +132,13 @@ final class PublicApiController extends PublicApiControllerAbstract
     protected function userLogin(string $email, string $password, Request $request): Response
     {
         $user = $this->userService->verifyUser($email, $password);
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
         if (empty($user)) {
             return new PublicApiControllerUserLoginSuccessResponse(
                 false,
                 null,
-                'O correo electrónico e/ou o contrasinal non son válidos.'
+                $localisationUtil->getValue('authenticationEmailAndOrPassNotValid')
             );
         }
 
@@ -152,7 +153,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             return new PublicApiControllerUserLoginSuccessResponse(
                 false,
                 null,
-                'O correo electrónico e/ou o contrasinal non son válidos.'
+                $localisationUtil->getValue('authenticationEmailAndOrPassNotValid')
             );
         }
 
@@ -201,12 +202,14 @@ final class PublicApiController extends PublicApiControllerAbstract
         int $timezoneOffsetMinutes,
         Request $request
     ): Response {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+
         try {
             $isRegistrationEnabled = Core::getConfigValue('registrationEnabled');
             if (!$isRegistrationEnabled) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
-                    'User registration not enabled. Please, contact site administrator.'
+                    $localisationUtil->getValue('authenticationUserRegistrationDisabled')
                 );
             }
 
@@ -215,16 +218,14 @@ final class PublicApiController extends PublicApiControllerAbstract
             if (!StringUtil::isEmailAddressValid($email)) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
-                    'Correo electrónico non válido'
+                    $localisationUtil->getValue('authenticationEmailNotValid')
                 );
             }
 
             if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
-                    'A lonxitude mínima do contrasinal son ' .
-                    UserService::USER_PASSWORD_MIN_LENGTH .
-                    ' caracteres. Corríxeo e volve a intentalo.'
+                    $localisationUtil->getValue('authenticationPasswordTooShort')
                 );
             }
 
@@ -234,8 +235,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                 $siteLanguage = strtolower($request->getSiteLanguage());
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
-                    'Xa hai outra conta co mesmo email. Por favor, identifícate' .
-                    ' <a href="' . StringUtil::getBaseLinkUrl($siteLanguage) . '/login">aquí</a>.'
+                    sprintf($localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'), StringUtil::getBaseLinkUrl($siteLanguage) . '/login')
                 );
             }
 
@@ -254,7 +254,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             $this->logger->logError('Error registering user: ' . $t->getMessage());
             return new PublicApiControllerUserRegistrationSuccessResponse(
                 false,
-                'O correo electrónico e/ou o contrasinal non son correctos. Compróbao e volve intentalo.'
+                $localisationUtil->getValue('authenticationEmailAndOrPassNotValid')
             );
         }
     }
@@ -277,6 +277,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         string $verificationHash,
         Request $request
     ): Response {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $user = $this->userService->getUserForId($userId);
         if (empty($user) || !$user->validateValidationHash($verificationHash)) {
             return new PublicApiControllerUserPasswordResetSuccessResponse(false);
@@ -285,16 +286,14 @@ final class PublicApiController extends PublicApiControllerAbstract
         if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
             return new PublicApiControllerUserPasswordResetSuccessResponse(
                 false,
-                'A lonxitude mínima do contrasinal son ' .
-                UserService::USER_PASSWORD_MIN_LENGTH .
-                ' caracteres. Corríxeo e volve a intentalo.'
+                $localisationUtil->getValue('authenticationPasswordTooShort')
             );
         }
 
         if ($passwordConfirmation != $password) {
             return new PublicApiControllerUserPasswordResetSuccessResponse(
                 false,
-                'Os contrasinais non coinciden. Corríxeo e volve a intentalo.'
+                $localisationUtil->getValue('authenticationPasswordsDoNotMatch')
             );
         }
 

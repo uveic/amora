@@ -27,6 +27,15 @@ return [
     'authenticationForgotPasswordSubtitle' => 'No te preocupes, introduce el correo electrónico que utilizaste para registrarte y te enviaremos un enlace para restaurar tu contraseña.',
     'authenticationForgotPasswordAction' => 'Enviar enlace de restauración',
     'authenticationForgotPasswordActionSuccess' => 'Correo enviado. Comprueba la bandeja de entrada de tu correo electrónico (<b><span id="register-feedback-email"></span></b>) y sigue las instruciones.',
+    'authenticationEmailVerified' => 'Correo electrónico verificado correctamente.',
+    'authenticationEmailVerifiedError' => 'El enlace para verificar tu correo electrónico no es válido.',
+    'authenticationPasswordResetLinkError' => 'El enlace para cambiar tu contraseña no es válido. Inicia el proceso de cambio de contraseña de nuevo.',
+    'authenticationEmailAndOrPassNotValid' => 'Correo electrónico y/o contresña no válidos.',
+    'authenticationEmailNotValid' => 'Correo electrónico no válido.',
+    'authenticationUserRegistrationDisabled' => 'El registro de usuarios no está habilitado. Ponte en contacto con el administrador de la web.',
+    'authenticationPasswordTooShort' => 'La contraseña es demasiado corta. Cámbiala e inténtalo de nuevo',
+    'authenticationPasswordsDoNotMatch' => 'Las contraseñas no coinciden. Corrígelo e inténtalo de nuevo.',
+    'authenticationRegistrationErrorExistingEmail' => 'Ya existe otra cuenta con el mismo correo electrónico. Por favor, identifícate <a href="%s">aquí</a>.',
 
     'authenticationPasswordResetSubtitle' => 'Cambia tu contraseña',
     'authenticationPasswordResetActionSuccess' => 'Se ha cambiado la contraseña correctamente.',
@@ -79,6 +88,8 @@ return [
     'globalActivated' => 'Activado',
     'globalDeactivated' => 'Desactivado',
     'globalUser' => 'Ususario',
+    'globalUserAccount' => 'Cuenta de usuario',
+    'globalUserAccountSettings' => 'Configuración de cuenta de usuario',
 
     'globalUploadImage' => 'Subir imagen(es)',
     'globalAddImage' => 'Añadir imagen(es)',
@@ -89,6 +100,7 @@ return [
     'globalAddHtml' => 'Añadir HTML',
 
     'globalGenericError' => 'Ha ocurrido un error inesperado, por favor inténtalo de nuevo',
+    'globalGenericNotFound' => 'No encontrado',
 
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',

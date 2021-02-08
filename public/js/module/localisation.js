@@ -24,8 +24,8 @@ class Global {
       "articleSectionMoveUp": "Move Up",
       "articleSection:MoveDown": "Move Down",
 
-      "feedbackPasswordsDoNotMatch": "Os contrasinais non coinciden. Corríxeo e volve a intentalo.",
-      "feedbackPasswordTooShort": "Contrasinal demasiado curto. Corríxeo e volve a intentalo.",
+      "feedbackPasswordsDoNotMatch": "The passwords do not match. Please, fix it and try it again.",
+      "feedbackPasswordTooShort": "The password is too short. Please, fix it and try it again.",
       "feedbackDeleteSectionConfirmation": "Are you sure you want to delete this section?",
       "feedbackDeleteImageConfirmation": "Are you sure you want to delete this image?",
       "feedbackImageDeleted": "Image deleted",

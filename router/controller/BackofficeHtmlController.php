@@ -2,6 +2,7 @@
 
 namespace uve\router;
 
+use uve\core\Core;
 use uve\core\Logger;
 use uve\core\model\response\HtmlResponseDataAuthorised;
 use uve\core\model\Request;
@@ -74,12 +75,13 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getUsersAdminPage(Request $request): Response
     {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $users = $this->userService->getListOfUsers();
         return Response::createBackofficeHtmlResponse(
             'users',
             new HtmlResponseDataAuthorised(
                 $request,
-                'Users',
+                $localisationUtil->getValue('navAdminUsers'),
                 null,
                 null,
                 $users
@@ -112,6 +114,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getEditUserPage(int $userId, Request $request): Response
     {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $user = $this->userService->getUserForId($userId, true);
         if (empty($user)) {
             return Response::createFrontendPublicHtmlResponse(
@@ -124,7 +127,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             'users-edit',
             new HtmlResponseDataAuthorised(
                 $request,
-                'Edit User',
+                $localisationUtil->getValue('globalEdit') . ' ' . $localisationUtil->getValue('globalUser'),
                 null,
                 null,
                 [$user]
@@ -142,12 +145,13 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getArticlesPage(Request $request): Response
     {
         $articles = $this->articleService->getAllArticles(new QueryOptions(null, 'DESC', 100));
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
         return Response::createBackofficeHtmlResponse(
             'articles',
             new HtmlResponseDataAuthorised(
                 $request,
-                'Articles',
+                $localisationUtil->getValue('navAdminArticles'),
                 null,
                 $articles
             )
@@ -163,9 +167,13 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getNewArticlePage(Request $request): Response
     {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         return Response::createBackofficeHtmlResponse(
             'articles-edit',
-            new HtmlResponseDataAuthorised($request, 'New Article')
+            new HtmlResponseDataAuthorised(
+                $request,
+                $localisationUtil->getValue('globalNew') . ' ' . $localisationUtil->getValue('globalArticle')
+            )
         );
     }
 
@@ -187,12 +195,13 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             );
         }
 
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $articleSections = $this->articleService->getSectionsForArticleId($articleId);
         return Response::createBackofficeHtmlResponse(
             'articles-edit',
             new HtmlResponseDataAuthorised(
                 $request,
-                'Edit Article',
+                $localisationUtil->getValue('globalEdit') . ' ' . $localisationUtil->getValue('globalArticle'),
                 null,
                 [$article],
                 [],
@@ -212,12 +221,13 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getImagesPage(Request $request): Response
     {
         $images = $this->imageService->getAllImages();
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
         return Response::createBackofficeHtmlResponse(
             'images',
             new HtmlResponseDataAuthorised(
                 $request,
-                'Images',
+                $localisationUtil->getValue('navAdminImages'),
                 null,
                 [],
                 [],

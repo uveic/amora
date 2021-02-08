@@ -27,6 +27,15 @@ return [
     'authenticationForgotPasswordSubtitle' => "Don't worry, just enter the email address you registered with and we will send you a link to reset your password.",
     'authenticationForgotPasswordAction' => 'Send password reset link',
     'authenticationForgotPasswordActionSuccess' => 'Email sent (<b><span id="register-feedback-email"></span></b>). Check your inbox and follow the instructions.',
+    'authenticationEmailVerified' => 'Email address verified successfully.',
+    'authenticationEmailVerifiedError' => 'The link to verify your email address is not valid.',
+    'authenticationPasswordResetLinkError' => 'The link to reset your password is not valid. Please start the process again.',
+    'authenticationEmailAndOrPassNotValid' => 'Email address and/or password not valid.',
+    'authenticationEmailNotValid' => 'Email address not valid.',
+    'authenticationUserRegistrationDisabled' => 'The user registration functionality is not enabled. Please, contact the site administrator.',
+    'authenticationPasswordTooShort' => 'The password is too short. Please, fix it and try it again.',
+    'authenticationPasswordsDoNotMatch' => 'The passwords do not match. Please, fix it and try it again.',
+    'authenticationRegistrationErrorExistingEmail' => 'There is another account with the same email address. Please, log in to your account <a href="%s">here</a>.',
 
     'authenticationPasswordResetSubtitle' => 'Change your password',
     'authenticationPasswordResetActionSuccess' => 'Password changed successfully.',
@@ -79,6 +88,8 @@ return [
     'globalActivated' => 'Enabled',
     'globalDeactivated' => 'Disabled',
     'globalUser' => 'User',
+    'globalUserAccount' => 'User Account',
+    'globalUserAccountSettings' => 'User Account Settings',
 
     'globalUploadImage' => 'Upload image(s)',
     'globalAddImage' => 'Add image(s)',
@@ -89,6 +100,7 @@ return [
     'globalAddHtml' => 'Add HTML',
 
     'globalGenericError' => 'Something went wrong, please try again',
+    'globalGenericNotFound' => 'Not found',
 
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',

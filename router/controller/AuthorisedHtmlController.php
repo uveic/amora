@@ -2,6 +2,7 @@
 
 namespace uve\router;
 
+use uve\core\Core;
 use uve\core\model\Request;
 use uve\core\model\Response;
 use uve\core\model\response\HtmlResponseData;
@@ -63,9 +64,13 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
      */
     protected function getUserAccountHtml(Request $request): Response
     {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         return Response::createFrontendPrivateHtmlResponse(
             'account',
-            new HtmlResponseData($request, 'User Account')
+            new HtmlResponseData(
+                $request,
+                $localisationUtil->getValue('globalUserAccount')
+            )
         );
     }
 
@@ -79,9 +84,13 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
      */
     protected function getUserAccountSettingsHtml(string $settingsPage, Request $request): Response
     {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         return Response::createFrontendPrivateHtmlResponse(
             'account',
-            new HtmlResponseData($request, 'User Account Settings')
+            new HtmlResponseData(
+                $request,
+                $localisationUtil->getValue('globalUserAccount')
+            )
         );
     }
 }
