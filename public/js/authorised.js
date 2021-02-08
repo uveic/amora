@@ -1,4 +1,5 @@
 import {xhr} from './module/xhr.js';
+import {global} from './module/localisation.js';
 
 const feedbackDiv = document.querySelector('#feedback');
 
@@ -36,7 +37,12 @@ if (formUserAccount) {
       repeatPassword: repeatPassword ? repeatPassword.value : null
     };
 
-    xhr.put('/api/user/' + userId.value, JSON.stringify(payload), feedbackDiv, 'Datos actualizados');
+    xhr.put(
+      '/api/user/' + userId.value,
+      JSON.stringify(payload),
+      feedbackDiv,
+      global.get('feedbackAccountUpdated')
+    );
   });
 }
 

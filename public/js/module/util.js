@@ -1,16 +1,8 @@
-function getUpdatedAtTime (language = 'EN') {
+import {global} from './localisation.js';
+
+function getUpdatedAtTime () {
   const now = new Date();
-
-  let prefix = ' at ';
-
-  switch (language.toUpperCase()) {
-    case 'GL':
-      prefix = ' ás ';
-      break;
-    case 'ES':
-      prefix = ' a las ';
-      break;
-  }
+  const prefix = ' ' + global.get('globalAt') + ' ';
 
   return prefix + now.getHours().toString().padStart(2, '0') +
     ':' + now.getMinutes().toString().padStart(2, '0');

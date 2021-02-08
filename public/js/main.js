@@ -1,4 +1,5 @@
 import {xhr} from './module/xhr.js';
+import {global} from './module/localisation.js';
 
 const formLogin = document.querySelector('form#form-login');
 const loginFailureFeedback = document.querySelector('#login-failure-message');
@@ -53,7 +54,7 @@ if (formRegister) {
     const name = document.querySelector('form#form-register input[name="name"]');
 
     if (password.value.length < 10) {
-      loginFailureFeedback.textContent = 'Lonxitude mínima: 10 caracteres. Corríxeo e volve a intentalo.';
+      loginFailureFeedback.textContent = global.get('feedbackPasswordTooShort');
       loginFailureFeedback.classList.remove('null');
       password.focus();
       return;
@@ -113,14 +114,14 @@ if (formPasswordReset) {
     const verificationHash = document.querySelector('form#form-password-reset input[name="verificationHash"]');
 
     if (password.value.length < 10) {
-      loginFailureFeedback.textContent = 'Lonxitude mínima: 10 caracteres. Corríxeo e volve a intentalo.';
+      loginFailureFeedback.textContent = global.get('feedbackPasswordTooShort');
       loginFailureFeedback.classList.remove('null');
       password.focus();
       return;
     }
 
     if (passwordConfirmation.value !== password.value) {
-      loginFailureFeedback.textContent = 'Os contrasinais non coinciden. Corríxeo e volve a intentalo.';
+      loginFailureFeedback.textContent = global.get('feedbackPasswordsDoNotMatch');
       loginFailureFeedback.classList.remove('null');
       password.focus();
       return;

@@ -14,7 +14,7 @@ import {global} from "./module/localisation.js";
 const removeSection = function(e, sectionId) {
   e.preventDefault();
 
-  const delRes = confirm('Are you sure you want to delete this section?');
+  const delRes = confirm(global.get('feedbackDeleteSectionConfirmation'));
   if (!delRes) {
     return;
   }
@@ -212,23 +212,20 @@ document.querySelectorAll('#form-article').forEach(el => {
           previewLink.href = '/' + articleUri + '?preview=true';
           previewLink.target = '_blank';
           previewLink.className = 'article-preview m-l-1';
-          previewLink.textContent = 'Preview';
+          previewLink.textContent = global.get('globalPreview');
           document.querySelectorAll('.article-control-bar-buttons').forEach(b => b.appendChild(previewLink));
         }
         document.querySelectorAll('.article-creation').forEach(a => a.classList.remove('hidden'));
         document.querySelectorAll('span.article-updated-at').forEach(s => {
-          s.textContent = getUpdatedAtTime(s.dataset.lang);
+          s.textContent = getUpdatedAtTime();
         });
         document.querySelectorAll('span.article-created-at').forEach(s => {
           if (!s.textContent.trim().length) {
-            s.textContent = getUpdatedAtTime(s.dataset.lang);
+            s.textContent = getUpdatedAtTime();
           }
         });
 
-        document.querySelectorAll('input.article-save').forEach(b => b.value = 'Update');
-        document.querySelectorAll('input.article-save-close').forEach(b => {
-          b.value = 'U&C'
-        });
+        document.querySelectorAll('input.article-save').forEach(b => b.value = global.get('globalUpdate'));
         document.querySelectorAll('.article-preview').forEach(b => {
           b.href = response.uri + '?preview=true'
         });
@@ -284,13 +281,13 @@ document.querySelectorAll('#form-article').forEach(el => {
     const url = '/back/article';
 
     if (articleIdEl && articleIdEl.value) {
-      xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, 'Updated')
+      xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, global.get('globalUpdated'))
         .then((response) => afterApiCall(response, uri.value))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
     } else {
-      xhr.post(url, payload, feedbackDiv, 'Saved')
+      xhr.post(url, payload, feedbackDiv, global.get('Saved'))
         .then((response) => afterApiCall(response, uri.value))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
@@ -336,14 +333,14 @@ if (sectionAllImages) {
 const deleteImage = async function (e, aEl) {
   e.preventDefault();
 
-  const delRes = confirm('Are you sure you want to delete this image?');
+  const delRes = confirm(global.get('feedbackDeleteImageConfirmation'));
   if (!delRes) {
     return;
   }
 
   const imageId = Number.parseInt(aEl.parentNode.parentNode.dataset.imageId);
 
-  xhr.delete('/api/image/' + imageId, feedbackDiv, 'Imaxe borrada')
+  xhr.delete('/api/image/' + imageId, feedbackDiv, global.get('feedbackImageDeleted'))
     .then(() => {
       const iDiv = document.querySelector(".image-item[data-image-id='" + imageId + "']");
       iDiv.classList.add('null');
@@ -388,7 +385,7 @@ if (inputFileImages) {
         image.src = String(reader.result);
         let imgLoading = new Image();
         imgLoading.className = 'justify-center';
-        imgLoading.alt = 'Loading...';
+        imgLoading.alt = global.get('globalLoading');
         imgLoading.src = '/img/loading.gif';
 
         articleImageDiv.appendChild(image);
@@ -578,7 +575,7 @@ document.querySelectorAll('.article-add-section-paragraph').forEach(bu => {
     articleSectionText.id = sectionId;
     articleSectionText.dataset.editorId = id;
     articleSectionText.className = 'article-section article-content article-section-paragraph placeholder';
-    articleSectionText.dataset.placeholder = 'Type something...';
+    articleSectionText.dataset.placeholder = global.get('editorParagraphPlaceholder');
 
     let divEditor = document.createElement('div');
     divEditor.className = 'pell-content ' + sectionId;
@@ -607,7 +604,7 @@ document.querySelectorAll('.article-add-section-title').forEach(bu => {
 
     let articleSectionTitle = document.createElement('h1');
     articleSectionTitle.className = 'article-title placeholder';
-    articleSectionTitle.dataset.placeholder = 'Title';
+    articleSectionTitle.dataset.placeholder = global.get('editorTitlePlaceholder');
     articleSectionTitle.contentEditable = 'true';
 
     articleSectionWrapper.appendChild(articleSectionTitle);
@@ -630,7 +627,7 @@ document.querySelectorAll('.article-add-section-subtitle').forEach(bu => {
 
     let articleSectionSubtitle = document.createElement('h2');
     articleSectionSubtitle.className = 'article-subtitle placeholder';
-    articleSectionSubtitle.dataset.placeholder = 'Subtitle';
+    articleSectionSubtitle.dataset.placeholder = global.get('editorSubtitlePlaceholder');
     articleSectionSubtitle.contentEditable = 'true';
 
     articleSectionWrapper.appendChild(articleSectionSubtitle);
@@ -645,7 +642,7 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
     e.preventDefault();
 
     // ToDo: Implement popup to get the video URL
-    const videoUrl = window.prompt('Video URL? (Only YouTube for now)');
+    const videoUrl = window.prompt(global.get('editorVideoUrlTitle'));
     if (videoUrl) {
       const ytVideoId = getYoutubeVideoIdFromUrl(videoUrl);
       if (!ytVideoId) {
@@ -694,7 +691,7 @@ if (inputArticleImages) {
       let file = files[i]
 
       if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-        return alert(file.name + " is not an image");
+        return alert(file.name + ' ' + global.get('feedbackErrorNotAnImage'));
       }
 
       formData.append('files[]', file);
@@ -709,7 +706,7 @@ if (inputArticleImages) {
 
         let imageCaption = document.createElement('p');
         imageCaption.className = 'placeholder article-section-image-caption';
-        imageCaption.dataset.placeholder = 'Type something...';
+        imageCaption.dataset.placeholder = global.get('editorTitlePlaceholder');
         imageCaption.contentEditable = 'true';
 
         let image = new Image();
@@ -718,7 +715,7 @@ if (inputArticleImages) {
 
         let imgLoading = new Image();
         imgLoading.className = 'justify-center';
-        imgLoading.alt = 'Loading...';
+        imgLoading.alt = global.get('globalLoading');
         imgLoading.src = '/img/loading.gif';
 
         articleSectionImage.appendChild(image);
