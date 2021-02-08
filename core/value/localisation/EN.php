@@ -88,6 +88,8 @@ return [
     'globalAddVideo' => 'Add video',
     'globalAddHtml' => 'Add HTML',
 
+    'globalGenericError' => 'Something went wrong, please try again',
+
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',
     'articleStatusDeleted' => 'Deleted',

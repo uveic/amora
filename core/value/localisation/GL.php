@@ -88,6 +88,8 @@ return [
     'globalAddVideo' => 'Engadir vídeo',
     'globalAddHtml' => 'Engadir HTML',
 
+    'globalGenericError' => 'Algo non foi ben, por favor inténtao de novo',
+
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
     'articleStatusDeleted' => 'Eliminado',

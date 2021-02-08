@@ -1,3 +1,5 @@
+import {global} from './localisation/global.js';
+
 async function logError(errorMessage = null, endpoint = null, method = null, payload = null) {
   const data = {
     endpoint: endpoint,
@@ -42,7 +44,7 @@ function request(url, stringPayload, method = 'POST', feedbackDivEl = null, succ
     }
   }).then((json) => {
     if (!json.success) {
-      throw new Error(json.errorMessage ?? 'Something went wrong, please try again.');
+      throw new Error(json.errorMessage ?? global.get('genericError'));
     }
 
     if (successMessage && feedbackDivEl) {

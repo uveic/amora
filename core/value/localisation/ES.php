@@ -88,6 +88,8 @@ return [
     'globalAddVideo' => 'Añadir vídeo',
     'globalAddHtml' => 'Añadir HTML',
 
+    'globalGenericError' => 'Ha ocurrido un error inesperado, por favor inténtalo de nuevo',
+
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
     'articleStatusDeleted' => 'Eliminado',

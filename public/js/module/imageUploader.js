@@ -1,3 +1,5 @@
+import {global} from './localisation/global.js';
+
 async function uploadImage(file, containerToAppendImages, userFeedbackDiv, payloadData = {}) {
   console.log(-1);
   const apiUploadEndpoint = '/api/image';
@@ -48,7 +50,7 @@ async function uploadImage(file, containerToAppendImages, userFeedbackDiv, paylo
       console.log(2);
       if (!json.success || !json.images || json.images.length <= 0) {
         throw new Error(
-          json.errorMessage ?? 'Something went wrong, please try again: ' + image.title
+          json.errorMessage ?? global.get('genericError') + ': ' + image.title
         );
       }
 

@@ -9,6 +9,7 @@ import {
 import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
 import {loadEditor} from './module/editor.js';
+import {global} from './module/localisation/global.js';
 
 const removeSection = function(e, sectionId) {
   e.preventDefault();
@@ -85,8 +86,8 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
 
   let trashImg = new Image();
   trashImg.className = 'img-svg';
-  trashImg.title = 'Remove from article';
-  trashImg.alt = 'Remove from article';
+  trashImg.title = global.get('articleSectionRemove');
+  trashImg.alt = global.get('articleSectionRemove');
   trashImg.src = '/img/svg/trash.svg';
 
   let deleteButton = document.createElement('a');
@@ -97,8 +98,8 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
 
   let arrowUpImg = new Image();
   arrowUpImg.className = 'img-svg';
-  arrowUpImg.title = 'Move Up';
-  arrowUpImg.alt = 'Move Up';
+  arrowUpImg.title = global.get('articleSectionMoveUp');
+  arrowUpImg.alt = global.get('articleSectionMoveUp');
   arrowUpImg.src = '/img/svg/arrow-fat-up.svg';
 
   let moveUpButton = document.createElement('a');
@@ -109,8 +110,8 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
 
   let arrowDownImg = new Image();
   arrowDownImg.className = 'img-svg';
-  arrowDownImg.title = 'Move Down';
-  arrowDownImg.alt = 'Move Down';
+  arrowDownImg.title = global.get('articleSectionMoveDown');
+  arrowDownImg.alt = global.get('articleSectionMoveDown');
   arrowDownImg.src = '/img/svg/arrow-fat-down.svg';
 
   let moveDownButton = document.createElement('a');
@@ -410,7 +411,7 @@ if (inputFileImages) {
           .then(data => {
             if (!data.success || !data.images || data.images.length <= 0) {
               throw new Error(
-                data.errorMessage ?? 'Something went wrong, please try again: ' + image.src
+                data.errorMessage ?? global.get('genericError') + ': ' + image.src
               );
             }
 
@@ -440,7 +441,7 @@ if (inputFileImages) {
             });
           }).catch((error) => {
           articleImageDiv.classList.add('null');
-          feedbackDiv.textContent = 'Something went wrong, please try again';
+          feedbackDiv.textContent = global.get('genericError');
           feedbackDiv.classList.remove('feedback-success');
           feedbackDiv.classList.add('feedback-error');
           feedbackDiv.classList.remove('null');
@@ -750,7 +751,7 @@ if (inputArticleImages) {
           .then(data => {
             if (!data.success || !data.images || data.images.length <= 0) {
               throw new Error(
-                data.errorMessage ?? 'Something went wrong, please try again. Image: ' + image.src
+                data.errorMessage ?? global.get('genericError') + ': ' + image.src
               );
             }
 

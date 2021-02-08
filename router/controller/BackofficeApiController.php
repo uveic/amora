@@ -3,6 +3,7 @@
 namespace uve\router;
 
 use Throwable;
+use uve\core\Core;
 use uve\core\Logger;
 use uve\core\model\Response;
 use uve\core\module\action\service\ActionService;
@@ -223,7 +224,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerDeleteUserSuccessResponse(
             $res,
-            $res ? null : 'Something went wrong, please try again.'
+            $res ? null : Core::getLocalisationUtil(
+                $request->getSiteLanguage())->getValue('globalGenericError'
+            )
         );
     }
 
