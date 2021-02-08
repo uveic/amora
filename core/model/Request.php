@@ -241,7 +241,7 @@ final class Request
             }
         }
 
-        return strtoupper(Core::getConfigValue('default_site_language'));
+        return strtoupper(Core::getConfigValue('defaultSiteLanguage'));
     }
 
     private function loadSession(): ?Session {

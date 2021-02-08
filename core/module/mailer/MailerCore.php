@@ -82,8 +82,8 @@ class MailerCore extends Core
 
                 $fromMail = $config['mailer']['from']['email'];
                 $fromName = $config['mailer']['from']['name'];
-                $replyToEmail = $config['mailer']['reply_to']['email'] ?? null;
-                $replyToName = $config['mailer']['reply_to']['name'] ?? null;
+                $replyToEmail = $config['mailer']['replyTo']['email'] ?? null;
+                $replyToName = $config['mailer']['replyTo']['name'] ?? null;
 
                 require_once self::getPathRoot() . '/core/module/mailer/app/api/RequestBuilderAbstract.php';
                 require_once self::getPathRoot() . '/core/module/mailer/app/api/sendgrid/RequestBuilder.php';
@@ -126,18 +126,18 @@ class MailerCore extends Core
                 $logger = self::getMailerLogger();
 
                 $config = Core::getConfig();
-                if (empty($config['mailer']['sendgrid']['base_api_url'])) {
-                    $logger->logError("Missing 'mailer.sendgrid.base_api_url' section from config");
+                if (empty($config['mailer']['sendgrid']['baseApiUrl'])) {
+                    $logger->logError("Missing 'mailer.sendgrid.baseApiUrl' section from config");
                     exit;
                 }
 
-                if (empty($config['mailer']['sendgrid']['api_key'])) {
-                    $logger->logError("Missing 'mailer.sendgrid.api_key' section from config");
+                if (empty($config['mailer']['sendgrid']['apiKey'])) {
+                    $logger->logError("Missing 'mailer.sendgrid.apiKey' section from config");
                     exit;
                 }
 
-                $baseApiUrl = $config['mailer']['sendgrid']['base_api_url'];
-                $apiKey = $config['mailer']['sendgrid']['api_key'];
+                $baseApiUrl = $config['mailer']['sendgrid']['baseApiUrl'];
+                $apiKey = $config['mailer']['sendgrid']['apiKey'];
 
                 require_once self::getPathRoot() . '/core/module/mailer/app/api/ApiClientAbstract.php';
                 require_once self::getPathRoot() . '/core/module/mailer/app/api/sendgrid/ApiClient.php';

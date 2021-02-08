@@ -27,7 +27,7 @@ class ActionService
     public function logAction(Request $request, ?Session $session = null): void
     {
         try {
-            $logEnabled = Core::getConfigValue('action_logger_enabled');
+            $logEnabled = Core::getConfigValue('actionLoggerEnabled');
             if (!$logEnabled) {
                 return;
             }

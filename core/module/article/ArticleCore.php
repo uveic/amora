@@ -83,21 +83,21 @@ class ArticleCore extends Core
 
     public static function getImageService(): ImageService
     {
-        if (empty(self::getConfigValue('media_base_dir'))) {
-            self::getDefaultLogger()->logError("Missing 'media_base_dir' section from config");
+        if (empty(self::getConfigValue('mediaBaseDir'))) {
+            self::getDefaultLogger()->logError("Missing 'mediaBaseDir' section from config");
             exit;
         }
 
-        if (empty(self::getConfigValue('media_base_url'))) {
-            self::getDefaultLogger()->logError("Missing 'media_base_url' section from config");
+        if (empty(self::getConfigValue('mediaBaseUrl'))) {
+            self::getDefaultLogger()->logError("Missing 'mediaBaseUrl' section from config");
             exit;
         }
 
         $logger = self::getArticleLogger();
         $imageDataLayer = self::getImageDataLayer();
         $imageResizeService = self::getImageResizeService();
-        $mediaBaseDir = self::getConfigValue('media_base_dir');
-        $mediaBaseUrl = self::getConfigValue('media_base_url');
+        $mediaBaseDir = self::getConfigValue('mediaBaseDir');
+        $mediaBaseUrl = self::getConfigValue('mediaBaseUrl');
 
         return self::getInstance(
             'ImageService',
@@ -124,19 +124,19 @@ class ArticleCore extends Core
 
     public static function getImageResizeService(): ImageResizeService
     {
-        if (empty(self::getConfigValue('media_base_dir'))) {
-            self::getDefaultLogger()->logError("Missing 'media_base_dir' section from config");
+        if (empty(self::getConfigValue('mediaBaseDir'))) {
+            self::getDefaultLogger()->logError("Missing 'mediaBaseDir' section from config");
             exit;
         }
 
-        if (empty(self::getConfigValue('media_base_url'))) {
-            self::getDefaultLogger()->logError("Missing 'media_base_url' section from config");
+        if (empty(self::getConfigValue('mediaBaseUrl'))) {
+            self::getDefaultLogger()->logError("Missing 'mediaBaseUrl' section from config");
             exit;
         }
 
         $logger = self::getArticleLogger();
-        $mediaBaseDir = self::getConfigValue('media_base_dir');
-        $mediaBaseUrl = self::getConfigValue('media_base_url');
+        $mediaBaseDir = self::getConfigValue('mediaBaseDir');
+        $mediaBaseUrl = self::getConfigValue('mediaBaseUrl');
 
         return self::getInstance(
             'ImageResizeService',

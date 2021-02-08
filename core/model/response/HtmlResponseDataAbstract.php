@@ -32,8 +32,8 @@ abstract class HtmlResponseDataAbstract
     ) {
         $this->localisationUtil = Core::getLocalisationUtil(strtoupper($request->getSiteLanguage()));
 
-        $baseUrl = Core::getConfigValue('base_url');
-        $siteImageUrl = Core::getConfigValue('site_image_url');
+        $baseUrl = Core::getConfigValue('baseUrl');
+        $siteImageUrl = Core::getConfigValue('siteImageUrl');
 
         $sitePath = !$request->getPath() || $request->getPath() === 'home'
             ? '/'

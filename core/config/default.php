@@ -2,14 +2,14 @@
 
 return [
     'env' => 'dev',
-    'site_image_url' => '',
+    'siteImageUrl' => '',
     'timezone' => 'UTC',
-    'php_locale' => 'en_GB',
-    'default_site_language' => 'en',
-    'base_url' => 'http://localhost:8888/',
-    'media_base_dir' => '/path/to/your/code/folder/public/uploads',
-    'media_base_url' => '/uploads/',
-    'action_logger_enabled' => true,
+    'phpLocale' => 'en_GB',
+    'defaultSiteLanguage' => 'en',
+    'baseUrl' => 'http://localhost:8888/',
+    'mediaBaseDir' => '/path/to/your/code/folder/public/uploads',
+    'mediaBaseUrl' => '/uploads/',
+    'actionLoggerEnabled' => true,
     'registrationEnabled' => false,
     'invitationEnabled' => true,
     'db' => [
@@ -37,13 +37,13 @@ return [
             'email' => '',
             'name' => '',
         ],
-        'reply_to' => [
+        'replyTo' => [
             'email' => '',
             'name' => '',
         ],
         'sendgrid' => [
-            'base_api_url' => 'https://api.sendgrid.com/v3',
-            'api_key' => ''
+            'baseApiUrl' => 'https://api.sendgrid.com/v3',
+            'apiKey' => ''
         ],
     ]
 ];

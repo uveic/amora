@@ -141,8 +141,8 @@ final class StringUtil
 
     public static function getBaseLinkUrl(string $siteLanguage): string
     {
-        $baseUrl = Core::getConfigValue('base_url');
-        $defaultSiteLanguage = strtolower(Core::getConfigValue('default_site_language'));
+        $baseUrl = Core::getConfigValue('baseUrl');
+        $defaultSiteLanguage = strtolower(Core::getConfigValue('defaultSiteLanguage'));
 
         $siteLanguage = strtolower($siteLanguage);
         $urlLanguagePart = $defaultSiteLanguage === $siteLanguage ? '' : '/' . $siteLanguage;

@@ -61,7 +61,7 @@ class Core
 
         self::$config = new Config();
         self::$timezone = self::$config->get('timezone') ?? 'UTC';
-        self::$phpLocale = self::$config->get('php_locale') ?? 'en';
+        self::$phpLocale = self::$config->get('phpLocale') ?? 'en';
 
         date_default_timezone_set(self::getDefaultTimezone());
         setlocale(LC_ALL, self::getPhpLocale());
@@ -293,7 +293,7 @@ class Core
     public static function getLocalisationUtil(string $siteLanguage): LocalisationUtil
     {
         $logger = Core::getLogger('localisation_util');
-        $defaultSiteLanguage = strtoupper(self::getConfigValue('default_site_language') ?? 'EN');
+        $defaultSiteLanguage = strtoupper(self::getConfigValue('defaultSiteLanguage') ?? 'EN');
 
         return self::getInstance(
             'LocalisationUtil',

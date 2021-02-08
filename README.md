@@ -12,7 +12,7 @@ Follow these steps to get your development machine up and running (only for Mac)
 4. Clone this repository.
 5. Run composer: go to the root folder and run `composer install`. It will create a new `vendor` folder and install all required dependencies.
 6. Create a database: run this in a terminal: `mysql -u root -p`, it will ask for the password for `root`. Then run this to create the database: `CREATE database dbname;`
-7. Go to `uve/config/default.php` and update the value for `media_base_dir` with the right path to your code folder. Do the same for the DB parameters (`db` field).
+7. Go to `uve/config/default.php` and update the value for `mediaBaseDir` with the right path to your code folder. Do the same for the DB parameters (`db` field).
 8. Run the database migrations: `/path-to-your-code-folder/uve/bin/migrate.php migrate`
 9. Sync lookup tables: `/path-to-your-code-folder/uve/bin/sync_lookup_tables.php`
 10. Create a new user: `/path-to-your-code-folder/uve/bin/create_admin_user.php --email=you@domain.com --user=username --password=password`

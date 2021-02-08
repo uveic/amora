@@ -94,7 +94,7 @@ class UserMailService
     {
         $verificationIdentifier = $this->getUniqueVerificationIdentifier();
 
-        $baseUrl = Core::getConfigValue('base_url');
+        $baseUrl = Core::getConfigValue('baseUrl');
         $linkUrl = $baseUrl . 'user/verify/' . $verificationIdentifier;
         $siteName = Core::getLocalisationUtil(Language::getIsoCodeForId($user->getLanguageId()))
             ->getValue('siteName');
@@ -121,7 +121,7 @@ class UserMailService
     {
         $verificationIdentifier = $this->getUniqueVerificationIdentifier();
 
-        $baseUrl = Core::getConfigValue('base_url');
+        $baseUrl = Core::getConfigValue('baseUrl');
         $linkUrl = $baseUrl . 'user/reset/' . $verificationIdentifier;
         $siteName = Core::getLocalisationUtil(Language::getIsoCodeForId($user->getLanguageId()))
             ->getValue('siteName');
