@@ -309,7 +309,11 @@ final class MySqlDb
         }
 
         $this->connect();
-        $this->connection->beginTransaction();
+        $res = $this->execute('START TRANSACTION;');
+
+        if (!$res) {
+            return false;
+        }
 
         $this->isInTransactionMode = true;
 
@@ -328,7 +332,11 @@ final class MySqlDb
         }
 
         $this->connect();
-        $this->connection->commit();
+        $res = $this->execute('COMMIT;');
+
+        if (!$res) {
+            return false;
+        }
 
         $this->isInTransactionMode = false;
 
@@ -347,7 +355,11 @@ final class MySqlDb
         }
 
         $this->connect();
-        $this->connection->rollBack();
+        $res = $this->execute('ROLLBACK;');
+
+        if (!$res) {
+            return false;
+        }
 
         $this->isInTransactionMode = false;
 
