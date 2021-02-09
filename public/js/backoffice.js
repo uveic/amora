@@ -26,6 +26,15 @@ const removeSection = function(e, sectionId) {
     article.removeChild(section);
   }
 
+  if (section.querySelector('#article-title-main')) {
+    const allTitles = document.querySelectorAll('h1.article-title');
+    if (allTitles.length > 0) {
+      allTitles[0].id = 'article-title-main';
+      allTitles[0].addEventListener('input', (e) => updateArticleUri(e));
+      allTitles[0].dispatchEvent(new Event('input', {bubbles: true, cancelable: true}));
+    }
+  }
+
   const sectionHtml = document.querySelector('#article-section-paragraph-' + sectionId + '-html');
   if (sectionHtml) {
     const divHtml = document.querySelector('.article-content-text');
