@@ -192,10 +192,11 @@ const displayUpAndDownArrows = function() {
   });
 };
 
-const updateArticleUri = (e, articleTitleInput) => {
+const updateArticleUri = (e) => {
+  const articleTitleText = e.target.innerText;
   const articleUriInput = document.querySelector('input[name="articleUri"]');
   const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
-  const cleanInput = cleanTextForUrl(articleTitleInput.innerText);
+  const cleanInput = cleanTextForUrl(articleTitleText);
 
   const payload = JSON.stringify({
     articleId: articleIdEl.value.trim() ? Number.parseInt(articleIdEl.value.trim()) : null,
@@ -213,47 +214,52 @@ document.querySelectorAll('#form-article').forEach(el => {
     const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
 
     const afterApiCall = function(response, articleUri) {
-      if (e.submitter.dataset.close) {
-        window.location = '/backoffice/articles'
-      } else {
-        if (response.articleId) {
-          articleIdEl.value = response.articleId;
-          history.pushState("", document.title, '/backoffice/articles/' + response.articleId);
-        }
-        const previewExists = document.querySelector('.article-preview');
-        if (!previewExists) {
-          const previewLink = document.createElement('a');
-          previewLink.href = '/' + articleUri + '?preview=true';
-          previewLink.target = '_blank';
-          previewLink.className = 'article-preview m-l-1';
-          previewLink.textContent = global.get('globalPreview');
-          document.querySelectorAll('.article-control-bar-buttons').forEach(b => b.appendChild(previewLink));
-        }
-        document.querySelectorAll('.control-bar-creation').forEach(a => a.classList.remove('hidden'));
-        document.querySelectorAll('span.article-updated-at').forEach(s => {
+      if (response.articleId) {
+        articleIdEl.value = response.articleId;
+        const lang = document.documentElement.lang
+          ? document.documentElement.lang.toLowerCase().trim()
+          : 'en';
+        history.pushState(
+          "",
+          document.title,
+          '/' + lang + '/backoffice/articles/' + response.articleId
+        );
+      }
+      const previewExists = document.querySelector('.article-preview');
+      if (!previewExists) {
+        const previewLink = document.createElement('a');
+        previewLink.href = '/' + articleUri + '?preview=true';
+        previewLink.target = '_blank';
+        previewLink.className = 'article-preview m-l-1';
+        previewLink.textContent = global.get('globalPreview');
+        document.querySelectorAll('.article-control-bar-buttons').forEach(b => b.appendChild(previewLink));
+      }
+      document.querySelectorAll('.control-bar-creation').forEach(a => a.classList.remove('hidden'));
+      document.querySelectorAll('span.article-updated-at').forEach(s => {
+        s.textContent = getUpdatedAtTime();
+      });
+      document.querySelectorAll('span.article-created-at').forEach(s => {
+        if (!s.textContent.trim().length) {
           s.textContent = getUpdatedAtTime();
-        });
-        document.querySelectorAll('span.article-created-at').forEach(s => {
-          if (!s.textContent.trim().length) {
-            s.textContent = getUpdatedAtTime();
-          }
-        });
+        }
+      });
 
-        document.querySelectorAll('input.article-save').forEach(b => b.value = global.get('globalUpdate'));
-        document.querySelectorAll('.article-preview').forEach(b => {
+      document.querySelectorAll('input.article-save').forEach(b => b.value = global.get('globalUpdate'));
+      document.querySelectorAll('.article-preview').forEach(b => {
           b.href = response.uri + '?preview=true'
         });
-      }
     };
 
     const titleEl = document.querySelector('#article-title-main');
     const uriEl = document.querySelector('input[name="articleUri"]');
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
     const statusId = Number.parseInt(status.dataset.articleStatusId);
+    const articleUri = uriEl && uriEl.value ? uriEl.value : null;
+
     document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
 
     let sections = [];
-    let articleContentHtml = null;
+    let articleContentHtml = '';
     let order = 1;
     document.querySelectorAll('.article-section').forEach(sec => {
       let section = sec.cloneNode(true);
@@ -267,6 +273,20 @@ document.querySelectorAll('#form-article').forEach(el => {
 
       for (let i = 0; i < sectionElement.children.length; i++) {
         let c = sectionElement.children[i];
+
+        // If it's the first title section add the article link
+        if (c.id === 'article-title-main' && articleUri) {
+          let aEl = document.createElement('a');
+          aEl.href = '/' + articleUri;
+          aEl.target = '_blank';
+          aEl.className = 'link-title';
+          aEl.innerHTML = c.innerHTML.trim();
+          let h1El = sectionElement.querySelector('h1');
+          h1El.textContent = '';
+          h1El.appendChild(aEl);
+        }
+
+        // Remove attributes and not required classes
         c.classList.remove('placeholder');
         c.removeAttribute('id');
         c.removeAttribute('contenteditable');
@@ -292,10 +312,20 @@ document.querySelectorAll('#form-article').forEach(el => {
       sections.push(currentSection);
     });
 
+    if (!articleContentHtml || !articleContentHtml.trim().length) {
+      feedbackDiv.textContent = global.get('feedbackSaving');
+      feedbackDiv.classList.remove('feedback-error');
+      feedbackDiv.classList.add('feedback-success');
+      feedbackDiv.classList.remove('null');
+      setTimeout(() => {feedbackDiv.classList.add('null')}, 5000);
+      document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
+      return;
+    }
+
     const payload = JSON.stringify({
       'title': titleEl ? titleEl.textContent : null,
-      'uri': uriEl && uriEl.value ? uriEl.value : null,
-      'contentHtml': articleContentHtml,
+      'uri': articleUri,
+      'contentHtml': articleContentHtml.trim().length ? articleContentHtml.trim() : null,
       'statusId': statusId,
       'sections': sections
     });
@@ -618,7 +648,7 @@ document.querySelectorAll('.article-add-section-title').forEach(bu => {
     const allTitles = document.querySelectorAll('h1.article-title');
     if (allTitles.length === 1) {
       articleSectionTitle.id = 'article-title-main';
-      allTitles[0].addEventListener('input', (e) => updateArticleUri(e, allTitles[0]));
+      allTitles[0].addEventListener('input', (e) => updateArticleUri(e));
     }
 
     document.querySelector('#' + sectionId + ' > h1').focus();
@@ -809,6 +839,10 @@ document.querySelectorAll('.article-section-button-down').forEach(el => {
 });
 
 document.querySelectorAll('section.article-section-paragraph').forEach(s => loadEditor(s.id));
+
+document.querySelectorAll('h1#article-title-main').forEach(t => {
+  t.addEventListener('input', (e) => updateArticleUri(e))
+});
 
 document.querySelectorAll('a.article-settings').forEach(el => {
   el.addEventListener('click', (e) => {

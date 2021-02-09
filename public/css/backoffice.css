@@ -112,7 +112,7 @@ input.is-light {
 }
 
 .article-title {
-  margin: 1rem 0;
+  padding: 0.67rem 1rem;
   min-height: 33px;
 }
 

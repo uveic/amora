@@ -518,12 +518,12 @@ label:not(:last-child) {
 
 /* Article styles starts here */
 .article-title {
-  margin: 1rem 0 0.3rem;
+  margin: 0;
   padding: 0 1rem;
   font-size: 1.5rem;
   font-family: var(--font-h1-title);
   font-weight: bold;
-  line-height: 1.4rem;
+  line-height: 2rem;
   color: var(--main-text-color);
 }
 
@@ -538,12 +538,13 @@ label:not(:last-child) {
 }
 
 .article-info {
-  padding: 0;
-  margin: 0;
+  padding: 0.5rem 0 0 0;
+  margin: 1rem;
   font-size: 0.85rem;
   font-weight: normal;
   font-family: var(--font-paragraph);
   color: var(--light-text-color);
+  border-top: 1px solid var(--light-bg-color-2);
 }
 
 article img,
@@ -608,11 +609,11 @@ div.article-section-video iframe {
   height: 100%;
 }
 
-a.black,
-a.black:hover,
-a.black:active,
-a.black:visited,
-a.black:focus {
+a.link-title,
+a.link-title:hover,
+a.link-title:active,
+a.link-title:visited,
+a.link-title:focus {
   color: var(--main-text-color);
 }
 

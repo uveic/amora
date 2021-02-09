@@ -32,7 +32,7 @@ foreach ($responseData->getArticles() as $article) {
   $previousYear = $year;
 ?>
   <div>
-    <?=$isPublished?><a class="black" href="<?=$href?>"><?=$article->getTitle()?></a>
+    <?=$isPublished?><a class="link-title" href="<?=$href?>"><?=$article->getTitle()?></a>
     <span class="article-info"><?=$this->e(DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, false))?></span>
   </div>
 <?php
