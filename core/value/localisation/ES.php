@@ -77,7 +77,7 @@ return [
     'globalUpdateAndClose' => 'AyC',
     'globalUpdated' => 'Actualizado',
     'globalUpdatedAt' => 'Actualizado',
-    'globalPublishAt' => 'Publicar el',
+    'globalPublishOn' => 'Publicar el',
     'globalCreated' => 'Creado',
     'globalStatus' => 'Estatus',
     'globalPreview' => 'Previsualizar',

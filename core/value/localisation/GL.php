@@ -77,7 +77,7 @@ return [
     'globalUpdateAndClose' => 'AeC',
     'globalUpdated' => 'Actualizado',
     'globalUpdatedAt' => 'Actualizado',
-    'globalPublishAt' => 'Publicar o',
+    'globalPublishOn' => 'Publicar o',
     'globalCreated' => 'Creado',
     'globalStatus' => 'Estatus',
     'globalPreview' => 'Previsualizar',

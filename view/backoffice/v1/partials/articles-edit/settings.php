@@ -12,6 +12,12 @@ $publishAt = $article && $article->getPublishedAt()
     ? DateUtil::transformFromUtcTo($article->getPublishedAt(), $responseData->getSession()->getTimezone(), 'Y-m-d')
     : '';
 
+$createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($article
+        ? '<span title="' .
+        $this->e(DateUtil::formatUtcDate($article->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
+        '">' . $this->e(DateUtil::getElapsedTimeString($article->getCreatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
+        : '<span class="article-created-at" title=""></span>');
+
 ?>
 <div id="side-options" class="side-options null">
   <div class="side-options-header">
@@ -19,7 +25,7 @@ $publishAt = $article && $article->getPublishedAt()
   </div>
   <h2><?=$responseData->getLocalValue('navAdminArticleOptions')?></h2>
   <div class="field">
-    <label for="publishAt" class="label"><?=$responseData->getLocalValue('globalPublishAt')?>:</label>
+    <label for="publishAt" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
     <div class="control">
       <input class="input" id="publishAt" name="publishAt" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" min="<?=$minPublishAt?>" value="<?=$publishAt?>" required>
     </div>
@@ -47,4 +53,5 @@ $publishAt = $article && $article->getPublishedAt()
   <div class="control">
     <button class="button is-success m-b-1" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
   </div>
+  <?=$createdAtContent?>
 </div>

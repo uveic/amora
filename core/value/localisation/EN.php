@@ -77,7 +77,7 @@ return [
     'globalUpdateAndClose' => 'U&C',
     'globalUpdated' => 'Updated',
     'globalUpdatedAt' => 'Updated At',
-    'globalPublishAt' => 'Publish At',
+    'globalPublishOn' => 'Publish On',
     'globalCreated' => 'Created',
     'globalStatus' => 'Status',
     'globalPreview' => 'Preview',
