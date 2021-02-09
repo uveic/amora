@@ -192,6 +192,20 @@ const displayUpAndDownArrows = function() {
   });
 };
 
+const updateArticleUri = (e, articleTitleInput) => {
+  const articleUriInput = document.querySelector('input[name="articleUri"]');
+  const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
+  const cleanInput = cleanTextForUrl(articleTitleInput.innerText);
+
+  const payload = JSON.stringify({
+    articleId: articleIdEl.value.trim() ? Number.parseInt(articleIdEl.value.trim()) : null,
+    uri: cleanInput
+  });
+
+  xhr.post('/back/article/uri/', payload)
+    .then(response => articleUriInput.value = response.uri);
+}
+
 document.querySelectorAll('#form-article').forEach(el => {
   el.addEventListener('submit', e => {
     e.preventDefault();
@@ -232,31 +246,39 @@ document.querySelectorAll('#form-article').forEach(el => {
       }
     };
 
-    const title = document.querySelector('div#article-title');
-    const uri = document.querySelector('#form-article input[name="uri"]');
+    const titleEl = document.querySelector('#article-title-main');
+    const uriEl = document.querySelector('input[name="articleUri"]');
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
     const statusId = Number.parseInt(status.dataset.articleStatusId);
     document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
 
     let sections = [];
-    let html = '';
+    let articleContentHtml = '';
     let order = 1;
     document.querySelectorAll('.article-section').forEach(sec => {
       let section = sec.cloneNode(true);
       let editorId = section.dataset.sectionId ?? section.dataset.editorId;
 
-      let sectionContent = section.classList.contains('article-section-paragraph')
-        ? document.querySelector('#article-section-paragraph-' + editorId + '-html').innerHTML.trim()
-        : section.innerHTML.trim();
+      let sectionElement = section.classList.contains('article-section-paragraph')
+        ? document.querySelector('#article-section-paragraph-' + editorId + '-html')
+        : section;
 
-      // Hacky but it does the work for now
-      sectionContent = sectionContent.replace('contenteditable="true"', '');
+      let sectionContentHtml = sectionElement.innerHTML.trim();
 
-      html += sectionContent;
+      for (let i = 0; i < sectionElement.children.length; i++) {
+        let c = sectionElement.children[i];
+        c.classList.remove('placeholder');
+        c.removeAttribute('id');
+        c.removeAttribute('contenteditable');
+        delete c.dataset.placeholder;
+        delete c.dataset.imageId;
+      }
+
+      articleContentHtml += sectionElement.innerHTML.trim();
       let currentSection = {
         id: section.dataset.sectionId ? Number.parseInt(section.dataset.sectionId) : null,
         sectionTypeId: getSectionTypeIdFromClassList(section.classList),
-        contentHtml: sectionContent,
+        contentHtml: sectionContentHtml,
         order: order++
       };
 
@@ -271,9 +293,9 @@ document.querySelectorAll('#form-article').forEach(el => {
     });
 
     const payload = JSON.stringify({
-      'title': title.textContent,
-      'uri': uri.value,
-      'content': html,
+      'title': titleEl ? titleEl.textContent : null,
+      'uri': uriEl ? uriEl.value : null,
+      'content': articleContentHtml,
       'statusId': statusId,
       'sections': sections
     });
@@ -282,36 +304,19 @@ document.querySelectorAll('#form-article').forEach(el => {
 
     if (articleIdEl && articleIdEl.value) {
       xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, global.get('globalUpdated'))
-        .then((response) => afterApiCall(response, uri.value))
+        .then((response) => afterApiCall(response, uriEl.value))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
     } else {
-      xhr.post(url, payload, feedbackDiv, global.get('Saved'))
-        .then((response) => afterApiCall(response, uri.value))
+      xhr.post(url, payload, feedbackDiv, global.get('globalSaved'))
+        .then((response) => afterApiCall(response, uriEl.value))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
     }
   });
 });
-
-const articleTitleInput = document.querySelector('div#article-title');
-if (articleTitleInput) {
-  const articleUriInput = document.querySelector('#form-article input[name="uri"]');
-  const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
-  articleTitleInput.addEventListener('input', () => {
-    const cleanInput = cleanTextForUrl(articleTitleInput.innerText);
-
-    const payload = JSON.stringify({
-      articleId: articleIdEl.value.trim() ? Number.parseInt(articleIdEl.value.trim()) : null,
-      uri: cleanInput
-    });
-
-    xhr.post('/back/article/uri/', payload)
-      .then(response => articleUriInput.value = response.uri);
-  });
-}
 
 const addMouseListenerToImageInImagesSection = function (imageEl) {
   let currentImgId = imageEl.dataset.imageId;
@@ -609,6 +614,12 @@ document.querySelectorAll('.article-add-section-title').forEach(bu => {
 
     articleSectionWrapper.appendChild(articleSectionTitle);
     generateSectionWrapperFor(articleSectionWrapper, id);
+
+    const allTitles = document.querySelectorAll('h1.article-title');
+    if (allTitles.length === 1) {
+      articleSectionTitle.id = 'article-title-main';
+      allTitles[0].addEventListener('input', (e) => updateArticleUri(e, allTitles[0]));
+    }
 
     document.querySelector('#' + sectionId + ' > h1').focus();
   });

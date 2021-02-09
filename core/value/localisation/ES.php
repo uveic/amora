@@ -55,6 +55,7 @@ return [
     'formPlaceholderPasswordConfirmation' => 'Repite la contraseña',
     'formLoginAction' => 'Entrar',
     'formPasswordResetAction' => 'Cambiar contraseña',
+    'formArticleUri' => 'URI del artículo',
 
     'dashboardGoTo' => 'Ir a...',
 

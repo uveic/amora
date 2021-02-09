@@ -55,6 +55,7 @@ return [
     'formPlaceholderPasswordConfirmation' => 'Repeat password',
     'formLoginAction' => 'Log in',
     'formPasswordResetAction' => 'Cambiar contrasinal',
+    'formArticleUri' => 'Article URI',
 
     'dashboardGoTo' => 'Go to...',
 

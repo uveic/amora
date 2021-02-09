@@ -50,8 +50,16 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
       <input class="input" id="tags" name="tags" type="text" placeholder="<?=$responseData->getLocalValue('globalTags')?>" value="">
     </div>
   </div>
+  <div class="field">
+    <label for="articleUri" class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</label>
+    <div class="control">
+      <div class="article-edit-uri"><?=$this->e(trim($responseData->getBaseUrl(), ' /') . '/')?>
+        <input id="articleUri" name="articleUri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->getUri() : ''); ?>">
+      </div>
+    </div>
+  </div>
   <div class="control">
     <button class="button is-success m-b-1" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
   </div>
-  <?=$createdAtContent?>
+  <?=$article ? $createdAtContent : ''?>
 </div>

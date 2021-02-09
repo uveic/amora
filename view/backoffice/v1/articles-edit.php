@@ -47,32 +47,9 @@ function generateSection(ArticleSection $articleSection): string
     }
 
     $class = 'article-section ' . getClassName($articleSection->getArticleSectionTypeId());
-    $contentHtml = $articleSection->getContentHtml();
-    if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_TITLE ||
-        $articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_SUBTITLE
-    ) {
-        $contentHtml = str_replace(
-            ' data-placeholder=',
-            ' contenteditable="true" data-placeholder=',
-            $contentHtml
-        );
-    }
-
-    if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
-        $class .= ' placeholder null';
-    }
-
-    if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::IMAGE) {
-        $contentHtml = str_replace(
-            'article-section-image-caption"',
-            'article-section-image-caption" contenteditable="true"',
-            $contentHtml
-        );
-    }
-
-  return '<section class="' . $class . '" data-section-id="' . $articleSection->getId() . '">'  . PHP_EOL
-      . $contentHtml . PHP_EOL
-      . '</section>';
+    return '<section class="' . $class . '" data-section-id="' . $articleSection->getId() . '">'  . PHP_EOL
+        . $articleSection->getContentHtml() . PHP_EOL
+        . '</section>';
 }
 
 ?>
@@ -84,10 +61,6 @@ function generateSection(ArticleSection $articleSection): string
 <?=$this->insert('partials/articles-edit/control-bar', ['responseData' => $responseData])?>
     <div class="content-medium-width">
       <input name="articleId" type="hidden" value="<?=$article ? $this->e($article->getId()) : ''?>">
-      <div id="article-title" class="article-title placeholder" contenteditable="true" data-placeholder="<?=$responseData->getLocalValue('globalTitle')?>"><?=$this->e($article ? $article->getTitle() : ''); ?></div>
-      <div class="article-edit-uri"><?=$this->e(trim($responseData->getBaseUrl(), ' /') . '/')?>
-        <input name="uri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->getUri() : ''); ?>">
-      </div>
       <article class="article-content">
 <?php
     $count = 0;

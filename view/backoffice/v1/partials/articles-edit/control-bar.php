@@ -22,7 +22,7 @@ $isPublished = $article ? $articleStatusId === ArticleStatus::PUBLISHED : false;
 $random = StringUtil::getRandomString(5);
 
 ?>
-  <div class="control-bar-wrapper m-b-3">
+  <div class="control-bar-wrapper m-b-3 m-t-1">
     <div class="article-control-bar-buttons">
       <input style="width: revert;" type="submit" class="article-save button m-r-1" value="<?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
 <?php if ($article) {?>
