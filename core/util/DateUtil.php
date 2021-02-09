@@ -326,7 +326,7 @@ final class DateUtil
                     $format .= '%A, ';
                 }
 
-                $format .= '%d de %B de %G';
+                $format .= '%e de %B de %G';
 
                 if ($includeTime) {
                     $format .= ' a las %H:%M';
