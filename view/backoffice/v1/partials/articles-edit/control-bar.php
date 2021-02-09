@@ -15,12 +15,6 @@ $updatedAtContent = $responseData->getLocalValue('globalUpdated') . ' ' . ($arti
     '">' . $this->e(DateUtil::getElapsedTimeString($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
     : '<span class="article-updated-at" title=""></span>');
 
-$createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($article
-    ? '<span title="' .
-    $this->e(DateUtil::formatUtcDate($article->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
-    '">' . $this->e(DateUtil::getElapsedTimeString($article->getCreatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
-    : '<span class="article-created-at" title=""></span>');
-
 $articleStatusId = $article ? $article->getStatusId() : ArticleStatus::DRAFT;
 $articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::getNameForId($articleStatusId));
 $isPublished = $article ? $articleStatusId === ArticleStatus::PUBLISHED : false;
@@ -28,14 +22,14 @@ $isPublished = $article ? $articleStatusId === ArticleStatus::PUBLISHED : false;
 $random = StringUtil::getRandomString(5);
 
 ?>
-  <div class="form-control-bar-header m-b-3">
+  <div class="control-bar-wrapper m-b-3">
     <div class="article-control-bar-buttons">
       <input style="width: revert;" type="submit" class="article-save button m-r-1" value="<?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
 <?php if ($article) {?>
-      <a class="article-preview m-l-1" href="<?=$responseData->getBaseUrlWithLanguage()?><?=$article->getUri()?>?preview=true" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
+        <a class="article-preview" href="<?=$responseData->getBaseUrlWithLanguage()?><?=$article->getUri()?>?preview=true" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
 <?php } ?>
     </div>
-    <div class="article-creation<?=$article ? '' : ' hidden'?>"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
+    <div class="control-bar-creation<?=$article ? '' : ' hidden'?>"><span><?=$updatedAtContent?></span></div>
     <div class="article-saving null">
       <img src="/img/loading.gif" class="" alt="Saving...">
       <span>Saving...</span>

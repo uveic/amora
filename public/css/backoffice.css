@@ -42,21 +42,21 @@
   text-align: right;
 }
 
-.form-control-bar-header {
+.control-bar-wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: center;
-  margin: 2rem 0 0 0;
-  padding: 0.25rem 1.5rem;
+  align-items: stretch;
+  margin: 0;
+  padding: 0 1rem;
   justify-content: flex-start;
+  position: relative;
   background-color: var(--light-bg-color);
   border-top: 1px solid var(--light-bg-color-3);
   border-bottom: 1px solid var(--light-bg-color-3);
-  position: relative;
 }
 
-.form-control-bar-header > button {
+.control-bar-wrapper > button {
   flex-grow: 0;
   flex-shrink: 0;
   padding: 10px 14px;
@@ -65,10 +65,19 @@
   margin: 0.5rem;
 }
 
-.form-control-bar-header > div {
+.control-bar-wrapper > div {
   flex-shrink: 1;
   flex-grow: 1;
+  margin: 0.5rem;
+}
+
+.control-bar-creation {
+  padding: 0 0.5rem;
   font-size: 0.9rem;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  flex-direction: column;
 }
 
 .background-light-color {
@@ -143,11 +152,6 @@ input.is-light {
 
 .article-add-section:hover {
   opacity: 0.9;
-}
-
-.article-creation {
-  text-align: right;
-  padding: 1rem;
 }
 
 .article-image {

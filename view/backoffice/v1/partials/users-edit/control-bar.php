@@ -25,9 +25,11 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
 $random = StringUtil::getRandomString(5);
 
 ?>
-      <div class="form-control-bar-header m-b-3">
-        <input style="width: revert;" type="submit" class="button" value="<?=$userToEdit ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
-        <div class="m-r-1" style="text-align: right"><?=$updatedAtContent?><br><?=$createdAtContent?></div>
+      <div class="control-bar-wrapper m-b-3">
+        <div class="article-control-bar-buttons">
+          <input style="width: revert;" type="submit" class="button" value="<?=$userToEdit ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
+        </div>
+        <div class="control-bar-creation"><span><?=$updatedAtContent?></span><br><span><?=$createdAtContent?></span></div>
         <input type="checkbox" id="dropdown-menu-<?=$random?>" class="dropdown-menu">
         <div class="dropdown-container">
           <ul>

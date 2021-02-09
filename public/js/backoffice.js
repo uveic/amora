@@ -215,7 +215,7 @@ document.querySelectorAll('#form-article').forEach(el => {
           previewLink.textContent = global.get('globalPreview');
           document.querySelectorAll('.article-control-bar-buttons').forEach(b => b.appendChild(previewLink));
         }
-        document.querySelectorAll('.article-creation').forEach(a => a.classList.remove('hidden'));
+        document.querySelectorAll('.control-bar-creation').forEach(a => a.classList.remove('hidden'));
         document.querySelectorAll('span.article-updated-at').forEach(s => {
           s.textContent = getUpdatedAtTime();
         });
