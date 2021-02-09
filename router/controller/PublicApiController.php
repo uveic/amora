@@ -13,15 +13,18 @@ use uve\core\module\user\value\UserRole;
 use uve\core\util\StringUtil;
 use uve\core\util\UrlBuilderUtil;
 use uve\core\value\Language;
+use uve\router\controller\response\PublicApiControllerForgotPasswordFailureResponse;
 use uve\router\controller\response\PublicApiControllerForgotPasswordSuccessResponse;
 use uve\router\controller\response\PublicApiControllerGetSessionSuccessResponse;
 use uve\router\controller\response\PublicApiControllerLogErrorSuccessResponse;
 use uve\router\controller\response\PublicApiControllerPingSuccessResponse;
+use uve\router\controller\response\PublicApiControllerRequestRegistrationInviteFailureResponse;
 use uve\router\controller\response\PublicApiControllerRequestRegistrationInviteSuccessResponse;
 use uve\router\controller\response\PublicApiControllerUserLoginSuccessResponse;
 use uve\core\model\Request;
 use uve\core\model\Response;
 use uve\core\module\user\service\UserService;
+use uve\router\controller\response\PublicApiControllerUserPasswordResetFailureResponse;
 use uve\router\controller\response\PublicApiControllerUserPasswordResetSuccessResponse;
 use uve\router\controller\response\PublicApiControllerUserRegistrationSuccessResponse;
 
@@ -178,7 +181,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     {
         $existingUser =$this->userService->getUserForEmail($email);
         if (empty($existingUser)) {
-            return new PublicApiControllerForgotPasswordSuccessResponse(true);
+            return new PublicApiControllerForgotPasswordFailureResponse();
         }
 
         $res = $this->mailService->sendPasswordResetEmail($existingUser);
@@ -253,10 +256,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             return new PublicApiControllerUserRegistrationSuccessResponse($res);
         } catch (Throwable $t) {
             $this->logger->logError('Error registering user: ' . $t->getMessage());
-            return new PublicApiControllerUserRegistrationSuccessResponse(
-                false,
-                $localisationUtil->getValue('authenticationEmailAndOrPassNotValid')
-            );
+            return new PublicApiControllerUserRegistrationSuccessResponse(false);
         }
     }
 
@@ -281,7 +281,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $user = $this->userService->getUserForId($userId);
         if (empty($user) || !$user->validateValidationHash($verificationHash)) {
-            return new PublicApiControllerUserPasswordResetSuccessResponse(false);
+            return new PublicApiControllerUserPasswordResetFailureResponse();
         }
 
         if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
@@ -318,7 +318,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     ): Response {
         $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
         if (!$isInvitationEnabled) {
-            return new PublicApiControllerRequestRegistrationInviteSuccessResponse(false);
+            return new PublicApiControllerRequestRegistrationInviteFailureResponse();
         }
 
         $res = $this->userService->storeRegistrationInviteRequest(

@@ -3,7 +3,7 @@ namespace uve\router\controller\response;
 
 use uve\core\model\Response;
 
-class PublicApiControllerUserRegistrationFailureResponse extends Response
+class AuthorisedApiControllerUpdateUserAccountFailureResponse extends Response
 {
     public function __construct(?array $errorInfo = null)
     {

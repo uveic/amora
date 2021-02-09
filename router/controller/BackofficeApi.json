@@ -118,7 +118,7 @@
               ]
             }
           },
-          "403": {
+          "401": {
             "description": "Failure",
             "schema": {
               "type": "object",
@@ -131,10 +131,6 @@
                   "enum": [
                     false
                   ]
-                },
-                "errorMessage": {
-                  "type": "string",
-                  "description": "Error message"
                 }
               }
             }
@@ -150,9 +146,6 @@
                   "enum": [
                     false
                   ]
-                },
-                "errorMessage": {
-                  "type": "string"
                 },
                 "errorInfo": {
                   "type": "array",
@@ -176,8 +169,7 @@
                 }
               },
               "required": [
-                "success",
-                "errorMessage"
+                "success"
               ]
             }
           }
@@ -273,7 +265,7 @@
               ]
             }
           },
-          "403": {
+          "401": {
             "description": "Failure",
             "schema": {
               "type": "object",
@@ -286,10 +278,6 @@
                   "enum": [
                     false
                   ]
-                },
-                "errorMessage": {
-                  "type": "string",
-                  "description": "Error message"
                 }
               }
             }
@@ -305,9 +293,6 @@
                   "enum": [
                     false
                   ]
-                },
-                "errorMessage": {
-                  "type": "string"
                 },
                 "errorInfo": {
                   "type": "array",
@@ -331,8 +316,7 @@
                 }
               },
               "required": [
-                "success",
-                "errorMessage"
+                "success"
               ]
             }
           }
@@ -342,7 +326,7 @@
         "tags": [],
         "summary": "Delete user",
         "description": "",
-        "operationId": "deleteUser",
+        "operationId": "destroyUser",
         "parameters": [
           {
             "name": "userId",
@@ -369,6 +353,44 @@
                 "errorMessage": {
                   "type": "string",
                   "description": "Error message (if any)"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
                 }
               },
               "required": [
@@ -405,7 +427,7 @@
                   "description": "Article title",
                   "type": "string"
                 },
-                "content": {
+                "contentHtml": {
                   "description": "Article content",
                   "type": "string"
                 },
@@ -458,9 +480,7 @@
               },
               "required": [
                 "statusId",
-                "title",
-                "content",
-                "uri",
+                "contentHtml",
                 "sections"
               ]
             }
@@ -506,12 +526,6 @@
                     false
                   ]
                 },
-                "errorMessage": {
-                  "type": "string",
-                  "enum": [
-                    "INVALID_PARAMETERS"
-                  ]
-                },
                 "errorInfo": {
                   "type": "array",
                   "items": {
@@ -534,8 +548,7 @@
                 }
               },
               "required": [
-                "success",
-                "errorMessage"
+                "success"
               ]
             }
           }
@@ -607,12 +620,6 @@
                     false
                   ]
                 },
-                "errorMessage": {
-                  "type": "string",
-                  "enum": [
-                    "INVALID_PARAMETERS"
-                  ]
-                },
                 "errorInfo": {
                   "type": "array",
                   "items": {
@@ -635,8 +642,7 @@
                 }
               },
               "required": [
-                "success",
-                "errorMessage"
+                "success"
               ]
             }
           }
@@ -676,7 +682,7 @@
                   "description": "Article title",
                   "type": "string"
                 },
-                "content": {
+                "contentHtml": {
                   "description": "Article content",
                   "type": "string"
                 },
@@ -729,7 +735,7 @@
               },
               "required": [
                 "statusId",
-                "uri",
+                "contentHtml",
                 "sections"
               ]
             }
@@ -775,12 +781,6 @@
                     false
                   ]
                 },
-                "errorMessage": {
-                  "type": "string",
-                  "enum": [
-                    "INVALID_PARAMETERS"
-                  ]
-                },
                 "errorInfo": {
                   "type": "array",
                   "items": {
@@ -803,8 +803,7 @@
                 }
               },
               "required": [
-                "success",
-                "errorMessage"
+                "success"
               ]
             }
           }
@@ -859,12 +858,6 @@
                     false
                   ]
                 },
-                "errorMessage": {
-                  "type": "string",
-                  "enum": [
-                    "INVALID_PARAMETERS"
-                  ]
-                },
                 "errorInfo": {
                   "type": "array",
                   "items": {
@@ -887,8 +880,7 @@
                 }
               },
               "required": [
-                "success",
-                "errorMessage"
+                "success"
               ]
             }
           }

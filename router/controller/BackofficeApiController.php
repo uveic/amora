@@ -20,10 +20,13 @@ use uve\core\module\user\value\UserJourneyStatus;
 use uve\core\util\DateUtil;
 use uve\core\util\StringUtil;
 use uve\router\controller\response\BackofficeApiControllerCheckArticleUriSuccessResponse;
-use uve\router\controller\response\BackofficeApiControllerDeleteUserSuccessResponse;
+use uve\router\controller\response\BackofficeApiControllerDestroyArticleFailureResponse;
 use uve\router\controller\response\BackofficeApiControllerDestroyArticleSuccessResponse;
+use uve\router\controller\response\BackofficeApiControllerDestroyUserFailureResponse;
+use uve\router\controller\response\BackofficeApiControllerDestroyUserSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerStoreArticleSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerStoreUserSuccessResponse;
+use uve\router\controller\response\BackofficeApiControllerUpdateArticleFailureResponse;
 use uve\router\controller\response\BackofficeApiControllerUpdateArticleSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerUpdateUserFailureResponse;
 use uve\router\controller\response\BackofficeApiControllerUpdateUserSuccessResponse;
@@ -180,12 +183,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $repeatPassword,
         Request $request
     ): Response {
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $existingUser = $this->userService->getUserForId($userId, true);
         if (empty($existingUser)) {
-            return new BackofficeApiControllerUpdateUserFailureResponse(
-                $localisationUtil->getValue('globalGenericNotFound')
-            );
+            return new BackofficeApiControllerUpdateUserFailureResponse();
         }
 
         $updateRes = $this->userService->workflowUpdateUser(
@@ -201,7 +201,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         if ($updateRes->isError()) {
-            return new BackofficeApiControllerUpdateUserFailureResponse($updateRes->getMessage());
+            return new BackofficeApiControllerUpdateUserSuccessResponse(
+                false,
+                $updateRes->getMessage()
+            );
         }
 
         return new BackofficeApiControllerUpdateUserSuccessResponse(true);
@@ -215,24 +218,22 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param Request $request
      * @return Response
      */
-    protected function deleteUser(int $userId, Request $request): Response
+    protected function destroyUser(int $userId, Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $user = $this->userService->getUserForId($userId, true);
         if (empty($user)) {
-            return new BackofficeApiControllerDeleteUserSuccessResponse(
-                false,
-                $localisationUtil->getValue('globalGenericNotFound')
-            );
+            return new BackofficeApiControllerDestroyUserFailureResponse();
         }
 
         $res = $this->userService->deleteUser($user);
 
-        return new BackofficeApiControllerDeleteUserSuccessResponse(
+        return new BackofficeApiControllerDestroyUserSuccessResponse(
             $res,
-            $res ? null : Core::getLocalisationUtil(
-                $request->getSiteLanguage())->getValue('globalGenericError'
-            )
+            $res
+                ? null
+                : Core::getLocalisationUtil(
+                    $request->getSiteLanguage()
+                )->getValue('globalGenericError')
         );
     }
 
@@ -257,9 +258,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      *
      * @param int $statusId
      * @param int|null $typeId
-     * @param string $title
-     * @param string $content
-     * @param string $uri
+     * @param string|null $title
+     * @param string $contentHtml
+     * @param string|null $uri
      * @param string|null $mainImageSrc
      * @param array $sections
      * @param Request $request
@@ -268,9 +269,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     public function storeArticle(
         int $statusId,
         ?int $typeId,
-        string $title,
-        string $content,
-        string $uri,
+        ?string $title,
+        string $contentHtml,
+        ?string $uri,
         ?string $mainImageSrc,
         array $sections,
         Request $request
@@ -293,7 +294,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $now,
                 $statusId === ArticleStatus::PUBLISHED ? $now : null,
                 $title,
-                html_entity_decode($content),
+                html_entity_decode($contentHtml),
                 $mainImageSrc,
                 $uri,
                 []
@@ -318,8 +319,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int $statusId
      * @param int|null $typeId
      * @param string|null $title
-     * @param string|null $content
-     * @param string $uri
+     * @param string $contentHtml
+     * @param string|null $uri
      * @param string|null $mainImageSrc
      * @param array $sections
      * @param Request $request
@@ -330,19 +331,15 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         int $statusId,
         ?int $typeId,
         ?string $title,
-        ?string $content,
-        string $uri,
+        string $contentHtml,
+        ?string $uri,
         ?string $mainImageSrc,
         array $sections,
         Request $request
     ): Response {
         $existingArticle = $this->articleService->getArticleForId($articleId);
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         if (empty($existingArticle)) {
-            return new BackofficeApiControllerDestroyArticleSuccessResponse(
-                false,
-                $localisationUtil->getValue('globalGenericNotFound')
-            );
+            return new BackofficeApiControllerUpdateArticleFailureResponse();
         }
 
         if (empty($uri)) {
@@ -351,10 +348,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        if ($content) {
-            $content = html_entity_decode($content);
-        }
-
+        $contentHtml = html_entity_decode($contentHtml);
         $now = DateUtil::getCurrentDateForMySql();
 
         $res = $this->articleService->updateArticle(
@@ -367,7 +361,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $now,
                 $now,
                 $title ?? $existingArticle->getTitle(),
-                $content ?? $existingArticle->getContentHtml(),
+                $contentHtml ?? $existingArticle->getContentHtml(),
                 $mainImageSrc ?? $existingArticle->getMainImageSrc(),
                 $uri
             ),
@@ -393,13 +387,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     public function destroyArticle(int $articleId, Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         $existingArticle = $this->articleService->getArticleForId($articleId);
         if (empty($existingArticle)) {
-            return new BackofficeApiControllerDestroyArticleSuccessResponse(
-                false,
-                $localisationUtil->getValue('globalGenericNotFound')
-            );
+            return new BackofficeApiControllerDestroyArticleFailureResponse();
         }
 
         $deleteRes = $this->articleService->deleteArticle(

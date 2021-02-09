@@ -14,11 +14,12 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     {
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerStoreUserSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerStoreUserFailureResponse.php';
-        require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerStoreUserForbiddenResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerStoreUserUnauthorisedResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerUpdateUserSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerUpdateUserFailureResponse.php';
-        require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerUpdateUserForbiddenResponse.php';
-        require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerDeleteUserSuccessResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerUpdateUserUnauthorisedResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerDestroyUserSuccessResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerDestroyUserFailureResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerStoreArticleSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerStoreArticleFailureResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerCheckArticleUriSuccessResponse.php';
@@ -101,7 +102,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param Request $request
      * @return Response
      */
-    abstract protected function deleteUser(int $userId, Request $request): Response;
+    abstract protected function destroyUser(int $userId, Request $request): Response;
 
     /**
      * Endpoint: /back/article
@@ -109,9 +110,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      *
      * @param int $statusId
      * @param int|null $typeId
-     * @param string $title
-     * @param string $content
-     * @param string $uri
+     * @param string|null $title
+     * @param string $contentHtml
+     * @param string|null $uri
      * @param string|null $mainImageSrc
      * @param array $sections
      * @param Request $request
@@ -120,9 +121,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     abstract protected function storeArticle(
         int $statusId,
         ?int $typeId,
-        string $title,
-        string $content,
-        string $uri,
+        ?string $title,
+        string $contentHtml,
+        ?string $uri,
         ?string $mainImageSrc,
         array $sections,
         Request $request
@@ -151,8 +152,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param int $statusId
      * @param int|null $typeId
      * @param string|null $title
-     * @param string|null $content
-     * @param string $uri
+     * @param string $contentHtml
+     * @param string|null $uri
      * @param string|null $mainImageSrc
      * @param array $sections
      * @param Request $request
@@ -163,8 +164,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         int $statusId,
         ?int $typeId,
         ?string $title,
-        ?string $content,
-        string $uri,
+        string $contentHtml,
+        ?string $uri,
         ?string $mainImageSrc,
         array $sections,
         Request $request
@@ -381,7 +382,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallDeleteUser(Request $request)
+    private function validateAndCallDestroyUser(Request $request)
     {
         $pathParts = explode('/', $request->getPath());
         $pathParams = $this->getPathParams(
@@ -418,13 +419,13 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         try {
-            return $this->deleteUser(
+            return $this->destroyUser(
                 $userId,
                 $request
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: deleteUser()' .
+                'Unexpected error in BackofficeApiControllerAbstract - Method: destroyUser()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -457,42 +458,20 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         $typeId = $bodyParams['typeId'] ?? null;
-        $title = null;
-        if (!isset($bodyParams['title'])) {
+        $title = $bodyParams['title'] ?? null;
+        $contentHtml = null;
+        if (!isset($bodyParams['contentHtml'])) {
             $errors[] = [
-                'field' => 'title',
+                'field' => 'contentHtml',
                 'message' => 'required'
             ];
         } else {
-            $title = isset($bodyParams['title'])
-                ? $bodyParams['title']
+            $contentHtml = isset($bodyParams['contentHtml'])
+                ? $bodyParams['contentHtml']
                 : null;
         }
 
-        $content = null;
-        if (!isset($bodyParams['content'])) {
-            $errors[] = [
-                'field' => 'content',
-                'message' => 'required'
-            ];
-        } else {
-            $content = isset($bodyParams['content'])
-                ? $bodyParams['content']
-                : null;
-        }
-
-        $uri = null;
-        if (!isset($bodyParams['uri'])) {
-            $errors[] = [
-                'field' => 'uri',
-                'message' => 'required'
-            ];
-        } else {
-            $uri = isset($bodyParams['uri'])
-                ? $bodyParams['uri']
-                : null;
-        }
-
+        $uri = $bodyParams['uri'] ?? null;
         $mainImageSrc = $bodyParams['mainImageSrc'] ?? null;
         $sections = null;
         if (!isset($bodyParams['sections'])) {
@@ -522,7 +501,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $statusId,
                 $typeId,
                 $title,
-                $content,
+                $contentHtml,
                 $uri,
                 $mainImageSrc,
                 $sections,
@@ -638,19 +617,19 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         $typeId = $bodyParams['typeId'] ?? null;
         $title = $bodyParams['title'] ?? null;
-        $content = $bodyParams['content'] ?? null;
-        $uri = null;
-        if (!isset($bodyParams['uri'])) {
+        $contentHtml = null;
+        if (!isset($bodyParams['contentHtml'])) {
             $errors[] = [
-                'field' => 'uri',
+                'field' => 'contentHtml',
                 'message' => 'required'
             ];
         } else {
-            $uri = isset($bodyParams['uri'])
-                ? $bodyParams['uri']
+            $contentHtml = isset($bodyParams['contentHtml'])
+                ? $bodyParams['contentHtml']
                 : null;
         }
 
+        $uri = $bodyParams['uri'] ?? null;
         $mainImageSrc = $bodyParams['mainImageSrc'] ?? null;
         $sections = null;
         if (!isset($bodyParams['sections'])) {
@@ -681,7 +660,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $statusId,
                 $typeId,
                 $title,
-                $content,
+                $contentHtml,
                 $uri,
                 $mainImageSrc,
                 $sections,
@@ -752,7 +731,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     {
         $auth = $this->authenticate($request);
         if ($auth !== true) {
-            return Response::createUnauthorizedPlainTextResponse();
+            return Response::createUnauthorizedJsonResponse();
         }
 
         $path = $request->getPath();
@@ -786,7 +765,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 ['fixed', 'fixed', 'int']
             )
         ) {
-            return $this->validateAndCallDeleteUser($request);
+            return $this->validateAndCallDestroyUser($request);
         }
 
         if ($method === 'POST' &&

@@ -218,12 +218,6 @@
                     false
                   ]
                 },
-                "errorMessage": {
-                  "type": "string",
-                  "enum": [
-                    "INVALID_PARAMETERS"
-                  ]
-                },
                 "errorInfo": {
                   "type": "array",
                   "items": {
@@ -306,12 +300,6 @@
                   "type": "boolean",
                   "enum": [
                     false
-                  ]
-                },
-                "errorMessage": {
-                  "type": "string",
-                  "enum": [
-                    "INVALID_PARAMETERS"
                   ]
                 },
                 "errorInfo": {
@@ -415,12 +403,6 @@
                   "type": "boolean",
                   "enum": [
                     false
-                  ]
-                },
-                "errorMessage": {
-                  "type": "string",
-                  "enum": [
-                    "INVALID_PARAMETERS"
                   ]
                 },
                 "errorInfo": {
@@ -530,12 +512,6 @@
                     false
                   ]
                 },
-                "errorMessage": {
-                  "type": "string",
-                  "enum": [
-                    "INVALID_PARAMETERS"
-                  ]
-                },
                 "errorInfo": {
                   "type": "array",
                   "items": {
@@ -626,12 +602,6 @@
                   "type": "boolean",
                   "enum": [
                     false
-                  ]
-                },
-                "errorMessage": {
-                  "type": "string",
-                  "enum": [
-                    "INVALID_PARAMETERS"
                   ]
                 },
                 "errorInfo": {

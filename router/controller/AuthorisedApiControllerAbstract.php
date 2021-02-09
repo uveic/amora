@@ -14,12 +14,16 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
     {
         require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerStoreImageSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerStoreImageFailureResponse.php';
-        require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerStoreImageForbiddenResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerStoreImageUnauthorisedResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerDestroyImageSuccessResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerDestroyImageFailureResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerDestroyImageUnauthorisedResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerUpdateUserAccountSuccessResponse.php';
-        require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerUpdateUserAccountForbiddenResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerUpdateUserAccountFailureResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerSendVerificationEmailSuccessResponse.php';
-        require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerSendVerificationEmailForbiddenResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerSendVerificationEmailFailureResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/AuthorisedApiControllerSendVerificationEmailUnauthorisedResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -313,7 +317,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
     {
         $auth = $this->authenticate($request);
         if ($auth !== true) {
-            return Response::createUnauthorizedPlainTextResponse();
+            return Response::createUnauthorizedJsonResponse();
         }
 
         $path = $request->getPath();

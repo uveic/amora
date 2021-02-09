@@ -12,6 +12,7 @@ class Global {
   values = {
     "en": {
       "genericError": "Something went wrong, please try again",
+      "genericErrorGetInTouch": "Please, refresh the page and get in touch with support if the error persists. Error: ",
 
       "globalPreview": "Preview",
       "globalUpdate": "Update",
@@ -55,6 +56,7 @@ class Global {
     },
     "es": {
       "genericError": "Ha ocurrido un error inesperado, por favor inténtalo de nuevo",
+      "genericErrorGetInTouch": "Por favor, actualiza la página y ponte en contacto con el soporte técnico si el error continúa. Error: ",
 
       "globalPreview": "Previsualizar",
       "globalUpdate": "Actualizar",
@@ -98,6 +100,7 @@ class Global {
     },
     "gl": {
       "genericError": "Algo non foi ben, por favor inténtao de novo",
+      "genericErrorGetInTouch": "Por favor, actualiza a páxina e ponte en contacto co soporte técnico se o erro persiste. Erro: ",
 
       "globalPreview": "Previsualizar",
       "globalUpdate": "Actualizar",

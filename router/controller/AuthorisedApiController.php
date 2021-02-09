@@ -14,12 +14,15 @@ use uve\core\module\article\service\ImageService;
 use uve\core\model\Request;
 use uve\core\model\Response;
 use uve\core\module\user\service\SessionService;
-use uve\router\controller\response\{
+use uve\router\controller\response\{AuthorisedApiControllerDestroyImageFailureResponse,
+    AuthorisedApiControllerDestroyImageUnauthorisedResponse,
     AuthorisedApiControllerDestroyImageSuccessResponse,
+    AuthorisedApiControllerSendVerificationEmailFailureResponse,
     AuthorisedApiControllerSendVerificationEmailSuccessResponse,
-    AuthorisedApiControllerStoreImageForbiddenResponse,
+    AuthorisedApiControllerStoreImageUnauthorisedResponse,
     AuthorisedApiControllerStoreImageSuccessResponse,
-    AuthorisedApiControllerUpdateUserAccountForbiddenResponse,
+    AuthorisedApiControllerUpdateUserAccountFailureResponse,
+    AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse,
     AuthorisedApiControllerUpdateUserAccountSuccessResponse};
 
 final class AuthorisedApiController extends AuthorisedApiControllerAbstract
@@ -68,7 +71,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
                         && $session->getUser()->getId() !== $article->getUser()->getId()
                     )
                 ) {
-                    return new AuthorisedApiControllerStoreImageForbiddenResponse();
+                    return new AuthorisedApiControllerStoreImageUnauthorisedResponse();
                 }
             }
 
@@ -106,11 +109,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
                 ' - Trace: ' . $t->getTraceAsString()
             );
 
-            return new AuthorisedApiControllerStoreImageSuccessResponse(
-                false,
-                [],
-                'Unexpected error saving image'
-            );
+            return new AuthorisedApiControllerStoreImageSuccessResponse(false, []);
         }
     }
 
@@ -127,20 +126,14 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
     {
         $image = $this->imageService->getImageForId($imageId);
         if (empty($image)) {
-            return new AuthorisedApiControllerDestroyImageSuccessResponse(
-                false,
-                'Image not found'
-            );
+            return new AuthorisedApiControllerDestroyImageFailureResponse();
         }
 
         $session = $request->getSession();
         if (!$session->isAdmin()
             && $image->getUserId() != $session->getUser()->getId()
         ) {
-            return new AuthorisedApiControllerDestroyImageSuccessResponse(
-                false,
-                'Not authorised to delete this image'
-            );
+            return new AuthorisedApiControllerDestroyImageUnauthorisedResponse();
         }
 
         $res = $this->imageService->deleteImage($image);
@@ -159,7 +152,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
     {
         $user = $this->userService->getUserForId($userId);
         if (empty($user)) {
-            return new AuthorisedApiControllerSendVerificationEmailSuccessResponse(false);
+            return new AuthorisedApiControllerSendVerificationEmailFailureResponse();
         }
 
         $resVerification = $this->userMailService->buildAndSendVerificationEmail(
@@ -197,15 +190,12 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
     ): Response {
         $existingUser = $this->userService->getUserForId($userId);
         if (empty($existingUser)) {
-            return new AuthorisedApiControllerUpdateUserAccountSuccessResponse(
-                false,
-                'User not found'
-            );
+            return new AuthorisedApiControllerUpdateUserAccountFailureResponse();
         }
 
         $session = $request->getSession();
         if ($session->getUser()->getId() !== $existingUser->getId()) {
-            return new AuthorisedApiControllerUpdateUserAccountForbiddenResponse();
+            return new AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse();
         }
 
         $updateRes = $this->userService->workflowUpdateUser(

@@ -16,7 +16,7 @@ class Article
         private string $createdAt,
         private string $updatedAt,
         private ?string $publishedAt,
-        private string $title,
+        private ?string $title,
         private string $contentHtml,
         private ?string $mainImageSrc,
         private string $uri,
@@ -45,7 +45,7 @@ class Article
             $createdAt,
             $updatedAt,
             $article['published_at'],
-            $article['title'],
+            $article['title'] ?? null,
             $article['content_html'],
             empty($article['main_image_src']) ? null : $article['main_image_src'],
             $article['uri']
@@ -120,7 +120,7 @@ class Article
         return $this->publishedAt;
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }

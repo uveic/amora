@@ -600,7 +600,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
     {
         $auth = $this->authenticate($request);
         if ($auth !== true) {
-            return Response::createUnauthorizedPlainTextResponse();
+            return Response::createUnauthorizedJsonResponse();
         }
 
         $path = $request->getPath();

@@ -24,6 +24,7 @@ function request(url, stringPayload, method = 'POST', feedbackDivEl = null, succ
   const headers = {
     "Content-Type": "application/json"
   };
+  let errorResponse = false;
 
   return fetch(
     url,
@@ -34,7 +35,9 @@ function request(url, stringPayload, method = 'POST', feedbackDivEl = null, succ
     }
   ).then((response) => {
     if (!response.ok) {
-      throw new Error(response.status + ': ' + response.statusText);
+      throw new Error(
+        global.get('genericErrorGetInTouch') + response.status + ': ' + response.statusText
+      );
     }
 
     try {
@@ -63,12 +66,14 @@ function request(url, stringPayload, method = 'POST', feedbackDivEl = null, succ
       feedbackDivEl.textContent = error.message;
     }
 
+    errorResponse = true;
     logError(error.message, url, method, stringPayload).then();
 
     return Promise.reject(error);
   }).finally(() => {
     if (feedbackDivEl) {
-      setTimeout(() => {feedbackDivEl.classList.add('null')}, 5000);
+      const displayTime = errorResponse ? 15000 : 5000;
+      setTimeout(() => {feedbackDivEl.classList.add('null')}, displayTime);
     }
   });
 }

@@ -338,7 +338,7 @@ function renderAbstractRouter(jsonFileName, operations) {
   const redirectExceptions = ['BackofficeHtml', 'AuthorisedHtml', 'PublicHtml'];
   const response = redirectExceptions.indexOf(jsonFileName) >= 0
     ? `Response::createUnauthorisedRedirectLoginResponse($request->getSiteLanguage())`
-    : 'Response::createUnauthorizedPlainTextResponse()';
+    : 'Response::createUnauthorizedJsonResponse()';
 
   return [
     `   

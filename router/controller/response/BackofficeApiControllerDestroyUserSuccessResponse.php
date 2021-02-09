@@ -3,7 +3,7 @@ namespace uve\router\controller\response;
 
 use uve\core\model\Response;
 
-class BackofficeApiControllerDeleteUserSuccessResponse extends Response
+class BackofficeApiControllerDestroyUserSuccessResponse extends Response
 {
     public function __construct(bool $success, ?string $errorMessage = null)
     {

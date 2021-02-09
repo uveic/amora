@@ -155,31 +155,22 @@ class Response
         return new Response('Page not found :(', self::PLAIN, self::HTTP_404_NOT_FOUND);
     }
 
-    public static function createJsonNotFoundResponse(): Response
-    {
-        $response = [
-            'success' => false,
-            'error' => 'Endpoint not found :('
-        ];
-
-        return new Response(
-            json_encode($response),
-            self::JSON,
-            self::HTTP_404_NOT_FOUND
-        );
-    }
-
     public static function createUnauthorisedRedirectLoginResponse(string $siteLanguage): Response
     {
         $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($siteLanguage);
         return Response::createRedirectResponse($baseLinkUrl . '/login');
     }
 
-    public static function createUnauthorizedPlainTextResponse(): Response
+    public static function createUnauthorizedJsonResponse(): Response
     {
+        $response = [
+            'success' => false,
+            'errorMessage' => 'Whoops! Not authorised...'
+        ];
+
         return new Response(
-            'Whoops! Not authorised...',
-            self::PLAIN,
+            json_encode($response),
+            self::JSON,
             self::HTTP_401_UNAUTHORIZED
         );
     }

@@ -253,7 +253,7 @@ document.querySelectorAll('#form-article').forEach(el => {
     document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
 
     let sections = [];
-    let articleContentHtml = '';
+    let articleContentHtml = null;
     let order = 1;
     document.querySelectorAll('.article-section').forEach(sec => {
       let section = sec.cloneNode(true);
@@ -294,8 +294,8 @@ document.querySelectorAll('#form-article').forEach(el => {
 
     const payload = JSON.stringify({
       'title': titleEl ? titleEl.textContent : null,
-      'uri': uriEl ? uriEl.value : null,
-      'content': articleContentHtml,
+      'uri': uriEl && uriEl.value ? uriEl.value : null,
+      'contentHtml': articleContentHtml,
       'statusId': statusId,
       'sections': sections
     });

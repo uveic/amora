@@ -5,12 +5,11 @@ use uve\core\model\Response;
 
 class BackofficeApiControllerStoreUserFailureResponse extends Response
 {
-    public function __construct(string $errorMessage, ?array $errorInfo = null)
+    public function __construct(?array $errorInfo = null)
     {
         // Required parameters
         $responseData = [
             'success' => false,
-            'errorMessage' => $errorMessage,
         ];
 
         $responseData['errorInfo'] = is_null($errorInfo)

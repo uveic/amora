@@ -9,6 +9,7 @@
     "ext-ctype": "*",
     "ext-mbstring": "*",
     "ext-gd": "*",
-    "ext-exif": "*"
+    "ext-exif": "*",
+    "ext-curl": "*"
   }
 }

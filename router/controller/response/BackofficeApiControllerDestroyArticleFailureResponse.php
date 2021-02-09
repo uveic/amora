@@ -10,7 +10,6 @@ class BackofficeApiControllerDestroyArticleFailureResponse extends Response
         // Required parameters
         $responseData = [
             'success' => false,
-            'errorMessage' => 'INVALID_PARAMETERS',
         ];
 
         $responseData['errorInfo'] = is_null($errorInfo)

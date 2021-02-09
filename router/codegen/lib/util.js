@@ -50,10 +50,10 @@ exports.httpResponseStatus = function(responseCode) {
         type: 'FailureResponse',
         httpStatus: 'HTTP_400_BAD_REQUEST'
       };
-    case '500':
+    case '401':
       return {
-        type: 'ErrorResponse',
-        httpStatus: 'HTTP_500_INTERNAL_ERROR'
+        type: 'UnauthorisedResponse',
+        httpStatus: 'HTTP_401_UNAUTHORIZED'
       };
     case '403':
       return {
@@ -64,6 +64,11 @@ exports.httpResponseStatus = function(responseCode) {
       return {
         type: 'NotFoundResponse',
         httpStatus: 'HTTP_404_NOT_FOUND'
+      };
+    case '500':
+      return {
+        type: 'ErrorResponse',
+        httpStatus: 'HTTP_500_INTERNAL_ERROR'
       };
     default:
       return {
