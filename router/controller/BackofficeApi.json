@@ -886,6 +886,154 @@
           }
         }
       }
+    },
+    "/back/tag": {
+      "post": {
+        "tags": [],
+        "summary": "Create a new tag",
+        "description": "Create a new tag",
+        "operationId": "storeTag",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "name": {
+                  "description": "Tag name",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "id": {
+                  "type": "integer",
+                  "description": "New tag ID"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [],
+        "summary": "Get available tags",
+        "description": "Get available tags",
+        "operationId": "getTags",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Tag name to filter results",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "tags": {
+                  "type": "array",
+                  "description": "List of tags",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Tag ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Tag name"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "tags"
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

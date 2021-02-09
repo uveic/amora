@@ -24,7 +24,9 @@ use uve\router\controller\response\BackofficeApiControllerDestroyArticleFailureR
 use uve\router\controller\response\BackofficeApiControllerDestroyArticleSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerDestroyUserFailureResponse;
 use uve\router\controller\response\BackofficeApiControllerDestroyUserSuccessResponse;
+use uve\router\controller\response\BackofficeApiControllerGetTagsSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerStoreArticleSuccessResponse;
+use uve\router\controller\response\BackofficeApiControllerStoreTagSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerStoreUserSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerUpdateArticleFailureResponse;
 use uve\router\controller\response\BackofficeApiControllerUpdateArticleSuccessResponse;
@@ -411,5 +413,40 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         return new BackofficeApiControllerDestroyArticleSuccessResponse($deleteRes);
+    }
+
+    /**
+     * Endpoint: /back/tag
+     * Method: POST
+     *
+     * @param string $name
+     * @param Request $request
+     * @return Response
+     */
+    protected function storeTag(string $name, Request $request): Response
+    {
+        return new BackofficeApiControllerStoreTagSuccessResponse(rand(1, 1000));
+    }
+
+    /**
+     * Endpoint: /back/tag
+     * Method: GET
+     *
+     * @param string|null $name
+     * @param Request $request
+     * @return Response
+     */
+    protected function getTags(?string $name, Request $request): Response
+    {
+        $tags = [
+            ['id' => 1, 'name' => 'Strawberry'],
+            ['id' => 2, 'name' => 'Lemon'],
+            ['id' => 3, 'name' => 'Orange'],
+            ['id' => 4, 'name' => 'Blueberry'],
+            ['id' => 5, 'name' => 'Banana'],
+            ['id' => 6, 'name' => 'Watermelon'],
+        ];
+
+        return new BackofficeApiControllerGetTagsSuccessResponse(true, $tags);
     }
 }

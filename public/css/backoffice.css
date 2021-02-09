@@ -527,6 +527,23 @@ input.is-light {
 }
 /* Side nav style ends here */
 
+/* Tags style starts here */
+#tags-selected {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0.5rem 0;
+  justify-content: flex-start;
+}
+
+#tags-selected > span {
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem;
+  background-color: var(--light-bg-color-2);
+  border-radius: var(--border-radius);
+}
+/* Tags style ends here */
+
 @media screen and (min-width: 800px) {
   #upload-images {
     flex-direction: row;

@@ -103,7 +103,7 @@ function renderOperationValidator(jsonFileName, operation) {
       ? `        $formDataParams = $request->getPostParams();`
       : [],
     parameters.find(p => p.in === 'query')
-      ? `        $queryParams = $request->getGet();`
+      ? `        $queryParams = $request->getGetParams();`
       : [],
     parameters.find(p => p.in === 'body')
       ? `        $bodyParams = $request->getBodyPayload();`

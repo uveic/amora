@@ -28,6 +28,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerUpdateArticleFailureResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerDestroyArticleSuccessResponse.php';
         require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerDestroyArticleFailureResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerStoreTagSuccessResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerStoreTagFailureResponse.php';
+        require_once Core::getPathRoot() . '/router/controller/response/BackofficeApiControllerGetTagsSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -180,6 +183,26 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function destroyArticle(int $articleId, Request $request): Response;
+
+    /**
+     * Endpoint: /back/tag
+     * Method: POST
+     *
+     * @param string $name
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function storeTag(string $name, Request $request): Response;
+
+    /**
+     * Endpoint: /back/tag
+     * Method: GET
+     *
+     * @param string|null $name
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getTags(?string $name, Request $request): Response;
 
     private function validateAndCallStoreUser(Request $request)
     {
@@ -726,6 +749,90 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallStoreTag(Request $request)
+    {
+        $bodyParams = $request->getBodyPayload();
+        $errors = [];
+
+        if (!isset($bodyParams)) {
+            $errors[] = [
+                'field' => 'payload',
+                'message' => 'required'
+            ];
+        }
+
+        $name = null;
+        if (!isset($bodyParams['name'])) {
+            $errors[] = [
+                'field' => 'name',
+                'message' => 'required'
+            ];
+        } else {
+            $name = isset($bodyParams['name'])
+                ? $bodyParams['name']
+                : null;
+        }
+
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->storeTag(
+                $name,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: storeTag()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetTags(Request $request)
+    {
+        $queryParams = $request->getGetParams();
+        $errors = [];
+
+
+        $name = isset($queryParams['name'])
+            ? $queryParams['name']
+            : null;
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getTags(
+                $name,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: getTags()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): Response
     {
@@ -806,6 +913,26 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallDestroyArticle($request);
+        }
+
+        if ($method === 'POST' &&
+            $this->pathParamsMatcher(
+                ['back', 'tag'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallStoreTag($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['back', 'tag'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetTags($request);
         }
 
         return Response::createNotFoundResponse();

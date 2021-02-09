@@ -872,3 +872,24 @@ document.querySelectorAll('a.close-button').forEach(el => {
     sideNav.classList.remove('side-options-open');
   });
 });
+
+document.querySelectorAll('input[name="tags"]').forEach(el => {
+  el.addEventListener('input', (e) => {
+    e.preventDefault();
+
+    const tags = document.querySelector('#tags-selected');
+    let inputText = e.target.value;
+
+    if (inputText.length > 2) {
+      xhr.get('/back/tag?name=' + inputText)
+        .then(response => {
+          response.tags.forEach(tag => {
+            let newTag = document.createElement('span');
+            newTag.dataset.tagId = tag.id;
+            newTag.textContent = tag.name;
+            tags.appendChild(newTag);
+          });
+        });
+    }
+  });
+});

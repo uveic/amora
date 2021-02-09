@@ -13,10 +13,9 @@ $publishAt = $article && $article->getPublishedAt()
     : '';
 
 $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($article
-        ? '<span title="' .
-        $this->e(DateUtil::formatUtcDate($article->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
-        '">' . $this->e(DateUtil::getElapsedTimeString($article->getCreatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
-        : '<span class="article-created-at" title=""></span>');
+        ? DateUtil::getElapsedTimeString($article->getCreatedAt(), $responseData->getSiteLanguage(), false, true) .
+        ': ' . DateUtil::formatUtcDate($article->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())
+        : '');
 
 ?>
 <div id="side-options" class="side-options null">
@@ -24,6 +23,21 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
     <a href="#" class="close-button"><img src="/img/svg/x.svg" class="img-svg" style="max-width: 25px;" alt="Close"></a>
   </div>
   <h2><?=$responseData->getLocalValue('navAdminArticleOptions')?></h2>
+  <div class="field">
+    <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
+    <div id="tags-selected"></div>
+    <div class="control">
+      <input class="input" id="tags" name="tags" type="text" placeholder="<?=$responseData->getLocalValue('globalTags')?>" value="">
+    </div>
+  </div>
+  <div class="field">
+    <label for="articleUri" class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</label>
+    <div class="control">
+      <div class="article-edit-uri"><?=$this->e(trim($responseData->getBaseUrl(), ' /') . '/')?>
+        <input id="articleUri" name="articleUri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->getUri() : ''); ?>">
+      </div>
+    </div>
+  </div>
   <div class="field">
     <label for="publishAt" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
     <div class="control">
@@ -42,20 +56,6 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
             <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$this->e($type['id'])?>"><?=$this->e($type['name'])?></option>
           <?php } ?>
       </select>
-    </div>
-  </div>
-  <div class="field">
-    <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
-    <div class="control">
-      <input class="input" id="tags" name="tags" type="text" placeholder="<?=$responseData->getLocalValue('globalTags')?>" value="">
-    </div>
-  </div>
-  <div class="field">
-    <label for="articleUri" class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</label>
-    <div class="control">
-      <div class="article-edit-uri"><?=$this->e(trim($responseData->getBaseUrl(), ' /') . '/')?>
-        <input id="articleUri" name="articleUri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->getUri() : ''); ?>">
-      </div>
     </div>
   </div>
   <div class="control">
