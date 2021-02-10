@@ -31,7 +31,7 @@ $random = StringUtil::getRandomString(5);
     </div>
     <div class="control-bar-creation<?=$article ? '' : ' hidden'?>"><span><?=$updatedAtContent?></span></div>
     <div class="article-saving null">
-      <img src="/img/loading.gif" class="" alt="Saving...">
+      <img src="/img/loading.gif" class="img-svg img-svg-25" alt="Saving...">
       <span>Saving...</span>
     </div>
     <input type="checkbox" id="dropdown-menu-<?=$random?>" class="dropdown-menu">

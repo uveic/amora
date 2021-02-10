@@ -15,6 +15,7 @@ class Global {
       "genericErrorGetInTouch": "Please, refresh the page and get in touch with support if the error persists. Error: ",
       "feedbackSaving": "Nothing to save...",
 
+      "globalRemove": "Remove",
       "globalPreview": "Preview",
       "globalUpdate": "Update",
       "globalUpdated": "Updated",
@@ -60,6 +61,7 @@ class Global {
       "genericErrorGetInTouch": "Por favor, actualiza la página y ponte en contacto con el soporte técnico si el error continúa. Error: ",
       "feedbackSaving": "Nada que guardar...",
 
+      "globalRemove": "Eliminar",
       "globalPreview": "Previsualizar",
       "globalUpdate": "Actualizar",
       "globalUpdated": "Actualizado",
@@ -105,6 +107,7 @@ class Global {
       "genericErrorGetInTouch": "Por favor, actualiza a páxina e ponte en contacto co soporte técnico se o erro persiste. Erro: ",
       "feedbackSaving": "Nada que gardar...",
 
+      "globalRemove": "Eliminar",
       "globalPreview": "Previsualizar",
       "globalUpdate": "Actualizar",
       "globalUpdated": "Actualizado",

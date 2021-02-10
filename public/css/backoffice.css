@@ -9,13 +9,6 @@
   align-items: center;
 }
 
-.article-saving img {
-  height: auto;
-  width: auto;
-  max-width: 25px;
-  max-height: 25px;
-}
-
 .article-saving span {
   margin-left: 0.5rem;
   justify-content: center;
@@ -564,15 +557,17 @@ input.is-light {
   cursor: pointer;
 }
 
+.search-results-close:hover,
 .search-results > span.result-item:hover {
   background-color: var(--light-bg-color-2);
 }
 
 .search-results-close {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  top: 0;
+  right: 0;
   z-index: 999;
+  padding: 0.5rem;
 }
 
 #tags-selected {
@@ -588,6 +583,10 @@ input.is-light {
   margin: 0.5rem;
   background-color: var(--light-bg-color-2);
   border-radius: var(--border-radius);
+}
+
+.result-selected > img {
+  cursor: pointer;
 }
 /* Side nav style ends here */
 

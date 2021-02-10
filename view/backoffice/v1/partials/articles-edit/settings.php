@@ -21,7 +21,7 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
 <div id="side-options" class="side-options null">
   <div class="side-options-header">
     <h2><?=$responseData->getLocalValue('navAdminArticleOptions')?></h2>
-    <a href="#" class="close-button"><img src="/img/svg/x.svg" class="img-svg" style="max-width: 25px;" alt="Close"></a>
+    <a href="#" class="close-button"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="Close"></a>
   </div>
   <div class="field">
     <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
@@ -31,7 +31,7 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
       <div class="search-wrapper">
         <div id="search-results-tags" class="search-results null">
           <a href="#" class="search-results-close"></a>
-          <a href="#" class="search-results-close"><img src="/img/svg/x.svg" class="img-svg" style="max-width: 25px;" alt="Close"></a>
+          <a href="#" class="search-results-close"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="Close"></a>
         </div>
       </div>
     </div>

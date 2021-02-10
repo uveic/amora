@@ -103,6 +103,7 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
   deleteButton.href = '#';
   deleteButton.id = 'article-section-button-delete-' + id;
   deleteButton.className = 'article-section-button article-section-button-delete';
+  deleteButton.addEventListener('click', e => removeSection(e, id));
   deleteButton.appendChild(trashImg);
 
   let arrowUpImg = new Image();
@@ -115,6 +116,7 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
   moveUpButton.href = '#';
   moveUpButton.id = 'article-section-button-up-' + id;
   moveUpButton.className = 'article-section-button article-section-button-up';
+  moveUpButton.addEventListener('click', e => moveSectionUp(e, id));
   moveUpButton.appendChild(arrowUpImg);
 
   let arrowDownImg = new Image();
@@ -127,6 +129,7 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
   moveDownButton.href = '#';
   moveDownButton.id = 'article-section-button-down-' + id;
   moveDownButton.className = 'article-section-button article-section-button-down';
+  moveDownButton.addEventListener('click', e => moveSectionDown(e, id));
   moveDownButton.appendChild(arrowDownImg);
 
   let sectionControls = document.createElement('div');
@@ -140,13 +143,6 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
   sectionWrapper.appendChild(sectionControls);
 
   articleContent.appendChild(sectionWrapper);
-
-  document.querySelector("#article-section-button-delete-" + id)
-    .addEventListener('click', e => removeSection(e, id));
-  document.querySelector("#article-section-button-down-" + id)
-    .addEventListener('click', e => moveSectionDown(e, id));
-  document.querySelector("#article-section-button-up-" + id)
-    .addEventListener('click', e => moveSectionUp(e, id));
 
   displayUpAndDownArrows();
 };
@@ -873,6 +869,10 @@ document.querySelectorAll('a.close-button').forEach(el => {
   });
 });
 
+const handleRemoveArticleTag = (event) => {
+  event.target.parentNode.parentNode.removeChild(event.target.parentNode);
+};
+
 const handleSearchResultClick = function(event) {
   event.preventDefault();
 
@@ -895,10 +895,18 @@ const handleSearchResultClick = function(event) {
     return;
   }
 
+  let imgClose = new Image();
+  imgClose.className = 'img-svg m-l-05';
+  imgClose.title = global.get('globalRemove');
+  imgClose.alt = global.get('globalRemove');
+  imgClose.src = '/img/svg/x.svg';
+  imgClose.addEventListener('click', (e) => handleRemoveArticleTag(e));
+
   let newTag = document.createElement('span');
   newTag.className = 'result-selected';
   newTag.dataset.tagId = el.dataset.tagId;
   newTag.textContent = el.textContent;
+  newTag.appendChild(imgClose);
   tags.appendChild(newTag);
 };
 
@@ -910,28 +918,26 @@ document.querySelectorAll('input[name="tags"]').forEach(el => {
 
     searchResultEl.querySelectorAll('span.result-item').forEach(c => searchResultEl.removeChild(c));
     let inputText = e.target.value.trim();
-    if (!inputText) {
+    if (inputText.length <= 1) {
       searchResultEl.classList.add('null');
       return;
     }
 
-    if (inputText.length > 1) {
-      xhr.get('/back/tag?name=' + inputText)
-        .then(response => {
-          searchResultEl.classList.remove('null');
-          response.tags.forEach(tag => {
-            let newTag = document.createElement('span');
-            newTag.className = 'result-item';
-            newTag.dataset.tagId = tag.id;
-            newTag.textContent = tag.name;
-            searchResultEl.appendChild(newTag);
-          });
-
-          document.querySelectorAll('span.result-item').forEach(r => {
-            r.addEventListener('click', (e) => handleSearchResultClick(e));
-          });
+    xhr.get('/back/tag?name=' + inputText)
+      .then(response => {
+        searchResultEl.classList.remove('null');
+        response.tags.forEach(tag => {
+          let newTag = document.createElement('span');
+          newTag.className = 'result-item';
+          newTag.dataset.tagId = tag.id;
+          newTag.textContent = tag.name;
+          searchResultEl.appendChild(newTag);
         });
-    }
+
+        document.querySelectorAll('span.result-item').forEach(r => {
+          r.addEventListener('click', (e) => handleSearchResultClick(e));
+        });
+      });
   });
 
   el.addEventListener('focus', (e) => {
