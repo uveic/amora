@@ -1,5 +1,6 @@
 <?php
 use uve\core\model\response\HtmlResponseDataAuthorised;
+use uve\Core\Model\Util\LookupTableBasicValue;
 use uve\core\util\DateUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
@@ -56,10 +57,11 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
     <div class="control">
       <select id="typeId" name="typeId">
           <?php
+          /** @var LookupTableBasicValue $type */
           foreach ($responseData->getArticleTypes() as $type) {
-              $selected = $article && $type['id'] == $article->getTypeId();
+              $selected = $article && $type->getId() == $article->getTypeId();
               ?>
-            <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$this->e($type['id'])?>"><?=$responseData->getLocalValue('articleType' . $type['name'])?></option>
+            <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$type->getId()?>"><?=$responseData->getLocalValue('articleType' . $type->getName())?></option>
           <?php } ?>
       </select>
     </div>

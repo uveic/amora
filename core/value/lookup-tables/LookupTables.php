@@ -33,12 +33,12 @@ return [
         'db' => Core::getCoreDb()
     ],
     [
-        'table_fields_to_values' => array_values(ArticleType::getAll()),
+        'table_fields_to_values' => array_values(ArticleType::asArray()),
         'table_name' => 'article_type',
         'db' => Core::getCoreDb()
     ],
     [
-        'table_fields_to_values' => array_values(ArticleStatus::getAll()),
+        'table_fields_to_values' => array_values(ArticleStatus::asArray()),
         'table_name' => 'article_status',
         'db' => Core::getCoreDb()
     ],

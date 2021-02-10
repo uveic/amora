@@ -2,6 +2,8 @@
 
 namespace uve\core\module\article\value;
 
+use uve\Core\Model\Util\LookupTableBasicValue;
+
 final class ArticleStatus
 {
     const PUBLISHED = 1;
@@ -11,24 +13,24 @@ final class ArticleStatus
     public static function getAll(): array
     {
         return [
-            self::PUBLISHED => [
-                'id' => self::PUBLISHED,
-                'name' => 'Published'
-            ],
-            self::DELETED => [
-                'id' => self::DELETED,
-                'name' => 'Deleted'
-            ],
-            self::DRAFT => [
-                'id' => self::DRAFT,
-                'name' => 'Draft'
-            ]
+            self::PUBLISHED => new LookupTableBasicValue(self::PUBLISHED, 'Published'),
+            self::DELETED =>  new LookupTableBasicValue(self::DELETED, 'Deleted'),
+            self::DRAFT =>  new LookupTableBasicValue(self::DRAFT, 'Draft')
         ];
+    }
+
+    public static function asArray(): array
+    {
+        $output = [];
+        foreach (self::getAll() as $item) {
+            $output[] = $item->asArray();
+        }
+        return $output;
     }
 
     public static function getNameForId(int $id): string
     {
         $all = self::getAll();
-        return empty($all[$id]) ? 'Unknown' : $all[$id]['name'];
+        return empty($all[$id]) ? 'Unknown' : $all[$id]->getName();
     }
 }

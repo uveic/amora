@@ -1,6 +1,7 @@
 <?php
 
 use uve\core\model\response\HtmlResponseDataAuthorised;
+use uve\Core\Model\Util\LookupTableBasicValue;
 use uve\core\module\article\value\ArticleStatus;
 use uve\core\util\DateUtil;
 use uve\core\util\StringUtil;
@@ -37,8 +38,10 @@ $random = StringUtil::getRandomString(5);
     <input type="checkbox" id="dropdown-menu-<?=$random?>" class="dropdown-menu">
     <div class="dropdown-container">
       <ul>
-<?php foreach ($responseData->getArticleStatuses() as $status) { ?>
-        <li><a data-checked="<?=$status['id'] === $articleStatusId ? '1' : '0'?>" data-article-status-id="<?=$this->e($status['id'])?>" class="dropdown-menu-option article-status-option <?=$status['id'] === ArticleStatus::PUBLISHED ? 'feedback-success' : 'background-light-color' ?>" href="#"><?=$responseData->getLocalValue('articleStatus' . $status['name'])?></a></li>
+<?php
+    /** @var LookupTableBasicValue $status */
+    foreach ($responseData->getArticleStatuses() as $status) { ?>
+        <li><a data-checked="<?=$status->getId() === $articleStatusId ? '1' : '0'?>" data-article-status-id="<?=$status->getId()?>" class="dropdown-menu-option article-status-option <?=$status->getId() === ArticleStatus::PUBLISHED ? 'feedback-success' : 'background-light-color' ?>" href="#"><?=$responseData->getLocalValue('articleStatus' . $status->getName())?></a></li>
 <?php } ?>
       </ul>
       <label for="dropdown-menu-<?=$random?>" class="dropdown-menu-label <?=$isPublished ? 'feedback-success' : 'background-light-color' ?>">
