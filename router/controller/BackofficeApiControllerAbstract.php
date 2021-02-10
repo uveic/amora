@@ -117,7 +117,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string $contentHtml
      * @param string|null $uri
      * @param string|null $mainImageSrc
+     * @param string|null $publishOn
      * @param array $sections
+     * @param ?array $tags
      * @param Request $request
      * @return Response
      */
@@ -128,7 +130,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         string $contentHtml,
         ?string $uri,
         ?string $mainImageSrc,
+        ?string $publishOn,
         array $sections,
+        ?array $tags,
         Request $request
     ): Response;
 
@@ -158,7 +162,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string $contentHtml
      * @param string|null $uri
      * @param string|null $mainImageSrc
+     * @param string|null $publishOn
      * @param array $sections
+     * @param ?array $tags
      * @param Request $request
      * @return Response
      */
@@ -170,7 +176,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         string $contentHtml,
         ?string $uri,
         ?string $mainImageSrc,
+        ?string $publishOn,
         array $sections,
+        ?array $tags,
         Request $request
     ): Response;
 
@@ -496,6 +504,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         $uri = $bodyParams['uri'] ?? null;
         $mainImageSrc = $bodyParams['mainImageSrc'] ?? null;
+        $publishOn = $bodyParams['publishOn'] ?? null;
         $sections = null;
         if (!isset($bodyParams['sections'])) {
             $errors[] = [
@@ -508,6 +517,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 : null;
         }
 
+        $tags = $bodyParams['tags'] ?? null;
 
         if (count($errors)) {
             return Response::createBadRequestResponse(
@@ -527,7 +537,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $contentHtml,
                 $uri,
                 $mainImageSrc,
+                $publishOn,
                 $sections,
+                $tags,
                 $request
             );
         } catch (Throwable $t) {
@@ -654,6 +666,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         $uri = $bodyParams['uri'] ?? null;
         $mainImageSrc = $bodyParams['mainImageSrc'] ?? null;
+        $publishOn = $bodyParams['publishOn'] ?? null;
         $sections = null;
         if (!isset($bodyParams['sections'])) {
             $errors[] = [
@@ -666,6 +679,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 : null;
         }
 
+        $tags = $bodyParams['tags'] ?? null;
 
         if (count($errors)) {
             return Response::createBadRequestResponse(
@@ -686,7 +700,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $contentHtml,
                 $uri,
                 $mainImageSrc,
+                $publishOn,
                 $sections,
+                $tags,
                 $request
             );
         } catch (Throwable $t) {

@@ -264,7 +264,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string $contentHtml
      * @param string|null $uri
      * @param string|null $mainImageSrc
+     * @param string|null $publishOn
      * @param array $sections
+     * @param array|null $tags
      * @param Request $request
      * @return Response
      */
@@ -275,7 +277,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         string $contentHtml,
         ?string $uri,
         ?string $mainImageSrc,
+        ?string $publishOn,
         array $sections,
+        ?array $tags,
         Request $request
     ): Response {
         $now = DateUtil::getCurrentDateForMySql();
@@ -324,7 +328,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string $contentHtml
      * @param string|null $uri
      * @param string|null $mainImageSrc
+     * @param string|null $publishOn
      * @param array $sections
+     * @param array|null $tags
      * @param Request $request
      * @return Response
      */
@@ -336,7 +342,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         string $contentHtml,
         ?string $uri,
         ?string $mainImageSrc,
+        ?string $publishOn,
         array $sections,
+        ?array $tags,
         Request $request
     ): Response {
         $existingArticle = $this->articleService->getArticleForId($articleId);

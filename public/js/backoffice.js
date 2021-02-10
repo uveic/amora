@@ -212,8 +212,8 @@ const updateArticleUri = (e) => {
     .then(response => articleUriInput.value = response.uri);
 }
 
-document.querySelectorAll('#form-article').forEach(el => {
-  el.addEventListener('submit', e => {
+document.querySelectorAll('.article-save-button').forEach(el => {
+  el.addEventListener('click', e => {
     e.preventDefault();
 
     const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
@@ -249,7 +249,8 @@ document.querySelectorAll('#form-article').forEach(el => {
         }
       });
 
-      document.querySelectorAll('input.article-save').forEach(b => b.value = global.get('globalUpdate'));
+      document.querySelectorAll('#side-options').forEach(i => i.classList.add('null'));
+      document.querySelectorAll('.article-save-button').forEach(b => b.value = global.get('globalUpdate'));
       document.querySelectorAll('.article-preview').forEach(b => {
           b.href = response.uri + '?preview=true'
         });
@@ -259,10 +260,13 @@ document.querySelectorAll('#form-article').forEach(el => {
     const uriEl = document.querySelector('input[name="articleUri"]');
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
     const statusId = Number.parseInt(status.dataset.articleStatusId);
+    const typeEl = document.querySelector('select[name="typeId"] option:checked');
+    const articleTypeId = typeEl && typeEl.value ? Number.parseInt(typeEl.value) : null;
     const articleUri = uriEl && uriEl.value ? uriEl.value : null;
 
     document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
 
+    let tags = [];
     let sections = [];
     let articleContentHtml = '';
     let order = 1;
@@ -316,6 +320,13 @@ document.querySelectorAll('#form-article').forEach(el => {
 
       sections.push(currentSection);
     });
+    document.querySelectorAll('#tags-selected > .result-selected')
+      .forEach(t => {
+        tags.push({
+            id: t.dataset.tagId ? Number.parseInt(t.dataset.tagId) : null,
+            name: t.textContent.trim()
+          });
+      });
 
     if (!articleContentHtml || !articleContentHtml.trim().length) {
       feedbackDiv.textContent = global.get('feedbackSaving');
@@ -331,8 +342,11 @@ document.querySelectorAll('#form-article').forEach(el => {
       'title': titleEl ? titleEl.textContent : null,
       'uri': articleUri,
       'contentHtml': articleContentHtml.trim().length ? articleContentHtml.trim() : null,
+      'typeId': articleTypeId,
       'statusId': statusId,
-      'sections': sections
+      'sections': sections,
+      'tags': tags,
+      'publishOn': null
     });
 
     const url = '/back/article';

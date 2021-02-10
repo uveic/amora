@@ -67,7 +67,7 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
     </div>
   </div>
   <div class="control">
-    <button class="button is-success m-b-1" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
+    <button class="article-save-button button is-success m-b-1" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
   </div>
   <p><?=$article ? $createdAtContent : ''?></p>
 </div>

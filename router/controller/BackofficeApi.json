@@ -439,6 +439,10 @@
                   "description": "Article main image source",
                   "type": "string"
                 },
+                "publishOn": {
+                  "description": "Publish the article on this date. Format:",
+                  "type": "string"
+                },
                 "sections": {
                   "description": "Array with article's sections",
                   "type": "array",
@@ -474,6 +478,27 @@
                     "required": [
                       "sectionTypeId",
                       "contentHtml"
+                    ]
+                  }
+                },
+                "tags": {
+                  "description": "Array with article's tags",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Article's tags",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Tag ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Section Type ID"
+                      }
+                    },
+                    "required": [
+                      "name"
                     ]
                   }
                 }
@@ -694,6 +719,10 @@
                   "description": "Article main image source",
                   "type": "string"
                 },
+                "publishOn": {
+                  "description": "Publish the article on this date. Format:",
+                  "type": "string"
+                },
                 "sections": {
                   "description": "Array with article's sections",
                   "type": "array",
@@ -729,6 +758,27 @@
                     "required": [
                       "sectionTypeId",
                       "contentHtml"
+                    ]
+                  }
+                },
+                "tags": {
+                  "description": "Array with article's tags",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Article's tags",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Tag ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Section Type ID"
+                      }
+                    },
+                    "required": [
+                      "name"
                     ]
                   }
                 }
