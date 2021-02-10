@@ -59,7 +59,7 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
           foreach ($responseData->getArticleTypes() as $type) {
               $selected = $article && $type['id'] == $article->getTypeId();
               ?>
-            <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$this->e($type['id'])?>"><?=$this->e($type['name'])?></option>
+            <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$this->e($type['id'])?>"><?=$responseData->getLocalValue('articleType' . $type['name'])?></option>
           <?php } ?>
       </select>
     </div>

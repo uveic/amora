@@ -103,6 +103,8 @@ return [
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
     'articleStatusDeleted' => 'Eliminado',
+    'articleTypeHome' => 'Portada',
+    'articleTypeArchived' => 'Arquivado',
 
     'sectionRemove' => 'Eliminar sección',
     'sectionMoveUp' => 'Mover para arriba',
