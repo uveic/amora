@@ -20,14 +20,20 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
 ?>
 <div id="side-options" class="side-options null">
   <div class="side-options-header">
+    <h2><?=$responseData->getLocalValue('navAdminArticleOptions')?></h2>
     <a href="#" class="close-button"><img src="/img/svg/x.svg" class="img-svg" style="max-width: 25px;" alt="Close"></a>
   </div>
-  <h2><?=$responseData->getLocalValue('navAdminArticleOptions')?></h2>
   <div class="field">
     <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
     <div id="tags-selected"></div>
     <div class="control">
       <input class="input" id="tags" name="tags" type="text" placeholder="<?=$responseData->getLocalValue('globalTags')?>" value="">
+      <div class="search-wrapper">
+        <div id="search-results-tags" class="search-results null">
+          <a href="#" class="search-results-close"></a>
+          <a href="#" class="search-results-close"><img src="/img/svg/x.svg" class="img-svg" style="max-width: 25px;" alt="Close"></a>
+        </div>
+      </div>
     </div>
   </div>
   <div class="field">
@@ -61,5 +67,5 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
   <div class="control">
     <button class="button is-success m-b-1" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
   </div>
-  <?=$article ? $createdAtContent : ''?>
+  <p><?=$article ? $createdAtContent : ''?></p>
 </div>

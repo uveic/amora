@@ -509,7 +509,7 @@ input.is-light {
   background-color: var(--main-bg-color);
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 2rem;
+  padding: 1.25rem;
   transition: 0.5s;
   border-left: 3px solid var(--light-bg-color-2);
 }
@@ -522,12 +522,59 @@ input.is-light {
 
 .side-options-header {
   display: flex;
-  flex-flow: row-reverse wrap;
-  align-items: flex-end;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
 }
-/* Side nav style ends here */
 
-/* Tags style starts here */
+.side-options-header > h2 {
+  margin: 0;
+}
+
+.search-wrapper {
+  position: relative;
+}
+
+.search-results {
+  position: absolute;
+  top: 7px;
+  left: 0;
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  background-color: var(--light-bg-color);
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: stretch;
+  align-content: flex-start;
+  min-height: 200px;
+  z-index: 998;
+  padding: 0.25rem;
+  border: 1px solid var(--light-bg-color-2);
+  overflow: auto;
+}
+
+.search-results > span.result-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 30px;
+  margin: 0;
+  padding: 1.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.search-results > span.result-item:hover {
+  background-color: var(--light-bg-color-2);
+}
+
+.search-results-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 999;
+}
+
 #tags-selected {
   display: flex;
   flex-flow: row wrap;
@@ -542,7 +589,7 @@ input.is-light {
   background-color: var(--light-bg-color-2);
   border-radius: var(--border-radius);
 }
-/* Tags style ends here */
+/* Side nav style ends here */
 
 @media screen and (min-width: 800px) {
   #upload-images {

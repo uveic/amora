@@ -4,8 +4,6 @@
   --main-text-color-hover: #1c1c1c;
 
   --color-red: #ff625c;
-  --color-red-light: #f7615c;
-  --color-green-light: #2dd770;
 
   --light-bg-color: #f4f4f4;
   --light-bg-color-2: #e8e8e8;
@@ -17,6 +15,7 @@
 
   --feedback-success-color: #2ed06e;
   --feedback-failure-color: #ff0000;
+  --highlight-success-color: #97e294;
 
   --input-text-color: #363636;
   --input-bg-color: #fff;
@@ -637,11 +636,11 @@ a.link-title:focus {
 }
 
 .feedback-success {
-  background-color: var(--feedback-success-color);
+  background-color: var(--feedback-success-color) !important;
 }
 
 .feedback-error {
-  background-color: var(--feedback-failure-color);
+  background-color: var(--feedback-failure-color) !important;
 }
 
 #feedback-banner {
@@ -654,6 +653,10 @@ a.link-title:focus {
 
 #feedback-banner > p {
   color: var(--color-red);
+}
+
+.highlight-effect {
+  background-color: var(--highlight-success-color) !important;
 }
 /* Feedback style ends here */
 
