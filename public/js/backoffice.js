@@ -11,6 +11,8 @@ import {feedbackDiv} from './authorised.js';
 import {loadEditor} from './module/editor.js';
 import {global} from "./module/localisation.js";
 
+let globalTags = [];
+
 const removeSection = function(e, sectionId) {
   e.preventDefault();
 
@@ -324,7 +326,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       .forEach(t => {
         tags.push({
             id: t.dataset.tagId ? Number.parseInt(t.dataset.tagId) : null,
-            name: t.textContent.trim()
+            name: t.dataset.tagName
           });
       });
 
@@ -870,6 +872,23 @@ document.querySelectorAll('a.article-settings').forEach(el => {
     const sideNav = document.getElementById('side-options');
     sideNav.classList.remove('null');
     sideNav.classList.add('side-options-open');
+
+    if (!globalTags.length) {
+      const searchResultEl = document.querySelector('#search-results-tags');
+      xhr.get('/back/tag')
+        .then(response => {
+          globalTags = response.tags;
+          globalTags.forEach(tag => {
+            let newTag = document.createElement('span');
+            newTag.className = 'result-item';
+            newTag.dataset.tagId = tag.id;
+            newTag.dataset.tagName = tag.name;
+            newTag.textContent = tag.name;
+            newTag.addEventListener('click', (e) => handleSearchResultClick(e));
+            searchResultEl.appendChild(newTag);
+          });
+        });
+    }
   });
 });
 
@@ -895,17 +914,19 @@ const handleSearchResultClick = function(event) {
 
   document.querySelector('#search-results-tags').classList.add('null');
 
-  let existingTagIds = [];
+  const tagIdentifier = el.dataset.tagId ?? el.dataset.tagName;
+  let existingTag = [];
   document.querySelectorAll('#tags-selected > .result-selected')
     .forEach(s => {
-      if (el.dataset.tagId === s.dataset.tagId) {
+      const currentIdentifier = s.dataset.tagId ?? s.dataset.tagName;
+      if (tagIdentifier === currentIdentifier) {
         s.classList.add('highlight-effect');
         setTimeout(() => s.classList.remove('highlight-effect'), 2000);
       }
-      existingTagIds.push(s.dataset.tagId)
+      existingTag.push(currentIdentifier);
     });
 
-  if (existingTagIds.includes(el.dataset.tagId)) {
+  if (existingTag.includes(tagIdentifier)) {
     return;
   }
 
@@ -918,8 +939,11 @@ const handleSearchResultClick = function(event) {
 
   let newTag = document.createElement('span');
   newTag.className = 'result-selected';
-  newTag.dataset.tagId = el.dataset.tagId;
-  newTag.textContent = el.textContent;
+  if (el.dataset.tagId) {
+    newTag.dataset.tagId = el.dataset.tagId;
+  }
+  newTag.dataset.tagName = el.dataset.tagName;
+  newTag.innerHTML = el.innerHTML;
   newTag.appendChild(imgClose);
   tags.appendChild(newTag);
 };
@@ -930,35 +954,42 @@ document.querySelectorAll('input[name="tags"]').forEach(el => {
   el.addEventListener('input', (e) => {
     e.preventDefault();
 
-    searchResultEl.querySelectorAll('span.result-item').forEach(c => searchResultEl.removeChild(c));
-    let inputText = e.target.value.trim();
-    if (inputText.length <= 1) {
-      searchResultEl.classList.add('null');
-      return;
+    const allResults = document.querySelectorAll('.search-results > .result-item');
+
+    let count = allResults.length;
+    console.log('Before: ', count);
+    const inputText = e.target.value.trim();
+    const cleanInput = cleanTextForUrl(inputText);
+    allResults.forEach(r => {
+      if (r.dataset.new) {
+        r.parentNode.removeChild(r);
+        count--;
+        return;
+      }
+
+      if (cleanTextForUrl(r.textContent).includes(cleanInput)) {
+        r.classList.remove('null');
+      } else {
+        count--;
+        r.classList.add('null');
+      }
+    });
+
+    console.log('After: ', count);
+
+    if (!count) {
+      let newTag = document.createElement('span');
+      newTag.className = 'result-item';
+      newTag.dataset.tagName = inputText;
+      newTag.dataset.new = '1';
+      newTag.innerHTML = '<span class="new-tag">New</span>' + inputText;
+      newTag.addEventListener('click', (e) => handleSearchResultClick(e));
+      searchResultEl.appendChild(newTag);
     }
-
-    xhr.get('/back/tag?name=' + inputText)
-      .then(response => {
-        searchResultEl.classList.remove('null');
-        response.tags.forEach(tag => {
-          let newTag = document.createElement('span');
-          newTag.className = 'result-item';
-          newTag.dataset.tagId = tag.id;
-          newTag.textContent = tag.name;
-          searchResultEl.appendChild(newTag);
-        });
-
-        document.querySelectorAll('span.result-item').forEach(r => {
-          r.addEventListener('click', (e) => handleSearchResultClick(e));
-        });
-      });
   });
 
   el.addEventListener('focus', (e) => {
-    let inputText = e.target.value.trim();
-    if (inputText.length && document.querySelectorAll('span.result-item').length) {
-      searchResultEl.classList.remove('null');
-    }
+    searchResultEl.classList.remove('null');
   });
 });
 

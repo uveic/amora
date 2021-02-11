@@ -453,6 +453,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             ['id' => 4, 'name' => 'Blueberry'],
             ['id' => 5, 'name' => 'Banana'],
             ['id' => 6, 'name' => 'Watermelon'],
+            ['id' => 7, 'name' => 'Pear'],
+            ['id' => 8, 'name' => 'Peach'],
+            ['id' => 9, 'name' => 'Avocado'],
         ];
 
         return new BackofficeApiControllerGetTagsSuccessResponse(true, $tags);

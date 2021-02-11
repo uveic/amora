@@ -535,12 +535,12 @@ input.is-light {
   width: 100%;
   height: auto;
   max-height: 300px;
+  min-height: 150px;
   background-color: var(--light-bg-color);
   display: flex;
   flex-flow: column nowrap;
   justify-content: stretch;
   align-content: flex-start;
-  min-height: 200px;
   z-index: 998;
   padding: 0.25rem;
   border: 1px solid var(--light-bg-color-2);
@@ -551,15 +551,22 @@ input.is-light {
   display: flex;
   align-items: center;
   width: 100%;
-  min-height: 30px;
+  min-height: 50px;
   margin: 0;
-  padding: 1.25rem 0.5rem;
+  padding: 0 0.75rem;
   cursor: pointer;
 }
 
 .search-results-close:hover,
 .search-results > span.result-item:hover {
   background-color: var(--light-bg-color-2);
+}
+
+.result-selected > .new-tag,
+.result-item > .new-tag {
+  background-color: var(--highlight-success-color);
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .search-results-close {

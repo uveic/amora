@@ -28,10 +28,9 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
     <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
     <div id="tags-selected"></div>
     <div class="control">
-      <input class="input" id="tags" name="tags" type="text" placeholder="<?=$responseData->getLocalValue('globalTags')?>" value="">
+      <input class="input search-input" id="tags" name="tags" type="text" placeholder="<?=$responseData->getLocalValue('globalTags')?>" value="">
       <div class="search-wrapper">
         <div id="search-results-tags" class="search-results null">
-          <a href="#" class="search-results-close"></a>
           <a href="#" class="search-results-close"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="Close"></a>
         </div>
       </div>
