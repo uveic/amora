@@ -558,6 +558,7 @@ input.is-light {
 }
 
 .search-results-close:hover,
+.search-results > span.selected,
 .search-results > span.result-item:hover {
   background-color: var(--light-bg-color-2);
 }

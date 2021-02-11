@@ -106,7 +106,7 @@ return [
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',
     'articleStatusDeleted' => 'Deleted',
-    'articleTypeHome' => 'Home',
+    'articleTypeHome' => 'Homepage',
     'articleTypeArchived' => 'Archived',
 
     'sectionRemove' => 'Remove section',

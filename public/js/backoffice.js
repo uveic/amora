@@ -884,7 +884,7 @@ document.querySelectorAll('a.article-settings').forEach(el => {
             newTag.dataset.tagId = tag.id;
             newTag.dataset.tagName = tag.name;
             newTag.textContent = tag.name;
-            newTag.addEventListener('click', (e) => handleSearchResultClick(e));
+            newTag.addEventListener('click', () => handleSearchResultClick(tag.id, tag.name, tag.name));
             searchResultEl.appendChild(newTag);
           });
         });
@@ -906,19 +906,21 @@ const handleRemoveArticleTag = (event) => {
   event.target.parentNode.parentNode.removeChild(event.target.parentNode);
 };
 
-const handleSearchResultClick = function(event) {
-  event.preventDefault();
-
+const handleSearchResultClick = (tagId, tagName, tagInnerHtml) => {
   const tags = document.querySelector('#tags-selected');
-  const el = event.target;
+  const allResults = document.querySelectorAll('.search-results > .result-item');
 
   document.querySelector('#search-results-tags').classList.add('null');
+  document.querySelector('input[name="tags"]').value = '';
+  allResults.forEach(r => r.classList.remove('null'));
 
-  const tagIdentifier = el.dataset.tagId ?? el.dataset.tagName;
+  const tagIdentifier = tagId ?? tagName;
   let existingTag = [];
   document.querySelectorAll('#tags-selected > .result-selected')
     .forEach(s => {
-      const currentIdentifier = s.dataset.tagId ?? s.dataset.tagName;
+      const currentIdentifier = s.dataset.tagId
+        ? Number.parseInt(s.dataset.tagId)
+        : s.dataset.tagName;
       if (tagIdentifier === currentIdentifier) {
         s.classList.add('highlight-effect');
         setTimeout(() => s.classList.remove('highlight-effect'), 2000);
@@ -939,11 +941,11 @@ const handleSearchResultClick = function(event) {
 
   let newTag = document.createElement('span');
   newTag.className = 'result-selected';
-  if (el.dataset.tagId) {
-    newTag.dataset.tagId = el.dataset.tagId;
+  if (tagId) {
+    newTag.dataset.tagId = tagId;
   }
-  newTag.dataset.tagName = el.dataset.tagName;
-  newTag.innerHTML = el.innerHTML;
+  newTag.dataset.tagName = tagName;
+  newTag.innerHTML = tagInnerHtml;
   newTag.appendChild(imgClose);
   tags.appendChild(newTag);
 };
@@ -951,13 +953,18 @@ const handleSearchResultClick = function(event) {
 document.querySelectorAll('input[name="tags"]').forEach(el => {
   const searchResultEl = document.querySelector('#search-results-tags');
 
-  el.addEventListener('input', (e) => {
+  el.addEventListener('keyup', (e) => {
     e.preventDefault();
+
+    searchResultEl.classList.remove('null');
+
+    if (e.keyCode === 37 || e.keyCode === 39) { // left/right arrows
+      return;
+    }
 
     const allResults = document.querySelectorAll('.search-results > .result-item');
 
     let count = allResults.length;
-    console.log('Before: ', count);
     const inputText = e.target.value.trim();
     const cleanInput = cleanTextForUrl(inputText);
     allResults.forEach(r => {
@@ -975,22 +982,18 @@ document.querySelectorAll('input[name="tags"]').forEach(el => {
       }
     });
 
-    console.log('After: ', count);
-
     if (!count) {
       let newTag = document.createElement('span');
       newTag.className = 'result-item';
       newTag.dataset.tagName = inputText;
       newTag.dataset.new = '1';
       newTag.innerHTML = '<span class="new-tag">New</span>' + inputText;
-      newTag.addEventListener('click', (e) => handleSearchResultClick(e));
+      newTag.addEventListener('click', () => handleSearchResultClick(null, inputText, newTag.innerHTML));
       searchResultEl.appendChild(newTag);
     }
   });
 
-  el.addEventListener('focus', (e) => {
-    searchResultEl.classList.remove('null');
-  });
+  el.addEventListener('focus', () => searchResultEl.classList.remove('null'));
 });
 
 document.querySelectorAll('a.search-results-close').forEach(el => {
