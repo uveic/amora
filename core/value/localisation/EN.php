@@ -59,6 +59,7 @@ return [
 
     'dashboardGoTo' => 'Go to...',
 
+    'globalBy' => 'by',
     'globalSettings' => 'Settings',
     'globalClose' => 'Close',
     'globalRemove' => 'Remove',
@@ -75,8 +76,6 @@ return [
     'globalBio' => 'Bio',
     'globalSave' => 'Save',
     'globalUpdate' => 'Update',
-    'globalSaveAndClose' => 'S&C',
-    'globalUpdateAndClose' => 'U&C',
     'globalUpdated' => 'Updated',
     'globalUpdatedAt' => 'Updated At',
     'globalPublishOn' => 'Publish On',

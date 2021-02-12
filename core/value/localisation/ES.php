@@ -59,6 +59,7 @@ return [
 
     'dashboardGoTo' => 'Ir a...',
 
+    'globalBy' => 'por',
     'globalSettings' => 'Configuración',
     'globalClose' => 'Cerrar',
     'globalRemove' => 'Eliminar',
@@ -75,8 +76,6 @@ return [
     'globalBio' => 'Breve biografía',
     'globalSave' => 'Guardar',
     'globalUpdate' => 'Actualizar',
-    'globalSaveAndClose' => 'GyC',
-    'globalUpdateAndClose' => 'AyC',
     'globalUpdated' => 'Actualizado',
     'globalUpdatedAt' => 'Actualizado',
     'globalPublishOn' => 'Publicar el',

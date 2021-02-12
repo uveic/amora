@@ -10,14 +10,18 @@ $article = $responseData->getFirstArticle();
 $d = new DateTime();
 $minPublishAt = $d->format('Y-m-d');
 
-$publishAt = $article && $article->getPublishOn()
+$publishOn = $article && $article->getPublishOn()
     ? DateUtil::transformFromUtcTo($article->getPublishOn(), $responseData->getSession()->getTimezone(), 'Y-m-d')
     : '';
 
-$createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($article
+$createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
+    ($article
         ? DateUtil::getElapsedTimeString($article->getCreatedAt(), $responseData->getSiteLanguage(), false, true) .
-        ': ' . DateUtil::formatUtcDate($article->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())
-        : '');
+        ' (' . DateUtil::formatUtcDate($article->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone()) . ')'
+        : ''
+    );
+
+$createdAtContent .= ' ' . $responseData->getLocalValue('globalBy') . ' ' . $article->getUser()->getName() . '.';
 
 ?>
 <div id="side-options" class="side-options null">
@@ -53,25 +57,11 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
     </div>
   </div>
   <div class="field">
-    <label for="publishAt" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
+    <label for="publishOn" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
     <div class="control">
-      <input class="input" id="publishAt" name="publishAt" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" min="<?=$minPublishAt?>" value="<?=$publishAt?>" required>
+      <input class="input" id="publishOn" name="publishOn" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" min="<?=$minPublishAt?>" value="<?=$publishOn?>" required>
     </div>
     <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span><?=$responseData->getLocalValue('globalFormat')?>: <i><?=$responseData->getLocalValue('globalDateFormat')?></i></p>
-  </div>
-  <div class="field">
-    <label for="typeId" class="label"><?=$responseData->getLocalValue('globalCategory')?>:</label>
-    <div class="control">
-      <select id="typeId" name="typeId">
-          <?php
-          /** @var LookupTableBasicValue $type */
-          foreach ($responseData->getArticleTypes() as $type) {
-              $selected = $article && $type->getId() == $article->getTypeId();
-              ?>
-            <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$type->getId()?>"><?=$responseData->getLocalValue('articleType' . $type->getName())?></option>
-          <?php } ?>
-      </select>
-    </div>
   </div>
   <div class="control">
     <button class="article-save-button button is-success m-b-1" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
