@@ -20,5 +20,5 @@ return "
 
         CONSTRAINT `user_registration_request_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
         CONSTRAINT `user_registration_request_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ";

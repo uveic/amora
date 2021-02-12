@@ -23,7 +23,7 @@ foreach ($responseData->getArticles() as $article) {
       ($article->isPublished() ? '' : '?preview=true');
   $isPublished = $article->isPublished() ? '' : '<span class="enabled-icon enabled-icon-failure m-r-05"></span>';
 
-  $year = date('Y', strtotime($article->getPublishedAt()));
+  $year = date('Y', strtotime($article->getPublishOn()));
   if ($previousYear !== $year) {
 ?>
     <h2><?=$year?></h2>

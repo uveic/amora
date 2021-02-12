@@ -137,6 +137,7 @@ class RouterCore extends Core
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
         $imageService = ArticleCore::getImageService();
+        $tagService = ArticleCore::getTagService();
 
         return self::getInstance(
             'BackofficeApiController',
@@ -146,7 +147,8 @@ class RouterCore extends Core
                 $sessionService,
                 $userService,
                 $articleService,
-                $imageService
+                $imageService,
+                $tagService,
             ) {
                 require_once self::getPathRoot() . '/core/model/response/UserFeedback.php';
                 require_once self::getPathRoot() . '/core/module/user/value/UserJourneyStatus.php';
@@ -159,7 +161,8 @@ class RouterCore extends Core
                     $sessionService,
                     $userService,
                     $articleService,
-                    $imageService
+                    $imageService,
+                    $tagService
                 );
             },
             true

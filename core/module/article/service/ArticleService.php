@@ -5,31 +5,26 @@ namespace uve\core\module\article\service;
 use uve\core\Logger;
 use uve\Core\Model\Util\QueryOptions;
 use uve\core\module\article\datalayer\ArticleDataLayer;
+use uve\core\module\article\datalayer\TagDataLayer;
 use uve\core\module\article\model\Article;
 use uve\core\module\article\model\ArticleSection;
+use uve\core\module\article\model\Tag;
 use uve\core\module\article\value\ArticleStatus;
 use uve\core\module\article\value\ArticleType;
 use uve\core\util\DateUtil;
 
 class ArticleService
 {
-    private Logger $logger;
-    private ArticleDataLayer $articleDataLayer;
-    private ImageService $imageService;
-
     public function __construct(
-        Logger $logger,
-        ArticleDataLayer $articleDataLayer,
-        ImageService $imageService
-    ) {
-        $this->logger = $logger;
-        $this->articleDataLayer = $articleDataLayer;
-        $this->imageService = $imageService;
-    }
+        private Logger $logger,
+        private ArticleDataLayer $articleDataLayer,
+        private TagDataLayer $tagDataLayer,
+        private ImageService $imageService,
+    ) {}
 
-    public function getArticleForId(int $id): ?Article
+    public function getArticleForId(int $id, bool $includeTags = false): ?Article
     {
-        return $this->articleDataLayer->getArticleForId($id);
+        return $this->articleDataLayer->getArticleForId($id, $includeTags);
     }
 
     public function getArticleForUri(string $uri): ?Article
@@ -66,11 +61,12 @@ class ArticleService
     public function updateArticle(
         Article $article,
         array $sections,
+        array $tags,
         ?string $userIp,
         ?string $userAgent
     ): bool {
         $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
-            function () use ($article, $sections, $userIp, $userAgent) {
+            function () use ($article, $sections, $tags, $userIp, $userAgent) {
                 $resUpdate = $this->articleDataLayer->updateArticle($article);
 
                 if (empty($resUpdate)) {
@@ -88,6 +84,14 @@ class ArticleService
                 if (empty($resSections)) {
                     $this->logger->logError(
                         'Error updating article sections. Article ID: ' . $article->getId()
+                    );
+                    return ['success' => false];
+                }
+
+                $resTags = $this->addOrRemoveTagsToArticle($article->getId(), $tags);
+                if (empty($resTags)) {
+                    $this->logger->logError(
+                        'Error updating article tags. Article ID: ' . $article->getId()
                     );
                     return ['success' => false];
                 }
@@ -181,6 +185,53 @@ class ArticleService
         return true;
     }
 
+    private function addOrRemoveTagsToArticle(int $articleId, array $tags): bool
+    {
+        $existingTags = $this->tagDataLayer->getTagsForArticleId($articleId);
+        $existingTagsById = [];
+        /** @var Tag $existingTag */
+        foreach ($existingTags as $existingTag) {
+            $existingTagsById[$existingTag->getId()] = $existingTag;
+        }
+
+        $newTags = [];
+        foreach ($tags as $tag) {
+            $newTagId = isset($tag['id']) ? (int)$tag['id'] : null;
+            $newTags[] = new Tag($newTagId, $tag['name']);
+        }
+
+        /** @var Tag $nTag */
+        foreach ($newTags as $nTag) {
+            if (empty($nTag->getId())) {
+                // ToDo: implement validation at controller level to avoid getting here
+                // This shouldn't happen ever
+                $this->logger->logError('Tag missing ID. This should not have happened.');
+                continue;
+            }
+
+            if ($existingTagsById[$nTag->getId()]) {
+                unset($existingTagsById[$nTag->getId()]);
+                continue;
+            }
+
+            $resRelation = $this->tagDataLayer->insertArticleTagRelation(
+                $nTag->getId(),
+                $articleId
+            );
+
+            if (empty($resRelation)) {
+                $this->logger->logError('Error inserting article/tag relation');
+                return false;
+            }
+        }
+
+        foreach ($existingTagsById as $tag) {
+            $this->tagDataLayer->deleteArticleTagRelation($tag->getId(), $articleId);
+        }
+
+        return true;
+    }
+
     public function deleteArticle(Article $article, ?string $userIp, ?string $userAgent): bool
     {
         return $this->articleDataLayer->deleteArticle($article, $userIp, $userAgent);
@@ -188,12 +239,13 @@ class ArticleService
 
     public function createNewArticle(
         Article $article,
-        ?array $sections,
+        array $sections,
+        array $tags,
         ?string $userIp,
         ?string $userAgent
     ): ?Article {
         $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
-            function () use ($article, $sections, $userIp, $userAgent) {
+            function () use ($article, $sections, $tags, $userIp, $userAgent) {
                 $article = $this->articleDataLayer->createNewArticle(
                     $article,
                     $userIp,
@@ -211,6 +263,14 @@ class ArticleService
                     $article->getId(),
                     $sections
                 );
+
+                $resTags = $this->addOrRemoveTagsToArticle($article->getId(), $tags);
+                if (empty($resTags)) {
+                    $this->logger->logError(
+                        'Error updating article tags. Article ID: ' . $article->getId()
+                    );
+                    return ['success' => false];
+                }
 
                 if (empty($resSections)) {
                     $this->logger->logError(

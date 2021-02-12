@@ -906,48 +906,58 @@ const handleRemoveArticleTag = (event) => {
   event.target.parentNode.parentNode.removeChild(event.target.parentNode);
 };
 
-const handleSearchResultClick = (tagId, tagName, tagInnerHtml) => {
+const handleSearchResultClick = (tagId, tagName, tagInnerHtml, tagElement = null) => {
   const tags = document.querySelector('#tags-selected');
   const allResults = document.querySelectorAll('.search-results > .result-item');
+
+  const generateNewTagHtml = function(id, name, html) {
+    let imgClose = new Image();
+    imgClose.className = 'img-svg m-l-05';
+    imgClose.title = global.get('globalRemove');
+    imgClose.alt = global.get('globalRemove');
+    imgClose.src = '/img/svg/x.svg';
+    imgClose.addEventListener('click', (e) => handleRemoveArticleTag(e));
+
+    let newTag = document.createElement('span');
+    newTag.className = 'result-selected';
+    newTag.dataset.tagId = id;
+    newTag.dataset.tagName = name;
+    newTag.innerHTML = html;
+    newTag.appendChild(imgClose);
+    tags.appendChild(newTag);
+  }
 
   document.querySelector('#search-results-tags').classList.add('null');
   document.querySelector('input[name="tags"]').value = '';
   allResults.forEach(r => r.classList.remove('null'));
+  tagId = Number.parseInt(tagId);
 
-  const tagIdentifier = tagId ?? tagName;
-  let existingTag = [];
-  document.querySelectorAll('#tags-selected > .result-selected')
-    .forEach(s => {
-      const currentIdentifier = s.dataset.tagId
-        ? Number.parseInt(s.dataset.tagId)
-        : s.dataset.tagName;
-      if (tagIdentifier === currentIdentifier) {
-        s.classList.add('highlight-effect');
-        setTimeout(() => s.classList.remove('highlight-effect'), 2000);
-      }
-      existingTag.push(currentIdentifier);
-    });
+  if (tagId) {
+    let existingTag = [];
+    document.querySelectorAll('#tags-selected > .result-selected')
+      .forEach(s => {
+        if (tagId === Number.parseInt(s.dataset.tagId)) {
+          s.classList.add('highlight-effect');
+          setTimeout(() => s.classList.remove('highlight-effect'), 2000);
+        }
+        existingTag.push(Number.parseInt(s.dataset.tagId));
+      });
 
-  if (existingTag.includes(tagIdentifier)) {
+    if (existingTag.includes(tagId)) {
+      return;
+    }
+
+    generateNewTagHtml(tagId, tagName, tagInnerHtml);
     return;
   }
 
-  let imgClose = new Image();
-  imgClose.className = 'img-svg m-l-05';
-  imgClose.title = global.get('globalRemove');
-  imgClose.alt = global.get('globalRemove');
-  imgClose.src = '/img/svg/x.svg';
-  imgClose.addEventListener('click', (e) => handleRemoveArticleTag(e));
-
-  let newTag = document.createElement('span');
-  newTag.className = 'result-selected';
-  if (tagId) {
-    newTag.dataset.tagId = tagId;
-  }
-  newTag.dataset.tagName = tagName;
-  newTag.innerHTML = tagInnerHtml;
-  newTag.appendChild(imgClose);
-  tags.appendChild(newTag);
+  xhr.post('/back/tag', JSON.stringify({name: tagName}))
+    .then(res => {
+      if (tagElement) {
+        tagElement.parentNode.removeChild(tagElement);
+      }
+      generateNewTagHtml(res.id, tagName, tagInnerHtml);
+    });
 };
 
 document.querySelectorAll('input[name="tags"]').forEach(el => {
@@ -988,7 +998,9 @@ document.querySelectorAll('input[name="tags"]').forEach(el => {
       newTag.dataset.tagName = inputText;
       newTag.dataset.new = '1';
       newTag.innerHTML = '<span class="new-tag">New</span>' + inputText;
-      newTag.addEventListener('click', () => handleSearchResultClick(null, inputText, newTag.innerHTML));
+      newTag.addEventListener('click', () => {
+        handleSearchResultClick(null, inputText, newTag.innerHTML, newTag);
+      });
       searchResultEl.appendChild(newTag);
     }
   });
@@ -1001,4 +1013,8 @@ document.querySelectorAll('a.search-results-close').forEach(el => {
     e.preventDefault();
     document.querySelector('#search-results-tags').classList.add('null');
   });
+});
+
+document.querySelectorAll('.result-selected > img').forEach(i => {
+  i.addEventListener('click', (e) => handleRemoveArticleTag(e));
 });

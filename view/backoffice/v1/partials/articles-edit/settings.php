@@ -1,6 +1,7 @@
 <?php
 use uve\core\model\response\HtmlResponseDataAuthorised;
 use uve\Core\Model\Util\LookupTableBasicValue;
+use uve\core\module\article\model\Tag;
 use uve\core\util\DateUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
@@ -9,8 +10,8 @@ $article = $responseData->getFirstArticle();
 $d = new DateTime();
 $minPublishAt = $d->format('Y-m-d');
 
-$publishAt = $article && $article->getPublishedAt()
-    ? DateUtil::transformFromUtcTo($article->getPublishedAt(), $responseData->getSession()->getTimezone(), 'Y-m-d')
+$publishAt = $article && $article->getPublishOn()
+    ? DateUtil::transformFromUtcTo($article->getPublishOn(), $responseData->getSession()->getTimezone(), 'Y-m-d')
     : '';
 
 $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($article
@@ -26,7 +27,14 @@ $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' . ($arti
   </div>
   <div class="field">
     <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
-    <div id="tags-selected"></div>
+    <div id="tags-selected">
+<?php
+    /** @var Tag $tag */
+    foreach ($article->getTags() as $tag) {
+?>
+      <span class="result-selected" data-tag-id="<?=$tag->getId()?>" data-tag-name="<?=$tag->getName()?>"><?=$tag->getName()?><img class="img-svg m-l-05" title="<?=$responseData->getLocalValue('globalRemove')?>" alt="<?=$responseData->getLocalValue('globalRemove')?>" src="/img/svg/x.svg"></span>
+<?php } ?>
+    </div>
     <div class="control">
       <input class="input search-input" id="tags" name="tags" type="text" placeholder="<?=$responseData->getLocalValue('globalTags')?>" value="">
       <div class="search-wrapper">

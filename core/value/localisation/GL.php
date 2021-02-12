@@ -61,6 +61,7 @@ return [
 
     'globalSettings' => 'Configuración',
     'globalClose' => 'Cerrar',
+    'globalRemove' => 'Eliminar',
     'globalFormat' => 'Formato',
     'globalRequired' => 'Obrigatorio',
     'globalNew' => 'Novo',

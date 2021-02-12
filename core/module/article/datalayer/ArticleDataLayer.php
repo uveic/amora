@@ -20,11 +20,13 @@ class ArticleDataLayer
     const ARTICLE_SECTION_IMAGE_TABLE_NAME = 'article_section_image';
 
     const ARTICLE_IMAGE_RELATION_TABLE_NAME = 'article_image_relation';
+    const ARTICLE_TAG_RELATION_TABLE_NAME = 'article_tag_relation';
 
     public function __construct(
         private MySqlDb $db,
         private Logger $logger,
-        private ImageDataLayer $imageDataLayer
+        private ImageDataLayer $imageDataLayer,
+        private TagDataLayer $tagDataLayer,
     ) {}
 
     public function getDb(): MySqlDb
@@ -37,6 +39,7 @@ class ArticleDataLayer
         ?int $statusId = null,
         ?int $typeId = null,
         ?string $uri = null,
+        bool $includeTags = false,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -112,6 +115,9 @@ class ArticleDataLayer
 
         $output = [];
         foreach ($res as $item) {
+            if ($includeTags) {
+                $item['tags'] = $this->tagDataLayer->getTagsForArticleId($item['article_id']);
+            }
             $output[] = Article::fromArray($item);
         }
 
@@ -120,12 +126,12 @@ class ArticleDataLayer
 
     public function getAllArticles(?QueryOptions $queryOptions): array
     {
-        return $this->getArticles(null, null, null, null, $queryOptions);
+        return $this->getArticles(null, null, null, null, false, $queryOptions);
     }
 
-    public function getArticleForId(int $id): ?Article
+    public function getArticleForId(int $id, $includeTags = false): ?Article
     {
-        $res = $this->getArticles($id);
+        $res = $this->getArticles($id, null, null, null, $includeTags);
         return empty($res[0]) ? null : $res[0];
     }
 
@@ -141,7 +147,7 @@ class ArticleDataLayer
         ?QueryOptions $queryOptions = null
     ): array
     {
-        return $this->getArticles(null, $statusId, $typeId, null, $queryOptions);
+        return $this->getArticles(null, $statusId, $typeId, null, false, $queryOptions);
     }
 
     public function updateArticle(Article $article): bool

@@ -4,35 +4,20 @@ namespace uve\core\database;
 
 use PDO;
 use Throwable;
-use uve\core\Core;
 use uve\core\Logger;
 
 final class MySqlDb
 {
     private ?PDO $connection = null;
-
-    private string $host;
-    private string $user;
-    private string $password;
-    private string $name;
-
     private bool $isInTransactionMode = false;
 
-    private Logger $logger;
-
     public function __construct(
-        Logger $logger,
-        string $host,
-        string $user,
-        string $password,
-        string $name
-    ) {
-        $this->logger = $logger;
-        $this->host = $host;
-        $this->user = $user;
-        $this->password = $password;
-        $this->name = $name;
-    }
+        private Logger $logger,
+        private string $host,
+        private string $user,
+        private string $password,
+        private string $name
+    ) {}
 
     public function getDbName(): string
     {
@@ -95,30 +80,39 @@ final class MySqlDb
         return $res;
     }
 
-    public function insert(string $tableName, array $data): int
+    public function insert(string $tableName, array $data): ?int
     {
-        $this->connect();
+        try {
+            $this->connect();
 
-        $fields = $this->getTableFields($tableName);
+            $fields = $this->getTableFields($tableName);
 
-        $sql = "INSERT INTO " . $tableName . " SET ";
-        $params = array();
+            $sql = "INSERT INTO " . $tableName . " SET ";
+            $params = array();
 
-        $i = 0;
-        foreach ($data as $key => $value) {
-            $value = is_bool($value) ? ($value ? 1 : 0) : $value;
-            if (in_array($key, $fields['fields'])) {
-                if ($i > 0) {
-                    $sql .= ', ';
+            $i = 0;
+            foreach ($data as $key => $value) {
+                $value = is_bool($value) ? ($value ? 1 : 0) : $value;
+                if (in_array($key, $fields['fields'])) {
+                    if ($i > 0) {
+                        $sql .= ', ';
+                    }
+                    $sql .= "`$key` = :$key";
+                    $params[':' . $key] = $value;
+                    $i++;
                 }
-                $sql .= "`$key` = :$key";
-                $params[':' . $key] = $value;
-                $i++;
             }
+
+            $this->execute($sql, $params);
+            $lastInsertedId = $this->connection->lastInsertId();
+        } catch (Throwable $t) {
+            $this->logger->logError(
+                'Error inserting entry into ' . $tableName . ' - Error message: ' . $t->getMessage()
+            );
+            return null;
         }
 
-        $this->execute($sql, $params);
-        return $this->connection->lastInsertId();
+        return empty($lastInsertedId) ? null : (int)$lastInsertedId;
     }
 
     public function update(string $tableName, int $id, array $data): bool
@@ -154,6 +148,8 @@ final class MySqlDb
         array $fields = array(),
         array $where = array()
     ): array {
+        $this->connect();
+
         $sql = "SELECT ";
 
         if ($fields) {
@@ -192,25 +188,34 @@ final class MySqlDb
     public function delete(string $tableName, array $where): bool
     {
         if (empty($tableName) || empty($where)) {
-            Core::getDefaultLogger()->logInfo('MySqlDb::delete => Parameters not valid');
+            $this->logger->logInfo('MySqlDb::delete => Parameters not valid');
 
             return false;
         }
 
-        $params = [];
-        $sql = "DELETE FROM $tableName WHERE ";
-        $i = 0;
-        foreach ($where as $key => $value) {
-            if ($i > 0) {
-                $sql .= " AND ";
+        try {
+            $params = [];
+            $sql = "DELETE FROM $tableName WHERE ";
+            $i = 0;
+            foreach ($where as $key => $value) {
+                if ($i > 0) {
+                    $sql .= " AND ";
+                }
+
+                $sql .= "`$key` = :$key";
+                $params[':' . $key] = $value;
+                $i++;
             }
 
-            $sql .= "`$key` = :$key";
-            $params[':' . $key] = $value;
-            $i++;
+            $res = $this->execute($sql, $params);
+        } catch (Throwable $t) {
+            $this->logger->logError(
+                'Error deleting entry from ' . $tableName . ' - Error message: ' . $t->getMessage()
+            );
+            return false;
         }
 
-        return $this->execute($sql, $params);
+        return $res;
     }
 
     private function getTableFields(string $tableName): array
@@ -267,7 +272,7 @@ final class MySqlDb
         }
 
         if (!is_callable($f)) {
-            Core::getDefaultLogger()->logInfo(
+            $this->logger->logInfo(
                 'MySqlDb::withTransaction: Provided parameter is not Callable'
             );
 
@@ -381,7 +386,7 @@ final class MySqlDb
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->connection->exec("SET names utf8mb4;SET time_zone = " . date('P') . ";");
         } catch (Throwable $t) {
-            Core::getDefaultLogger()->logInfo(
+            $this->logger->logInfo(
                 'Error establishing DB connection: ' . $t->getMessage()
             );
         }

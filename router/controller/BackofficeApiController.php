@@ -8,8 +8,10 @@ use uve\core\Logger;
 use uve\core\model\Response;
 use uve\core\module\action\service\ActionService;
 use uve\core\module\article\model\Article;
+use uve\core\module\article\model\Tag;
 use uve\core\module\article\service\ArticleService;
 use uve\core\module\article\service\ImageService;
+use uve\core\module\article\service\TagService;
 use uve\core\module\article\value\ArticleStatus;
 use uve\core\module\article\value\ArticleType;
 use uve\core\module\user\model\User;
@@ -26,6 +28,7 @@ use uve\router\controller\response\BackofficeApiControllerDestroyUserFailureResp
 use uve\router\controller\response\BackofficeApiControllerDestroyUserSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerGetTagsSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerStoreArticleSuccessResponse;
+use uve\router\controller\response\BackofficeApiControllerStoreTagFailureResponse;
 use uve\router\controller\response\BackofficeApiControllerStoreTagSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerStoreUserSuccessResponse;
 use uve\router\controller\response\BackofficeApiControllerUpdateArticleFailureResponse;
@@ -42,6 +45,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         private UserService $userService,
         private ArticleService $articleService,
         private ImageService $imageService,
+        private TagService $tagService
     ) {
         parent::__construct();
     }
@@ -290,6 +294,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
+        if (empty($publishOn)) {
+            $publishOn = $statusId === ArticleStatus::PUBLISHED ? $now : null;
+        }
+
         $res = $this->articleService->createNewArticle(
             new Article(
                 null,
@@ -298,14 +306,14 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $typeId ?? ArticleType::HOME,
                 $now,
                 $now,
-                $statusId === ArticleStatus::PUBLISHED ? $now : null,
+                $publishOn,
                 $title,
                 html_entity_decode($contentHtml),
                 $mainImageSrc,
                 $uri,
-                []
             ),
-            $sections,
+            $sections ?? [],
+            $tags ?? [],
             $request->getSourceIp(),
             $request->getUserAgent()
         );
@@ -369,13 +377,14 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $typeId ?? $existingArticle->getTypeId(),
                 $existingArticle->getCreatedAt(),
                 $now,
-                $now,
+                $publishOn ?? $existingArticle->getPublishOn(),
                 $title ?? $existingArticle->getTitle(),
                 $contentHtml ?? $existingArticle->getContentHtml(),
                 $mainImageSrc ?? $existingArticle->getMainImageSrc(),
                 $uri
             ),
             $sections,
+            $tags ?? [],
             $request->getSourceIp(),
             $request->getUserAgent()
         );
@@ -410,7 +419,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $existingArticle->getTypeId(),
                 $existingArticle->getCreatedAt(),
                 DateUtil::getCurrentDateForMySql(),
-                $existingArticle->getPublishedAt(),
+                $existingArticle->getPublishOn(),
                 $existingArticle->getTitle(),
                 $existingArticle->getContentHtml(),
                 $existingArticle->getMainImageSrc(),
@@ -433,7 +442,18 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     protected function storeTag(string $name, Request $request): Response
     {
-        return new BackofficeApiControllerStoreTagSuccessResponse(rand(1, 1000));
+        $existingTag = $this->tagService->getTagForName($name);
+        if ($existingTag) {
+            return new BackofficeApiControllerStoreTagSuccessResponse(true, $existingTag->getId());
+        }
+
+        $res = $this->tagService->storeTag(new Tag(null, $name));
+
+        if (empty($res)) {
+            return new BackofficeApiControllerStoreTagFailureResponse();
+        }
+
+        return new BackofficeApiControllerStoreTagSuccessResponse(true, $res->getId());
     }
 
     /**
@@ -446,18 +466,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     protected function getTags(?string $name, Request $request): Response
     {
-        $tags = [
-            ['id' => 1, 'name' => 'Strawberry'],
-            ['id' => 2, 'name' => 'Lemon'],
-            ['id' => 3, 'name' => 'Orange'],
-            ['id' => 4, 'name' => 'Blueberry'],
-            ['id' => 5, 'name' => 'Banana'],
-            ['id' => 6, 'name' => 'Watermelon'],
-            ['id' => 7, 'name' => 'Pear'],
-            ['id' => 8, 'name' => 'Peach'],
-            ['id' => 9, 'name' => 'Avocado'],
-        ];
-
+        $tags = $this->tagService->getAllTags(true);
         return new BackofficeApiControllerGetTagsSuccessResponse(true, $tags);
     }
 }

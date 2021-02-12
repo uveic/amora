@@ -187,7 +187,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getEditArticlePage(int $articleId, Request $request): Response
     {
-        $article = $this->articleService->getArticleForId($articleId);
+        $article = $this->articleService->getArticleForId($articleId, true);
         if (empty($article)) {
             return Response::createFrontendPublicHtmlResponse(
                 'shared/404',

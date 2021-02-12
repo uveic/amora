@@ -15,12 +15,13 @@ class Article
         private int $typeId,
         private string $createdAt,
         private string $updatedAt,
-        private ?string $publishedAt,
+        private ?string $publishOn,
         private ?string $title,
         private string $contentHtml,
         private ?string $mainImageSrc,
         private string $uri,
-        private array $sections = []
+        private array $sections = [],
+        private array $tags = [],
     ) {}
 
     public static function fromArray(array $article): self
@@ -48,7 +49,9 @@ class Article
             $article['title'] ?? null,
             $article['content_html'],
             empty($article['main_image_src']) ? null : $article['main_image_src'],
-            $article['uri']
+            $article['uri'],
+            $article['sections'] ?? [],
+            $article['tags'] ?? [],
         );
     }
 
@@ -62,11 +65,12 @@ class Article
             'type_id' => $this->getTypeId(),
             'created_at' => $this->getCreatedAt(),
             'updated_at' => $this->getUpdatedAt(),
-            'published_at' => $this->getPublishedAt(),
+            'published_at' => $this->getPublishOn(),
             'title' => $this->getTitle(),
             'content_html' => $this->getContentHtml(),
             'main_image_src' => $this->getMainImageSrc(),
             'uri' => $this->getUri(),
+            'tags' => $this->getTags()
         ];
     }
 
@@ -115,9 +119,9 @@ class Article
         return $this->updatedAt;
     }
 
-    public function getPublishedAt(): ?string
+    public function getPublishOn(): ?string
     {
-        return $this->publishedAt;
+        return $this->publishOn;
     }
 
     public function getTitle(): ?string
@@ -145,17 +149,22 @@ class Article
         return $this->uri;
     }
 
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
     public function isPublished(): bool
     {
         if ($this->getStatusId() !== ArticleStatus::PUBLISHED) {
             return false;
         }
 
-        if (!$this->getPublishedAt()) {
+        if (!$this->getPublishOn()) {
             return false;
         }
 
-        if (strtotime($this->getPublishedAt()) > time()) {
+        if (strtotime($this->getPublishOn()) > time()) {
             return false;
         }
 
