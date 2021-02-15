@@ -12,25 +12,25 @@ const exec = (command, value = null) => document.execCommand(command, false, val
 
 const defaultActions = {
   bold: {
-    icon: '<b>B</b>',
+    icon: '<img src="/img/svg/text-bolder.svg" class="img-svg" title="' + global.get('editorBold') + '" alt="' + global.get('editorBold') + '">',
     title: global.get('editorBold'),
     state: () => queryCommandState('bold'),
     result: () => exec('bold')
   },
   italic: {
-    icon: '<i>I</i>',
+    icon: '<img src="/img/svg/text-italic.svg" class="img-svg" title="' + global.get('editorItalic') + '" alt="' + global.get('editorItalic') + '">',
     title: global.get('editorItalic'),
     state: () => queryCommandState('italic'),
     result: () => exec('italic')
   },
   underline: {
-    icon: '<u>U</u>',
+    icon: '<img src="/img/svg/text-underline.svg" class="img-svg" title="' + global.get('editorUnderline') + '" alt="' + global.get('editorUnderline') + '">',
     title: global.get('editorUnderline'),
     state: () => queryCommandState('underline'),
     result: () => exec('underline')
   },
   strikethrough: {
-    icon: '<del>S</del>',
+    icon: '<img src="/img/svg/text-strikethrough.svg" class="img-svg" title="' + global.get('editorStrikeThrough') + '" alt="' + global.get('editorStrikeThrough') + '">',
     title: global.get('editorStrikeThrough'),
     state: () => queryCommandState('strikeThrough'),
     result: () => exec('strikeThrough')
@@ -61,12 +61,12 @@ const defaultActions = {
     result: () => exec(formatBlock, '<blockquote>')
   },
   olist: {
-    icon: '&#35;',
+    icon: '<img src="/img/svg/list-numbers.svg" class="img-svg" title="' + global.get('editorOrderedList') + '" alt="' + global.get('editorOrderedList') + '">',
     title: global.get('editorOrderedList'),
     result: () => exec('insertOrderedList')
   },
   ulist: {
-    icon: '&#8226;',
+    icon: '<img src="/img/svg/list-dashes.svg" class="img-svg" title="' + global.get('editorUnorderedList') + '" alt="' + global.get('editorUnorderedList') + '">',
     title: global.get('editorUnorderedList'),
     result: () => exec('insertUnorderedList')
   },
@@ -81,7 +81,7 @@ const defaultActions = {
     result: () => exec('insertHorizontalRule')
   },
   link: {
-    icon: '<img src="/img/svg/link.svg" class="img-svg m-t-0" alt="Insert link">',
+    icon: '<img src="/img/svg/link.svg" class="img-svg" title="' + global.get('editorInsertLink') + '" alt="' + global.get('editorInsertLink') + '">',
     title: global.get('editorInsertLink'),
     result: () => {
       const url = window.prompt('Enter the link URL')
@@ -97,7 +97,7 @@ const defaultActions = {
     }
   },
   eraser: {
-    icon: '✕',
+    icon: '<img src="/img/svg/x.svg" class="img-svg" title="' + global.get('editorClearFormat') + '" alt="' + global.get('editorClearFormat') + '">',
     title: global.get('editorClearFormat'),
     result: () => {
       exec('removeFormat');
@@ -205,9 +205,6 @@ function loadEditor(elementId, elementHtmlId = null) {
       'strikethrough',
       'olist',
       'ulist',
-      'heading1',
-      'heading2',
-      'paragraph',
       'link',
       'eraser'
     ],

@@ -293,6 +293,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 StringUtil::getRandomString(32)
             );
         }
+        $uri = StringUtil::cleanString(trim($uri, '/ '));
 
         if (empty($publishOn)) {
             $publishOn = $statusId === ArticleStatus::PUBLISHED ? $now : null;
@@ -365,6 +366,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 StringUtil::getRandomString(32)
             );
         }
+        $uri = StringUtil::cleanString(trim($uri, '/ '));
 
         $contentHtml = html_entity_decode($contentHtml);
         $now = DateUtil::getCurrentDateForMySql();

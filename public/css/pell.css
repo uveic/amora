@@ -6,7 +6,7 @@
   height: auto;
   padding: 0 1rem;
   min-height: 150px;
-  border: 1px solid var(--light-bg-color-2);
+  border: 1px solid var(--light-bg-color-3);
 }
 
 .pell-content h1, .pell-content h2 {
@@ -23,15 +23,20 @@
 }
 
 .pell-actionbar{
-  border: 1px solid var(--light-bg-color-2);
+  border: 1px solid var(--light-bg-color-3);
   border-bottom: none;
   display: flex;
   margin-top: 1rem;
 }
 
-.pell-actionbar-right {
+.pell-actionbar-right,
+.pell-actionbar-left {
   display: flex;
   flex-grow: 1;
+  align-items: stretch;
+}
+
+.pell-actionbar-right {
   justify-content: flex-end;
 }
 

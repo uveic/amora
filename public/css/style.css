@@ -334,7 +334,7 @@ ul.user-nav-menu a:hover {
   list-style: none;
   position: absolute;
   right: 0;
-  top: 27px;
+  top: 25px;
   padding: 0;
   z-index: 900;
 }
@@ -344,7 +344,7 @@ ul.user-nav-menu a:hover {
 }
 
 .dropdown-menu ~ div > ul a:hover {
-  opacity: 0.9;
+  opacity: 0.95;
 }
 /* Dropdown style ends here */
 

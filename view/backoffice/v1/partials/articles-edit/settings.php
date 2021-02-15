@@ -7,6 +7,7 @@ use uve\core\util\DateUtil;
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
 
+$articleTags = $article ? $article->getTags() : [];
 $d = new DateTime();
 $minPublishAt = $d->format('Y-m-d');
 
@@ -14,14 +15,23 @@ $publishOn = $article && $article->getPublishOn()
     ? DateUtil::transformFromUtcTo($article->getPublishOn(), $responseData->getSession()->getTimezone(), 'Y-m-d')
     : '';
 
-$createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
-    ($article
-        ? DateUtil::getElapsedTimeString($article->getCreatedAt(), $responseData->getSiteLanguage(), false, true) .
-        ' (' . DateUtil::formatUtcDate($article->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone()) . ')'
-        : ''
-    );
-
-$createdAtContent .= ' ' . $responseData->getLocalValue('globalBy') . ' ' . $article->getUser()->getName() . '.';
+$createdAtContent = '';
+if ($article) {
+    $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
+        DateUtil::getElapsedTimeString(
+            $article->getCreatedAt(), $responseData->getSiteLanguage(), false, true
+        ) . ' ('
+        . DateUtil::formatUtcDate(
+            $article->getCreatedAt(),
+            $responseData->getSiteLanguage(),
+            true,
+            true,
+            $responseData->getTimezone()
+        ) . ')'
+        . ' '
+        . $responseData->getLocalValue('globalBy') . ' '
+        . $article->getUser()->getName() . '.';
+}
 
 ?>
 <div id="side-options" class="side-options null">
@@ -34,7 +44,7 @@ $createdAtContent .= ' ' . $responseData->getLocalValue('globalBy') . ' ' . $art
     <div id="tags-selected">
 <?php
     /** @var Tag $tag */
-    foreach ($article->getTags() as $tag) {
+    foreach ($articleTags as $tag) {
 ?>
       <span class="result-selected" data-tag-id="<?=$tag->getId()?>" data-tag-name="<?=$tag->getName()?>"><?=$tag->getName()?><img class="img-svg m-l-05" title="<?=$responseData->getLocalValue('globalRemove')?>" alt="<?=$responseData->getLocalValue('globalRemove')?>" src="/img/svg/x.svg"></span>
 <?php } ?>

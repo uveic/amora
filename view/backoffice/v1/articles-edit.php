@@ -36,13 +36,15 @@ function getControlButtonsHtml(
         . '</div>' . PHP_EOL;
 }
 
-function generateSection(ArticleSection $articleSection): string
-{
+function generateSection(
+    HtmlResponseDataAuthorised $responseData,
+    ArticleSection $articleSection
+): string {
     if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
         $class = getClassName($articleSection->getArticleSectionTypeId());
         $id = $class . '-' . $articleSection->getId();
-        return '<section id="' . $id . '" data-editor-id="' . $articleSection->getId() . '" class="article-section article-content article-section-paragraph placeholder" data-placeholder="Type something...">' . PHP_EOL
-            . '<div class="pell-content ' . $id . '" contenteditable="true">' . $articleSection->getContentHtml() . '</div>' . PHP_EOL
+        return '<section id="' . $id . '" data-editor-id="' . $articleSection->getId() . '" class="article-section article-content article-section-paragraph">' . PHP_EOL
+            . '<div class="pell-content placeholder ' . $id . '" data-placeholder="' . $responseData->getLocalValue('paragraphPlaceholder') . '" contenteditable="true">' . $articleSection->getContentHtml() . '</div>' . PHP_EOL
             . '</section>';
     }
 
@@ -69,7 +71,7 @@ function generateSection(ArticleSection $articleSection): string
     foreach ($articleSections as $articleSection) {
 ?>
         <div id="article-section-wrapper-<?=$articleSection->getId()?>" class="article-section-wrapper" data-section-id="<?=$articleSection->getId()?>">
-          <?=generateSection($articleSection)?>
+          <?=generateSection($responseData, $articleSection)?>
           <?=getControlButtonsHtml($responseData, $articleSection->getId(), $count === 0, $count === $total - 1)?>
         </div>
 <?php

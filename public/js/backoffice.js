@@ -239,7 +239,10 @@ document.querySelectorAll('.article-save-button').forEach(el => {
         previewLink.target = '_blank';
         previewLink.className = 'article-preview m-l-1';
         previewLink.textContent = global.get('globalPreview');
-        document.querySelectorAll('.article-control-bar-buttons').forEach(b => b.appendChild(previewLink));
+        document.querySelectorAll('.article-control-bar-buttons').forEach(b => {
+          const newButton = previewLink.cloneNode(true);
+          b.appendChild(newButton);
+        });
       }
       document.querySelectorAll('.control-bar-creation').forEach(a => a.classList.remove('hidden'));
       document.querySelectorAll('span.article-updated-at').forEach(s => {
@@ -252,10 +255,15 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       });
 
       document.querySelectorAll('#side-options').forEach(i => i.classList.add('null'));
-      document.querySelectorAll('.article-save-button').forEach(b => b.value = global.get('globalUpdate'));
+      document.querySelectorAll('.article-save-button').forEach(b => {
+        b.value = global.get('globalUpdate');
+      });
       document.querySelectorAll('.article-preview').forEach(b => {
-          b.href = response.uri + '?preview=true'
+          b.href = response.uri + '?preview=true';
         });
+      document.querySelectorAll('input[name="articleUri"]').forEach(i => {
+        i.value = response.uri.trim().replace(/^\//,"");
+      });
     };
 
     const titleEl = document.querySelector('#article-title-main');
@@ -629,12 +637,12 @@ document.querySelectorAll('.article-add-section-paragraph').forEach(bu => {
     let articleSectionText = document.createElement('section');
     articleSectionText.id = sectionId;
     articleSectionText.dataset.editorId = id;
-    articleSectionText.className = 'article-section article-content article-section-paragraph placeholder';
-    articleSectionText.dataset.placeholder = global.get('editorParagraphPlaceholder');
+    articleSectionText.className = 'article-section article-content article-section-paragraph';
 
     let divEditor = document.createElement('div');
-    divEditor.className = 'pell-content ' + sectionId;
+    divEditor.className = 'pell-content placeholder ' + sectionId;
     divEditor.contentEditable = 'true';
+    divEditor.dataset.placeholder = global.get('editorParagraphPlaceholder');
     articleSectionText.appendChild(divEditor);
 
     generateSectionWrapperFor(articleSectionText, id);
