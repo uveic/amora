@@ -183,6 +183,11 @@ input.is-light {
   background-color: var(--light-bg-color-2);
 }
 
+.article-section-title,
+.article-section-subtitle {
+  border: 1px solid var(--light-bg-color-3);
+}
+
 .placeholder:focus {
   background-color: var(--light-bg-color);
   outline: 0;

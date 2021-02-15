@@ -527,8 +527,8 @@ label:not(:last-child) {
 }
 
 .article-subtitle {
-  margin: 1rem 0;
-  padding: 0 1rem;
+  margin: 0;
+  padding: 1rem;
   font-size: 1.2rem;
   font-family: var(--font-h1-title);
   font-weight: bold;
