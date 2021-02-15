@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const util = require('./lib/util');
 
-const controllerFolderPath = __dirname + '/../controller/';
+const controllerFolderPath = __dirname + '/../../../router/controller/';
 const phpControllerTemplate = require('./class.php');
 const phpResponsesTemplate = require('./responses.php');
 
