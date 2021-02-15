@@ -3,6 +3,7 @@
 namespace uve\core\module\user\service;
 
 use UserAgentParserUtil;
+use uve\core\Core;
 use uve\core\Logger;
 use uve\core\module\user\dataLayer\SessionDataLayer;
 use uve\core\module\user\model\Session;
@@ -76,12 +77,20 @@ class SessionService
 
     private function updateBrowserCookie(string $sid, string $newExpiryTimestamp)
     {
-        setcookie(
-            self::SESSION_ID_COOKIE_NAME,
-            $sid,
-            $newExpiryTimestamp,
-            '/'
-        );
+        $isLive = Core::isRunningInLiveEnv();
+        $options = [
+            'expires' => $newExpiryTimestamp,
+            'path' => '/',
+            'secure' => $isLive ? true : false,
+            'httponly' => true,
+            'samesite' => 'Strict',
+        ];
+
+        if ($isLive) {
+            $options['domain'] = '.' . parse_url(Core::getConfigValue('baseUrl'), PHP_URL_HOST);
+        }
+
+        setcookie(self::SESSION_ID_COOKIE_NAME, $sid, $options);
         $_COOKIE[self::SESSION_ID_COOKIE_NAME] = $sid;
     }
 
