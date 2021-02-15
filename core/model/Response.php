@@ -39,14 +39,10 @@ class Response
             [
                 $httpStatus,
                 "Content-Type: $contentType",
-                "Cache-Control: public"
+                "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate, no-store",
             ],
             $headers
         );
-//                "Cache-Control: max-age=2628000, public"
-//                "Cache-Control: no-cache, no-store, must-revalidate",
-//                "Pragma: no-cache",
-//                "Expires: 0"
     }
 
     public function getOutput(): string
