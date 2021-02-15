@@ -51,10 +51,10 @@ class UserCore extends Core
         return self::getInstance(
             'UserService',
             function () use ($logger, $userDataLayer, $sessionService, $userMailService) {
-                require_once Core::getPathRoot() . '/core/module/user/value/VerificationType.php';
-                require_once Core::getPathRoot() . '/core/module/user/value/UserRole.php';
-                require_once Core::getPathRoot() . '/core/module/user/model/UserVerification.php';
-                require_once Core::getPathRoot() . '/core/module/user/model/UserRegistrationRequest.php';
+                require_once self::getPathRoot() . '/core/module/user/value/VerificationType.php';
+                require_once self::getPathRoot() . '/core/module/user/value/UserRole.php';
+                require_once self::getPathRoot() . '/core/module/user/model/UserVerification.php';
+                require_once self::getPathRoot() . '/core/module/user/model/UserRegistrationRequest.php';
                 require_once self::getPathRoot() . '/core/module/user/model/User.php';
                 require_once self::getPathRoot() . '/core/module/user/service/UserService.php';
                 return new UserService($logger, $userDataLayer, $sessionService, $userMailService);

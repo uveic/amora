@@ -17,12 +17,12 @@ class MailerCore extends Core
 {
     public static function getDb(): MySqlDb
     {
-        return Core::getMailerDb();
+        return self::getMailerDb();
     }
 
     public static function getMailerLogger(): Logger
     {
-        return Core::getLogger('mailer_module_logger');
+        return self::getLogger('mailer_module_logger');
     }
 
     public static function getMailerDataLayer(): MailerDataLayer
@@ -69,7 +69,7 @@ class MailerCore extends Core
             function () {
                 $logger = self::getMailerLogger();
 
-                $config = Core::getConfig();
+                $config = self::getConfig();
                 if (empty($config['mailer']['from']['email'])) {
                     $logger->logError("Missing 'mailer.from.email' section from config");
                     exit;
@@ -125,7 +125,7 @@ class MailerCore extends Core
             function () {
                 $logger = self::getMailerLogger();
 
-                $config = Core::getConfig();
+                $config = self::getConfig();
                 if (empty($config['mailer']['sendgrid']['baseApiUrl'])) {
                     $logger->logError("Missing 'mailer.sendgrid.baseApiUrl' section from config");
                     exit;

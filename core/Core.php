@@ -205,7 +205,7 @@ class Core
         return self::getInstance(
             $dbClassname,
             function () use ($dbIdentifier) {
-                $config = Core::getConfig();
+                $config = self::getConfig();
                 if (empty($config['db'])) {
                     self::getDefaultLogger()->logError("Missing 'db' section from config");
                     exit;
@@ -236,7 +236,7 @@ class Core
                     exit;
                 }
 
-                $logger = Core::getLogger($dbIdentifier . '_database');
+                $logger = self::getLogger($dbIdentifier . '_database');
                 $host = $config['db'][$dbIdentifier]['host'];
                 $user = $config['db'][$dbIdentifier]['user'];
                 $pass = $config['db'][$dbIdentifier]['password'];
@@ -275,7 +275,7 @@ class Core
      */
     public static function getSyncLookupTablesApp(): SyncLookupTablesApp
     {
-        $logger = Core::getLogger('sync_lookup_tables');
+        $logger = self::getLogger('sync_lookup_tables');
 
         return self::getInstance(
             'SyncLookupTablesApp',
@@ -293,7 +293,7 @@ class Core
      */
     public static function getLocalisationUtil(string $siteLanguage): LocalisationUtil
     {
-        $logger = Core::getLogger('localisation_util');
+        $logger = self::getLogger('localisation_util');
         $defaultSiteLanguage = strtoupper(self::getConfigValue('defaultSiteLanguage') ?? 'EN');
 
         return self::getInstance(
