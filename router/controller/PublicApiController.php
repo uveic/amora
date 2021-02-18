@@ -213,6 +213,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             if (!$isRegistrationEnabled) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
+                    null,
                     $localisationUtil->getValue('authenticationUserRegistrationDisabled')
                 );
             }
@@ -222,6 +223,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             if (!StringUtil::isEmailAddressValid($email)) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
+                    null,
                     $localisationUtil->getValue('authenticationEmailNotValid')
                 );
             }
@@ -229,6 +231,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
+                    null,
                     $localisationUtil->getValue('authenticationPasswordTooShort')
                 );
             }
@@ -239,6 +242,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                 $siteLanguage = strtolower($request->getSiteLanguage());
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
+                    null,
                     sprintf($localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'), UrlBuilderUtil::getBaseLinkUrl($siteLanguage) . '/login')
                 );
             }

@@ -26,7 +26,7 @@ $random = StringUtil::getRandomString(5);
 
 ?>
       <div class="control-bar-wrapper m-b-3 m-t-1">
-        <div class="article-control-bar-buttons">
+        <div class="control-bar-buttons">
           <input style="width: revert;" type="submit" class="button" value="<?=$userToEdit ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
         </div>
         <div class="control-bar-creation"><span><?=$updatedAtContent?></span><br><span><?=$createdAtContent?></span></div>

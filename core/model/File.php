@@ -4,25 +4,13 @@ namespace uve\core\model;
 
 class File
 {
-    private string $name;
-    private string $fullPath;
-    private string $size;
-    private string $type;
-    private int $error;
-
     public function __construct(
-        string $name,
-        string $fullPath,
-        string $size,
-        string $type,
-        int $error
-    ) {
-        $this->name = $name;
-        $this->fullPath = $fullPath;
-        $this->size = $size;
-        $this->type = $type;
-        $this->error = $error;
-    }
+        private string $name,
+        private string $fullPath,
+        private string $size,
+        private string $type,
+        private int $error
+    ) {}
 
     public function getName(): string
     {

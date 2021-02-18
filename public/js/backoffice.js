@@ -202,7 +202,7 @@ const displayUpAndDownArrows = function() {
 const updateArticleUri = (e) => {
   const articleTitleText = e.target.innerText;
   const articleUriInput = document.querySelector('input[name="articleUri"]');
-  const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
+  const articleIdEl = document.querySelector('input[name="articleId"]');
   const cleanInput = cleanTextForUrl(articleTitleText);
 
   const payload = JSON.stringify({
@@ -218,7 +218,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
 
-    const articleIdEl = document.querySelector('#form-article input[name="articleId"]');
+    const articleIdEl = document.querySelector('input[name="articleId"]');
 
     const afterApiCall = function(response, articleUri) {
       if (response.articleId) {
@@ -239,7 +239,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
         previewLink.target = '_blank';
         previewLink.className = 'article-preview m-l-1';
         previewLink.textContent = global.get('globalPreview');
-        document.querySelectorAll('.article-control-bar-buttons').forEach(b => {
+        document.querySelectorAll('.control-bar-buttons').forEach(b => {
           const newButton = previewLink.cloneNode(true);
           b.appendChild(newButton);
         });
@@ -423,7 +423,7 @@ if (inputFileImages) {
 
     const articleImagesDiv = document.querySelector('#images-list');
     const files = inputFileImages.files;
-    const articleIdInput = document.querySelector('#form-article input[name="articleId"]');
+    const articleIdInput = document.querySelector('input[name="articleId"]');
     const eventIdInput = document.querySelector('form#invitation input[name="eventId"]');
     const eventId = eventIdInput ? eventIdInput.value : null;
 
@@ -753,7 +753,7 @@ if (inputArticleImages) {
 
     const articleContentDiv = document.querySelector('article.article-content');
     const files = inputArticleImages.files;
-    const articleIdInput = document.querySelector('#form-article input[name="articleId"]');
+    const articleIdInput = document.querySelector('input[name="articleId"]');
 
     for (let i = 0; i < files.length; i++) {
       let formData = new FormData();

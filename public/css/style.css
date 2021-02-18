@@ -689,9 +689,7 @@ a.link-title:focus {
 .p-b-6 {padding-bottom: 6rem !important;}
 .p-b-10 {padding-bottom: 10rem !important;}
 .light-text-color {color: var(--light-text-color);}
-.light-bg-color {
-  background-color: var(--light-bg-color-3) !important;
-}
+.light-bg-color {background-color: var(--light-bg-color-3) !important;}
 .flex-no-grow {flex-grow: 0 !important;}
 .flex-grow-2 {flex-grow: 2 !important;}
 .flex-grow-3 {flex-grow: 3 !important;}

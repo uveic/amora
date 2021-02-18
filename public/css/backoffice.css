@@ -51,7 +51,7 @@
   border-bottom: 1px solid var(--light-bg-color-3);
 }
 
-.control-bar-wrapper > button {
+.control-bar-wrapper button {
   flex-grow: 0;
   flex-shrink: 0;
   padding: 10px 14px;
@@ -60,10 +60,9 @@
   margin: 0.5rem;
 }
 
-.control-bar-wrapper > div {
-  flex-shrink: 1;
+.control-bar-buttons {
   flex-grow: 1;
-  margin: 0.5rem;
+  flex-shrink: 1;
 }
 
 .control-bar-creation {

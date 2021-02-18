@@ -13,7 +13,7 @@ use uve\core\model\response\HtmlResponseDataAuthorised;
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="<?=$this->e($responseData->getPageDescription())?>">
   <title><?=$this->e($responseData->getPageTitle())?></title>
-  <link href="/css/pell.css" rel="stylesheet" type="text/css">
+  <link href="/css/editor.css" rel="stylesheet" type="text/css">
   <link href="/css/style.css" rel="stylesheet" type="text/css">
   <link href="/css/backoffice.css" rel="stylesheet" type="text/css">
 </head>

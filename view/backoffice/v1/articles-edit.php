@@ -58,7 +58,7 @@ function generateSection(
 <?=$this->insert('partials/articles-edit/settings', ['responseData' => $responseData])?>
 <section>
   <div id="feedback" class="feedback null"></div>
-  <form id="form-article" action="#">
+  <form action="#">
 <?=$this->insert('partials/articles-edit/header', ['responseData' => $responseData])?>
 <?=$this->insert('partials/articles-edit/control-bar', ['responseData' => $responseData])?>
     <div class="content-medium-width">

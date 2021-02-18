@@ -26,7 +26,7 @@ use uve\core\module\user\service\UserService;
         </div>
         <div class="field">
           <p class="control has-icons-left has-icons-right">
-            <input class="input" type="email" id="email" name="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderPassword')?>">
+            <input class="input" type="email" id="email" name="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>">
           </p>
         </div>
         <div class="field">

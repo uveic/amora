@@ -12,7 +12,7 @@ class Global {
   values = {
     "en": {
       "genericError": "Something went wrong, please try again",
-      "genericErrorGetInTouch": "Please, refresh the page and get in touch with support if the error persists. Error: ",
+      "genericErrorGetInTouch": "Please, refresh page and get in touch with support if the error persists. Error: ",
       "feedbackSaving": "Nothing to save...",
 
       "globalRemove": "Remove",

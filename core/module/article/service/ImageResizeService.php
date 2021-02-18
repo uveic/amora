@@ -33,7 +33,7 @@ class ImageResizeService
         $this->mediaBaseUrl = rtrim($mediaBaseUrl, ' /') . '/';
     }
 
-    public function getImageObjectFromUploaded(
+    public function getImageObjectFromUploadedImageFile(
         string $imagePath,
         int $userId,
         ?string $caption = null

@@ -107,7 +107,10 @@ class ImageService
                 return $output;
             }
 
-            $current = $this->imageResizeService->getImageObjectFromUploaded($targetPath, $userId);
+            $current = $this->imageResizeService->getImageObjectFromUploadedImageFile(
+                $targetPath,
+                $userId
+            );
             $output[] = $current;
 
             $key++;
