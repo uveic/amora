@@ -10,9 +10,6 @@ use uve\core\model\response\HtmlResponseDataAbstract;
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="<?=$this->e($responseData->getPageDescription())?>">
-  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <meta property="og:site_name" content="<?=$this->e($responseData->getSiteName())?>">
   <meta property="og:title" content="<?=$this->e($responseData->getPageTitleWithoutSiteName())?>">
   <meta property="og:description" content="<?=$this->e($responseData->getPageDescription())?>">
@@ -27,5 +24,9 @@ use uve\core\model\response\HtmlResponseDataAbstract;
   <meta name="twitter:description" content="<?=$this->e($responseData->getPageDescription())?>">
   <meta name="twitter:image" content="<?=$this->e($responseData->getSiteImageUri())?>">
   <title><?=$this->e($responseData->getPageTitle())?></title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+  <link rel="alternate" href="https://www.convidades.com/" hreflang="x-default">
   <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>

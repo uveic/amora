@@ -21,7 +21,6 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
           <h1 id="register-title" class="logo m-b-3"><?=$this->e($responseData->getSiteName())?></h1>
           <h2 id="register-subtitle"><?=$responseData->getLocalValue('authenticationInviteRequest')?></h2>
           <p class="light-text-color m-b-3"><?=$responseData->getLocalValue('authenticationInviteRequestSubtitle')?></p>
-          <input type="hidden" name="languageIsoCode" value="<?=$responseData->getSiteLanguage()?>">
           <div class="field">
             <p class="control">
               <input class="input" type="email" id="email" name="email" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderEmail'))?>" required>

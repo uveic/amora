@@ -50,11 +50,36 @@ const insertAfter = (el, referenceNode) => {
   referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
 };
 
+const getSectionTypeIdFromClassList = function(classList) {
+  if (classList.contains('article-section-paragraph')) {
+    return 1;
+  }
+
+  if (classList.contains('article-section-image')) {
+    return 2;
+  }
+
+  if (classList.contains('article-section-video')) {
+    return 3;
+  }
+
+  if (classList.contains('article-section-title')) {
+    return 4;
+  }
+
+  if (classList.contains('article-section-subtitle')) {
+    return 5;
+  }
+
+  return 0;
+};
+
 export {
   getUpdatedAtTime,
   cleanTextForUrl,
   getYoutubeVideoIdFromUrl,
   managePlaceholderForEditableElements,
   generateRandomString,
-  insertAfter
+  insertAfter,
+  getSectionTypeIdFromClassList
 };

@@ -43,8 +43,8 @@ return [
 
     'authenticationInviteRequest' => 'Get your invitation',
     'authenticationInviteRequestSubtitle' => 'The site is currently in private beta, we are making sure everything works as expected and looking forward to getting it ready for you. Enter your email address and we\'ll send you an invitation as soon as it\'s ready.<br>Thank you for your patience!',
-    'authenticationInviteRequestActionSuccess' => '<h2>Invitation request received</h2><p>Your email: <b><span id="register-feedback-email"></span></b>.</p><p>Thank you!</p>',
-    'authenticationInviteRequestHomeLink' => 'Go back to the homepage',
+    'authenticationInviteRequestActionSuccess' => '<h2>Invitation request received</h2><p>We will send your invitation as soon as everything is ready. Thank you for your patience!</p><p>Your email: <b><span id="register-feedback-email"></span></b>.</p>',
+    'authenticationInviteRequestHomeLink' => 'Go back to homepage',
     'authenticationInviteRequestFormAction' => 'Request an invitation',
 
     'formPlaceholderUserName' => 'Your name',
@@ -91,6 +91,7 @@ return [
     'globalUser' => 'User',
     'globalUserAccount' => 'User Account',
     'globalUserAccountSettings' => 'User Account Settings',
+    'globalNext' => 'Next',
 
     'globalUploadImage' => 'Upload image(s)',
     'globalAddImage' => 'Add image(s)',
@@ -113,4 +114,16 @@ return [
     'sectionRemove' => 'Remove section',
     'sectionMoveUp' => 'Move Up',
     'sectionMoveDown' => 'Move Down',
+
+    'emailVerificationSubject' => 'Welcome to %s! Confirm Your Email',
+    'emailVerificationContent' => '<p>Welcome!</p>' .
+        '<p>By clicking on the following link, you are confirming your email address.</p>' .
+        '<p><a href="%s">Confirm Your Email</a></p>' .
+        '<p>Thanks,<br>%s</p>',
+    'emailPasswordChangeSubject' => '%s Password Reset',
+    'emailPasswordChangeContent' => '<p>Hi there,</p>' .
+        '<p>We received a request to change the password for your %s account.</p>' .
+        '<p>If you did not make this request, just ignore this email. Otherwise, please click the link below to reset your password:</p>' .
+        '<p><a href="%s">Change Password</a></p>' .
+        '<p>Love,<br>%s</p>',
 ];

@@ -168,11 +168,18 @@
                 "password": {
                   "description": "Password",
                   "type": "string"
+                },
+                "languageIsoCode": {
+                  "description": "Language ISO code",
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 2
                 }
               },
               "required": [
                 "password",
-                "user"
+                "user",
+                "languageIsoCode"
               ]
             }
           }
@@ -357,13 +364,20 @@
                 "verificationHash": {
                   "description": "Verification Hash",
                   "type": "string"
+                },
+                "languageIsoCode": {
+                  "description": "Language ISO code",
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 2
                 }
               },
               "required": [
                 "userId",
                 "password",
                 "passwordConfirmation",
-                "verificationHash"
+                "verificationHash",
+                "languageIsoCode"
               ]
             }
           }
@@ -445,6 +459,12 @@
             "required": true,
             "schema": {
               "properties": {
+                "languageIsoCode": {
+                  "description": "Language ISO code",
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 2
+                },
                 "email": {
                   "description": "Email",
                   "type": "string"
@@ -463,6 +483,7 @@
                 }
               },
               "required": [
+                "languageIsoCode",
                 "password",
                 "email",
                 "name",

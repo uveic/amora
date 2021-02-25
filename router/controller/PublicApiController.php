@@ -112,10 +112,10 @@ final class PublicApiController extends PublicApiControllerAbstract
 
         $userArray = [];
         if ($user) {
-             $userArray = $user->asArray();
-             $userArray['language_name'] = Language::getNameForId($user->getLanguageId());
-             $userArray['role_name'] = UserRole::getNameForId($user->getRoleId());
-             $userArray['journey_status_name'] = UserJourneyStatus::getNameForId($user->getJourneyStatusId());
+            $userArray = $user->asArray();
+            $userArray['language_name'] = Language::getNameForId($user->getLanguageId());
+            $userArray['role_name'] = UserRole::getNameForId($user->getRoleId());
+            $userArray['journey_status_name'] = UserJourneyStatus::getNameForId($user->getJourneyStatusId());
             unset($userArray['password_hash']);
         }
 
@@ -127,15 +127,23 @@ final class PublicApiController extends PublicApiControllerAbstract
      * Endpoint: /api/login
      * Method: POST
      *
-     * @param string $email
+     * @param string $user
      * @param string $password
+     * @param string $languageIsoCode
      * @param Request $request
      * @return Response
      */
-    protected function userLogin(string $email, string $password, Request $request): Response
-    {
-        $user = $this->userService->verifyUser($email, $password);
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+    protected function userLogin(
+        string $user,
+        string $password,
+        string $languageIsoCode,
+        Request $request
+    ): Response {
+        $languageIsoCode = in_array(strtoupper($languageIsoCode), Language::getAvailableIsoCodes())
+            ? strtolower($languageIsoCode)
+            : Core::getConfigValue('defaultSiteLanguage');
+        $user = $this->userService->verifyUser($user, $password);
+        $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
 
         if (empty($user)) {
             return new PublicApiControllerUserLoginSuccessResponse(
@@ -160,7 +168,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
+        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode);
         return new PublicApiControllerUserLoginSuccessResponse(
             true,
             $session->isAdmin()
@@ -192,6 +200,7 @@ final class PublicApiController extends PublicApiControllerAbstract
      * Endpoint: /papi/register
      * Method: POST
      *
+     * @param string $languageIsoCode
      * @param string $email
      * @param string $password
      * @param string $name
@@ -200,13 +209,17 @@ final class PublicApiController extends PublicApiControllerAbstract
      * @return Response
      */
     protected function userRegistration(
+        string $languageIsoCode,
         string $email,
         string $password,
         string $name,
         int $timezoneOffsetMinutes,
         Request $request
     ): Response {
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $languageIsoCode = in_array(strtoupper($languageIsoCode), Language::getAvailableIsoCodes())
+            ? strtolower($languageIsoCode)
+            : Core::getConfigValue('defaultSiteLanguage');
+        $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
 
         try {
             $isRegistrationEnabled = Core::getConfigValue('registrationEnabled');
@@ -219,7 +232,6 @@ final class PublicApiController extends PublicApiControllerAbstract
             }
 
             $email = StringUtil::normaliseEmail($email);
-
             if (!StringUtil::isEmailAddressValid($email)) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
@@ -238,16 +250,17 @@ final class PublicApiController extends PublicApiControllerAbstract
 
             $existingUser =$this->userService->getUserForEmail($email);
             if (!empty($existingUser)) {
-                // ToDo: Replace $request->getSiteLanguage() with the language sent by the client
-                $siteLanguage = strtolower($request->getSiteLanguage());
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     false,
                     null,
-                    sprintf($localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'), UrlBuilderUtil::getBaseLinkUrl($siteLanguage) . '/login')
+                    sprintf(
+                        $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
+                        UrlBuilderUtil::getBaseLinkUrl($languageIsoCode) . '/login'
+                    )
                 );
             }
 
-            $languageId = Language::getIdForIsoCode($request->getSiteLanguage());
+            $languageId = Language::getIdForIsoCode($languageIsoCode);
             // ToDo
             $user = $this->userService->storeUser(
                 new User(
@@ -257,7 +270,13 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
             $res = empty($user) ? false : true;
 
-            return new PublicApiControllerUserRegistrationSuccessResponse($res);
+            $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode);
+            return new PublicApiControllerUserRegistrationSuccessResponse(
+                $res,
+                $res
+                    ? $baseLinkUrl . UrlBuilderUtil::APP_DASHBOARD_URL_PATH
+                    : $baseLinkUrl
+            );
         } catch (Throwable $t) {
             $this->logger->logError('Error registering user: ' . $t->getMessage());
             return new PublicApiControllerUserRegistrationSuccessResponse(false);
@@ -272,6 +291,7 @@ final class PublicApiController extends PublicApiControllerAbstract
      * @param string $password
      * @param string $passwordConfirmation
      * @param string $verificationHash
+     * @param string $languageIsoCode
      * @param Request $request
      * @return Response
      */
@@ -280,9 +300,13 @@ final class PublicApiController extends PublicApiControllerAbstract
         string $password,
         string $passwordConfirmation,
         string $verificationHash,
+        string $languageIsoCode,
         Request $request
     ): Response {
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $languageIsoCode = in_array(strtoupper($languageIsoCode), Language::getAvailableIsoCodes())
+            ? strtolower($languageIsoCode)
+            : Core::getConfigValue('defaultSiteLanguage');
+        $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
         $user = $this->userService->getUserForId($userId);
         if (empty($user) || !$user->validateValidationHash($verificationHash)) {
             return new PublicApiControllerUserPasswordResetFailureResponse();

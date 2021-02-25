@@ -13,23 +13,16 @@ use uve\core\module\user\model\UserVerification;
 use uve\core\module\user\value\VerificationType;
 use uve\core\util\DateUtil;
 use uve\core\util\StringUtil;
+use uve\core\util\UrlBuilderUtil;
 use uve\core\value\Language;
 
 class UserMailService
 {
-    private UserDataLayer $userDataLayer;
-    private Logger $logger;
-    private MailerService $mailerService;
-
     public function __construct(
-        Logger $logger,
-        UserDataLayer $userDataLayer,
-        MailerService $mailerService
-    ) {
-        $this->userDataLayer = $userDataLayer;
-        $this->logger = $logger;
-        $this->mailerService = $mailerService;
-    }
+        private Logger $logger,
+        private UserDataLayer $userDataLayer,
+        private MailerService $mailerService,
+    ) {}
 
     private function sendVerificationEmail(
         User $user,
@@ -93,19 +86,23 @@ class UserMailService
     public function buildAndSendVerificationEmail(User $user, int $verificationTypeId): bool
     {
         $verificationIdentifier = $this->getUniqueVerificationIdentifier();
-
-        $baseUrl = Core::getConfigValue('baseUrl');
-        $linkUrl = $baseUrl . 'user/verify/' . $verificationIdentifier;
+        $localisationUtil = Core::getLocalisationUtil(
+            Language::getIsoCodeForId($user->getLanguageId())
+        );
+        $linkUrl = UrlBuilderUtil::getBaseLinkUrl(Language::getIsoCodeForId($user->getLanguageId()))
+            . '/user/verify/' . $verificationIdentifier;
         $siteName = Core::getLocalisationUtil(Language::getIsoCodeForId($user->getLanguageId()))
             ->getValue('siteName');
 
-        $emailSubject = 'Welcome to ' . $siteName . '! Confirm Your Email';
-        $emailContent = '<h2>Welcome!</h2>' .
-            '<p>By clicking on the following link, you are confirming your email address.</p>' .
-            '<p><a href="' . $linkUrl . '">Confirm Your Email</a></p>' .
-            '<p>If you’re having trouble with the button above, copy and paste the URL below into your web browser.</p>' .
-            '<p>' . $linkUrl . '</p>' .
-            '<p>Thanks,<br>' . $siteName . '</p>';
+        $emailSubject = sprintf(
+            $localisationUtil->getValue('emailVerificationSubject'),
+            $siteName
+        );
+        $emailContent = sprintf(
+            $localisationUtil->getValue('emailVerificationContent'),
+            $linkUrl,
+            $siteName
+        );
 
         return $this->sendVerificationEmail(
             $user,
@@ -120,19 +117,23 @@ class UserMailService
     public function sendPasswordResetEmail(User $user): bool
     {
         $verificationIdentifier = $this->getUniqueVerificationIdentifier();
-
-        $baseUrl = Core::getConfigValue('baseUrl');
-        $linkUrl = $baseUrl . 'user/reset/' . $verificationIdentifier;
+        $localisationUtil = Core::getLocalisationUtil(
+            Language::getIsoCodeForId($user->getLanguageId())
+        );
+        $linkUrl = UrlBuilderUtil::getBaseLinkUrl(Language::getIsoCodeForId($user->getLanguageId()))
+            . '/user/reset/' . $verificationIdentifier;
         $siteName = Core::getLocalisationUtil(Language::getIsoCodeForId($user->getLanguageId()))
             ->getValue('siteName');
-        $emailSubject = $siteName . ' Password Reset';
-        $emailContent = '<p>Hi there,</p>' .
-            '<p>We received a request to change the password for your ' . $siteName . ' account.</p>' .
-            '<p>If you did not make this request, just ignore this email. Otherwise, please click the link below to reset your password:</p>' .
-            '<p><a href="' . $linkUrl . '">Change Password</a></p>' .
-            '<p>You can also copy and paste this URL into your web browser:</p>' .
-            '<p>' . $linkUrl . '</p>' .
-            '<p>Love,<br>' . $siteName . '</p>';
+        $emailSubject = sprintf(
+            $localisationUtil->getValue('emailPasswordChangeSubject'),
+            $siteName
+        );
+        $emailContent = sprintf(
+            $localisationUtil->getValue('emailPasswordChangeContent'),
+            $siteName,
+            $linkUrl,
+            $siteName
+        );
 
         return $this->sendVerificationEmail(
             $user,

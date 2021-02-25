@@ -23,10 +23,6 @@ class Global {
       "globalLoading": "Loading...",
       "globalAt": "at",
 
-      "articleSectionRemove": "Remove from article",
-      "articleSectionMoveUp": "Move Up",
-      "articleSection:MoveDown": "Move Down",
-
       "feedbackPasswordsDoNotMatch": "The passwords do not match. Please, fix it and try it again.",
       "feedbackPasswordTooShort": "The password is too short. Please, fix it and try it again.",
       "feedbackDeleteSectionConfirmation": "Are you sure you want to delete this section?",
@@ -54,7 +50,10 @@ class Global {
       "editorParagraphPlaceholder": "Type here...",
       "editorTitlePlaceholder": "Title",
       "editorSubtitlePlaceholder": "Subtitle",
-      "editorVideoUrlTitle": "Video URL? (Only YouTube for now)"
+      "editorVideoUrlTitle": "Video URL? (Only YouTube for now)",
+      "editorSectionRemove": "Remove from article",
+      "editorSectionMoveUp": "Move Up",
+      "editorSection:MoveDown": "Move Down"
     },
     "es": {
       "genericError": "Ha ocurrido un error inesperado, por favor inténtalo de nuevo",
@@ -68,10 +67,6 @@ class Global {
       "globalSaved": "Guardado",
       "globalLoading": "Cargando...",
       "globalAt": "a las",
-
-      "articleSectionRemove": "Eliminar sección del artículo",
-      "articleSectionMoveUp": "Mover para arriba",
-      "articleSection:MoveDown": "Mover para abajo",
 
       "feedbackPasswordsDoNotMatch": "Las contraseñas no coinciden. Corrígelo y vuelve a intentarlo.",
       "feedbackPasswordTooShort": "La contraseña es demasiado corta. Corrígelo y vuelve a intentarlo.",
@@ -97,10 +92,13 @@ class Global {
       "editorInsertLink": "Insertar enlace",
       "editorInsertImage": "Insertar imagen",
       "editorClearFormat": "Limpiar formato",
-      "editorParagraphPlaceholder": "Escribe aquií...",
+      "editorParagraphPlaceholder": "Escribe aquí...",
       "editorTitlePlaceholder": "Título",
       "editorSubtitlePlaceholder": "Subtítulo",
-      "editorVideoUrlTitle": "Introduce la direccioón URL del vídeo (Solo YouTube por ahora)"
+      "editorVideoUrlTitle": "Introduce la direccioón URL del vídeo (Solo YouTube por ahora)",
+      "editorSectionRemove": "Eliminar sección del artículo",
+      "editorSectionMoveUp": "Mover para arriba",
+      "editorSection:MoveDown": "Mover para abajo"
     },
     "gl": {
       "genericError": "Algo non foi ben, por favor inténtao de novo",
@@ -114,10 +112,6 @@ class Global {
       "globalSaved": "Gardado",
       "globalLoading": "Cargando...",
       "globalAt": "ás",
-
-      "articleSectionRemove": "Eliminar do artigo",
-      "articleSectionMoveUp": "Mover para arriba",
-      "articleSection:MoveDown": "Move para abaixo",
 
       "feedbackPasswordsDoNotMatch": "Os contrasinais non coinciden. Corríxeo e volve a intentalo.",
       "feedbackPasswordTooShort": "Contrasinal demasiado curto. Corríxeo e volve a intentalo.",
@@ -146,7 +140,10 @@ class Global {
       "editorParagraphPlaceholder": "Escribe aquí...",
       "editorTitlePlaceholder": "Título",
       "editorSubtitlePlaceholder": "Subtítulo",
-      "editorVideoUrlTitle": "Introduce o enderezo do vídeo (Só YouTube polo momento)"
+      "editorVideoUrlTitle": "Introduce o enderezo do vídeo (Só YouTube polo momento)",
+      "editorSectionRemove": "Eliminar do artigo",
+      "editorSectionMoveUp": "Mover para arriba",
+      "editorSection:MoveDown": "Move para abaixo",
     }
   }
 

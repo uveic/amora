@@ -26,16 +26,19 @@ if (formLogin) {
 
     const user = document.querySelector('form#form-login input[name="user"]');
     const password = document.querySelector('form#form-login input[name="password"]');
+    const siteLanguage = document.documentElement.lang
+      ? document.documentElement.lang.toLowerCase().trim()
+      : 'en';
 
     const data = {
       'user': user.value,
-      'password': password.value
+      'password': password.value,
+      'languageIsoCode': siteLanguage
     };
 
     xhr.post('/papi/login', JSON.stringify(data))
-      .then((response) => {
-        window.location = response.redirect;
-      }).catch((error) => {
+      .then((response) => window.location = response.redirect)
+      .catch((error) => {
         password.value = '';
         loginFailureFeedback.textContent = error.message;
         loginFailureFeedback.classList.remove('null');
@@ -52,6 +55,9 @@ if (formRegister) {
     const email = document.querySelector('form#form-register input[name="email"]');
     const password = document.querySelector('form#form-register input[name="password"]');
     const name = document.querySelector('form#form-register input[name="name"]');
+    const siteLanguage = document.documentElement.lang
+      ? document.documentElement.lang.toLowerCase().trim()
+      : 'en';
 
     if (password.value.length < 10) {
       loginFailureFeedback.textContent = global.get('feedbackPasswordTooShort');
@@ -62,6 +68,7 @@ if (formRegister) {
 
     const d = new Date();
     const data = {
+      'languageIsoCode': siteLanguage,
       'email': email.value,
       'password': password.value,
       'name': name.value,
@@ -72,9 +79,9 @@ if (formRegister) {
       .then((response) => {
         window.location = response.redirect;
       }).catch((error) => {
-        loginFailureFeedback.innerHTML = error.message;
-        loginFailureFeedback.classList.remove('null');
-      });
+      loginFailureFeedback.innerHTML = error.message;
+      loginFailureFeedback.classList.remove('null');
+    });
   });
 }
 
@@ -95,7 +102,8 @@ if (formLoginForgot) {
         document.querySelector('span#register-feedback-email').textContent = email.value;
         document.querySelector('div#register-form').classList.add('null');
         document.querySelector('div#register-back-login').classList.remove('null');
-      }).catch((error) => {
+      })
+      .catch((error) => {
         loginFailureFeedback.textContent = error.message;
         loginFailureFeedback.classList.remove('null');
       });
@@ -127,11 +135,16 @@ if (formPasswordReset) {
       return;
     }
 
+    const siteLanguage = document.documentElement.lang
+      ? document.documentElement.lang.toLowerCase().trim()
+      : 'en';
+
     const data = {
       'userId': Number.parseInt(userId.value),
       'password': password.value,
       'passwordConfirmation': passwordConfirmation.value,
-      'verificationHash': verificationHash.value
+      'verificationHash': verificationHash.value,
+      'languageIsoCode': siteLanguage
     };
 
     xhr.post('/papi/login/password-reset', JSON.stringify(data))
@@ -139,9 +152,9 @@ if (formPasswordReset) {
         document.querySelector('div#password-reset-form').classList.add('null');
         document.querySelector('div#password-reset-success').classList.remove('null');
       }).catch((error) => {
-        loginFailureFeedback.innerHTML = error.message;
-        loginFailureFeedback.classList.remove('null');
-      });
+      loginFailureFeedback.innerHTML = error.message;
+      loginFailureFeedback.classList.remove('null');
+    });
   });
 }
 
@@ -171,11 +184,13 @@ document.querySelectorAll('form#form-invite-request').forEach(f => {
     loginFailureFeedback.classList.add('null');
 
     const email = document.querySelector('form#form-invite-request input[name="email"]');
-    const lg = document.querySelector('form#form-invite-request input[name="languageIsoCode"]');
+    const siteLanguage = document.documentElement.lang
+      ? document.documentElement.lang.toLowerCase().trim()
+      : 'en';
 
     const data = {
       'email': email.value,
-      'languageIsoCode': lg ? lg.value : null
+      'languageIsoCode': siteLanguage
     };
 
     xhr.post('/papi/invite-request', JSON.stringify(data))
@@ -183,7 +198,8 @@ document.querySelectorAll('form#form-invite-request').forEach(f => {
         document.querySelector('span#register-feedback-email').textContent = email.value;
         document.querySelector('div.div-request-form').classList.add('null');
         document.querySelector('div#request-form-feedback').classList.remove('null');
-      }).catch((error) => {
+      })
+      .catch((error) => {
         loginFailureFeedback.textContent = error.message;
         loginFailureFeedback.classList.remove('null');
       });

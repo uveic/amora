@@ -76,12 +76,14 @@ abstract class PublicApiControllerAbstract extends AbstractController
      *
      * @param string $user
      * @param string $password
+     * @param string $languageIsoCode
      * @param Request $request
      * @return Response
      */
     abstract protected function userLogin(
         string $user,
         string $password,
+        string $languageIsoCode,
         Request $request
     ): Response;
 
@@ -103,6 +105,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
      * @param string $password
      * @param string $passwordConfirmation
      * @param string $verificationHash
+     * @param string $languageIsoCode
      * @param Request $request
      * @return Response
      */
@@ -111,6 +114,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
         string $password,
         string $passwordConfirmation,
         string $verificationHash,
+        string $languageIsoCode,
         Request $request
     ): Response;
 
@@ -118,6 +122,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
      * Endpoint: /papi/register
      * Method: POST
      *
+     * @param string $languageIsoCode
      * @param string $email
      * @param string $password
      * @param string $name
@@ -126,6 +131,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function userRegistration(
+        string $languageIsoCode,
         string $email,
         string $password,
         string $name,
@@ -289,6 +295,18 @@ abstract class PublicApiControllerAbstract extends AbstractController
                 : null;
         }
 
+        $languageIsoCode = null;
+        if (!isset($bodyParams['languageIsoCode'])) {
+            $errors[] = [
+                'field' => 'languageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $languageIsoCode = isset($bodyParams['languageIsoCode'])
+                ? $bodyParams['languageIsoCode']
+                : null;
+        }
+
 
         if (count($errors)) {
             return Response::createBadRequestResponse(
@@ -304,6 +322,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
             return $this->userLogin(
                 $user,
                 $password,
+                $languageIsoCode,
                 $request
             );
         } catch (Throwable $t) {
@@ -426,6 +445,18 @@ abstract class PublicApiControllerAbstract extends AbstractController
                 : null;
         }
 
+        $languageIsoCode = null;
+        if (!isset($bodyParams['languageIsoCode'])) {
+            $errors[] = [
+                'field' => 'languageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $languageIsoCode = isset($bodyParams['languageIsoCode'])
+                ? $bodyParams['languageIsoCode']
+                : null;
+        }
+
 
         if (count($errors)) {
             return Response::createBadRequestResponse(
@@ -443,6 +474,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
                 $password,
                 $passwordConfirmation,
                 $verificationHash,
+                $languageIsoCode,
                 $request
             );
         } catch (Throwable $t) {
@@ -465,6 +497,18 @@ abstract class PublicApiControllerAbstract extends AbstractController
                 'field' => 'payload',
                 'message' => 'required'
             ];
+        }
+
+        $languageIsoCode = null;
+        if (!isset($bodyParams['languageIsoCode'])) {
+            $errors[] = [
+                'field' => 'languageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $languageIsoCode = isset($bodyParams['languageIsoCode'])
+                ? $bodyParams['languageIsoCode']
+                : null;
         }
 
         $email = null;
@@ -528,6 +572,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
 
         try {
             return $this->userRegistration(
+                $languageIsoCode,
                 $email,
                 $password,
                 $name,

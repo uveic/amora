@@ -17,7 +17,7 @@ return [
     'navAdminArticleOptions' => 'Opciones artículo',
 
     'authenticationActionHomeLink' => 'Volver a la página de entrada',
-    'authenticationLoginSubtitle' => '¡Bienvenido/a de nuevo, adelante!',
+    'authenticationLoginSubtitle' => '¡Bienvenido/a de nuevo!',
     'authenticationRegisterSubtitle' => 'A un paso.',
     'authenticationRegisterTOS' => 'Al registrarte aceptas los <a href="#">términos de uso</a> y la <a href="#">política de privacidad</a>.',
     'authenticationRegisterPasswordHelp' => 'Longitud mínima: ' . UserService::USER_PASSWORD_MIN_LENGTH . ' caracteres. Recomenable: letras, números y símbolos.',
@@ -43,7 +43,7 @@ return [
 
     'authenticationInviteRequest' => 'Consigue una invitación',
     'authenticationInviteRequestSubtitle' => 'La web está actualmente en beta privada, estamos trajando para asegurarnos de que todo funciona correctamente. Tenemos muchas ganas de que esté lista para que la puedas utilizar. Déjanos tu correo y te enviaremos una invitación tan pronto como sea posible. Solo utilizaremos tu correo para enviarte la invitación. <br>¡Gracias por tu paciencia!',
-    'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>Tu correo: <b><span id="register-feedback-email"></span></b>.</p><p>¡Gracias!</p>',
+    'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>Te enviaremos tu invitación en cuanto tengamos todo listo. ¡Gracias por la espera!</p><p>Tu correo: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Volver a la página principal',
     'authenticationInviteRequestFormAction' => 'Pedir una invitación',
 
@@ -91,6 +91,7 @@ return [
     'globalUser' => 'Ususario',
     'globalUserAccount' => 'Cuenta de usuario',
     'globalUserAccountSettings' => 'Configuración de cuenta de usuario',
+    'globalNext' => 'Siguiente',
 
     'globalUploadImage' => 'Subir imagen(es)',
     'globalAddImage' => 'Añadir imagen(es)',
@@ -113,4 +114,16 @@ return [
     'sectionRemove' => 'Eliminar sección',
     'sectionMoveUp' => 'Mover para arriba',
     'sectionMoveDown' => 'Mover para abajo',
+
+    'emailVerificationSubject' => 'Bienvenido/a a %s! Confirma tu correo electrónico',
+    'emailVerificationContent' => '<p>¡Bienvenido/a!</p>' .
+        '<p>Por favor, confirma tu correo electrónico haciendo clic en el siguiente enlace.</p>' .
+        '<p><a href="%s">Confirmar correo electrónico</a></p>' .
+        '<p>Gracias,<br>%s</p>',
+    'emailPasswordChangeSubject' => '%s: cambiar contraseña',
+    'emailPasswordChangeContent' => '<p>Hola,</p>' .
+        '<p>Hemos recibido una petición de cambio de contraseña en tu cuenta de %s.</p>' .
+        '<p>Si no has hecho tú esta petición puedes ignorar este correo electrónico. En caso contrario, haz clic en el siguiente enlace para cambiar tu contraseña:</p>' .
+        '<p><a href="%s">Cambiar contraseña</a></p>' .
+        '<p>Saludos,<br>%s</p>',
 ];

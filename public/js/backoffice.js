@@ -4,7 +4,8 @@ import {
   getYoutubeVideoIdFromUrl,
   managePlaceholderForEditableElements,
   generateRandomString,
-  insertAfter
+  insertAfter,
+  getSectionTypeIdFromClassList
 } from './module/util.js';
 import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
@@ -97,8 +98,8 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
 
   let trashImg = new Image();
   trashImg.className = 'img-svg';
-  trashImg.title = global.get('articleSectionRemove');
-  trashImg.alt = global.get('articleSectionRemove');
+  trashImg.title = global.get('editorSectionRemove');
+  trashImg.alt = global.get('editorSectionRemove');
   trashImg.src = '/img/svg/trash.svg';
 
   let deleteButton = document.createElement('a');
@@ -110,8 +111,8 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
 
   let arrowUpImg = new Image();
   arrowUpImg.className = 'img-svg';
-  arrowUpImg.title = global.get('articleSectionMoveUp');
-  arrowUpImg.alt = global.get('articleSectionMoveUp');
+  arrowUpImg.title = global.get('editorSectionMoveUp');
+  arrowUpImg.alt = global.get('editorSectionMoveUp');
   arrowUpImg.src = '/img/svg/arrow-fat-up.svg';
 
   let moveUpButton = document.createElement('a');
@@ -123,8 +124,8 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
 
   let arrowDownImg = new Image();
   arrowDownImg.className = 'img-svg';
-  arrowDownImg.title = global.get('articleSectionMoveDown');
-  arrowDownImg.alt = global.get('articleSectionMoveDown');
+  arrowDownImg.title = global.get('editorSectionMoveDown');
+  arrowDownImg.alt = global.get('editorSectionMoveDown');
   arrowDownImg.src = '/img/svg/arrow-fat-down.svg';
 
   let moveDownButton = document.createElement('a');
@@ -147,30 +148,6 @@ const generateSectionWrapperFor = function(articleSectionElement, id) {
   articleContent.appendChild(sectionWrapper);
 
   displayUpAndDownArrows();
-};
-
-const getSectionTypeIdFromClassList = function(classList) {
-  if (classList.contains('article-section-paragraph')) {
-    return 1;
-  }
-
-  if (classList.contains('article-section-image')) {
-    return 2;
-  }
-
-  if (classList.contains('article-section-video')) {
-    return 3;
-  }
-
-  if (classList.contains('article-section-title')) {
-    return 4;
-  }
-
-  if (classList.contains('article-section-subtitle')) {
-    return 5;
-  }
-
-  return 0;
 };
 
 const displayUpAndDownArrows = function() {

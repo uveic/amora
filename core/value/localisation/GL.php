@@ -43,7 +43,7 @@ return [
 
     'authenticationInviteRequest' => 'Consegue unha invitación',
     'authenticationInviteRequestSubtitle' => 'A web está actualmente nunha beta privada, estamos traballando para asegurarnos de que todo funciona correctamente e con moitas ganas de que estea lista para que a poidas utilizar. Déixanos o teu correo e enviarémosche unha invitación tan pronto como sexa posible. Só utilizaremos o teu correo para enviarche a invitación.<br>Grazas pola túa paciencia!',
-    'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>O teu correo: <b><span id="register-feedback-email"></span></b>.</p><p>Grazas!</p>',
+    'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>Enviarémosche unha invitación en canto teñamos todo listo. Grazas pola espera!</p><p>O teu correo: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Volver á páxina principal',
     'authenticationInviteRequestFormAction' => 'Pedir invitación',
 
@@ -89,6 +89,9 @@ return [
     'globalActivated' => 'Activado',
     'globalDeactivated' => 'Desactivado',
     'globalUser' => 'Ususario',
+    'globalUserAccount' => 'Conta de usuario',
+    'globalUserAccountSettings' => 'Configuración de conta de usuario',
+    'globalNext' => 'Seguinte',
 
     'globalUploadImage' => 'Subir imaxe(s)',
     'globalAddImage' => 'Engadir imaxe(s)',
@@ -110,4 +113,16 @@ return [
     'sectionRemove' => 'Eliminar sección',
     'sectionMoveUp' => 'Mover para arriba',
     'sectionMoveDown' => 'Mover para abaixo',
+
+    'emailVerificationSubject' => 'Benvido/a a %s! Confirma o teu correo electrónico',
+    'emailVerificationContent' => '<p>¡Benvido/a!</p>' .
+        '<p>Por favor, confirma o teu correo electrónico facendo clic na seguinte ligazón.</p>' .
+        '<p><a href="%s">Confirmar correo electrónico</a></p>' .
+        '<p>Grazas,<br>%s</p>',
+    'emailPasswordChangeSubject' => '%s: cambiar contrasinal',
+    'emailPasswordChangeContent' => '<p>Ola,</p>' .
+        '<p>Recibimos unha petición de cambio de contrasinal na túa conta de %s.</p>' .
+        '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo electrónico. En caso contrario, fai clic na seguinte ligazón para cambiar o teu contrasinal:</p>' .
+        '<p><a href="%s">Cambiar contrasinal</a></p>' .
+        '<p>Unha aperta,<br>%s</p>',
 ];
