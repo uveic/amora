@@ -49,6 +49,7 @@
   background-color: var(--light-bg-color);
   border-top: 1px solid var(--light-bg-color-3);
   border-bottom: 1px solid var(--light-bg-color-3);
+  width: 100%;
 }
 
 .control-bar-wrapper button {
@@ -185,20 +186,6 @@ input.is-light {
 .article-section-title,
 .article-section-subtitle {
   border: 1px solid var(--light-bg-color-3);
-}
-
-.placeholder:focus {
-  background-color: var(--light-bg-color);
-  outline: 0;
-}
-
-.placeholder:empty:before {
-  content: attr(data-placeholder);
-  color: var(--light-bg-color-3);
-}
-
-.placeholder:empty:focus:before {
-  content: "";
 }
 /* Form style ends here */
 

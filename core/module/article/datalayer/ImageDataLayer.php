@@ -2,7 +2,6 @@
 
 namespace uve\core\module\article\datalayer;
 
-use Throwable;
 use uve\core\database\MySqlDb;
 use uve\core\Logger;
 use uve\core\module\article\model\Image;
@@ -21,7 +20,6 @@ class ImageDataLayer
 
     private function getImages(
         ?int $imageId = null,
-        ?int $articleId = null,
         ?int $userId = null
     ): array {
         $params = [];
@@ -46,13 +44,6 @@ class ImageDataLayer
         if (isset($imageId)) {
             $where .= ' AND i.id = :imageId';
             $params[':imageId'] = $imageId;
-        }
-
-        if (isset($articleId)) {
-            $joins .= ' LEFT JOIN ' . ArticleDataLayer::ARTICLE_IMAGE_RELATION_TABLE_NAME . ' AS ar'
-                . ' ON ar.image_id = i.id';
-            $where .= ' AND ar.article_id = :articleId';
-            $params[':articleId'] = $articleId;
         }
 
         if (isset($userId)) {
@@ -85,14 +76,9 @@ class ImageDataLayer
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getImagesForArticleId(int $articleId): array
-    {
-        return $this->getImages(null, $articleId);
-    }
-
     public function getImagesForUserId(int $userId): array
     {
-        return $this->getImages(null, null, $userId);
+        return $this->getImages(null, $userId);
     }
 
     public function storeImage(Image $image): Image {
@@ -110,17 +96,6 @@ class ImageDataLayer
     public function deleteImage(int $imageId): bool
     {
         $dbRes = $this->db->withTransaction(function() use ($imageId) {
-            $resAr = $this->db->delete(
-                ArticleDataLayer::ARTICLE_IMAGE_RELATION_TABLE_NAME,
-                [
-                    'image_id' => $imageId
-                ]
-            );
-
-            if (empty($resAr)) {
-                return ['success' => false];
-            }
-
             $resDel = $this->db->delete(
                 self::IMAGE_TABLE_NAME,
                 [
@@ -136,32 +111,5 @@ class ImageDataLayer
         });
 
         return empty($dbRes['success']) ? false : true;
-    }
-
-    public function insertArticleImageRelation(
-        int $imageId,
-        int $articleId,
-        ?int $order = null
-    ): bool {
-        try {
-            $this->db->insert(
-                ArticleDataLayer::ARTICLE_IMAGE_RELATION_TABLE_NAME,
-                [
-                    'image_id' => $imageId,
-                    'article_id' => $articleId,
-                    'order' => $order
-                ]
-            );
-        } catch (Throwable $t) {
-            $this->logger->logError(
-                'Error inserting entry into ' . ArticleDataLayer::ARTICLE_IMAGE_RELATION_TABLE_NAME .
-                ' - ImageId: ' . $imageId .
-                ' - ArticleId: ' . $articleId .
-                ' - Error message: ' . $t->getMessage()
-            );
-            return false;
-        }
-
-        return true;
     }
 }

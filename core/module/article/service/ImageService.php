@@ -34,26 +34,9 @@ class ImageService
         return $this->imageDataLayer->getImagesForUserId($userId);
     }
 
-    public function storeImage(Image $image, ?int $articleId = null): ?Image
+    public function storeImage(Image $image): ?Image
     {
-        $image = $this->imageDataLayer->storeImage($image);
-
-        if ($articleId) {
-            $res = $this->imageDataLayer->insertArticleImageRelation(
-                $image->getId(),
-                $articleId
-            );
-
-            if (empty($res)) {
-                $this->logger->logError(
-                    'Error inserting article image relation' .
-                    ' - Image: ' . $image->getFilePathOriginal()
-                );
-                return null;
-            }
-        }
-
-        return $image;
+        return $this->imageDataLayer->storeImage($image);
     }
 
     public function deleteImage(Image $image): bool

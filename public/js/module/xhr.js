@@ -1,6 +1,10 @@
 import {global} from "./localisation.js";
 
 async function logError(errorMessage = null, endpoint = null, method = null, payload = null) {
+  if (typeof payload !== 'string') {
+    payload = 'Not a string';
+  }
+
   const data = {
     endpoint: endpoint,
     method: method,
@@ -14,16 +18,20 @@ async function logError(errorMessage = null, endpoint = null, method = null, pay
     '/papi/log',
     {
       method: 'POST',
-      headers: {"Content-Type": "application/json"},
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
     }
   );
 }
 
-function request(url, stringPayload, method = 'POST', feedbackDivEl = null, successMessage = null) {
-  const headers = {
-    "Content-Type": "application/json"
-  };
+function request(
+  url,
+  stringPayload,
+  method = 'POST',
+  headers,
+  feedbackDivEl = null,
+  successMessage = null
+) {
   let errorResponse = false;
 
   return fetch(
@@ -79,24 +87,34 @@ function request(url, stringPayload, method = 'POST', feedbackDivEl = null, succ
 }
 
 function get(url, feedbackDivEl = null, successMessage = null) {
-  return request(url, null, 'GET', feedbackDivEl, successMessage);
+  const headers = {'Content-Type': 'application/json'};
+  return request(url, null, 'GET', headers, feedbackDivEl, successMessage);
 }
 
 function post(url, stringPayload, feedbackDivEl = null, successMessage = null) {
-  return request(url, stringPayload, 'POST', feedbackDivEl, successMessage);
+  const headers = {'Content-Type': 'application/json'};
+  return request(url, stringPayload, 'POST', headers, feedbackDivEl, successMessage);
 }
 
 function put(url, stringPayload, feedbackDivEl = null, successMessage = null) {
-  return request(url, stringPayload, 'PUT', feedbackDivEl, successMessage);
+  const headers = {'Content-Type': 'application/json'};
+  return request(url, stringPayload, 'PUT', headers, feedbackDivEl, successMessage);
 }
 
 function _delete(url, feedbackDivEl = null, successMessage = null) {
-  return request(url, null, 'DELETE', feedbackDivEl, successMessage);
+  const headers = {'Content-Type': 'application/json'};
+  return request(url, null, 'DELETE', headers, feedbackDivEl, successMessage);
+}
+
+function postImage(url, formData, feedbackDivEl = null, successMessage = null) {
+  const headers = {};
+  return request(url, formData, 'POST', headers, feedbackDivEl, successMessage);
 }
 
 export const xhr = {
   get,
   post,
+  postImage,
   put,
   delete: _delete
 };

@@ -32,11 +32,10 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
      * Endpoint: /api/image
      * Method: POST
      *
-     * @param int|null $articleId
      * @param Request $request
      * @return Response
      */
-    abstract protected function storeImage(?int $articleId, Request $request): Response;
+    abstract protected function storeImage(Request $request): Response;
 
     /**
      * Endpoint: /api/image/{imageId}
@@ -92,15 +91,8 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
     private function validateAndCallStoreImage(Request $request)
     {
-        $formDataParams = $request->getPostParams();
         $errors = [];
 
-
-        if (isset($formDataParams['articleId']) && strlen($formDataParams['articleId']) > 0) {
-            $articleId = intval($formDataParams['articleId']);
-        } else {
-            $articleId = null;
-        }
         if (count($errors)) {
             return Response::createBadRequestResponse(
                 [
@@ -113,7 +105,6 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
         try {
             return $this->storeImage(
-                $articleId,
                 $request
             );
         } catch (Throwable $t) {

@@ -10,6 +10,7 @@ $this->layout('base', ['responseData' => $responseData]);
 $images = $responseData->getImages();
 
 ?>
+  <div id="feedback" class="feedback null"></div>
   <main>
     <div class="content-images">
       <div class="field m-t-0 m-b-0">

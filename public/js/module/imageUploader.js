@@ -1,79 +1,67 @@
-import {global} from "./localisation.js";
+import {xhr} from './xhr.js';
+import {global} from './localisation.js';
 
-async function uploadImage(file, containerToAppendImages, userFeedbackDiv, payloadData = {}) {
-  console.log(-1);
+const logError = (userFeedbackDiv, error) => {
+  if (userFeedbackDiv) {
+    userFeedbackDiv.textContent = error.message;
+    userFeedbackDiv.classList.remove('feedback-success');
+    userFeedbackDiv.classList.add('feedback-error');
+    userFeedbackDiv.classList.remove('null');
+    setTimeout(() => {userFeedbackDiv.classList.add('null')}, 15000);
+  }
+};
+
+function uploadImage(
+  file,
+  imageContainer,
+  imageClassName,
+  userFeedbackDiv,
+  then = () => {},
+  catchError = () => {}
+) {
   const apiUploadEndpoint = '/api/image';
 
   if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-    return Promise.reject(file.name + " is not an image");
+    logError(userFeedbackDiv, new Error(file.name + ' is not an image'));
+    return;
   }
 
   let formData = new FormData();
-
   formData.append('files[]', file);
-  for (let i in payloadData) {
-    formData.append(i, payloadData[i]);
-  }
 
   const reader = new FileReader();
   reader.addEventListener('load', function () {
-    let articleImageDiv = document.createElement('div');
-    articleImageDiv.className = 'image-item';
-
     let image = new Image();
-    image.className = 'opacity preview';
-    image.title = file.name;
+    image.className = 'opacity ' + imageClassName;
     image.src = String(reader.result);
 
     let imgLoading = new Image();
     imgLoading.className = 'justify-center';
-    imgLoading.alt = 'Loading...';
+    imgLoading.alt = global.get('globalLoading');
     imgLoading.src = '/img/loading.gif';
 
-    articleImageDiv.appendChild(image);
-    articleImageDiv.appendChild(imgLoading);
-    containerToAppendImages.appendChild(articleImageDiv);
+    imageContainer.appendChild(image);
+    imageContainer.appendChild(imgLoading);
 
-    console.log(0);
+    xhr.postImage(apiUploadEndpoint, formData, userFeedbackDiv)
+      .then(data => {
+        if (!data.success || !data.images || data.images.length <= 0) {
+          throw new Error(data.errorMessage ?? global.get('genericError'));
+        }
 
-    return fetch(
-      apiUploadEndpoint,
-      {
-        method: 'POST',
-        body: formData
-      }
-    ).then(response => {
-      console.log(1);
+        const uploadedImageData = data.images[0];
+        image.classList.remove('opacity');
+        image.src = uploadedImageData.url;
+        image.dataset.imageId = uploadedImageData.id;
+        image.alt = uploadedImageData.caption ?? '';
+        imageContainer.removeChild(imgLoading);
 
-      return response.json();
-    }).then(json => {
-      console.log(2);
-      if (!json.success || !json.images || json.images.length <= 0) {
-        throw new Error(
-          json.errorMessage ?? global.get('genericError') + ': ' + image.title
-        );
-      }
-
-      return Promise.resolve({
-        apiJsonResponse: json,
-        image: image,
-        imageDiv: articleImageDiv,
-        imageLoading: imgLoading
+        then(uploadedImageData);
+      })
+      .catch((error) => {
+        logError(userFeedbackDiv, error);
+        catchError();
       });
-    }).catch((error) => {
-      articleImageDiv.classList.add('null');
-      userFeedbackDiv.textContent = error.message;
-      userFeedbackDiv.classList.remove('feedback-success');
-      userFeedbackDiv.classList.add('feedback-error');
-      userFeedbackDiv.classList.remove('null');
-      setTimeout(() => {
-        userFeedbackDiv.classList.add('null')
-      }, 5000);
-      console.log('Here');
-      console.log(error);
-
-      return Promise.reject(error.message);
-    });
   });
 
   reader.readAsDataURL(file);

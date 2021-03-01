@@ -19,7 +19,6 @@ class ArticleDataLayer
     const ARTICLE_SECTION_TABLE_NAME = 'article_section';
     const ARTICLE_SECTION_IMAGE_TABLE_NAME = 'article_section_image';
 
-    const ARTICLE_IMAGE_RELATION_TABLE_NAME = 'article_image_relation';
     const ARTICLE_TAG_RELATION_TABLE_NAME = 'article_tag_relation';
 
     public function __construct(

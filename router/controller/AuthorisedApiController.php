@@ -19,7 +19,6 @@ use uve\router\controller\response\{AuthorisedApiControllerDestroyImageFailureRe
     AuthorisedApiControllerDestroyImageSuccessResponse,
     AuthorisedApiControllerSendVerificationEmailFailureResponse,
     AuthorisedApiControllerSendVerificationEmailSuccessResponse,
-    AuthorisedApiControllerStoreImageUnauthorisedResponse,
     AuthorisedApiControllerStoreImageSuccessResponse,
     AuthorisedApiControllerUpdateUserAccountFailureResponse,
     AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse,
@@ -55,26 +54,13 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      * Endpoint: /api/image
      * Method: POST
      *
-     * @param ?int $articleId
      * @param Request $request
      * @return Response
      */
-    public function storeImage(?int $articleId, Request $request): Response
+    public function storeImage(Request $request): Response
     {
         try {
             $session = $request->getSession();
-            if ($articleId) {
-                $article = $this->articleService->getArticleForId($articleId);
-                if (empty($article) ||
-                    (
-                        !$session->isAdmin()
-                        && $session->getUser()->getId() !== $article->getUser()->getId()
-                    )
-                ) {
-                    return new AuthorisedApiControllerStoreImageUnauthorisedResponse();
-                }
-            }
-
             $images = $this->imageService->processImages(
                 $request->getFiles(),
                 $session->getUser()->getId()
@@ -82,7 +68,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
             $imgSaved = [];
             foreach ($images as $image) {
-                $res = $this->imageService->storeImage($image, $articleId);
+                $res = $this->imageService->storeImage($image);
                 if ($res) {
                     $imgSaved[] = $res;
                 }

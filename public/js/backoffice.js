@@ -1,180 +1,11 @@
-import {
-  cleanTextForUrl,
-  getUpdatedAtTime,
-  getYoutubeVideoIdFromUrl,
-  managePlaceholderForEditableElements,
-  generateRandomString,
-  insertAfter,
-  getSectionTypeIdFromClassList
-} from './module/util.js';
+import {cleanTextForUrl, getUpdatedAtTime} from './module/util.js';
 import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
-import {loadEditor} from './module/editor.js';
 import {global} from "./module/localisation.js";
+import {classes as pexegoClasses, getSectionTypeIdFromClassList} from "./module/pexego.js";
+import {uploadImage} from "./module/imageUploader.js";
 
 let globalTags = [];
-
-const removeSection = function(e, sectionId) {
-  e.preventDefault();
-
-  const delRes = confirm(global.get('feedbackDeleteSectionConfirmation'));
-  if (!delRes) {
-    return;
-  }
-
-  const article = document.querySelector('.article-content');
-  const section = document.querySelector('#article-section-wrapper-' + sectionId);
-
-  if (article && section) {
-    article.removeChild(section);
-  }
-
-  if (section.querySelector('#article-title-main')) {
-    const allTitles = document.querySelectorAll('h1.article-title');
-    if (allTitles.length > 0) {
-      allTitles[0].id = 'article-title-main';
-      allTitles[0].addEventListener('input', (e) => updateArticleUri(e));
-      allTitles[0].dispatchEvent(new Event('input', {bubbles: true, cancelable: true}));
-    }
-  }
-
-  const sectionHtml = document.querySelector('#article-section-paragraph-' + sectionId + '-html');
-  if (sectionHtml) {
-    const divHtml = document.querySelector('.article-content-text');
-    if (divHtml) {
-      divHtml.removeChild(sectionHtml);
-    }
-  }
-
-  displayUpAndDownArrows();
-};
-
-const moveSectionUp = function(e, id) {
-  e.preventDefault();
-
-  const selectedSection = document.querySelector('#article-section-wrapper-' + id);
-
-  let previousElement = null;
-
-  let allSections = [];
-  document.querySelectorAll('.article-section-wrapper').forEach(s => {
-    allSections.push({id: s.dataset.sectionId, element: s});
-  });
-
-  for (let i = 0; i < allSections.length; i++) {
-    if (allSections[i].id === id) {
-      if (previousElement) {
-        selectedSection.parentNode.insertBefore(selectedSection, previousElement);
-      }
-      break;
-    }
-
-    previousElement = allSections[i].element;
-  }
-
-  displayUpAndDownArrows();
-};
-
-const moveSectionDown = function(e, id) {
-  e.preventDefault();
-
-  const selectedSection = document.querySelector('#article-section-wrapper-' + id);
-
-  if (!selectedSection.nextElementSibling) {
-    return;
-  }
-
-  insertAfter(selectedSection, selectedSection.nextElementSibling);
-  displayUpAndDownArrows();
-}
-
-const generateSectionWrapperFor = function(articleSectionElement, id) {
-  const articleContent = document.querySelector('article.article-content');
-
-  let sectionWrapper = document.createElement('div');
-  sectionWrapper.id = 'article-section-wrapper-' + id;
-  sectionWrapper.className = 'article-section-wrapper';
-  sectionWrapper.dataset.sectionId = id;
-
-  let trashImg = new Image();
-  trashImg.className = 'img-svg';
-  trashImg.title = global.get('editorSectionRemove');
-  trashImg.alt = global.get('editorSectionRemove');
-  trashImg.src = '/img/svg/trash.svg';
-
-  let deleteButton = document.createElement('a');
-  deleteButton.href = '#';
-  deleteButton.id = 'article-section-button-delete-' + id;
-  deleteButton.className = 'article-section-button article-section-button-delete';
-  deleteButton.addEventListener('click', e => removeSection(e, id));
-  deleteButton.appendChild(trashImg);
-
-  let arrowUpImg = new Image();
-  arrowUpImg.className = 'img-svg';
-  arrowUpImg.title = global.get('editorSectionMoveUp');
-  arrowUpImg.alt = global.get('editorSectionMoveUp');
-  arrowUpImg.src = '/img/svg/arrow-fat-up.svg';
-
-  let moveUpButton = document.createElement('a');
-  moveUpButton.href = '#';
-  moveUpButton.id = 'article-section-button-up-' + id;
-  moveUpButton.className = 'article-section-button article-section-button-up';
-  moveUpButton.addEventListener('click', e => moveSectionUp(e, id));
-  moveUpButton.appendChild(arrowUpImg);
-
-  let arrowDownImg = new Image();
-  arrowDownImg.className = 'img-svg';
-  arrowDownImg.title = global.get('editorSectionMoveDown');
-  arrowDownImg.alt = global.get('editorSectionMoveDown');
-  arrowDownImg.src = '/img/svg/arrow-fat-down.svg';
-
-  let moveDownButton = document.createElement('a');
-  moveDownButton.href = '#';
-  moveDownButton.id = 'article-section-button-down-' + id;
-  moveDownButton.className = 'article-section-button article-section-button-down';
-  moveDownButton.addEventListener('click', e => moveSectionDown(e, id));
-  moveDownButton.appendChild(arrowDownImg);
-
-  let sectionControls = document.createElement('div');
-  sectionControls.className = 'article-section-controls';
-
-  sectionControls.appendChild(moveUpButton);
-  sectionControls.appendChild(moveDownButton);
-  sectionControls.appendChild(deleteButton);
-
-  sectionWrapper.appendChild(articleSectionElement);
-  sectionWrapper.appendChild(sectionControls);
-
-  articleContent.appendChild(sectionWrapper);
-
-  displayUpAndDownArrows();
-};
-
-const displayUpAndDownArrows = function() {
-  let arrowDownAll = document.querySelectorAll('.article-section-button-down');
-  let count = 0;
-
-  arrowDownAll.forEach(d => {
-    if (arrowDownAll.length && count !== arrowDownAll.length - 1) {
-      d.classList.remove('null');
-    } else {
-      d.classList.add('null');
-    }
-    count++;
-  });
-
-  let arrowUpAll = document.querySelectorAll('.article-section-button-up');
-
-  count = 0;
-  arrowUpAll.forEach(u => {
-    if (arrowUpAll.length && count !== 0) {
-      u.classList.remove('null');
-    } else {
-      u.classList.add('null');
-    }
-    count++;
-  });
-};
 
 const updateArticleUri = (e) => {
   const articleTitleText = e.target.innerText;
@@ -236,8 +67,8 @@ document.querySelectorAll('.article-save-button').forEach(el => {
         b.value = global.get('globalUpdate');
       });
       document.querySelectorAll('.article-preview').forEach(b => {
-          b.href = response.uri + '?preview=true';
-        });
+        b.href = response.uri + '?preview=true';
+      });
       document.querySelectorAll('input[name="articleUri"]').forEach(i => {
         i.value = response.uri.trim().replace(/^\//,"");
       });
@@ -257,12 +88,12 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     let sections = [];
     let articleContentHtml = '';
     let order = 1;
-    document.querySelectorAll('.article-section').forEach(sec => {
+    document.querySelectorAll('.pexego-section').forEach(sec => {
       let section = sec.cloneNode(true);
       let editorId = section.dataset.sectionId ?? section.dataset.editorId;
 
-      let sectionElement = section.classList.contains('article-section-paragraph')
-        ? document.querySelector('#article-section-paragraph-' + editorId + '-html')
+      let sectionElement = section.classList.contains(pexegoClasses.sectionParagraph)
+        ? document.querySelector('#' + pexegoClasses.sectionParagraph + '-' + editorId + '-html')
         : section;
 
       let sectionContentHtml = sectionElement.innerHTML.trim();
@@ -282,15 +113,32 @@ document.querySelectorAll('.article-save-button').forEach(el => {
           h1El.appendChild(aEl);
         }
 
-        // Remove attributes and not required classes
-        c.classList.remove('placeholder');
+        c.classList.remove(
+          'placeholder',
+          pexegoClasses.contentTitle,
+          pexegoClasses.contentSubtitle,
+          pexegoClasses.contentParagraph,
+          pexegoClasses.contentImage,
+          pexegoClasses.contentImageCaption
+        );
+        if (!c.classList.length) {
+          c.removeAttribute('class');
+        }
         c.removeAttribute('id');
         c.removeAttribute('contenteditable');
         delete c.dataset.placeholder;
         delete c.dataset.imageId;
+
+        if (c.nodeName !== 'IMG' && !c.innerHTML.trim().length) {
+          sectionElement.removeChild(c);
+        }
       }
 
-      articleContentHtml += sectionElement.innerHTML.trim();
+      let elementContent = sectionElement.innerHTML.trim();
+      if (elementContent.length) {
+        articleContentHtml += elementContent;
+      }
+
       let currentSection = {
         id: section.dataset.sectionId ? Number.parseInt(section.dataset.sectionId) : null,
         sectionTypeId: getSectionTypeIdFromClassList(section.classList),
@@ -298,10 +146,10 @@ document.querySelectorAll('.article-save-button').forEach(el => {
         order: order++
       };
 
-      if (section.classList.contains('article-section-image')) {
-        const imageCaption = section.getElementsByClassName('article-section-image-caption');
+      if (section.classList.contains(pexegoClasses.sectionImage)) {
+        const imageCaption = section.getElementsByClassName(pexegoClasses.contentImageCaption);
         currentSection.imageCaption = imageCaption.length > 0 ? imageCaption[0].textContent : null;
-        const image = section.getElementsByClassName('article-image');
+        const image = section.getElementsByClassName(pexegoClasses.sectionImage);
         currentSection.imageId = image[0] ? Number.parseInt(image[0].dataset.imageId) : null;
       }
 
@@ -310,9 +158,9 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     document.querySelectorAll('#tags-selected > .result-selected')
       .forEach(t => {
         tags.push({
-            id: t.dataset.tagId ? Number.parseInt(t.dataset.tagId) : null,
-            name: t.dataset.tagName
-          });
+          id: t.dataset.tagId ? Number.parseInt(t.dataset.tagId) : null,
+          name: t.dataset.tagName
+        });
       });
 
     if (!articleContentHtml || !articleContentHtml.trim().length) {
@@ -337,7 +185,6 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     });
 
     const url = '/back/article';
-
     if (articleIdEl && articleIdEl.value) {
       xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, global.get('globalUpdated'))
         .then((response) => afterApiCall(response, uriEl.value))
@@ -366,10 +213,7 @@ const addMouseListenerToImageInImagesSection = function (imageEl) {
   }
 }
 
-let sectionAllImages = document.querySelectorAll('.image-item');
-if (sectionAllImages) {
-  sectionAllImages.forEach(addMouseListenerToImageInImagesSection);
-}
+document.querySelectorAll('.image-item').forEach(im => addMouseListenerToImageInImagesSection(im));
 
 const deleteImage = async function (e, aEl) {
   e.preventDefault();
@@ -393,105 +237,45 @@ document.querySelectorAll('.image-delete').forEach(function (aEl) {
   });
 });
 
-const inputFileImages = document.querySelector('input[name="images"]');
-if (inputFileImages) {
-  inputFileImages.addEventListener('change', e => {
+document.querySelectorAll('input#images').forEach(im => {
+  im.addEventListener('change', e => {
     e.preventDefault();
 
-    const articleImagesDiv = document.querySelector('#images-list');
-    const files = inputFileImages.files;
-    const articleIdInput = document.querySelector('input[name="articleId"]');
-    const eventIdInput = document.querySelector('form#invitation input[name="eventId"]');
-    const eventId = eventIdInput ? eventIdInput.value : null;
+    const imagesContainer = document.querySelector('#images-list');
+    let newImgDiv = document.createElement('div');
+    newImgDiv.className = 'image-item';
 
-    for (let i = 0; i < files.length; i++) {
-      let formData = new FormData();
-      let file = files[i]
+    imagesContainer.appendChild(newImgDiv);
 
-      if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-        return alert(file.name + " is not an image");
-      }
+    for (let i = 0; i < im.files.length; i++) {
+      let file = im.files[i]
 
-      formData.append('files[]', file);
-      formData.append('articleId', articleIdInput ? Number.parseInt(articleIdInput.value) : null);
-      formData.append('eventId', eventId);
-
-      const reader = new FileReader();
-      reader.addEventListener('load', function () {
-        let articleImageDiv = document.createElement('div');
-        articleImageDiv.className = 'image-item';
-        let image = new Image();
-        image.className = 'opacity preview';
-        image.alt = file.name;
-        image.src = String(reader.result);
-        let imgLoading = new Image();
-        imgLoading.className = 'justify-center';
-        imgLoading.alt = global.get('globalLoading');
-        imgLoading.src = '/img/loading.gif';
-
-        articleImageDiv.appendChild(image);
-        articleImageDiv.appendChild(imgLoading);
-        articleImagesDiv.appendChild(articleImageDiv);
-
-        fetch(
-          '/api/image',
-          {
-            method: 'POST',
-            body: formData
+      uploadImage(
+        file,
+        newImgDiv,
+        '',
+        feedbackDiv,
+        (response) => {
+          if (response && response.id) {
+            newImgDiv.dataset.imageId = response.id;
+            let imageDeleteDiv = document.createElement('div');
+            imageDeleteDiv.id = 'image-options-' + response.id;
+            imageDeleteDiv.className = 'options null';
+            let imageDeleteA = document.createElement('a');
+            imageDeleteA.href = '#';
+            imageDeleteA.className = 'image-delete';
+            imageDeleteA.innerHTML = '&#10006;';
+            imageDeleteA.addEventListener('click', e => deleteImage(e, imageDeleteA).then());
+            imageDeleteDiv.appendChild(imageDeleteA);
+            newImgDiv.appendChild(imageDeleteDiv);
+            addMouseListenerToImageInImagesSection(newImgDiv);
           }
-        ).then(response => {
-          if (!response.ok) {
-            throw new Error(response.status + ': ' + response.statusText);
-          }
-
-          return response.json();
-        })
-          .then(data => {
-            if (!data.success || !data.images || data.images.length <= 0) {
-              throw new Error(
-                data.errorMessage ?? global.get('genericError') + ': ' + image.src
-              );
-            }
-
-            data.images.forEach((i) => {
-              let imageId = i.id;
-
-              let imageDeleteDiv = document.createElement('div');
-              imageDeleteDiv.id = 'image-options-' + imageId;
-              imageDeleteDiv.className = 'options null';
-              let imageDeleteA = document.createElement('a');
-              imageDeleteA.href = '#';
-              imageDeleteA.className = 'image-delete';
-              imageDeleteA.innerHTML = '&#10006;';
-              imageDeleteDiv.appendChild(imageDeleteA);
-              articleImageDiv.appendChild(imageDeleteDiv);
-
-              image.classList.remove('opacity');
-              image.src = i.url;
-              articleImageDiv.dataset.imageId = imageId;
-              image.dataset.imageId = imageId;
-              image.dataset.eventId = eventId;
-              imgLoading.classList.add('null');
-              addMouseListenerToImageInImagesSection(articleImageDiv);
-              imageDeleteA.addEventListener('click', e => {
-                deleteImage(e, imageDeleteA).then();
-              });
-            });
-          }).catch((error) => {
-          articleImageDiv.classList.add('null');
-          feedbackDiv.textContent = global.get('genericError');
-          feedbackDiv.classList.remove('feedback-success');
-          feedbackDiv.classList.add('feedback-error');
-          feedbackDiv.classList.remove('null');
-          setTimeout(() => {
-            feedbackDiv.classList.add('null')
-          }, 5000);
-        });
-      });
-      reader.readAsDataURL(file);
+        },
+        () => {}
+      );
     }
   });
-}
+});
 
 const formUser = document.querySelector('form#form-user');
 if (formUser) {
@@ -589,260 +373,6 @@ document.querySelectorAll('.user-enabled-option').forEach(op => {
     });
   });
 });
-
-document.querySelectorAll('.article-add-section-paragraph').forEach(bu => {
-  bu.addEventListener('click', e => {
-    e.preventDefault();
-
-    const existingSections = document.querySelectorAll('section.article-section');
-    if (existingSections.length &&
-      existingSections[existingSections.length - 1].classList.contains('article-section-paragraph')
-    ) {
-      let id = existingSections[existingSections.length - 1].dataset.sectionId
-        ?? existingSections[existingSections.length - 1].dataset.editorId;
-      document.querySelector('.article-section-paragraph-' + id).focus();
-      return;
-    }
-
-    const articleContentHtml = document.querySelector('div.article-content-text');
-    const id = generateRandomString(5);
-    const sectionId = 'article-section-paragraph-' + id;
-
-    let articleSectionTextHtml = document.createElement('div');
-    articleSectionTextHtml.id = sectionId + '-html';
-
-    let articleSectionText = document.createElement('section');
-    articleSectionText.id = sectionId;
-    articleSectionText.dataset.editorId = id;
-    articleSectionText.className = 'article-section article-content article-section-paragraph';
-
-    let divEditor = document.createElement('div');
-    divEditor.className = 'pell-content placeholder ' + sectionId;
-    divEditor.contentEditable = 'true';
-    divEditor.dataset.placeholder = global.get('editorParagraphPlaceholder');
-    articleSectionText.appendChild(divEditor);
-
-    generateSectionWrapperFor(articleSectionText, id);
-    articleContentHtml.appendChild(articleSectionTextHtml);
-
-    loadEditor(sectionId);
-
-    document.querySelector('.' + sectionId).focus();
-  });
-});
-
-document.querySelectorAll('.article-add-section-title').forEach(bu => {
-  bu.addEventListener('click', e => {
-    e.preventDefault();
-
-    const id = generateRandomString(5);
-    const sectionId = 'article-section-title-' + id;
-
-    let articleSectionWrapper = document.createElement('section');
-    articleSectionWrapper.id = sectionId;
-    articleSectionWrapper.className = 'article-section article-section-title';
-
-    let articleSectionTitle = document.createElement('h1');
-    articleSectionTitle.className = 'article-title placeholder';
-    articleSectionTitle.dataset.placeholder = global.get('editorTitlePlaceholder');
-    articleSectionTitle.contentEditable = 'true';
-
-    articleSectionWrapper.appendChild(articleSectionTitle);
-    generateSectionWrapperFor(articleSectionWrapper, id);
-
-    const allTitles = document.querySelectorAll('h1.article-title');
-    if (allTitles.length === 1) {
-      articleSectionTitle.id = 'article-title-main';
-      allTitles[0].addEventListener('input', (e) => updateArticleUri(e));
-    }
-
-    document.querySelector('#' + sectionId + ' > h1').focus();
-  });
-});
-
-document.querySelectorAll('.article-add-section-subtitle').forEach(bu => {
-  bu.addEventListener('click', e => {
-    e.preventDefault();
-
-    const id = generateRandomString(5);
-    const sectionId = 'article-section-subtitle-' + id;
-
-    let articleSectionWrapper = document.createElement('section');
-    articleSectionWrapper.id = sectionId;
-    articleSectionWrapper.className = 'article-section article-section-subtitle';
-
-    let articleSectionSubtitle = document.createElement('h2');
-    articleSectionSubtitle.className = 'article-subtitle placeholder';
-    articleSectionSubtitle.dataset.placeholder = global.get('editorSubtitlePlaceholder');
-    articleSectionSubtitle.contentEditable = 'true';
-
-    articleSectionWrapper.appendChild(articleSectionSubtitle);
-    generateSectionWrapperFor(articleSectionWrapper, id);
-
-    document.querySelector('#' + sectionId).focus();
-  });
-});
-
-document.querySelectorAll('.article-add-section-video').forEach(bu => {
-  bu.addEventListener('click', e => {
-    e.preventDefault();
-
-    // ToDo: Implement popup to get the video URL
-    const videoUrl = window.prompt(global.get('editorVideoUrlTitle'));
-    if (videoUrl) {
-      const ytVideoId = getYoutubeVideoIdFromUrl(videoUrl);
-      if (!ytVideoId) {
-        return;
-      }
-
-      let articleSectionVideo = document.createElement('section');
-      articleSectionVideo.className = 'article-section article-section-video';
-      let iframeWrapper = document.createElement('div');
-      iframeWrapper.className = 'article-section-video';
-      let articleSectionIframe = document.createElement('iframe');
-      articleSectionIframe.width = '560';
-      articleSectionIframe.height = '315';
-      articleSectionIframe.src = 'https://www.youtube-nocookie.com/embed/' + ytVideoId;
-      articleSectionIframe.frameBorder = '0';
-      articleSectionIframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      articleSectionIframe.allowFullscreen = true;
-
-      iframeWrapper.appendChild(articleSectionIframe);
-      articleSectionVideo.appendChild(iframeWrapper);
-
-      generateSectionWrapperFor(articleSectionVideo, generateRandomString(5));
-    }
-  });
-});
-
-document.querySelectorAll('.article-add-section-html').forEach(bu => {
-  bu.addEventListener('click', e => {
-    e.preventDefault();
-
-    alert('ToDo');
-  });
-});
-
-const inputArticleImages = document.querySelector('input[name="article-add-image-input"]');
-if (inputArticleImages) {
-  inputArticleImages.addEventListener('change', e => {
-    e.preventDefault();
-
-    const articleContentDiv = document.querySelector('article.article-content');
-    const files = inputArticleImages.files;
-    const articleIdInput = document.querySelector('input[name="articleId"]');
-
-    for (let i = 0; i < files.length; i++) {
-      let formData = new FormData();
-      let file = files[i]
-
-      if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-        return alert(file.name + ' ' + global.get('feedbackErrorNotAnImage'));
-      }
-
-      formData.append('files[]', file);
-      formData.append('articleId', articleIdInput ? Number.parseInt(articleIdInput.value) : null);
-
-      const reader = new FileReader();
-      reader.addEventListener('load', function () {
-        let id = generateRandomString(5);
-
-        let articleSectionImage = document.createElement('section');
-        articleSectionImage.className = 'article-section article-section-image';
-
-        let imageCaption = document.createElement('p');
-        imageCaption.className = 'placeholder article-section-image-caption';
-        imageCaption.dataset.placeholder = global.get('editorTitlePlaceholder');
-        imageCaption.contentEditable = 'true';
-
-        let image = new Image();
-        image.className = 'opacity article-image';
-        image.src = String(reader.result);
-
-        let imgLoading = new Image();
-        imgLoading.className = 'justify-center';
-        imgLoading.alt = global.get('globalLoading');
-        imgLoading.src = '/img/loading.gif';
-
-        articleSectionImage.appendChild(image);
-        articleSectionImage.appendChild(imgLoading);
-        articleSectionImage.appendChild(imageCaption);
-
-        generateSectionWrapperFor(articleSectionImage, id);
-
-        const pPlaceholders = document.querySelectorAll('.placeholder');
-        pPlaceholders[pPlaceholders.length - 1]
-          .addEventListener('focus', managePlaceholderForEditableElements);
-
-        fetch(
-          '/api/image',
-          {
-            method: 'POST',
-            body: formData
-          }
-        ).then(response => {
-          if (!response.ok) {
-            throw new Error(response.status + ': ' + response.statusText);
-          }
-
-          try {
-            return response.json();
-          } catch (error) {
-            throw new Error(error.message);
-          }
-        })
-          .then(data => {
-            if (!data.success || !data.images || data.images.length <= 0) {
-              throw new Error(
-                data.errorMessage ?? global.get('genericError') + ': ' + image.src
-              );
-            }
-
-            data.images.forEach((i) => {
-              image.classList.remove('opacity');
-              image.src = i.url;
-              image.dataset.imageId = i.id;
-              image.alt = i.caption ?? i.url;
-              articleSectionImage.removeChild(imgLoading);
-            });
-          }).catch((error) => {
-            articleContentDiv.removeChild(articleSectionImage);
-            feedbackDiv.textContent = error.message;
-            feedbackDiv.classList.remove('feedback-success');
-            feedbackDiv.classList.add('feedback-error');
-            feedbackDiv.classList.remove('null');
-            setTimeout(() => {
-              feedbackDiv.classList.add('null')
-            }, 5000);
-          });
-      });
-      reader.readAsDataURL(file);
-    }
-  });
-}
-
-document.querySelectorAll('.placeholder').forEach(el => {
-  el.addEventListener('focus', managePlaceholderForEditableElements);
-})
-
-document.querySelectorAll('.article-section-button-delete').forEach(el => {
-  el.addEventListener('click', e => {
-    e.preventDefault();
-
-    const sectionId = Number.parseInt(el.parentNode.parentNode.dataset.sectionId);
-    removeSection(e, sectionId);
-  });
-});
-
-document.querySelectorAll('.article-section-button-up').forEach(el => {
-  el.addEventListener('click', e => moveSectionUp(e, el.parentNode.parentNode.dataset.sectionId));
-});
-
-document.querySelectorAll('.article-section-button-down').forEach(el => {
-  el.addEventListener('click', e => moveSectionDown(e, el.parentNode.parentNode.dataset.sectionId));
-});
-
-document.querySelectorAll('section.article-section-paragraph').forEach(s => loadEditor(s.id));
 
 document.querySelectorAll('h1#article-title-main').forEach(t => {
   t.addEventListener('input', (e) => updateArticleUri(e))

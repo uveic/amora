@@ -38,15 +38,7 @@
         "summary": "Store a new image",
         "description": "",
         "operationId": "storeImage",
-        "parameters": [
-          {
-            "name": "articleId",
-            "in": "formData",
-            "description": "Article ID to link the image to an article",
-            "required": false,
-            "type": "integer"
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Image stored",
