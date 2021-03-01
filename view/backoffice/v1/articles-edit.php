@@ -1,8 +1,8 @@
 <?php
 
-use uve\core\model\response\HtmlResponseDataAuthorised;
-use uve\core\module\article\model\ArticleSection;
-use uve\core\module\article\value\ArticleSectionType;
+use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Module\Article\Model\ArticleSection;
+use Amora\Core\Module\Article\Value\ArticleSectionType;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();

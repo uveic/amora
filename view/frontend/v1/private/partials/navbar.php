@@ -1,7 +1,7 @@
 <?php
 
-use uve\Core\Menu\MenuItem;
-use uve\core\model\response\HtmlResponseData;
+use Amora\Core\Menu\MenuItem;
+use Amora\Core\Model\Response\HtmlResponseData;
 
 /** @var HtmlResponseData $responseData */
 

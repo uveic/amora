@@ -1,8 +1,8 @@
 <?php
 
-use uve\core\model\response\HtmlResponseDataAuthorised;
-use uve\core\util\DateUtil;
-use uve\core\util\StringUtil;
+use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\StringUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 

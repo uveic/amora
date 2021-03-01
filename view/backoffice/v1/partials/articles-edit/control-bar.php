@@ -1,10 +1,10 @@
 <?php
 
-use uve\core\model\response\HtmlResponseDataAuthorised;
-use uve\Core\Model\Util\LookupTableBasicValue;
-use uve\core\module\article\value\ArticleStatus;
-use uve\core\util\DateUtil;
-use uve\core\util\StringUtil;
+use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Model\Util\LookupTableBasicValue;
+use Amora\Core\Module\Article\Value\ArticleStatus;
+use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\StringUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 

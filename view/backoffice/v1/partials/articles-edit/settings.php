@@ -1,8 +1,8 @@
 <?php
-use uve\core\model\response\HtmlResponseDataAuthorised;
-use uve\Core\Model\Util\LookupTableBasicValue;
-use uve\core\module\article\model\Tag;
-use uve\core\util\DateUtil;
+use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Model\Util\LookupTableBasicValue;
+use Amora\Core\Module\Article\Model\Tag;
+use Amora\Core\Util\DateUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();

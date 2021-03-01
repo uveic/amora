@@ -1,7 +1,7 @@
 <?php
 
-use uve\core\model\response\HtmlResponseData;
-use uve\core\module\user\service\UserService;
+use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Module\User\Service\UserService;
 
 /** @var HtmlResponseData $responseData */
 

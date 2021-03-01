@@ -1,6 +1,6 @@
 <?php
 
-use uve\core\model\response\HtmlResponseData;
+use Amora\Core\Model\Response\HtmlResponseData;
 
 /** @var HtmlResponseData $responseData */
 

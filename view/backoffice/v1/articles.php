@@ -1,9 +1,9 @@
 <?php
 
-use uve\core\module\article\model\Article;
-use uve\core\model\response\HtmlResponseDataAuthorised;
-use uve\core\module\article\value\ArticleStatus;
-use uve\core\util\DateUtil;
+use Amora\Core\Module\Article\Model\Article;
+use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Module\Article\Value\ArticleStatus;
+use Amora\Core\Util\DateUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 

@@ -1,8 +1,8 @@
 <?php
 
-use uve\core\model\response\HtmlResponseData;
-use uve\core\module\article\model\Article;
-use uve\core\util\DateUtil;
+use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Module\Article\Model\Article;
+use Amora\Core\Util\DateUtil;
 
 /** @var HtmlResponseData $responseData */
 

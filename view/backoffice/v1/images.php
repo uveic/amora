@@ -1,7 +1,7 @@
 <?php
 
-use uve\core\model\response\HtmlResponseDataAuthorised;
-use uve\core\module\article\model\Image;
+use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Module\Article\Model\Image;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 

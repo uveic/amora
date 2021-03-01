@@ -1,7 +1,7 @@
 <?php
 
-use uve\core\model\response\HtmlResponseData;
-use uve\core\util\DateUtil;
+use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Util\DateUtil;
 
 /** @var HtmlResponseData $responseData */
 $article = $responseData->getFirstArticle();

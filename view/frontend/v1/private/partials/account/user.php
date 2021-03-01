@@ -1,7 +1,7 @@
 <?php
 
-use uve\core\model\response\HtmlResponseData;
-use uve\core\value\Language;
+use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Value\Language;
 
 /** @var HtmlResponseData $responseData */
 

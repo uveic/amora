@@ -1,6 +1,6 @@
 <?php
 
-use uve\core\model\response\HtmlResponseDataAuthorised;
+use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 

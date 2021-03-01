@@ -1,8 +1,8 @@
 <?php
 
-use uve\core\module\user\model\User;
-use uve\core\model\response\HtmlResponseDataAuthorised;
-use uve\core\module\user\value\UserRole;
+use Amora\Core\Module\User\Model\User;
+use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Module\User\Value\UserRole;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 

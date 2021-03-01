@@ -3,7 +3,7 @@
 .php_cs.cache
 
 #
-app/config/local.php
+App/config/local.php
 vendor
 public/uploads
 

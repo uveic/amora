@@ -1,7 +1,7 @@
 <?php
 
-use uve\core\model\response\HtmlResponseDataAuthorised;
-use uve\core\util\DateUtil;
+use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Util\DateUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
