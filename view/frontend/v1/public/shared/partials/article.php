@@ -9,7 +9,7 @@ $canEdit = $responseData->getSession() && $responseData->getSession()->isAdmin()
 
 if ($article) {
 ?>
-  <article class="content-medium-width m-t-2 m-b-2">
+  <article>
     <?=$article->getContentHtml()?>
     <div class="article-info">
       <?=$this->e(DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true))?>

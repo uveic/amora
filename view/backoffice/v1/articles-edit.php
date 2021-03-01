@@ -61,7 +61,7 @@ function generateSection(
   <form action="#">
 <?=$this->insert('partials/articles-edit/header', ['responseData' => $responseData])?>
 <?=$this->insert('partials/articles-edit/control-bar', ['responseData' => $responseData])?>
-    <div class="content-medium-width">
+    <div>
       <input name="articleId" type="hidden" value="<?=$article ? $article->getId() : ''?>">
       <article class="pexego-container">
 <?php

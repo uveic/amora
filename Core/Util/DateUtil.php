@@ -263,7 +263,8 @@ final class DateUtil
         string $lang = 'EN',
         bool $includeWeekDay = true,
         bool $includeTime = false,
-        string $timezone = 'UTC'
+        string $timezone = 'UTC',
+        bool $includeYear = true
     ): string {
         if (!isset($stringDate)) {
             $stringDate = 'now';
@@ -272,12 +273,7 @@ final class DateUtil
         $d = new DateTime($stringDate, new DateTimeZone('UTC'));
         $d->setTimezone(new DateTimeZone($timezone));
 
-        if ($lang) {
-            $lang = strtoupper($lang);
-        }
-
-        $weekDay = '';
-        $time = '';
+        $lang = strtoupper($lang);
         switch (strtoupper($lang)) {
             case 'GL':
                 $months = [
@@ -304,50 +300,31 @@ final class DateUtil
                     'domingo'
                 ];
 
-                if ($includeWeekDay) {
-                    $weekDay = $days[$d->format('N') - 1] . ', ';
-                }
-
-                if ($includeTime) {
-                    $time = ' ás ' . $d->format('H:i');
-                }
+                $weekDay = $includeWeekDay ? $days[$d->format('N') - 1] . ', ' : '';
+                $time = $includeTime ? ' ás ' . $d->format('H:i') : '';
+                $year = $includeYear ? ' de ' . $d->format('Y') : '';
 
                 return $weekDay
                     . $d->format('j')
                     . ' de '
                     . $months[$d->format('n') - 1]
-                    . ' de '
-                    . $d->format('Y')
+                    . $year
                     . $time;
             case 'ES':
-                $format = '';
-
-                if ($includeWeekDay) {
-                    $format .= '%A, ';
-                }
-
-                $format .= '%e de %B de %G';
-
-                if ($includeTime) {
-                    $format .= ' a las %H:%M';
-                }
+                $format = ($includeWeekDay ? '%A, ' : '')
+                    . '%e de %B'
+                    . ($includeYear ? ' de %G' : '')
+                    . ($includeTime ? ' a las %H:%M' : '');
 
                 setlocale(LC_ALL, 'es_ES');
                 $output = strftime($format, $d->getTimestamp());
                 setlocale(LC_ALL, Core::getPhpLocale());
                 return $output;
             default:
-                $format = '';
-
-                if ($includeWeekDay) {
-                    $format .= 'l, ';
-                }
-
-                $format .= 'F jS, Y';
-
-                if ($includeTime) {
-                    $format .= ' \a\t H:i';
-                }
+                $format = ($includeWeekDay ? 'l, ' : '')
+                    . 'F jS'
+                    . ($includeYear ? ', Y' : '')
+                    . ($includeTime ? ' \a\t H:i' : '');
 
                 return $d->format($format);
         }

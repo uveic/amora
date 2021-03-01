@@ -292,12 +292,15 @@ class ArticleService
     public function getArticlesForHome(bool $isAdmin = false): array
     {
         if ($isAdmin) {
-            return $this->articleDataLayer->filterArticlesBy();
+            return $this->articleDataLayer->filterArticlesBy(
+                queryOptions: new QueryOptions(limit: 200)
+            );
         }
 
         return $this->articleDataLayer->filterArticlesBy(
-            ArticleStatus::PUBLISHED,
-            ArticleType::HOME
+            statusId: ArticleStatus::PUBLISHED,
+            typeId: ArticleType::HOME,
+            queryOptions: new QueryOptions(limit: 20)
         );
     }
 
