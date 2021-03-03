@@ -144,7 +144,10 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getArticlesPage(Request $request): Response
     {
-        $articles = $this->articleService->getAllArticles(new QueryOptions(null, 'DESC', 100));
+        $articles = $this->articleService->getAllArticles(
+            true,
+            new QueryOptions(null, 'DESC', 100)
+        );
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
         return Response::createBackofficeHtmlResponse(

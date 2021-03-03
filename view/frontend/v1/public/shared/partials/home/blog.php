@@ -1,12 +1,16 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Model\Response\HtmlHomepageResponseData;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Util\DateUtil;
 
-/** @var HtmlResponseData $responseData */
+/** @var HtmlHomepageResponseData $responseData */
 
 $isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin();
+
+if (!$responseData->getBlogArticles()) {
+  return;
+}
 
 ?>
 <section class="home-blog">
@@ -14,7 +18,7 @@ $isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin()
 <?php
 $previousYear = null;
 /** @var Article $article */
-foreach ($responseData->getArticles() as $article) {
+foreach ($responseData->getBlogArticles() as $article) {
     if (!$article->isPublished() && !$isAdmin) {
         continue;
     }

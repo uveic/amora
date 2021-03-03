@@ -32,14 +32,22 @@ class ArticleService
         return $this->articleDataLayer->getArticleForUri($uri);
     }
 
-    public function getAllArticles(?QueryOptions $queryOptions): array
+    public function getAllArticles(
+        bool $includeTags = false,
+        ?QueryOptions $queryOptions = null
+    ): array
     {
-        return $this->articleDataLayer->getAllArticles($queryOptions);
+        return $this->articleDataLayer->getAllArticles($includeTags, $queryOptions);
     }
 
     public function getSectionsForArticleId(int $articleId): array
     {
         return $this->articleDataLayer->getSectionsForArticleId($articleId);
+    }
+
+    public function getHomepageArticle(): ?Article
+    {
+        return $this->articleDataLayer->getHomepageArticle();
     }
 
     public function checkUriAndReturnAnAvailableOne(string $uri, int $articleId = null): string
@@ -209,7 +217,7 @@ class ArticleService
                 continue;
             }
 
-            if ($existingTagsById[$nTag->getId()]) {
+            if (isset($existingTagsById[$nTag->getId()])) {
                 unset($existingTagsById[$nTag->getId()]);
                 continue;
             }
@@ -299,7 +307,7 @@ class ArticleService
 
         return $this->articleDataLayer->filterArticlesBy(
             statusId: ArticleStatus::PUBLISHED,
-            typeId: ArticleType::HOME,
+            typeId: ArticleType::HOMEPAGE,
             queryOptions: new QueryOptions(limit: 20)
         );
     }

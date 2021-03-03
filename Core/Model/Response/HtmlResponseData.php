@@ -4,12 +4,9 @@ namespace Amora\Core\Model\Response;
 
 use Amora\Core\Model\Request;
 use Amora\Core\Module\Article\Model\Article;
-use Amora\Core\Module\User\Model\Session;
 
 class HtmlResponseData extends HtmlResponseDataAbstract
 {
-    protected ?Session $session;
-
     public function __construct(
         Request $request,
         ?string $pageTitle = null,
@@ -21,8 +18,6 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         private ?int $forgotPasswordUserId = null
     ) {
         parent::__construct($request, $pageTitle, $pageDescription, $mainImageSiteUri);
-
-        $this->session = $request->getSession();
     }
 
     public function getArticles(): array
@@ -39,11 +34,6 @@ class HtmlResponseData extends HtmlResponseDataAbstract
     public function getUserFeedback(): ?UserFeedback
     {
         return $this->userFeedback;
-    }
-
-    public function getSession(): ?Session
-    {
-        return $this->session;
     }
 
     public function getForgotPasswordUserId(): ?int

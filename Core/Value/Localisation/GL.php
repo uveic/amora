@@ -109,6 +109,8 @@ return [
     'articleStatusDeleted' => 'Eliminado',
     'articleTypeHome' => 'Portada',
     'articleTypeArchived' => 'Arquivado',
+    'articleTypeBlog' => 'Blog',
+    'articleTypeArticle' => 'Artigo',
     'paragraphPlaceholder' => 'Escribe aquí...',
 
     'sectionRemove' => 'Eliminar sección',

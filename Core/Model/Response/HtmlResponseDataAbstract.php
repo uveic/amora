@@ -5,12 +5,14 @@ namespace Amora\Core\Model\Response;
 use Amora\App\Value\AppMenu;
 use Amora\Core\Core;
 use Amora\Core\Model\Request;
+use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Util\LocalisationUtil;
 use Amora\Core\Value\CoreMenu;
 
 abstract class HtmlResponseDataAbstract
 {
     protected LocalisationUtil $localisationUtil;
+    protected ?Session $session;
     protected string $baseUrl;
     protected string $baseUrlWithLanguage;
     protected string $siteUrl;
@@ -30,6 +32,7 @@ abstract class HtmlResponseDataAbstract
         ?string $pageDescription = null,
         ?string $siteImageUri = null
     ) {
+        $this->session = $request->getSession();
         $this->localisationUtil = Core::getLocalisationUtil(strtoupper($request->getSiteLanguage()));
 
         $baseUrl = Core::getConfigValue('baseUrl');
@@ -55,6 +58,11 @@ abstract class HtmlResponseDataAbstract
             ?? $this->localisationUtil->getValue('siteDescription');
         $this->baseUrlWithLanguage = $this->getBaseUrl() .
             strtolower($this->getSiteLanguage()) . '/';
+    }
+
+    public function getSession(): ?Session
+    {
+        return $this->session;
     }
 
     public function getBaseUrl(): string

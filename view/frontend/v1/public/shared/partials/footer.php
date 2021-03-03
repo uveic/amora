@@ -1,8 +1,8 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Model\Response\HtmlResponseDataAbstract;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAbstract $responseData */
 
 $isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin();
 

@@ -1,9 +1,9 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Model\Response\HtmlHomepageResponseData;
 use Amora\Core\Module\Article\Model\Article;
 
-/** @var HtmlResponseData $responseData */
+/** @var HtmlHomepageResponseData $responseData */
 
 $isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin();
 
@@ -13,7 +13,7 @@ $isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin()
   <div class="home-tag-items">
 <?php
 /** @var Article $article */
-foreach ($responseData->getArticles() as $article) {
+foreach ($responseData->getTagArticles() as $article) {
     if (!$article->isPublished() && !$isAdmin) {
         continue;
     }

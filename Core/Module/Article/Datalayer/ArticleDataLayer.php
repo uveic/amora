@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Datalayer;
 
+use Amora\Core\Module\Article\Value\ArticleType;
 use Throwable;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
@@ -136,9 +137,14 @@ class ArticleDataLayer
         return $output;
     }
 
-    public function getAllArticles(?QueryOptions $queryOptions): array
-    {
-        return $this->getArticles(null, null, null, null, false, $queryOptions);
+    public function getAllArticles(
+        bool $includeTags = false,
+        ?QueryOptions $queryOptions = null
+    ): array {
+        return $this->getArticles(
+            includeTags: $includeTags,
+            queryOptions: $queryOptions
+        );
     }
 
     public function getArticleForId(int $id, $includeTags = false): ?Article
@@ -150,6 +156,22 @@ class ArticleDataLayer
     public function getArticleForUri(string $uri): ?Article
     {
         $res = $this->getArticles(null, null, null, $uri);
+        return empty($res[0]) ? null : $res[0];
+    }
+
+    public function getHomepageArticle(): ?Article
+    {
+        $res = $this->getArticles(
+            statusId: ArticleStatus::PUBLISHED,
+            typeId: ArticleType::HOMEPAGE,
+        );
+
+        if (count($res) > 1) {
+            $this->logger->logError(
+                'There are more than one homepage article. Returning the most recently updated.'
+            );
+        }
+
         return empty($res[0]) ? null : $res[0];
     }
 

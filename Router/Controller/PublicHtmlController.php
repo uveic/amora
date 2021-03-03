@@ -3,9 +3,11 @@
 namespace Amora\Router;
 
 use Amora\Core\Core;
+use Amora\Core\Model\Response\HtmlHomepageResponseData;
 use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Model\Response\UserFeedback;
 use Amora\Core\Module\Action\Service\ActionService;
+use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\User\Service\SessionService;
@@ -42,14 +44,13 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     {
         $isAdmin = $request->getSession() && $request->getSession()->isAdmin();
         $articles = $this->articleService->getArticlesForHome($isAdmin);
+        $homepageArticle = $this->articleService->getHomepageArticle();
         return Response::createFrontendPublicHtmlResponse(
             'shared/home',
-            new HtmlResponseData(
-                $request,
-                Core::getLocalisationUtil($request->getSiteLanguage())->getValue('siteTitle'),
-                null,
-                null,
-                $articles,
+            new HtmlHomepageResponseData(
+                request: $request,
+                article: $homepageArticle,
+                tagArticles: $articles,
             )
         );
     }
@@ -164,12 +165,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         return Response::createFrontendPublicHtmlResponse(
             strtolower($request->getSiteLanguage()) . '/home',
             new HtmlResponseData(
-                $request,
-                null,
-                null,
-                null,
-                [],
-                new UserFeedback($isError, $message),
+                request: $request,
+                userFeedback: new UserFeedback($isError, $message),
             )
         );
     }
@@ -193,13 +190,11 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             return Response::createFrontendPublicHtmlResponse(
                 strtolower($request->getSiteLanguage()) . '/home',
                 new HtmlResponseData(
-                    $request,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    new UserFeedback(true, $localisationUtil->getValue('authenticationPasswordResetLinkError'))
+                    request: $request,
+                    userFeedback: new UserFeedback(
+                        true,
+                        $localisationUtil->getValue('authenticationPasswordResetLinkError')
+                    )
                 )
             );
         }
@@ -208,14 +203,10 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         return Response::createFrontendPublicHtmlResponse(
             'shared/password-reset',
             new HtmlResponseData(
-                $request,
-                $localisationUtil->getValue('navChangePassword'),
-                null,
-                null,
-                null,
-                null,
-                $user->getValidationHash(),
-                $user->getId()
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navChangePassword'),
+                verificationHash: $user->getValidationHash(),
+                forgotPasswordUserId: $user->getId()
             )
         );
     }

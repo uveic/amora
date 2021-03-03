@@ -1,8 +1,8 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Model\Response\HtmlHomepageResponseData;
 
-/** @var HtmlResponseData $responseData */
+/** @var HtmlHomepageResponseData $responseData */
 
 ?>
 <!DOCTYPE html>

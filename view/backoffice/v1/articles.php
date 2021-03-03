@@ -3,11 +3,12 @@
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Value\ArticleStatus;
-use Amora\Core\Util\DateUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
 $this->layout('base', ['responseData' => $responseData,])
+
+// UpdatedAt:  DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true);
 
 ?>
   <main>
@@ -24,7 +25,8 @@ $this->layout('base', ['responseData' => $responseData,])
             <div class="table-item edit flex-no-grow"></div>
             <div class="table-item flex-no-grow">#</div>
             <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalTitle')?></div>
-            <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalUpdatedAt')?></div>
+            <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalTags')?></div>
+            <div class="table-item width-1"><?=$responseData->getLocalValue('globalCategory')?></div>
             <div class="table-item width-1"><?=$responseData->getLocalValue('globalStatus')?></div>
           </div>
 <?php
@@ -38,7 +40,8 @@ foreach ($responseData->getArticles() as $article) {
                 <div class="table-item edit flex-no-grow"><a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/articles/<?=$article->getId()?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('globalEdit')?>"></a></div>
                 <div class="table-item flex-no-grow"><?=$article->getId()?></div>
                 <div class="table-item flex-grow-2"><?=$articleTitle?></div>
-                <div class="table-item flex-grow-2"><?=DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true)?></div>
+                <div class="table-item flex-grow-2"><?=$article->getTagsAsString()?></div>
+                <div class="table-item width-1"><?=$responseData->getLocalValue('articleType' . $article->getTypeName()); ?></div>
                 <div class="table-item width-1"><?=$responseData->getLocalValue('articleStatus' . $article->getStatusName()); ?></div>
               </div>
 <?php } ?>

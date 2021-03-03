@@ -162,6 +162,17 @@ class Article
         return $this->tags;
     }
 
+    public function getTagsAsString(): string
+    {
+        $output = [];
+        /** @var Tag $tag */
+        foreach ($this->getTags() as $tag) {
+            $output[] = $tag->getName();
+        }
+
+        return implode(', ', $output);
+    }
+
     public function isPublished(): bool
     {
         if ($this->getStatusId() !== ArticleStatus::PUBLISHED) {

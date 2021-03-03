@@ -304,7 +304,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 null,
                 $request->getSession()->getUser(),
                 $statusId,
-                $typeId ?? ArticleType::HOME,
+                $typeId ?? ArticleType::ARTICLE,
                 $now,
                 $now,
                 $publishOn,
@@ -383,7 +383,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $publishOn ?? $existingArticle->getPublishOn(),
                 $title ?? $existingArticle->getTitle(),
                 $contentHtml ?? $existingArticle->getContentHtml(),
-                $mainImageId ?? $existingArticle->getMainImage()->getId(),
+                $mainImageId ?? $existingArticle->getMainImage()?->getId(),
                 null,
                 $uri
             ),
