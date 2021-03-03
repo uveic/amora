@@ -267,7 +267,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string|null $title
      * @param string $contentHtml
      * @param string|null $uri
-     * @param string|null $mainImageSrc
+     * @param int|null $mainImageId
      * @param string|null $publishOn
      * @param array $sections
      * @param array|null $tags
@@ -280,7 +280,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $title,
         string $contentHtml,
         ?string $uri,
-        ?string $mainImageSrc,
+        ?int $mainImageId,
         ?string $publishOn,
         array $sections,
         ?array $tags,
@@ -310,7 +310,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $publishOn,
                 $title,
                 html_entity_decode($contentHtml),
-                $mainImageSrc,
+                $mainImageId,
+                null,
                 $uri,
             ),
             $sections ?? [],
@@ -336,7 +337,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string|null $title
      * @param string $contentHtml
      * @param string|null $uri
-     * @param string|null $mainImageSrc
+     * @param int|null $mainImageId
      * @param string|null $publishOn
      * @param array $sections
      * @param array|null $tags
@@ -350,7 +351,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $title,
         string $contentHtml,
         ?string $uri,
-        ?string $mainImageSrc,
+        ?int $mainImageId,
         ?string $publishOn,
         array $sections,
         ?array $tags,
@@ -382,7 +383,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $publishOn ?? $existingArticle->getPublishOn(),
                 $title ?? $existingArticle->getTitle(),
                 $contentHtml ?? $existingArticle->getContentHtml(),
-                $mainImageSrc ?? $existingArticle->getMainImageSrc(),
+                $mainImageId ?? $existingArticle->getMainImage()->getId(),
+                null,
                 $uri
             ),
             $sections,
@@ -424,7 +426,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $existingArticle->getPublishOn(),
                 $existingArticle->getTitle(),
                 $existingArticle->getContentHtml(),
-                $existingArticle->getMainImageSrc(),
+                $existingArticle->getMainImage() ? $existingArticle->getMainImage()->getId() : null,
+                $existingArticle->getMainImage(),
                 $existingArticle->getUri()
             ),
             $request->getSourceIp(),

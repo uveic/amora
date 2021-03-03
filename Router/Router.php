@@ -2,6 +2,7 @@
 
 namespace Amora\Router;
 
+use Amora\Core\Util\UrlBuilderUtil;
 use Exception;
 use Throwable;
 use Amora\Core\Core;
@@ -138,13 +139,20 @@ class Router
             );
         }
 
+        $img = $article->getMainImageId()
+            ? ArticleCore::getImageService()->getImageForId($article->getMainImageId())
+            : null;
+        $siteImageUrl = $img
+            ? rtrim(Core::getConfigValue('baseUrl'), ' /') . $img->getFullUrlMedium()
+            : null;
+
         return Response::createFrontendPublicHtmlResponse(
             'shared/home-article',
             new HtmlResponseData(
                 $request,
                 $article->getTitle(),
                 $article->getContentExcerpt(),
-                $article->getMainImageSrc(),
+                $siteImageUrl,
                 [$article],
             )
         );

@@ -435,9 +435,9 @@
                   "description": "Article URI",
                   "type": "string"
                 },
-                "mainImageSrc": {
-                  "description": "Article main image source",
-                  "type": "string"
+                "mainImageId": {
+                  "description": "Article main image Id",
+                  "type": "integer"
                 },
                 "publishOn": {
                   "description": "Publish the article on this date. Format:",
@@ -716,9 +716,9 @@
                   "description": "Article URI",
                   "type": "string"
                 },
-                "mainImageSrc": {
-                  "description": "Article main image source",
-                  "type": "string"
+                "mainImageId": {
+                  "description": "Article main image ID",
+                  "type": "integer"
                 },
                 "publishOn": {
                   "description": "Publish the article on this date. Format:",

@@ -12,7 +12,7 @@ class Global {
   values = {
     "en": {
       "genericError": "Something went wrong, please try again",
-      "genericErrorGetInTouch": "Please, refresh page and get in touch with support if the error persists. Error: ",
+      "genericErrorGetInTouch": "Please, refresh page and try it again. Get in touch with support if the error persists. Error: ",
       "feedbackSaving": "Nothing to save...",
 
       "globalRemove": "Remove",
@@ -58,7 +58,7 @@ class Global {
     },
     "es": {
       "genericError": "Ha ocurrido un error inesperado, por favor inténtalo de nuevo",
-      "genericErrorGetInTouch": "Por favor, actualiza la página y ponte en contacto con el soporte técnico si el error continúa. Error: ",
+      "genericErrorGetInTouch": "Por favor, actualiza la página e intétalo de nuevo. Ponte en contacto con el soporte técnico si el error continúa. Error: ",
       "feedbackSaving": "Nada que guardar...",
 
       "globalRemove": "Eliminar",
@@ -104,7 +104,7 @@ class Global {
     },
     "gl": {
       "genericError": "Algo non foi ben, por favor inténtao de novo",
-      "genericErrorGetInTouch": "Por favor, actualiza a páxina e ponte en contacto co soporte técnico se o erro persiste. Erro: ",
+      "genericErrorGetInTouch": "Por favor, actualiza a páxina e inténtao de novo. Ponte en contacto co soporte técnico se o erro persiste. Erro: ",
       "feedbackSaving": "Nada que gardar...",
 
       "globalRemove": "Eliminar",

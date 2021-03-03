@@ -92,6 +92,7 @@ return [
     'globalUserAccount' => 'Cuenta de usuario',
     'globalUserAccountSettings' => 'Configuración de cuenta de usuario',
     'globalNext' => 'Siguiente',
+    'globalNoTitle' => 'Sin título',
 
     'globalUploadImage' => 'Subir imagen(es)',
     'globalAddImage' => 'Añadir imagen(es)',

@@ -92,6 +92,7 @@ return [
     'globalUserAccount' => 'User Account',
     'globalUserAccountSettings' => 'User Account Settings',
     'globalNext' => 'Next',
+    'globalNoTitle' => 'No Title',
 
     'globalUploadImage' => 'Upload image(s)',
     'globalAddImage' => 'Add image(s)',

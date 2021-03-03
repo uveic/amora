@@ -88,8 +88,9 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     let sections = [];
     let articleContentHtml = '';
     let order = 1;
-    document.querySelectorAll('.pexego-section').forEach(sec => {
-      let section = sec.cloneNode(true);
+    let mainImageId = null;
+    document.querySelectorAll('.pexego-section').forEach(originalSection => {
+      let section = originalSection.cloneNode(true);
       let editorId = section.dataset.sectionId ?? section.dataset.editorId;
 
       let sectionElement = section.classList.contains(pexegoClasses.sectionParagraph)
@@ -147,10 +148,13 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       };
 
       if (section.classList.contains(pexegoClasses.sectionImage)) {
-        const imageCaption = section.getElementsByClassName(pexegoClasses.contentImageCaption);
+        const imageCaption = originalSection.getElementsByClassName(pexegoClasses.contentImageCaption);
         currentSection.imageCaption = imageCaption.length > 0 ? imageCaption[0].textContent : null;
-        const image = section.getElementsByClassName(pexegoClasses.sectionImage);
-        currentSection.imageId = image[0] ? Number.parseInt(image[0].dataset.imageId) : null;
+        const image = originalSection.getElementsByClassName(pexegoClasses.contentImage);
+        currentSection.imageId = image.length > 0 ? Number.parseInt(image[0].dataset.imageId) : null;
+        if (!mainImageId && currentSection.imageId) {
+          mainImageId = currentSection.imageId;
+        }
       }
 
       sections.push(currentSection);
@@ -179,6 +183,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       'contentHtml': articleContentHtml.trim().length ? articleContentHtml.trim() : null,
       'typeId': articleTypeId,
       'statusId': statusId,
+      'mainImageId': mainImageId,
       'sections': sections,
       'tags': tags,
       'publishOn': null

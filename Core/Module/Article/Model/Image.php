@@ -48,9 +48,21 @@ class Image
             ? (int)$image['image_id']
             : (empty($image['id']) ? null : (int)$image['id']);
 
+        $userId = isset($image['image_user_id'])
+            ? (int)$image['image_user_id']
+            : (int)$image['user_id'];
+
+        $createdAt = empty($image['image_created_at'])
+            ? $image['created_at']
+            : $image['image_created_at'];
+
+        $updatedAt = empty($image['image_updated_at'])
+            ? $image['updated_at']
+            : $image['image_updated_at'];
+
         return new Image(
             $id,
-            (int)$image['user_id'],
+            $userId,
             $image['full_url_original'],
             $image['full_url_medium'] ?? null,
             $image['full_url_big'] ?? null,
@@ -58,8 +70,8 @@ class Image
             $image['file_path_medium'] ?? null,
             $image['file_path_big'] ?? null,
             empty($image['caption']) ? null : $image['caption'],
-            $image['created_at'],
-            $image['updated_at']
+            $createdAt,
+            $updatedAt
         );
     }
 

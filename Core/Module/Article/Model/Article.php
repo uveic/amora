@@ -18,7 +18,8 @@ class Article
         private ?string $publishOn,
         private ?string $title,
         private string $contentHtml,
-        private ?string $mainImageSrc,
+        private ?int $mainImageId,
+        private ?Image $mainImage,
         private string $uri,
         private array $sections = [],
         private array $tags = [],
@@ -48,7 +49,8 @@ class Article
             $article['published_at'],
             $article['title'] ?? null,
             $article['content_html'],
-            empty($article['main_image_src']) ? null : $article['main_image_src'],
+            empty($article['main_image_id']) ? null : (int)$article['main_image_id'],
+            empty($article['main_image_id']) ? null : Image::fromArray($article),
             $article['uri'],
             $article['sections'] ?? [],
             $article['tags'] ?? [],
@@ -68,7 +70,8 @@ class Article
             'published_at' => $this->getPublishOn(),
             'title' => $this->getTitle(),
             'content_html' => $this->getContentHtml(),
-            'main_image_src' => $this->getMainImageSrc(),
+            'main_image' => $this->getMainImage() ? $this->getMainImage()->asArray() : [],
+            'main_image_id' => $this->getMainImageId(),
             'uri' => $this->getUri(),
             'tags' => $this->getTags()
         ];
@@ -139,9 +142,14 @@ class Article
         return '';
     }
 
-    public function getMainImageSrc(): ?string
+    public function getMainImageId(): ?int
     {
-        return $this->mainImageSrc;
+        return $this->mainImageId;
+    }
+
+    public function getMainImage(): ?Image
+    {
+        return $this->mainImage;
     }
 
     public function getUri(): string

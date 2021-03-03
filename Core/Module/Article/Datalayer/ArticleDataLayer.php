@@ -66,7 +66,7 @@ class ArticleDataLayer
                 a.published_at,
                 a.title,
                 a.content_html,
-                a.main_image_src,
+                a.main_image_id,
                 a.uri,
                 u.language_id,
                 u.role_id,
@@ -80,10 +80,23 @@ class ArticleDataLayer
                 u.is_enabled,
                 u.verified,
                 u.timezone,
-                u.previous_email_address
+                u.previous_email_address,
+                i.id AS image_id,
+                i.user_id AS image_user_id,
+                i.file_path_original,
+                i.file_path_big,
+                i.file_path_medium,
+                i.full_url_original,
+                i.full_url_big,
+                i.full_url_medium,
+                i.caption,
+                i.created_at AS image_created_at,
+                i.updated_at AS image_updated_at
             FROM ' . self::ARTICLE_TABLE_NAME . ' AS a
                 JOIN ' . UserDataLayer::USER_TABLE_NAME . ' AS u
                     ON u.id = a.user_id
+                LEFT JOIN ' . ImageDataLayer::IMAGE_TABLE_NAME . ' AS i
+                    ON i.id = a.main_image_id
             WHERE 1
         ';
 
@@ -199,7 +212,7 @@ class ArticleDataLayer
             'created_at' => $article->getCreatedAt(),
             'title' => $article->getTitle(),
             'content_html' => $article->getContentHtml(),
-            'main_image_src' => $article->getMainImageSrc(),
+            'main_image_id' => $article->getMainImageId(),
             'uri' => $article->getUri(),
             'ip' => $userIp,
             'user_agent' => $userAgent

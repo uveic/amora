@@ -116,7 +116,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string|null $title
      * @param string $contentHtml
      * @param string|null $uri
-     * @param string|null $mainImageSrc
+     * @param int|null $mainImageId
      * @param string|null $publishOn
      * @param array $sections
      * @param ?array $tags
@@ -129,7 +129,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?string $title,
         string $contentHtml,
         ?string $uri,
-        ?string $mainImageSrc,
+        ?int $mainImageId,
         ?string $publishOn,
         array $sections,
         ?array $tags,
@@ -161,7 +161,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string|null $title
      * @param string $contentHtml
      * @param string|null $uri
-     * @param string|null $mainImageSrc
+     * @param int|null $mainImageId
      * @param string|null $publishOn
      * @param array $sections
      * @param ?array $tags
@@ -175,7 +175,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?string $title,
         string $contentHtml,
         ?string $uri,
-        ?string $mainImageSrc,
+        ?int $mainImageId,
         ?string $publishOn,
         array $sections,
         ?array $tags,
@@ -503,7 +503,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         $uri = $bodyParams['uri'] ?? null;
-        $mainImageSrc = $bodyParams['mainImageSrc'] ?? null;
+        $mainImageId = $bodyParams['mainImageId'] ?? null;
         $publishOn = $bodyParams['publishOn'] ?? null;
         $sections = null;
         if (!isset($bodyParams['sections'])) {
@@ -536,7 +536,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $title,
                 $contentHtml,
                 $uri,
-                $mainImageSrc,
+                $mainImageId,
                 $publishOn,
                 $sections,
                 $tags,
@@ -665,7 +665,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         $uri = $bodyParams['uri'] ?? null;
-        $mainImageSrc = $bodyParams['mainImageSrc'] ?? null;
+        $mainImageId = $bodyParams['mainImageId'] ?? null;
         $publishOn = $bodyParams['publishOn'] ?? null;
         $sections = null;
         if (!isset($bodyParams['sections'])) {
@@ -699,7 +699,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $title,
                 $contentHtml,
                 $uri,
-                $mainImageSrc,
+                $mainImageId,
                 $publishOn,
                 $sections,
                 $tags,

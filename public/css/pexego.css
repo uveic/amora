@@ -162,6 +162,10 @@
   background-color: var(--light-bg-color-2);
 }
 
+.pexego-section-image {
+  margin-top: 1rem;
+}
+
 .placeholder:focus {
   outline: 0;
 }
