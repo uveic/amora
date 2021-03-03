@@ -3,7 +3,7 @@ Amora: simple web framework to develop web applications built with modern PHP
 
 ToDo
 
-Amora is named after a [Galician blackberry](https://gl.wikipedia.org/wiki/Amora).
+Amora is the translation for blackberry in [Galician](https://en.wikipedia.org/wiki/Galician_language) ([Amora in Galician Wikipedia](https://gl.wikipedia.org/wiki/Amora)).
 
 ## Why use Amora?
 
