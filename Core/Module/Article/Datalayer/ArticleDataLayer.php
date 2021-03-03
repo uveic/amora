@@ -39,6 +39,7 @@ class ArticleDataLayer
         ?int $statusId = null,
         ?int $typeId = null,
         ?string $uri = null,
+        array $tagIds = [],
         bool $includeTags = false,
         ?QueryOptions $queryOptions = null,
     ): array {
@@ -51,78 +52,96 @@ class ArticleDataLayer
             'updated_at' => 'a.updated_at',
         ];
 
-        $orderBy = empty($orderByMapping[$queryOptions->getOrderBy()])
-            ? 'a.updated_at'
-            : $orderByMapping[$queryOptions->getOrderBy()];
-
         $params = [];
-        $sql = '
-            SELECT
-                a.id AS article_id,
-                a.user_id,
-                a.status_id,
-                a.type_id,
-                a.created_at AS article_created_at,
-                a.updated_at AS article_updated_at,
-                a.published_at,
-                a.title,
-                a.content_html,
-                a.main_image_id,
-                a.uri,
-                u.language_id,
-                u.role_id,
-                u.journey_id,
-                u.created_at AS user_created_at,
-                u.updated_at AS user_updated_at,
-                u.email,
-                u.name,
-                u.password_hash,
-                u.bio,
-                u.is_enabled,
-                u.verified,
-                u.timezone,
-                u.previous_email_address,
-                i.id AS image_id,
-                i.user_id AS image_user_id,
-                i.file_path_original,
-                i.file_path_big,
-                i.file_path_medium,
-                i.full_url_original,
-                i.full_url_big,
-                i.full_url_medium,
-                i.caption,
-                i.created_at AS image_created_at,
-                i.updated_at AS image_updated_at
-            FROM ' . self::ARTICLE_TABLE_NAME . ' AS a
-                JOIN ' . UserDataLayer::USER_TABLE_NAME . ' AS u
-                    ON u.id = a.user_id
-                LEFT JOIN ' . ImageDataLayer::IMAGE_TABLE_NAME . ' AS i
-                    ON i.id = a.main_image_id
-            WHERE 1
-        ';
+        $baseSql = 'SELECT ';
+        $fields = [
+            'a.id AS article_id',
+            'a.user_id',
+            'a.status_id',
+            'a.type_id',
+            'a.created_at AS article_created_at',
+            'a.updated_at AS article_updated_at',
+            'a.published_at',
+            'a.title',
+            'a.content_html',
+            'a.main_image_id',
+            'a.uri',
+
+            'u.language_id',
+            'u.role_id',
+            'u.journey_id',
+            'u.created_at AS user_created_at',
+            'u.updated_at AS user_updated_at',
+            'u.email',
+            'u.name',
+            'u.password_hash',
+            'u.bio',
+            'u.is_enabled',
+            'u.verified',
+            'u.timezone',
+            'u.previous_email_address',
+
+            'i.id AS image_id',
+            'i.user_id AS image_user_id',
+            'i.file_path_original',
+            'i.file_path_big',
+            'i.file_path_medium',
+            'i.full_url_original',
+            'i.full_url_big',
+            'i.full_url_medium',
+            'i.caption',
+            'i.created_at AS image_created_at',
+            'i.updated_at AS image_updated_at',
+        ];
+
+        $joins = ' FROM ' . self::ARTICLE_TABLE_NAME . ' AS a';
+        $joins .= ' JOIN ' . UserDataLayer::USER_TABLE_NAME . ' AS u ON u.id = a.user_id';
+        $joins .= ' LEFT JOIN ' . ImageDataLayer::IMAGE_TABLE_NAME
+            . ' AS i ON i.id = a.main_image_id';
+
+        $where = ' WHERE 1';
 
         if (isset($articleId)) {
-            $sql .= ' AND a.id = :article_id';
-            $params[':article_id'] = $articleId;
+            $where .= ' AND a.id = :articleId';
+            $params[':articleId'] = $articleId;
         }
 
         if (isset($statusId)) {
-            $sql .= ' AND a.status_id = :status_id';
-            $params[':status_id'] = $statusId;
+            $where .= ' AND a.status_id = :statusId';
+            $params[':statusId'] = $statusId;
         }
 
         if (isset($typeId)) {
-            $sql .= ' AND a.type_id = :type_id';
-            $params[':type_id'] = $typeId;
+            $where .= ' AND a.type_id = :typeId';
+            $params[':typeId'] = $typeId;
         }
 
         if (isset($uri)) {
-            $sql .= ' AND a.uri = :uri';
-            $params[':uri'] = $uri;
+            $where .= ' AND a.uri = :articleUri';
+            $params[':articleUri'] = $uri;
         }
 
-        $sql .= ' ORDER BY ' . $orderBy . ' ' . $queryOptions->getSortingDirection();
-        $sql .= ' LIMIT ' . $queryOptions->getLimit() . ' OFFSET ' . $queryOptions->getOffset();
+        if ($tagIds) {
+            $allKeys = [];
+            $joins .= ' JOIN ' . ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE_NAME
+                . ' AS at ON at.article_id = a.id';
+            foreach (array_values($tagIds) as $key => $tagId) {
+                $currentKey = ':tagId' . $key;
+                $allKeys[] = $currentKey;
+                $params[$currentKey] = $tagId;
+            }
+            $where .= ' AND at.tag_id IN (' . implode(', ', $allKeys) . ')';
+        }
+
+        $orderBy = ' ORDER BY ' .
+            (empty($orderByMapping[$queryOptions->getOrderBy()])
+                ? 'a.updated_at'
+                : $orderByMapping[$queryOptions->getOrderBy()])
+            . ' ' . $queryOptions->getSortingDirection();
+
+        $limit = ' LIMIT ' . $queryOptions->getLimit() . ' OFFSET ' . $queryOptions->getOffset();
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderBy . $limit;
 
         $res = $this->db->fetchAll($sql, $params);
 
@@ -147,15 +166,19 @@ class ArticleDataLayer
         );
     }
 
-    public function getArticleForId(int $id, $includeTags = false): ?Article
+    public function getArticleForId(int $id, bool $includeTags = false): ?Article
     {
-        $res = $this->getArticles($id, null, null, null, $includeTags);
+        $res = $this->getArticles(
+            articleId: $id,
+            includeTags: $includeTags
+        );
+
         return empty($res[0]) ? null : $res[0];
     }
 
     public function getArticleForUri(string $uri): ?Article
     {
-        $res = $this->getArticles(null, null, null, $uri);
+        $res = $this->getArticles(uri: $uri);
         return empty($res[0]) ? null : $res[0];
     }
 
@@ -176,12 +199,18 @@ class ArticleDataLayer
     }
 
     public function filterArticlesBy(
+        array $tagIds = [],
         int $statusId = null,
         int $typeId = null,
         ?QueryOptions $queryOptions = null
     ): array
     {
-        return $this->getArticles(null, $statusId, $typeId, null, false, $queryOptions);
+        return $this->getArticles(
+            statusId: $statusId,
+            typeId: $typeId,
+            tagIds: $tagIds,
+            queryOptions: $queryOptions
+        );
     }
 
     public function updateArticle(Article $article): bool

@@ -42,15 +42,14 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getHomePage(Request $request): Response
     {
-        $isAdmin = $request->getSession() && $request->getSession()->isAdmin();
-        $articles = $this->articleService->getArticlesForHome($isAdmin);
+        $homeArticles = $this->articleService->getArticlesForHome();
         $homepageArticle = $this->articleService->getHomepageArticle();
         return Response::createFrontendPublicHtmlResponse(
             'shared/home',
             new HtmlHomepageResponseData(
                 request: $request,
                 article: $homepageArticle,
-                tagArticles: $articles,
+                homeArticles: $homeArticles,
             )
         );
     }

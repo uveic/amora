@@ -372,6 +372,11 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $contentHtml = html_entity_decode($contentHtml);
         $now = DateUtil::getCurrentDateForMySql();
 
+        // ToDo: Implement publishOn in JS and remove this
+        if (empty($publishOn)) {
+            $publishOn = $existingArticle->getPublishOn() ?? $now;
+        }
+
         $res = $this->articleService->updateArticle(
             new Article(
                 $articleId,
@@ -380,7 +385,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 $typeId ?? $existingArticle->getTypeId(),
                 $existingArticle->getCreatedAt(),
                 $now,
-                $publishOn ?? $existingArticle->getPublishOn(),
+                $publishOn,
                 $title ?? $existingArticle->getTitle(),
                 $contentHtml ?? $existingArticle->getContentHtml(),
                 $mainImageId ?? $existingArticle->getMainImage()?->getId(),

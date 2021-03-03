@@ -12,6 +12,7 @@ return [
     'actionLoggerEnabled' => true,
     'registrationEnabled' => false,
     'invitationEnabled' => true,
+    'tagIdsForHomepage' => [-1],
     'db' => [
         'core' => [
             'host' => 'localhost',

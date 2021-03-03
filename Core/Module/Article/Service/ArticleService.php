@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use Amora\Core\Core;
 use Amora\Core\Logger;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
@@ -30,6 +31,17 @@ class ArticleService
     public function getArticleForUri(string $uri): ?Article
     {
         return $this->articleDataLayer->getArticleForUri($uri);
+    }
+
+    public function getArticlesForTagIds(
+        array $tagIds,
+        ?QueryOptions $queryOptions = null,
+    ): array
+    {
+        return $this->articleDataLayer->filterArticlesBy(
+            tagIds: $tagIds,
+            queryOptions: $queryOptions,
+        );
     }
 
     public function getAllArticles(
@@ -297,18 +309,15 @@ class ArticleService
         return $resTransaction['article'] ?? null;
     }
 
-    public function getArticlesForHome(bool $isAdmin = false): array
+    public function getArticlesForHome(int $maxArticles = 20): array
     {
-        if ($isAdmin) {
-            return $this->articleDataLayer->filterArticlesBy(
-                queryOptions: new QueryOptions(limit: 200)
-            );
-        }
-
+        // ToDo: Move tagIdsForHomepage to some kind of settings
+        $tagIds = Core::getConfigValue('tagIdsForHomepage') ?? [];
         return $this->articleDataLayer->filterArticlesBy(
+            tagIds: $tagIds,
             statusId: ArticleStatus::PUBLISHED,
-            typeId: ArticleType::HOMEPAGE,
-            queryOptions: new QueryOptions(limit: 20)
+            typeId: ArticleType::ARTICLE,
+            queryOptions: new QueryOptions(limit: $maxArticles)
         );
     }
 
