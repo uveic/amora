@@ -31,6 +31,6 @@ final class VerificationType
     public static function getNameForId(int $id): string
     {
         $all = self::getAll();
-        return empty($all[$id]) ? 'Unknown' : $all[$id]['name'];
+        return empty($all[$id]) ? 'Unknown' : $all[$id]->getName();
     }
 }

@@ -27,7 +27,7 @@ final class UserJourneyStatus
     public static function getNameForId(int $id): string
     {
         $all = self::getAll();
-        return $all[$id]['name'] ?? 'Unknown';
+        return isset($all[$id]) ? $all[$id]->getName() : 'Unknown';
     }
 
     public static function getInitialJourneyIdFromRoleId(int $roleId): int
