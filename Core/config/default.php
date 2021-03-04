@@ -13,24 +13,24 @@ return [
     'registrationEnabled' => false,
     'invitationEnabled' => true,
     'tagIdsForHomepage' => [-1],
-    'db' => [
+    'database' => [
         'core' => [
             'host' => 'localhost',
-            'user' => 'root',
-            'password' => 'rootpass',
-            'name' => 'victorgonzalez'
+            'user' => 'user',
+            'password' => 'pass',
+            'name' => 'amora_core'
         ],
         'action' => [
             'host' => 'localhost',
-            'user' => 'root',
-            'password' => 'rootpass',
-            'name' => 'victorgonzalez_action'
+            'user' => 'user',
+            'password' => 'pass',
+            'name' => 'amora_action'
         ],
         'mailer' => [
             'host' => 'localhost',
-            'user' => 'root',
-            'password' => 'rootpass',
-            'name' => 'victorgonzalez_mailer'
+            'user' => 'user',
+            'password' => 'pass',
+            'name' => 'amora_mailer'
         ]
     ],
     'mailer' => [

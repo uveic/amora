@@ -199,47 +199,47 @@ class Core
 
     private static function getDb(string $dbIdentifier): MySqlDb
     {
-        $dbClassname = ucfirst($dbIdentifier) . 'Db';
+        $dbClassname = ucfirst($dbIdentifier) . 'Database';
 
         return self::getInstance(
             $dbClassname,
             function () use ($dbIdentifier) {
                 $config = self::getConfig();
-                if (empty($config['db'])) {
-                    self::getDefaultLogger()->logError("Missing 'db' section from config");
+                if (empty($config['database'])) {
+                    self::getDefaultLogger()->logError("Missing 'database' section from config");
                     exit;
                 }
 
-                if (empty($config['db'][$dbIdentifier])) {
-                    self::getDefaultLogger()->logError("Missing database name section from config");
+                if (empty($config['database'][$dbIdentifier])) {
+                    self::getDefaultLogger()->logError("Missing database section from config");
                     exit;
                 }
 
-                if (empty($config['db'][$dbIdentifier]['host'])) {
-                    self::getDefaultLogger()->logError("Missing 'db.host' from config");
+                if (empty($config['database'][$dbIdentifier]['host'])) {
+                    self::getDefaultLogger()->logError("Missing 'database.host' from config");
                     exit;
                 }
 
-                if (empty($config['db'][$dbIdentifier]['user'])) {
-                    self::getDefaultLogger()->logError("Missing 'db.user' from config");
+                if (empty($config['database'][$dbIdentifier]['user'])) {
+                    self::getDefaultLogger()->logError("Missing 'database.user' from config");
                     exit;
                 }
 
-                if (!isset($config['db'][$dbIdentifier]['password'])) {
-                    self::getDefaultLogger()->logError("Missing 'db.password' from config");
+                if (!isset($config['database'][$dbIdentifier]['password'])) {
+                    self::getDefaultLogger()->logError("Missing 'database.password' from config");
                     exit;
                 }
 
-                if (empty($config['db'][$dbIdentifier]['name'])) {
-                    self::getDefaultLogger()->logError("Missing 'db.name' from config");
+                if (empty($config['database'][$dbIdentifier]['name'])) {
+                    self::getDefaultLogger()->logError("Missing 'database.name' from config");
                     exit;
                 }
 
-                $logger = self::getLogger($dbIdentifier . '_database');
-                $host = $config['db'][$dbIdentifier]['host'];
-                $user = $config['db'][$dbIdentifier]['user'];
-                $pass = $config['db'][$dbIdentifier]['password'];
-                $dbName = $config['db'][$dbIdentifier]['name'];
+                $logger = self::getLogger($dbIdentifier . 'Database');
+                $host = $config['database'][$dbIdentifier]['host'];
+                $user = $config['database'][$dbIdentifier]['user'];
+                $pass = $config['database'][$dbIdentifier]['password'];
+                $dbName = $config['database'][$dbIdentifier]['name'];
 
                 require_once self::getPathRoot() . '/Core/Database/MySqlDb.php';
                 return new MySqlDb($logger, $host, $user, $pass, $dbName);
