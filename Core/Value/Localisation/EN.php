@@ -47,15 +47,21 @@ return [
     'authenticationInviteRequestHomeLink' => 'Go back to homepage',
     'authenticationInviteRequestFormAction' => 'Request an invitation',
 
+    'formYourAccount' => 'Your Account',
     'formPlaceholderUserName' => 'Your name',
-    'formPlaceholderEmail' => 'Your email address',
+    'formPlaceholderUserHelp' => 'Min three characters',
+    'formEmail' => 'Your Email Address',
+    'formPlaceholderEmail' => 'name@example.com',
+    'formEmailUpdateWarning1' => 'Recentemente actualizaches o teu correo electrónico e aínda non foi verificado. Por favor revisa a túa bandexa de entrada e verifícao canto antes. Se non recibiras o correo de verificación revisa a caixa do lixo ou <a class="verified-link" data-user-id="%d" href="#">fai click aquí</a> e enviarémosche outro.',
+    'formEmailUpdateWarning2' => 'Previous email address: %s.',
     'formPlaceholderPassword' => 'Your password',
     'formPlaceholderCreatePassword' => 'Create a password',
     'formPlaceholderPasswordNew' => 'New password',
     'formPlaceholderPasswordConfirmation' => 'Repeat password',
     'formLoginAction' => 'Log in',
-    'formPasswordResetAction' => 'Cambiar contrasinal',
+    'formPasswordResetAction' => 'Change password',
     'formArticleUri' => 'Article URI',
+    'formTimezone' => 'Timezone',
 
     'dashboardGoTo' => 'Go to...',
 
