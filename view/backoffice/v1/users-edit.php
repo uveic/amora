@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Model\Util\LookupTableBasicValue;
 use Amora\Core\Util\DateUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
@@ -79,10 +80,11 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
           <div class="control">
             <select id="roleId" name="roleId">
 <?php
-  foreach ($responseData->getUserRoles() as $role) {
-      $selected = $userToEdit && $role['id'] == $userToEdit->getRoleId();
+    /** @var LookupTableBasicValue $role */
+foreach ($responseData->getUserRoles() as $role) {
+        $selected = $userToEdit && $role->getId() == $userToEdit->getRoleId();
 ?>
-                <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$this->e($role['id'])?>"><?=$this->e($role['name'])?></option>
+                <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$role->getId()?>"><?=$role->getName()?></option>
 <?php
   }
 ?>

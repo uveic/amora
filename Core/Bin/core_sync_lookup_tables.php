@@ -30,20 +30,21 @@ if (!file_exists($CORE_LOOKUP_TABLE_FILE_PATH)) {
     exit;
 }
 
-$coreLookupTables = require($CORE_LOOKUP_TABLE_FILE_PATH);
-
-if (file_exists($APP_LOOKUP_TABLE_FILE_PATH)) {
-    $appLookupTables = require($APP_LOOKUP_TABLE_FILE_PATH);
-} else {
-    $appLookupTables = [];
-    echo 'No app lookup tables values found in ' . $APP_LOOKUP_TABLE_FILE_PATH .
-        '. Continuing...' . PHP_EOL;
-}
-
-$lookupTables = array_merge($appLookupTables, $coreLookupTables);
-
 try {
     $App = Core::getSyncLookupTablesApp();
+
+    $coreLookupTables = require($CORE_LOOKUP_TABLE_FILE_PATH);
+
+    if (file_exists($APP_LOOKUP_TABLE_FILE_PATH)) {
+        $appLookupTables = require($APP_LOOKUP_TABLE_FILE_PATH);
+    } else {
+        $appLookupTables = [];
+        echo 'No app lookup tables values found in ' . $APP_LOOKUP_TABLE_FILE_PATH .
+            '. Continuing...' . PHP_EOL;
+    }
+
+    $lookupTables = array_merge($appLookupTables, $coreLookupTables);
+
     $App->run($lookupTables);
 } catch (Throwable $t) {
     Core::getDefaultLogger()->logError(

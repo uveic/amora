@@ -2,6 +2,7 @@
 
 namespace Amora\Core\App;
 
+use Amora\Core\Model\Util\LookupTableSettings;
 use Exception;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
@@ -47,11 +48,12 @@ final class SyncLookupTablesApp
 
         $this->logger->logInfo('Syncing lookup tables...');
 
+        /** @var LookupTableSettings $lookupTable */
         foreach ($lookupTablesConfig as $lookupTable) {
             $this->syncLookupTable(
-                $lookupTable['db'],
-                $lookupTable['table_name'],
-                $lookupTable['table_fields_to_values']
+                $lookupTable->getDatabase(),
+                $lookupTable->getTableName(),
+                array_values($lookupTable->getTableFieldsToValues())
             );
         }
 

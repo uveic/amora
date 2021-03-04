@@ -2,6 +2,8 @@
 
 namespace Amora\Core\Module\User\Value;
 
+use Amora\Core\Model\Util\LookupTableBasicValue;
+
 final class UserRole
 {
     const ADMIN = 1;
@@ -10,22 +12,18 @@ final class UserRole
     public static function getAll(): array
     {
         return [
-            self::ADMIN => [
-                'id' => self::ADMIN,
-                'name' => 'Admin'
-            ],
-            self::CUSTOMER => [
-                'id' => self::CUSTOMER,
-                'name' => 'Customer'
-            ]
+            self::ADMIN => new LookupTableBasicValue(self::ADMIN, 'Admin'),
+            self::CUSTOMER => new LookupTableBasicValue(self::CUSTOMER, 'Customer'),
         ];
     }
 
-    public static function getUserRoleIdsWithAdminPermissions(): array
+    public static function asArray(): array
     {
-        return [
-            self::ADMIN
-        ];
+        $output = [];
+        foreach (self::getAll() as $item) {
+            $output[] = $item->asArray();
+        }
+        return $output;
     }
 
     public static function getNameForId(int $id): string

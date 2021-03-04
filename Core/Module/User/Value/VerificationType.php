@@ -2,6 +2,8 @@
 
 namespace Amora\Core\Module\User\Value;
 
+use Amora\Core\Model\Util\LookupTableBasicValue;
+
 final class VerificationType
 {
     const ACCOUNT = 1;
@@ -11,19 +13,19 @@ final class VerificationType
     public static function getAll(): array
     {
         return [
-            self::ACCOUNT => [
-                'id' => self::ACCOUNT,
-                'name' => 'Account Verification'
-            ],
-            self::PASSWORD_RESET => [
-                'id' => self::PASSWORD_RESET,
-                'name' => 'Password Reset'
-            ],
-            self::UPDATE_EMAIL_ADDRESS => [
-                'id' => self::UPDATE_EMAIL_ADDRESS,
-                'name' => 'Update email address'
-            ]
+            self::ACCOUNT => new LookupTableBasicValue(self::ACCOUNT, 'Account Verification'),
+            self::PASSWORD_RESET => new LookupTableBasicValue(self::PASSWORD_RESET, 'Password Reset'),
+            self::UPDATE_EMAIL_ADDRESS => new LookupTableBasicValue(self::UPDATE_EMAIL_ADDRESS, 'Update email address'),
         ];
+    }
+
+    public static function asArray(): array
+    {
+        $output = [];
+        foreach (self::getAll() as $item) {
+            $output[] = $item->asArray();
+        }
+        return $output;
     }
 
     public static function getNameForId(int $id): string

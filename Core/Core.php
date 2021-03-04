@@ -279,6 +279,7 @@ class Core
         return self::getInstance(
             'SyncLookupTablesApp',
             function () use ($logger) {
+                require_once self::getPathRoot() . '/Core/Model/Util/LookupTableSettings.php';
                 require_once self::getPathRoot() . '/Core/App/SyncLookupTablesApp.php';
                 return new SyncLookupTablesApp($logger);
             },
