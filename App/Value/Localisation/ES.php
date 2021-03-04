@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'siteName' => 'Victor Gonzalez',
+    'siteName' => 'Amora',
     'siteTitle' => '',
-    'siteDescription' => 'Soy un programador web.',
+    'siteDescription' => 'Framework para desarrollar aplicaciones con PHP 8.0',
 ];

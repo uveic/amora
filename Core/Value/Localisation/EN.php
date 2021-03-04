@@ -93,6 +93,7 @@ return [
     'globalUserAccountSettings' => 'User Account Settings',
     'globalNext' => 'Next',
     'globalNoTitle' => 'No Title',
+    'globalComingSoon' => 'Coming soon...',
 
     'globalUploadImage' => 'Upload image(s)',
     'globalAddImage' => 'Add image(s)',

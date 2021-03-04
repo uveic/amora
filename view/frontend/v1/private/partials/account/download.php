@@ -7,6 +7,5 @@ use Amora\Core\Model\Response\HtmlResponseData;
 $user = $responseData->getSession()->getUser();
 
 ?>
-      <h1><?=$this->e($responseData->getLocalValue('navDownloadAccountData'))?></h1>
-      <p>Dispoñible proximamente...</p>
-      <p>Mentres non está dispoñible podes poñerte en contacto comigo en <a href="mailto:victor.gonzalez@protonmail.com">victor.gonzalez@protonmail.com</a> e fareino o antes posible.</p>
+      <h1><?=$responseData->getLocalValue('navDownloadAccountData')?></h1>
+      <p><?=$responseData->getLocalValue('globalComingSoon')?></p>
