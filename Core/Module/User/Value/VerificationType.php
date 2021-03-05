@@ -6,16 +6,14 @@ use Amora\Core\Model\Util\LookupTableBasicValue;
 
 final class VerificationType
 {
-    const ACCOUNT = 1;
+    const EMAIL_ADDRESS = 1;
     const PASSWORD_RESET = 2;
-    const UPDATE_EMAIL_ADDRESS = 3;
 
     public static function getAll(): array
     {
         return [
-            self::ACCOUNT => new LookupTableBasicValue(self::ACCOUNT, 'Account Verification'),
+            self::EMAIL_ADDRESS => new LookupTableBasicValue(self::EMAIL_ADDRESS, 'Email Address Verification'),
             self::PASSWORD_RESET => new LookupTableBasicValue(self::PASSWORD_RESET, 'Password Reset'),
-            self::UPDATE_EMAIL_ADDRESS => new LookupTableBasicValue(self::UPDATE_EMAIL_ADDRESS, 'Update email address'),
         ];
     }
 

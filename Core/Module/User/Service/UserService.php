@@ -2,6 +2,8 @@
 
 namespace Amora\Core\Module\User\Service;
 
+use Amora\Core\Core;
+use Amora\Core\Util\LocalisationUtil;
 use DateTime;
 use DateTimeZone;
 use Amora\Core\Logger;
@@ -18,6 +20,7 @@ use Amora\Core\Value\Language;
 class UserService
 {
     const USER_PASSWORD_MIN_LENGTH = 10;
+    const VERIFICATION_LINK_VALID_FOR_DAYS = 7;
 
     private UserDataLayer $userDataLayer;
     private Logger $logger;
@@ -48,21 +51,20 @@ class UserService
 
     private function updateUser(
         User $user,
-        bool $newEmailAddress = false,
         bool $updateSessionTimezone = false
     ): ?User {
         $res = $this->userDataLayer->getDb()->withTransaction(
-            function() use ($user, $newEmailAddress, $updateSessionTimezone) {
+            function() use ($user, $updateSessionTimezone) {
                 $updatedUser = $this->userDataLayer->updateUser($user, $user->getId());
 
                 if (empty($updatedUser)) {
                     return ['success' => false];
                 }
 
-                if ($newEmailAddress) {
-                    $this->userMailService->buildAndSendVerificationEmail(
+                if ($user->getChangeEmailTo()) {
+                    $this->userMailService->sendUpdateEmailVerificationEmail(
                         $user,
-                        VerificationType::UPDATE_EMAIL_ADDRESS
+                        $user->getChangeEmailTo()
                     );
                 }
 
@@ -103,8 +105,7 @@ class UserService
     }
 
     private function validateUpdateUserEndpoint(
-        string $existingHashedPassword,
-        int $existingUserId,
+        User $existingUser,
         ?string $email,
         ?int $languageId,
         ?string $timezone,
@@ -112,35 +113,48 @@ class UserService
         ?string $newPassword,
         ?string $repeatPassword
     ): UserFeedback {
+        if (isset($timezone) && !in_array($timezone, DateTimeZone::listIdentifiers())) {
+            $this->logger->logError('Timezone not valid');
+            return new UserFeedback(true);
+        }
+
+        if (isset($languageId) && !in_array($languageId, array_column(Language::getAll(), 'id'))) {
+            $this->logger->logError('Language ID not valid: ' . $languageId);
+            return new UserFeedback(true);
+        }
+
+        $localisationUtil = Core::getLocalisationUtil($existingUser->getLanguageId());
         if (isset($currentPassword) || isset($newPassword) || isset($repeatPassword)) {
             if (empty($currentPassword) || empty($newPassword) || empty($repeatPassword)) {
-                return new UserFeedback(
-                    true,
+                $this->logger->logError(
                     'Submitted payload not valid: one of the password fields is empty.'
                 );
+
+                return new UserFeedback(true);
             }
 
-            $validPass = StringUtil::verifyPassword($currentPassword, $existingHashedPassword);
+            $validPass = StringUtil::verifyPassword(
+                $currentPassword,
+                $existingUser->getPasswordHash()
+            );
             if (!$validPass) {
                 return new UserFeedback(
                     true,
-                    'O contrasinal actual non é válido.'
+                    $localisationUtil->getValue('authenticationPassNotValid')
                 );
             }
 
             if (strlen($newPassword) < self::USER_PASSWORD_MIN_LENGTH) {
                 return new UserFeedback(
                     true,
-                    'A lonxitude mínima do contrasinal son ' .
-                    UserService::USER_PASSWORD_MIN_LENGTH .
-                    ' caracteres. Corríxeo e volve a intentalo.'
+                    $localisationUtil->getValue('authenticationPasswordTooShort')
                 );
             }
 
             if ($newPassword !== $repeatPassword) {
                 return new UserFeedback(
                     true,
-                    'Os contrasinais novos non coinciden.'
+                    $localisationUtil->getValue('authenticationPasswordsDoNotMatch')
                 );
             }
         }
@@ -149,33 +163,17 @@ class UserService
             if (!StringUtil::isEmailAddressValid($email)) {
                 return new UserFeedback(
                     true,
-                    'Correo electrónico non válido'
+                    $localisationUtil->getValue('authenticationEmailNotValid')
                 );
             }
 
-            $existingUser = $this->getUserForEmail($email);
-            if (!empty($existingUser) && $existingUser->getId() !== $existingUserId) {
+            $userForEmail = $this->getUserForEmail($email);
+            if ($userForEmail && $userForEmail->getId() !== $existingUser->getId()) {
                 return new UserFeedback(
                     true,
-                    'O correo electrónico xa está a ser usado por outra conta.'
+                    $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail')
                 );
             }
-        }
-
-        if (isset($timezone)
-            && !in_array($timezone, DateTimeZone::listIdentifiers(DateTimeZone::ALL))
-        ) {
-            return new UserFeedback(
-                true,
-                'Timezone not valid'
-            );
-        }
-
-        if (isset($languageId) && !in_array($languageId, array_column(Language::getAll(), 'id'))) {
-            return new UserFeedback(
-                true,
-                'Language not supported'
-            );
         }
 
         return new UserFeedback(false, null);
@@ -196,38 +194,49 @@ class UserService
         return $this->userDataLayer->getUserForEmail($email, $includeDisabled);
     }
 
-    public function validateEmailAddressVerificationPage(string $verificationIdentifier): bool
-    {
+    public function verifyEmailAddress(
+        string $verificationIdentifier,
+        LocalisationUtil $localisationUtil
+    ): UserFeedback {
         $verification = $this->userDataLayer->getUserVerification(
             $verificationIdentifier,
-            VerificationType::ACCOUNT
+            VerificationType::EMAIL_ADDRESS
         );
 
         if (empty($verification)) {
-            return false;
+            return new UserFeedback(true, $localisationUtil->getValue('globalGenericError'));
         }
+
+        $message = $verification->getTypeId() === VerificationType::EMAIL_ADDRESS
+            ? $localisationUtil->getValue('authenticationEmailVerifiedExpired')
+            : $localisationUtil->getValue('authenticationEmailVerifiedError');
 
         $user = $this->getUserForId($verification->getUserId());
         if (empty($user)) {
-            return false;
-        }
-
-        if ($user->isVerified()) {
-            return true;
+            return new UserFeedback(
+                true,
+                $localisationUtil->getValue('globalGenericError')
+            );
         }
 
         if (!$verification->isEnabled()) {
-            return false;
+            return new UserFeedback(true, $message);
         }
 
         $verificationDate = new DateTime($verification->getCreatedAt());
         $now = new DateTime();
         $dateDiff = $now->diff($verificationDate);
-        if ($dateDiff->days > 7) {
-            return false;
+        if ($dateDiff->days > self::VERIFICATION_LINK_VALID_FOR_DAYS) {
+            return new UserFeedback(true, $message);
         }
 
-        return $this->userDataLayer->markUserAsVerified($verification->getUserId());
+        $res = $this->userDataLayer->markUserAsVerified($user, $verification);
+        return new UserFeedback(
+            !$res,
+            $res
+                ? $localisationUtil->getValue('authenticationEmailVerified')
+                : $localisationUtil->getValue('globalGenericError')
+        );
     }
 
     public function validatePasswordResetVerificationPage(
@@ -271,8 +280,7 @@ class UserService
         ?bool $isEnabled = null
     ): UserFeedback {
         $validation = $this->validateUpdateUserEndpoint(
-            $existingUser->getPasswordHash(),
-            $existingUser->getId(),
+            $existingUser,
             $email,
             $languageId,
             $timezone,
@@ -289,26 +297,23 @@ class UserService
             && $existingUser->getEmail() !== StringUtil::normaliseEmail($email);
         $res = $this->updateUser(
             new User(
-                $existingUser->getId(),
-                $languageId ?? $existingUser->getLanguageId(),
-                $existingUser->getRoleId(),
-                $existingUser->getJourneyStatusId(),
-                $existingUser->getCreatedAt(),
-                DateUtil::getCurrentDateForMySql(),
-                $email ? StringUtil::normaliseEmail($email) : $existingUser->getEmail(),
-                $name ?? $existingUser->getName(),
-                $newPassword
+                id: $existingUser->getId(),
+                languageId: $languageId ?? $existingUser->getLanguageId(),
+                roleId: $existingUser->getRoleId(),
+                journeyStatusId: $existingUser->getJourneyStatusId(),
+                createdAt: $existingUser->getCreatedAt(),
+                updatedAt: DateUtil::getCurrentDateForMySql(),
+                email: $existingUser->getEmail(),
+                name: $name ?? $existingUser->getName(),
+                passwordHash: $newPassword
                     ? StringUtil::hashPassword($newPassword)
                     : $existingUser->getPasswordHash(),
-                $existingUser->getBio(),
-                isset($isEnabled) ? $isEnabled : $existingUser->isEnabled(),
-                $hasEmailChanged ? false : $existingUser->isVerified(),
-                $timezone ?? $existingUser->getTimezone(),
-                $hasEmailChanged
-                    ? $existingUser->getEmail()
-                    : $existingUser->getPreviousEmailAddress()
+                bio: $existingUser->getBio(),
+                isEnabled: isset($isEnabled) ? $isEnabled : $existingUser->isEnabled(),
+                verified: $existingUser->isVerified(),
+                timezone: $timezone ?? $existingUser->getTimezone(),
+                changeEmailAddressTo: $hasEmailChanged ? StringUtil::normaliseEmail($email) : null
             ),
-            $hasEmailChanged,
             isset($timezone)
         );
 

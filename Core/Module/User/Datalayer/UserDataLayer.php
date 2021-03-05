@@ -11,9 +11,9 @@ use Amora\Core\Util\DateUtil;
 
 class UserDataLayer
 {
-    const USER_TABLE_NAME = 'user';
-    const USER_VERIFICATION_TABLE_NAME = 'user_verification';
-    const USER_REGISTRATION_REQUEST_TABLE_NAME = 'user_registration_request';
+    const USER_TABLE = 'user';
+    const USER_VERIFICATION_TABLE = 'user_verification';
+    const USER_REGISTRATION_REQUEST_TABLE = 'user_registration_request';
 
     private MySqlDb $db;
     private Logger $logger;
@@ -45,8 +45,8 @@ class UserDataLayer
                 u.is_enabled,
                 u.verified,
                 u.timezone,
-                u.previous_email_address
-            FROM ' . self::USER_TABLE_NAME . ' AS u
+                u.change_email_to
+            FROM ' . self::USER_TABLE . ' AS u
             WHERE 1
         ';
 
@@ -104,7 +104,7 @@ class UserDataLayer
         $userArray = $user->asArray();
         unset($userArray['created_at']);
         unset($userArray['id']);
-        $res = $this->db->update(self::USER_TABLE_NAME, $userId, $userArray);
+        $res = $this->db->update(self::USER_TABLE, $userId, $userArray);
 
         if (empty($res)) {
             $this->logger->logError('Error updating user. User ID: ' . $userId);
@@ -116,7 +116,7 @@ class UserDataLayer
 
     public function createNewUser(User $user): User
     {
-        $resUser = $this->db->insert(self::USER_TABLE_NAME, $user->asArray());
+        $resUser = $this->db->insert(self::USER_TABLE, $user->asArray());
 
         if (empty($resUser)) {
             $this->logger->logError('Error inserting user');
@@ -129,12 +129,12 @@ class UserDataLayer
 
     public function deleteUser(User $user): bool
     {
-        return $this->db->delete(self::USER_TABLE_NAME, ['id' => $user->getId()]);
+        return $this->db->delete(self::USER_TABLE, ['id' => $user->getId()]);
     }
 
     public function storeUserVerification(UserVerification $data): UserVerification
     {
-        $res = $this->db->insert(self::USER_VERIFICATION_TABLE_NAME, $data->asArray());
+        $res = $this->db->insert(self::USER_VERIFICATION_TABLE, $data->asArray());
 
         if (empty($res)) {
             $this->logger->logError('Error inserting user verification data');
@@ -148,7 +148,7 @@ class UserDataLayer
     public function disableVerificationDataForUserId(int $userId, int $typeId): bool
     {
         $sql = '
-            UPDATE ' . self::USER_VERIFICATION_TABLE_NAME . '
+            UPDATE ' . self::USER_VERIFICATION_TABLE . '
             SET is_enabled = 0
             WHERE user_id = :user_id
                 AND type_id = :type_id
@@ -171,11 +171,12 @@ class UserDataLayer
                 u.id,
                 u.user_id,
                 u.type_id,
+                u.email,
                 u.created_at,
                 u.verified_at,
                 u.verification_identifier,
                 u.is_enabled
-            FROM ' . self::USER_VERIFICATION_TABLE_NAME . ' AS u
+            FROM ' . self::USER_VERIFICATION_TABLE . ' AS u
             WHERE 1
                 AND u.verification_identifier = :verificationIdentifier
         ';
@@ -199,32 +200,35 @@ class UserDataLayer
         return $res ? UserVerification::fromArray($res) : null;
     }
 
-    public function markUserAsVerified(int $userId): bool
+    public function markUserAsVerified(User $user, UserVerification $verification): bool
     {
-        $res = $this->db->withTransaction(function () use ($userId) {
-            $res = $this->db->execute(
-                'UPDATE ' . self::USER_TABLE_NAME . ' SET verified = 1 WHERE id = :userId',
-                [':userId' => $userId]
-            );
+        $res = $this->db->withTransaction(function () use ($user, $verification) {
+            $data = [
+                'updated_at' => DateUtil::getCurrentDateForMySql(),
+                'verified' => 1,
+                'change_email_to' => null
+            ];
+
+            if ($verification->getEmail()) {
+                $data['email'] = $verification->getEmail();
+            }
+
+            $res = $this->db->update(self::USER_TABLE, $user->getId(), $data);
 
             if (empty($res)) {
                 return ['success' => false];
             }
 
-            $res = $this->db->execute(
-                '
-                    UPDATE ' . self::USER_VERIFICATION_TABLE_NAME . '
-                    SET is_enabled = 0,
-                        verified_at = :verifiedAt
-                    WHERE user_id = :userId
-                 ',
+            $res2 = $this->db->update(
+                self::USER_VERIFICATION_TABLE,
+                $verification->getId(),
                 [
-                    ':userId' => $userId,
-                    ':verifiedAt' => DateUtil::getCurrentDateForMySql()
+                    'is_enabled' => 0,
+                    'verified_at' => DateUtil::getCurrentDateForMySql()
                 ]
             );
 
-            if (empty($res)) {
+            if (empty($res2)) {
                 return ['success' => false];
             }
 
@@ -236,19 +240,14 @@ class UserDataLayer
 
     public function updatePassword(int $userId, string $hashedPassword): bool
     {
-        $sql = '
-            UPDATE ' . self::USER_TABLE_NAME . '
-            SET password_hash = :newPassword,
-                updated_at = :now
-            WHERE id = :userId
-        ';
-        $params = [
-            ':userId' => $userId,
-            ':newPassword' => $hashedPassword,
-            ':now' => DateUtil::getCurrentDateForMySql()
-        ];
-
-        return $this->db->execute($sql, $params);
+        return $this->db->update(
+            self::USER_TABLE,
+            $userId,
+            [
+                'password_hash' => $hashedPassword,
+                'updated_at' => DateUtil::getCurrentDateForMySql(),
+            ]
+        );
     }
 
     public function getUserRegistrationRequest(
@@ -269,7 +268,7 @@ class UserDataLayer
                 urr.processed_at,
                 urr.request_code,
                 urr.user_id
-            FROM ' . self::USER_REGISTRATION_REQUEST_TABLE_NAME . ' AS urr
+            FROM ' . self::USER_REGISTRATION_REQUEST_TABLE . ' AS urr
             WHERE 1
         ';
 
@@ -295,7 +294,7 @@ class UserDataLayer
     public function storeRegistrationInviteRequest(
         UserRegistrationRequest $data
     ): UserRegistrationRequest {
-        $res = $this->db->insert(self::USER_REGISTRATION_REQUEST_TABLE_NAME, $data->asArray());
+        $res = $this->db->insert(self::USER_REGISTRATION_REQUEST_TABLE, $data->asArray());
 
         if (empty($res)) {
             $this->logger->logError('Error inserting user registration request data');

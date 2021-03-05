@@ -189,7 +189,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     {
         $existingUser =$this->userService->getUserForEmail($email);
         if (empty($existingUser)) {
-            return new PublicApiControllerForgotPasswordFailureResponse();
+            return new PublicApiControllerForgotPasswordSuccessResponse(true);
         }
 
         $res = $this->mailService->sendPasswordResetEmail($existingUser);

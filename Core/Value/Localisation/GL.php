@@ -26,9 +26,10 @@ return [
     'authenticationForgotPassword' => 'Esquecíches o teu contrasinal?',
     'authenticationForgotPasswordSubtitle' => 'Non te preocupes, introduce o correo electrónico co que te rexistraches e enviarémosche unha ligazón para restaurar o teu contrasinal.',
     'authenticationForgotPasswordAction' => 'Enviar ligazón de restauración',
-    'authenticationForgotPasswordActionSuccess' => 'Correo enviado. Comproba a bandexa de entrada do teu correo electrónico (<b><span id="register-feedback-email"></span></b>) e segue as instruccións.',
+    'authenticationForgotPasswordActionSuccess' => 'Se temos o teu enderezo (<b><span id="register-feedback-email"></span></b>) na nosa base de datos xa che enviamos un correo para restaurar o contrasinal. Comproba a bandexa de entrada e segue as instruccións.',
     'authenticationEmailVerified' => 'Correo electrónico verificado correctamente.',
     'authenticationEmailVerifiedError' => 'A ligazón para verificar o teu correo electrónico non é válida.',
+    'authenticationEmailVerifiedExpired' => 'A ligazón para verificar o teu correo electrónico caducou. Por favor, inicia o proceso de novo.',
     'authenticationPasswordResetLinkError' => 'A ligazón para cambiar o teu contrasinal non é válida. Inicia o proceso de cambio de contrasinal de novo.',
     'authenticationEmailAndOrPassNotValid' => 'Correo electrónico e/ou contrasinal non válidos.',
     'authenticationEmailNotValid' => 'Correo electrónico non válido.',
@@ -46,14 +47,15 @@ return [
     'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>Enviarémosche unha invitación en canto teñamos todo listo. Grazas pola espera!</p><p>O teu correo: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Volver á páxina principal',
     'authenticationInviteRequestFormAction' => 'Pedir invitación',
+    'authenticationVerifyEmailBanner' => 'Por favor, verifica a túa conta seguindo as instrucións que che enviamos nun correo a <b>%s</b>. Se non o recibiches revisa a caixa do lixo ou <a class="verified-link" data-user-id="%s" href="#">fai clic aquí</a> e enviarémosche outro. Podes <a href="/gl/account">modificar o teu enderezo</a> se fora necesario.',
+    'authenticationPassNotValid' => 'O contrasinal actual non é válido.',
 
     'formYourAccount' => 'A túa conta',
     'formPlaceholderUserName' => 'O teu nome',
     'formPlaceholderUserHelp' => 'Mínimo tres letras',
     'formEmail' => 'O teu correo electrónico',
     'formPlaceholderEmail' => 'nome@exemplo.com',
-    'formEmailUpdateWarning1' => 'Recentemente actualizaches o teu correo electrónico e aínda non foi verificado. Por favor revisa a túa bandexa de entrada e verifícao canto antes. Se non recibiras o correo de verificación revisa a caixa do lixo ou <a class="verified-link" data-user-id="%d" href="#">fai click aquí</a> e enviarémosche outro.',
-    'formEmailUpdateWarning2' => 'Este era o teu anterior correo electrónico: %s.',
+    'formEmailUpdateWarning' => 'Por favor, verifica o teu novo correo electrónico (%s) para cambialo.',
     'formPlaceholderPassword' => 'O teu contrasinal',
     'formPlaceholderCreatePassword' => 'Crea un contrasinal',
     'formPlaceholderPasswordNew' => 'Novo contrasinal',
@@ -124,15 +126,21 @@ return [
     'sectionMoveUp' => 'Mover para arriba',
     'sectionMoveDown' => 'Mover para abaixo',
 
-    'emailVerificationSubject' => 'Benvido/a a %s! Confirma o teu correo electrónico',
-    'emailVerificationContent' => '<p>¡Benvido/a!</p>' .
+    'emailConfirmationSubject' => 'Benvido/a a %s! Confirma o teu correo electrónico',
+    'emailConfirmationContent' => '<p>¡Benvido/a!</p>' .
         '<p>Por favor, confirma o teu correo electrónico facendo clic na seguinte ligazón.</p>' .
         '<p><a href="%s">Confirmar correo electrónico</a></p>' .
         '<p>Grazas,<br>%s</p>',
+    'emailUpdateVerificationSubject' => 'Verifica o teu correo electrónico',
+    'emailUpdateVerificationContent' => '<p>Ola,</p>' .
+        '<p>Recibimos unha petición de cambio de correo electrónico na túa conta de %s.</p>' .
+        '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo. En caso contrario, fai clic na seguinte ligazón para verificar o teu novo correo:</p>' .
+        '<p><a href="%s">Confirma o teu correo electrónico</a></p>' .
+        '<p>Un saúdo,<br>%s</p>',
     'emailPasswordChangeSubject' => '%s: cambiar contrasinal',
     'emailPasswordChangeContent' => '<p>Ola,</p>' .
         '<p>Recibimos unha petición de cambio de contrasinal na túa conta de %s.</p>' .
         '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo electrónico. En caso contrario, fai clic na seguinte ligazón para cambiar o teu contrasinal:</p>' .
         '<p><a href="%s">Cambiar contrasinal</a></p>' .
-        '<p>Unha aperta,<br>%s</p>',
+        '<p>Un saúdo,<br>%s</p>',
 ];

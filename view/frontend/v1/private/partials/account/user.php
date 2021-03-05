@@ -27,9 +27,8 @@ $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
               <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" value="<?=$this->e($responseData->getSession()->getUser()->getEmail())?>">
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
-<?php if (!$user->isVerified() && $user->getPreviousEmailAddress()) { ?>
-            <p class="warning m-t-3 m-b-0"><?=sprintf($responseData->getLocalValue('formEmailUpdateWarning1'), $user->getId())?></p>
-            <p class="m-b-3"><?=sprintf($responseData->getLocalValue('formEmailUpdateWarning2'), '<i>' . $user->getPreviousEmailAddress() . '</i>')?></p>
+<?php if ($user->getChangeEmailTo()) { ?>
+            <p class="warning m-t-3 m-b-3"><?=sprintf($responseData->getLocalValue('formEmailUpdateWarning'), '<i>' . $user->getChangeEmailTo() . '</i>')?></p>
 <?php } ?>
           </div>
           <div class="field">

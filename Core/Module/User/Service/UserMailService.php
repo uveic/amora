@@ -24,106 +24,126 @@ class UserMailService
         private MailerService $mailerService,
     ) {}
 
-    private function sendVerificationEmail(
+    private function sendEmailAndDisablePreviousVerifications(
         User $user,
-        string $verificationIdentifier,
-        int $verificationTypeId,
-        string $linkUrl,
-        string $emailSubject,
-        string $emailContent
+        UserVerification $verification,
+        MailerItem $mailerItem
     ): bool {
+        $this->userDataLayer->disableVerificationDataForUserId(
+            $user->getId(),
+            $verification->getTypeId()
+        );
+
+        $res = $this->userDataLayer->storeUserVerification($verification);
+
+        if (empty($res)) {
+            return false;
+        }
+
+        $res2 = $this->mailerService->storeMail($mailerItem);
+        return empty($res2) ? false : true;
+    }
+
+    public function sendUpdateEmailVerificationEmail(User $user, string $emailToVerify): bool
+    {
+        $verificationIdentifier = $this->getUniqueVerificationIdentifier();
+        $verification = new UserVerification(
+            id: null,
+            userId: $user->getId(),
+            typeId: VerificationType::EMAIL_ADDRESS,
+            email: $emailToVerify,
+            createdAt: DateUtil::getCurrentDateForMySql(),
+            verifiedAt: null,
+            verificationIdentifier: $verificationIdentifier,
+            isEnabled: true
+        );
+
+        $mailerItem = $this->buildEmailUpdateVerificationEmail($user, $emailToVerify, $verificationIdentifier);
+
+        return $this->sendEmailAndDisablePreviousVerifications($user, $verification, $mailerItem);
+    }
+
+    public function sendVerificationEmail(User $user, string $emailToVerify): bool
+    {
         $res = $this->userDataLayer->getDb()->withTransaction(
-            function () use (
-                $user,
-                $verificationIdentifier,
-                $verificationTypeId,
-                $linkUrl,
-                $emailSubject,
-                $emailContent
-            ) {
-                $this->userDataLayer->disableVerificationDataForUserId(
-                    $user->getId(),
-                    $verificationTypeId
-                );
-                $res = $this->userDataLayer->storeUserVerification(
-                    new UserVerification(
-                        null,
-                        $user->getId(),
-                        $verificationTypeId,
-                        DateUtil::getCurrentDateForMySql(),
-                        null,
-                        $verificationIdentifier,
-                        true
-                    )
+            function () use ($user, $emailToVerify) {
+                $verificationIdentifier = $this->getUniqueVerificationIdentifier();
+                $verification = new UserVerification(
+                    id: null,
+                    userId: $user->getId(),
+                    typeId: VerificationType::EMAIL_ADDRESS,
+                    email: $emailToVerify,
+                    createdAt: DateUtil::getCurrentDateForMySql(),
+                    verifiedAt: null,
+                    verificationIdentifier: $verificationIdentifier,
+                    isEnabled: true
                 );
 
-                if (empty($res)) {
+                $mailerItem = $this->buildVerificationEmail(
+                    $user,
+                    $emailToVerify,
+                    $verificationIdentifier
+                );
+
+                $resEmail = $this->sendEmailAndDisablePreviousVerifications(
+                    $user,
+                    $verification,
+                    $mailerItem
+                );
+
+                if (!$resEmail) {
                     return ['success' => false];
                 }
 
-                $resMail = $this->mailerService->storeMail(
-                    new MailerItem(
-                        null,
-                        MailerTemplate::ACCOUNT_VERIFICATION,
-                        null,
-                        null,
-                        $user->getEmail(),
-                        $user->getName(),
-                        $emailSubject,
-                        $emailContent,
-                        null,
-                        DateUtil::getCurrentDateForMySql()
-                    )
-                );
-
-                return ['success' => $resMail ? true : false];
+                return ['success' => true];
             }
         );
 
         return empty($res['success']) ? false : true;
     }
 
-    public function buildAndSendVerificationEmail(User $user, int $verificationTypeId): bool
-    {
-        $verificationIdentifier = $this->getUniqueVerificationIdentifier();
-        $localisationUtil = Core::getLocalisationUtil(
-            Language::getIsoCodeForId($user->getLanguageId())
-        );
-        $linkUrl = UrlBuilderUtil::getBaseLinkUrl(Language::getIsoCodeForId($user->getLanguageId()))
-            . '/user/verify/' . $verificationIdentifier;
-        $siteName = Core::getLocalisationUtil(Language::getIsoCodeForId($user->getLanguageId()))
-            ->getValue('siteName');
-
-        $emailSubject = sprintf(
-            $localisationUtil->getValue('emailVerificationSubject'),
-            $siteName
-        );
-        $emailContent = sprintf(
-            $localisationUtil->getValue('emailVerificationContent'),
-            $linkUrl,
-            $siteName
-        );
-
-        return $this->sendVerificationEmail(
-            $user,
-            $verificationIdentifier,
-            $verificationTypeId,
-            $linkUrl,
-            $emailSubject,
-            $emailContent
-        );
-    }
-
     public function sendPasswordResetEmail(User $user): bool
     {
-        $verificationIdentifier = $this->getUniqueVerificationIdentifier();
-        $localisationUtil = Core::getLocalisationUtil(
-            Language::getIsoCodeForId($user->getLanguageId())
+        $res = $this->userDataLayer->getDb()->withTransaction(
+            function () use ($user) {
+                $verificationIdentifier = $this->getUniqueVerificationIdentifier();
+                $mailerItem = $this->buildPasswordResetEmail($user, $verificationIdentifier);
+
+                $verification = new UserVerification(
+                    null,
+                    $user->getId(),
+                    VerificationType::PASSWORD_RESET,
+                    null,
+                    DateUtil::getCurrentDateForMySql(),
+                    null,
+                    $verificationIdentifier,
+                    true
+                );
+
+                $resEmail = $this->sendEmailAndDisablePreviousVerifications(
+                    $user,
+                    $verification,
+                    $mailerItem
+                );
+
+                if (!$resEmail) {
+                    return ['success' => false];
+                }
+
+                return ['success' => true];
+            }
         );
-        $linkUrl = UrlBuilderUtil::getBaseLinkUrl(Language::getIsoCodeForId($user->getLanguageId()))
+
+        return empty($res['success']) ? false : true;
+    }
+
+    private function buildPasswordResetEmail(User $user, string $verificationIdentifier): MailerItem
+    {
+        $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
+        $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
+        $linkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode)
             . '/user/reset/' . $verificationIdentifier;
-        $siteName = Core::getLocalisationUtil(Language::getIsoCodeForId($user->getLanguageId()))
-            ->getValue('siteName');
+        $siteName = $localisationUtil->getValue('siteName');
         $emailSubject = sprintf(
             $localisationUtil->getValue('emailPasswordChangeSubject'),
             $siteName
@@ -135,13 +155,85 @@ class UserMailService
             $siteName
         );
 
-        return $this->sendVerificationEmail(
-            $user,
-            $verificationIdentifier,
-            VerificationType::PASSWORD_RESET,
-            $linkUrl,
+        return new MailerItem(
+            null,
+            MailerTemplate::ACCOUNT_VERIFICATION,
+            null,
+            null,
+            $user->getEmail(),
+            $user->getName(),
             $emailSubject,
-            $emailContent
+            $emailContent,
+            null,
+            DateUtil::getCurrentDateForMySql()
+        );
+    }
+
+    private function buildVerificationEmail(
+        User $user,
+        string $emailToVerify,
+        string $verificationIdentifier
+    ): MailerItem {
+        $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
+        $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
+        $linkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode)
+            . '/user/verify/' . $verificationIdentifier;
+        $siteName = $localisationUtil->getValue('siteName');
+
+        $emailSubject = sprintf(
+            $localisationUtil->getValue('emailConfirmationSubject'),
+            $siteName
+        );
+        $emailContent = sprintf(
+            $localisationUtil->getValue('emailConfirmationContent'),
+            $linkUrl,
+            $siteName
+        );
+
+        return new MailerItem(
+            null,
+            MailerTemplate::ACCOUNT_VERIFICATION,
+            null,
+            null,
+            $emailToVerify,
+            $user->getName(),
+            $emailSubject,
+            $emailContent,
+            null,
+            DateUtil::getCurrentDateForMySql()
+        );
+    }
+
+    private function buildEmailUpdateVerificationEmail(
+        User $user,
+        string $emailToVerify,
+        string $verificationIdentifier
+    ): MailerItem {
+        $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
+        $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
+        $linkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode)
+            . '/user/verify/' . $verificationIdentifier;
+        $siteName = $localisationUtil->getValue('siteName');
+
+        $emailSubject = $localisationUtil->getValue('emailUpdateVerificationSubject');
+        $emailContent = sprintf(
+            $localisationUtil->getValue('emailUpdateVerificationContent'),
+            $siteName,
+            $linkUrl,
+            $siteName,
+        );
+
+        return new MailerItem(
+            null,
+            MailerTemplate::ACCOUNT_VERIFICATION,
+            null,
+            null,
+            $emailToVerify,
+            $user->getName(),
+            $emailSubject,
+            $emailContent,
+            null,
+            DateUtil::getCurrentDateForMySql()
         );
     }
 

@@ -7,52 +7,22 @@ use Amora\Core\Module\User\Value\UserRole;
 
 class User
 {
-    protected ?int $id;
-    protected int $languageId;
-    protected int $roleId;
-    protected int $journeyStatusId;
-    protected string $createdAt;
-    protected string $updatedAt;
-    protected ?string $email;
-    protected ?string $name;
-    protected ?string $passwordHash;
-    protected ?string $bio;
-    protected bool $isEnabled;
-    protected bool $verified;
-    protected string $timezone;
-    private ?string $previousEmailAddress;
-
     public function __construct(
-        ?int $id,
-        int $languageId,
-        int $roleId,
-        int $journeyStatusId,
-        string $createdAt,
-        string $updatedAt,
-        ?string $email,
-        ?string $name,
-        ?string $passwordHash,
-        ?string $bio,
-        bool $isEnabled,
-        bool $verified,
-        string $timezone,
-        ?string $previousEmailAddress = null
-    ) {
-        $this->id = $id;
-        $this->languageId = $languageId;
-        $this->roleId = $roleId;
-        $this->journeyStatusId = $journeyStatusId;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
-        $this->email = $email;
-        $this->name = $name;
-        $this->passwordHash = $passwordHash;
-        $this->bio = $bio;
-        $this->isEnabled = $isEnabled;
-        $this->verified = $verified;
-        $this->timezone = $timezone;
-        $this->previousEmailAddress = $previousEmailAddress;
-    }
+        private ?int $id,
+        private int $languageId,
+        private int $roleId,
+        private int $journeyStatusId,
+        private string $createdAt,
+        private string $updatedAt,
+        private ?string $email,
+        private ?string $name,
+        private ?string $passwordHash,
+        private ?string $bio,
+        private bool $isEnabled,
+        private bool $verified,
+        private string $timezone,
+        private ?string $changeEmailAddressTo = null
+    ) {}
 
     public static function fromArray(array $user): User
     {
@@ -77,7 +47,7 @@ class User
             empty($user['is_enabled']) ? false : true,
             empty($user['verified']) ? false : true,
             $user['timezone'],
-            $user['previous_email_address'] ?? null
+            $user['change_email_to'] ?? null
         );
     }
 
@@ -97,7 +67,7 @@ class User
             'is_enabled' => $this->isEnabled(),
             'verified' => $this->isVerified(),
             'timezone' => $this->getTimezone(),
-            'previous_email_address' => $this->getPreviousEmailAddress()
+            'change_email_to' => $this->getChangeEmailTo()
         ];
     }
 
@@ -171,9 +141,9 @@ class User
         return $this->timezone;
     }
 
-    public function getPreviousEmailAddress(): ?string
+    public function getChangeEmailTo(): ?string
     {
-        return $this->previousEmailAddress;
+        return $this->changeEmailAddressTo;
     }
 
     public function getLanguageName(): string

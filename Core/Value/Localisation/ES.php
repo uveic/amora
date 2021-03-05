@@ -26,9 +26,10 @@ return [
     'authenticationForgotPassword' => '¿Olvidaste tu contraseña?',
     'authenticationForgotPasswordSubtitle' => 'No te preocupes, introduce el correo electrónico que utilizaste para registrarte y te enviaremos un enlace para restaurar tu contraseña.',
     'authenticationForgotPasswordAction' => 'Enviar enlace de restauración',
-    'authenticationForgotPasswordActionSuccess' => 'Correo enviado. Comprueba la bandeja de entrada de tu correo electrónico (<b><span id="register-feedback-email"></span></b>) y sigue las instruciones.',
+    'authenticationForgotPasswordActionSuccess' => 'Si tenemos tu dirección (<b><span id="register-feedback-email"></span></b>) en nuestra base de datos ya te hemos enviado un correo para restaurar tu contraseña. Comprueba la bandeja de entrada y sigue las instruciones.',
     'authenticationEmailVerified' => 'Correo electrónico verificado correctamente.',
     'authenticationEmailVerifiedError' => 'El enlace para verificar tu correo electrónico no es válido.',
+    'authenticationEmailVerifiedExpired' => 'El enlace para verificar tu correo electrónico ha caducado. Por favor, inicia el proceso de nuevo.',
     'authenticationPasswordResetLinkError' => 'El enlace para cambiar tu contraseña no es válido. Inicia el proceso de cambio de contraseña de nuevo.',
     'authenticationEmailAndOrPassNotValid' => 'Correo electrónico y/o contresña no válidos.',
     'authenticationEmailNotValid' => 'Correo electrónico no válido.',
@@ -46,14 +47,15 @@ return [
     'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>Te enviaremos tu invitación en cuanto tengamos todo listo. ¡Gracias por la espera!</p><p>Tu correo: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Volver a la página principal',
     'authenticationInviteRequestFormAction' => 'Pedir una invitación',
+    'authenticationVerifyEmailBanner' => 'Por favor, verifica tu cuenta siguiendo las instruciones que te enviamos en un correo a <b>%s</b>. Si no lo has recibido revisa la carpeta de correo basura o <a class="verified-link" data-user-id="$d" href="#">haz clic aquí</a> y te enviaremos otro. Puedes <a href="/es/account">modificar tu dirección de correo</a> si fuese necesario.',
+    'authenticationPassNotValid' => 'La contraseña no es correcta.',
 
     'formYourAccount' => 'Tu cuenta',
     'formPlaceholderUserName' => 'Tu nombre',
     'formPlaceholderUserHelp' => 'Mínimo tres letras',
     'formEmail' => 'Tu correo electrónico',
     'formPlaceholderEmail' => 'nombre@ejemplo.com',
-    'formEmailUpdateWarning1' => 'Recentemente actualizaches o teu correo electrónico e aínda non foi verificado. Por favor revisa a túa bandexa de entrada e verifícao canto antes. Se non recibiras o correo de verificación revisa a caixa do lixo ou <a class="verified-link" data-user-id="%d" href="#">fai click aquí</a> e enviarémosche outro.',
-    'formEmailUpdateWarning2' => 'Previous email address: %s.',
+    'formEmailUpdateWarning' => 'Por favor, verifica tu nuevo correo electrónico (%s) para cambiarlo.',
     'formPlaceholderPassword' => 'Tu contraseña',
     'formPlaceholderCreatePassword' => 'Crea una contraseña',
     'formPlaceholderPasswordNew' => 'Nueva contraseña',
@@ -110,7 +112,6 @@ return [
     'globalAddHtml' => 'Añadir HTML',
 
     'globalGenericError' => 'Ha ocurrido un error inesperado, por favor inténtalo de nuevo',
-    'globalGenericNotFound' => 'No encontrado',
 
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
@@ -125,11 +126,17 @@ return [
     'sectionMoveUp' => 'Mover para arriba',
     'sectionMoveDown' => 'Mover para abajo',
 
-    'emailVerificationSubject' => 'Bienvenido/a a %s! Confirma tu correo electrónico',
-    'emailVerificationContent' => '<p>¡Bienvenido/a!</p>' .
+    'emailConfirmationSubject' => 'Bienvenido/a a %s! Confirma tu correo electrónico',
+    'emailConfirmationContent' => '<p>¡Bienvenido/a!</p>' .
         '<p>Por favor, confirma tu correo electrónico haciendo clic en el siguiente enlace.</p>' .
         '<p><a href="%s">Confirmar correo electrónico</a></p>' .
         '<p>Gracias,<br>%s</p>',
+    'emailUpdateVerificationSubject' => 'Verifica tu correo electrónico',
+    'emailUpdateVerificationContent' => '<p>Hola,</p>' .
+        '<p>Hemos recibido una petición de cambio de correo electrónico en tu cuenta de %s.</p>' .
+        '<p>Si no has sido tú el que ha hecho esta petición puedes ignorar este correo. En caso contrario, haz clic en el siguiente enlace para confirmar tu nuevo correo:</p>' .
+        '<p><a href="%s">Confirma tu correo electrónico</a></p>' .
+        '<p>Saludos,<br>%s</p>',
     'emailPasswordChangeSubject' => '%s: cambiar contraseña',
     'emailPasswordChangeContent' => '<p>Hola,</p>' .
         '<p>Hemos recibido una petición de cambio de contraseña en tu cuenta de %s.</p>' .

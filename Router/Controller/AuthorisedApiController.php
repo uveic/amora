@@ -141,10 +141,11 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             return new AuthorisedApiControllerSendVerificationEmailFailureResponse();
         }
 
-        $resVerification = $this->userMailService->buildAndSendVerificationEmail(
+        $resVerification = $this->userMailService->sendVerificationEmail(
             $user,
-            VerificationType::ACCOUNT
+            $user->getEmail()
         );
+
         return new AuthorisedApiControllerSendVerificationEmailSuccessResponse($resVerification);
     }
 

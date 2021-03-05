@@ -50,9 +50,9 @@ class SessionDataLayer
                 u.is_enabled,
                 u.verified,
                 u.timezone,
-                u.previous_email_address
+                u.change_email_to
             FROM ' . self::SESSION_TABLE_NAME . ' AS s
-                JOIN ' . UserDataLayer::USER_TABLE_NAME . ' AS u
+                JOIN ' . UserDataLayer::USER_TABLE . ' AS u
                     ON s.user_id = u.id
             WHERE s.sid = :session_id
         ';
