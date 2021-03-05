@@ -160,10 +160,15 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             $localisationUtil
         );
 
+        $homeArticles = $this->articleService->getArticlesForHome();
+        $homepageArticle = $this->articleService->getHomepageArticle();
+
         return Response::createFrontendPublicHtmlResponse(
             'shared/home',
             new HtmlHomepageResponseData(
                 request: $request,
+                article: $homepageArticle,
+                homeArticles: $homeArticles,
                 userFeedback: $userFeedback,
             )
         );
@@ -184,11 +189,16 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $res = $this->userService->validatePasswordResetVerificationPage($verificationIdentifier);
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
+        $homeArticles = $this->articleService->getArticlesForHome();
+        $homepageArticle = $this->articleService->getHomepageArticle();
+
         if (empty($res)) {
             return Response::createFrontendPublicHtmlResponse(
                 'shared/home',
                 new HtmlHomepageResponseData(
                     request: $request,
+                    article: $homepageArticle,
+                    homeArticles: $homeArticles,
                     userFeedback: new UserFeedback(
                         true,
                         $localisationUtil->getValue('authenticationPasswordResetLinkError')
