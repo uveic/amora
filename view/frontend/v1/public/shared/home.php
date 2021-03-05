@@ -4,11 +4,20 @@ use Amora\Core\Model\Response\HtmlHomepageResponseData;
 
 /** @var HtmlHomepageResponseData $responseData */
 
+$userFeedbackHtml = '';
+if ($responseData->getUserFeedback()) {
+    $class = $responseData->getUserFeedback()->isError()
+        ? 'feedback-error'
+        : 'feedback-success';
+    $userFeedbackHtml = '<div id="feedback-banner" class="' . $class . '">' . $responseData->getUserFeedback()->getMessage() . '</div>';
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="<?=$this->e(strtolower($responseData->getSiteLanguage()))?>">
 <?= $this->insert('shared/partials/head', ['responseData' => $responseData]) ?>
 <body>
+<?=$userFeedbackHtml?>
 <?=$this->insert('shared/partials/home/main', ['responseData' => $responseData])?>
 <?php
   if ($responseData->getSession() && $responseData->getSession()->isAdmin()) {

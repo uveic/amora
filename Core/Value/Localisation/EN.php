@@ -26,9 +26,10 @@ return [
     'authenticationForgotPassword' => 'Forgot your password?',
     'authenticationForgotPasswordSubtitle' => "Don't worry, just enter the email address you registered with and we will send you a link to reset your password.",
     'authenticationForgotPasswordAction' => 'Send password reset link',
-    'authenticationForgotPasswordActionSuccess' => 'Email sent (<b><span id="register-feedback-email"></span></b>). Check your inbox and follow the instructions.',
+    'authenticationForgotPasswordActionSuccess' => 'A password restoration email has been sent to you (<b><span id="register-feedback-email"></span></b>) if you have an account with us. Check your inbox and follow the instructions.',
     'authenticationEmailVerified' => 'Email address verified successfully.',
     'authenticationEmailVerifiedError' => 'The link to verify your email address is not valid.',
+    'authenticationEmailVerifiedExpired' => 'The link to verify your email address has expired. Please, start the process again.',
     'authenticationPasswordResetLinkError' => 'The link to reset your password is not valid. Please start the process again.',
     'authenticationEmailAndOrPassNotValid' => 'Email address and/or password not valid.',
     'authenticationEmailNotValid' => 'Email address not valid.',
@@ -36,6 +37,7 @@ return [
     'authenticationPasswordTooShort' => 'The password is too short. Please, fix it and try it again.',
     'authenticationPasswordsDoNotMatch' => 'The passwords do not match. Please, fix it and try it again.',
     'authenticationRegistrationErrorExistingEmail' => 'There is another account with the same email address. Please, log in to your account <a href="%s">here</a>.',
+    'authenticationPassNotValid' => 'Password not valid.',
 
     'authenticationPasswordResetSubtitle' => 'Change your password',
     'authenticationPasswordResetActionSuccess' => 'Password changed successfully.',
@@ -46,14 +48,14 @@ return [
     'authenticationInviteRequestActionSuccess' => '<h2>Invitation request received</h2><p>We will send your invitation as soon as everything is ready. Thank you for your patience!</p><p>Your email: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Go back to homepage',
     'authenticationInviteRequestFormAction' => 'Request an invitation',
+    'authenticationVerifyEmailBanner' => 'Please verify your account following the instructions sent to your email address at <b>%s</b>. If you have not received it, please check your spam folder or <a class="verified-link" data-user-id="%d" href="#">click here</a> and we will send you another one. If necessary you can <a href="/en/account">update your email address here</a>.',
 
     'formYourAccount' => 'Your Account',
     'formPlaceholderUserName' => 'Your name',
     'formPlaceholderUserHelp' => 'Min three characters',
     'formEmail' => 'Your Email Address',
     'formPlaceholderEmail' => 'name@example.com',
-    'formEmailUpdateWarning1' => 'Recentemente actualizaches o teu correo electrónico e aínda non foi verificado. Por favor revisa a túa bandexa de entrada e verifícao canto antes. Se non recibiras o correo de verificación revisa a caixa do lixo ou <a class="verified-link" data-user-id="%d" href="#">fai click aquí</a> e enviarémosche outro.',
-    'formEmailUpdateWarning2' => 'Previous email address: %s.',
+    'formEmailUpdateWarning' => 'Please, verify your new email address (%s) to get it changed.',
     'formPlaceholderPassword' => 'Your password',
     'formPlaceholderCreatePassword' => 'Create a password',
     'formPlaceholderPasswordNew' => 'New password',
@@ -110,7 +112,6 @@ return [
     'globalAddHtml' => 'Add HTML',
 
     'globalGenericError' => 'Something went wrong, please try again',
-    'globalGenericNotFound' => 'Not found',
 
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',
@@ -125,11 +126,17 @@ return [
     'sectionMoveUp' => 'Move Up',
     'sectionMoveDown' => 'Move Down',
 
-    'emailVerificationSubject' => 'Welcome to %s! Confirm Your Email',
-    'emailVerificationContent' => '<p>Welcome!</p>' .
+    'emailConfirmationSubject' => 'Welcome to %s! Confirm Your Email',
+    'emailConfirmationContent' => '<p>Welcome!</p>' .
         '<p>By clicking on the following link, you are confirming your email address.</p>' .
         '<p><a href="%s">Confirm Your Email</a></p>' .
         '<p>Thanks,<br>%s</p>',
+    'emailUpdateVerificationSubject' => 'Verify Your Email',
+    'emailUpdateVerificationContent' => '<p>Hi,</p>' .
+        '<p>We received a request to change you email address for your %s account.</p>' .
+        '<p>If you did not make this request, just ignore this email. Otherwise, please click the link below to change you email:</p>' .
+        '<p><a href="%s">Confirm Your Email</a></p>' .
+        '<p>Love,<br>%s</p>',
     'emailPasswordChangeSubject' => '%s Password Reset',
     'emailPasswordChangeContent' => '<p>Hi there,</p>' .
         '<p>We received a request to change the password for your %s account.</p>' .

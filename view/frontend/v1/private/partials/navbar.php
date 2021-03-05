@@ -6,12 +6,10 @@ use Amora\Core\Model\Response\HtmlResponseData;
 /** @var HtmlResponseData $responseData */
 
 $userRegisteredMoreThan24HoursAgo = $responseData->minutesSinceUserRegistration() > 24 * 60;
-if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) {
-?>
-<div id="feedback-banner" class="feedback-success">
-  Enviámosche un correo a <b><?=$this->e($responseData->getSession()->getUser()->getEmail())?></b> para verificar a túa conta.
-  Se non o recibiras revisa a caixa do lixo ou <a class="verified-link" data-user-id="<?=$this->e($responseData->getSession()->getUser()->getId())?>" href="#">fai click aquí</a> e enviarémosche outro. Podes <a href="/account">modificar aquí</a> o teu enderezo se fora necesario.
-</div>
+if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
+  <div id="feedback-banner" class="feedback-success">
+      <?=sprintf($responseData->getLocalValue('authenticationVerifyEmailBanner'), $responseData->getSession()->getUser()->getEmail(), $responseData->getSession()->getUser()->getId())?>
+  </div>
 <?php } ?>
 <header>
   <h1 class="logo"><a class="white" href="<?=$responseData->getBaseUrlWithLanguage()?>"><?=$this->e($responseData->getSiteName())?></a></h1>

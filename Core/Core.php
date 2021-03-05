@@ -289,10 +289,13 @@ class Core
 
     /**
      * @param string $siteLanguage
+     * @param bool $isSingleton
      * @return LocalisationUtil
      */
-    public static function getLocalisationUtil(string $siteLanguage): LocalisationUtil
-    {
+    public static function getLocalisationUtil(
+        string $siteLanguage,
+        bool $isSingleton = true
+    ): LocalisationUtil {
         $logger = self::getLogger('LocalisationUtil');
         $defaultSiteLanguage = strtoupper(self::getConfigValue('defaultSiteLanguage') ?? 'EN');
 
@@ -303,7 +306,7 @@ class Core
                 require_once self::getPathRoot() . '/Core/Util/LocalisationUtil.php';
                 return new LocalisationUtil($logger, $defaultSiteLanguage, $siteLanguage);
             },
-            true
+            $isSingleton
         );
     }
 }

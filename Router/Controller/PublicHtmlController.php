@@ -155,17 +155,16 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         Request $request
     ): Response {
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
-        $res = $this->userService->validateEmailAddressVerificationPage($verificationIdentifier);
-        $isError = !$res;
-        $message = $res
-            ? $localisationUtil->getValue('authenticationEmailVerified')
-            : $localisationUtil->getValue('authenticationEmailVerifiedError');
+        $userFeedback = $this->userService->verifyEmailAddress(
+            $verificationIdentifier,
+            $localisationUtil
+        );
 
         return Response::createFrontendPublicHtmlResponse(
-            strtolower($request->getSiteLanguage()) . '/home',
-            new HtmlResponseData(
+            'shared/home',
+            new HtmlHomepageResponseData(
                 request: $request,
-                userFeedback: new UserFeedback($isError, $message),
+                userFeedback: $userFeedback,
             )
         );
     }
@@ -187,8 +186,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
         if (empty($res)) {
             return Response::createFrontendPublicHtmlResponse(
-                strtolower($request->getSiteLanguage()) . '/home',
-                new HtmlResponseData(
+                'shared/home',
+                new HtmlHomepageResponseData(
                     request: $request,
                     userFeedback: new UserFeedback(
                         true,

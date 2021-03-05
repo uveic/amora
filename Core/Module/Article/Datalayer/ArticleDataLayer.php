@@ -79,7 +79,7 @@ class ArticleDataLayer
             'u.is_enabled',
             'u.verified',
             'u.timezone',
-            'u.previous_email_address',
+            'u.change_email_to',
 
             'i.id AS image_id',
             'i.user_id AS image_user_id',
@@ -95,7 +95,7 @@ class ArticleDataLayer
         ];
 
         $joins = ' FROM ' . self::ARTICLE_TABLE_NAME . ' AS a';
-        $joins .= ' JOIN ' . UserDataLayer::USER_TABLE_NAME . ' AS u ON u.id = a.user_id';
+        $joins .= ' JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = a.user_id';
         $joins .= ' LEFT JOIN ' . ImageDataLayer::IMAGE_TABLE_NAME
             . ' AS i ON i.id = a.main_image_id';
 

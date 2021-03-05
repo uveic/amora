@@ -12,6 +12,7 @@ class HtmlHomepageResponseData extends HtmlResponseDataAbstract
         private ?Article $article = null,
         private array $homeArticles = [],
         private array $blogArticles = [],
+        private ?UserFeedback $userFeedback = null,
     ) {
         parent::__construct($request);
     }
@@ -29,5 +30,10 @@ class HtmlHomepageResponseData extends HtmlResponseDataAbstract
     public function getBlogArticles(): array
     {
         return $this->blogArticles;
+    }
+
+    public function getUserFeedback(): ?UserFeedback
+    {
+        return $this->userFeedback;
     }
 }

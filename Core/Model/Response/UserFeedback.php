@@ -4,19 +4,11 @@ namespace Amora\Core\Model\Response;
 
 class UserFeedback
 {
-    private bool $isError;
-    private ?string $message;
-    private ?int $code;
-
     public function __construct(
-        bool $isError,
-        ?string $message,
-        ?int $code = null
-    ) {
-        $this->isError = $isError;
-        $this->message = $message;
-        $this->code = $code;
-    }
+        private bool $isError,
+        private ?string $message = null,
+        private ?int $code = null
+    ) {}
 
     public function asArray(): array
     {

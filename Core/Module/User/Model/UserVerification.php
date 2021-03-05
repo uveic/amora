@@ -4,31 +4,16 @@ namespace Amora\Core\Module\User\Model;
 
 class UserVerification
 {
-    private ?int $id;
-    private int $userId;
-    private int $typeId;
-    private string $createdAt;
-    private ?string $verifiedAt;
-    private string $verificationIdentifier;
-    private bool $isEnabled;
-
     public function __construct(
-        ?int $id,
-        int $userId,
-        int $typeId,
-        string $createdAt,
-        ?string $verifiedAt,
-        string $verificationIdentifier,
-        bool $isEnabled
-    ) {
-        $this->id = $id;
-        $this->userId = $userId;
-        $this->typeId = $typeId;
-        $this->createdAt = $createdAt;
-        $this->verifiedAt = $verifiedAt;
-        $this->verificationIdentifier = $verificationIdentifier;
-        $this->isEnabled = $isEnabled;
-    }
+        private ?int $id,
+        private int $userId,
+        private int $typeId,
+        private ?string $email,
+        private string $createdAt,
+        private ?string $verifiedAt,
+        private string $verificationIdentifier,
+        private bool $isEnabled
+    ) {}
 
     public static function fromArray(array $item): self
     {
@@ -40,6 +25,7 @@ class UserVerification
             $id,
             $item['user_id'],
             $item['type_id'],
+            $item['email'] ?? null,
             $item['created_at'],
             $item['verified_at'] ?? null,
             $item['verification_identifier'],
@@ -53,6 +39,7 @@ class UserVerification
             'id' => $this->getId(),
             'user_id' => $this->getUserId(),
             'type_id' => $this->getTypeId(),
+            'email' => $this->getEmail(),
             'created_at' => $this->getCreatedAt(),
             'verified_at' => $this->getVerifiedAt(),
             'verification_identifier' => $this->getVerificationIdentifier(),
@@ -78,6 +65,11 @@ class UserVerification
     public function getTypeId(): int
     {
         return $this->typeId;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
     }
 
     public function getCreatedAt(): string
