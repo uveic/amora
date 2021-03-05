@@ -288,12 +288,12 @@ class Core
     }
 
     /**
-     * @param string $siteLanguage
+     * @param string $languageIsoCode
      * @param bool $isSingleton
      * @return LocalisationUtil
      */
     public static function getLocalisationUtil(
-        string $siteLanguage,
+        string $languageIsoCode,
         bool $isSingleton = true
     ): LocalisationUtil {
         $logger = self::getLogger('LocalisationUtil');
@@ -301,10 +301,10 @@ class Core
 
         return self::getInstance(
             'LocalisationUtil',
-            function () use ($logger, $defaultSiteLanguage, $siteLanguage) {
+            function () use ($logger, $defaultSiteLanguage, $languageIsoCode) {
                 require_once self::getPathRoot() . '/Core/Module/User/Service/UserService.php';
                 require_once self::getPathRoot() . '/Core/Util/LocalisationUtil.php';
-                return new LocalisationUtil($logger, $defaultSiteLanguage, $siteLanguage);
+                return new LocalisationUtil($logger, $defaultSiteLanguage, $languageIsoCode);
             },
             $isSingleton
         );
