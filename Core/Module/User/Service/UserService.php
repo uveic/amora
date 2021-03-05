@@ -230,12 +230,18 @@ class UserService
             return new UserFeedback(true, $message);
         }
 
-        $res = $this->userDataLayer->markUserAsVerified($user, $verification);
+        $res = $this->userDataLayer->getDb()->withTransaction(
+            function () use ($user, $verification) {
+                $resVer = $this->userDataLayer->markUserAsVerified($user, $verification);
+                return ['success' => $resVer];
+            }
+        );
+
         return new UserFeedback(
-            !$res,
-            $res
-                ? $localisationUtil->getValue('authenticationEmailVerified')
-                : $localisationUtil->getValue('globalGenericError')
+            empty($res['success']),
+            empty($res['success'])
+                ? $localisationUtil->getValue('globalGenericError')
+                : $localisationUtil->getValue('authenticationEmailVerified')
         );
     }
 
