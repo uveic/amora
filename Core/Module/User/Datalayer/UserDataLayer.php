@@ -202,40 +202,36 @@ class UserDataLayer
 
     public function markUserAsVerified(User $user, UserVerification $verification): bool
     {
-        $res = $this->db->withTransaction(function () use ($user, $verification) {
-            $data = [
-                'updated_at' => DateUtil::getCurrentDateForMySql(),
-                'verified' => 1,
-                'change_email_to' => null
-            ];
+        $data = [
+            'updated_at' => DateUtil::getCurrentDateForMySql(),
+            'verified' => 1,
+            'change_email_to' => null
+        ];
 
-            if ($verification->getEmail()) {
-                $data['email'] = $verification->getEmail();
-            }
+        if ($verification->getEmail()) {
+            $data['email'] = $verification->getEmail();
+        }
 
-            $res = $this->db->update(self::USER_TABLE, $user->getId(), $data);
+        $res = $this->db->update(self::USER_TABLE, $user->getId(), $data);
 
-            if (empty($res)) {
-                return ['success' => false];
-            }
+        if (empty($res)) {
+            return false;
+        }
 
-            $res2 = $this->db->update(
-                self::USER_VERIFICATION_TABLE,
-                $verification->getId(),
-                [
-                    'is_enabled' => 0,
-                    'verified_at' => DateUtil::getCurrentDateForMySql()
-                ]
-            );
+        $res2 = $this->db->update(
+            self::USER_VERIFICATION_TABLE,
+            $verification->getId(),
+            [
+                'is_enabled' => 0,
+                'verified_at' => DateUtil::getCurrentDateForMySql()
+            ]
+        );
 
-            if (empty($res2)) {
-                return ['success' => false];
-            }
+        if (empty($res2)) {
+            return false;
+        }
 
-            return ['success' => true];
-        });
-
-        return empty($res['success']) ? false : true;
+        return true;
     }
 
     public function updatePassword(int $userId, string $hashedPassword): bool
