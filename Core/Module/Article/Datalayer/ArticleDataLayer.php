@@ -37,7 +37,7 @@ class ArticleDataLayer
     private function getArticles(
         ?int $articleId = null,
         ?int $statusId = null,
-        ?int $typeId = null,
+        array $typeIds = [],
         ?string $uri = null,
         array $tagIds = [],
         bool $includeTags = false,
@@ -111,9 +111,14 @@ class ArticleDataLayer
             $params[':statusId'] = $statusId;
         }
 
-        if (isset($typeId)) {
-            $where .= ' AND a.type_id = :typeId';
-            $params[':typeId'] = $typeId;
+        if ($typeIds) {
+            $allKeys = [];
+            foreach (array_values($typeIds) as $key => $typeId) {
+                $currentKey = ':typeId' . $key;
+                $allKeys[] = $currentKey;
+                $params[$currentKey] = $typeId;
+            }
+            $where .= ' AND a.type_id IN (' . implode(', ', $allKeys) . ')';
         }
 
         if (isset($uri)) {
@@ -156,16 +161,6 @@ class ArticleDataLayer
         return $output;
     }
 
-    public function getAllArticles(
-        bool $includeTags = false,
-        ?QueryOptions $queryOptions = null
-    ): array {
-        return $this->getArticles(
-            includeTags: $includeTags,
-            queryOptions: $queryOptions
-        );
-    }
-
     public function getArticleForId(int $id, bool $includeTags = false): ?Article
     {
         $res = $this->getArticles(
@@ -176,9 +171,9 @@ class ArticleDataLayer
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getArticlesForTypeId(int $articleTypeId): array
+    public function getArticlesForTypeIds(array $articleTypeIds): array
     {
-        return $this->getArticles(typeId: $articleTypeId);
+        return $this->getArticles(typeIds: $articleTypeIds);
     }
 
     public function getArticleForUri(string $uri): ?Article
@@ -191,7 +186,7 @@ class ArticleDataLayer
     {
         $res = $this->getArticles(
             statusId: ArticleStatus::PUBLISHED,
-            typeId: ArticleType::HOMEPAGE,
+            typeIds: [ArticleType::HOMEPAGE],
         );
 
         if (count($res) > 1) {
@@ -206,14 +201,16 @@ class ArticleDataLayer
     public function filterArticlesBy(
         array $tagIds = [],
         int $statusId = null,
-        int $typeId = null,
+        array $typeIds = [],
+        bool $includeTags = false,
         ?QueryOptions $queryOptions = null
     ): array
     {
         return $this->getArticles(
             statusId: $statusId,
-            typeId: $typeId,
+            typeIds: $typeIds,
             tagIds: $tagIds,
+            includeTags: $includeTags,
             queryOptions: $queryOptions
         );
     }
