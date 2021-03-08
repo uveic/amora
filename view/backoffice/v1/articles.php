@@ -33,7 +33,7 @@ $this->layout('base', ['responseData' => $responseData,])
 /** @var Article $article */
 foreach ($responseData->getArticles() as $article) {
     $articleTitle = $article->getStatusId() === ArticleStatus::PUBLISHED
-        ? '<a href="' . $responseData->getBaseUrl() . $article->getUri() . '">' . $article->getTitle() . '</a>'
+        ? '<a href="' . $responseData->getBaseUrlWithLanguage() . $article->getUri() . '">' . $article->getTitle() . '</a>'
         : $article->getTitle();
 ?>
               <div class="table-row">

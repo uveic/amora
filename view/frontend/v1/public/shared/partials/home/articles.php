@@ -16,7 +16,7 @@ if (!$responseData->getHomeArticles()) {
 <?php
 /** @var Article $article */
 foreach ($responseData->getHomeArticles() as $article) {
-    $href = $responseData->getBaseUrl() . $article->getUri();
+    $href = $responseData->getBaseUrlWithLanguage() . $article->getUri();
     $link = $article->getTitle()
         ? '<a class="link-title" href="' . $href . '">' . $article->getTitle() . '</a>'
         : '';
