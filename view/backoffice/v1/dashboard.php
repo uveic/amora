@@ -12,6 +12,7 @@ $this->layout('base', ['responseData' => $responseData])
       <h1 class="h1-flex"><?=$this->e($responseData->getLocalValue('navAdminDashboard'))?></h1>
       <div class="content-flex">
         <?=$this->insert('partials/dashboard/links', ['responseData' => $responseData])?>
+        <?=$this->insert('partials/dashboard/homepage', ['responseData' => $responseData])?>
       </div>
     </section>
   </main>

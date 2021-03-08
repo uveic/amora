@@ -66,6 +66,8 @@ return [
     'formTimezone' => 'Zona horaria',
 
     'dashboardGoTo' => 'Ir a...',
+    'dashboardHomepage' => 'Portada',
+    'dashboardHomepageEdit' => 'Editar el contenido de la portada',
 
     'globalBy' => 'por',
     'globalSettings' => 'Configuración',
@@ -88,7 +90,7 @@ return [
     'globalUpdatedAt' => 'Actualizado',
     'globalPublishOn' => 'Publicar el',
     'globalCreated' => 'Creado',
-    'globalStatus' => 'Estatus',
+    'globalStatus' => 'Estado',
     'globalPreview' => 'Previsualizar',
     'globalArticle' => 'artículo',
     'globalCategory' => 'Categoría',
