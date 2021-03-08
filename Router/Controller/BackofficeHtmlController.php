@@ -60,9 +60,13 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getAdminDashboard(Request $request): Response
     {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         return Response::createBackofficeHtmlResponse(
             'dashboard',
-            new HtmlResponseDataAuthorised($request, 'Dashboard')
+            new HtmlResponseDataAuthorised(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navAdminDashboard')
+            )
         );
     }
 
@@ -80,11 +84,9 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         return Response::createBackofficeHtmlResponse(
             'users',
             new HtmlResponseDataAuthorised(
-                $request,
-                $localisationUtil->getValue('navAdminUsers'),
-                null,
-                null,
-                $users
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navAdminUsers'),
+                usersList: $users
             )
         );
     }
@@ -98,9 +100,15 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getNewUserPage(Request $request): Response
     {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+
         return Response::createBackofficeHtmlResponse(
             'users-edit',
-            new HtmlResponseDataAuthorised($request, 'New User')
+            new HtmlResponseDataAuthorised(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
+                    $localisationUtil->getValue('globalUser')
+            )
         );
     }
 
@@ -126,11 +134,10 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         return Response::createBackofficeHtmlResponse(
             'users-edit',
             new HtmlResponseDataAuthorised(
-                $request,
-                $localisationUtil->getValue('globalEdit') . ' ' . $localisationUtil->getValue('globalUser'),
-                null,
-                null,
-                [$user]
+                request: $request,
+                pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
+                    $localisationUtil->getValue('globalUser'),
+                usersList: [$user]
             )
         );
     }
@@ -153,10 +160,9 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         return Response::createBackofficeHtmlResponse(
             'articles',
             new HtmlResponseDataAuthorised(
-                $request,
-                $localisationUtil->getValue('navAdminArticles'),
-                null,
-                $articles
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navAdminArticles'),
+                articles: $articles
             )
         );
     }
@@ -174,8 +180,9 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         return Response::createBackofficeHtmlResponse(
             'articles-edit',
             new HtmlResponseDataAuthorised(
-                $request,
-                $localisationUtil->getValue('globalNew') . ' ' . $localisationUtil->getValue('globalArticle')
+                request: $request,
+                pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
+                    $localisationUtil->getValue('globalArticle')
             )
         );
     }
@@ -203,13 +210,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         return Response::createBackofficeHtmlResponse(
             'articles-edit',
             new HtmlResponseDataAuthorised(
-                $request,
-                $localisationUtil->getValue('globalEdit') . ' ' . $localisationUtil->getValue('globalArticle'),
-                null,
-                [$article],
-                [],
-                [],
-                $articleSections
+                request: $request,
+                pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
+                    $localisationUtil->getValue('globalArticle'),
+                articles: [$article],
+                articleSections: $articleSections
             )
         );
     }
@@ -229,12 +234,9 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         return Response::createBackofficeHtmlResponse(
             'images',
             new HtmlResponseDataAuthorised(
-                $request,
-                $localisationUtil->getValue('navAdminImages'),
-                null,
-                [],
-                [],
-                $images
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navAdminImages'),
+                images: $images
             )
         );
     }
