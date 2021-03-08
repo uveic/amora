@@ -176,6 +176,11 @@ class ArticleDataLayer
         return empty($res[0]) ? null : $res[0];
     }
 
+    public function getArticlesForTypeId(int $articleTypeId): array
+    {
+        return $this->getArticles(typeId: $articleTypeId);
+    }
+
     public function getArticleForUri(string $uri): ?Article
     {
         $res = $this->getArticles(uri: $uri);

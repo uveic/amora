@@ -28,6 +28,11 @@ class ArticleService
         return $this->articleDataLayer->getArticleForId($id, $includeTags);
     }
 
+    public function getArticlesForTypeId(int $articleTypeId): array
+    {
+        return $this->articleDataLayer->getArticlesForTypeId($articleTypeId);
+    }
+
     public function getArticleForUri(string $uri): ?Article
     {
         return $this->articleDataLayer->getArticleForUri($uri);

@@ -109,6 +109,7 @@ class RouterCore extends Core
                 $articleService,
                 $imageService
             ) {
+                require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseDataAuthorised.php';
                 require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';

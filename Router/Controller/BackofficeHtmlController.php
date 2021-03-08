@@ -11,6 +11,7 @@ use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\ImageService;
+use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Module\User\Service\UserService;
 
@@ -61,11 +62,13 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getAdminDashboard(Request $request): Response
     {
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $articles = $this->articleService->getArticlesForTypeId(ArticleType::HOMEPAGE);
         return Response::createBackofficeHtmlResponse(
             'dashboard',
             new HtmlResponseDataAuthorised(
                 request: $request,
-                pageTitle: $localisationUtil->getValue('navAdminDashboard')
+                pageTitle: $localisationUtil->getValue('navAdminDashboard'),
+                articles: $articles,
             )
         );
     }
@@ -176,6 +179,18 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getNewArticlePage(Request $request): Response
     {
+        $articleTypeIdGetParam = $request->getGetParam('articleType')
+            ? (int)$request->getGetParam('articleType')
+            : null;
+        if ($articleTypeIdGetParam && $articleTypeIdGetParam === ArticleType::HOMEPAGE) {
+            $articles = $this->articleService->getArticlesForTypeId($articleTypeIdGetParam);
+            if ($articles) {
+                return Response::createRedirectResponse(
+                    '/backoffice/articles/' . $articles[0]->getId()
+                );
+            }
+        }
+
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
         return Response::createBackofficeHtmlResponse(
             'articles-edit',

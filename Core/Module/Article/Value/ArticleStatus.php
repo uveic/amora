@@ -33,4 +33,10 @@ final class ArticleStatus
         $all = self::getAll();
         return empty($all[$id]) ? 'Unknown' : $all[$id]->getName();
     }
+
+    public static function getStatusForId(int $id): ?LookupTableBasicValue
+    {
+        $all = self::getAll();
+        return empty($all[$id]) ? null : $all[$id];
+    }
 }

@@ -1,9 +1,9 @@
 <?php
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
-use Amora\Core\Model\Util\LookupTableBasicValue;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use Amora\Core\Util\StringUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
@@ -35,18 +35,5 @@ $random = StringUtil::getRandomString(5);
       <img src="/img/loading.gif" class="img-svg img-svg-25" alt="Saving...">
       <span>Saving...</span>
     </div>
-    <input type="checkbox" id="dropdown-menu-<?=$random?>" class="dropdown-menu">
-    <div class="dropdown-container">
-      <ul>
-<?php
-    /** @var LookupTableBasicValue $status */
-    foreach ($responseData->getArticleStatuses() as $status) { ?>
-        <li><a data-checked="<?=$status->getId() === $articleStatusId ? '1' : '0'?>" data-article-status-id="<?=$status->getId()?>" class="dropdown-menu-option article-status-option <?=$status->getId() === ArticleStatus::PUBLISHED ? 'feedback-success' : 'background-light-color' ?>" href="#"><?=$responseData->getLocalValue('articleStatus' . $status->getName())?></a></li>
-<?php } ?>
-      </ul>
-      <label for="dropdown-menu-<?=$random?>" class="dropdown-menu-label <?=$isPublished ? 'feedback-success' : 'background-light-color' ?>">
-        <span><?=$articleStatusName?></span>
-        <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">
-      </label>
-    </div>
+    <?=ArticleEditHtmlGenerator::generateStatusDropdownSelectHtml($responseData)?>
   </div>
