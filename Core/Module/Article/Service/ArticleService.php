@@ -28,9 +28,9 @@ class ArticleService
         return $this->articleDataLayer->getArticleForId($id, $includeTags);
     }
 
-    public function getArticlesForTypeId(int $articleTypeId): array
+    public function getArticlesForTypeIds(array $articleTypeIds): array
     {
-        return $this->articleDataLayer->getArticlesForTypeId($articleTypeId);
+        return $this->articleDataLayer->getArticlesForTypeIds($articleTypeIds);
     }
 
     public function getArticleForUri(string $uri): ?Article
@@ -49,12 +49,16 @@ class ArticleService
         );
     }
 
-    public function getAllArticles(
-        bool $includeTags = false,
+    public function getArticlesList(
+        array $typeIds = [],
         ?QueryOptions $queryOptions = null
     ): array
     {
-        return $this->articleDataLayer->getAllArticles($includeTags, $queryOptions);
+        return $this->articleDataLayer->filterArticlesBy(
+            typeIds: $typeIds,
+            includeTags: true,
+            queryOptions: $queryOptions
+        );
     }
 
     public function getSectionsForArticleId(int $articleId): array
@@ -321,7 +325,7 @@ class ArticleService
         return $this->articleDataLayer->filterArticlesBy(
             tagIds: $tagIds,
             statusId: ArticleStatus::PUBLISHED,
-            typeId: ArticleType::ARTICLE,
+            typeIds: [ArticleType::ARTICLE],
             queryOptions: new QueryOptions(limit: $maxArticles)
         );
     }

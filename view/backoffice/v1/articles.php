@@ -8,8 +8,6 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 
 $this->layout('base', ['responseData' => $responseData,])
 
-// UpdatedAt:  DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true);
-
 ?>
   <main>
     <section class="content">
@@ -23,7 +21,6 @@ $this->layout('base', ['responseData' => $responseData,])
         <div class="table">
           <div class="table-row header">
             <div class="table-item edit flex-no-grow"></div>
-            <div class="table-item flex-no-grow">#</div>
             <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalTitle')?></div>
             <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalTags')?></div>
             <div class="table-item width-1"><?=$responseData->getLocalValue('globalCategory')?></div>
@@ -38,7 +35,6 @@ foreach ($responseData->getArticles() as $article) {
 ?>
               <div class="table-row">
                 <div class="table-item edit flex-no-grow"><a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/articles/<?=$article->getId()?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('globalEdit')?>"></a></div>
-                <div class="table-item flex-no-grow"><?=$article->getId()?></div>
                 <div class="table-item flex-grow-2"><?=$articleTitle?></div>
                 <div class="table-item flex-grow-2"><?=$article->getTagsAsString()?></div>
                 <div class="table-item width-1"><?=$responseData->getLocalValue('articleType' . $article->getTypeName()); ?></div>

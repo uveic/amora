@@ -62,7 +62,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getAdminDashboard(Request $request): Response
     {
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
-        $articles = $this->articleService->getArticlesForTypeId(ArticleType::HOMEPAGE);
+        $articles = $this->articleService->getArticlesForTypeIds([ArticleType::HOMEPAGE]);
         return Response::createBackofficeHtmlResponse(
             'dashboard',
             new HtmlResponseDataAuthorised(
@@ -154,9 +154,9 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getArticlesPage(Request $request): Response
     {
-        $articles = $this->articleService->getAllArticles(
-            true,
-            new QueryOptions(null, 'DESC', 100)
+        $articles = $this->articleService->getArticlesList(
+            typeIds: [ArticleType::ARCHIVED, ArticleType::ARTICLE],
+            queryOptions: new QueryOptions(null, 'DESC', 100)
         );
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
@@ -183,7 +183,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             ? (int)$request->getGetParam('articleType')
             : null;
         if ($articleTypeIdGetParam && $articleTypeIdGetParam === ArticleType::HOMEPAGE) {
-            $articles = $this->articleService->getArticlesForTypeId($articleTypeIdGetParam);
+            $articles = $this->articleService->getArticlesForTypeIds([$articleTypeIdGetParam]);
             if ($articles) {
                 return Response::createRedirectResponse(
                     '/backoffice/articles/' . $articles[0]->getId()
