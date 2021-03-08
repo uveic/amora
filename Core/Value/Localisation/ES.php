@@ -67,7 +67,6 @@ return [
 
     'dashboardGoTo' => 'Ir a...',
     'dashboardHomepage' => 'Portada',
-    'dashboardHomepageEdit' => 'Editar el contenido de la portada',
 
     'globalBy' => 'por',
     'globalSettings' => 'Configuración',
