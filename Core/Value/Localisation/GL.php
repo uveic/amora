@@ -115,6 +115,7 @@ return [
 
     'globalGenericError' => 'Algo non foi ben, por favor inténtao de novo',
 
+    'articleEditHomepageTitle' => 'Editar o contido da portada',
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
     'articleStatusDeleted' => 'Eliminado',

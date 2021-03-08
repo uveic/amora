@@ -27,7 +27,7 @@ abstract class HtmlResponseDataAbstract
     protected string $pageDescription;
 
     public function __construct(
-        Request $request,
+        private Request $request,
         ?string $pageTitle = null,
         ?string $pageDescription = null,
         ?string $siteImageUri = null
@@ -58,6 +58,11 @@ abstract class HtmlResponseDataAbstract
             ?? $this->localisationUtil->getValue('siteDescription');
         $this->baseUrlWithLanguage = $this->getBaseUrl() .
             strtolower($this->getSiteLanguage()) . '/';
+    }
+
+    public function getRequest(): Request
+    {
+        return $this->request;
     }
 
     public function getSession(): ?Session

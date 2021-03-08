@@ -78,8 +78,10 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     const uriEl = document.querySelector('input[name="articleUri"]');
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
     const statusId = Number.parseInt(status.dataset.articleStatusId);
-    const typeEl = document.querySelector('select[name="typeId"] option:checked');
-    const articleTypeId = typeEl && typeEl.value ? Number.parseInt(typeEl.value) : null;
+    const articleTypeIdEl = document.querySelector('input[name="articleId"]');
+    const articleTypeId = articleTypeIdEl && articleTypeIdEl.value
+      ? Number.parseInt(articleTypeIdEl.value)
+      : null;
     const articleUri = uriEl && uriEl.value ? uriEl.value : null;
 
     document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));

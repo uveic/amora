@@ -1,13 +1,14 @@
 <?php
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Module\Article\Value\ArticleType;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
 $articleEditUrl = $responseData->getBaseUrlWithLanguage() . 'backoffice/articles/' .
     ($responseData->getFirstArticle()
         ? $responseData->getFirstArticle()->getId()
-        : 'new?type=homepage'
+        : ('new?articleType=' . ArticleType::HOMEPAGE)
 );
 
 ?>

@@ -115,6 +115,7 @@ return [
 
     'globalGenericError' => 'Something went wrong, please try again',
 
+    'articleEditHomepageTitle' => 'Edit Homepage Content',
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',
     'articleStatusDeleted' => 'Deleted',

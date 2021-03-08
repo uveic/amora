@@ -115,6 +115,7 @@ return [
 
     'globalGenericError' => 'Ha ocurrido un error inesperado, por favor inténtalo de nuevo',
 
+    'articleEditHomepageTitle' => 'Editar el contenido de la portada',
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
     'articleStatusDeleted' => 'Eliminado',
