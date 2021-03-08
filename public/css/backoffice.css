@@ -1,4 +1,7 @@
 :root {
+  --font-h1-title: sans-serif;
+  --font-paragraph: sans-serif;
+
   --content-medium-width-extended: 840px;
 }
 /* Feedback style starts here */

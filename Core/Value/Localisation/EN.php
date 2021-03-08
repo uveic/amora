@@ -66,6 +66,8 @@ return [
     'formTimezone' => 'Timezone',
 
     'dashboardGoTo' => 'Go to...',
+    'dashboardHomepage' => 'Homepage',
+    'dashboardHomepageEdit' => 'Edit homepage content',
 
     'globalBy' => 'by',
     'globalSettings' => 'Settings',

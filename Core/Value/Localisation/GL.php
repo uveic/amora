@@ -66,6 +66,8 @@ return [
     'formArticleUri' => 'URI do artigo',
 
     'dashboardGoTo' => 'Ir a...',
+    'dashboardHomepage' => 'Portada',
+    'dashboardHomepageEdit' => 'Editar contido da portada',
 
     'globalBy' => 'por',
     'globalSettings' => 'Configuración',
@@ -88,7 +90,7 @@ return [
     'globalUpdatedAt' => 'Actualizado',
     'globalPublishOn' => 'Publicar o',
     'globalCreated' => 'Creado',
-    'globalStatus' => 'Estatus',
+    'globalStatus' => 'Estado',
     'globalPreview' => 'Previsualizar',
     'globalArticle' => 'artigo',
     'globalCategory' => 'Categoría',
