@@ -13,20 +13,20 @@ use Amora\Core\Model\Response\HtmlResponseDataAbstract;
   <meta property="og:site_name" content="<?=$this->e($responseData->getSiteName())?>">
   <meta property="og:title" content="<?=$this->e($responseData->getPageTitleWithoutSiteName())?>">
   <meta property="og:description" content="<?=$this->e($responseData->getPageDescription())?>">
-  <meta property="og:image" content="<?=$this->e($responseData->getSiteImageUri())?>">
-  <meta property="og:url" content="<?=$this->e($responseData->getSiteUrl())?>">
+  <meta property="og:image" content="<?=$responseData->getSiteImageUri()?>">
+  <meta property="og:url" content="<?=$responseData->getSiteUrl()?>">
   <meta property="og:type" content="website">
-  <meta property="og:updated_time" content="<?=$this->e($responseData->getLasUpdatedTimestamp())?>">
+  <meta property="og:updated_time" content="<?=$responseData->getLasUpdatedTimestamp()?>">
   <meta name="twitter:card" content="summary_large_image">
-  <meta property="twitter:domain" content="<?=$this->e($responseData->getSiteDomain())?>">
-  <meta property="twitter:url" content="<?=$this->e($responseData->getSiteUrl())?>">
+  <meta property="twitter:domain" content="<?=$responseData->getSiteDomain()?>">
+  <meta property="twitter:url" content="<?=$responseData->getSiteUrl()?>">
   <meta name="twitter:title" content="<?=$this->e($responseData->getPageTitleWithoutSiteName())?>">
   <meta name="twitter:description" content="<?=$this->e($responseData->getPageDescription())?>">
-  <meta name="twitter:image" content="<?=$this->e($responseData->getSiteImageUri())?>">
+  <meta name="twitter:image" content="<?=$responseData->getSiteImageUri()?>">
   <title><?=$this->e($responseData->getPageTitle())?></title>
   <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
-  <link rel="alternate" href="https://www.convidades.com/" hreflang="x-default">
+  <link rel="alternate" href="<?=$responseData->getSiteUrl()?>" hreflang="x-default">
   <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
