@@ -244,21 +244,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     }
 
     /**
-     * Endpoint: /back/article/uri
-     * Method: POST
-     *
-     * @param int|null $articleId
-     * @param string $uri
-     * @param Request $request
-     * @return Response
-     */
-    protected function checkArticleUri(?int $articleId, string $uri, Request $request): Response
-    {
-        $res = $this->articleService->checkUriAndReturnAnAvailableOne($uri, $articleId);
-        return new BackofficeApiControllerCheckArticleUriSuccessResponse(true, $res);
-    }
-
-    /**
      * Endpoint: /back/article
      * Method: POST
      *
@@ -287,13 +272,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         Request $request
     ): Response {
         $now = DateUtil::getCurrentDateForMySql();
-
-        if (empty($uri)) {
-            $uri = $this->articleService->checkUriAndReturnAnAvailableOne(
-                StringUtil::getRandomString(32)
-            );
-        }
-        $uri = StringUtil::cleanString(trim($uri, '/ '));
+        $uri = $this->articleService->getAvailableUriForArticle(articleTitle: $title);
 
         if (empty($publishOn)) {
             $publishOn = $statusId === ArticleStatus::PUBLISHED ? $now : null;
@@ -362,12 +341,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             return new BackofficeApiControllerUpdateArticleFailureResponse();
         }
 
-        if (empty($uri)) {
-            $uri = $this->articleService->checkUriAndReturnAnAvailableOne(
-                StringUtil::getRandomString(32)
-            );
-        }
-        $uri = StringUtil::cleanString(trim($uri, '/ '));
+        $uri = $this->articleService->getAvailableUriForArticle($uri, $title, $existingArticle);
 
         $contentHtml = html_entity_decode($contentHtml);
         $now = DateUtil::getCurrentDateForMySql();

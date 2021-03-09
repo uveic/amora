@@ -13,6 +13,7 @@ use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\StringUtil;
 
 class ArticleService
 {
@@ -71,8 +72,21 @@ class ArticleService
         return $this->articleDataLayer->getHomepageArticle();
     }
 
-    public function checkUriAndReturnAnAvailableOne(string $uri, int $articleId = null): string
-    {
+    public function getAvailableUriForArticle(
+        ?string $uri = null,
+        ?string $articleTitle = null,
+        ?Article $existingArticle = null
+    ): string {
+        $articleId = $existingArticle ? $existingArticle->getId() : null;
+
+        if (empty($uri)) {
+            $uri = strtolower(StringUtil::getRandomString(32));
+        } else {
+            $uri = $uri === $existingArticle->getUri()
+                ? strtolower(StringUtil::cleanString($articleTitle))
+                : $uri;
+        }
+
         $count = 0;
         $validUri = null;
         do {

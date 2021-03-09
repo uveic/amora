@@ -23,7 +23,7 @@ $articleTypeId = ArticleEditHtmlGenerator::getArticleTypeId($responseData);
 <?=$this->insert('partials/articles-edit/control-bar', ['responseData' => $responseData])?>
     <div>
       <input name="articleId" type="hidden" value="<?=$article ? $article->getId() : ''?>">
-      <input name="articleType" type="hidden" value="<?=$articleTypeId?>">
+      <input name="articleTypeId" type="hidden" value="<?=$articleTypeId?>">
       <article class="pexego-container">
 <?php
     $count = 0;

@@ -4,13 +4,15 @@ namespace Amora\Core\Util;
 
 final class StringUtil
 {
-    public static function cleanString(string $text, string $charsToBeRemoved = ''): string
+    public static function cleanString(
+        string $text,
+        string $charsToBeRemoved = '',
+        string $replaceWith = '-'
+    ): string
     {
-        $text = str_replace('§', '', $text);
-
         if (!empty($charsToBeRemoved)) {
             foreach (str_split($charsToBeRemoved) as $item) {
-                $text = str_replace($item, ' ', $text);
+                $text = str_replace($item, $replaceWith, $text);
             }
         }
 
@@ -37,11 +39,11 @@ final class StringUtil
         );
         $text = preg_replace(array_keys($utf8), array_values($utf8), $text);
 
-        $text = preg_replace('/\s+/', ' ', $text);
-        $text = preg_replace('/[^A-Za-z0-9\s:().@,;!&-_\/]+/', '', $text);
-        $text = str_replace(' ', '_', $text);
+        $text = preg_replace('/[^A-Za-z0-9\s-]+/', $replaceWith, $text);
+        $text = preg_replace('/\s+/', $replaceWith, $text);
+        $text = preg_replace('/' . $replaceWith . '+/', $replaceWith, $text);
 
-        return trim($text);
+        return trim($text, ' ' . $replaceWith);
     }
 
     public static function cleanPostCode(string $postCode): string

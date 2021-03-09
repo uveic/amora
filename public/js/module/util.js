@@ -8,7 +8,7 @@ function getUpdatedAtTime () {
     ':' + now.getMinutes().toString().padStart(2, '0');
 }
 
-function cleanTextForUrl(text) {
+function cleanString(text) {
   return text
     .trim()
     .toLowerCase()
@@ -20,7 +20,9 @@ function cleanTextForUrl(text) {
     .replace(/ñ/g, 'n')
     .replace(/\s{2,}/g,' ')
     .replace(/\s/g,'-')
-    .replace(/[^A-Za-z0-9\-]/g,'-');
+    .replace(/[^A-Za-z0-9\-]/g,'-')
+    .replace(/-+/g, '-')
+    .replace(/-$/g, '');
 }
 
-export {getUpdatedAtTime, cleanTextForUrl};
+export {getUpdatedAtTime, cleanString};

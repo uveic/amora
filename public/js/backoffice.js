@@ -1,4 +1,4 @@
-import {cleanTextForUrl, getUpdatedAtTime} from './module/util.js';
+import {cleanString, getUpdatedAtTime} from './module/util.js';
 import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
 import {global} from "./module/localisation.js";
@@ -6,21 +6,6 @@ import {classes as pexegoClasses, getSectionTypeIdFromClassList} from "./module/
 import {uploadImage} from "./module/imageUploader.js";
 
 let globalTags = [];
-
-const updateArticleUri = (e) => {
-  const articleTitleText = e.target.innerText;
-  const articleUriInput = document.querySelector('input[name="articleUri"]');
-  const articleIdEl = document.querySelector('input[name="articleId"]');
-  const cleanInput = cleanTextForUrl(articleTitleText);
-
-  const payload = JSON.stringify({
-    articleId: articleIdEl.value.trim() ? Number.parseInt(articleIdEl.value.trim()) : null,
-    uri: cleanInput
-  });
-
-  xhr.post('/back/article/uri/', payload)
-    .then(response => articleUriInput.value = response.uri);
-}
 
 document.querySelectorAll('.article-save-button').forEach(el => {
   el.addEventListener('click', e => {
@@ -74,11 +59,11 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       });
     };
 
-    const titleEl = document.querySelector('#article-title-main');
+    const titleEl = document.querySelector('.' + pexegoClasses.contentTitle);
     const uriEl = document.querySelector('input[name="articleUri"]');
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
     const statusId = Number.parseInt(status.dataset.articleStatusId);
-    const articleTypeIdEl = document.querySelector('input[name="articleId"]');
+    const articleTypeIdEl = document.querySelector('input[name="articleTypeId"]');
     const articleTypeId = articleTypeIdEl && articleTypeIdEl.value
       ? Number.parseInt(articleTypeIdEl.value)
       : null;
@@ -91,6 +76,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     let articleContentHtml = '';
     let order = 1;
     let mainImageId = null;
+    let count = 0;
     document.querySelectorAll('.pexego-section').forEach(originalSection => {
       let section = originalSection.cloneNode(true);
       let editorId = section.dataset.sectionId ?? section.dataset.editorId;
@@ -104,8 +90,8 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       for (let i = 0; i < sectionElement.children.length; i++) {
         let c = sectionElement.children[i];
 
-        // If it's the first title section add the article link
-        if (c.id === 'article-title-main' && articleUri) {
+        // If it's the first title section convert it into a link to the article
+        if (c.classList.contains(pexegoClasses.contentTitle) && count === 0 && articleUri) {
           let aEl = document.createElement('a');
           aEl.href = '/' + articleUri;
           aEl.target = '_blank';
@@ -160,6 +146,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       }
 
       sections.push(currentSection);
+      count++;
     });
     document.querySelectorAll('#tags-selected > .result-selected')
       .forEach(t => {
@@ -381,10 +368,6 @@ document.querySelectorAll('.user-enabled-option').forEach(op => {
   });
 });
 
-document.querySelectorAll('h1#article-title-main').forEach(t => {
-  t.addEventListener('input', (e) => updateArticleUri(e))
-});
-
 document.querySelectorAll('a.article-settings').forEach(el => {
   el.addEventListener('click', (e) => {
     e.preventDefault();
@@ -498,7 +481,7 @@ document.querySelectorAll('input[name="tags"]').forEach(el => {
 
     let count = allResults.length;
     const inputText = e.target.value.trim();
-    const cleanInput = cleanTextForUrl(inputText);
+    const cleanInput = cleanString(inputText);
     allResults.forEach(r => {
       if (r.dataset.new) {
         r.parentNode.removeChild(r);
@@ -506,7 +489,7 @@ document.querySelectorAll('input[name="tags"]').forEach(el => {
         return;
       }
 
-      if (cleanTextForUrl(r.textContent).includes(cleanInput)) {
+      if (cleanString(r.textContent).includes(cleanInput)) {
         r.classList.remove('null');
       } else {
         count--;

@@ -22,8 +22,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeApiControllerDestroyUserFailureResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeApiControllerStoreArticleSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeApiControllerStoreArticleFailureResponse.php';
-        require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeApiControllerCheckArticleUriSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeApiControllerCheckArticleUriFailureResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeApiControllerUpdateArticleSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeApiControllerUpdateArticleFailureResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeApiControllerDestroyArticleSuccessResponse.php';
@@ -133,21 +131,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?string $publishOn,
         array $sections,
         ?array $tags,
-        Request $request
-    ): Response;
-
-    /**
-     * Endpoint: /back/article/uri
-     * Method: POST
-     *
-     * @param int|null $articleId
-     * @param string $uri
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function checkArticleUri(
-        ?int $articleId,
-        string $uri,
         Request $request
     ): Response;
 
@@ -552,58 +535,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallCheckArticleUri(Request $request)
-    {
-        $bodyParams = $request->getBodyPayload();
-        $errors = [];
-
-        if (!isset($bodyParams)) {
-            $errors[] = [
-                'field' => 'payload',
-                'message' => 'required'
-            ];
-        }
-
-        $articleId = $bodyParams['articleId'] ?? null;
-        $uri = null;
-        if (!isset($bodyParams['uri'])) {
-            $errors[] = [
-                'field' => 'uri',
-                'message' => 'required'
-            ];
-        } else {
-            $uri = isset($bodyParams['uri'])
-                ? $bodyParams['uri']
-                : null;
-        }
-
-
-        if (count($errors)) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->checkArticleUri(
-                $articleId,
-                $uri,
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: checkArticleUri()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
-
     private function validateAndCallUpdateArticle(Request $request)
     {
         $pathParts = explode('/', $request->getPath());
@@ -899,16 +830,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallStoreArticle($request);
-        }
-
-        if ($method === 'POST' &&
-            $this->pathParamsMatcher(
-                ['back', 'article', 'uri'],
-                $pathParts,
-                ['fixed', 'fixed', 'fixed']
-            )
-        ) {
-            return $this->validateAndCallCheckArticleUri($request);
         }
 
         if ($method === 'PUT' &&
