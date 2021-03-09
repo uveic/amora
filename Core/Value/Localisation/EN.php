@@ -92,7 +92,6 @@ return [
     'globalStatus' => 'Status',
     'globalPreview' => 'Preview',
     'globalArticle' => 'Article',
-    'globalCategory' => 'Type',
     'globalTags' => 'Tags',
     'globalDateFormat' => 'dd/mm/yyyy',
     'globalActivated' => 'Enabled',

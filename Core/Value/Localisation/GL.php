@@ -92,7 +92,6 @@ return [
     'globalStatus' => 'Estado',
     'globalPreview' => 'Previsualizar',
     'globalArticle' => 'artigo',
-    'globalCategory' => 'Categoría',
     'globalTags' => 'Etiquetas',
     'globalDateFormat' => 'dd/mm/aaaa',
     'globalActivated' => 'Activado',

@@ -1,6 +1,6 @@
 :root {
-  --font-h1-title: sans-serif;
-  --font-paragraph: sans-serif;
+  --font-h1-title: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
+  --font-paragraph: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
 
   --content-medium-width-extended: 840px;
 }
@@ -190,6 +190,26 @@ input.is-light {
 .article-section-subtitle {
   border: 1px solid var(--light-bg-color-3);
 }
+
+.article-status {
+  color: var(--main-bg-color);
+  padding: 0.15rem 0.4rem;
+  margin-left: 0.5rem;
+  border-radius: 5%;
+  font-size: 0.85em;
+}
+
+.status-published {
+  background-color: var(--feedback-success-color);
+}
+
+.status-deleted {
+  background-color: var(--feedback-failure-color);
+}
+
+.status-draft {
+  background-color: var(--light-text-color);
+}
 /* Form style ends here */
 
 /* Skeleton style starts here */
@@ -296,7 +316,9 @@ input.is-light {
   padding-right: 1em;
   width: 2.5em;
   display: flex;
+  flex-flow: row wrap;
   align-items: center;
+  justify-content: space-between;
 }
 
 .table-item:last-child {

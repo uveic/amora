@@ -4,6 +4,7 @@ namespace Amora\Core\Util\Helper;
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Model\Util\LookupTableBasicValue;
+use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;
 use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleStatus;
@@ -139,5 +140,31 @@ final class ArticleEditHtmlGenerator
                 ? $responseData->getLocalValue('globalEdit')
                 : $responseData->getLocalValue('globalNew') . ' ' .
                 $responseData->getLocalValue('globalArticle'));
+    }
+
+    public static function generateArticleTitleHtml(
+        HtmlResponseDataAuthorised $responseData,
+        Article $article
+    ): string {
+        $statusClassname = match ($article->getStatusId()) {
+            ArticleStatus::PUBLISHED => 'status-published',
+            ArticleStatus::DELETED => 'status-deleted',
+            ArticleStatus::DRAFT => 'status-draft',
+            default => ''
+        };
+
+        $articleTitle = $article->getTitle()
+            ? $article->getTitle()
+            : $responseData->getLocalValue('globalNoTitle');
+
+        $output = ($article->getStatusId() === ArticleStatus::PUBLISHED
+            ? '<a href="' . $responseData->getBaseUrlWithLanguage() . $article->getUri() . '">' . $articleTitle . '</a>'
+            : $articleTitle);
+
+        $output .= '<span class="article-status ' . $statusClassname . '">' .
+            $responseData->getLocalValue('articleStatus' . $article->getStatusName()) .
+            '</span>';
+
+        return $output;
     }
 }
