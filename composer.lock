@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0868cfd18618c13215e180c3b46cc303",
+    "content-hash": "9d70163866a7fa8873e28c672d10d544",
     "packages": [
         {
             "name": "composer/ca-bundle",
-            "version": "1.2.8",
+            "version": "1.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "8a7ecad675253e4654ea05505233285377405215"
+                "reference": "78a0e288fdcebf92aa2318a8d3656168da6ac1a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/8a7ecad675253e4654ea05505233285377405215",
-                "reference": "8a7ecad675253e4654ea05505233285377405215",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/78a0e288fdcebf92aa2318a8d3656168da6ac1a5",
+                "reference": "78a0e288fdcebf92aa2318a8d3656168da6ac1a5",
                 "shasum": ""
             },
             "require": {
@@ -26,14 +26,15 @@
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || 6.5 - 8",
+                "phpstan/phpstan": "^0.12.55",
                 "psr/log": "^1.0",
+                "symfony/phpunit-bridge": "^4.2 || ^5",
                 "symfony/process": "^2.5 || ^3.0 || ^4.0 || ^5.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.x-dev"
+                    "dev-main": "1.x-dev"
                 }
             },
             "autoload": {
@@ -60,6 +61,11 @@
                 "ssl",
                 "tls"
             ],
+            "support": {
+                "irc": "irc://irc.freenode.org/composer",
+                "issues": "https://github.com/composer/ca-bundle/issues",
+                "source": "https://github.com/composer/ca-bundle/tree/1.2.9"
+            },
             "funding": [
                 {
                     "url": "https://packagist.com",
@@ -74,31 +80,31 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-23T12:54:47+00:00"
+            "time": "2021-01-12T12:10:35+00:00"
         },
         {
             "name": "geoip2/geoip2",
-            "version": "v2.10.0",
+            "version": "v2.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/GeoIP2-php.git",
-                "reference": "419557cd21d9fe039721a83490701a58c8ce784a"
+                "reference": "d01be5894a5c1a3381c58c9b1795cd07f96c30f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/419557cd21d9fe039721a83490701a58c8ce784a",
-                "reference": "419557cd21d9fe039721a83490701a58c8ce784a",
+                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/d01be5894a5c1a3381c58c9b1795cd07f96c30f7",
+                "reference": "d01be5894a5c1a3381c58c9b1795cd07f96c30f7",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "maxmind-db/reader": "~1.5",
-                "maxmind/web-service-common": "~0.6",
-                "php": ">=5.6"
+                "maxmind-db/reader": "~1.8",
+                "maxmind/web-service-common": "~0.8",
+                "php": ">=7.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "2.*",
-                "phpunit/phpunit": "5.*",
+                "phpunit/phpunit": "^8.0 || ^9.0",
                 "squizlabs/php_codesniffer": "3.*"
             },
             "type": "library",
@@ -127,29 +133,33 @@
                 "geolocation",
                 "maxmind"
             ],
-            "time": "2019-12-12T18:48:39+00:00"
+            "support": {
+                "issues": "https://github.com/maxmind/GeoIP2-php/issues",
+                "source": "https://github.com/maxmind/GeoIP2-php/tree/v2.11.0"
+            },
+            "time": "2020-10-01T18:48:34+00:00"
         },
         {
             "name": "league/plates",
-            "version": "3.3.0",
+            "version": "v3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/plates.git",
-                "reference": "b1684b6f127714497a0ef927ce42c0b44b45a8af"
+                "reference": "6d3ee31199b536a4e003b34a356ca20f6f75496a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/plates/zipball/b1684b6f127714497a0ef927ce42c0b44b45a8af",
-                "reference": "b1684b6f127714497a0ef927ce42c0b44b45a8af",
+                "url": "https://api.github.com/repos/thephpleague/plates/zipball/6d3ee31199b536a4e003b34a356ca20f6f75496a",
+                "reference": "6d3ee31199b536a4e003b34a356ca20f6f75496a",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3 | ^7.0"
+                "php": "^7.0|^8.0"
             },
             "require-dev": {
-                "mikey179/vfsstream": "^1.4",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "~1.5"
+                "mikey179/vfsstream": "^1.6",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
             "extra": {
@@ -171,10 +181,15 @@
                     "name": "Jonathan Reinink",
                     "email": "jonathan@reinink.ca",
                     "role": "Developer"
+                },
+                {
+                    "name": "RJ Garcia",
+                    "email": "ragboyjr@icloud.com",
+                    "role": "Developer"
                 }
             ],
             "description": "Plates, the native PHP template system that's fast, easy to use and easy to extend.",
-            "homepage": "http://platesphp.com",
+            "homepage": "https://platesphp.com",
             "keywords": [
                 "league",
                 "package",
@@ -182,31 +197,36 @@
                 "templating",
                 "views"
             ],
-            "time": "2016-12-28T00:14:17+00:00"
+            "support": {
+                "issues": "https://github.com/thephpleague/plates/issues",
+                "source": "https://github.com/thephpleague/plates/tree/v3.4.0"
+            },
+            "time": "2020-12-25T05:00:37+00:00"
         },
         {
             "name": "maxmind-db/reader",
-            "version": "v1.7.0",
+            "version": "v1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/MaxMind-DB-Reader-php.git",
-                "reference": "942553da239f12051275f9c666538b5dd09e2908"
+                "reference": "07f84d969cfc527ce49388558a366ad376f1f35c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/942553da239f12051275f9c666538b5dd09e2908",
-                "reference": "942553da239f12051275f9c666538b5dd09e2908",
+                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/07f84d969cfc527ce49388558a366ad376f1f35c",
+                "reference": "07f84d969cfc527ce49388558a366ad376f1f35c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2"
             },
             "conflict": {
-                "ext-maxminddb": "<1.7.0,>=2.0.0"
+                "ext-maxminddb": "<1.10.0,>=2.0.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "2.*",
+                "friendsofphp/php-cs-fixer": "*",
                 "php-coveralls/php-coveralls": "^2.1",
+                "phpstan/phpstan": "*",
                 "phpunit/phpcov": ">=6.0.0",
                 "phpunit/phpunit": ">=8.0.0,<10.0.0",
                 "squizlabs/php_codesniffer": "3.*"
@@ -242,31 +262,35 @@
                 "geolocation",
                 "maxmind"
             ],
-            "time": "2020-08-07T22:10:05+00:00"
+            "support": {
+                "issues": "https://github.com/maxmind/MaxMind-DB-Reader-php/issues",
+                "source": "https://github.com/maxmind/MaxMind-DB-Reader-php/tree/v1.10.0"
+            },
+            "time": "2021-02-09T17:52:47+00:00"
         },
         {
             "name": "maxmind/web-service-common",
-            "version": "v0.7.0",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/web-service-common-php.git",
-                "reference": "74c996c218ada5c639c8c2f076756e059f5552fc"
+                "reference": "32f274051c543fc865e5a84d3a2c703913641ea8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/74c996c218ada5c639c8c2f076756e059f5552fc",
-                "reference": "74c996c218ada5c639c8c2f076756e059f5552fc",
+                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/32f274051c543fc865e5a84d3a2c703913641ea8",
+                "reference": "32f274051c543fc865e5a84d3a2c703913641ea8",
                 "shasum": ""
             },
             "require": {
                 "composer/ca-bundle": "^1.0.3",
                 "ext-curl": "*",
                 "ext-json": "*",
-                "php": ">=5.6"
+                "php": ">=7.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "2.*",
-                "phpunit/phpunit": "^4.8.36 || ^5.7 || ^6.5 || ^7.0",
+                "phpunit/phpunit": "^8.0 || ^9.0",
                 "squizlabs/php_codesniffer": "3.*"
             },
             "type": "library",
@@ -288,7 +312,11 @@
             ],
             "description": "Internal MaxMind Web Service API",
             "homepage": "https://github.com/maxmind/web-service-common-php",
-            "time": "2020-05-06T14:07:26+00:00"
+            "support": {
+                "issues": "https://github.com/maxmind/web-service-common-php/issues",
+                "source": "https://github.com/maxmind/web-service-common-php/tree/v0.8.1"
+            },
+            "time": "2020-11-02T17:00:53+00:00"
         }
     ],
     "packages-dev": [],
@@ -302,8 +330,12 @@
         "ext-simplexml": "*",
         "ext-dom": "*",
         "ext-pdo": "*",
-        "ext-ctype": "*"
+        "ext-ctype": "*",
+        "ext-mbstring": "*",
+        "ext-gd": "*",
+        "ext-exif": "*",
+        "ext-curl": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
