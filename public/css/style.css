@@ -511,7 +511,6 @@ label:not(:last-child) {
 article {
   max-width: var(--content-max-width);
   margin: 2rem auto;
-  position: relative;
 }
 
 article > h1 {
@@ -538,9 +537,7 @@ article > p {
 }
 
 .article-edit {
-  position: absolute;
-  top: 0;
-  right: 0;
+  float: right;
   padding: 0.5rem
 }
 
