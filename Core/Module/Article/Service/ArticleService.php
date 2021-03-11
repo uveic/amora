@@ -80,10 +80,12 @@ class ArticleService
     ): string {
         $articleId = $existingArticle ? $existingArticle->getId() : null;
 
-        if (empty($uri)) {
+        if (!$uri && !$articleTitle) {
             $uri = strtolower(StringUtil::getRandomString(32));
+        } else if (!$uri && $articleTitle) {
+            $uri = strtolower(StringUtil::cleanString($articleTitle));
         } else {
-            $uri = $uri === $existingArticle->getUri()
+            $uri = $uri === $existingArticle->getUri() && $articleTitle
                 ? strtolower(StringUtil::cleanString($articleTitle))
                 : $uri;
         }
