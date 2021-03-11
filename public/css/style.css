@@ -25,8 +25,8 @@
 
   --content-max-width: 800px;
 
-  --font-h1-title: monospace;
-  --font-paragraph: monospace;
+  --font-h1-title: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
+  --font-paragraph: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
 }
 
 *, *:before, *:after {

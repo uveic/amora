@@ -14,13 +14,13 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 
 class ArticleDataLayer
 {
-    const ARTICLE_TABLE_NAME = 'article';
-    const ARTICLE_HISTORY_TABLE_NAME = 'article_history';
+    const ARTICLE_TABLE = 'article';
+    const ARTICLE_HISTORY_TABLE = 'article_history';
 
-    const ARTICLE_SECTION_TABLE_NAME = 'article_section';
-    const ARTICLE_SECTION_IMAGE_TABLE_NAME = 'article_section_image';
+    const ARTICLE_SECTION_TABLE = 'article_section';
+    const ARTICLE_SECTION_IMAGE_TABLE = 'article_section_image';
 
-    const ARTICLE_TAG_RELATION_TABLE_NAME = 'article_tag_relation';
+    const ARTICLE_TAG_RELATION_TABLE = 'article_tag_relation';
 
     public function __construct(
         private MySqlDb $db,
@@ -94,7 +94,7 @@ class ArticleDataLayer
             'i.updated_at AS image_updated_at',
         ];
 
-        $joins = ' FROM ' . self::ARTICLE_TABLE_NAME . ' AS a';
+        $joins = ' FROM ' . self::ARTICLE_TABLE . ' AS a';
         $joins .= ' JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = a.user_id';
         $joins .= ' LEFT JOIN ' . ImageDataLayer::IMAGE_TABLE_NAME
             . ' AS i ON i.id = a.main_image_id';
@@ -128,7 +128,7 @@ class ArticleDataLayer
 
         if ($tagIds) {
             $allKeys = [];
-            $joins .= ' JOIN ' . ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE_NAME
+            $joins .= ' JOIN ' . ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE
                 . ' AS at ON at.article_id = a.id';
             foreach (array_values($tagIds) as $key => $tagId) {
                 $currentKey = ':tagId' . $key;
@@ -221,7 +221,7 @@ class ArticleDataLayer
         unset($articleArray['created_at']);
         unset($articleArray['user_id']); // Keep the user ID that originally created it
         $articleId = $article->getId();
-        $resUpdate = $this->db->update(self::ARTICLE_TABLE_NAME, $articleId, $articleArray);
+        $resUpdate = $this->db->update(self::ARTICLE_TABLE, $articleId, $articleArray);
 
         if (empty($resUpdate)) {
             $this->logger->logError('Error updating article. Article ID: ' . $articleId);
@@ -237,7 +237,7 @@ class ArticleDataLayer
         ?string $userAgent
     ): ?Article {
 
-        $resInsert = $this->db->insert(self::ARTICLE_TABLE_NAME, $article->asArray());
+        $resInsert = $this->db->insert(self::ARTICLE_TABLE, $article->asArray());
 
         if (empty($resInsert)) {
             $this->logger->logError('Error inserting article');
@@ -270,7 +270,7 @@ class ArticleDataLayer
             'ip' => $userIp,
             'user_agent' => $userAgent
         ];
-        $resInsert = $this->db->insert(self::ARTICLE_HISTORY_TABLE_NAME, $data);
+        $resInsert = $this->db->insert(self::ARTICLE_HISTORY_TABLE, $data);
 
         if (empty($resInsert)) {
             $this->logger->logError('Error inserting article history');
@@ -292,7 +292,7 @@ class ArticleDataLayer
                 }
 
                 $resDe = $this->db->update(
-                    self::ARTICLE_TABLE_NAME,
+                    self::ARTICLE_TABLE,
                     $article->getId(),
                     [
                         'status_id' => ArticleStatus::DELETED
@@ -331,8 +331,8 @@ class ArticleDataLayer
                 aSecI.caption AS image_caption,
                 aSec.created_at,
                 aSec.updated_at
-            FROM ' . self::ARTICLE_SECTION_TABLE_NAME . ' AS aSec
-                LEFT JOIN ' . self::ARTICLE_SECTION_IMAGE_TABLE_NAME . ' AS aSecI
+            FROM ' . self::ARTICLE_SECTION_TABLE . ' AS aSec
+                LEFT JOIN ' . self::ARTICLE_SECTION_IMAGE_TABLE . ' AS aSecI
                     ON aSec.id = aSecI.article_section_id
             WHERE 1
         ';
@@ -372,7 +372,7 @@ class ArticleDataLayer
     public function createArticleSection(ArticleSection $articleSection): ?ArticleSection
     {
         $resInsert = $this->db->insert(
-            self::ARTICLE_SECTION_TABLE_NAME, $articleSection->asArray()
+            self::ARTICLE_SECTION_TABLE, $articleSection->asArray()
         );
 
         if (empty($resInsert)) {
@@ -390,7 +390,7 @@ class ArticleDataLayer
         $array = $articleSection->asArray();
         unset($array['created_at']);
         $resUpdate = $this->db->update(
-            self::ARTICLE_SECTION_TABLE_NAME,
+            self::ARTICLE_SECTION_TABLE,
             $articleSection->getId(),
             $array
         );
@@ -407,7 +407,7 @@ class ArticleDataLayer
 
     public function deleteArticleSection(int $articleSectionId): bool
     {
-        return $this->db->delete(self::ARTICLE_SECTION_TABLE_NAME, ['id' => $articleSectionId]);
+        return $this->db->delete(self::ARTICLE_SECTION_TABLE, ['id' => $articleSectionId]);
     }
 
     public function createArticleSectionImage(
@@ -417,7 +417,7 @@ class ArticleDataLayer
     ): bool {
         try {
             $this->db->insert(
-                ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE_NAME,
+                ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE,
                 [
                     'image_id' => $imageId,
                     'article_section_id' => $articleSectionId,
@@ -426,7 +426,7 @@ class ArticleDataLayer
             );
         } catch (Throwable $t) {
             $this->logger->logError(
-                'Error inserting entry into ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE_NAME .
+                'Error inserting entry into ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
                 ' - ImageId: ' . $imageId .
                 ' - ArticleSectionId: ' . $articleSectionId .
                 ' - Error message: ' . $t->getMessage()
@@ -444,7 +444,7 @@ class ArticleDataLayer
     ): bool {
         try {
             $this->db->execute(
-                'UPDATE ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE_NAME .
+                'UPDATE ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
                 ' SET caption = :caption' .
                 ' WHERE image_id = :imageId
                     AND article_section_id = :articleSectionId',
@@ -456,7 +456,7 @@ class ArticleDataLayer
             );
         } catch (Throwable $t) {
             $this->logger->logError(
-                'Error updating entry into ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE_NAME .
+                'Error updating entry into ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
                 ' - ImageId: ' . $imageId .
                 ' - ArticleSectionId: ' . $articleSectionId .
                 ' - Error message: ' . $t->getMessage()
@@ -470,7 +470,7 @@ class ArticleDataLayer
     public function deleteArticleSectionImage(int $articleSectionId, int $imageId): bool
     {
         return $this->db->execute(
-            'DELETE FROM ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE_NAME .
+            'DELETE FROM ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
             ' WHERE image_id = :imageId
                 AND article_section_id = :articleSectionId',
             [

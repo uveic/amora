@@ -33,7 +33,7 @@ try {
 
     Core::getMigrationDbApp(
         Core::getCoreDb(),
-        Core::getPathRoot() . '/App/Database/files/core'
+        Core::getPathRoot() . '/App/Database/Migration/files/core'
     )->run($argv);
 
     Core::getMigrationDbApp(

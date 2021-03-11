@@ -44,7 +44,7 @@ class TagDataLayer
         }
 
         if (isset($articleId)) {
-            $joins .= ' LEFT JOIN ' . ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE_NAME . ' AS at'
+            $joins .= ' LEFT JOIN ' . ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE . ' AS at'
                 . ' ON at.tag_id = t.id';
             $where .= ' AND at.article_id = :articleId';
             $params[':articleId'] = $articleId;
@@ -102,7 +102,7 @@ class TagDataLayer
     {
         $dbRes = $this->db->withTransaction(function() use ($id) {
             $resAr = $this->db->delete(
-                ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE_NAME,
+                ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE,
                 [
                     'tag_id' => $id
                 ]
@@ -132,7 +132,7 @@ class TagDataLayer
     public function insertArticleTagRelation(int $tagId, int $articleId): bool
     {
         $this->db->insert(
-            ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE_NAME,
+            ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE,
             [
                 'tag_id' => $tagId,
                 'article_id' => $articleId,
@@ -145,7 +145,7 @@ class TagDataLayer
     public function deleteArticleTagRelation(int $tagId, int $articleId): bool
     {
         return $this->db->delete(
-            ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE_NAME,
+            ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE,
             [
                 'tag_id' => $tagId,
                 'article_id' => $articleId

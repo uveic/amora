@@ -7,7 +7,6 @@ use Amora\Core\Logger;
 use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
-use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Module\Article\Model\Image;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\ImageService;

@@ -197,7 +197,11 @@ final class MigrationDbApp
     private function getMigrationFiles(): array
     {
         if (empty($this->pathToMigrationFiles) || ! is_dir($this->pathToMigrationFiles)) {
-            echo 'Migrate files folder path needed' . PHP_EOL;
+            $this->printOutput(
+                'Migrate files folder path not found: ' . $this->pathToMigrationFiles
+            );
+
+            return [];
         }
 
         $executed = $this->db->select(self::MIGRATION_TABLE_NAME);

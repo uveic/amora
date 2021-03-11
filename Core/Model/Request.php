@@ -11,46 +11,24 @@ final class Request
 {
     private ?string $sessionId;
     private ?Session $session;
-    private ?string $sourceIp;
-    private ?string $userAgent;
-    private string $verb; // The HTTP request verb (GET, POST, PUT, etc.)
-    private string $path; // The request URI
-    private ?string $referrer;
     private string $siteLanguage;
-    private array $headers;
-    private string $body;
-    private array $getParams;
-    private array $postParams;
-    private array $files;
-    private array $cookies;
     private ?string $clientLanguage;
-    private ?string $accessToken = null;
-    private bool $isAuthenticated = false;
 
     public function __construct(
-        ?string $sourceIp,
-        ?string $userAgent,
-        string $verb,
-        string $path,
-        ?string $referrer,
-        string $body,
-        array $getParams,
-        array $postParams,
-        array $files,
-        array $cookies,
-        array $headers
+        private ?string $sourceIp,
+        private ?string $userAgent,
+        private string $verb, // The HTTP request verb (GET, POST, PUT, etc.)
+        private string $path, // The request URI
+        private ?string $referrer,
+        private string $body,
+        private array $getParams,
+        private array $postParams,
+        private array $files,
+        private array $cookies,
+        private array $headers
     ) {
-        $this->sourceIp = $sourceIp;
-        $this->userAgent = $userAgent;
         $this->verb = strtoupper($verb);
-        $this->path = $path;
-        $this->referrer = $referrer;
-        $this->headers = $headers;
-        $this->body = $body;
-        $this->getParams = $getParams;
-        $this->postParams = $postParams;
         $this->files = $this->processFiles($files);
-        $this->cookies = $cookies;
         $this->sessionId = $this->getCookie('sid');
         $this->session = $this->loadSession();
         $this->clientLanguage = $headers['HTTP_ACCEPT_LANGUAGE'] ?? null;
@@ -58,12 +36,6 @@ final class Request
 
         if (empty($this->path)) {
             $this->path = 'home';
-        }
-
-        if (!empty($headers['X-Auth-Token'])) {
-            $this->accessToken = $headers['X-Auth-Token'];
-        } elseif (!empty($get['access_token'])) {
-            $this->accessToken = $get['access_token'];
         }
     }
 
@@ -154,16 +126,6 @@ final class Request
     public function getClientLanguage(): ?string
     {
         return $this->clientLanguage;
-    }
-
-    public function getAccessToken(): ?string
-    {
-        return $this->accessToken;
-    }
-
-    public function isAuthenticated(): bool
-    {
-        return $this->isAuthenticated;
     }
 
     public function getCookie(string $cookieName): ?string
