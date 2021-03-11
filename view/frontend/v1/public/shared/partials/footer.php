@@ -12,4 +12,3 @@ $isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin()
   <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/dashboard"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
 <?php } ?>
 </footer>
-<script type="module" src="/js/main.js"></script>
