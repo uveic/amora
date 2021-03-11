@@ -27,7 +27,7 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
 ?>
   <section>
     <div id="feedback" class="feedback null"></div>
-    <form id="form-user" action="#">
+    <form action="#">
       <div class="form-header m-t-1 m-l-1 m-r-1">
         <h1><?=($userToEdit ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></h1>
         <div class="links">

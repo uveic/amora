@@ -271,9 +271,8 @@ document.querySelectorAll('input#images').forEach(im => {
   });
 });
 
-const formUser = document.querySelector('form#form-user');
-if (formUser) {
-  formUser.addEventListener('submit', e => {
+document.querySelectorAll('.user-save-button').forEach(el => {
+  el.addEventListener('click', e => {
     e.preventDefault();
 
     const userIdEl = document.querySelector('input#userId');
@@ -306,7 +305,7 @@ if (formUser) {
         .then(() => window.location = '/backoffice/users');
     }
   });
-}
+});
 
 document.querySelectorAll('.article-status-option').forEach(op => {
   op.addEventListener('click', (e) => {

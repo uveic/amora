@@ -12,7 +12,7 @@ $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
 ?>
       <h1><?=$responseData->getLocalValue('formYourAccount')?></h1>
       <div class="content-main">
-        <form id="form-user-account" action="#">
+        <form action="#">
           <input type="hidden" name="userId" id="userId" value="<?=$user->getId()?>">
           <div class="field">
             <label for="name" class="label"><?=$responseData->getLocalValue('formPlaceholderUserName')?>:</label>
@@ -54,7 +54,7 @@ $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
           </div>
           <div class="control">
-            <button class="button is-success m-b-3" value="Submit"><?=$responseData->getLocalValue('globalUpdate')?></button>
+            <button class="save-user-account-button button is-success m-b-3" value="Submit"><?=$responseData->getLocalValue('globalUpdate')?></button>
           </div>
         </form>
         <div class="field">

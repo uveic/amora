@@ -27,7 +27,7 @@ $random = StringUtil::getRandomString(5);
 ?>
       <div class="control-bar-wrapper m-b-3 m-t-1">
         <div class="control-bar-buttons">
-          <button class="article-save-button button m-r-1"><?=$userToEdit ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?></button>
+          <button class="user-save-button button m-r-1"><?=$userToEdit ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?></button>
         </div>
         <div class="control-bar-creation"><span><?=$updatedAtContent?></span><br><span><?=$createdAtContent?></span></div>
         <input type="checkbox" id="dropdown-menu-<?=$random?>" class="dropdown-menu">

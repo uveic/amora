@@ -13,19 +13,18 @@ document.querySelectorAll('a.verified-link').forEach(el => {
   });
 });
 
-const formUserAccount = document.querySelector('#form-user-account');
-if (formUserAccount) {
-  formUserAccount.addEventListener('submit', e => {
+document.querySelectorAll('.save-user-account-button').forEach(el => {
+  el.addEventListener('click', e => {
     e.preventDefault();
 
-    const userId = document.querySelector('form#form-user-account input[name="userId"]');
-    const name = document.querySelector('form#form-user-account input[name="name"]');
-    const email = document.querySelector('form#form-user-account input[name="email"]');
-    const languageId = document.querySelector('form#form-user-account select[name="languageId"]');
-    const timezone = document.querySelector('form#form-user-account select[name="timezone"]');
-    const currentPassword = document.querySelector('form#form-user-account input[name="currentPassword"]');
-    const newPassword = document.querySelector('form#form-user-account input[name="newPassword"]');
-    const repeatPassword = document.querySelector('form#form-user-account input[name="repeatPassword"]');
+    const userId = document.querySelector('input[name="userId"]');
+    const name = document.querySelector('input[name="name"]');
+    const email = document.querySelector('input[name="email"]');
+    const languageId = document.querySelector('select[name="languageId"]');
+    const timezone = document.querySelector('select[name="timezone"]');
+    const currentPassword = document.querySelector('input[name="currentPassword"]');
+    const newPassword = document.querySelector('input[name="newPassword"]');
+    const repeatPassword = document.querySelector('input[name="repeatPassword"]');
 
     const payload = {
       name: name ? name.value : null,
@@ -44,6 +43,6 @@ if (formUserAccount) {
       global.get('feedbackAccountUpdated')
     );
   });
-}
+});
 
 export {feedbackDiv};

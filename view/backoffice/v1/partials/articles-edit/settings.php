@@ -1,6 +1,5 @@
 <?php
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
-use Amora\Core\Model\Util\LookupTableBasicValue;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Util\DateUtil;
 
