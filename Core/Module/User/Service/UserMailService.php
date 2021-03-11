@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\User\Service;
 
 use Amora\Core\Core;
+use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Logger;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Service\MailerService;
@@ -92,14 +93,14 @@ class UserMailService
                 );
 
                 if (!$resEmail) {
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
-                return ['success' => true];
+                return new TransactionResponse(true);
             }
         );
 
-        return empty($res['success']) ? false : true;
+        return $res->isSuccess();
     }
 
     public function sendPasswordResetEmail(User $user): bool
@@ -127,14 +128,14 @@ class UserMailService
                 );
 
                 if (!$resEmail) {
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
-                return ['success' => true];
+                return new TransactionResponse(true);
             }
         );
 
-        return empty($res['success']) ? false : true;
+        return $res->isSuccess();
     }
 
     private function buildPasswordResetEmail(User $user, string $verificationIdentifier): MailerItem

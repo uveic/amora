@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Database\migration;
 
+use Amora\Core\Database\Model\TransactionResponse;
 use Exception;
 use Amora\Core\Database\MySqlDb;
 
@@ -268,16 +269,16 @@ final class MigrationDbApp
                 $resExecute = $this->db->execute($sql);
 
                 if (empty($resExecute)) {
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
                 $this->db->insert(self::MIGRATION_TABLE_NAME, ['filename' => $filename]);
 
-                return ['success' => true];
+                return new TransactionResponse(true);
             }
         );
 
-        return empty($res['success']) ? false : true;
+        return $res->isSuccess();
     }
 
     private function isDbEmpty()

@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Article\Service;
 
 use Amora\Core\Core;
+use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Logger;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
@@ -116,7 +117,7 @@ class ArticleService
                     $this->logger->logError(
                         'Error updating article. Article ID: ' . $article->getId()
                     );
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
                 $resSections = $this->updateCreateOrDeleteArticleSections(
@@ -128,7 +129,7 @@ class ArticleService
                     $this->logger->logError(
                         'Error updating article sections. Article ID: ' . $article->getId()
                     );
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
                 $resTags = $this->addOrRemoveTagsToArticle($article->getId(), $tags);
@@ -136,7 +137,7 @@ class ArticleService
                     $this->logger->logError(
                         'Error updating article tags. Article ID: ' . $article->getId()
                     );
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
                 $resHistory = $this->articleDataLayer->insertArticleHistory(
@@ -149,17 +150,14 @@ class ArticleService
                     $this->logger->logError(
                         'Error inserting article history. Article ID: ' . $article->getId()
                     );
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
-                return [
-                    'success' => true,
-                    'article' => $article
-                ];
+                return new TransactionResponse(true);
             }
         );
 
-        return $resTransaction['success'];
+        return $resTransaction->isSuccess();
     }
 
     private function updateCreateOrDeleteArticleSections(int $articleId, array $sections): bool
@@ -299,7 +297,7 @@ class ArticleService
                     $this->logger->logError(
                         'Error creating article. Article ID: ' . $article->getId()
                     );
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
                 $resSections = $this->updateCreateOrDeleteArticleSections(
@@ -312,24 +310,21 @@ class ArticleService
                     $this->logger->logError(
                         'Error updating article tags. Article ID: ' . $article->getId()
                     );
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
                 if (empty($resSections)) {
                     $this->logger->logError(
                         'Error updating article sections. Article ID: ' . $article->getId()
                     );
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
-                return [
-                    'success' => true,
-                    'article' => $article
-                ];
+                return new TransactionResponse(true, $article);
             }
         );
 
-        return $resTransaction['article'] ?? null;
+        return $resTransaction->isSuccess() ? $resTransaction->getResponse() : null;
     }
 
     public function getArticlesForHome(int $maxArticles = 20): array

@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Datalayer;
 
+use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
 use Amora\Core\Module\Article\Model\Image;
@@ -95,21 +96,6 @@ class ImageDataLayer
 
     public function deleteImage(int $imageId): bool
     {
-        $dbRes = $this->db->withTransaction(function() use ($imageId) {
-            $resDel = $this->db->delete(
-                self::IMAGE_TABLE_NAME,
-                [
-                    'id' => $imageId
-                ]
-            );
-
-            if (empty($resDel)) {
-                return ['success' => false];
-            }
-
-            return ['success' => true];
-        });
-
-        return empty($dbRes['success']) ? false : true;
+        return $this->db->delete(self::IMAGE_TABLE_NAME, ['id' => $imageId]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Database;
 
+use Amora\Core\Database\Model\TransactionResponse;
 use PDO;
 use Throwable;
 use Amora\Core\Logger;
@@ -261,7 +262,7 @@ final class MySqlDb
      * @param Callable $f
      * @return mixed|bool
      */
-    public function withTransaction(callable $f)
+    public function withTransaction(callable $f): ?TransactionResponse
     {
         if ($this->isInTransactionMode) {
             $this->logger->logWarning(
@@ -272,11 +273,8 @@ final class MySqlDb
         }
 
         if (!is_callable($f)) {
-            $this->logger->logInfo(
-                'MySqlDb::withTransaction: Provided parameter is not Callable'
-            );
-
-            return false;
+            $this->logger->logError('MySqlDb transaction: provided parameter is not Callable');
+            return null;
         }
 
         $this->beginTransaction();
@@ -284,7 +282,20 @@ final class MySqlDb
         try {
             $res = $f();
 
-            if (empty($res['success'])) {
+            if (!$res instanceof TransactionResponse) {
+                $this->logger->logError(
+                    'Not valid response from callable function in MySqlDb transaction'
+                );
+                return null;
+            }
+
+            if (!$res->isSuccess()) {
+                if ($res->getMessage()) {
+                    $this->logger->logError(
+                        'Rolling back transaction. Message: ' . $res->getMessage()
+                    );
+                }
+
                 $this->rollBackTransaction();
                 return $res;
             }
@@ -293,13 +304,12 @@ final class MySqlDb
             return $res;
         } catch (Throwable $t) {
             $this->logger->logError(
-                'MySqlDb - withTransaction - PHP Error: ' . $t->getMessage() . PHP_EOL .
-                ' - PHP trace: ' . $t->getTraceAsString()
+                'Error in MySqlDb transaction: ' . $t->getMessage() . PHP_EOL .
+                ' - Trace: ' . $t->getTraceAsString()
             );
             $this->rollBackTransaction();
+            return null;
         }
-
-        return false;
     }
 
     private function beginTransaction(): bool
@@ -352,7 +362,7 @@ final class MySqlDb
     {
         if (!$this->isInTransactionMode) {
             $this->logger->logError(
-                'You are trying to roll back a transaction that has not been started before.' .
+                'You are trying to roll back a transaction that has not been started.' .
                 ' Ignoring request...'
             );
 

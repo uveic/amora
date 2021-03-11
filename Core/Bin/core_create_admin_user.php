@@ -3,6 +3,7 @@
 
 namespace Amora\App\Bin;
 
+use Amora\Core\Database\Model\TransactionResponse;
 use Throwable;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Core;
@@ -105,5 +106,5 @@ UserCore::getDb()->withTransaction(function() use ($logger, $email, $name, $pass
 
     $logger->logInfo('User created: ' . $email . ' / ' . $pass);
 
-    return ['success' => true];
+    return new TransactionResponse(true);
 });

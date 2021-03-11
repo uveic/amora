@@ -241,6 +241,7 @@ class Core
                 $pass = $config['database'][$dbIdentifier]['password'];
                 $dbName = $config['database'][$dbIdentifier]['name'];
 
+                require_once self::getPathRoot() . '/Core/Database/Model/TransactionResponse.php';
                 require_once self::getPathRoot() . '/Core/Database/MySqlDb.php';
                 return new MySqlDb($logger, $host, $user, $pass, $dbName);
             },

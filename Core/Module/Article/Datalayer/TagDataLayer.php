@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Datalayer;
 
+use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
 use Amora\Core\Module\Article\Model\Tag;
@@ -103,30 +104,22 @@ class TagDataLayer
         $dbRes = $this->db->withTransaction(function() use ($id) {
             $resAr = $this->db->delete(
                 ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE,
-                [
-                    'tag_id' => $id
-                ]
+                ['tag_id' => $id]
             );
 
             if (empty($resAr)) {
-                return ['success' => false];
+                return new TransactionResponse(false);
             }
 
-            $resDel = $this->db->delete(
-                self::TAG_TABLE_NAME,
-                [
-                    'id' => $id
-                ]
-            );
-
+            $resDel = $this->db->delete(self::TAG_TABLE_NAME, ['id' => $id]);
             if (empty($resDel)) {
-                return ['success' => false];
+                return new TransactionResponse(false);
             }
 
-            return ['success' => true];
+            return new TransactionResponse(true);
         });
 
-        return empty($dbRes['success']) ? false : true;
+        return $dbRes->isSuccess();
     }
 
     public function insertArticleTagRelation(int $tagId, int $articleId): bool

@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Datalayer;
 
+use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Throwable;
 use Amora\Core\Database\MySqlDb;
@@ -286,9 +287,7 @@ class ArticleDataLayer
             function () use ($article, $userIp, $userAgent) {
                 $resHistory = $this->insertArticleHistory($article, $userIp, $userAgent);
                 if (empty($resHistory)) {
-                    return [
-                        'success' => false
-                    ];
+                    return new TransactionResponse(false);
                 }
 
                 $resDe = $this->db->update(
@@ -300,18 +299,14 @@ class ArticleDataLayer
                 );
 
                 if (empty($resDe)) {
-                    return [
-                        'success' => false
-                    ];
+                    return new TransactionResponse(false);
                 }
 
-                return [
-                    'success' => true
-                ];
+                return new TransactionResponse(true);
             }
         );
 
-        return empty($resTransaction['success']) ? false : true;
+        return $resTransaction->isSuccess();
     }
 
     private function getArticleSections(

@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\User\Service;
 
 use Amora\Core\Core;
+use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Util\LocalisationUtil;
 use DateTime;
 use DateTimeZone;
@@ -52,13 +53,13 @@ class UserService
     private function updateUser(
         User $user,
         bool $updateSessionTimezone = false
-    ): ?User {
+    ): bool {
         $res = $this->userDataLayer->getDb()->withTransaction(
             function() use ($user, $updateSessionTimezone) {
                 $updatedUser = $this->userDataLayer->updateUser($user, $user->getId());
 
                 if (empty($updatedUser)) {
-                    return ['success' => false];
+                    return new TransactionResponse(false);
                 }
 
                 if ($user->getChangeEmailTo()) {
@@ -75,14 +76,11 @@ class UserService
                     );
                 }
 
-                return [
-                    'success' => true,
-                    'user' => $updatedUser
-                ];
+                return new TransactionResponse(true);
             }
         );
 
-        return empty($res['success']) ? null : $res['user'];
+        return $res->isSuccess();
     }
 
     public function verifyUser(string $email, string $unHashedPassword): ?User
@@ -233,7 +231,7 @@ class UserService
         $res = $this->userDataLayer->getDb()->withTransaction(
             function () use ($user, $verification) {
                 $resVer = $this->userDataLayer->markUserAsVerified($user, $verification);
-                return ['success' => $resVer];
+                return new TransactionResponse($resVer);
             }
         );
 
