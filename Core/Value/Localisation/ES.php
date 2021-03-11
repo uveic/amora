@@ -87,6 +87,7 @@ return [
     'globalUpdate' => 'Actualizar',
     'globalUpdated' => 'Actualizado',
     'globalUpdatedAt' => 'Actualizado',
+    'globalSubmittedAt' => 'Hora envío',
     'globalPublishOn' => 'Publicar el',
     'globalCreated' => 'Creado',
     'globalStatus' => 'Estado',

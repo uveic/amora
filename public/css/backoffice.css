@@ -321,6 +321,11 @@ input.is-light {
   justify-content: space-between;
 }
 
+.table-item-overflow {
+  white-space: normal;
+  overflow: auto;
+}
+
 .table-item:last-child {
   padding-right: 0;
 }

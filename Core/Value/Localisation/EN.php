@@ -87,6 +87,7 @@ return [
     'globalUpdate' => 'Update',
     'globalUpdated' => 'Updated',
     'globalUpdatedAt' => 'Updated At',
+    'globalSubmittedAt' => 'Submitted At',
     'globalPublishOn' => 'Publish On',
     'globalCreated' => 'Created',
     'globalStatus' => 'Status',
