@@ -196,7 +196,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         );
 
         return new AuthorisedApiControllerUpdateUserAccountSuccessResponse(
-            !$updateRes->isError(),
+            $updateRes->isSuccess(),
             $updateRes->getMessage()
         );
     }

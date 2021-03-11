@@ -113,12 +113,12 @@ class UserService
     ): UserFeedback {
         if (isset($timezone) && !in_array($timezone, DateTimeZone::listIdentifiers())) {
             $this->logger->logError('Timezone not valid');
-            return new UserFeedback(true);
+            return new UserFeedback(false);
         }
 
         if (isset($languageId) && !in_array($languageId, array_column(Language::getAll(), 'id'))) {
             $this->logger->logError('Language ID not valid: ' . $languageId);
-            return new UserFeedback(true);
+            return new UserFeedback(false);
         }
 
         $localisationUtil = Core::getLocalisationUtil($existingUser->getLanguageId());
@@ -128,7 +128,7 @@ class UserService
                     'Submitted payload not valid: one of the password fields is empty.'
                 );
 
-                return new UserFeedback(true);
+                return new UserFeedback(false);
             }
 
             $validPass = StringUtil::verifyPassword(
@@ -137,21 +137,21 @@ class UserService
             );
             if (!$validPass) {
                 return new UserFeedback(
-                    true,
+                    false,
                     $localisationUtil->getValue('authenticationPassNotValid')
                 );
             }
 
             if (strlen($newPassword) < self::USER_PASSWORD_MIN_LENGTH) {
                 return new UserFeedback(
-                    true,
+                    false,
                     $localisationUtil->getValue('authenticationPasswordTooShort')
                 );
             }
 
             if ($newPassword !== $repeatPassword) {
                 return new UserFeedback(
-                    true,
+                    false,
                     $localisationUtil->getValue('authenticationPasswordsDoNotMatch')
                 );
             }
@@ -160,7 +160,7 @@ class UserService
         if ($email) {
             if (!StringUtil::isEmailAddressValid($email)) {
                 return new UserFeedback(
-                    true,
+                    false,
                     $localisationUtil->getValue('authenticationEmailNotValid')
                 );
             }
@@ -168,13 +168,13 @@ class UserService
             $userForEmail = $this->getUserForEmail($email);
             if ($userForEmail && $userForEmail->getId() !== $existingUser->getId()) {
                 return new UserFeedback(
-                    true,
+                    false,
                     $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail')
                 );
             }
         }
 
-        return new UserFeedback(false, null);
+        return new UserFeedback(true);
     }
 
     public function getListOfUsers(): array
@@ -202,7 +202,7 @@ class UserService
         );
 
         if (empty($verification)) {
-            return new UserFeedback(true, $localisationUtil->getValue('globalGenericError'));
+            return new UserFeedback(false, $localisationUtil->getValue('globalGenericError'));
         }
 
         $message = $verification->getTypeId() === VerificationType::EMAIL_ADDRESS
@@ -212,20 +212,20 @@ class UserService
         $user = $this->getUserForId($verification->getUserId());
         if (empty($user)) {
             return new UserFeedback(
-                true,
+                false,
                 $localisationUtil->getValue('globalGenericError')
             );
         }
 
         if (!$verification->isEnabled()) {
-            return new UserFeedback(true, $message);
+            return new UserFeedback(false, $message);
         }
 
         $verificationDate = new DateTime($verification->getCreatedAt());
         $now = new DateTime();
         $dateDiff = $now->diff($verificationDate);
         if ($dateDiff->days > self::VERIFICATION_LINK_VALID_FOR_DAYS) {
-            return new UserFeedback(true, $message);
+            return new UserFeedback(false, $message);
         }
 
         $res = $this->userDataLayer->getDb()->withTransaction(
@@ -236,10 +236,10 @@ class UserService
         );
 
         return new UserFeedback(
-            empty($res['success']),
-            empty($res['success'])
-                ? $localisationUtil->getValue('globalGenericError')
-                : $localisationUtil->getValue('authenticationEmailVerified')
+            $res->isSuccess(),
+            $res->isSuccess()
+                ? $localisationUtil->getValue('authenticationEmailVerified')
+                : $localisationUtil->getValue('globalGenericError')
         );
     }
 
@@ -293,7 +293,7 @@ class UserService
             $repeatPassword
         );
 
-        if ($validation->isError()) {
+        if (!$validation->isSuccess()) {
             return $validation;
         }
 
@@ -322,7 +322,7 @@ class UserService
         );
 
         if (empty($res)) {
-            return new UserFeedback(true, 'Error updating user');
+            return new UserFeedback(false, 'Error updating user');
         }
 
         return $validation;

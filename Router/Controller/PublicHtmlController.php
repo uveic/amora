@@ -200,7 +200,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                     article: $homepageArticle,
                     homeArticles: $homeArticles,
                     userFeedback: new UserFeedback(
-                        true,
+                        false,
                         $localisationUtil->getValue('authenticationPasswordResetLinkError')
                     )
                 )

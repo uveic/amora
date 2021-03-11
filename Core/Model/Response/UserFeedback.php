@@ -5,23 +5,14 @@ namespace Amora\Core\Model\Response;
 class UserFeedback
 {
     public function __construct(
-        private bool $isError,
+        private bool $isSuccess,
         private ?string $message = null,
         private ?int $code = null
     ) {}
 
-    public function asArray(): array
+    public function isSuccess(): bool
     {
-        return [
-            'has_error' => $this->isError(),
-            'message' => $this->getMessage(),
-            'code' => $this->getCode()
-        ];
-    }
-
-    public function isError(): bool
-    {
-        return $this->isError;
+        return $this->isSuccess;
     }
 
     public function getMessage(): ?string

@@ -206,7 +206,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             StringUtil::isTrue($isEnabled)
         );
 
-        if ($updateRes->isError()) {
+        if (!$updateRes->isSuccess()) {
             return new BackofficeApiControllerUpdateUserSuccessResponse(
                 false,
                 $updateRes->getMessage()

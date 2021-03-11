@@ -6,9 +6,9 @@ use Amora\Core\Model\Response\HtmlHomepageResponseData;
 
 $userFeedbackHtml = '';
 if ($responseData->getUserFeedback()) {
-    $class = $responseData->getUserFeedback()->isError()
-        ? 'feedback-error'
-        : 'feedback-success';
+    $class = $responseData->getUserFeedback()->isSuccess()
+        ? 'feedback-success'
+        : 'feedback-error';
     $userFeedbackHtml = '<div id="feedback-banner" class="' . $class . '">' . $responseData->getUserFeedback()->getMessage() . '</div>';
 }
 
