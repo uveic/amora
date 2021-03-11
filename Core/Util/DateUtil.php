@@ -66,11 +66,6 @@ final class DateUtil
         return true;
     }
 
-    /**
-     * @param string $isoDate
-     * @return string
-     * @throws Exception
-     */
     public static function convertDateFromISOToMySQLFormat(string $isoDate): ?string
     {
         if (!self::isValidDateISO8601($isoDate)) {
@@ -82,11 +77,6 @@ final class DateUtil
         return date('Y-m-d H:i:s', strtotime($isoDate));
     }
 
-    /**
-     * @param string $date
-     * @return string|null
-     * @throws Exception
-     */
     public static function convertDateFromMySQLFormatToISO(string $date): ?string
     {
         if (!self::isValidDateForMySql($date)) {
@@ -258,6 +248,27 @@ final class DateUtil
         );
     }
 
+    public static function formatUtcDateShort(
+        ?string $stringDate = null,
+        string $timezone = 'UTC',
+        bool $includeTime = true,
+        bool $includeSeconds = false,
+    ): string {
+        if (!isset($stringDate)) {
+            $stringDate = 'now';
+        }
+
+        $d = new DateTime($stringDate, new DateTimeZone('UTC'));
+        $d->setTimezone(new DateTimeZone($timezone));
+
+        $format = 'd/m/Y';
+        $format .= $includeTime
+            ? ' H:i' . ($includeSeconds ? ':s' : '')
+            : '';
+
+        return $d->format($format);
+    }
+
     public static function formatUtcDate(
         ?string $stringDate = null,
         string $lang = 'EN',
@@ -276,29 +287,9 @@ final class DateUtil
         $lang = strtoupper($lang);
         switch (strtoupper($lang)) {
             case 'GL':
-                $months = [
-                    'xaneiro',
-                    'febreiro',
-                    'marzo',
-                    'abril',
-                    'maio',
-                    'xuño',
-                    'xullo',
-                    'agosto',
-                    'setembro',
-                    'outubro',
-                    'novembro',
-                    'decembro'
-                ];
-                $days = [
-                    'luns',
-                    'martes',
-                    'mércores',
-                    'xoves',
-                    'venres',
-                    'sábado',
-                    'domingo'
-                ];
+                $months = ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo',
+                    'agosto', 'setembro', 'outubro', 'novembro', 'decembro'];
+                $days = ['luns', 'martes', 'mércores', 'xoves', 'venres', 'sábado', 'domingo'];
 
                 $weekDay = $includeWeekDay ? $days[$d->format('N') - 1] . ', ' : '';
                 $time = $includeTime ? ' ás ' . $d->format('H:i') : '';
@@ -311,15 +302,20 @@ final class DateUtil
                     . $year
                     . $time;
             case 'ES':
-                $format = ($includeWeekDay ? '%A, ' : '')
-                    . '%e de %B'
-                    . ($includeYear ? ' de %G' : '')
-                    . ($includeTime ? ' a las %H:%M' : '');
+                $months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
+                    'septiembre', 'octubre', 'noviembre', 'dieciembre'];
+                $days = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
-                setlocale(LC_ALL, 'es_ES');
-                $output = strftime($format, $d->getTimestamp());
-                setlocale(LC_ALL, Core::getPhpLocale());
-                return $output;
+                $weekDay = $includeWeekDay ? $days[$d->format('N') - 1] . ', ' : '';
+                $time = $includeTime ? ' a las ' . $d->format('H:i') : '';
+                $year = $includeYear ? ' de ' . $d->format('Y') : '';
+
+                return $weekDay
+                    . $d->format('j')
+                    . ' de '
+                    . $months[$d->format('n') - 1]
+                    . $year
+                    . $time;
             default:
                 $format = ($includeWeekDay ? 'l, ' : '')
                     . 'F jS'
