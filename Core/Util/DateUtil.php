@@ -275,7 +275,8 @@ final class DateUtil
         bool $includeWeekDay = true,
         bool $includeTime = false,
         string $timezone = 'UTC',
-        bool $includeYear = true
+        bool $includeYear = true,
+        bool $includeSeconds = false
     ): string {
         if (!isset($stringDate)) {
             $stringDate = 'now';
@@ -283,6 +284,8 @@ final class DateUtil
 
         $d = new DateTime($stringDate, new DateTimeZone('UTC'));
         $d->setTimezone(new DateTimeZone($timezone));
+
+        $timeFormat = 'H:i' . ($includeSeconds ? ':s' : '');
 
         $lang = strtoupper($lang);
         switch (strtoupper($lang)) {
@@ -292,7 +295,7 @@ final class DateUtil
                 $days = ['luns', 'martes', 'mércores', 'xoves', 'venres', 'sábado', 'domingo'];
 
                 $weekDay = $includeWeekDay ? $days[$d->format('N') - 1] . ', ' : '';
-                $time = $includeTime ? ' ás ' . $d->format('H:i') : '';
+                $time = $includeTime ? ' ás ' . $d->format($timeFormat) : '';
                 $year = $includeYear ? ' de ' . $d->format('Y') : '';
 
                 return $weekDay
@@ -307,7 +310,7 @@ final class DateUtil
                 $days = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
                 $weekDay = $includeWeekDay ? $days[$d->format('N') - 1] . ', ' : '';
-                $time = $includeTime ? ' a las ' . $d->format('H:i') : '';
+                $time = $includeTime ? ' a las ' . $d->format($timeFormat) : '';
                 $year = $includeYear ? ' de ' . $d->format('Y') : '';
 
                 return $weekDay
@@ -320,7 +323,7 @@ final class DateUtil
                 $format = ($includeWeekDay ? 'l, ' : '')
                     . 'F jS'
                     . ($includeYear ? ', Y' : '')
-                    . ($includeTime ? ' \a\t H:i' : '');
+                    . ($includeTime ? ' \a\t ' . $timeFormat : '');
 
                 return $d->format($format);
         }
