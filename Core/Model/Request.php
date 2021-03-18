@@ -87,6 +87,25 @@ final class Request
         return $this->headers;
     }
 
+    public function getParsedHeaders(): array
+    {
+        $headers = array();
+        foreach($_SERVER as $key => $value) {
+            if (substr($key, 0, 5) !== 'HTTP_') {
+                continue;
+            }
+
+            $header = str_replace(
+                ' ',
+                '-',
+                ucwords(str_replace('_', ' ', strtolower(substr($key, 5))))
+            );
+            $headers[$header] = $value;
+        }
+
+        return $headers;
+    }
+
     public function getBody(): string
     {
         return $this->body;
