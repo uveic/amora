@@ -10,10 +10,22 @@ use Amora\Core\Util\StringUtil;
 
 $article = $responseData->getFirstArticle();
 
+$updatedAtDate = DateUtil::formatUtcDate(
+    stringDate: $article->getUpdatedAt(),
+    lang: $responseData->getSiteLanguage(),
+    includeTime: true,
+    timezone: $responseData->getTimezone()
+);
+
+$updatedAtEta = DateUtil::getElapsedTimeString(
+    datetime: $article->getUpdatedAt(),
+    language: $responseData->getSiteLanguage(),
+    includePrefixAndOrSuffix: true,
+);
+
 $updatedAtContent = $responseData->getLocalValue('globalUpdated') . ' ' . ($article
-    ? '<span class="article-updated-at" title="' .
-    $this->e(DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
-    '">' . $this->e(DateUtil::getElapsedTimeString($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
+    ? '<span class="article-updated-at" title="' . $updatedAtDate.
+    '">' . $this->e($updatedAtEta) . '</span>.'
     : '<span class="article-updated-at" title=""></span>');
 
 $articleStatusId = $article ? $article->getStatusId() : ArticleStatus::DRAFT;

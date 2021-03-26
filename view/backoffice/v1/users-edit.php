@@ -2,27 +2,12 @@
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Model\Util\LookupTableBasicValue;
-use Amora\Core\Util\DateUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
 $this->layout('base', ['responseData' => $responseData]);
 $userToEdit = $responseData->getUserToEdit();
 $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
-
-$updatedAtContent = $userToEdit
-    ? 'Updated <span title="' .
-        $this->e(DateUtil::formatUtcDate($userToEdit->getUpdatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
-        '">' . $this->e(DateUtil::getElapsedTimeString($userToEdit->getUpdatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
-    : '';
-
-$createdAtContent = $userToEdit
-    ? 'Created <span title="' .
-    $this->e(DateUtil::formatUtcDate($userToEdit->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
-    '">' . $this->e(DateUtil::getElapsedTimeString($userToEdit->getCreatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
-    : '';
-
-$isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
 
 ?>
   <section>

@@ -1,15 +1,15 @@
 #!/usr/bin/env php
 <?php
 
-namespace Amora\App\Bin;
+namespace Amora\Core\Bin;
+
+// change working directory
+chdir(dirname(__FILE__));
 
 require_once '../Core.php';
 
 use Throwable;
 use Amora\Core\Core;
-
-// change working directory
-chdir(dirname(__FILE__));
 
 try {
     Core::initiate(realpath(__DIR__ . '/../..'));

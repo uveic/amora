@@ -68,6 +68,8 @@ return [
     'dashboardGoTo' => 'Ir a...',
     'dashboardHomepage' => 'Portada',
 
+    'globalYes' => 'Sí',
+    'globalNo' => 'No',
     'globalBy' => 'por',
     'globalSettings' => 'Configuración',
     'globalClose' => 'Cerrar',

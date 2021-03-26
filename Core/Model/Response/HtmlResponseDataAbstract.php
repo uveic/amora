@@ -147,10 +147,7 @@ abstract class HtmlResponseDataAbstract
     public function getMenu(): array
     {
         if ($this->getSession() && $this->getSession()->isAdmin()) {
-            return array_merge(
-                CoreMenu::getAdminMenu($this->getBaseUrlWithLanguage(), $this->getSiteLanguage()),
-                AppMenu::getAdminAll($this->getBaseUrlWithLanguage(), $this->getSiteLanguage())
-            );
+            return AppMenu::getAdminAll($this->getBaseUrlWithLanguage(), $this->getSiteLanguage());
         }
 
         if ($this->getSession()) {

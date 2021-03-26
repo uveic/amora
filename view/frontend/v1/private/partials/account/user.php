@@ -7,7 +7,7 @@ use Amora\Core\Value\Language;
 
 $user = $responseData->getSession()->getUser();
 
-$timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
+$timezones = DateTimeZone::listIdentifiers();
 
 ?>
       <h1><?=$responseData->getLocalValue('formYourAccount')?></h1>
@@ -59,17 +59,17 @@ $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
         </form>
         <div class="field">
           <div class="control">
-            <a href="/account/password"><?=$responseData->getLocalValue('navChangePassword')?></a>
+            <a href="<?=$responseData->getBaseUrlWithLanguage()?>account/password"><?=$responseData->getLocalValue('navChangePassword')?></a>
           </div>
         </div>
         <div class="field">
           <div class="control">
-            <a href="/account/download"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
+            <a href="<?=$responseData->getBaseUrlWithLanguage()?>account/download"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
           </div>
         </div>
         <div class="field m-b-6">
           <div class="control">
-            <a class="is-danger" href="/account/delete"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
+            <a class="is-danger" href="<?=$responseData->getBaseUrlWithLanguage()?>account/delete"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
           </div>
         </div>
       </div>

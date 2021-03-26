@@ -28,12 +28,11 @@ foreach ($responseData->getBlogArticles() as $article) {
         : $responseData->getLocalValue('globalNoTitle');
     $publishedOn = $article->getPublishOn()
         ? DateUtil::formatUtcDate(
-            $article->getPublishOn(),
-            $responseData->getSiteLanguage(),
-            false,
-            false,
-            $article->getUser()->getTimezone(),
-            false
+            stringDate: $article->getPublishOn(),
+            lang: $responseData->getSiteLanguage(),
+            includeWeekDay: false,
+            timezone: $article->getUser()->getTimezone(),
+            includeYear: false
         )
         : '';
 

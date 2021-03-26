@@ -3,6 +3,7 @@
 namespace Amora\Core\Util;
 
 use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use Amora\Core\Core;
@@ -92,6 +93,12 @@ final class DateUtil
     public static function getCurrentDateForMySql(): string
     {
         return date('Y-m-d H:i:s');
+    }
+
+    public static function getDateForMySqlFrom(string $dateString = 'now'): string
+    {
+        $d = new DateTimeImmutable($dateString);
+        return $d->format('Y-m-d H:i:s');
     }
 
     public static function getMySqlDateFromUnixTime(int $unixTime): string
@@ -240,11 +247,11 @@ final class DateUtil
         }
 
         return self::formatUtcDate(
-            self::getMySqlDateFromUnixTime($unixTime),
-            $lang,
-            $includeWeekDay,
-            $includeTime,
-            $timeZone
+            stringDate: self::getMySqlDateFromUnixTime($unixTime),
+            lang: $lang,
+            includeWeekDay: $includeWeekDay,
+            includeTime: $includeTime,
+            timezone: $timeZone
         );
     }
 
@@ -276,7 +283,8 @@ final class DateUtil
         bool $includeTime = false,
         string $timezone = 'UTC',
         bool $includeYear = true,
-        bool $includeSeconds = false
+        bool $includeDay = true,
+        bool $includeSeconds = false,
     ): string {
         if (!isset($stringDate)) {
             $stringDate = 'now';
@@ -295,12 +303,12 @@ final class DateUtil
                 $days = ['luns', 'martes', 'mércores', 'xoves', 'venres', 'sábado', 'domingo'];
 
                 $weekDay = $includeWeekDay ? $days[$d->format('N') - 1] . ', ' : '';
+                $day = $includeDay ? $d->format('j') . ' de ' : '';
                 $time = $includeTime ? ' ás ' . $d->format($timeFormat) : '';
                 $year = $includeYear ? ' de ' . $d->format('Y') : '';
 
                 return $weekDay
-                    . $d->format('j')
-                    . ' de '
+                    . $day
                     . $months[$d->format('n') - 1]
                     . $year
                     . $time;
@@ -310,19 +318,20 @@ final class DateUtil
                 $days = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
                 $weekDay = $includeWeekDay ? $days[$d->format('N') - 1] . ', ' : '';
+                $day = $includeDay ? $d->format('j') . ' de ' : '';
                 $time = $includeTime ? ' a las ' . $d->format($timeFormat) : '';
                 $year = $includeYear ? ' de ' . $d->format('Y') : '';
 
                 return $weekDay
-                    . $d->format('j')
-                    . ' de '
+                    . $day
                     . $months[$d->format('n') - 1]
                     . $year
                     . $time;
             default:
                 $format = ($includeWeekDay ? 'l, ' : '')
-                    . 'F jS'
-                    . ($includeYear ? ', Y' : '')
+                    . ($includeDay ? ' jS' : '')
+                    . 'F'
+                    . ($includeYear ? ' Y' : '')
                     . ($includeTime ? ' \a\t ' . $timeFormat : '');
 
                 return $d->format($format);

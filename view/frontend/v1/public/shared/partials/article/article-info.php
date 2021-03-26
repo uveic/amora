@@ -10,7 +10,14 @@ if (!$article) {
   return '';
 }
 
+$updatedAtDate = DateUtil::formatUtcDate(
+    stringDate: $article->getUpdatedAt(),
+    lang: $responseData->getSiteLanguage(),
+    includeWeekDay: false,
+    includeTime: true
+);
+
 ?>
     <div class="article-info">
-      <?=$this->e(DateUtil::formatUtcDate($article->getUpdatedAt(), $responseData->getSiteLanguage(), false, true))?>
+      <?=$this->e($updatedAtDate)?>
     </div>

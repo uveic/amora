@@ -9,16 +9,40 @@ use Amora\Core\Util\StringUtil;
 $userToEdit = $responseData->getUserToEdit();
 $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
 
+$updatedAtDate = DateUtil::formatUtcDate(
+    stringDate: $userToEdit->getUpdatedAt(),
+    lang: $responseData->getSiteLanguage(),
+    includeTime: true,
+    timezone: $responseData->getTimezone()
+);
+
+$updatedAtEta = DateUtil::getElapsedTimeString(
+    datetime: $userToEdit->getUpdatedAt(),
+    language: $responseData->getSiteLanguage(),
+    includePrefixAndOrSuffix: true
+);
+
+$createdAtDate = DateUtil::formatUtcDate(
+    stringDate: $userToEdit->getCreatedAt(),
+    lang: $responseData->getSiteLanguage(),
+    includeTime: true,
+    timezone: $responseData->getTimezone()
+);
+
+$createdAtEta = DateUtil::getElapsedTimeString(
+    datetime: $userToEdit->getCreatedAt(),
+    language: $responseData->getSiteLanguage(),
+    includePrefixAndOrSuffix: true
+);
+
 $updatedAtContent = $userToEdit
-    ? $responseData->getLocalValue('globalUpdated') . ' <span title="' .
-    $this->e(DateUtil::formatUtcDate($userToEdit->getUpdatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
-    '">' . $this->e(DateUtil::getElapsedTimeString($userToEdit->getUpdatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
+    ? $responseData->getLocalValue('globalUpdated') .
+        ' <span title="' . $this->e($updatedAtDate) . '">' . $this->e($updatedAtEta) . '</span>.'
     : '';
 
 $createdAtContent = $userToEdit
-    ? $responseData->getLocalValue('globalCreated') . ' <span title="' .
-    $this->e(DateUtil::formatUtcDate($userToEdit->getCreatedAt(), $responseData->getSiteLanguage(), true, true, $responseData->getTimezone())) .
-    '">' . $this->e(DateUtil::getElapsedTimeString($userToEdit->getCreatedAt(), $responseData->getSiteLanguage(), false, true)) . '</span>.'
+    ? $responseData->getLocalValue('globalCreated') .
+        ' <span title="' . $this->e($createdAtDate) . '">' . $this->e($createdAtEta) . '</span>.'
     : '';
 
 $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;

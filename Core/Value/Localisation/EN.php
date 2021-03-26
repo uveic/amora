@@ -68,6 +68,8 @@ return [
     'dashboardGoTo' => 'Go to...',
     'dashboardHomepage' => 'Homepage',
 
+    'globalYes' => 'Yes',
+    'globalNo' => 'No',
     'globalBy' => 'by',
     'globalSettings' => 'Settings',
     'globalClose' => 'Close',

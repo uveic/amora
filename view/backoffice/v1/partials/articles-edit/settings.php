@@ -18,14 +18,16 @@ $createdAtContent = '';
 if ($article) {
     $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
         DateUtil::getElapsedTimeString(
-            $article->getCreatedAt(), $responseData->getSiteLanguage(), false, true
+            datetime: $article->getCreatedAt(),
+            language: $responseData->getSiteLanguage(),
+            includePrefixAndOrSuffix: true
         ) . ' ('
         . DateUtil::formatUtcDate(
-            $article->getCreatedAt(),
-            $responseData->getSiteLanguage(),
-            true,
-            true,
-            $responseData->getTimezone()
+            stringDate: $article->getCreatedAt(),
+            lang: $responseData->getSiteLanguage(),
+            includeWeekDay: true,
+            includeTime: true,
+            timezone: $responseData->getTimezone()
         ) . ')'
         . ' '
         . $responseData->getLocalValue('globalBy') . ' '

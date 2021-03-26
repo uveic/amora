@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-namespace Amora\App\Bin;
+namespace Amora\Core\Bin;
 
 use Throwable;
 use Amora\Core\Core;
