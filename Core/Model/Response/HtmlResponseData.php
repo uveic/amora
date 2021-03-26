@@ -54,21 +54,4 @@ class HtmlResponseData extends HtmlResponseDataAbstract
     {
         return $this->verificationHash;
     }
-
-    public function isUserVerified(): bool
-    {
-        if (empty($this->getSession())) {
-            return false;
-        }
-        return $this->getSession()->getUser()->isVerified();
-    }
-
-    public function minutesSinceUserRegistration(): int
-    {
-        if (empty($this->getSession())) {
-            return 0;
-        }
-
-        return round((time() - strtotime($this->getSession()->getUser()->getCreatedAt())) / 60);
-    }
 }

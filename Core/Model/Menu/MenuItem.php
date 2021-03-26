@@ -5,14 +5,14 @@ namespace Amora\Core\Menu;
 class MenuItem
 {
     public function __construct(
-        private string $uri,
+        private ?string $uri = null,
         private ?string $text = null,
         private ?string $icon = null,
-        private ?string $parent = null,
-        private bool $isForAdmin = false,
+        private array $children = [],
+        private int $order = 0,
     ) {}
 
-    public function getUri(): string
+    public function getUri(): ?string
     {
         return $this->uri;
     }
@@ -27,13 +27,13 @@ class MenuItem
         return $this->icon;
     }
 
-    public function getParent(): ?string
+    public function getChildren(): array
     {
-        return $this->parent;
+        return $this->children ?? [];
     }
 
-    public function isForAdmin(): bool
+    public function getOrder(): int
     {
-        return $this->isForAdmin;
+        return $this->order;
     }
 }

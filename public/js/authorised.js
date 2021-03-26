@@ -45,4 +45,14 @@ document.querySelectorAll('.save-user-account-button').forEach(el => {
   });
 });
 
+document.querySelectorAll('.nav-dropdown-toggle-label').forEach(el => {
+  el.addEventListener('click', e => {
+    document.querySelectorAll('.nav-dropdown-toggle').forEach(dr => {
+      if (dr.id !== e.target.htmlFor) {
+        document.querySelector('#' + dr.id).checked = false;
+      }
+    });
+  });
+});
+
 export {feedbackDiv};

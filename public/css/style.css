@@ -171,33 +171,33 @@ nav ul {
   list-style: none;
 }
 
-.nav-item,
-.nav-item:visited,
-.nav-item:hover,
-.nav-item:active,
-.nav-item:focus {
+.nav-dropdown-item,
+.nav-dropdown-item:visited,
+.nav-dropdown-item:hover,
+.nav-dropdown-item:active,
+.nav-dropdown-item:focus {
   color: var(--main-bg-color);
   text-decoration: none;
   padding: 1em;
-  margin-left: 0.5rem;
+  margin: 0;
   display: block;
   position: relative;
   border: 1px solid transparent;
   border-radius: var(--border-radius);
 }
 
-.nav-item:hover {
+.nav-dropdown-item:hover {
   text-decoration: none;
   background-color: var(--main-text-color-hover);
 }
 
-.nav-toggle {
+.mobile-nav {
   position: absolute !important;
   top: -9999px !important;
   left: -9999px !important;
 }
 
-.nav-toggle-label {
+.mobile-nav-label {
   position: absolute;
   top: 0;
   right: 0;
@@ -207,9 +207,9 @@ nav ul {
   align-items: center;
 }
 
-.nav-toggle-label span,
-.nav-toggle-label span::before,
-.nav-toggle-label span::after {
+.mobile-nav-label span,
+.mobile-nav-label span::before,
+.mobile-nav-label span::after {
   display: block;
   background: white;
   height: 2px;
@@ -218,48 +218,52 @@ nav ul {
   position: relative;
 }
 
-.nav-toggle-label span::before,
-.nav-toggle-label span::after {
+.mobile-nav-label span::before,
+.mobile-nav-label span::after {
   content: '';
   position: absolute;
 }
 
-.nav-toggle-label span::before {
+.mobile-nav-label span::before {
   bottom: 7px;
 }
 
-.nav-toggle-label span::after {
+.mobile-nav-label span::after {
   top: 7px;
 }
 
-.nav-toggle:checked ~ nav {
+.mobile-nav:checked ~ nav {
   display: block;
 }
 
-.user-nav-menu {
+.nav-dropdown-menu-wrapper {
+  position: relative;
+}
+
+.nav-dropdown-menu {
   display: none;
   background-color: var(--main-bg-color);
   color: var(--main-text-color);
 }
 
-.user-nav-toggle {
+.nav-dropdown-toggle {
   display: none;
 }
 
-.user-nav-toggle-label {
+.nav-dropdown-toggle-label {
   cursor: pointer;
   font-weight: normal;
   margin-bottom: 0 !important;
 }
 
-.user-nav-toggle-label svg {
+.nav-dropdown-toggle-label svg {
   width: 20px;
   height: auto;
   vertical-align: middle;
   margin-left: 0.5rem;
 }
 
-ul.user-nav-menu {
+ul.nav-dropdown-menu {
   display: none;
   position: relative;
   padding: 0.5rem 0.5rem 0.5rem 2rem;
@@ -269,29 +273,30 @@ ul.user-nav-menu {
   background-color: var(--main-text-color);
 }
 
-ul.user-nav-menu li {
+ul.nav-dropdown-menu li {
   display: block;
 }
 
-ul.user-nav-menu a {
+ul.nav-dropdown-menu a {
   display: block;
-  padding: 1rem 4rem 1rem 1rem;
+  padding: 1rem;
   width: 100%;
+  min-width: 180px;
   color: var(--main-bg-color);
 }
 
-ul.user-nav-menu a svg {
+ul.nav-dropdown-menu a svg {
   width: 20px;
   height: auto;
   vertical-align: middle;
   margin-right: 1rem;
 }
 
-ul.user-nav-menu a:hover {
+ul.nav-dropdown-menu a:hover {
   background-color: var(--main-text-color-hover);
 }
 
-.user-nav-toggle:checked ~ nav>ul>li>ul.user-nav-menu {
+.nav-dropdown-toggle:checked ~ ul.nav-dropdown-menu {
   display: block;
 }
 
@@ -832,7 +837,7 @@ svg,
     margin-right: 0.5rem;
   }
 
-  .nav-toggle-label {
+  .mobile-nav-label {
     display: none;
   }
 
@@ -863,15 +868,6 @@ svg,
     align-items: center;
   }
 
-  .nav-item,
-  .nav-item:visited,
-  .nav-item:hover,
-  .nav-item:active,
-  .nav-item:focus {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
-
   .nav-button,
   .nav-button:visited,
   .nav-button:active,
@@ -885,14 +881,14 @@ svg,
     text-decoration: none;
   }
 
-  ul.user-nav-menu {
+  ul.nav-dropdown-menu {
     position: absolute;
     right: 0;
     top: 50px;
     padding: 0.5rem;
   }
 
-  ul.user-nav-menu a {
+  ul.nav-dropdown-menu a {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
   }

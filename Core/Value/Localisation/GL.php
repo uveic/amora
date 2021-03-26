@@ -12,6 +12,7 @@ return [
     'navDeleteAccount' => 'Eliminar conta',
     'navAdminDashboard' => 'Escritorio',
     'navAdminUsers' => 'Usuarios',
+    'navAdminContent' => 'Contido',
     'navAdminImages' => 'Imaxes',
     'navAdminArticles' => 'Artigos',
     'navAdminArticleOptions' => 'Configuración artigo',

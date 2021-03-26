@@ -12,6 +12,7 @@ return [
     'navDeleteAccount' => 'Delete Account',
     'navAdminDashboard' => 'Dashboard',
     'navAdminUsers' => 'Users',
+    'navAdminContent' => 'Content',
     'navAdminImages' => 'Images',
     'navAdminArticles' => 'Articles',
     'navAdminArticleOptions' => 'Article Options',

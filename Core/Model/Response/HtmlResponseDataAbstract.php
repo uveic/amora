@@ -147,16 +147,38 @@ abstract class HtmlResponseDataAbstract
     public function getMenu(): array
     {
         if ($this->getSession() && $this->getSession()->isAdmin()) {
-            return AppMenu::getAdminAll($this->getBaseUrlWithLanguage(), $this->getSiteLanguage());
+            return AppMenu::getAdminAll(
+                $this->getBaseUrlWithLanguage(),
+                $this->getSiteLanguage(),
+                $this->getSession()->getUser()->getNameOrEmail(),
+            );
         }
 
         if ($this->getSession()) {
             return AppMenu::getCustomerAll(
                 $this->getBaseUrlWithLanguage(),
-                $this->getSiteLanguage()
+                $this->getSiteLanguage(),
+                $this->getSession()->getUser()->getNameOrEmail(),
             );
         }
 
         return [];
+    }
+
+    public function isUserVerified(): bool
+    {
+        if (empty($this->getSession())) {
+            return false;
+        }
+        return $this->getSession()->getUser()->isVerified();
+    }
+
+    public function minutesSinceUserRegistration(): int
+    {
+        if (empty($this->getSession())) {
+            return 0;
+        }
+
+        return round((time() - strtotime($this->getSession()->getUser()->getCreatedAt())) / 60);
     }
 }
