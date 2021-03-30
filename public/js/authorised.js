@@ -13,8 +13,8 @@ document.querySelectorAll('a.verified-link').forEach(el => {
   });
 });
 
-document.querySelectorAll('.save-user-account-button').forEach(el => {
-  el.addEventListener('click', e => {
+document.querySelectorAll('form#form-user-account-update').forEach(f => {
+  f.addEventListener('submit', e => {
     e.preventDefault();
 
     const userId = document.querySelector('input[name="userId"]');

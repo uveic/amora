@@ -271,8 +271,8 @@ document.querySelectorAll('input#images').forEach(im => {
   });
 });
 
-document.querySelectorAll('.user-save-button').forEach(el => {
-  el.addEventListener('click', e => {
+document.querySelectorAll('form#form-user-creation').forEach(f => {
+  f.addEventListener('submit', e => {
     e.preventDefault();
 
     const userIdEl = document.querySelector('input#userId');
@@ -299,10 +299,18 @@ document.querySelectorAll('.user-save-button').forEach(el => {
 
     if (userId) {
       xhr.put('/back/user/' + userId, payload, feedbackDiv)
-        .then(() => window.location = '/backoffice/users');
+        .then((response) => {
+          if (response.redirect) {
+            window.location = response.redirect;
+          }
+        });
     } else {
       xhr.post('/back/user', payload, feedbackDiv)
-        .then(() => window.location = '/backoffice/users');
+        .then((response) => {
+          if (response.redirect) {
+            window.location = response.redirect;
+          }
+        });
     }
   });
 });

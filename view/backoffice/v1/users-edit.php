@@ -7,12 +7,19 @@ use Amora\Core\Model\Util\LookupTableBasicValue;
 
 $this->layout('base', ['responseData' => $responseData]);
 $userToEdit = $responseData->getUserToEdit();
-$timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
+$timezones = DateTimeZone::listIdentifiers();
+$emailHelpCopy = $userToEdit ? '' : $responseData->getLocalValue('formEmailNewUserHelp');
+$defaultTimezone = $userToEdit
+    ? $userToEdit->getTimezone()
+    : $responseData->getSession()->getUser()->getTimezone();
+$defaultLanguage = $userToEdit
+    ? $userToEdit->getLanguageId()
+    : $responseData->getSession()->getUser()->getLanguageId();
 
 ?>
   <section>
     <div id="feedback" class="feedback null"></div>
-    <form action="#">
+    <form action="#" method="post" id="form-user-creation">
       <div class="form-header m-t-1 m-l-1 m-r-1">
         <h1><?=($userToEdit ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></h1>
         <div class="links">
@@ -20,7 +27,7 @@ $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
         </div>
       </div>
 <?=$this->insert('partials/users-edit/control-bar', ['responseData' => $responseData])?>
-      <div class="content-small-width">
+      <div class="content-narrow-width">
 <?php if ($userToEdit) { ?>
         <input id="userId" class="input" name="userId" type="hidden" value="<?=$this->e($userToEdit->getId()); ?>">
 <?php } ?>
@@ -39,6 +46,13 @@ $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
           <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
         </div>
         <div class="field">
+          <label for="email" class="label"><?=$responseData->getLocalValue('globalPassword')?></label>
+          <div class="control">
+            <?=$emailHelpCopy?>
+          </div>
+          <p class="help"></p>
+        </div>
+        <div class="field">
           <label for="bio" class="label"><?=$responseData->getLocalValue('globalBio')?></label>
           <div class="control">
             <textarea id="bio" name="bio"><?=$this->e($userToEdit ? $userToEdit->getBio() : '')?></textarea>
@@ -50,7 +64,7 @@ $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
             <select id="languageId" name="languageId">
 <?php
                   foreach ($responseData->getLanguages() as $language) {
-                      $selected = $userToEdit && $language['id'] == $userToEdit->getLanguageId();
+                      $selected = $language['id'] === $defaultLanguage;
 ?>
               <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$this->e($language['id'])?>"><?=$this->e($language['name'])?></option>
 <?php
@@ -69,7 +83,7 @@ $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
 foreach ($responseData->getUserRoles() as $role) {
         $selected = $userToEdit && $role->getId() == $userToEdit->getRoleId();
 ?>
-                <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$role->getId()?>"><?=$role->getName()?></option>
+                <option <?php echo $selected ? 'selected ' : ''; ?>value="<?=$role->getId()?>"><?=$responseData->getLocalValue('userRole' . $role->getName())?></option>
 <?php
   }
 ?>
@@ -81,9 +95,11 @@ foreach ($responseData->getUserRoles() as $role) {
           <label for="timezone" class="label"><?=$responseData->getLocalValue('globalTimezone')?></label>
           <div class="control">
             <select name="timezone" id="timezone">
-                <?php foreach ($timezones as $timezone) { ?>
-                  <option value="<?=$this->e($timezone)?>" <?=$this->e($userToEdit && $userToEdit->getTimezone() === $timezone ? ' selected="selected"' : '')?>><?=$this->e($timezone)?></option>
-                <?php } ?>
+<?php foreach ($timezones as $timezone) {
+    $selected = $timezone === $defaultTimezone;
+?>
+                  <option  <?php echo $selected ? 'selected ' : ''; ?>value="<?=$this->e($timezone)?>" <?=$this->e($userToEdit && $userToEdit->getTimezone() === $timezone ? ' selected="selected"' : '')?>><?=$this->e($timezone)?></option>
+<?php } ?>
             </select>
           </div>
           <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>

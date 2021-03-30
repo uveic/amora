@@ -8,6 +8,7 @@ return [
     'navSignIn' => 'Entra',
     'navSignUp' => 'Rexístrate',
     'navChangePassword' => 'Cambiar contrasinal',
+    'navCreatePassword' => 'Crear contrasinal',
     'navDownloadAccountData' => 'Descargar os teus datos',
     'navDeleteAccount' => 'Eliminar conta',
     'navAdminDashboard' => 'Escritorio',
@@ -32,6 +33,7 @@ return [
     'authenticationEmailVerifiedError' => 'A ligazón para verificar o teu correo electrónico non é válida.',
     'authenticationEmailVerifiedExpired' => 'A ligazón para verificar o teu correo electrónico caducou. Por favor, inicia o proceso de novo.',
     'authenticationPasswordResetLinkError' => 'A ligazón para cambiar o teu contrasinal non é válida. Inicia o proceso de cambio de contrasinal de novo.',
+    'authenticationPasswordCreationLinkError' => 'A ligazón para crear o teu contrasinal non é válida. Por favor, cambia o teu contrasinal ou contacta co/a adminstrador/a da páxina.',
     'authenticationEmailAndOrPassNotValid' => 'Correo electrónico e/ou contrasinal non válidos.',
     'authenticationEmailNotValid' => 'Correo electrónico non válido.',
     'authenticationUserRegistrationDisabled' => 'O rexistro de usuarios non está habilitado. Ponte en contacto co administrador do sitio web.',
@@ -42,6 +44,8 @@ return [
     'authenticationPasswordResetSubtitle' => 'Cambia o contrasinal',
     'authenticationPasswordResetActionSuccess' => 'Cambiouse o contrasinal correctamente.',
     'authenticationPasswordResetAlreadyLogin' => 'Queres <a href="%s">entrar na túa conta</a> sen cambiar o contrasinal?',
+    'authenticationPasswordCreateSubtitle' => 'Crea o teu contrasinal',
+    'authenticationPasswordCreationActionSuccess' => 'Contrasinal creado correctamente.',
 
     'authenticationInviteRequest' => 'Consegue unha invitación',
     'authenticationInviteRequestSubtitle' => 'A web está actualmente nunha beta privada, estamos traballando para asegurarnos de que todo funciona correctamente e con moitas ganas de que estea lista para que a poidas utilizar. Déixanos o teu correo e enviarémosche unha invitación tan pronto como sexa posible. Só utilizaremos o teu correo para enviarche a invitación.<br>Grazas pola túa paciencia!',
@@ -52,9 +56,10 @@ return [
     'authenticationPassNotValid' => 'O contrasinal actual non é válido.',
 
     'formYourAccount' => 'A túa conta',
-    'formPlaceholderUserName' => 'O teu nome',
+    'formPlaceholderUserName' => 'Nome',
     'formPlaceholderUserHelp' => 'Mínimo tres letras',
     'formEmail' => 'O teu correo electrónico',
+    'formEmailNewUserHelp' => 'Enviaráselle un correo electrónico para crear o contrasinal unha vez gardado.',
     'formPlaceholderEmail' => 'nome@exemplo.com',
     'formEmailUpdateWarning' => 'Por favor, verifica o teu novo correo electrónico (%s) para cambialo.',
     'formPlaceholderPassword' => 'O teu contrasinal',
@@ -64,6 +69,7 @@ return [
     'formTimezone' => 'Zona horaria',
     'formLoginAction' => 'Entrar',
     'formPasswordResetAction' => 'Cambiar contrasinal',
+    'formPasswordCreateAction' => 'Crear contrasinal',
     'formArticleUri' => 'URI do artigo',
 
     'dashboardGoTo' => 'Ir a...',
@@ -82,6 +88,7 @@ return [
     'globalTitle' => 'Título',
     'globalName' => 'Nome',
     'globalEmail' => 'Correo electrónico',
+    'globalPassword' => 'Contrasinal',
     'globalLanguage' => 'Idioma',
     'globalRole' => 'Rol',
     'globalTimezone' => 'Zona horaria',
@@ -115,7 +122,7 @@ return [
     'globalAddVideo' => 'Engadir vídeo',
     'globalAddHtml' => 'Engadir HTML',
 
-    'globalGenericError' => 'Algo non foi ben, por favor inténtao de novo',
+    'globalGenericError' => 'Algo non foi ben, por favor inténtao de novo.',
 
     'articleEditHomepageTitle' => 'Editar o contido da portada',
     'articleStatusDraft' => 'Borrador',
@@ -127,6 +134,9 @@ return [
     'articleTypeArticle' => 'Artigo',
     'paragraphPlaceholder' => 'Escribe aquí...',
 
+    'userRoleAdmin' => 'Administrador/a',
+    'userRoleUser' => 'Usuario/a',
+
     'sectionRemove' => 'Eliminar sección',
     'sectionMoveUp' => 'Mover para arriba',
     'sectionMoveDown' => 'Mover para abaixo',
@@ -135,17 +145,23 @@ return [
     'emailConfirmationContent' => '<p>¡Benvido/a!</p>' .
         '<p>Por favor, confirma o teu correo electrónico facendo clic na seguinte ligazón.</p>' .
         '<p><a href="%s">Confirmar correo electrónico</a></p>' .
-        '<p>Grazas,<br>%s</p>',
+        '<p>%s</p>',
     'emailUpdateVerificationSubject' => 'Verifica o teu correo electrónico',
     'emailUpdateVerificationContent' => '<p>Ola,</p>' .
         '<p>Recibimos unha petición de cambio de correo electrónico na túa conta de %s.</p>' .
         '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo. En caso contrario, fai clic na seguinte ligazón para verificar o teu novo correo:</p>' .
         '<p><a href="%s">Confirma o teu correo electrónico</a></p>' .
-        '<p>Un saúdo,<br>%s</p>',
+        '<p>%s</p>',
     'emailPasswordChangeSubject' => '%s: cambiar contrasinal',
     'emailPasswordChangeContent' => '<p>Ola,</p>' .
         '<p>Recibimos unha petición de cambio de contrasinal na túa conta de %s.</p>' .
         '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo electrónico. En caso contrario, fai clic na seguinte ligazón para cambiar o teu contrasinal:</p>' .
         '<p><a href="%s">Cambiar contrasinal</a></p>' .
-        '<p>Un saúdo,<br>%s</p>',
+        '<p>%s</p>',
+    'emailPasswordCreationSubject' => 'A túa nova conta en %s',
+    'emailPasswordCreationContent' => '<p>Ola %s,</p>' .
+        '<p>Fai clic na seguinte ligazón para crear un contrasinal na túa nova conta en %s.</p>' .
+        '<p>Usuario: %s</p>' .
+        '<p><a href="%s">Crear contrasinal</a></p>' .
+        '<p>%s</p>',
 ];

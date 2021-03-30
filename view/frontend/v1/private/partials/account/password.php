@@ -10,7 +10,7 @@ $user = $responseData->getSession()->getUser();
 ?>
       <h1><?=$responseData->getLocalValue('navChangePassword')?></h1>
       <div class="content-main">
-        <form action="#">
+        <form action="#" method="post" id="form-user-account-update">
           <input type="hidden" name="userId" id="userId" value="<?=$this->e($user->getId())?>">
           <div class="field">
             <label for="currentPassword" class="label"><?=$responseData->getLocalValue('formPlaceholderPassword')?>:</label>
@@ -34,7 +34,7 @@ $user = $responseData->getSession()->getUser();
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
           </div>
           <div class="control">
-            <button class="save-user-account-button button is-success m-b-3" value="Submit"><?=$responseData->getLocalValue('formPasswordResetAction')?></button>
+            <input type="submit" class="button is-success m-b-3" value="<?=$responseData->getLocalValue('formPasswordResetAction')?>">
           </div>
         </form>
       </div>

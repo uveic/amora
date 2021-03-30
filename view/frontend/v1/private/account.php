@@ -44,7 +44,7 @@ switch ($url) {
         </ul>
       </div>
       <div class="content-onboarding-right">
-        <div class="content-small-width">
+        <div class="content-narrow-width">
 <?php
     switch ($url) {
         case 'settings':

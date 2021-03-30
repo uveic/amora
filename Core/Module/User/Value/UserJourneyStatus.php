@@ -6,12 +6,17 @@ use Amora\Core\Model\Util\LookupTableBasicValue;
 
 final class UserJourneyStatus
 {
+    const USER_CREATED_PENDING_PASSWORD = 500;
     const REGISTRATION = 1000;
 
     public static function getAll(): array
     {
         return [
-            self::REGISTRATION => new LookupTableBasicValue(self::REGISTRATION, 'User registered'),
+            self::USER_CREATED_PENDING_PASSWORD => new LookupTableBasicValue(
+                self::USER_CREATED_PENDING_PASSWORD,
+                'Pending Password'
+            ),
+            self::REGISTRATION => new LookupTableBasicValue(self::REGISTRATION, 'Registered'),
         ];
     }
 
@@ -34,8 +39,8 @@ final class UserJourneyStatus
     {
         switch ($roleId) {
             case UserRole::ADMIN:
-            case UserRole::CUSTOMER:
-                return self::REGISTRATION;
+            case UserRole::USER:
+                return self::USER_CREATED_PENDING_PASSWORD;
         }
 
         return self::REGISTRATION;

@@ -18,6 +18,7 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicHtmlControllerGetRegistrationPageSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicHtmlControllerGetUserVerifiedHtmlSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicHtmlControllerGetPasswordChangeHtmlSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Router/Controller/Response/PublicHtmlControllerGetCreateUserPasswordHtmlSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicHtmlControllerGetInviteRequestPageSuccessResponse.php';
     }
 
@@ -81,6 +82,19 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function getPasswordChangeHtml(
+        string $verificationIdentifier,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /user/create/{verificationIdentifier}
+     * Method: GET
+     *
+     * @param string $verificationIdentifier
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getCreateUserPasswordHtml(
         string $verificationIdentifier,
         Request $request
     ): Response;
@@ -298,6 +312,52 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         }
     }
 
+    private function validateAndCallGetCreateUserPasswordHtml(Request $request)
+    {
+        $pathParts = explode('/', $request->getPath());
+        $pathParams = $this->getPathParams(
+            ['user', 'create', '{verificationIdentifier}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $verificationIdentifier = null;
+        if (!isset($pathParams['verificationIdentifier'])) {
+            $errors[] = [
+                'field' => 'verificationIdentifier',
+                'message' => 'required'
+            ];
+        } else {
+            $verificationIdentifier = isset($pathParams['verificationIdentifier'])
+                ? $pathParams['verificationIdentifier']
+                : null;
+        }
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getCreateUserPasswordHtml(
+                $verificationIdentifier,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicHtmlControllerAbstract - Method: getCreateUserPasswordHtml()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
     private function validateAndCallGetInviteRequestPage(Request $request)
     {
         $errors = [];
@@ -395,6 +455,16 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetPasswordChangeHtml($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['user', 'create', '{verificationIdentifier}'],
+                $pathParts,
+                ['fixed', 'fixed', 'string']
+            )
+        ) {
+            return $this->validateAndCallGetCreateUserPasswordHtml($request);
         }
 
         if ($method === 'GET' &&

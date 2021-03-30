@@ -151,6 +151,31 @@
         }
       }
     },
+    "/user/create/{verificationIdentifier}": {
+      "get": {
+        "tags": [],
+        "summary": "Create new password for new user",
+        "description": "",
+        "operationId": "getCreateUserPasswordHtml",
+        "parameters": [
+          {
+            "name": "verificationIdentifier",
+            "in": "path",
+            "description": "Identifier to verify that the user is who it claims it is",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return HTML for the password creation page",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "/invite-request": {
       "get": {
         "tags": [],

@@ -2,6 +2,8 @@
 
 namespace Amora\Router;
 
+use Amora\Router\Controller\Response\PublicApiControllerUserPasswordCreationFailureResponse;
+use Amora\Router\Controller\Response\PublicApiControllerUserPasswordCreationSuccessResponse;
 use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Logger;
@@ -188,7 +190,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     protected function forgotPassword(string $email, Request $request): Response
     {
         $existingUser =$this->userService->getUserForEmail($email);
-        if (empty($existingUser)) {
+        if (empty($existingUser) || !$existingUser->isEnabled()) {
             return new PublicApiControllerForgotPasswordSuccessResponse(true);
         }
 
@@ -284,7 +286,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     }
 
     /**
-     * Endpoint: /papi/password-reset
+     * Endpoint: /papi/login/password-reset
      * Method: POST
      *
      * @param int $userId
@@ -328,6 +330,60 @@ final class PublicApiController extends PublicApiControllerAbstract
 
         $res = $this->userService->updatePassword($userId, $password);
         return new PublicApiControllerUserPasswordResetSuccessResponse($res);
+    }
+
+    /**
+     * Endpoint: /papi/login/password-creation
+     * Method: POST
+     *
+     * @param int $userId
+     * @param string $password
+     * @param string $passwordConfirmation
+     * @param string $verificationHash
+     * @param string $verificationIdentifier
+     * @param string $languageIsoCode
+     * @param Request $request
+     * @return Response
+     */
+    protected function userPasswordCreation(
+        int $userId,
+        string $password,
+        string $passwordConfirmation,
+        string $verificationHash,
+        string $verificationIdentifier,
+        string $languageIsoCode,
+        Request $request
+    ): Response {
+        $user = $this->userService->getUserForId($userId);
+        if (empty($user) || !$user->validateValidationHash($verificationHash)) {
+            return new PublicApiControllerUserPasswordCreationFailureResponse();
+        }
+
+        $languageIsoCode = in_array(strtoupper($languageIsoCode), Language::getAvailableIsoCodes())
+            ? strtolower($languageIsoCode)
+            : Core::getConfigValue('defaultSiteLanguage');
+        $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
+
+        if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
+            return new PublicApiControllerUserPasswordCreationSuccessResponse(
+                false,
+                $localisationUtil->getValue('authenticationPasswordTooShort')
+            );
+        }
+
+        if ($passwordConfirmation != $password) {
+            return new PublicApiControllerUserPasswordCreationSuccessResponse(
+                false,
+                $localisationUtil->getValue('authenticationPasswordsDoNotMatch')
+            );
+        }
+
+        $res = $this->userService->workflowCreatePassword(
+            user: $user,
+            verificationIdentifier: $verificationIdentifier,
+            newPassword: $password
+        );
+        return new PublicApiControllerUserPasswordCreationSuccessResponse($res);
     }
 
     /**

@@ -445,6 +445,121 @@
         }
       }
     },
+    "/papi/login/password-creation": {
+      "post": {
+        "tags": [],
+        "summary": "Create password for new account",
+        "description": "",
+        "operationId": "userPasswordCreation",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "userId": {
+                  "description": "User ID",
+                  "type": "integer"
+                },
+                "password": {
+                  "description": "Password",
+                  "type": "string"
+                },
+                "passwordConfirmation": {
+                  "description": "Password Confirmation",
+                  "type": "string"
+                },
+                "verificationHash": {
+                  "description": "Verification Hash",
+                  "type": "string"
+                },
+                "verificationIdentifier": {
+                  "description": "Verification Identifier",
+                  "type": "string"
+                },
+                "languageIsoCode": {
+                  "description": "Language ISO code",
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 2
+                }
+              },
+              "required": [
+                "userId",
+                "password",
+                "passwordConfirmation",
+                "verificationHash",
+                "verificationIdentifier",
+                "languageIsoCode"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password change response",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/papi/register": {
       "post": {
         "tags": [],

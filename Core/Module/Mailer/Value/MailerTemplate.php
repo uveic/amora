@@ -9,6 +9,7 @@ final class MailerTemplate
     const INVITATION_001 = 1000;
 
     const ACCOUNT_VERIFICATION = 2000;
+    const PASSWORD_CREATION = 2001;
 
     public static function getAll(): array
     {
@@ -20,6 +21,10 @@ final class MailerTemplate
             self::ACCOUNT_VERIFICATION => new LookupTableBasicValue(
                 self::ACCOUNT_VERIFICATION,
                 'Account Verification'
+            ),
+            self::PASSWORD_CREATION => new LookupTableBasicValue(
+                self::PASSWORD_CREATION,
+                'Password Creation'
             ),
         ];
     }

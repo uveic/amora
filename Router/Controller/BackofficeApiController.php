@@ -2,6 +2,7 @@
 
 namespace Amora\Router;
 
+use Amora\Core\Util\UrlBuilderUtil;
 use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Logger;
@@ -90,33 +91,13 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         Request $request
     ): Response {
         $now = DateUtil::getCurrentDateForMySql();
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
-
-        if ($newPassword !== $repeatPassword) {
-            return new BackofficeApiControllerStoreUserSuccessResponse(
-                false,
-                $localisationUtil->getValue('authenticationPasswordsDoNotMatch')
-            );
-        }
-
-        // ToDo: Replace with an email to create first password
-        if (empty($newPassword)) {
-            $newPassword = 'testuve123';
-        }
-
         $email = StringUtil::normaliseEmail($email);
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
         if (!StringUtil::isEmailAddressValid($email)) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
                 false,
                 $localisationUtil->getValue('authenticationEmailNotValid')
-            );
-        }
-
-        if (strlen($newPassword) < UserService::USER_PASSWORD_MIN_LENGTH) {
-            return new BackofficeApiControllerStoreUserSuccessResponse(
-                false,
-                $localisationUtil->getValue('authenticationPasswordTooShort')
             );
         }
 
@@ -130,21 +111,22 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         try {
             $this->userService->storeUser(
-                new User(
-                    null,
-                    $languageId,
-                    $roleId,
-                    UserJourneyStatus::getInitialJourneyIdFromRoleId($roleId),
-                    $now,
-                    $now,
-                    $email,
-                    $name,
-                    StringUtil::hashPassword($newPassword),
-                    $bio,
-                    $isEnabled,
-                    true,
-                    $timezone
-                )
+                user: new User(
+                    id: null,
+                    languageId: $languageId,
+                    roleId: $roleId,
+                    journeyStatusId: UserJourneyStatus::getInitialJourneyIdFromRoleId($roleId),
+                    createdAt: $now,
+                    updatedAt: $now,
+                    email: $email,
+                    name: $name,
+                    passwordHash: null,
+                    bio: $bio,
+                    isEnabled: $isEnabled,
+                    verified: false,
+                    timezone: $timezone
+                ),
+                sendPasswordCreationEmail: true,
             );
         } catch (Throwable $t) {
             $this->logger->logError('Error creating new user: ' . $t->getMessage());
@@ -154,7 +136,11 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        return new BackofficeApiControllerStoreUserSuccessResponse(true);
+        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
+        return new BackofficeApiControllerStoreUserSuccessResponse(
+            true,
+            $baseLinkUrl . UrlBuilderUtil::BACKOFFICE_USERS
+        );
     }
 
     /**
@@ -209,11 +195,16 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         if (!$updateRes->isSuccess()) {
             return new BackofficeApiControllerUpdateUserSuccessResponse(
                 false,
+                null,
                 $updateRes->getMessage()
             );
         }
 
-        return new BackofficeApiControllerUpdateUserSuccessResponse(true);
+        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
+        return new BackofficeApiControllerUpdateUserSuccessResponse(
+            true,
+            $baseLinkUrl . UrlBuilderUtil::BACKOFFICE_USERS
+        );
     }
 
     /**

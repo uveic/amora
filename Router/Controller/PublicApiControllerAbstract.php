@@ -21,6 +21,8 @@ abstract class PublicApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicApiControllerForgotPasswordFailureResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicApiControllerUserPasswordResetSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicApiControllerUserPasswordResetFailureResponse.php';
+        require_once Core::getPathRoot() . '/Router/Controller/Response/PublicApiControllerUserPasswordCreationSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Router/Controller/Response/PublicApiControllerUserPasswordCreationFailureResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicApiControllerUserRegistrationSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicApiControllerUserRegistrationFailureResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicApiControllerRequestRegistrationInviteSuccessResponse.php';
@@ -114,6 +116,29 @@ abstract class PublicApiControllerAbstract extends AbstractController
         string $password,
         string $passwordConfirmation,
         string $verificationHash,
+        string $languageIsoCode,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /papi/login/password-creation
+     * Method: POST
+     *
+     * @param int $userId
+     * @param string $password
+     * @param string $passwordConfirmation
+     * @param string $verificationHash
+     * @param string $verificationIdentifier
+     * @param string $languageIsoCode
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function userPasswordCreation(
+        int $userId,
+        string $password,
+        string $passwordConfirmation,
+        string $verificationHash,
+        string $verificationIdentifier,
         string $languageIsoCode,
         Request $request
     ): Response;
@@ -487,6 +512,121 @@ abstract class PublicApiControllerAbstract extends AbstractController
         }
     }
 
+    private function validateAndCallUserPasswordCreation(Request $request)
+    {
+        $bodyParams = $request->getBodyPayload();
+        $errors = [];
+
+        if (!isset($bodyParams)) {
+            $errors[] = [
+                'field' => 'payload',
+                'message' => 'required'
+            ];
+        }
+
+        $userId = null;
+        if (!isset($bodyParams['userId'])) {
+            $errors[] = [
+                'field' => 'userId',
+                'message' => 'required'
+            ];
+        } else {
+            $userId = isset($bodyParams['userId'])
+                ? $bodyParams['userId']
+                : null;
+        }
+
+        $password = null;
+        if (!isset($bodyParams['password'])) {
+            $errors[] = [
+                'field' => 'password',
+                'message' => 'required'
+            ];
+        } else {
+            $password = isset($bodyParams['password'])
+                ? $bodyParams['password']
+                : null;
+        }
+
+        $passwordConfirmation = null;
+        if (!isset($bodyParams['passwordConfirmation'])) {
+            $errors[] = [
+                'field' => 'passwordConfirmation',
+                'message' => 'required'
+            ];
+        } else {
+            $passwordConfirmation = isset($bodyParams['passwordConfirmation'])
+                ? $bodyParams['passwordConfirmation']
+                : null;
+        }
+
+        $verificationHash = null;
+        if (!isset($bodyParams['verificationHash'])) {
+            $errors[] = [
+                'field' => 'verificationHash',
+                'message' => 'required'
+            ];
+        } else {
+            $verificationHash = isset($bodyParams['verificationHash'])
+                ? $bodyParams['verificationHash']
+                : null;
+        }
+
+        $verificationIdentifier = null;
+        if (!isset($bodyParams['verificationIdentifier'])) {
+            $errors[] = [
+                'field' => 'verificationIdentifier',
+                'message' => 'required'
+            ];
+        } else {
+            $verificationIdentifier = isset($bodyParams['verificationIdentifier'])
+                ? $bodyParams['verificationIdentifier']
+                : null;
+        }
+
+        $languageIsoCode = null;
+        if (!isset($bodyParams['languageIsoCode'])) {
+            $errors[] = [
+                'field' => 'languageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $languageIsoCode = isset($bodyParams['languageIsoCode'])
+                ? $bodyParams['languageIsoCode']
+                : null;
+        }
+
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->userPasswordCreation(
+                $userId,
+                $password,
+                $passwordConfirmation,
+                $verificationHash,
+                $verificationIdentifier,
+                $languageIsoCode,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicApiControllerAbstract - Method: userPasswordCreation()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
     private function validateAndCallUserRegistration(Request $request)
     {
         $bodyParams = $request->getBodyPayload();
@@ -710,6 +850,16 @@ abstract class PublicApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallUserPasswordReset($request);
+        }
+
+        if ($method === 'POST' &&
+            $this->pathParamsMatcher(
+                ['papi', 'login', 'password-creation'],
+                $pathParts,
+                ['fixed', 'fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallUserPasswordCreation($request);
         }
 
         if ($method === 'POST' &&

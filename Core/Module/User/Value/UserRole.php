@@ -7,13 +7,13 @@ use Amora\Core\Model\Util\LookupTableBasicValue;
 final class UserRole
 {
     const ADMIN = 1;
-    const CUSTOMER = 10;
+    const USER = 10;
 
     public static function getAll(): array
     {
         return [
             self::ADMIN => new LookupTableBasicValue(self::ADMIN, 'Admin'),
-            self::CUSTOMER => new LookupTableBasicValue(self::CUSTOMER, 'Customer'),
+            self::USER => new LookupTableBasicValue(self::USER, 'User'),
         ];
     }
 
