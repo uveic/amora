@@ -10,23 +10,26 @@ use Amora\Core\Util\StringUtil;
 
 $article = $responseData->getFirstArticle();
 
-$updatedAtDate = DateUtil::formatUtcDate(
-    stringDate: $article->getUpdatedAt(),
-    lang: $responseData->getSiteLanguage(),
-    includeTime: true,
-    timezone: $responseData->getTimezone()
-);
+$updatedAtContent = '<span class="article-updated-at"></span>';
 
-$updatedAtEta = DateUtil::getElapsedTimeString(
-    datetime: $article->getUpdatedAt(),
-    language: $responseData->getSiteLanguage(),
-    includePrefixAndOrSuffix: true,
-);
+if ($article) {
+    $updatedAtDate = DateUtil::formatUtcDate(
+        stringDate: $article->getUpdatedAt(),
+        lang: $responseData->getSiteLanguage(),
+        includeTime: true,
+        timezone: $responseData->getTimezone()
+    );
 
-$updatedAtContent = $responseData->getLocalValue('globalUpdated') . ' ' . ($article
-    ? '<span class="article-updated-at" title="' . $updatedAtDate.
-    '">' . $this->e($updatedAtEta) . '</span>.'
-    : '<span class="article-updated-at" title=""></span>');
+    $updatedAtEta = DateUtil::getElapsedTimeString(
+        datetime: $article->getUpdatedAt(),
+        language: $responseData->getSiteLanguage(),
+        includePrefixAndOrSuffix: true,
+    );
+
+    $updatedAtContent = $responseData->getLocalValue('globalUpdated') . ' ' .
+        '<span class="article-updated-at" title="' . $updatedAtDate .
+        '">' . $this->e($updatedAtEta) . '</span>.';
+}
 
 $articleStatusId = $article ? $article->getStatusId() : ArticleStatus::DRAFT;
 $articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::getNameForId($articleStatusId));

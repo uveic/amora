@@ -9,41 +9,41 @@ use Amora\Core\Util\StringUtil;
 $userToEdit = $responseData->getUserToEdit();
 $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
 
-$updatedAtDate = DateUtil::formatUtcDate(
-    stringDate: $userToEdit->getUpdatedAt(),
-    lang: $responseData->getSiteLanguage(),
-    includeTime: true,
-    timezone: $responseData->getTimezone()
-);
+$updatedAtContent = '';
+$createdAtContent = '';
+if ($userToEdit) {
+    $updatedAtDate = DateUtil::formatUtcDate(
+        stringDate: $userToEdit->getUpdatedAt(),
+        lang: $responseData->getSiteLanguage(),
+        includeTime: true,
+        timezone: $responseData->getTimezone()
+    );
 
-$updatedAtEta = DateUtil::getElapsedTimeString(
-    datetime: $userToEdit->getUpdatedAt(),
-    language: $responseData->getSiteLanguage(),
-    includePrefixAndOrSuffix: true
-);
+    $updatedAtEta = DateUtil::getElapsedTimeString(
+        datetime: $userToEdit->getUpdatedAt(),
+        language: $responseData->getSiteLanguage(),
+        includePrefixAndOrSuffix: true
+    );
 
-$createdAtDate = DateUtil::formatUtcDate(
-    stringDate: $userToEdit->getCreatedAt(),
-    lang: $responseData->getSiteLanguage(),
-    includeTime: true,
-    timezone: $responseData->getTimezone()
-);
+    $createdAtDate = DateUtil::formatUtcDate(
+        stringDate: $userToEdit->getCreatedAt(),
+        lang: $responseData->getSiteLanguage(),
+        includeTime: true,
+        timezone: $responseData->getTimezone()
+    );
 
-$createdAtEta = DateUtil::getElapsedTimeString(
-    datetime: $userToEdit->getCreatedAt(),
-    language: $responseData->getSiteLanguage(),
-    includePrefixAndOrSuffix: true
-);
+    $createdAtEta = DateUtil::getElapsedTimeString(
+        datetime: $userToEdit->getCreatedAt(),
+        language: $responseData->getSiteLanguage(),
+        includePrefixAndOrSuffix: true
+    );
 
-$updatedAtContent = $userToEdit
-    ? $responseData->getLocalValue('globalUpdated') .
-        ' <span title="' . $this->e($updatedAtDate) . '">' . $this->e($updatedAtEta) . '</span>.'
-    : '';
+    $updatedAtContent = $responseData->getLocalValue('globalUpdated') .
+        ' <span title="' . $this->e($updatedAtDate) . '">' . $this->e($updatedAtEta) . '</span>.';
 
-$createdAtContent = $userToEdit
-    ? $responseData->getLocalValue('globalCreated') .
-        ' <span title="' . $this->e($createdAtDate) . '">' . $this->e($createdAtEta) . '</span>.'
-    : '';
+    $createdAtContent = $responseData->getLocalValue('globalCreated') .
+        ' <span title="' . $this->e($createdAtDate) . '">' . $this->e($createdAtEta) . '</span>.';
+}
 
 $isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
 $random = StringUtil::getRandomString(5);
