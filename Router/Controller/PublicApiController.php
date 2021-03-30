@@ -265,14 +265,12 @@ final class PublicApiController extends PublicApiControllerAbstract
                 );
             }
 
-            $languageId = Language::getIdForIsoCode($languageIsoCode);
-            $roleId = UserRole::USER;
             $now = DateUtil::getCurrentDateForMySql();
             $user = $this->userService->storeUser(
                 user: new User(
                     id: null,
-                    languageId: $languageId,
-                    roleId: $roleId,
+                    languageId: Language::getIdForIsoCode($languageIsoCode),
+                    roleId: UserRole::USER,
                     journeyStatusId: UserJourneyStatus::REGISTRATION,
                     createdAt: $now,
                     updatedAt: $now,
