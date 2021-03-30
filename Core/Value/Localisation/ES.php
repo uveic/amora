@@ -8,6 +8,7 @@ return [
     'navSignIn' => 'Entra',
     'navSignUp' => 'Regístrate',
     'navChangePassword' => 'Cambiar contraseña',
+    'navCreatePassword' => 'Crear contraseña',
     'navDownloadAccountData' => 'Descargar tus datos',
     'navDeleteAccount' => 'Eliminar cuenta',
     'navAdminDashboard' => 'Escritorio',
@@ -32,6 +33,7 @@ return [
     'authenticationEmailVerifiedError' => 'El enlace para verificar tu correo electrónico no es válido.',
     'authenticationEmailVerifiedExpired' => 'El enlace para verificar tu correo electrónico ha caducado. Por favor, inicia el proceso de nuevo.',
     'authenticationPasswordResetLinkError' => 'El enlace para cambiar tu contraseña no es válido. Inicia el proceso de cambio de contraseña de nuevo.',
+    'authenticationPasswordCreationLinkError' => 'El enlace para crear tu contraseña no es válido. Por favor, cambia tu contraseña o contacta con el/la administrador/a de la página.',
     'authenticationEmailAndOrPassNotValid' => 'Correo electrónico y/o contresña no válidos.',
     'authenticationEmailNotValid' => 'Correo electrónico no válido.',
     'authenticationUserRegistrationDisabled' => 'El registro de usuarios no está habilitado. Ponte en contacto con el administrador de la web.',
@@ -42,6 +44,8 @@ return [
     'authenticationPasswordResetSubtitle' => 'Cambia tu contraseña',
     'authenticationPasswordResetActionSuccess' => 'Se ha cambiado la contraseña correctamente.',
     'authenticationPasswordResetAlreadyLogin' => '¿Quieres <a href="%s">entrar en tu cuenta</a> sin cambiar tu contraseña?',
+    'authenticationPasswordCreateSubtitle' => 'Crea tu contraseña',
+    'authenticationPasswordCreationActionSuccess' => 'Contraseña creada correctamente.',
 
     'authenticationInviteRequest' => 'Consigue una invitación',
     'authenticationInviteRequestSubtitle' => 'La web está actualmente en beta privada, estamos trajando para asegurarnos de que todo funciona correctamente. Tenemos muchas ganas de que esté lista para que la puedas utilizar. Déjanos tu correo y te enviaremos una invitación tan pronto como sea posible. Solo utilizaremos tu correo para enviarte la invitación. <br>¡Gracias por tu paciencia!',
@@ -49,12 +53,13 @@ return [
     'authenticationInviteRequestHomeLink' => 'Volver a la página principal',
     'authenticationInviteRequestFormAction' => 'Pedir una invitación',
     'authenticationVerifyEmailBanner' => 'Por favor, verifica tu cuenta siguiendo las instruciones que te enviamos en un correo a <b>%s</b>. Si no lo has recibido revisa la carpeta de correo basura o <a class="verified-link" data-user-id="$d" href="#">haz clic aquí</a> y te enviaremos otro. Puedes <a href="/es/account">modificar tu dirección de correo</a> si fuese necesario.',
-    'authenticationPassNotValid' => 'La contraseña no es correcta.',
+    'authenticationPassNotValid' => 'La contraseña actual no es correcta.',
 
     'formYourAccount' => 'Tu cuenta',
-    'formPlaceholderUserName' => 'Tu nombre',
+    'formPlaceholderUserName' => 'Nombre',
     'formPlaceholderUserHelp' => 'Mínimo tres letras',
     'formEmail' => 'Tu correo electrónico',
+    'formEmailNewUserHelp' => 'Se le enviará un correo electrónico para crear la contraseña una vez guardado.',
     'formPlaceholderEmail' => 'nombre@ejemplo.com',
     'formEmailUpdateWarning' => 'Por favor, verifica tu nuevo correo electrónico (%s) para cambiarlo.',
     'formPlaceholderPassword' => 'Tu contraseña',
@@ -63,6 +68,7 @@ return [
     'formPlaceholderPasswordConfirmation' => 'Repite la contraseña',
     'formLoginAction' => 'Entrar',
     'formPasswordResetAction' => 'Cambiar contraseña',
+    'formPasswordCreateAction' => 'Crear contraseña',
     'formArticleUri' => 'URI del artículo',
     'formTimezone' => 'Zona horaria',
 
@@ -82,6 +88,7 @@ return [
     'globalTitle' => 'Título',
     'globalName' => 'Nombre',
     'globalEmail' => 'Correo electrónico',
+    'globalPassword' => 'Contraseña',
     'globalLanguage' => 'Idioma',
     'globalRole' => 'Rol',
     'globalTimezone' => 'Zona horaria',
@@ -115,7 +122,7 @@ return [
     'globalAddVideo' => 'Añadir vídeo',
     'globalAddHtml' => 'Añadir HTML',
 
-    'globalGenericError' => 'Ha ocurrido un error inesperado, por favor inténtalo de nuevo',
+    'globalGenericError' => 'Ha ocurrido un error inesperado, por favor inténtalo de nuevo.',
 
     'articleEditHomepageTitle' => 'Editar el contenido de la portada',
     'articleStatusDraft' => 'Borrador',
@@ -127,6 +134,9 @@ return [
     'articleTypeArticle' => 'Artículo',
     'paragraphPlaceholder' => 'Escribe aquí...',
 
+    'userRoleAdmin' => 'Administrador/a',
+    'userRoleUser' => 'Usuario/a',
+
     'sectionRemove' => 'Eliminar sección',
     'sectionMoveUp' => 'Mover para arriba',
     'sectionMoveDown' => 'Mover para abajo',
@@ -135,17 +145,23 @@ return [
     'emailConfirmationContent' => '<p>¡Bienvenido/a!</p>' .
         '<p>Por favor, confirma tu correo electrónico haciendo clic en el siguiente enlace.</p>' .
         '<p><a href="%s">Confirmar correo electrónico</a></p>' .
-        '<p>Gracias,<br>%s</p>',
+        '<p>%s</p>',
     'emailUpdateVerificationSubject' => 'Verifica tu correo electrónico',
     'emailUpdateVerificationContent' => '<p>Hola,</p>' .
         '<p>Hemos recibido una petición de cambio de correo electrónico en tu cuenta de %s.</p>' .
         '<p>Si no has sido tú el que ha hecho esta petición puedes ignorar este correo. En caso contrario, haz clic en el siguiente enlace para confirmar tu nuevo correo:</p>' .
         '<p><a href="%s">Confirma tu correo electrónico</a></p>' .
-        '<p>Saludos,<br>%s</p>',
+        '<p>%s</p>',
     'emailPasswordChangeSubject' => '%s: cambiar contraseña',
     'emailPasswordChangeContent' => '<p>Hola,</p>' .
         '<p>Hemos recibido una petición de cambio de contraseña en tu cuenta de %s.</p>' .
         '<p>Si no has hecho tú esta petición puedes ignorar este correo electrónico. En caso contrario, haz clic en el siguiente enlace para cambiar tu contraseña:</p>' .
         '<p><a href="%s">Cambiar contraseña</a></p>' .
-        '<p>Saludos,<br>%s</p>',
+        '<p>%s</p>',
+    'emailPasswordCreationSubject' => 'Tu nueva cuenta en %s',
+    'emailPasswordCreationContent' => '<p>Hola %s,</p>' .
+        '<p>Haz clic en el siguiente enlace para crear tu contraseña de tu nueva cuenta en %s.</p>' .
+        '<p>Usuario: %s</p>' .
+        '<p><a href="%s">Crear contraseña</a></p>' .
+        '<p>%s</p>',
 ];

@@ -30,11 +30,7 @@ class UserMailService
         UserVerification $verification,
         MailerItem $mailerItem
     ): bool {
-        $this->userDataLayer->disableVerificationDataForUserId(
-            $user->getId(),
-            $verification->getTypeId()
-        );
-
+        $this->userDataLayer->disableVerificationDataForUserId($user->getId());
         $res = $this->userDataLayer->storeUserVerification($verification);
 
         if (empty($res)) {
@@ -138,12 +134,43 @@ class UserMailService
         return $res->isSuccess();
     }
 
+    public function sendPasswordCreationEmail(User $user): bool
+    {
+        $verificationIdentifier = $this->getUniqueVerificationIdentifier();
+        $verification = new UserVerification(
+            id: null,
+            userId: $user->getId(),
+            typeId: VerificationType::PASSWORD_CREATION,
+            email: null,
+            createdAt: DateUtil::getCurrentDateForMySql(),
+            verifiedAt: null,
+            verificationIdentifier: $verificationIdentifier,
+            isEnabled: true
+        );
+
+        $mailerItem = $this->buildPasswordCreationEmail(
+            $user,
+            $verificationIdentifier
+        );
+
+        $resEmail = $this->sendEmailAndDisablePreviousVerifications(
+            user: $user,
+            verification: $verification,
+            mailerItem: $mailerItem
+        );
+
+        if (!$resEmail) {
+            return false;
+        }
+
+        return true;
+    }
+
     private function buildPasswordResetEmail(User $user, string $verificationIdentifier): MailerItem
     {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode)
-            . '/user/reset/' . $verificationIdentifier;
+        $linkUrl = UrlBuilderUtil::getPasswordResetUrl($languageIsoCode, $verificationIdentifier);
         $siteName = $localisationUtil->getValue('siteName');
         $emailSubject = sprintf(
             $localisationUtil->getValue('emailPasswordChangeSubject'),
@@ -177,8 +204,10 @@ class UserMailService
     ): MailerItem {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode)
-            . '/user/verify/' . $verificationIdentifier;
+        $linkUrl = UrlBuilderUtil::getVerificationEmailUrl(
+            $languageIsoCode,
+            $verificationIdentifier
+        );
         $siteName = $localisationUtil->getValue('siteName');
 
         $emailSubject = sprintf(
@@ -192,16 +221,16 @@ class UserMailService
         );
 
         return new MailerItem(
-            null,
-            MailerTemplate::ACCOUNT_VERIFICATION,
-            null,
-            null,
-            $emailToVerify,
-            $user->getName(),
-            $emailSubject,
-            $emailContent,
-            null,
-            DateUtil::getCurrentDateForMySql()
+            id: null,
+            templateId: MailerTemplate::ACCOUNT_VERIFICATION,
+            replyToEmailAddress: null,
+            senderName: null,
+            receiverEmailAddress: $emailToVerify,
+            receiverName: $user->getName(),
+            subject: $emailSubject,
+            contentHtml: $emailContent,
+            fieldsJson: null,
+            createdAt: DateUtil::getCurrentDateForMySql()
         );
     }
 
@@ -212,8 +241,7 @@ class UserMailService
     ): MailerItem {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode)
-            . '/user/verify/' . $verificationIdentifier;
+        $linkUrl = UrlBuilderUtil::getEmailUpdateUrl($languageIsoCode, $verificationIdentifier);
         $siteName = $localisationUtil->getValue('siteName');
 
         $emailSubject = $localisationUtil->getValue('emailUpdateVerificationSubject');
@@ -225,16 +253,52 @@ class UserMailService
         );
 
         return new MailerItem(
-            null,
-            MailerTemplate::ACCOUNT_VERIFICATION,
-            null,
-            null,
-            $emailToVerify,
+            id: null,
+            templateId: MailerTemplate::ACCOUNT_VERIFICATION,
+            replyToEmailAddress: null,
+            senderName: null,
+            receiverEmailAddress: $emailToVerify,
+            receiverName: $user->getName(),
+            subject: $emailSubject,
+            contentHtml: $emailContent,
+            fieldsJson: null,
+            createdAt: DateUtil::getCurrentDateForMySql()
+        );
+    }
+
+    private function buildPasswordCreationEmail(
+        User $user,
+        string $verificationIdentifier
+    ): MailerItem {
+        $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
+        $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
+        $linkUrl = UrlBuilderUtil::getCreatePasswordUrl($languageIsoCode, $verificationIdentifier);
+        $siteName = $localisationUtil->getValue('siteName');
+
+        $emailSubject = sprintf(
+            $localisationUtil->getValue('emailPasswordCreationSubject'),
+            $siteName
+        );
+        $emailContent = sprintf(
+            $localisationUtil->getValue('emailPasswordCreationContent'),
             $user->getName(),
-            $emailSubject,
-            $emailContent,
-            null,
-            DateUtil::getCurrentDateForMySql()
+            $siteName,
+            $user->getEmail(),
+            $linkUrl,
+            $siteName,
+        );
+
+        return new MailerItem(
+            id: null,
+            templateId: MailerTemplate::PASSWORD_CREATION,
+            replyToEmailAddress: null,
+            senderName: null,
+            receiverEmailAddress: $user->getEmail(),
+            receiverName: $user->getName(),
+            subject: $emailSubject,
+            contentHtml: $emailContent,
+            fieldsJson: null,
+            createdAt: DateUtil::getCurrentDateForMySql()
         );
     }
 

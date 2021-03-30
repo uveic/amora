@@ -214,7 +214,47 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navChangePassword'),
                 verificationHash: $user->getValidationHash(),
-                forgotPasswordUserId: $user->getId()
+                passwordUserId: $user->getId()
+            )
+        );
+    }
+
+    /**
+     * Endpoint: /user/create/{verificationIdentifier}
+     * Method: GET
+     *
+     * @param string $verificationIdentifier
+     * @param Request $request
+     * @return Response
+     */
+    protected function getCreateUserPasswordHtml(
+        string $verificationIdentifier,
+        Request $request
+    ): Response {
+        $res = $this->userService->validateCreateUserPasswordPage($verificationIdentifier);
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+
+        if (empty($res)) {
+            return Response::createFrontendPublicHtmlResponse(
+                'shared/home',
+                new HtmlHomepageResponseData(
+                    request: $request,
+                    userFeedback: new UserFeedback(
+                        false,
+                        $localisationUtil->getValue('authenticationPasswordCreationLinkError')
+                    )
+                )
+            );
+        }
+
+        $user = $this->userService->getUserForId($res->getUserId());
+        return Response::createFrontendPublicHtmlResponse(
+            'shared/password-creation',
+            new HtmlResponseData(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navCreatePassword'),
+                verificationHash: $user->getValidationHash(),
+                passwordUserId: $user->getId()
             )
         );
     }

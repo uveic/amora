@@ -120,6 +120,8 @@ if (formPasswordReset) {
     const password = document.querySelector('form#form-password-reset input[name="password"]');
     const passwordConfirmation = document.querySelector('form#form-password-reset input[name="passwordConfirmation"]');
     const verificationHash = document.querySelector('form#form-password-reset input[name="verificationHash"]');
+    const postUrl = document.querySelector('form#form-password-reset input[name="postUrl"]').value;
+    const verificationIdentifier = window.location.pathname.split('/').pop();
 
     if (password.value.length < 10) {
       loginFailureFeedback.textContent = global.get('feedbackPasswordTooShort');
@@ -144,10 +146,11 @@ if (formPasswordReset) {
       'password': password.value,
       'passwordConfirmation': passwordConfirmation.value,
       'verificationHash': verificationHash.value,
+      'verificationIdentifier': verificationIdentifier,
       'languageIsoCode': siteLanguage
     };
 
-    xhr.post('/papi/login/password-reset', JSON.stringify(data))
+    xhr.post(postUrl, JSON.stringify(data))
       .then(() => {
         document.querySelector('div#password-reset-form').classList.add('null');
         document.querySelector('div#password-reset-success').classList.remove('null');

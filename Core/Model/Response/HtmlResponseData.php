@@ -15,7 +15,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         protected ?array $articles = [],
         protected ?UserFeedback $userFeedback = null,
         protected ?string $verificationHash = null,
-        private ?int $forgotPasswordUserId = null
+        private ?int $passwordUserId = null
     ) {
         parent::__construct($request, $pageTitle, $pageDescription, $mainImageSiteUri);
     }
@@ -36,9 +36,9 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         return $this->userFeedback;
     }
 
-    public function getForgotPasswordUserId(): ?int
+    public function getPasswordUserId(): ?int
     {
-        return $this->forgotPasswordUserId;
+        return $this->passwordUserId;
     }
 
     public function getUserName(): ?string

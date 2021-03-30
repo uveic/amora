@@ -83,7 +83,7 @@ UserCore::getDb()->withTransaction(function() use ($logger, $email, $name, $pass
             null,
             Language::ENGLISH,
             UserRole::ADMIN,
-            UserJourneyStatus::getInitialJourneyIdFromRoleId(UserRole::ADMIN),
+            UserJourneyStatus::REGISTRATION,
             $now,
             $now,
             $email,

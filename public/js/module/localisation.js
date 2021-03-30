@@ -11,8 +11,8 @@ class Global {
 
   values = {
     "en": {
-      "genericError": "Something went wrong, please try again",
-      "genericErrorGetInTouch": "Please, refresh page and try it again. Get in touch with support if the error persists. Error: ",
+      "genericError": "Something went wrong, please try again.",
+      "genericErrorGetInTouch": "An unexpected error has occurred. Please, refresh the page and try it again. Get in touch with support if the error persists. Error: ",
       "feedbackSaving": "Nothing to save...",
 
       "globalRemove": "Remove",
@@ -57,8 +57,8 @@ class Global {
       "editorSection:MoveDown": "Move Down"
     },
     "es": {
-      "genericError": "Ha ocurrido un error inesperado, por favor inténtalo de nuevo",
-      "genericErrorGetInTouch": "Por favor, actualiza la página e intétalo de nuevo. Ponte en contacto con el soporte técnico si el error continúa. Error: ",
+      "genericError": "Ha ocurrido un error inesperado, por favor inténtalo de nuevo.",
+      "genericErrorGetInTouch": "Ha ocurrido un error inesperado. Por favor, actualiza la página e intétalo de nuevo. Ponte en contacto con el soporte técnico si el error continúa. Error: ",
       "feedbackSaving": "Nada que guardar...",
 
       "globalRemove": "Eliminar",
@@ -103,8 +103,8 @@ class Global {
       "editorSection:MoveDown": "Mover para abajo"
     },
     "gl": {
-      "genericError": "Algo non foi ben, por favor inténtao de novo",
-      "genericErrorGetInTouch": "Por favor, actualiza a páxina e inténtao de novo. Ponte en contacto co soporte técnico se o erro persiste. Erro: ",
+      "genericError": "Algo non foi ben, por favor inténtao de novo.",
+      "genericErrorGetInTouch": "Erro inesperado. Por favor, actualiza a páxina e inténtao de novo. Ponte en contacto co soporte técnico se o erro persiste. Erro: ",
       "feedbackSaving": "Nada que gardar...",
 
       "globalRemove": "Eliminar",

@@ -5,11 +5,9 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 
-$titleHtml = $responseData->getLocalValue('authenticationPasswordResetSubtitle');
-$subtitleHtml = sprintf(
-    $responseData->getLocalValue('authenticationPasswordResetAlreadyLogin'),
-    $responseData->getBaseUrlWithLanguage() . 'login'
-);
+$titleHtml = $responseData->getLocalValue('authenticationPasswordCreateSubtitle');
+$subtitleHtml = '';
+$buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink');
 
 ?>
 <!DOCTYPE html>
@@ -23,7 +21,7 @@ $subtitleHtml = sprintf(
     <form method="POST" id="form-password-reset">
       <input class="input" type="hidden" id="userId" name="userId" value="<?=$responseData->getPasswordUserId()?>">
       <input class="input" type="hidden" id="verificationHash" name="verificationHash" value="<?=$responseData->getVerificationHash()?>">
-      <input class="input" type="hidden" id="postUrl" name="postUrl" value="<?= UrlBuilderUtil::PUBLIC_API_PASSWORD_RESET?>">
+      <input class="input" type="hidden" id="postUrl" name="postUrl" value="<?= UrlBuilderUtil::PUBLIC_API_PASSWORD_CREATION?>">
       <div>
         <h1 id="register-title" class="m-b-6"><?=$this->e($responseData->getSiteName())?></h1>
         <h2 id="register-subtitle"><?=$titleHtml?></h2>
@@ -43,13 +41,13 @@ $subtitleHtml = sprintf(
           <div id="login-failure-message" class="field is-failure null"></div>
           <div class="field">
             <p class="control">
-              <input class="button is-success" type="submit" value="<?=$responseData->getLocalValue('formPasswordResetAction')?>">
+              <input class="button is-success" type="submit" value="<?=$responseData->getLocalValue('formPasswordCreateAction')?>">
             </p>
           </div>
         </div>
       </div>
       <div id="password-reset-success" class="field null">
-        <p class="m-b-3"><?=$responseData->getLocalValue('authenticationPasswordResetActionSuccess')?></p>
+        <p class="m-b-3"><?=$responseData->getLocalValue('authenticationPasswordCreationActionSuccess')?></p>
         <a class="button is-success" href="<?=$responseData->getBaseUrlWithLanguage()?>login"><?=$responseData->getLocalValue('authenticationActionHomeLink')?></a>
       </div>
     </form>

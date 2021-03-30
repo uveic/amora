@@ -113,6 +113,7 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseDataAuthorised.php';
                 require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
                 require_once self::getPathRoot() . '/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Router/Controller/BackofficeHtmlControllerAbstract.php';

@@ -7,6 +7,7 @@ use Amora\Core\Logger;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserRegistrationRequest;
 use Amora\Core\Module\User\Model\UserVerification;
+use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\DateUtil;
 
 class UserDataLayer
@@ -145,20 +146,18 @@ class UserDataLayer
         return $data;
     }
 
-    public function disableVerificationDataForUserId(int $userId, int $typeId): bool
+    public function disableVerificationDataForUserId(int $userId): bool
     {
-        $sql = '
-            UPDATE ' . self::USER_VERIFICATION_TABLE . '
-            SET is_enabled = 0
-            WHERE user_id = :user_id
-                AND type_id = :type_id
-        ';
-
-        $params = [
-            ':user_id' => $userId,
-            ':type_id' => $typeId
-        ];
-        return $this->db->execute($sql, $params);
+        return $this->db->execute(
+            '
+                UPDATE ' . self::USER_VERIFICATION_TABLE . '
+                SET is_enabled = 0
+                WHERE user_id = :userId
+            ',
+            [
+                ':userId' => $userId,
+            ]
+        );
     }
 
     public function getUserVerification(
@@ -241,6 +240,18 @@ class UserDataLayer
             $userId,
             [
                 'password_hash' => $hashedPassword,
+                'updated_at' => DateUtil::getCurrentDateForMySql(),
+            ]
+        );
+    }
+
+    public function updateUserJourney(int $userId, int $userJourneyId): bool
+    {
+        return $this->db->update(
+            self::USER_TABLE,
+            $userId,
+            [
+                'journey_id' => $userJourneyId,
                 'updated_at' => DateUtil::getCurrentDateForMySql(),
             ]
         );

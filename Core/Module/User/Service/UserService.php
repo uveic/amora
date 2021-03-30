@@ -4,6 +4,7 @@ namespace Amora\Core\Module\User\Service;
 
 use Amora\Core\Core;
 use Amora\Core\Database\Model\TransactionResponse;
+use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Util\LocalisationUtil;
 use DateTime;
 use DateTimeZone;
@@ -40,9 +41,28 @@ class UserService
         $this->userMailService = $userMailService;
     }
 
-    public function storeUser(User $user): User
+    public function storeUser(User $user, bool $sendPasswordCreationEmail = false): ?User
     {
-        return $this->userDataLayer->createNewUser($user);
+        $res = $this->userDataLayer->getDb()->withTransaction(
+            function () use ($user, $sendPasswordCreationEmail) {
+                $resUser = $this->userDataLayer->createNewUser($user);
+                if (empty($resUser)) {
+                    return new TransactionResponse(false);
+                }
+
+                if ($sendPasswordCreationEmail) {
+                    $resEmail = $this->userMailService->sendPasswordCreationEmail($resUser);
+
+                    if (!$resEmail) {
+                        return new TransactionResponse(false);
+                    }
+                }
+
+                return new TransactionResponse(true, $resUser);
+            }
+        );
+
+        return $res->isSuccess() ? $res->getResponse() : null;
     }
 
     public function deleteUser(User $user): bool
@@ -85,8 +105,16 @@ class UserService
 
     public function verifyUser(string $email, string $unHashedPassword): ?User
     {
+        if (empty($unHashedPassword)) {
+            return null;
+        }
+
         $res = $this->userDataLayer->getUserForEmail($email);
         if (empty($res)) {
+            return null;
+        }
+
+        if (empty($res->getPasswordHash())) {
             return null;
         }
 
@@ -201,7 +229,7 @@ class UserService
             VerificationType::EMAIL_ADDRESS
         );
 
-        if (empty($verification)) {
+        if (empty($verification) || !$verification->isEnabled()) {
             return new UserFeedback(false, $localisationUtil->getValue('globalGenericError'));
         }
 
@@ -252,7 +280,28 @@ class UserService
             true
         );
 
-        if (empty($verification)) {
+        if (empty($verification) || !$verification->isEnabled()) {
+            return null;
+        }
+
+        $user = $this->getUserForId($verification->getUserId());
+        if (empty($user)) {
+            return null;
+        }
+
+        return $verification;
+    }
+
+    public function validateCreateUserPasswordPage(
+        string $verificationIdentifier
+    ): ?UserVerification {
+        $verification = $this->userDataLayer->getUserVerification(
+            $verificationIdentifier,
+            VerificationType::PASSWORD_CREATION,
+            true
+        );
+
+        if (empty($verification) || !$verification->isEnabled()) {
             return null;
         }
 
@@ -270,6 +319,48 @@ class UserService
             $userId,
             StringUtil::hashPassword($newPassword)
         );
+    }
+
+    public function workflowCreatePassword(
+        User $user,
+        string $verificationIdentifier,
+        string $newPassword
+    ): bool {
+        $res = $this->userDataLayer->getDb()->withTransaction(
+            function () use ($user, $verificationIdentifier, $newPassword) {
+                $updateRes = $this->userDataLayer->updatePassword(
+                    $user->getId(),
+                    StringUtil::hashPassword($newPassword)
+                );
+
+                if (!$updateRes) {
+                    return new TransactionResponse(false);
+                }
+
+                $verification = $this->userDataLayer->getUserVerification(
+                    $verificationIdentifier,
+                    VerificationType::PASSWORD_CREATION
+                );
+
+                if (empty($verification) || !$verification->isEnabled()) {
+                    return new TransactionResponse(false);
+                }
+
+                $markRes = $this->userDataLayer->markUserAsVerified($user, $verification);
+                if (empty($markRes)) {
+                    return new TransactionResponse(false);
+                }
+
+                $journeyRes = $this->userDataLayer->updateUserJourney(
+                    $user->getId(),
+                    UserJourneyStatus::REGISTRATION
+                );
+
+                return new TransactionResponse($journeyRes);
+            }
+        );
+
+        return $res->isSuccess();
     }
 
     public function workflowUpdateUser(
