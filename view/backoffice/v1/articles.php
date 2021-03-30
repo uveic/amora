@@ -10,7 +10,7 @@ $this->layout('base', ['responseData' => $responseData,])
 
 ?>
   <main>
-    <section class="content">
+    <section>
       <div class="form-header m-r-1 m-l-1">
         <h1><?=$responseData->getLocalValue('navAdminArticles')?></h1>
         <div class="links">

@@ -11,7 +11,7 @@ $this->layout('base', ['responseData' => $responseData,])
 
 ?>
   <main>
-    <section class="content">
+    <section>
       <div class="form-header m-r-1 m-l-1">
         <h1>Users</h1>
         <div class="links">

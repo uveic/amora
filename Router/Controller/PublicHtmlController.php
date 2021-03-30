@@ -124,7 +124,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
+                $session->isAdmin()
+                    ? UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
+                    : UrlBuilderUtil::getAppDashboardUrl($request->getSiteLanguage())
             );
         }
 
