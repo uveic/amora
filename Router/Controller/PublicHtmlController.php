@@ -65,13 +65,13 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $session = $request->getSession();
         if ($session && $session->isAdmin()) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getAdminDashboardUrl($request->getSiteLanguage())
+                UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
             );
         }
 
         if ($session && $session->isAuthenticated()) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getUserDashboardUrl($request->getSiteLanguage())
+                UrlBuilderUtil::getAppDashboardUrl($request->getSiteLanguage())
             );
         }
 
@@ -96,15 +96,17 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $session = $request->getSession();
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
-            $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
-            return Response::createRedirectResponse($baseLinkUrl . '/backoffice/dashboard');
+            return Response::createRedirectResponse(
+                UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
+            );
         }
 
         return Response::createFrontendPublicHtmlResponse(
             'shared/login-forgot',
             new HtmlResponseData(
                 $request,
-                Core::getLocalisationUtil($request->getSiteLanguage())->getValue('authenticationForgotPassword')
+                Core::getLocalisationUtil($request->getSiteLanguage())
+                    ->getValue('authenticationForgotPassword')
             )
         );
     }
@@ -121,20 +123,22 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $session = $request->getSession();
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
-            $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
-            return Response::createRedirectResponse($baseLinkUrl . '/backoffice/dashboard');
+            return Response::createRedirectResponse(
+                UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
+            );
         }
 
         $isRegistrationEnabled = Core::getConfigValue('registrationEnabled');
         if (!$isRegistrationEnabled) {
             $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
             if ($isInvitationEnabled) {
-                $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
-                return Response::createRedirectResponse($baseLinkUrl . '/invite-request');
+                return Response::createRedirectResponse(
+                    UrlBuilderUtil::getPublicInviteRequestUrl($request->getSiteLanguage())
+                );
             }
 
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage())
+                UrlBuilderUtil::getPublicHomepageUrl($request->getSiteLanguage())
             );
         }
 
@@ -276,15 +280,16 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $session = $request->getSession();
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
-            $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
-            return Response::createRedirectResponse($baseLinkUrl . '/backoffice/dashboard');
+            return Response::createRedirectResponse(
+                UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
+            );
         }
 
 
         $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
         if (!$isInvitationEnabled) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage())
+                UrlBuilderUtil::getPublicHomepageUrl($request->getSiteLanguage())
             );
         }
 

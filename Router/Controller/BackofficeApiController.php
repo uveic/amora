@@ -137,10 +137,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
         return new BackofficeApiControllerStoreUserSuccessResponse(
             true,
-            $baseLinkUrl . UrlBuilderUtil::BACKOFFICE_USERS
+            UrlBuilderUtil::getBackofficeUsersUrl($request->getSiteLanguage())
         );
     }
 
@@ -201,10 +200,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
         return new BackofficeApiControllerUpdateUserSuccessResponse(
             true,
-            $baseLinkUrl . UrlBuilderUtil::BACKOFFICE_USERS
+            UrlBuilderUtil::getBackofficeUsersUrl($request->getSiteLanguage())
         );
     }
 

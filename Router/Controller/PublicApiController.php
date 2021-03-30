@@ -174,12 +174,11 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode);
         return new PublicApiControllerUserLoginSuccessResponse(
             true,
             $session->isAdmin()
-                ? $baseLinkUrl . UrlBuilderUtil::BACKOFFICE_DASHBOARD_URL_PATH
-                : $baseLinkUrl . UrlBuilderUtil::APP_DASHBOARD_URL_PATH
+                ? UrlBuilderUtil::getBackofficeDashboardUrl($languageIsoCode)
+                : UrlBuilderUtil::getAppDashboardUrl($languageIsoCode)
         );
     }
 
@@ -261,7 +260,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                     null,
                     sprintf(
                         $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
-                        UrlBuilderUtil::getBaseLinkUrl($languageIsoCode) . '/login'
+                        UrlBuilderUtil::getPublicLoginUrl($languageIsoCode)
                     )
                 );
             }
@@ -296,12 +295,11 @@ final class PublicApiController extends PublicApiControllerAbstract
                 $request->getUserAgent()
             );
 
-            $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode);
             return new PublicApiControllerUserRegistrationSuccessResponse(
                 $res,
                 $session->isAdmin()
-                    ? $baseLinkUrl . UrlBuilderUtil::BACKOFFICE_DASHBOARD_URL_PATH
-                    : $baseLinkUrl . UrlBuilderUtil::APP_DASHBOARD_URL_PATH
+                    ? UrlBuilderUtil::getBackofficeDashboardUrl($languageIsoCode)
+                    : UrlBuilderUtil::getAppDashboardUrl($languageIsoCode)
             );
         } catch (Throwable $t) {
             $this->logger->logError('Error registering user: ' . $t->getMessage());
