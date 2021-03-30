@@ -41,21 +41,28 @@ class UserService
         $this->userMailService = $userMailService;
     }
 
-    public function storeUser(User $user, bool $sendPasswordCreationEmail = false): ?User
+    public function storeUser(User $user, ?int $verificationEmailId = null): ?User
     {
         $res = $this->userDataLayer->getDb()->withTransaction(
-            function () use ($user, $sendPasswordCreationEmail) {
+            function () use ($user, $verificationEmailId) {
                 $resUser = $this->userDataLayer->createNewUser($user);
                 if (empty($resUser)) {
                     return new TransactionResponse(false);
                 }
 
-                if ($sendPasswordCreationEmail) {
-                    $resEmail = $this->userMailService->sendPasswordCreationEmail($resUser);
+                $resEmail = match ($verificationEmailId) {
+                    VerificationType::PASSWORD_CREATION =>
+                        $this->userMailService->sendPasswordCreationEmail($resUser),
+                    VerificationType::EMAIL_ADDRESS =>
+                        $this->userMailService->sendVerificationEmail(
+                            $resUser,
+                            $resUser->getEmail()
+                        ),
+                    default => true
+                };
 
-                    if (!$resEmail) {
-                        return new TransactionResponse(false);
-                    }
+                if (!$resEmail) {
+                    return new TransactionResponse(false);
                 }
 
                 return new TransactionResponse(true, $resUser);

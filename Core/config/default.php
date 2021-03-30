@@ -11,7 +11,7 @@ return [
     'mediaBaseUrl' => '/uploads/',
     'actionLoggerEnabled' => true,
     'registrationEnabled' => false,
-    'invitationEnabled' => true,
+    'invitationEnabled' => false,
     'tagIdsForHomepage' => [-1],
     'database' => [
         'core' => [

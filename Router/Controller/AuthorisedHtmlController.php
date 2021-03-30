@@ -42,6 +42,25 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     }
 
     /**
+     * Endpoint: /dashboard
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getAppDashboardHtml(Request $request): Response
+    {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        return Response::createFrontendPrivateHtmlResponse(
+            'dashboard',
+            new HtmlResponseData(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navDashboard')
+            )
+        );
+    }
+
+    /**
      * Endpoint: /logout
      * Method: GET
      *
@@ -68,8 +87,8 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
         return Response::createFrontendPrivateHtmlResponse(
             'account',
             new HtmlResponseData(
-                $request,
-                $localisationUtil->getValue('globalUserAccount')
+                request: $request,
+                pageTitle: $localisationUtil->getValue('globalUserAccount')
             )
         );
     }
@@ -88,8 +107,8 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
         return Response::createFrontendPrivateHtmlResponse(
             'account',
             new HtmlResponseData(
-                $request,
-                $localisationUtil->getValue('globalUserAccount')
+                request: $request,
+                pageTitle: $localisationUtil->getValue('globalUserAccount')
             )
         );
     }

@@ -2,6 +2,7 @@
 
 namespace Amora\Router;
 
+use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\UrlBuilderUtil;
 use Throwable;
 use Amora\Core\Core;
@@ -126,7 +127,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                     verified: false,
                     timezone: $timezone
                 ),
-                sendPasswordCreationEmail: true,
+                verificationEmailId: VerificationType::PASSWORD_CREATION,
             );
         } catch (Throwable $t) {
             $this->logger->logError('Error creating new user: ' . $t->getMessage());

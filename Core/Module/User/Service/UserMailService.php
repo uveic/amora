@@ -185,7 +185,7 @@ class UserMailService
 
         return new MailerItem(
             null,
-            MailerTemplate::ACCOUNT_VERIFICATION,
+            MailerTemplate::PASSWORD_RESET,
             null,
             null,
             $user->getEmail(),

@@ -68,8 +68,6 @@ class Router
         $authorisedHtmlControllerActions = [
             'logout' => true,
             'dashboard' => true,
-            'invitation' => true,
-            'guests' => true,
             'account' => true,
         ];
 

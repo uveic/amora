@@ -10,6 +10,7 @@ final class MailerTemplate
 
     const ACCOUNT_VERIFICATION = 2000;
     const PASSWORD_CREATION = 2001;
+    const PASSWORD_RESET = 2002;
 
     public static function getAll(): array
     {
@@ -25,6 +26,10 @@ final class MailerTemplate
             self::PASSWORD_CREATION => new LookupTableBasicValue(
                 self::PASSWORD_CREATION,
                 'Password Creation'
+            ),
+            self::PASSWORD_RESET => new LookupTableBasicValue(
+                self::PASSWORD_RESET,
+                'Password Reset'
             ),
         ];
     }
