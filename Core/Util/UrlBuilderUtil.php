@@ -13,7 +13,10 @@ final class UrlBuilderUtil
     const PUBLIC_API_PASSWORD_RESET = '/papi/login/password-reset';
     const PUBLIC_API_PASSWORD_CREATION = '/papi/login/password-creation';
 
-    public static function getBaseLinkUrl(string $siteLanguage): string
+    const PUBLIC_HTML_INVITE_REQUEST = '/invite-request';
+    const PUBLIC_HTML_LOGIN = '/login';
+
+    private static function getBaseLinkUrl(string $siteLanguage): string
     {
         $baseUrl = Core::getConfigValue('baseUrl');
         $siteLanguage = strtolower($siteLanguage);
@@ -50,13 +53,33 @@ final class UrlBuilderUtil
         return self::getBaseLinkUrl($languageIsoCode) . '/user/reset/' . $verificationIdentifier;
     }
 
-    public static function getAdminDashboardUrl(string $languageIsoCode): string
+    public static function getBackofficeDashboardUrl(string $languageIsoCode): string
     {
         return self::getBaseLinkUrl($languageIsoCode) . self::BACKOFFICE_DASHBOARD_URL_PATH;
     }
 
-    public static function getUserDashboardUrl(string $languageIsoCode): string
+    public static function getBackofficeUsersUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . self::BACKOFFICE_USERS;
+    }
+
+    public static function getAppDashboardUrl(string $languageIsoCode): string
     {
         return self::getBaseLinkUrl($languageIsoCode) . self::APP_DASHBOARD_URL_PATH;
+    }
+
+    public static function getPublicInviteRequestUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . self::PUBLIC_HTML_INVITE_REQUEST;
+    }
+
+    public static function getPublicLoginUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . self::PUBLIC_HTML_LOGIN;
+    }
+
+    public static function getPublicHomepageUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode);
     }
 }

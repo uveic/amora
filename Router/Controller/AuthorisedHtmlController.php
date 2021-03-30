@@ -70,8 +70,9 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     protected function logout(Request $request): Response
     {
         $this->sessionService->logout($request->getSession());
-        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
-        return Response::createRedirectResponse($baseLinkUrl);
+        return Response::createRedirectResponse(
+            UrlBuilderUtil::getPublicHomepageUrl($request->getSiteLanguage())
+        );
     }
 
     /**

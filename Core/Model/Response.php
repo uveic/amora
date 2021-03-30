@@ -153,8 +153,7 @@ class Response
 
     public static function createUnauthorisedRedirectLoginResponse(string $siteLanguage): Response
     {
-        $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($siteLanguage);
-        return Response::createRedirectResponse($baseLinkUrl . '/login');
+        return Response::createRedirectResponse(UrlBuilderUtil::getPublicLoginUrl($siteLanguage));
     }
 
     public static function createUnauthorizedJsonResponse(): Response
