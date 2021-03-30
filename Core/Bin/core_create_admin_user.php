@@ -76,35 +76,31 @@ if (empty($pass)) {
     $pass = StringUtil::getRandomString(10);
 }
 
-UserCore::getDb()->withTransaction(function() use ($logger, $email, $name, $pass) {
-    $now = DateUtil::getCurrentDateForMySql();
-    $res = UserCore::getUserService()->storeUser(
-        new User(
-            null,
-            Language::ENGLISH,
-            UserRole::ADMIN,
-            UserJourneyStatus::REGISTRATION,
-            $now,
-            $now,
-            $email,
-            $name,
-            StringUtil::hashPassword($pass),
-            null,
-            true,
-            true,
-            'Europe/Madrid'
-        )
+$now = DateUtil::getCurrentDateForMySql();
+$res = UserCore::getUserService()->storeUser(
+    new User(
+        id: null,
+        languageId: Language::ENGLISH,
+        roleId: UserRole::ADMIN,
+        journeyStatusId: UserJourneyStatus::REGISTRATION,
+        createdAt: $now,
+        updatedAt: $now,
+        email: $email,
+        name: $name,
+        passwordHash: StringUtil::hashPassword($pass),
+        bio: null,
+        isEnabled: true,
+        verified: true,
+        timezone: 'Europe/Madrid'
+    )
+);
+
+if (empty($res)) {
+    $logger->logError(
+        'User not created. Error: ' .
+        (empty($res['errorMessage']) ? 'UNKNOWN' : $res['errorMessage'])
     );
+    exit;
+}
 
-    if (empty($res)) {
-        $logger->logError(
-            'User not created. Error: ' .
-            (empty($res['errorMessage']) ? 'UNKNOWN' : $res['errorMessage'])
-        );
-        exit;
-    }
-
-    $logger->logInfo('User created: ' . $email . ' / ' . $pass);
-
-    return new TransactionResponse(true);
-});
+$logger->logInfo('User created: ' . $email . ' / ' . $pass);
