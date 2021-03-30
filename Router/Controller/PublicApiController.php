@@ -146,9 +146,9 @@ final class PublicApiController extends PublicApiControllerAbstract
         $languageIsoCode = in_array(strtoupper($languageIsoCode), Language::getAvailableIsoCodes())
             ? strtolower($languageIsoCode)
             : Core::getConfigValue('defaultSiteLanguage');
-        $user = $this->userService->verifyUser($user, $password);
-        $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
 
+        $user = $this->userService->verifyUser($user, $password);
         if (empty($user)) {
             return new PublicApiControllerUserLoginSuccessResponse(
                 false,
@@ -157,6 +157,8 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
+        $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
+        $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
         $session = $this->sessionService->login(
             $user,
             $user->getTimezone(),
