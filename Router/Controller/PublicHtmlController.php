@@ -7,7 +7,6 @@ use Amora\Core\Model\Response\HtmlHomepageResponseData;
 use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Model\Response\UserFeedback;
 use Amora\Core\Module\Action\Service\ActionService;
-use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\User\Service\SessionService;
@@ -64,10 +63,16 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     protected function getLoginPage(Request $request): Response
     {
         $session = $request->getSession();
-        $isAuthenticated = $session && $session->isAuthenticated();
-        if ($isAuthenticated) {
-            $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($request->getSiteLanguage());
-            return Response::createRedirectResponse($baseLinkUrl . '/backoffice/dashboard');
+        if ($session && $session->isAdmin()) {
+            return Response::createRedirectResponse(
+                UrlBuilderUtil::getAdminDashboardUrl($request->getSiteLanguage())
+            );
+        }
+
+        if ($session && $session->isAuthenticated()) {
+            return Response::createRedirectResponse(
+                UrlBuilderUtil::getUserDashboardUrl($request->getSiteLanguage())
+            );
         }
 
         return Response::createFrontendPublicHtmlResponse(

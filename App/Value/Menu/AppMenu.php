@@ -13,7 +13,6 @@ final class AppMenu
         string $languageIsoCode,
         ?string $username = null,
     ): array {
-        $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
         $appMenu = [];
 
         $output = array_merge(
@@ -33,7 +32,17 @@ final class AppMenu
         string $languageIsoCode,
         string $username = null,
     ): array {
-        $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
-        return [];
+        $appMenu = [];
+
+        $output = array_merge(
+            CoreMenu::getUserMenu($baseUrlWithLanguage, $languageIsoCode, $username),
+            $appMenu
+        );
+
+        usort($output, function($a, $b) {
+            return $a->getOrder() - $b->getOrder();
+        });
+
+        return $output;
     }
 }

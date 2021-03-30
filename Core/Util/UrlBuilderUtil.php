@@ -49,4 +49,14 @@ final class UrlBuilderUtil
     {
         return self::getBaseLinkUrl($languageIsoCode) . '/user/reset/' . $verificationIdentifier;
     }
+
+    public static function getAdminDashboardUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . self::BACKOFFICE_DASHBOARD_URL_PATH;
+    }
+
+    public static function getUserDashboardUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . self::APP_DASHBOARD_URL_PATH;
+    }
 }

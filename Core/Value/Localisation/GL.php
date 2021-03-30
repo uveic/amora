@@ -3,6 +3,7 @@
 use Amora\Core\Module\User\Service\UserService;
 
 return [
+    'navDashboard' => 'Escritorio',
     'navAccount' => 'Os teus datos',
     'navSignOut' => 'Saír',
     'navSignIn' => 'Entra',

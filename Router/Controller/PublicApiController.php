@@ -2,6 +2,9 @@
 
 namespace Amora\Router;
 
+use Amora\Core\Module\User\Model\User;
+use Amora\Core\Module\User\Value\VerificationType;
+use Amora\Core\Util\DateUtil;
 use Amora\Router\Controller\Response\PublicApiControllerUserPasswordCreationFailureResponse;
 use Amora\Router\Controller\Response\PublicApiControllerUserPasswordCreationSuccessResponse;
 use Throwable;
@@ -15,7 +18,6 @@ use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\Language;
-use Amora\Router\Controller\Response\PublicApiControllerForgotPasswordFailureResponse;
 use Amora\Router\Controller\Response\PublicApiControllerForgotPasswordSuccessResponse;
 use Amora\Router\Controller\Response\PublicApiControllerGetSessionSuccessResponse;
 use Amora\Router\Controller\Response\PublicApiControllerLogErrorSuccessResponse;
@@ -263,21 +265,41 @@ final class PublicApiController extends PublicApiControllerAbstract
             }
 
             $languageId = Language::getIdForIsoCode($languageIsoCode);
-            // ToDo
+            $roleId = UserRole::USER;
+            $now = DateUtil::getCurrentDateForMySql();
             $user = $this->userService->storeUser(
-                new User(
-
-                )
-
+                user: new User(
+                    id: null,
+                    languageId: $languageId,
+                    roleId: $roleId,
+                    journeyStatusId: UserJourneyStatus::REGISTRATION,
+                    createdAt: $now,
+                    updatedAt: $now,
+                    email: $email,
+                    name: $name,
+                    passwordHash: StringUtil::hashPassword($password),
+                    bio: null,
+                    isEnabled: true,
+                    verified: false,
+                    timezone: DateUtil::getTimezoneFromUtcOffset($timezoneOffsetMinutes)
+                ),
+                verificationEmailId: VerificationType::EMAIL_ADDRESS
             );
             $res = empty($user) ? false : true;
+
+            $session = $this->sessionService->login(
+                $user,
+                $user->getTimezone(),
+                $request->getSourceIp(),
+                $request->getUserAgent()
+            );
 
             $baseLinkUrl = UrlBuilderUtil::getBaseLinkUrl($languageIsoCode);
             return new PublicApiControllerUserRegistrationSuccessResponse(
                 $res,
-                $res
-                    ? $baseLinkUrl . UrlBuilderUtil::APP_DASHBOARD_URL_PATH
-                    : $baseLinkUrl
+                $session->isAdmin()
+                    ? $baseLinkUrl . UrlBuilderUtil::BACKOFFICE_DASHBOARD_URL_PATH
+                    : $baseLinkUrl . UrlBuilderUtil::APP_DASHBOARD_URL_PATH
             );
         } catch (Throwable $t) {
             $this->logger->logError('Error registering user: ' . $t->getMessage());

@@ -12,12 +12,22 @@ abstract class AuthorisedHtmlControllerAbstract extends AbstractController
 {
     public function __construct()
     {
+        require_once Core::getPathRoot() . '/Router/Controller/Response/AuthorisedHtmlControllerGetAppDashboardHtmlSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/AuthorisedHtmlControllerLogoutSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/AuthorisedHtmlControllerGetUserAccountHtmlSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/AuthorisedHtmlControllerGetUserAccountSettingsHtmlSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
+
+    /**
+     * Endpoint: /dashboard
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getAppDashboardHtml(Request $request): Response;
 
     /**
      * Endpoint: /logout
@@ -49,6 +59,34 @@ abstract class AuthorisedHtmlControllerAbstract extends AbstractController
         string $settingsPage,
         Request $request
     ): Response;
+
+    private function validateAndCallGetAppDashboardHtml(Request $request)
+    {
+        $errors = [];
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getAppDashboardHtml(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in AuthorisedHtmlControllerAbstract - Method: getAppDashboardHtml()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
 
     private function validateAndCallLogout(Request $request)
     {
@@ -162,6 +200,16 @@ abstract class AuthorisedHtmlControllerAbstract extends AbstractController
         $path = $request->getPath();
         $pathParts = explode('/', $path);
         $method = $request->getMethod();
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['dashboard'],
+                $pathParts,
+                ['fixed']
+            )
+        ) {
+            return $this->validateAndCallGetAppDashboardHtml($request);
+        }
 
         if ($method === 'GET' &&
             $this->pathParamsMatcher(
