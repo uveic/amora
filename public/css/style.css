@@ -266,7 +266,6 @@ nav ul {
 ul.nav-dropdown-menu {
   display: none;
   position: relative;
-  padding: 0.5rem 0.5rem 0.5rem 2rem;
   text-align: left;
   list-style: none;
   border-radius: var(--border-radius);
@@ -275,6 +274,10 @@ ul.nav-dropdown-menu {
 
 ul.nav-dropdown-menu li {
   display: block;
+}
+
+ul.nav-dropdown-menu > li > a {
+  padding-left: 3rem;
 }
 
 ul.nav-dropdown-menu a {
@@ -890,13 +893,11 @@ svg,
   ul.nav-dropdown-menu {
     position: absolute;
     right: 0;
-    top: 50px;
-    padding: 0.5rem;
+    top: 56px;
   }
 
-  ul.nav-dropdown-menu a {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+  ul.nav-dropdown-menu > li > a {
+    padding-left: 1.5rem;
   }
 
   #register-left {
