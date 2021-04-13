@@ -3,7 +3,9 @@
 use Amora\Core\Model\Response\HtmlResponseData;
 
 /** @var HtmlResponseData $responseData */
-
+$siteLogo = $responseData->getSiteLogoUrl()
+    ? '<img src="' . $responseData->getSiteLogoUrl() . '" alt="' . $responseData->getSiteName() . '">'
+    : $this->e($responseData->getSiteName());
 ?>
 <!DOCTYPE html>
 <html lang="<?=$this->e(strtolower($responseData->getSiteLanguage()))?>">
@@ -17,7 +19,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
     <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">&#10005;</a>
     <form method="POST" id="form-login">
       <div>
-        <h1 id="register-title" class="logo m-b-4"><?=$this->e($responseData->getSiteName())?></h1>
+        <h1 id="register-title" class="logo m-t-2 m-b-3"><?=$siteLogo?></h1>
         <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationLoginSubtitle'))?></h2>
         <p class="light-text-color m-b-3"></p>
         <div class="field">

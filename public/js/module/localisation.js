@@ -153,6 +153,33 @@ class Global {
   get(key) {
     return this.values[this.locale][key] ?? '';
   }
+
+  formatDate(dateObj) {
+    if (this.locale === 'gl') {
+      const months = ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo',
+        'agosto', 'setembro', 'outubro', 'novembro', 'decembro'];
+      const days = ['domingo', 'luns', 'martes', 'mércores', 'xoves', 'venres', 'sábado'];
+
+      return days[dateObj.getDay()] + ', ' + dateObj.getDate() + ' de '
+        + months[dateObj.getMonth()] + ' de ' + dateObj.getFullYear();
+    }
+
+    if (this.locale === 'es') {
+      const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
+        'agosto', 'septiembre', 'octubre', 'noviembre', 'dieciembre'];
+      const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+
+      return days[dateObj.getDay()] + ', ' + dateObj.getDate() + ' de '
+        + months[dateObj.getMonth()] + ' de ' + dateObj.getFullYear();
+    }
+
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+      'August', 'September', 'October', 'November', 'December'];
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    return days[dateObj.getDay()] + ', ' + dateObj.getDate() + ' '
+      + months[dateObj.getMonth()] + ' ' + dateObj.getFullYear();
+  }
 }
 
 export const global = new Global();

@@ -9,7 +9,6 @@ use Amora\Core\Model\Response\UserFeedback;
 use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\User\Service\UserService;
-use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -17,7 +16,6 @@ use Amora\Core\Util\UrlBuilderUtil;
 final class PublicHtmlController extends PublicHtmlControllerAbstract
 {
     public function __construct(
-        private SessionService $sessionService,
         private UserService $userService,
         private ArticleService $articleService,
         private ActionService $actionService
@@ -286,7 +284,6 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
             );
         }
-
 
         $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
         if (!$isInvitationEnabled) {

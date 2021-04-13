@@ -11,12 +11,10 @@ $this->layout('base', ['responseData' => $responseData,])
 
 ?>
   <main>
-    <section>
-      <div class="form-header m-r-1 m-l-1">
-        <h1>Users</h1>
-        <div class="links">
-          <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users/new" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
-        </div>
+    <section class="page-header">
+      <h1>Users</h1>
+      <div class="links">
+        <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users/new" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
       </div>
     </section>
     <section class="content-flex-block">

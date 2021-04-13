@@ -509,7 +509,7 @@ document.querySelectorAll('input[name="tags"]').forEach(el => {
       newTag.className = 'result-item';
       newTag.dataset.tagName = inputText;
       newTag.dataset.new = '1';
-      newTag.innerHTML = '<span class="new-tag">New</span>' + inputText;
+      newTag.innerHTML = '<span class="new">New</span>' + inputText;
       newTag.addEventListener('click', () => {
         handleSearchResultClick(null, inputText, newTag.innerHTML, newTag);
       });
@@ -527,6 +527,6 @@ document.querySelectorAll('a.search-results-close').forEach(el => {
   });
 });
 
-document.querySelectorAll('.result-selected > img').forEach(i => {
+document.querySelectorAll('.tag-result-selected-delete').forEach(i => {
   i.addEventListener('click', (e) => handleRemoveArticleTag(e));
 });

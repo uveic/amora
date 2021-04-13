@@ -4,6 +4,7 @@ namespace Amora\Core\Module\User\Service;
 
 use Amora\Core\Core;
 use Amora\Core\Database\Model\TransactionResponse;
+use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Util\LocalisationUtil;
 use DateTime;
@@ -212,9 +213,14 @@ class UserService
         return new UserFeedback(true);
     }
 
-    public function getListOfUsers(): array
-    {
-        return $this->userDataLayer->getAllUsers();
+    public function filterUsersBy(
+        ?string $searchText = null,
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        return $this->userDataLayer->filterUsersBy(
+            searchText: $searchText,
+            queryOptions: $queryOptions,
+        );
     }
 
     public function getUserForId(int $userId, $includeDisabled = false): ?User

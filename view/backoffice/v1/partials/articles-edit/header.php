@@ -9,10 +9,10 @@ $article = $responseData->getFirstArticle();
 $articleTitle = ArticleEditHtmlGenerator::generateTitleHtml($responseData);
 $settings = ArticleEditHtmlGenerator::generateSettingsButtonHtml($responseData);
 ?>
-    <div class="form-header m-t-1 m-l-1 m-r-1">
+    <section class="page-header">
         <h1><?=$articleTitle?></h1>
         <div class="links">
           <?=$settings?>
           <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/articles" class="m-r-1"><img src="/img/svg/x.svg" class="img-svg m-t-0" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
         </div>
-    </div>
+    </section>

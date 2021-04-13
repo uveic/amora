@@ -121,6 +121,7 @@ header {
   display: inline-block;
   margin: 0;
   font-size: 1rem;
+  max-width: 250px;
 }
 
 a.white,

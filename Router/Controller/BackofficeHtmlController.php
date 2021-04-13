@@ -3,7 +3,6 @@
 namespace Amora\Router;
 
 use Amora\Core\Core;
-use Amora\Core\Logger;
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
@@ -12,15 +11,12 @@ use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Module\Article\Value\ArticleType;
-use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Module\User\Service\UserService;
 
 final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 {
     public function __construct(
-        private Logger $logger,
         private ActionService $actionService,
-        private SessionService $sessionService,
         private UserService $userService,
         private ArticleService $articleService,
         private ImageService $imageService,
@@ -83,7 +79,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getUsersAdminPage(Request $request): Response
     {
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
-        $users = $this->userService->getListOfUsers();
+        $users = $this->userService->filterUsersBy();
         return Response::createBackofficeHtmlResponse(
             'users',
             new HtmlResponseDataAuthorised(

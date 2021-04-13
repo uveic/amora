@@ -4,10 +4,10 @@ namespace Amora\Core\Module\User\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
+use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserRegistrationRequest;
 use Amora\Core\Module\User\Model\UserVerification;
-use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\DateUtil;
 
 class UserDataLayer
@@ -28,45 +28,71 @@ class UserDataLayer
     private function getUsers(
         ?bool $includeDisabled = true,
         ?int $userId = null,
-        ?string $email = null
+        ?string $email = null,
+        ?string $searchText = null,
+        ?QueryOptions $queryOptions = null,
     ): array {
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
+        }
+
+        $orderByMapping = [
+            'updated_at' => 'u.updated_at',
+            'created_at' => 'u.created_at',
+            'name' => 'u.name',
+        ];
+
         $params = [];
-        $sql = '
-            SELECT
-                u.id,
-                u.language_id,
-                u.role_id,
-                u.journey_id,
-                u.created_at,
-                u.updated_at,
-                u.email,
-                u.name,
-                u.password_hash,
-                u.bio,
-                u.is_enabled,
-                u.verified,
-                u.timezone,
-                u.change_email_to
-            FROM ' . self::USER_TABLE . ' AS u
-            WHERE 1
-        ';
+        $baseSql = 'SELECT ';
+        $fields = [
+            'u.id',
+            'u.language_id',
+            'u.role_id',
+            'u.journey_id',
+            'u.created_at',
+            'u.updated_at',
+            'u.email',
+            'u.name',
+            'u.password_hash',
+            'u.bio',
+            'u.is_enabled',
+            'u.verified',
+            'u.timezone',
+            'u.change_email_to',
+        ];
+
+        $joins = ' FROM ' . self::USER_TABLE . ' AS u';
+        $where = ' WHERE 1';
 
         if (!$includeDisabled) {
-            $sql .= ' AND u.is_enabled = :enabled';
+            $where .= ' AND u.is_enabled = :enabled';
             $params[':enabled'] = 1;
         }
 
         if (isset($userId)) {
-            $sql .= ' AND u.id = :user_id';
+            $where .= ' AND u.id = :user_id';
             $params[':user_id'] = $userId;
         }
 
         if (isset($email)) {
-            $sql .= ' AND u.email = :email';
+            $where .= ' AND u.email = :email';
             $params[':email'] = $email;
         }
 
-        $sql .= ' ORDER BY u.id ASC';
+        if (isset($searchText)) {
+            $where .= " AND (u.email LIKE :searchText OR u.name LIKE :searchText)";
+            $params[':searchText'] = '%' . $searchText . '%';
+        }
+
+        $orderBy = ' ORDER BY ' .
+            (empty($orderByMapping[$queryOptions->getOrderBy()])
+                ? 'u.created_at'
+                : $orderByMapping[$queryOptions->getOrderBy()])
+            . ' ' . $queryOptions->getSortingDirection();
+
+        $limit = ' LIMIT ' . $queryOptions->getLimit() . ' OFFSET ' . $queryOptions->getOffset();
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderBy . $limit;
 
         $res = $this->db->fetchAll($sql, $params);
 
@@ -83,9 +109,14 @@ class UserDataLayer
         return $this->db;
     }
 
-    public function getAllUsers(): array
-    {
-        return $this->getUsers();
+    public function filterUsersBy(
+        ?string $searchText = null,
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        return $this->getUsers(
+            searchText: $searchText,
+            queryOptions: $queryOptions,
+        );
     }
 
     public function getUserForId(int $id, $includeDisabled = false): ?User

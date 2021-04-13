@@ -14,27 +14,28 @@ final class DateUtil
     /**
      * Check if the date is a valid ISO8601 date: YYYY-mm-ddTHH:mm:ssZ
      * https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14
-     * @param string $isoDate
+     * @param string|null $isoDate
      * @return bool
      */
-    public static function isValidDateISO8601(string $isoDate): bool
+    public static function isValidDateISO8601(?string $isoDate): bool
     {
-        $tmpDate = DateTime::createFromFormat("Y-m-d\TH:i:s\Z", $isoDate);
-        if ($tmpDate === false) {
-            $tmpDate = DateTime::createFromFormat("Y-m-d\TH:i:s\+H:i", $isoDate);
-            if ($tmpDate === false) {
-                return false;
-            }
+        if (empty($isoDate)) {
+            return false;
         }
 
-        $errors = DateTime::getLastErrors();
+        $dateObj = DateTimeImmutable::createFromFormat(DateTimeImmutable::ISO8601, $isoDate);
+        if ($dateObj === false) {
+            return false;
+        }
+
+        $errors = DateTimeImmutable::getLastErrors();
         if (!empty($errors['warning_count'])) {
             return false;
         }
 
         // For some reason DateTime::createFromFormat does not check if the year has four digits
         // It accepts as valid strings like: 25-01-01T00:00:00Z
-        if ((int) $tmpDate->format('Y') < 1000) {
+        if ((int) $dateObj->format('Y') < 1000) {
             return false;
         }
 
@@ -43,11 +44,15 @@ final class DateUtil
 
     /**
      * Check if the date is a valid for MySQL: Y-m-d H:i:s
-     * @param string $date
+     * @param string|null $date
      * @return bool
      */
-    public static function isValidDateForMySql(string $date): bool
+    public static function isValidDateForMySql(?string $date): bool
     {
+        if (empty($date)) {
+            return false;
+        }
+
         $tmpDate = DateTime::createFromFormat("Y-m-d H:i:s", $date);
         if ($tmpDate === false) {
             return false;
@@ -231,30 +236,6 @@ final class DateUtil
         return $prefix . $output . $suffix;
     }
 
-    public static function formatDateFromUnixTime(
-        ?int $unixTime = null,
-        string $lang = 'EN',
-        bool $includeWeekDay = true,
-        bool $includeTime = false,
-        string $timeZone = 'UTC'
-    ): string {
-        if (!isset($unixTime)) {
-            $unixTime = time();
-        }
-
-        if (self::isSummerTime()) {
-            $unixTime += 3600; // 1 hour
-        }
-
-        return self::formatUtcDate(
-            stringDate: self::getMySqlDateFromUnixTime($unixTime),
-            lang: $lang,
-            includeWeekDay: $includeWeekDay,
-            includeTime: $includeTime,
-            timezone: $timeZone
-        );
-    }
-
     public static function formatUtcDateShort(
         ?string $stringDate = null,
         string $timezone = 'UTC',
@@ -265,15 +246,15 @@ final class DateUtil
             $stringDate = 'now';
         }
 
-        $d = new DateTime($stringDate, new DateTimeZone('UTC'));
-        $d->setTimezone(new DateTimeZone($timezone));
+        $utcDate = new DateTime($stringDate, new DateTimeZone('UTC'));
+        $outputTzDate = $utcDate->setTimezone(new DateTimeZone($timezone));
 
         $format = 'd/m/Y';
         $format .= $includeTime
             ? ' H:i' . ($includeSeconds ? ':s' : '')
             : '';
 
-        return $d->format($format);
+        return $outputTzDate->format($format);
     }
 
     public static function formatUtcDate(
@@ -290,8 +271,32 @@ final class DateUtil
             $stringDate = 'now';
         }
 
-        $d = new DateTime($stringDate, new DateTimeZone('UTC'));
-        $d->setTimezone(new DateTimeZone($timezone));
+        $utcDate = new DateTime($stringDate, new DateTimeZone('UTC'));
+        $outputTzDate = $utcDate->setTimezone(new DateTimeZone($timezone));
+
+        return self::formatDate(
+            date: $outputTzDate,
+            lang: $lang,
+            includeWeekDay: $includeWeekDay,
+            includeTime: $includeTime,
+            timezone: $timezone,
+            includeYear: $includeYear,
+            includeDay: $includeDay,
+            includeSeconds: $includeSeconds,
+        );
+    }
+
+    public static function formatDate(
+        DateTimeImmutable|DateTime $date,
+        string $lang = 'EN',
+        bool $includeWeekDay = true,
+        bool $includeTime = false,
+        string $timezone = 'UTC',
+        bool $includeYear = true,
+        bool $includeDay = true,
+        bool $includeSeconds = false,
+    ): string {
+        $outputTzDate = $date->setTimezone(new DateTimeZone($timezone));
 
         $timeFormat = 'H:i' . ($includeSeconds ? ':s' : '');
 
@@ -302,14 +307,16 @@ final class DateUtil
                     'agosto', 'setembro', 'outubro', 'novembro', 'decembro'];
                 $days = ['luns', 'martes', 'mércores', 'xoves', 'venres', 'sábado', 'domingo'];
 
-                $weekDay = $includeWeekDay ? $days[$d->format('N') - 1] . ', ' : '';
-                $day = $includeDay ? $d->format('j') . ' de ' : '';
-                $time = $includeTime ? ' ás ' . $d->format($timeFormat) : '';
-                $year = $includeYear ? ' de ' . $d->format('Y') : '';
+                $weekDay = $includeWeekDay ? $days[$outputTzDate->format('N') - 1] . ', ' : '';
+                $day = $includeDay ? $outputTzDate->format('j') . ' de ' : '';
+                $time = $includeTime ? ' ás ' . $outputTzDate->format($timeFormat) : '';
+                $year = $includeYear
+                    ? ($includeDay ? ' de ' : ' ') . $outputTzDate->format('Y')
+                    : '';
 
                 return $weekDay
                     . $day
-                    . $months[$d->format('n') - 1]
+                    . $months[$outputTzDate->format('n') - 1]
                     . $year
                     . $time;
             case 'ES':
@@ -317,24 +324,26 @@ final class DateUtil
                     'septiembre', 'octubre', 'noviembre', 'dieciembre'];
                 $days = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
-                $weekDay = $includeWeekDay ? $days[$d->format('N') - 1] . ', ' : '';
-                $day = $includeDay ? $d->format('j') . ' de ' : '';
-                $time = $includeTime ? ' a las ' . $d->format($timeFormat) : '';
-                $year = $includeYear ? ' de ' . $d->format('Y') : '';
+                $weekDay = $includeWeekDay ? $days[$outputTzDate->format('N') - 1] . ', ' : '';
+                $day = $includeDay ? $outputTzDate->format('j') . ' de ' : '';
+                $time = $includeTime ? ' a las ' . $outputTzDate->format($timeFormat) : '';
+                $year = $includeYear
+                    ? ($includeDay ? ' de ' : ' ') . $outputTzDate->format('Y')
+                    : '';
 
                 return $weekDay
                     . $day
-                    . $months[$d->format('n') - 1]
+                    . $months[$outputTzDate->format('n') - 1]
                     . $year
                     . $time;
             default:
                 $format = ($includeWeekDay ? 'l, ' : '')
-                    . ($includeDay ? ' jS' : '')
+                    . ($includeDay ? ' jS ' : '')
                     . 'F'
                     . ($includeYear ? ' Y' : '')
                     . ($includeTime ? ' \a\t ' . $timeFormat : '');
 
-                return $d->format($format);
+                return $outputTzDate->format($format);
         }
     }
 
@@ -354,8 +363,68 @@ final class DateUtil
         string $outputFormat = 'Y-m-d H:i:s'
     ): string
     {
-        $d = new DateTime($stringDate, new DateTimeZone('UTC'));
-        $d->setTimezone(new DateTimeZone($timezone));
-        return $d->format($outputFormat);
+        $utcDate = new DateTime($stringDate, new DateTimeZone('UTC'));
+        $outputTzDate = $utcDate->setTimezone(new DateTimeZone($timezone));
+        return $outputTzDate->format($outputFormat);
+    }
+
+    public static function getMySqlAggregateFormat(string $range): string
+    {
+        return match ($range) {
+            'minute' => "'%Y-%m-%dT%H:%i'",
+            'hour' => "'%Y-%m-%dT%H'",
+            'day' => "'%Y-%m-%d'",
+            'month' => "'%Y-%m'",
+            'year' => "'%Y'",
+            default => "'%Y-%m'",
+        };
+    }
+
+    public static function getPhpAggregateFormat(string $range): string
+    {
+        return match ($range) {
+            'minute' => 'Y-m-d H:i',
+            'hour' => 'Y-m-d H',
+            'day' => 'Y-m-d',
+            'month' => 'Y-m',
+            'year' => 'Y',
+            default => 'Y-m',
+        };
+    }
+
+    public static function convertPartialDateFormatToFullDate(
+        string $partialDate,
+        string $aggregatedBy,
+        bool $roundUp = true
+    ): string {
+        $res = match ($aggregatedBy) {
+            'minute' => $partialDate . ($roundUp ? ':59' : ':00'),
+            'hour' => $partialDate . ($roundUp ? ':59:59' : ':00:00'),
+            'day' => $partialDate . ($roundUp ? ' 23:59:59' : ' 00:00:00'),
+            default => null,
+        };
+
+        if ($res) {
+            return $res;
+        }
+
+        if ($aggregatedBy === 'month') {
+            $now = new DateTimeImmutable('now');
+            $month = substr($partialDate, -2);
+            $n = new DateTimeImmutable($now->format('Y-' . $month . '-d H:i:s'));
+
+            return $partialDate .
+                ($roundUp
+                    ? $n->format('n') . ' 23:59:59'
+                    : '-01 00:00:00'
+                );
+        }
+
+        if ($aggregatedBy === 'year') {
+            return $partialDate . $roundUp ? '-12-31 23:59:59' : '-01-01 00:00:00';
+        }
+
+        $now = new DateTimeImmutable('now');
+        return $now->format('Y-m-d H:i:s');
     }
 }

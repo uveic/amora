@@ -7,25 +7,15 @@ use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
 use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Module\Action\Service\ActionService;
-use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Util\UrlBuilderUtil;
 
 final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
 {
-    private SessionService $sessionService;
-    private ImageService $imageService;
-    private ActionService $actionService;
-
     public function __construct(
-        SessionService $sessionService,
-        ImageService $imageService,
-        ActionService $actionService
+        private SessionService $sessionService,
+        private ActionService $actionService
     ) {
-        $this->sessionService = $sessionService;
-        $this->imageService = $imageService;
-        $this->actionService = $actionService;
-
         parent::__construct();
     }
 

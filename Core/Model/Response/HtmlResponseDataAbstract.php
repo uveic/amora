@@ -7,7 +7,6 @@ use Amora\Core\Core;
 use Amora\Core\Model\Request;
 use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Util\LocalisationUtil;
-use Amora\Core\Value\CoreMenu;
 
 abstract class HtmlResponseDataAbstract
 {
@@ -52,7 +51,7 @@ abstract class HtmlResponseDataAbstract
 
         $this->pageTitle = isset($pageTitle) && $pageTitle
             ? $pageTitle . ' - ' . $this->getSiteName()
-            : $this->getSiteName();
+            : $this->getSiteNameAndTitle();
         $this->pageTitleWithoutSiteName = $this->pageTitle ?? '';
         $this->pageDescription = $pageDescription
             ?? $this->localisationUtil->getValue('siteDescription');
@@ -103,6 +102,16 @@ abstract class HtmlResponseDataAbstract
     public function getSiteName(): string
     {
         return $this->siteName;
+    }
+
+    public function getSiteLogoUrl(): ?string {
+        return Core::getConfigValue('logoUrl');
+    }
+
+    public function getSiteNameAndTitle(): string
+    {
+        $siteTitle = $this->localisationUtil->getValue('siteTitle');
+        return $this->getSiteName() . ($siteTitle ? ' - ' . $siteTitle : '');
     }
 
     public function getSiteImageUri(): string

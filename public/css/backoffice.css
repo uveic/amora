@@ -20,21 +20,22 @@
 /* Feedback style ends here */
 
 /* Form style starts here */
-.form-header {
+.page-header {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-end;
   align-items: center;
+  margin: 1rem;
 }
 
-.form-header > h1 {
+.page-header > h1 {
   flex-grow: 3;
   flex-shrink: 0;
   margin: 0;
 }
 
-.form-header > .links {
+.page-header > .links {
   flex-grow: 1;
   flex-shrink: 1;
   text-align: right;
@@ -245,7 +246,7 @@ input.is-light {
 .content-flex-block {
   flex-shrink: 1;
   flex-grow: 3;
-  margin: 1rem;
+  margin: 0;
   padding: 1rem;
   min-width: 328px;
   background-color: var(--light-bg-color);
@@ -584,8 +585,8 @@ input.is-light {
   background-color: var(--light-bg-color-2);
 }
 
-.result-selected > .new-tag,
-.result-item > .new-tag {
+.result-selected > .new,
+.result-item > .new {
   background-color: var(--highlight-success-color);
   padding: 0.25rem 0.5rem;
   margin-right: 0.5rem;
@@ -599,14 +600,14 @@ input.is-light {
   padding: 0.5rem;
 }
 
-#tags-selected {
+.search-results-selected {
   display: flex;
   flex-flow: row wrap;
   margin: 0.5rem 0;
   justify-content: flex-start;
 }
 
-#tags-selected > span {
+.result-selected {
   display: inline-block;
   padding: 0.5rem 0.75rem;
   margin: 0.5rem;
@@ -672,6 +673,7 @@ input.is-light {
   }
 
   .content-flex-block {
+    margin: 0 1rem;
     min-height: 300px;
     min-width: 370px;
   }

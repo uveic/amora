@@ -42,12 +42,12 @@ if ($article) {
   </div>
   <div class="field">
     <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
-    <div id="tags-selected">
+    <div id="tags-selected" class="search-results-selected">
 <?php
     /** @var Tag $tag */
     foreach ($articleTags as $tag) {
 ?>
-      <span class="result-selected" data-tag-id="<?=$tag->getId()?>" data-tag-name="<?=$tag->getName()?>"><?=$tag->getName()?><img class="img-svg m-l-05" title="<?=$responseData->getLocalValue('globalRemove')?>" alt="<?=$responseData->getLocalValue('globalRemove')?>" src="/img/svg/x.svg"></span>
+      <span class="result-selected" data-tag-id="<?=$tag->getId()?>" data-tag-name="<?=$tag->getName()?>"><?=$tag->getName()?><img class="tag-result-selected-delete img-svg m-l-05" title="<?=$responseData->getLocalValue('globalRemove')?>" alt="<?=$responseData->getLocalValue('globalRemove')?>" src="/img/svg/x.svg"></span>
 <?php } ?>
     </div>
     <div class="control">

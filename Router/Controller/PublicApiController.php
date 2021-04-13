@@ -94,7 +94,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                 ' - Page URL: ' . $pageUrl .
                 ' - User agent: ' . $userAgent
             );
-        } catch (Throwable $t) {
+        } catch (Throwable) {
             // Ignore and move on
         }
 
@@ -284,7 +284,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                 ),
                 verificationEmailId: VerificationType::EMAIL_ADDRESS
             );
-            $res = empty($user) ? false : true;
+            $res = !empty($user);
 
             $session = $this->sessionService->login(
                 $user,
@@ -430,8 +430,6 @@ final class PublicApiController extends PublicApiControllerAbstract
             Language::getIdForIsoCode($languageIsoCode)
         );
 
-        return new PublicApiControllerRequestRegistrationInviteSuccessResponse(
-            $res ? true : false
-        );
+        return new PublicApiControllerRequestRegistrationInviteSuccessResponse((bool)$res);
     }
 }

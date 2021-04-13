@@ -4,7 +4,7 @@ namespace Amora\Core\Util;
 
 use Amora\Core\Core;
 
-final class UrlBuilderUtil
+class UrlBuilderUtil
 {
     const APP_DASHBOARD_URL_PATH = '/dashboard';
     const BACKOFFICE_DASHBOARD_URL_PATH = '/backoffice/dashboard';
@@ -16,7 +16,7 @@ final class UrlBuilderUtil
     const PUBLIC_HTML_INVITE_REQUEST = '/invite-request';
     const PUBLIC_HTML_LOGIN = '/login';
 
-    private static function getBaseLinkUrl(string $siteLanguage): string
+    protected static function getBaseLinkUrl(string $siteLanguage): string
     {
         $baseUrl = Core::getConfigValue('baseUrl');
         $siteLanguage = strtolower($siteLanguage);

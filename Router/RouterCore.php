@@ -22,7 +22,6 @@ class RouterCore extends Core
      */
     public static function getPublicHtmlController(): PublicHtmlController
     {
-        $sessionService = UserCore::getSessionService();
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
         $actionService = ActionLoggerCore::getActionService();
@@ -30,20 +29,17 @@ class RouterCore extends Core
         return self::getInstance(
             'PublicHtmlController',
             function () use (
-                $sessionService,
                 $userService,
                 $articleService,
                 $actionService
             ) {
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlHomepageResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
-                require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
                 require_once self::getPathRoot() . '/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Router/Controller/PublicHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Router/Controller/PublicHtmlController.php';
                 return new PublicHtmlController(
-                    $sessionService,
                     $userService,
                     $articleService,
                     $actionService
@@ -60,17 +56,14 @@ class RouterCore extends Core
     public static function getAuthorisedHtmlController(): AuthorisedHtmlController
     {
         $sessionService = UserCore::getSessionService();
-        $imageService = ArticleCore::getImageService();
         $actionService = ActionLoggerCore::getActionService();
 
         return self::getInstance(
             'AuthorisedHtmlController',
             function () use (
                 $sessionService,
-                $imageService,
                 $actionService
             ) {
-                require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Service/UserService.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Router/Controller/AbstractController.php';
@@ -78,7 +71,6 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Router/Controller/AuthorisedHtmlController.php';
                 return new AuthorisedHtmlController(
                     $sessionService,
-                    $imageService,
                     $actionService
                 );
             },
@@ -92,9 +84,7 @@ class RouterCore extends Core
      */
     public static function getBackofficeHtmlController(): BackofficeHtmlController
     {
-        $logger = self::getRouterLogger();
         $actionService = ActionLoggerCore::getActionService();
-        $sessionService = UserCore::getSessionService();
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
         $imageService = ArticleCore::getImageService();
@@ -102,9 +92,7 @@ class RouterCore extends Core
         return self::getInstance(
             'BackofficeHtmlController',
             function () use (
-                $logger,
                 $actionService,
-                $sessionService,
                 $userService,
                 $articleService,
                 $imageService
@@ -112,16 +100,13 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseDataAuthorised.php';
-                require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
                 require_once self::getPathRoot() . '/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Router/Controller/BackofficeHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Router/Controller/BackofficeHtmlController.php';
                 return new BackofficeHtmlController(
-                    $logger,
                     $actionService,
-                    $sessionService,
                     $userService,
                     $articleService,
                     $imageService
@@ -139,10 +124,8 @@ class RouterCore extends Core
     {
         $logger = self::getRouterLogger();
         $actionService = ActionLoggerCore::getActionService();
-        $sessionService = UserCore::getSessionService();
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
-        $imageService = ArticleCore::getImageService();
         $tagService = ArticleCore::getTagService();
 
         return self::getInstance(
@@ -150,10 +133,8 @@ class RouterCore extends Core
             function () use (
                 $logger,
                 $actionService,
-                $sessionService,
                 $userService,
                 $articleService,
-                $imageService,
                 $tagService,
             ) {
                 require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
@@ -164,10 +145,8 @@ class RouterCore extends Core
                 return new BackofficeApiController(
                     $logger,
                     $actionService,
-                    $sessionService,
                     $userService,
                     $articleService,
-                    $imageService,
                     $tagService
                 );
             },
@@ -182,9 +161,7 @@ class RouterCore extends Core
     public static function getAuthorisedApiController(): AuthorisedApiController
     {
         $logger = self::getRouterLogger();
-        $sessionService = UserCore::getSessionService();
         $imageService = ArticleCore::getImageService();
-        $articleService = ArticleCore::getArticleService();
         $userService = UserCore::getUserService();
         $userMailService = UserCore::getUserMailService();
         $actionService = ActionLoggerCore::getActionService();
@@ -193,9 +170,7 @@ class RouterCore extends Core
             'AuthorisedApiController',
             function () use (
                 $logger,
-                $sessionService,
                 $imageService,
-                $articleService,
                 $userService,
                 $userMailService,
                 $actionService
@@ -208,9 +183,7 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Router/Controller/AuthorisedApiController.php';
                 return new AuthorisedApiController(
                     $logger,
-                    $sessionService,
                     $imageService,
-                    $articleService,
                     $userService,
                     $userMailService,
                     $actionService
@@ -241,7 +214,6 @@ class RouterCore extends Core
                 $mailService,
                 $actionService
             ) {
-                require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Router/Controller/PublicApiControllerAbstract.php';

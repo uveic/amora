@@ -2,8 +2,10 @@
 
 namespace Amora\Router;
 
+use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Router\Controller\Response\BackofficeApiControllerGetUsersSuccessResponse;
 use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Logger;
@@ -12,18 +14,15 @@ use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Module\Article\Service\ArticleService;
-use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Module\Article\Service\TagService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Model\Request;
-use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
-use Amora\Router\Controller\Response\BackofficeApiControllerCheckArticleUriSuccessResponse;
 use Amora\Router\Controller\Response\BackofficeApiControllerDestroyArticleFailureResponse;
 use Amora\Router\Controller\Response\BackofficeApiControllerDestroyArticleSuccessResponse;
 use Amora\Router\Controller\Response\BackofficeApiControllerDestroyUserFailureResponse;
@@ -43,11 +42,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     public function __construct(
         private Logger $logger,
         private ActionService $actionService,
-        private SessionService $sessionService,
         private UserService $userService,
         private ArticleService $articleService,
-        private ImageService $imageService,
-        private TagService $tagService
+        private TagService $tagService,
     ) {
         parent::__construct();
     }
@@ -141,6 +138,34 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             true,
             UrlBuilderUtil::getBackofficeUsersUrl($request->getSiteLanguage())
         );
+    }
+
+    /**
+     * Endpoint: /back/user
+     * Method: GET
+     *
+     * @param string|null $q
+     * @param Request $request
+     * @return Response
+     */
+    protected function getUsers(?string $q, Request $request): Response
+    {
+        $users = $this->userService->filterUsersBy(
+            searchText: $q,
+            queryOptions: new QueryOptions(orderBy: 'name', sortingDirection: 'ASC', limit: 5),
+        );
+
+        $output = [];
+        /** @var User $user */
+        foreach ($users as $user) {
+            $output[] = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'email' => $user->getEmail(),
+            ];
+        }
+
+        return new BackofficeApiControllerGetUsersSuccessResponse(true, $output);
     }
 
     /**

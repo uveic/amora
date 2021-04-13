@@ -394,7 +394,7 @@ final class MySqlDb
                 $this->password
             );
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->connection->exec("SET names utf8mb4;SET time_zone = " . date('P') . ";");
+            $this->connection->exec("SET names utf8mb4;SET time_zone = '" . date('P') . "';");
         } catch (Throwable $t) {
             $this->logger->logInfo(
                 'Error establishing DB connection: ' . $t->getMessage()

@@ -19,13 +19,13 @@ $defaultLanguage = $userToEdit
 ?>
   <section>
     <div id="feedback" class="feedback null"></div>
-    <form action="#" method="post" id="form-user-creation">
-      <div class="form-header m-t-1 m-l-1 m-r-1">
-        <h1><?=($userToEdit ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></h1>
-        <div class="links">
-          <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
-        </div>
+    <section class="page-header">
+      <h1><?=($userToEdit ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></h1>
+      <div class="links">
+        <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
       </div>
+    </section>
+    <form action="#" method="post" id="form-user-creation">
 <?=$this->insert('partials/users-edit/control-bar', ['responseData' => $responseData])?>
       <div class="content-narrow-width">
 <?php if ($userToEdit) { ?>

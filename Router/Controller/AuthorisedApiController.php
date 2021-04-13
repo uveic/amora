@@ -8,11 +8,9 @@ use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Model\Image;
-use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
-use Amora\Core\Module\User\Service\SessionService;
 use Amora\Router\Controller\Response\{AuthorisedApiControllerDestroyImageFailureResponse,
     AuthorisedApiControllerDestroyImageUnauthorisedResponse,
     AuthorisedApiControllerDestroyImageSuccessResponse,
@@ -27,9 +25,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 {
     public function __construct(
         private Logger $logger,
-        private SessionService $sessionService,
         private ImageService $imageService,
-        private ArticleService $articleService,
         private UserService $userService,
         private UserMailService $userMailService,
         private ActionService $actionService,
@@ -84,7 +80,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             }
 
             return new AuthorisedApiControllerStoreImageSuccessResponse(
-                empty($output) ? false : true,
+                !empty($output),
                 $output
             );
         } catch (Throwable $t) {
