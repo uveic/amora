@@ -5,6 +5,7 @@ namespace Amora\Core\Module\User\Datalayer;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
 use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserRegistrationRequest;
 use Amora\Core\Module\User\Model\UserVerification;
@@ -12,6 +13,8 @@ use Amora\Core\Util\DateUtil;
 
 class UserDataLayer
 {
+    use DataLayerTrait;
+
     const USER_TABLE = 'user';
     const USER_VERIFICATION_TABLE = 'user_verification';
     const USER_REGISTRATION_REQUEST_TABLE = 'user_registration_request';
@@ -37,8 +40,8 @@ class UserDataLayer
         }
 
         $orderByMapping = [
-            'updated_at' => 'u.updated_at',
             'created_at' => 'u.created_at',
+            'updated_at' => 'u.updated_at',
             'name' => 'u.name',
         ];
 
@@ -84,15 +87,9 @@ class UserDataLayer
             $params[':searchText'] = '%' . $searchText . '%';
         }
 
-        $orderBy = ' ORDER BY ' .
-            (empty($orderByMapping[$queryOptions->getOrderBy()])
-                ? 'u.created_at'
-                : $orderByMapping[$queryOptions->getOrderBy()])
-            . ' ' . $queryOptions->getSortingDirection();
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
 
-        $limit = ' LIMIT ' . $queryOptions->getLimit() . ' OFFSET ' . $queryOptions->getOffset();
-
-        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderBy . $limit;
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
 
         $res = $this->db->fetchAll($sql, $params);
 

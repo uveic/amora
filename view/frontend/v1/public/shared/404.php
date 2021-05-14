@@ -12,8 +12,8 @@ use Amora\Core\Model\Response\HtmlResponseData;
 <?= $this->insert('shared/partials/header', ['responseData' => $responseData]) ?>
 <main>
   <article>
-    <h1 class="article-title">Page Not Found :(</h1>
-    <p class="m-b-6">The page you are looking for does not exist.</p>
+    <h1 class="article-title"><?=$responseData->getLocalValue('globalPageNotFoundTitle')?></h1>
+    <p class="m-b-6"><?=$responseData->getLocalValue('globalPageNotFoundContent')?></p>
     <div style="min-height: 200px"></div>
   </article>
 </main>

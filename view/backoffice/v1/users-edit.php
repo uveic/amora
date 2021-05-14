@@ -36,7 +36,7 @@ $defaultLanguage = $userToEdit
           <div class="control">
             <input class="input" id="name" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" minlength="3" value="<?=$this->e($userToEdit ? $userToEdit->getName() : ''); ?>" required>
           </div>
-          <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span>Mínimo tres letras.</p>
+          <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span><?=$responseData->getLocalValue('formPlaceholderUserHelp')?></p>
         </div>
         <div class="field">
           <label for="email" class="label"><?=$responseData->getLocalValue('globalEmail')?></label>

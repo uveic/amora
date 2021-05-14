@@ -7,6 +7,7 @@ use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
 use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\ImageService;
@@ -152,7 +153,10 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $articles = $this->articleService->getArticlesList(
             typeIds: [ArticleType::ARCHIVED, ArticleType::ARTICLE],
-            queryOptions: new QueryOptions(null, 'DESC', 100)
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('updated_at', 'DESC')],
+                limit: 100
+            )
         );
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 

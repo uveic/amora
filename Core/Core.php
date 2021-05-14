@@ -50,6 +50,8 @@ class Core
         require_once self::getPathRoot() . '/Core/Value/Language/Language.php';
         require_once self::getPathRoot() . '/Core/Value/Menu/CoreMenu.php';
 
+        require_once self::getPathRoot() . '/Core/Module/DataLayerTrait.php';
+
         require_once self::getPathRoot() . '/App/AppCore.php';
         require_once self::getPathRoot() . '/Core/Module/User/UserCore.php';
         require_once self::getPathRoot() . '/Core/Module/Article/ArticleCore.php';
@@ -242,6 +244,7 @@ class Core
                 $pass = $config['database'][$dbIdentifier]['password'];
                 $dbName = $config['database'][$dbIdentifier]['name'];
 
+                require_once self::getPathRoot() . '/Core/Model/Util/QueryOrderBy.php';
                 require_once self::getPathRoot() . '/Core/Model/Util/QueryOptions.php';
                 require_once self::getPathRoot() . '/Core/Database/Model/TransactionResponse.php';
                 require_once self::getPathRoot() . '/Core/Database/MySqlDb.php';

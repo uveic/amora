@@ -6,10 +6,18 @@ use Amora\Core\Core;
 
 class UrlBuilderUtil
 {
-    const APP_DASHBOARD_URL_PATH = '/dashboard';
+    // Backoffice URLs
     const BACKOFFICE_DASHBOARD_URL_PATH = '/backoffice/dashboard';
     const BACKOFFICE_USERS = '/backoffice/users';
+    const BACKOFFICE_IMAGES = '/backoffice/images';
+    const BACKOFFICE_ARTICLES = '/backoffice/articles';
 
+    // Authorised URLs
+    const AUTHORISED_ACCOUNT = '/account';
+    const AUTHORISED_LOGOUT = '/logout';
+    const APP_DASHBOARD_URL_PATH = '/dashboard';
+
+    // Public URLs
     const PUBLIC_API_PASSWORD_RESET = '/papi/login/password-reset';
     const PUBLIC_API_PASSWORD_CREATION = '/papi/login/password-creation';
 
@@ -53,9 +61,23 @@ class UrlBuilderUtil
         return self::getBaseLinkUrl($languageIsoCode) . '/user/reset/' . $verificationIdentifier;
     }
 
+    //////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
+    /// Backoffice URLs
+
     public static function getBackofficeDashboardUrl(string $languageIsoCode): string
     {
         return self::getBaseLinkUrl($languageIsoCode) . self::BACKOFFICE_DASHBOARD_URL_PATH;
+    }
+
+    public static function getBackofficeImagesUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . self::BACKOFFICE_IMAGES;
+    }
+
+    public static function getBackofficeArticlesUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . self::BACKOFFICE_ARTICLES;
     }
 
     public static function getBackofficeUsersUrl(string $languageIsoCode): string
@@ -63,10 +85,28 @@ class UrlBuilderUtil
         return self::getBaseLinkUrl($languageIsoCode) . self::BACKOFFICE_USERS;
     }
 
+    //////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
+    /// Authorised URLs
+
     public static function getAppDashboardUrl(string $languageIsoCode): string
     {
         return self::getBaseLinkUrl($languageIsoCode) . self::APP_DASHBOARD_URL_PATH;
     }
+
+    public static function getAuthorisedAccountUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . self::AUTHORISED_ACCOUNT;
+    }
+
+    public static function getAuthorisedLogoutUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . self::AUTHORISED_LOGOUT;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
+    /// Public URLs
 
     public static function getPublicInviteRequestUrl(string $languageIsoCode): string
     {

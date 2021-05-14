@@ -3,6 +3,7 @@
 namespace Amora\Router;
 
 use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Router\Controller\Response\BackofficeApiControllerGetUsersSuccessResponse;
@@ -152,7 +153,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     {
         $users = $this->userService->filterUsersBy(
             searchText: $q,
-            queryOptions: new QueryOptions(orderBy: 'name', sortingDirection: 'ASC', limit: 5),
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('name', 'ASC')],
+                limit: 5
+            ),
         );
 
         $output = [];

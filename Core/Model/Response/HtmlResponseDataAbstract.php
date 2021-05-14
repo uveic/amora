@@ -153,21 +153,19 @@ abstract class HtmlResponseDataAbstract
         return $this->getSession()->getTimezone();
     }
 
-    public function getMenu(): array
+    public function getMenu(bool $forceCustomerMenu = false): array
     {
-        if ($this->getSession() && $this->getSession()->isAdmin()) {
+        if ($this->getSession() && $this->getSession()->isAdmin() && !$forceCustomerMenu) {
             return AppMenu::getAdminAll(
-                $this->getBaseUrlWithLanguage(),
-                $this->getSiteLanguage(),
-                $this->getSession()->getUser()->getNameOrEmail(),
+                languageIsoCode: $this->getSiteLanguage(),
+                username: $this->getSession()->getUser()->getNameOrEmail(),
             );
         }
 
         if ($this->getSession()) {
             return AppMenu::getCustomerAll(
-                $this->getBaseUrlWithLanguage(),
-                $this->getSiteLanguage(),
-                $this->getSession()->getUser()->getNameOrEmail(),
+                languageIsoCode: $this->getSiteLanguage(),
+                username: $this->getSession()->getUser()->getNameOrEmail(),
             );
         }
 

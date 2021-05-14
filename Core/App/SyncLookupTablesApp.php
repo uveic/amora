@@ -66,13 +66,13 @@ final class SyncLookupTablesApp
      * @param MySqlDb $db
      * @param string $tableName
      * @param array $valueByDbFieldName - { field_name_on_db: string => value: string|int }
-     * @return bool
+     * @return void
      */
     private function syncLookupTable(
         MySqlDb $db,
         string $tableName,
         array $valueByDbFieldName
-    ): bool {
+    ): void {
         if (empty($tableName)) {
             $this->logger->logError('Table name is empty - Check array configuration');
             exit(1);
@@ -184,14 +184,12 @@ final class SyncLookupTablesApp
                 );
             }
         }
-
-        return true;
     }
 
     /**
      * Compare current values in DB with values in config file - Update field if necessary
      *
-     * @param int $rowId
+     * @param int|string $rowId
      * @param array $ours - Values in DB
      * @param array $theirs - Values in config file
      * @param string $tableName
@@ -199,7 +197,7 @@ final class SyncLookupTablesApp
      * @return boolean - Always true
      */
     private function compareAndUpdate(
-        int $rowId,
+        int|string $rowId,
         array $ours,
         array $theirs,
         string $tableName,

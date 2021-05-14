@@ -3,7 +3,7 @@
 use Amora\Core\Module\User\Service\UserService;
 
 return [
-    'navDashboard' => 'Escritorio',
+    'navDashboard' => 'Inicio',
     'navAccount' => 'Os teus datos',
     'navSignOut' => 'Saír',
     'navSignIn' => 'Entra',
@@ -12,14 +12,15 @@ return [
     'navCreatePassword' => 'Crear contrasinal',
     'navDownloadAccountData' => 'Descargar os teus datos',
     'navDeleteAccount' => 'Eliminar conta',
-    'navAdminDashboard' => 'Escritorio',
+    'navAdministrator' => 'Admin',
+    'navAdminDashboard' => 'Inicio',
     'navAdminUsers' => 'Usuarios',
     'navAdminContent' => 'Contido',
     'navAdminImages' => 'Imaxes',
     'navAdminArticles' => 'Artigos',
     'navAdminArticleOptions' => 'Configuración artigo',
 
-    'authenticationActionHomeLink' => 'Volver á páxina de entrada',
+    'authenticationActionHomeLink' => 'Ir á páxina de entrada',
     'authenticationLoginSubtitle' => 'Benvida/o de volta. Adiante!',
     'authenticationRegisterSubtitle' => 'A un paso.',
     'authenticationRegisterTOS' => 'Ao rexistráreste aceptas os <a href="#">termos de uso</a> e a <a href="#">política de privacidade</a>.',
@@ -124,6 +125,8 @@ return [
     'globalAddHtml' => 'Engadir HTML',
 
     'globalGenericError' => 'Algo non foi ben, por favor inténtao de novo.',
+    'globalPageNotFoundTitle' => 'Non se atopu a páxinga :(',
+    'globalPageNotFoundContent' => 'A páxina que buscas non existe.',
 
     'articleEditHomepageTitle' => 'Editar o contido da portada',
     'articleStatusDraft' => 'Borrador',
