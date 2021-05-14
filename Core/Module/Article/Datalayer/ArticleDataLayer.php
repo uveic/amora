@@ -4,6 +4,7 @@ namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Module\DataLayerTrait;
 use Throwable;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
@@ -15,6 +16,8 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 
 class ArticleDataLayer
 {
+    use DataLayerTrait;
+
     const ARTICLE_TABLE = 'article';
     const ARTICLE_HISTORY_TABLE = 'article_history';
 
@@ -49,8 +52,8 @@ class ArticleDataLayer
         }
 
         $orderByMapping = [
-            'published_at' => 'a.published_at',
             'updated_at' => 'a.updated_at',
+            'published_at' => 'a.published_at',
         ];
 
         $params = [];
@@ -113,13 +116,7 @@ class ArticleDataLayer
         }
 
         if ($typeIds) {
-            $allKeys = [];
-            foreach (array_values($typeIds) as $key => $typeId) {
-                $currentKey = ':typeId' . $key;
-                $allKeys[] = $currentKey;
-                $params[$currentKey] = $typeId;
-            }
-            $where .= ' AND a.type_id IN (' . implode(', ', $allKeys) . ')';
+            $where .= $this->generateWhereSqlCodeForIds($params, $typeIds, 'a.type_id', 'typeId');
         }
 
         if (isset($uri)) {
@@ -128,26 +125,15 @@ class ArticleDataLayer
         }
 
         if ($tagIds) {
-            $allKeys = [];
             $joins .= ' JOIN ' . ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE
                 . ' AS at ON at.article_id = a.id';
-            foreach (array_values($tagIds) as $key => $tagId) {
-                $currentKey = ':tagId' . $key;
-                $allKeys[] = $currentKey;
-                $params[$currentKey] = $tagId;
-            }
-            $where .= ' AND at.tag_id IN (' . implode(', ', $allKeys) . ')';
+
+            $where .= $this->generateWhereSqlCodeForIds($params, $tagIds, 'at.tag_id', 'tagId');
         }
 
-        $orderBy = ' ORDER BY ' .
-            (empty($orderByMapping[$queryOptions->getOrderBy()])
-                ? 'a.updated_at'
-                : $orderByMapping[$queryOptions->getOrderBy()])
-            . ' ' . $queryOptions->getSortingDirection();
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
 
-        $limit = ' LIMIT ' . $queryOptions->getLimit() . ' OFFSET ' . $queryOptions->getOffset();
-
-        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderBy . $limit;
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
 
         $res = $this->db->fetchAll($sql, $params);
 

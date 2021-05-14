@@ -189,12 +189,12 @@ final class DateUtil
                 break;
         }
 
-        if ($diff['y'] !== 0
-            && $diff['m'] !== 0
-            && $diff['d'] !== 0
-            && $diff['h'] !== 0
-            && $diff['i'] !== 0
-            && !$includeSeconds
+        if (!$includeSeconds &&
+            ($diff['y'] > 0
+                || $diff['m'] > 0
+                || $diff['d'] > 0
+                || $diff['h'] > 0
+                || $diff['i'] > 0)
         ) {
             unset($string['s']);
         }
@@ -338,7 +338,7 @@ final class DateUtil
                     . $time;
             default:
                 $format = ($includeWeekDay ? 'l, ' : '')
-                    . ($includeDay ? ' jS ' : '')
+                    . ($includeDay ? 'jS ' : '')
                     . 'F'
                     . ($includeYear ? ' Y' : '')
                     . ($includeTime ? ' \a\t ' . $timeFormat : '');

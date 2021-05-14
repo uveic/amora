@@ -5,25 +5,15 @@ namespace Amora\Core\Model\Util;
 class QueryOptions
 {
     public function __construct(
-        private ?string $orderBy = null,
-        private string $sortingDirection = 'DESC',
+        private array $orderBy = [],
         private int $limit = 10000,
         private int $offset = 0,
-    ) {
-        $this->sortingDirection = strtoupper(trim($this->sortingDirection));
-        if (!in_array($this->sortingDirection, ['ASC', 'DESC'])) {
-            $this->sortingDirection = 'DESC';
-        }
-    }
+        private bool $orderRandomly = false,
+    ) {}
 
-    public function getOrderBy(): ?string
+    public function getOrderBy(): array
     {
         return $this->orderBy;
-    }
-
-    public function getSortingDirection(): string
-    {
-        return $this->sortingDirection;
     }
 
     public function getLimit(): int
@@ -34,5 +24,10 @@ class QueryOptions
     public function getOffset(): int
     {
         return $this->offset;
+    }
+
+    public function orderRandomly(): bool
+    {
+        return $this->orderRandomly;
     }
 }

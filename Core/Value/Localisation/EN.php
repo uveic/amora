@@ -12,6 +12,7 @@ return [
     'navCreatePassword' => 'Create Password',
     'navDownloadAccountData' => 'Download Account Data',
     'navDeleteAccount' => 'Delete Account',
+    'navAdministrator' => 'Admin',
     'navAdminDashboard' => 'Dashboard',
     'navAdminUsers' => 'Users',
     'navAdminContent' => 'Content',
@@ -124,6 +125,8 @@ return [
     'globalAddHtml' => 'Add HTML',
 
     'globalGenericError' => 'Something went wrong, please try again.',
+    'globalPageNotFoundTitle' => 'Page Not Found :(',
+    'globalPageNotFoundContent' => 'The page you are looking for does not exist.',
 
     'articleEditHomepageTitle' => 'Edit Homepage Content',
     'articleStatusDraft' => 'Draft',

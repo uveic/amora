@@ -293,7 +293,7 @@ ul.nav-dropdown-menu a svg {
   width: 20px;
   height: auto;
   vertical-align: middle;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 ul.nav-dropdown-menu a:hover {
