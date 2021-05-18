@@ -54,7 +54,7 @@ trait DataLayerTrait {
                     continue;
                 }
 
-                $orderByParts[] = $item->getField() . ' ' . $item->getDirection();
+                $orderByParts[] = $orderByMapping[$item->getField()] . ' ' . $item->getDirection();
             }
 
             if (empty($orderByParts)) {
