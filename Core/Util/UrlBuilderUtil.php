@@ -23,6 +23,9 @@ class UrlBuilderUtil
 
     const PUBLIC_HTML_INVITE_REQUEST = '/invite-request';
     const PUBLIC_HTML_LOGIN = '/login';
+    const PUBLIC_CREATE_PASSWORD = '/user/create/%s';
+    const PUBLIC_VERIFY_USER = '/user/verify/%s';
+    const PUBLIC_RESET_PASSWORD = '/user/reset/%s';
 
     protected static function getBaseLinkUrl(string $siteLanguage): string
     {
@@ -30,35 +33,6 @@ class UrlBuilderUtil
         $siteLanguage = strtolower($siteLanguage);
 
         return trim($baseUrl, ' /') . '/' . $siteLanguage;
-    }
-
-    public static function getCreatePasswordUrl(
-        string $languageIsoCode,
-        string $verificationIdentifier
-    ): string {
-        return self::getBaseLinkUrl($languageIsoCode) . '/user/create/' . $verificationIdentifier;
-    }
-
-    public static function getEmailUpdateUrl(
-        string $languageIsoCode,
-        string $verificationIdentifier
-    ): string {
-        return self::getBaseLinkUrl($languageIsoCode) . '/user/verify/' . $verificationIdentifier;
-    }
-
-    public static function getVerificationEmailUrl(
-        string $languageIsoCode,
-        string $verificationIdentifier
-    ): string {
-        return self::getBaseLinkUrl($languageIsoCode) . '/user/verify/' . $verificationIdentifier;
-    }
-
-    public static function getPasswordResetUrl(
-        string $languageIsoCode,
-        string $verificationIdentifier
-    ): string
-    {
-        return self::getBaseLinkUrl($languageIsoCode) . '/user/reset/' . $verificationIdentifier;
     }
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -121,5 +95,38 @@ class UrlBuilderUtil
     public static function getPublicHomepageUrl(string $languageIsoCode): string
     {
         return self::getBaseLinkUrl($languageIsoCode);
+    }
+
+    public static function getPublicCreatePasswordUrl(
+        string $languageIsoCode,
+        string $verificationIdentifier
+    ): string {
+        return self::getBaseLinkUrl($languageIsoCode) .
+            sprintf(self::PUBLIC_CREATE_PASSWORD, $verificationIdentifier);
+    }
+
+    public static function getPublicEmailUpdateUrl(
+        string $languageIsoCode,
+        string $verificationIdentifier
+    ): string {
+        return self::getBaseLinkUrl($languageIsoCode) .
+            sprintf(self::PUBLIC_VERIFY_USER, $verificationIdentifier);
+    }
+
+    public static function getPublicVerificationEmailUrl(
+        string $languageIsoCode,
+        string $verificationIdentifier
+    ): string {
+        return self::getBaseLinkUrl($languageIsoCode) .
+            sprintf(self::PUBLIC_VERIFY_USER, $verificationIdentifier);
+    }
+
+    public static function getPublicPasswordResetUrl(
+        string $languageIsoCode,
+        string $verificationIdentifier
+    ): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) .
+            sprintf(self::PUBLIC_RESET_PASSWORD, $verificationIdentifier);
     }
 }
