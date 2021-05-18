@@ -170,7 +170,10 @@ class UserMailService
     {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getPasswordResetUrl($languageIsoCode, $verificationIdentifier);
+        $linkUrl = UrlBuilderUtil::getPublicPasswordResetUrl(
+            languageIsoCode: $languageIsoCode,
+            verificationIdentifier: $verificationIdentifier,
+        );
         $siteName = $localisationUtil->getValue('siteName');
         $emailSubject = sprintf(
             $localisationUtil->getValue('emailPasswordChangeSubject'),
@@ -204,9 +207,9 @@ class UserMailService
     ): MailerItem {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getVerificationEmailUrl(
-            $languageIsoCode,
-            $verificationIdentifier
+        $linkUrl = UrlBuilderUtil::getPublicVerificationEmailUrl(
+            languageIsoCode: $languageIsoCode,
+            verificationIdentifier: $verificationIdentifier,
         );
         $siteName = $localisationUtil->getValue('siteName');
 
@@ -241,7 +244,10 @@ class UserMailService
     ): MailerItem {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getEmailUpdateUrl($languageIsoCode, $verificationIdentifier);
+        $linkUrl = UrlBuilderUtil::getPublicEmailUpdateUrl(
+            languageIsoCode: $languageIsoCode,
+            verificationIdentifier: $verificationIdentifier
+        );
         $siteName = $localisationUtil->getValue('siteName');
 
         $emailSubject = $localisationUtil->getValue('emailUpdateVerificationSubject');
@@ -272,7 +278,10 @@ class UserMailService
     ): MailerItem {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getCreatePasswordUrl($languageIsoCode, $verificationIdentifier);
+        $linkUrl = UrlBuilderUtil::getPublicCreatePasswordUrl(
+            languageIsoCode: $languageIsoCode,
+            verificationIdentifier: $verificationIdentifier,
+        );
         $siteName = $localisationUtil->getValue('siteName');
 
         $emailSubject = sprintf(
