@@ -84,4 +84,9 @@ final class Language
     {
         return array_column(self::getAvailableLanguages(), 'iso_code');
     }
+
+    public static function isValidIsoCode(string $languageIsoCode): bool
+    {
+        return in_array(strtoupper($languageIsoCode), self::getAvailableIsoCodes());
+    }
 }

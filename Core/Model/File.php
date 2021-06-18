@@ -7,9 +7,9 @@ class File
     public function __construct(
         private string $name,
         private string $fullPath,
-        private string $size,
-        private string $type,
-        private int $error
+        private ?string $size = null,
+        private ?string $type = null,
+        private ?int $error = null,
     ) {}
 
     public function getName(): string
@@ -22,17 +22,22 @@ class File
         return $this->fullPath;
     }
 
-    public function getSize(): string
+    public function getFullPathWithName(): string
+    {
+        return $this->getFullPath() . $this->getName();
+    }
+
+    public function getSize(): ?string
     {
         return $this->size;
     }
 
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    public function getError(): int
+    public function getError(): ?int
     {
         return $this->error;
     }

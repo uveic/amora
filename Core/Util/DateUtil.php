@@ -5,8 +5,9 @@ namespace Amora\Core\Util;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
-use Exception;
 use Amora\Core\Core;
+use Exception;
+use Throwable;
 
 final class DateUtil
 {
@@ -133,6 +134,7 @@ final class DateUtil
      * @param bool $full
      * @param bool $includePrefixAndOrSuffix
      * @param bool $includeSeconds
+     * @param string $timezone
      * @return string
      * @throws Exception
      */
@@ -141,10 +143,16 @@ final class DateUtil
         string $language = 'EN',
         bool $full = false,
         bool $includePrefixAndOrSuffix = false,
-        bool $includeSeconds = false
+        bool $includeSeconds = false,
+        string $timezone = 'UTC',
     ): string {
-        $now = new DateTime;
-        $ago = new DateTime($datetime);
+        try {
+            $tz = new DateTimeZone($timezone);
+        } catch (Throwable) {
+            $tz = new DateTimeZone('UTC');
+        }
+        $now = new DateTimeImmutable('now', $tz);
+        $ago = new DateTimeImmutable($datetime, $tz);
         $diff = (array)$now->diff($ago);
 
         switch (strtoupper($language)) {
@@ -266,6 +274,7 @@ final class DateUtil
         bool $includeYear = true,
         bool $includeDay = true,
         bool $includeSeconds = false,
+        bool $includeMonthYearSeparator = false,
     ): string {
         if (!isset($stringDate)) {
             $stringDate = 'now';
@@ -283,6 +292,7 @@ final class DateUtil
             includeYear: $includeYear,
             includeDay: $includeDay,
             includeSeconds: $includeSeconds,
+            includeMonthYearSeparator: $includeMonthYearSeparator,
         );
     }
 
@@ -295,6 +305,7 @@ final class DateUtil
         bool $includeYear = true,
         bool $includeDay = true,
         bool $includeSeconds = false,
+        bool $includeMonthYearSeparator = false,
     ): string {
         $outputTzDate = $date->setTimezone(new DateTimeZone($timezone));
 
@@ -311,7 +322,7 @@ final class DateUtil
                 $day = $includeDay ? $outputTzDate->format('j') . ' de ' : '';
                 $time = $includeTime ? ' ás ' . $outputTzDate->format($timeFormat) : '';
                 $year = $includeYear
-                    ? ($includeDay ? ' de ' : ' ') . $outputTzDate->format('Y')
+                    ? ($includeMonthYearSeparator ? ' de ' : ' ') . $outputTzDate->format('Y')
                     : '';
 
                 return $weekDay
@@ -328,7 +339,7 @@ final class DateUtil
                 $day = $includeDay ? $outputTzDate->format('j') . ' de ' : '';
                 $time = $includeTime ? ' a las ' . $outputTzDate->format($timeFormat) : '';
                 $year = $includeYear
-                    ? ($includeDay ? ' de ' : ' ') . $outputTzDate->format('Y')
+                    ? ($includeMonthYearSeparator ? ' de ' : ' ') . $outputTzDate->format('Y')
                     : '';
 
                 return $weekDay

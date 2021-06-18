@@ -138,4 +138,23 @@ final class StringUtil
         $text = str_replace('<br/>', ' ', $text);
         return strip_tags($text);
     }
+
+    public static function formatNumber(
+        float $number,
+        int $decimals = 0,
+        string $language = 'EN',
+        bool $includeThousandsSeparator = true,
+    ): string {
+        $language = strtoupper($language);
+
+        if ($language === 'ES' || $language === 'GL') {
+            $thousandsSeparator = $includeThousandsSeparator ? '.' : '';
+            $decimalsSeparator = ',';
+        } else {
+            $thousandsSeparator = $includeThousandsSeparator ? ',' : '';
+            $decimalsSeparator = '.';
+        }
+
+        return number_format($number, $decimals, $decimalsSeparator, $thousandsSeparator);
+    }
 }

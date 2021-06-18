@@ -116,7 +116,7 @@ class Response
         return Core::getPathRoot() . '/view/' . $templatePath;
     }
 
-    public static function createDownloadResponse(
+    private static function createDownloadResponse(
         string $localPath,
         string $fileName,
         string $contentType
@@ -131,6 +131,15 @@ class Response
                 'Content-Length:' . filesize($localPath),
                 "Content-Disposition: attachment; filename={$fileName}"
             ]
+        );
+    }
+
+    public static function createCsvDownloadResponse(string $localPath, string $fileName): Response
+    {
+        return self::createDownloadResponse(
+            localPath: $localPath,
+            fileName: $fileName,
+            contentType: self::CSV,
         );
     }
 
