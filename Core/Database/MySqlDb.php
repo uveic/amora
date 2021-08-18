@@ -25,6 +25,16 @@ final class MySqlDb
         return $this->name;
     }
 
+    public function getUser(): string
+    {
+        return $this->user;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
     public function fetchAll(string $sql, array $params = []): array
     {
         $this->connect();

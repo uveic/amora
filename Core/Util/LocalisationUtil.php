@@ -44,7 +44,7 @@ final class LocalisationUtil
         }
 
         $this->logger->logError(
-            'Localisation not set for key in site default language: ' . $key .
+            'Localisation not set for key: ' . $key .
             ' - Site default language: ' . $this->defaultLocalisationIsoCode
         );
 

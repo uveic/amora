@@ -246,7 +246,7 @@ class UserMailService
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
         $linkUrl = UrlBuilderUtil::getPublicEmailUpdateUrl(
             languageIsoCode: $languageIsoCode,
-            verificationIdentifier: $verificationIdentifier
+            verificationIdentifier: $verificationIdentifier,
         );
         $siteName = $localisationUtil->getValue('siteName');
 

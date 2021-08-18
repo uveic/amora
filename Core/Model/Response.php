@@ -160,6 +160,15 @@ class Response
         return new Response('Page not found :(', self::PLAIN, self::HTTP_404_NOT_FOUND);
     }
 
+    public static function createJsonNotFoundResponse(): Response
+    {
+        return new Response(
+            json_encode(['success' => false]),
+            self::JSON,
+            self::HTTP_404_NOT_FOUND
+        );
+    }
+
     public static function createUnauthorisedRedirectLoginResponse(string $siteLanguage): Response
     {
         return Response::createRedirectResponse(UrlBuilderUtil::getPublicLoginUrl($siteLanguage));

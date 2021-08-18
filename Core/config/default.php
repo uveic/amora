@@ -7,12 +7,19 @@ return [
     'phpLocale' => 'en_GB',
     'defaultSiteLanguage' => 'en',
     'baseUrl' => 'http://localhost:8888/',
+    'logoUrl' => '',
     'mediaBaseDir' => '/path/to/your/code/folder/public/uploads',
     'mediaBaseUrl' => '/uploads/',
     'actionLoggerEnabled' => true,
     'registrationEnabled' => false,
     'invitationEnabled' => false,
     'tagIdsForHomepage' => [-1],
+    'databaseBackup' => [
+        'mysqlCommandPath' => 'mysql',
+        'mysqlDumpCommandPath' => 'mysqldump',
+        'gzipCommandPath' => 'gzip',
+        'folderPath' => '/tmp/',
+    ],
     'database' => [
         'core' => [
             'host' => 'localhost',

@@ -7,28 +7,20 @@ use Amora\Core\Logger;
 
 abstract class App
 {
-    protected Logger $logger;
-
-    private string $appName;
     private LockManager $lockManager;
     private string $logPrefix;
-    private int $appFrequencySeconds;
 
     public function __construct(
-        Logger $logger,
-        string $appName,
-        int $appFrequencySeconds = 5,
-        int $lockMaxTimeSinceLastSyncSeconds = 30
+        protected Logger $logger,
+        private string $appName,
+        private int $appFrequencySeconds = 5,
+        int $lockMaxTimeSinceLastSyncSeconds = 30,
+        private bool $isPersistent = true,
     ) {
-        $this->logger = $logger;
-
         if (empty($appName)) {
             $this->logger->logError('Empty App name value when trying to run an App. Aborting...');
             exit(1);
         }
-
-        $this->appFrequencySeconds = $appFrequencySeconds;
-        $this->appName = $appName;
 
         $this->lockManager = new LockManager(
             $this->logger,
@@ -56,7 +48,7 @@ abstract class App
         $this->lockManager->setLock();
 
         try {
-            $this->triggerApp($f);
+            $this->isPersistent ? $this->triggerApp($f) : $this->runApp($f);
         } catch (Throwable $t) {
             $this->logger->logException($t);
             exit(1);
@@ -106,5 +98,15 @@ abstract class App
             ' - Memory: ' . number_format($usedMiB, 3) . ' MiB'
         );
         unset($usedMiB);
+    }
+
+    protected function log(string $message, bool $isError = false): void
+    {
+        if ($isError) {
+            $this->logger->logError($this->getLogPrefix() . $message);
+            return;
+        }
+
+        $this->logger->logInfo($this->getLogPrefix() . $message);
     }
 }

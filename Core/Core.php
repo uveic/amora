@@ -3,6 +3,7 @@
 namespace Amora\Core;
 
 use Amora\App\AppCore;
+use Amora\Core\Database\DbBackupApp;
 use Closure;
 use Exception;
 use Amora\Core\App\SyncLookupTablesApp;
@@ -269,6 +270,40 @@ class Core
             function () use ($db, $pathToMigrationFiles) {
                 require_once self::getPathRoot() . '/Core/Database/Migration/MigrationDbApp.php';
                 return new MigrationDbApp($db, $pathToMigrationFiles);
+            },
+            false
+        );
+    }
+
+    /**
+     * @param MySqlDb $db
+     * @return DbBackupApp
+     * @throws Exception
+     */
+    public static function getDbBackupApp(
+        MySqlDb $db
+    ): DbBackupApp {
+        $config = Core::getConfig();
+
+        return self::getInstance(
+            'DbBackupApp',
+            function () use ($db, $config) {
+                $backupFolderPath = $config['databaseBackup']['folderPath'] ?? '/tmp/';
+                $mysqlCommand = $config['databaseBackup']['mysqlCommandPath'] ?? 'mysql';
+                $mysqlDumpCommand = $config['databaseBackup']['mysqlDumpCommandPath'] ?? 'mysqldump';
+                $gzipCommand = $config['databaseBackup']['gzipCommandPath'] ?? 'gzip';
+
+                require_once self::getPathRoot() . '/Core/App/LockManager.php';
+                require_once self::getPathRoot() . '/Core/App/App.php';
+                require_once self::getPathRoot() . '/Core/Database/DbBackupApp.php';
+                return new DbBackupApp(
+                    logger: self::getDefaultLogger(),
+                    db: $db,
+                    backupFolderPath: $backupFolderPath,
+                    mysqlCommand: $mysqlCommand,
+                    mysqlDumpCommand: $mysqlDumpCommand,
+                    gzipCommand: $gzipCommand,
+                );
             },
             false
         );

@@ -6,6 +6,9 @@ namespace Amora\Core\Bin;
 // change working directory
 chdir(dirname(__FILE__));
 
+// change working directory
+chdir(dirname(__FILE__));
+
 require_once '../Core.php';
 
 use Throwable;

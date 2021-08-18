@@ -41,7 +41,7 @@ class User
             $createdAt,
             $updatedAt,
             $user['email'] ?? null,
-            $user['name'] ?? null,
+            $user['user_name'] ?? ($user['name'] ?? null),
             $user['password_hash'] ?? null,
             $user['bio'] ?? null,
             empty($user['is_enabled']) ? false : true,

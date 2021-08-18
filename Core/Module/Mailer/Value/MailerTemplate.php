@@ -4,7 +4,7 @@ namespace Amora\Core\Module\Mailer\Value;
 
 use Amora\Core\Model\Util\LookupTableBasicValue;
 
-final class MailerTemplate
+class MailerTemplate
 {
     const INVITATION_001 = 1000;
 

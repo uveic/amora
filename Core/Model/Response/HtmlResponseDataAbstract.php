@@ -166,6 +166,7 @@ abstract class HtmlResponseDataAbstract
             return AppMenu::getCustomerAll(
                 languageIsoCode: $this->getSiteLanguage(),
                 username: $this->getSession()->getUser()->getNameOrEmail(),
+                includeAdminLink: $this->getSession()->isAdmin(),
             );
         }
 
