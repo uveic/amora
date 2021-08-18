@@ -2,11 +2,11 @@
 
 namespace Amora\Core\Util;
 
+use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Amora\Core\Core;
-use Exception;
 use Throwable;
 
 final class DateUtil
@@ -35,7 +35,7 @@ final class DateUtil
         }
 
         // For some reason DateTime::createFromFormat does not check if the year has four digits
-        // It accepts as valid strings like: 25-01-01T00:00:00Z
+        // It accepts strings like: 25-01-01T00:00:00Z as valid
         if ((int) $dateObj->format('Y') < 1000) {
             return false;
         }
@@ -136,7 +136,7 @@ final class DateUtil
      * @param bool $includeSeconds
      * @param string $timezone
      * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     public static function getElapsedTimeString(
         string $datetime,
@@ -268,13 +268,15 @@ final class DateUtil
     public static function formatUtcDate(
         ?string $stringDate = null,
         string $lang = 'EN',
+        string $timezone = 'UTC',
+        bool $includeDay = true,
+        bool $includeYear = true,
         bool $includeWeekDay = true,
         bool $includeTime = false,
-        string $timezone = 'UTC',
-        bool $includeYear = true,
-        bool $includeDay = true,
+        bool $includeDayTimeSeparator = true,
         bool $includeSeconds = false,
         bool $includeMonthYearSeparator = false,
+        bool $includeDayMonthSeparator = true,
     ): string {
         if (!isset($stringDate)) {
             $stringDate = 'now';
@@ -286,26 +288,30 @@ final class DateUtil
         return self::formatDate(
             date: $outputTzDate,
             lang: $lang,
+            timezone: $timezone,
+            includeDay: $includeDay,
+            includeYear: $includeYear,
             includeWeekDay: $includeWeekDay,
             includeTime: $includeTime,
-            timezone: $timezone,
-            includeYear: $includeYear,
-            includeDay: $includeDay,
+            includeDayTimeSeparator: $includeDayTimeSeparator,
             includeSeconds: $includeSeconds,
             includeMonthYearSeparator: $includeMonthYearSeparator,
+            includeDayMonthSeparator: $includeDayMonthSeparator,
         );
     }
 
     public static function formatDate(
         DateTimeImmutable|DateTime $date,
         string $lang = 'EN',
+        string $timezone = 'UTC',
+        bool $includeDay = true,
+        bool $includeYear = true,
         bool $includeWeekDay = true,
         bool $includeTime = false,
-        string $timezone = 'UTC',
-        bool $includeYear = true,
-        bool $includeDay = true,
+        bool $includeDayTimeSeparator = true,
         bool $includeSeconds = false,
         bool $includeMonthYearSeparator = false,
+        bool $includeDayMonthSeparator = true,
     ): string {
         $outputTzDate = $date->setTimezone(new DateTimeZone($timezone));
 
@@ -314,37 +320,41 @@ final class DateUtil
         $lang = strtoupper($lang);
         switch (strtoupper($lang)) {
             case 'GL':
-                $months = ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo',
-                    'agosto', 'setembro', 'outubro', 'novembro', 'decembro'];
                 $days = ['luns', 'martes', 'mércores', 'xoves', 'venres', 'sábado', 'domingo'];
 
                 $weekDay = $includeWeekDay ? $days[$outputTzDate->format('N') - 1] . ', ' : '';
-                $day = $includeDay ? $outputTzDate->format('j') . ' de ' : '';
-                $time = $includeTime ? ' ás ' . $outputTzDate->format($timeFormat) : '';
+                $day = $includeDay ? $outputTzDate->format('j')
+                    . ($includeDayMonthSeparator ? ' de ' : ' ')
+                    : '';
+                $time = $includeTime
+                    ? ($includeDayTimeSeparator ? ' ás ' : ' ') . $outputTzDate->format($timeFormat)
+                    : '';
                 $year = $includeYear
                     ? ($includeMonthYearSeparator ? ' de ' : ' ') . $outputTzDate->format('Y')
                     : '';
 
                 return $weekDay
                     . $day
-                    . $months[$outputTzDate->format('n') - 1]
+                    . self::getMonthName($outputTzDate->format('n'), $lang)
                     . $year
                     . $time;
             case 'ES':
-                $months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
-                    'septiembre', 'octubre', 'noviembre', 'dieciembre'];
                 $days = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
                 $weekDay = $includeWeekDay ? $days[$outputTzDate->format('N') - 1] . ', ' : '';
-                $day = $includeDay ? $outputTzDate->format('j') . ' de ' : '';
-                $time = $includeTime ? ' a las ' . $outputTzDate->format($timeFormat) : '';
+                $day = $includeDay ? $outputTzDate->format('j')
+                    . ($includeDayMonthSeparator ? ' de ' : ' ')
+                    : '';
+                $time = $includeTime
+                    ? ($includeDayTimeSeparator ? ' a las ' : ' ') . $outputTzDate->format($timeFormat)
+                    : '';
                 $year = $includeYear
                     ? ($includeMonthYearSeparator ? ' de ' : ' ') . $outputTzDate->format('Y')
                     : '';
 
                 return $weekDay
                     . $day
-                    . $months[$outputTzDate->format('n') - 1]
+                    . self::getMonthName($outputTzDate->format('n'), $lang)
                     . $year
                     . $time;
             default:
@@ -356,6 +366,21 @@ final class DateUtil
 
                 return $outputTzDate->format($format);
         }
+    }
+
+    public static function getMonthName(int $month, string $lang = 'EN'): string
+    {
+        $lang = strtoupper($lang);
+        $months = match($lang) {
+            'ES' => ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
+                'septiembre', 'octubre', 'noviembre', 'dieciembre'],
+            'GL' => ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo',
+                'agosto', 'setembro', 'outubro', 'novembro', 'decembro'],
+            default => ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+                'August', 'September', 'October', 'November', 'December'],
+        };
+
+        return $months[$month - 1] ?? '';
     }
 
     public static function isSummerTime(): bool
@@ -437,5 +462,38 @@ final class DateUtil
 
         $now = new DateTimeImmutable('now');
         return $now->format('Y-m-d H:i:s');
+    }
+
+    public static function convertSecondsToDateInterval(int $seconds): DateInterval
+    {
+        $minutes = 0;
+        $hours = 0;
+        $days = 0;
+
+        if ($seconds > 60) {
+            $minutes = round($seconds / 60, 0, PHP_ROUND_HALF_DOWN);
+            $seconds = $seconds % 60;
+        }
+
+        if ($minutes > 60) {
+            $hours = round($minutes / 60, 0, PHP_ROUND_HALF_DOWN);
+            $minutes = $minutes % 60;
+        }
+
+        if ($hours > 24) {
+            $days = round($hours / 24, 0, PHP_ROUND_HALF_DOWN);
+            $hours = $hours % 24;
+        }
+
+        return new DateInterval(
+            'P0000-00-'
+            . str_pad($days, 2, '0', STR_PAD_LEFT)
+            . 'T'
+            . str_pad($hours, 2, '0', STR_PAD_LEFT)
+            . ':'
+            . str_pad($minutes, 2, '0', STR_PAD_LEFT)
+            . ':'
+            . str_pad($seconds, 2, '0', STR_PAD_LEFT)
+        );
     }
 }

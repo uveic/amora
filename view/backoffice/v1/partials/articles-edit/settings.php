@@ -25,9 +25,9 @@ if ($article) {
         . DateUtil::formatUtcDate(
             stringDate: $article->getCreatedAt(),
             lang: $responseData->getSiteLanguage(),
+            timezone: $responseData->getTimezone(),
             includeWeekDay: true,
             includeTime: true,
-            timezone: $responseData->getTimezone()
         ) . ')'
         . ' '
         . $responseData->getLocalValue('globalBy') . ' '

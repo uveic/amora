@@ -14,7 +14,7 @@ $updatedAtDate = DateUtil::formatUtcDate(
     stringDate: $article->getUpdatedAt(),
     lang: $responseData->getSiteLanguage(),
     includeWeekDay: false,
-    includeTime: true
+    includeTime: true,
 );
 
 ?>

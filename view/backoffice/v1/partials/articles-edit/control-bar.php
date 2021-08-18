@@ -16,8 +16,8 @@ if ($article) {
     $updatedAtDate = DateUtil::formatUtcDate(
         stringDate: $article->getUpdatedAt(),
         lang: $responseData->getSiteLanguage(),
+        timezone: $responseData->getTimezone(),
         includeTime: true,
-        timezone: $responseData->getTimezone()
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(

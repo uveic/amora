@@ -30,9 +30,9 @@ foreach ($responseData->getBlogArticles() as $article) {
         ? DateUtil::formatUtcDate(
             stringDate: $article->getPublishOn(),
             lang: $responseData->getSiteLanguage(),
-            includeWeekDay: false,
             timezone: $article->getUser()->getTimezone(),
-            includeYear: false
+            includeYear: false,
+            includeWeekDay: false,
         )
         : '';
 

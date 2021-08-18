@@ -4,49 +4,21 @@ namespace Amora\Core\Module\Mailer\Model;
 
 class MailerItem
 {
-    private ?int $id;
-    private int $templateId;
-    private ?string $replyToEmailAddress;
-    private ?string $senderName;
-    private string $receiverEmailAddress;
-    private ?string $receiverName;
-    private ?string $subject;
-    private ?string $contentHtml;
-    private ?string $fieldsJson;
-    private string $createdAt;
-    private ?string $processedAt;
-    private ?bool $hasError;
-    private ?string $lockId;
-
     public function __construct(
-        ?int $id,
-        int $templateId,
-        ?string $replyToEmailAddress,
-        ?string $senderName,
-        string $receiverEmailAddress,
-        ?string $receiverName,
-        ?string $subject,
-        ?string $contentHtml,
-        ?string $fieldsJson,
-        string $createdAt,
-        ?string $processedAt = null,
-        ?bool $hasError = null,
-        ?string $lockId = null
-    ) {
-        $this->id = $id;
-        $this->templateId = $templateId;
-        $this->replyToEmailAddress = $replyToEmailAddress;
-        $this->senderName = $senderName;
-        $this->receiverEmailAddress = $receiverEmailAddress;
-        $this->receiverName = $receiverName;
-        $this->subject = $subject;
-        $this->contentHtml = $contentHtml;
-        $this->fieldsJson = $fieldsJson;
-        $this->createdAt = $createdAt;
-        $this->processedAt = $processedAt;
-        $this->hasError = $hasError;
-        $this->lockId = $lockId;
-    }
+        private ?int $id,
+        private int $templateId,
+        private ?string $replyToEmailAddress,
+        private ?string $senderName,
+        private string $receiverEmailAddress,
+        private ?string $receiverName,
+        private ?string $subject,
+        private ?string $contentHtml,
+        private ?string $fieldsJson,
+        private string $createdAt,
+        private ?string $processedAt = null,
+        private ?bool $hasError = null,
+        private ?string $lockId = null,
+    ) {}
 
     public static function fromArray(array $item): MailerItem
     {

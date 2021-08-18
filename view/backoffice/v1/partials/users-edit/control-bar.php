@@ -15,8 +15,8 @@ if ($userToEdit) {
     $updatedAtDate = DateUtil::formatUtcDate(
         stringDate: $userToEdit->getUpdatedAt(),
         lang: $responseData->getSiteLanguage(),
+        timezone: $responseData->getTimezone(),
         includeTime: true,
-        timezone: $responseData->getTimezone()
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
@@ -28,8 +28,8 @@ if ($userToEdit) {
     $createdAtDate = DateUtil::formatUtcDate(
         stringDate: $userToEdit->getCreatedAt(),
         lang: $responseData->getSiteLanguage(),
+        timezone: $responseData->getTimezone(),
         includeTime: true,
-        timezone: $responseData->getTimezone()
     );
 
     $createdAtEta = DateUtil::getElapsedTimeString(
