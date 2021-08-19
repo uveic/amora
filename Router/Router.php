@@ -57,6 +57,7 @@ class Router
             'home' => true,
             'login' => true,
             'register' => true,
+            'rss' => 'true',
             'invite-request' => true,
             'user' => true
         );

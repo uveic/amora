@@ -192,6 +192,23 @@
           }
         }
       }
+    },
+    "/rss": {
+      "get": {
+        "tags": [],
+        "summary": "Return the latest articles in RSS/XML format",
+        "description": "",
+        "operationId": "getRss",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return the latest articles in RSS/XML format",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}
