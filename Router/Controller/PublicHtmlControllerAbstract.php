@@ -20,6 +20,7 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicHtmlControllerGetPasswordChangeHtmlSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicHtmlControllerGetCreateUserPasswordHtmlSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/PublicHtmlControllerGetInviteRequestPageSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Router/Controller/Response/PublicHtmlControllerGetRssSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -107,6 +108,15 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function getInviteRequestPage(Request $request): Response;
+
+    /**
+     * Endpoint: /rss
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getRss(Request $request): Response;
 
     private function validateAndCallGetHomePage(Request $request)
     {
@@ -385,6 +395,34 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallGetRss(Request $request)
+    {
+        $errors = [];
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getRss(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicHtmlControllerAbstract - Method: getRss()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): Response
     {
@@ -475,6 +513,16 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetInviteRequestPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['rss'],
+                $pathParts,
+                ['fixed']
+            )
+        ) {
+            return $this->validateAndCallGetRss($request);
         }
 
         return Response::createNotFoundResponse();

@@ -3,6 +3,7 @@
 return [
     'env' => 'dev',
     'siteImageUrl' => '',
+    'siteAdminEmail' => '',
     'timezone' => 'UTC',
     'phpLocale' => 'en_GB',
     'defaultSiteLanguage' => 'en',

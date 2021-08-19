@@ -19,6 +19,7 @@
     "ext-mbstring": "*",
     "ext-gd": "*",
     "ext-exif": "*",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "ext-libxml": "*"
   }
 }

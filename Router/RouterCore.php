@@ -25,13 +25,15 @@ class RouterCore extends Core
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
         $actionService = ActionLoggerCore::getActionService();
+        $rssService = ArticleCore::getRssService();
 
         return self::getInstance(
             'PublicHtmlController',
             function () use (
                 $userService,
                 $articleService,
-                $actionService
+                $actionService,
+                $rssService,
             ) {
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlHomepageResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
@@ -42,7 +44,8 @@ class RouterCore extends Core
                 return new PublicHtmlController(
                     $userService,
                     $articleService,
-                    $actionService
+                    $actionService,
+                    $rssService,
                 );
             },
             true

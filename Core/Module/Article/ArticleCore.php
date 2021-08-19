@@ -11,6 +11,7 @@ use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Datalayer\ImageDataLayer;
 use Amora\Core\Module\Article\Service\ImageResizeService;
 use Amora\Core\Module\Article\Service\ImageService;
+use Amora\Core\Module\Article\Service\RssService;
 use Amora\Core\Module\Article\Service\TagService;
 
 class ArticleCore extends Core
@@ -180,6 +181,20 @@ class ArticleCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/TagService.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Tag.php';
                 return new TagService($logger, $tagDatalayer);
+            },
+            true
+        );
+    }
+
+    public static function getRssService(): RssService
+    {
+        $logger = self::getArticleLogger();
+
+        return self::getInstance(
+            'RssService',
+            function () use ($logger) {
+                require_once self::getPathRoot() . '/Core/Module/Article/Service/RssService.php';
+                return new RssService($logger);
             },
             true
         );

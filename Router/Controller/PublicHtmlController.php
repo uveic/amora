@@ -8,6 +8,7 @@ use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Model\Response\UserFeedback;
 use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Service\ArticleService;
+use Amora\Core\Module\Article\Service\RssService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
@@ -18,7 +19,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     public function __construct(
         private UserService $userService,
         private ArticleService $articleService,
-        private ActionService $actionService
+        private ActionService $actionService,
+        private RssService $rssService,
     ) {
         parent::__construct();
     }
@@ -76,8 +78,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         return Response::createFrontendPublicHtmlResponse(
             'shared/login',
             new HtmlResponseData(
-                $request,
-                Core::getLocalisationUtil($request->getSiteLanguage())->getValue('formLoginAction')
+                request: $request,
+                pageTitle: Core::getLocalisationUtil($request->getSiteLanguage())
+                    ->getValue('formLoginAction'),
             )
         );
     }
@@ -102,9 +105,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         return Response::createFrontendPublicHtmlResponse(
             'shared/login-forgot',
             new HtmlResponseData(
-                $request,
-                Core::getLocalisationUtil($request->getSiteLanguage())
-                    ->getValue('authenticationForgotPassword')
+                request: $request,
+                pageTitle: Core::getLocalisationUtil($request->getSiteLanguage())
+                    ->getValue('authenticationForgotPassword'),
             )
         );
     }
@@ -145,8 +148,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         return Response::createFrontendPublicHtmlResponse(
             'shared/register',
             new HtmlResponseData(
-                $request,
-                Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navSignUp')
+                request: $request,
+                pageTitle: Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navSignUp'),
             )
         );
     }
@@ -295,9 +298,25 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         return Response::createFrontendPublicHtmlResponse(
             'shared/invite-request',
             new HtmlResponseData(
-                $request,
-                Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navSignUp')
+                request: $request,
+                pageTitle: Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navSignUp'),
             )
         );
+    }
+
+    /**
+     * Endpoint: /rss
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getRss(Request $request): Response
+    {
+        $xml = $this->rssService->buildRss(
+            siteLanguage: $request->getSiteLanguage(),
+        );
+
+        return Response::createSuccessResponse($xml);
     }
 }
