@@ -67,7 +67,18 @@ class ArticleService
 
     public function getHomepageArticle(): ?Article
     {
-        return $this->articleDataLayer->getHomepageArticle();
+        $res = $this->filterArticlesBy(
+            statusIds: [ArticleStatus::PUBLISHED],
+            typeIds: [ArticleType::HOMEPAGE],
+        );
+
+        if (count($res) > 1) {
+            $this->logger->logError(
+                'There are more than one homepage article. Returning the most recently updated.'
+            );
+        }
+
+        return empty($res[0]) ? null : $res[0];
     }
 
     public function getAvailableUriForArticle(
@@ -75,7 +86,7 @@ class ArticleService
         ?string $articleTitle = null,
         ?Article $existingArticle = null
     ): string {
-        $articleId = $existingArticle ? $existingArticle->getId() : null;
+        $articleId = $existingArticle?->getId();
 
         if (!$uri && !$articleTitle) {
             $uri = strtolower(StringUtil::getRandomString(32));
@@ -88,7 +99,6 @@ class ArticleService
         }
 
         $count = 0;
-        $validUri = null;
         do {
             $validUri = $uri . ($count > 0 ? '-' . $count : '');
             $res = $this->getArticleForUri($validUri);
@@ -324,21 +334,6 @@ class ArticleService
         );
 
         return $resTransaction->isSuccess() ? $resTransaction->getResponse() : null;
-    }
-
-    public function getArticlesForHome(int $maxArticles = 20): array
-    {
-        // ToDo: Move tagIdsForHomepage to some kind of settings
-        $tagIds = Core::getConfigValue('tagIdsForHomepage') ?? [];
-        return $this->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED],
-            typeIds: [ArticleType::ARTICLE],
-            tagIds: $tagIds,
-            queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy('published_at', 'DESC')],
-                limit: $maxArticles
-            ),
-        );
     }
 
     private function createArticleSection(ArticleSection $section): bool

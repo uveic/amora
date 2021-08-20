@@ -192,6 +192,6 @@ class UrlBuilderUtil
     ): string {
         return self::getBaseUrl($languageIsoCode)
             . '/' . $uri
-            . $preview ? '?preview=true' : '';
+            . ($preview ? '?preview=true' : '');
     }
 }

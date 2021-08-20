@@ -6,5 +6,5 @@ use Amora\Core\Model\Response\HtmlHomepageResponseData;
 
 ?>
 <section class="home-main">
-  <?=$responseData->getArticle() ? $responseData->getArticle()->getContentHtml() : '';?>
+  <?=$responseData->getHomepageContent() ? $responseData->getHomepageContent()->getContentHtml() : '';?>
 </section>

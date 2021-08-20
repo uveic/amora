@@ -65,7 +65,7 @@ final class ArticleEditHtmlGenerator
 
         $typeIdGetParam = $responseData->getRequest()->getGetParam('articleType');
         if (empty($typeIdGetParam)) {
-            return ArticleType::ARTICLE;
+            return ArticleType::PAGE;
         }
 
         foreach (ArticleType::getAll() as $articleType) {
@@ -74,7 +74,7 @@ final class ArticleEditHtmlGenerator
             }
         }
 
-        return ArticleType::ARTICLE;
+        return ArticleType::PAGE;
     }
 
     public static function generateStatusDropdownSelectHtml(

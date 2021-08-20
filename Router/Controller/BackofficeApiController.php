@@ -302,7 +302,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 id: null,
                 user: $request->getSession()->getUser(),
                 statusId: $statusId,
-                typeId: $typeId ?? ArticleType::ARTICLE,
+                typeId: $typeId ?? ArticleType::PAGE,
                 createdAt: $now,
                 updatedAt: $now,
                 publishOn: $publishOn,

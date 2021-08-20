@@ -9,7 +9,7 @@ class HtmlHomepageResponseData extends HtmlResponseDataAbstract
 {
     public function __construct(
         Request $request,
-        private ?Article $article = null,
+        private ?Article $homepageContent = null,
         private array $homeArticles = [],
         private array $blogArticles = [],
         private ?UserFeedback $userFeedback = null,
@@ -17,9 +17,9 @@ class HtmlHomepageResponseData extends HtmlResponseDataAbstract
         parent::__construct($request);
     }
 
-    public function getArticle(): ?Article
+    public function getHomepageContent(): ?Article
     {
-        return $this->article;
+        return $this->homepageContent;
     }
 
     public function getHomeArticles(): array

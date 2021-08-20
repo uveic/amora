@@ -9,7 +9,7 @@ final class ArticleType
     const HOMEPAGE = 1;
     const ARCHIVED = 2;
     const BLOG = 3;
-    const ARTICLE = 4;
+    const PAGE = 4;
 
     public static function getAll(): array
     {
@@ -17,7 +17,7 @@ final class ArticleType
             self::HOMEPAGE => new LookupTableBasicValue(self::HOMEPAGE, 'Home'),
             self::ARCHIVED => new LookupTableBasicValue(self::ARCHIVED, 'Archived'),
             self::BLOG => new LookupTableBasicValue(self::BLOG, 'Blog'),
-            self::ARTICLE => new LookupTableBasicValue(self::ARTICLE, 'Article'),
+            self::PAGE => new LookupTableBasicValue(self::PAGE, 'Page'),
         ];
     }
 

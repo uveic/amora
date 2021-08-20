@@ -167,22 +167,6 @@ class ArticleDataLayer
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getHomepageArticle(): ?Article
-    {
-        $res = $this->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED],
-            typeIds: [ArticleType::HOMEPAGE],
-        );
-
-        if (count($res) > 1) {
-            $this->logger->logError(
-                'There are more than one homepage article. Returning the most recently updated.'
-            );
-        }
-
-        return empty($res[0]) ? null : $res[0];
-    }
-
     public function updateArticle(Article $article): bool
     {
         $articleArray = $article->asArray();
