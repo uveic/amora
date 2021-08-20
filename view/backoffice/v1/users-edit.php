@@ -2,6 +2,7 @@
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Model\Util\LookupTableBasicValue;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
@@ -22,7 +23,7 @@ $defaultLanguage = $userToEdit
     <section class="page-header">
       <h1><?=($userToEdit ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></h1>
       <div class="links">
-        <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/users" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
+        <a href="<?=UrlBuilderUtil::getBackofficeUsersUrl($responseData->getSiteLanguage())?>" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
       </div>
     </section>
     <form action="#" method="post" id="form-user-creation">

@@ -9,8 +9,11 @@ class UrlBuilderUtil
     // Backoffice URLs
     const BACKOFFICE_DASHBOARD_URL_PATH = '/backoffice/dashboard';
     const BACKOFFICE_USERS = '/backoffice/users';
+    const BACKOFFICE_USER = '/backoffice/users/%d';
+    const BACKOFFICE_NEW_USER = '/backoffice/users/new';
     const BACKOFFICE_IMAGES = '/backoffice/images';
     const BACKOFFICE_ARTICLES = '/backoffice/articles';
+    const BACKOFFICE_ARTICLE = '/backoffice/articles/%d';
 
     // Authorised URLs
     const AUTHORISED_ACCOUNT = '/account';
@@ -54,9 +57,24 @@ class UrlBuilderUtil
         return self::getBaseLinkUrl($languageIsoCode) . self::BACKOFFICE_ARTICLES;
     }
 
+    public static function getBackofficeArticleUrl(string $languageIsoCode, int $articleId): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . sprintf(self::BACKOFFICE_ARTICLE, $articleId);
+    }
+
     public static function getBackofficeUsersUrl(string $languageIsoCode): string
     {
         return self::getBaseLinkUrl($languageIsoCode) . self::BACKOFFICE_USERS;
+    }
+
+    public static function getBackofficeUserUrl(string $languageIsoCode, int $userId): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . sprintf(self::BACKOFFICE_USER, $userId);
+    }
+
+    public static function getBackofficeNewUserUrl(string $languageIsoCode): string
+    {
+        return self::getBaseLinkUrl($languageIsoCode) . self::BACKOFFICE_NEW_USER;
     }
 
     //////////////////////////////////////////////////////////////////////////////////
