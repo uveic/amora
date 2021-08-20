@@ -6,6 +6,7 @@ use Amora\Core\Core;
 use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Logger;
 use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
 use Amora\Core\Module\Article\Datalayer\TagDataLayer;
 use Amora\Core\Module\Article\Model\Article;
@@ -22,7 +23,6 @@ class ArticleService
         private Logger $logger,
         private ArticleDataLayer $articleDataLayer,
         private TagDataLayer $tagDataLayer,
-        private ImageService $imageService,
     ) {}
 
     public function getArticleForId(int $id, bool $includeTags = false): ?Article
@@ -40,26 +40,23 @@ class ArticleService
         return $this->articleDataLayer->getArticleForUri($uri);
     }
 
-    public function getArticlesForTagIds(
-        array $tagIds,
-        ?QueryOptions $queryOptions = null,
-    ): array
-    {
-        return $this->articleDataLayer->filterArticlesBy(
-            tagIds: $tagIds,
-            queryOptions: $queryOptions,
-        );
-    }
-
-    public function getArticlesList(
+    public function filterArticlesBy(
+        array $articleIds = [],
+        array $statusIds = [],
         array $typeIds = [],
-        ?QueryOptions $queryOptions = null
-    ): array
-    {
+        ?string $uri = null,
+        array $tagIds = [],
+        bool $includeTags = false,
+        ?QueryOptions $queryOptions = null,
+    ): array {
         return $this->articleDataLayer->filterArticlesBy(
+            articleIds: $articleIds,
+            statusIds: $statusIds,
             typeIds: $typeIds,
-            includeTags: true,
-            queryOptions: $queryOptions
+            uri: $uri,
+            tagIds: $tagIds,
+            includeTags: $includeTags,
+            queryOptions: $queryOptions,
         );
     }
 
@@ -333,11 +330,14 @@ class ArticleService
     {
         // ToDo: Move tagIdsForHomepage to some kind of settings
         $tagIds = Core::getConfigValue('tagIdsForHomepage') ?? [];
-        return $this->articleDataLayer->filterArticlesBy(
-            tagIds: $tagIds,
-            statusId: ArticleStatus::PUBLISHED,
+        return $this->filterArticlesBy(
+            statusIds: [ArticleStatus::PUBLISHED],
             typeIds: [ArticleType::ARTICLE],
-            queryOptions: new QueryOptions(limit: $maxArticles)
+            tagIds: $tagIds,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('published_at', 'DESC')],
+                limit: $maxArticles
+            ),
         );
     }
 

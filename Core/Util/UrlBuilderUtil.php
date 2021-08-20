@@ -129,4 +129,11 @@ class UrlBuilderUtil
         return self::getBaseLinkUrl($languageIsoCode) .
             sprintf(self::PUBLIC_RESET_PASSWORD, $verificationIdentifier);
     }
+
+    public static function getPublicArticleUrl(
+        string $languageIsoCode,
+        string $uri,
+    ): string {
+        return self::getBaseLinkUrl($languageIsoCode) . '/' . $uri;
+    }
 }

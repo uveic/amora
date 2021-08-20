@@ -4,7 +4,10 @@ namespace Amora\Core\Module\Article\Service;
 
 use Amora\Core\Core;
 use Amora\Core\Logger;
+use Amora\Core\Module\Article\Model\Article;
+use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Util\LocalisationUtil;
+use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 use DateTimeZone;
 use SimpleXMLElement;
@@ -19,10 +22,13 @@ class RssService
 
     public function buildRss(
         string $siteLanguage,
+        array $articles,
     ): SimpleXMLElement {
         $this->localisationUtil = Core::getLocalisationUtil(strtoupper($siteLanguage));
 
         $this->logger->logInfo('Building RSS...');
+
+        $lastBuildDate = $this->getBuildDate($articles);
 
         $xml = array_merge(
             [
@@ -32,9 +38,13 @@ class RssService
             ],
             $this->buildMainItems(
                 siteLanguage: $siteLanguage,
-                lastPubDate: new DateTimeImmutable('now'),
+                lastPubDate: $this->getLastPubDate($articles[0] ?? null),
+                lastBuildDate: $lastBuildDate,
             ),
-            $this->buildContent(),
+            $this->buildContent(
+                siteLanguage: $siteLanguage,
+                articles: $articles,
+            ),
             [
                 '</channel>',
                 '</rss>',
@@ -47,13 +57,12 @@ class RssService
     private function buildMainItems(
         string $siteLanguage,
         DateTimeImmutable $lastPubDate,
+        DateTimeImmutable $lastBuildDate,
     ): array {
         $baseUrl = Core::getConfigValue('baseUrl');
         $siteAdminEmail = Core::getConfigValue('siteAdminEmail');
         $siteTitle = $this->getSiteTitle();
         $siteDescription = $this->localisationUtil->getValue('siteDescription');
-
-        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
 
         $output = [
             '<title>' . $siteTitle . '</title>',
@@ -61,7 +70,7 @@ class RssService
             '<description>' . $siteDescription . '</description>',
             '<language>' . strtolower($siteLanguage) . '</language>',
             '<pubDate>' . $lastPubDate->format('r') . '</pubDate>',
-            '<lastBuildDate>' . $now->format('r') . '</lastBuildDate>',
+            '<lastBuildDate>' . $lastBuildDate->format('r') . '</lastBuildDate>',
             '<docs>http://blogs.law.harvard.edu/tech/rss</docs>',
             '<generator>' . $siteTitle . '</generator>',
         ];
@@ -74,15 +83,32 @@ class RssService
         return $output;
     }
 
-    private function buildContent(): array
+    private function buildContent(string $siteLanguage, array $articles): array
     {
-        return [
-            '<item>',
-            '<description>Sky watchers in Europe, Asia, and parts of Alaska and Canada will experience a &lt;a href="http://science.nasa.gov/headlines/y2003/30may_solareclipse.htm"&gt;partial eclipse of the Sun&lt;/a&gt; on Saturday, May 31st.</description>',
-            '<pubDate>Fri, 30 May 2003 11:06:42 GMT</pubDate>',
-            '<guid>http://liftoff.msfc.nasa.gov/2003/05/30.html#item572</guid>',
-            '</item>',
-        ];
+        $output = [];
+
+        /** @var Article $article */
+        foreach ($articles as $article) {
+            $pubDate = new DateTimeImmutable($article->getPublishOn());
+            $link = UrlBuilderUtil::getPublicArticleUrl($siteLanguage, $article->getUri());
+
+            $output[] = '<item>';
+            $output[] = '<title>' . htmlentities($article->getTitle()) . '</title>';
+            $output[] = '<link>' . $link . '</link>';
+            $output[] = '<guid>' . $link . '</guid>';
+            $output[] = '<author>' . $article->getUser()->getNameOrEmail() . '</author>';
+            $output[] = '<description>' . htmlentities($article->getContentHtml()) . '</description>';
+            $output[] = '<pubDate>' . $pubDate->format('r') . '</pubDate>';
+
+            /** @var Tag $tag */
+            foreach ($article->getTags() as $tag) {
+                $output[] = '<category>' . $tag->getName() . '</category>';
+            }
+
+            $output[] = '</item>';
+        }
+
+        return $output;
     }
 
     private function getSiteTitle(): string
@@ -91,5 +117,36 @@ class RssService
         $siteName = $this->localisationUtil->getValue('siteName');
 
         return $siteName . ($siteTitle ? ' - ' . $siteTitle : '');
+    }
+
+    private function getLastPubDate(?Article $article): DateTimeImmutable
+    {
+        $utcTimezone = new DateTimeZone('UTC');
+
+        if (!$article) {
+            return new DateTimeImmutable('now', $utcTimezone);
+        }
+
+        return new DateTimeImmutable($article->getPublishOn(), $utcTimezone);
+    }
+
+    private function getBuildDate(array $articles): ?DateTimeImmutable
+    {
+        if (!$articles) {
+            return null;
+        }
+
+        $buildDate = $this->getLastPubDate($articles[0]);
+        $utcTimezone = new DateTimeZone('UTC');
+
+        /** @var Article $article */
+        foreach ($articles as $article) {
+            $updatedAt = new DateTimeImmutable($article->getUpdatedAt(), $utcTimezone);
+            if ($buildDate < $updatedAt) {
+                $buildDate = $updatedAt;
+            }
+        }
+
+        return $buildDate;
     }
 }
