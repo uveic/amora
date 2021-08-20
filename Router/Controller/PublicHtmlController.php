@@ -45,16 +45,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getHomePage(Request $request): Response
     {
-        $homeArticles = $this->articleService->getArticlesForHome();
-        $homepageArticle = $this->articleService->getHomepageArticle();
-        return Response::createFrontendPublicHtmlResponse(
-            'shared/home',
-            new HtmlHomepageResponseData(
-                request: $request,
-                article: $homepageArticle,
-                homeArticles: $homeArticles,
-            )
-        );
+        return $this->buildHomepageResponse($request);
     }
 
     /**
@@ -176,17 +167,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             $localisationUtil
         );
 
-        $homeArticles = $this->articleService->getArticlesForHome();
-        $homepageArticle = $this->articleService->getHomepageArticle();
-
-        return Response::createFrontendPublicHtmlResponse(
-            'shared/home',
-            new HtmlHomepageResponseData(
-                request: $request,
-                article: $homepageArticle,
-                homeArticles: $homeArticles,
-                userFeedback: $userFeedback,
-            )
+        return $this->buildHomepageResponse(
+            request: $request,
+            userFeedback: $userFeedback,
         );
     }
 
@@ -205,20 +188,12 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $res = $this->userService->validatePasswordResetVerificationPage($verificationIdentifier);
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
-        $homeArticles = $this->articleService->getArticlesForHome();
-        $homepageArticle = $this->articleService->getHomepageArticle();
-
         if (empty($res)) {
-            return Response::createFrontendPublicHtmlResponse(
-                'shared/home',
-                new HtmlHomepageResponseData(
-                    request: $request,
-                    article: $homepageArticle,
-                    homeArticles: $homeArticles,
-                    userFeedback: new UserFeedback(
-                        false,
-                        $localisationUtil->getValue('authenticationPasswordResetLinkError')
-                    )
+            return $this->buildHomepageResponse(
+                request: $request,
+                userFeedback: new UserFeedback(
+                    false,
+                    $localisationUtil->getValue('authenticationPasswordResetLinkError')
                 )
             );
         }
@@ -319,7 +294,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     {
         $articles = $this->articleService->filterArticlesBy(
             statusIds: [ArticleStatus::PUBLISHED],
-            typeIds: [ArticleType::ARTICLE],
+            typeIds: [ArticleType::PAGE],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
                 limit: 10
@@ -332,5 +307,44 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         );
 
         return Response::createSuccessResponse($xml);
+    }
+
+    private function buildHomepageResponse(
+        Request $request,
+        ?UserFeedback $userFeedback = null,
+    ): Response {
+        // ToDo: Move tagIdsForHomepage to some kind of settings
+        $tagIds = Core::getConfigValue('tagIdsForHomepage') ?? [];
+        $homeArticles = $this->articleService->filterArticlesBy(
+            statusIds: [ArticleStatus::PUBLISHED],
+            typeIds: [ArticleType::PAGE],
+            tagIds: $tagIds,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('published_at', 'DESC')],
+                limit: 10
+            ),
+        );
+
+        $blogArticles = $this->articleService->filterArticlesBy(
+            statusIds: [ArticleStatus::PUBLISHED],
+            typeIds: [ArticleType::BLOG],
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('published_at', 'DESC')],
+                limit: 10
+            ),
+        );
+
+        $homepageArticle = $this->articleService->getHomepageArticle();
+
+        return Response::createFrontendPublicHtmlResponse(
+            'shared/home',
+            new HtmlHomepageResponseData(
+                request: $request,
+                homepageContent: $homepageArticle,
+                homeArticles: $homeArticles,
+                blogArticles: $blogArticles,
+                userFeedback: $userFeedback,
+            )
+        );
     }
 }
