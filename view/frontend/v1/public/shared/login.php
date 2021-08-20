@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 $siteLogo = $responseData->getSiteLogoUrl()
@@ -16,7 +17,9 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">&#10005;</a>
+    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">
+      <img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>">
+    </a>
     <form method="POST" id="form-login">
       <div>
         <h1 id="register-title" class="logo m-t-2 m-b-3"><?=$siteLogo?></h1>
@@ -39,7 +42,11 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
           </p>
         </div>
       </div>
-      <p class="register-forgot no-margin"><a href="<?=$responseData->getBaseUrlWithLanguage()?>login/forgot"><?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?></a></p>
+      <p class="register-forgot no-margin">
+        <a href="<?=UrlBuilderUtil::getPublicLoginForgotUrl($responseData->getSiteLanguage())?>">
+            <?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?>
+        </a>
+      </p>
     </form>
   </div>
 </main>

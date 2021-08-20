@@ -10,6 +10,7 @@ use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Util\UrlBuilderUtil;
 
 final class ArticleEditHtmlGenerator
 {
@@ -153,13 +154,15 @@ final class ArticleEditHtmlGenerator
             default => ''
         };
 
-        $articleTitle = $article->getTitle()
-            ? $article->getTitle()
-            : $responseData->getLocalValue('globalNoTitle');
+        $articleTitle = $article->getTitle() ?: $responseData->getLocalValue('globalNoTitle');
+        $articleUrl = UrlBuilderUtil::getPublicArticleUrl(
+            languageIsoCode: $responseData->getSiteLanguage(),
+            uri: $article->getUri(),
+        );
 
-        $output = ($article->getStatusId() === ArticleStatus::PUBLISHED
-            ? '<a href="' . $responseData->getBaseUrlWithLanguage() . $article->getUri() . '">' . $articleTitle . '</a>'
-            : $articleTitle);
+        $output = $article->getStatusId() === ArticleStatus::PUBLISHED
+            ? '<a href="' . $articleUrl . '">' . $articleTitle . '</a>'
+            : $articleTitle;
 
         $output .= '<span class="article-status ' . $statusClassname . '">' .
             $responseData->getLocalValue('articleStatus' . $article->getStatusName()) .

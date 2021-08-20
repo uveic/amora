@@ -5,6 +5,7 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
@@ -33,7 +34,7 @@ if ($article) {
 
 $articleStatusId = $article ? $article->getStatusId() : ArticleStatus::DRAFT;
 $articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::getNameForId($articleStatusId));
-$isPublished = $article ? $articleStatusId === ArticleStatus::PUBLISHED : false;
+$isPublished = $article && $articleStatusId === ArticleStatus::PUBLISHED;
 
 $random = StringUtil::getRandomString(5);
 
@@ -42,7 +43,7 @@ $random = StringUtil::getRandomString(5);
     <div class="control-bar-buttons">
       <button class="article-save-button button m-r-1"><?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?></button>
 <?php if ($article) {?>
-        <a class="article-preview" href="<?=$responseData->getBaseUrlWithLanguage()?><?=$article->getUri()?>?preview=true" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
+        <a class="article-preview" href="<?=UrlBuilderUtil::getPublicArticleUrl($responseData->getSiteLanguage(), $article->getUri(), true)?>" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
 <?php } ?>
     </div>
     <div class="control-bar-creation<?=$article ? '' : ' hidden'?>"><span><?=$updatedAtContent?></span></div>

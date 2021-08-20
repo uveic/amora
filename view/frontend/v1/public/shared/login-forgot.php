@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 
@@ -12,7 +13,9 @@ use Amora\Core\Model\Response\HtmlResponseData;
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">&#10005;</a>
+    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">
+      <img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>">
+    </a>
     <form method="POST" id="form-login-forgot">
       <div>
         <h1 id="register-title" class="logo m-b-4"><?=$this->e($responseData->getSiteName())?></h1>
@@ -34,7 +37,7 @@ use Amora\Core\Model\Response\HtmlResponseData;
       <div id="login-failure-message" class="field is-failure null"></div>
       <div id="register-back-login" class="field null">
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationForgotPasswordActionSuccess')?></p>
-        <a class="button is-success" href="<?=$responseData->getBaseUrlWithLanguage()?>login"><?=$this->e($responseData->getLocalValue('authenticationActionHomeLink'))?></a>
+        <a class="button is-success" href="<?=UrlBuilderUtil::getPublicLoginUrl($responseData->getSiteLanguage())?>"><?=$this->e($responseData->getLocalValue('authenticationActionHomeLink'))?></a>
       </div>
     </form>
   </div>

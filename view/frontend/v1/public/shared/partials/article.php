@@ -2,6 +2,7 @@
 
 use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 $article = $responseData->getFirstArticle();
@@ -12,7 +13,7 @@ if ($article) {
 ?>
   <article>
 <?php if ($canEdit && !$preview) { ?>
-    <a class="article-edit" href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/articles/<?=$article->getId()?>"><?=strtolower($responseData->getLocalValue('globalEdit'))?></a>
+    <a class="article-edit" href="<?=UrlBuilderUtil::getBackofficeArticleUrl($responseData->getSiteLanguage(), $article->getId())?>"><?=strtolower($responseData->getLocalValue('globalEdit'))?></a>
 <?php } ?>
     <?=$article->getContentHtml()?>
 <?php if ($article->getTypeId() === ArticleType::BLOG) {
