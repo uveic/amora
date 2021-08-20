@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\Language;
 
 /** @var HtmlResponseData $responseData */
@@ -59,17 +60,17 @@ $timezones = DateTimeZone::listIdentifiers();
         </form>
         <div class="field">
           <div class="control">
-            <a href="<?=$responseData->getBaseUrlWithLanguage()?>account/password"><?=$responseData->getLocalValue('navChangePassword')?></a>
+            <a href="<?=UrlBuilderUtil::getAuthorisedAccountPasswordUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navChangePassword')?></a>
           </div>
         </div>
         <div class="field">
           <div class="control">
-            <a href="<?=$responseData->getBaseUrlWithLanguage()?>account/download"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
+            <a href="<?=UrlBuilderUtil::getAuthorisedAccountDownloadUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
           </div>
         </div>
         <div class="field m-b-6">
           <div class="control">
-            <a class="is-danger" href="<?=$responseData->getBaseUrlWithLanguage()?>account/delete"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
+            <a class="is-danger" href="<?=UrlBuilderUtil::getAuthorisedAccountDeleteUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
           </div>
         </div>
       </div>

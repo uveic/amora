@@ -2,6 +2,7 @@
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
@@ -38,7 +39,7 @@ if ($article) {
 <div id="side-options" class="side-options null">
   <div class="side-options-header">
     <h2><?=$responseData->getLocalValue('navAdminArticleOptions')?></h2>
-    <a href="#" class="close-button"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="Close"></a>
+    <a href="#" class="close-button"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
   </div>
   <div class="field">
     <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
@@ -62,7 +63,7 @@ if ($article) {
   <div class="field">
     <label for="articleUri" class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</label>
     <div class="control">
-      <div class="article-edit-uri"><?=$this->e(trim($responseData->getBaseUrl(), ' /') . '/')?>
+      <div class="article-edit-uri"><?=UrlBuilderUtil::getBaseUrl($responseData->getSiteLanguage()) . '/'?>
         <input id="articleUri" name="articleUri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->getUri() : ''); ?>">
       </div>
     </div>

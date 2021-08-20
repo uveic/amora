@@ -2,6 +2,7 @@
 
 use Amora\Core\Model\Response\HtmlHomepageResponseData;
 use Amora\Core\Module\Article\Model\Article;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlHomepageResponseData $responseData */
 
@@ -16,7 +17,7 @@ if (!$responseData->getHomeArticles()) {
 <?php
 /** @var Article $article */
 foreach ($responseData->getHomeArticles() as $article) {
-    $href = $responseData->getBaseUrlWithLanguage() . $article->getUri();
+    $href = UrlBuilderUtil::getPublicArticleUrl($responseData->getSiteLanguage(), $article->getUri());
     $link = $article->getTitle()
         ? '<a class="link-title" href="' . $href . '">' . $article->getTitle() . '</a>'
         : '';

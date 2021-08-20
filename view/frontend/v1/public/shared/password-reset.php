@@ -8,7 +8,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 $titleHtml = $responseData->getLocalValue('authenticationPasswordResetSubtitle');
 $subtitleHtml = sprintf(
     $responseData->getLocalValue('authenticationPasswordResetAlreadyLogin'),
-    $responseData->getBaseUrlWithLanguage() . 'login'
+    UrlBuilderUtil::getPublicLoginUrl($responseData->getSiteLanguage())
 );
 
 ?>
@@ -19,7 +19,9 @@ $subtitleHtml = sprintf(
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">&#10005;</a>
+    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">
+      <img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>">
+    </a>
     <form method="POST" id="form-password-reset">
       <input class="input" type="hidden" id="userId" name="userId" value="<?=$responseData->getPasswordUserId()?>">
       <input class="input" type="hidden" id="verificationHash" name="verificationHash" value="<?=$responseData->getVerificationHash()?>">
@@ -50,7 +52,7 @@ $subtitleHtml = sprintf(
       </div>
       <div id="password-reset-success" class="field null">
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationPasswordResetActionSuccess')?></p>
-        <a class="button is-success" href="<?=$responseData->getBaseUrlWithLanguage()?>login"><?=$responseData->getLocalValue('authenticationActionHomeLink')?></a>
+        <a class="button is-success" href="<?=UrlBuilderUtil::getPublicLoginUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('authenticationActionHomeLink')?></a>
       </div>
     </form>
   </div>

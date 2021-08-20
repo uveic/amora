@@ -2,15 +2,19 @@
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
-$articleEditUrl = $responseData->getBaseUrlWithLanguage() . 'backoffice/articles/' .
-    ($responseData->getFirstArticle()
-        ? $responseData->getFirstArticle()->getId()
-        : ('new?articleType=' . ArticleType::HOMEPAGE)
-);
-
+$articleEditUrl = $responseData->getFirstArticle()
+    ? UrlBuilderUtil::getBackofficeArticleUrl(
+        $responseData->getSiteLanguage(),
+        $responseData->getFirstArticle()->getId()
+    )
+    : UrlBuilderUtil::getBackofficeNewArticleUrl(
+        languageIsoCode: $responseData->getSiteLanguage(),
+        articleTypeId: ArticleType::HOMEPAGE,
+    );
 ?>
         <div class="content-flex-block width-45-percent">
           <h2><?=$responseData->getLocalValue('dashboardHomepage')?></h2>
