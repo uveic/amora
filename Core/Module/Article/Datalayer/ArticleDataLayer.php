@@ -38,9 +38,9 @@ class ArticleDataLayer
         return $this->db;
     }
 
-    private function getArticles(
-        ?int $articleId = null,
-        ?int $statusId = null,
+    public function filterArticlesBy(
+        array $articleIds = [],
+        array $statusIds = [],
         array $typeIds = [],
         ?string $uri = null,
         array $tagIds = [],
@@ -105,14 +105,12 @@ class ArticleDataLayer
 
         $where = ' WHERE 1';
 
-        if (isset($articleId)) {
-            $where .= ' AND a.id = :articleId';
-            $params[':articleId'] = $articleId;
+        if ($articleIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $articleIds, 'a.id', 'articleId');
         }
 
-        if (isset($statusId)) {
-            $where .= ' AND a.status_id = :statusId';
-            $params[':statusId'] = $statusId;
+        if ($statusIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $statusIds, 'a.status_id', 'statusId');
         }
 
         if ($typeIds) {
@@ -150,8 +148,8 @@ class ArticleDataLayer
 
     public function getArticleForId(int $id, bool $includeTags = false): ?Article
     {
-        $res = $this->getArticles(
-            articleId: $id,
+        $res = $this->filterArticlesBy(
+            articleIds: [$id],
             includeTags: $includeTags
         );
 
@@ -160,19 +158,19 @@ class ArticleDataLayer
 
     public function getArticlesForTypeIds(array $articleTypeIds): array
     {
-        return $this->getArticles(typeIds: $articleTypeIds);
+        return $this->filterArticlesBy(typeIds: $articleTypeIds);
     }
 
     public function getArticleForUri(string $uri): ?Article
     {
-        $res = $this->getArticles(uri: $uri);
+        $res = $this->filterArticlesBy(uri: $uri);
         return empty($res[0]) ? null : $res[0];
     }
 
     public function getHomepageArticle(): ?Article
     {
-        $res = $this->getArticles(
-            statusId: ArticleStatus::PUBLISHED,
+        $res = $this->filterArticlesBy(
+            statusIds: [ArticleStatus::PUBLISHED],
             typeIds: [ArticleType::HOMEPAGE],
         );
 
@@ -183,23 +181,6 @@ class ArticleDataLayer
         }
 
         return empty($res[0]) ? null : $res[0];
-    }
-
-    public function filterArticlesBy(
-        array $tagIds = [],
-        int $statusId = null,
-        array $typeIds = [],
-        bool $includeTags = false,
-        ?QueryOptions $queryOptions = null
-    ): array
-    {
-        return $this->getArticles(
-            statusId: $statusId,
-            typeIds: $typeIds,
-            tagIds: $tagIds,
-            includeTags: $includeTags,
-            queryOptions: $queryOptions
-        );
     }
 
     public function updateArticle(Article $article): bool

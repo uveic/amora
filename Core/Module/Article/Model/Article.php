@@ -21,7 +21,6 @@ class Article
         private ?int $mainImageId,
         private ?Image $mainImage,
         private string $uri,
-        private array $sections = [],
         private array $tags = [],
     ) {}
 

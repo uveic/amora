@@ -6,9 +6,13 @@ use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlHomepageResponseData;
 use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Model\Response\UserFeedback;
+use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\RssService;
+use Amora\Core\Module\Article\Value\ArticleStatus;
+use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
@@ -313,8 +317,18 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getRss(Request $request): Response
     {
+        $articles = $this->articleService->filterArticlesBy(
+            statusIds: [ArticleStatus::PUBLISHED],
+            typeIds: [ArticleType::ARTICLE],
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('published_at', 'DESC')],
+                limit: 10
+            ),
+        );
+
         $xml = $this->rssService->buildRss(
             siteLanguage: $request->getSiteLanguage(),
+            articles: $articles,
         );
 
         return Response::createSuccessResponse($xml);

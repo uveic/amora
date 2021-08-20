@@ -51,17 +51,16 @@ class ArticleCore extends Core
         $logger = self::getArticleLogger();
         $articleDataLayer = self::getArticleDataLayer();
         $tagDataLayer = self::getTagDataLayer();
-        $imageService = self::getImageService();
 
         return self::getInstance(
             'ArticleService',
-            function () use ($logger, $articleDataLayer, $tagDataLayer, $imageService) {
+            function () use ($logger, $articleDataLayer, $tagDataLayer) {
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/ArticleSection.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/ArticleService.php';
-                return new ArticleService($logger, $articleDataLayer, $tagDataLayer, $imageService);
+                return new ArticleService($logger, $articleDataLayer, $tagDataLayer);
             },
             true
         );

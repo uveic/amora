@@ -151,7 +151,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getArticlesPage(Request $request): Response
     {
-        $articles = $this->articleService->getArticlesList(
+        $articles = $this->articleService->filterArticlesBy(
             typeIds: [ArticleType::ARCHIVED, ArticleType::ARTICLE],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('updated_at', 'DESC')],
