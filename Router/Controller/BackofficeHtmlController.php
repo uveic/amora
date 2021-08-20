@@ -13,6 +13,7 @@ use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Service\UserService;
+use Amora\Core\Util\UrlBuilderUtil;
 
 final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 {
@@ -182,11 +183,15 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $articleTypeIdGetParam = $request->getGetParam('articleType')
             ? (int)$request->getGetParam('articleType')
             : null;
-        if ($articleTypeIdGetParam && $articleTypeIdGetParam === ArticleType::HOMEPAGE) {
+
+        if ($articleTypeIdGetParam === ArticleType::HOMEPAGE) {
             $articles = $this->articleService->getArticlesForTypeIds([$articleTypeIdGetParam]);
             if ($articles) {
                 return Response::createRedirectResponse(
-                    '/backoffice/articles/' . $articles[0]->getId()
+                    UrlBuilderUtil::getBackofficeArticleUrl(
+                        languageIsoCode: $request->getSiteLanguage(),
+                        articleId: $articles[0]->getId()
+                    )
                 );
             }
         }

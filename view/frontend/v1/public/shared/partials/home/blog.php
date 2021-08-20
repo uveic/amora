@@ -23,9 +23,7 @@ foreach ($responseData->getBlogArticles() as $article) {
         continue;
     }
 
-    $title = $article->getTitle()
-        ? $article->getTitle()
-        : $responseData->getLocalValue('globalNoTitle');
+    $title = $article->getTitle() ?: $responseData->getLocalValue('globalNoTitle');
     $publishedOn = $article->getPublishOn()
         ? DateUtil::formatUtcDate(
             stringDate: $article->getPublishOn(),

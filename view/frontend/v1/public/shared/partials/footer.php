@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Model\Response\HtmlResponseDataAbstract;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAbstract $responseData */
 
@@ -9,6 +10,6 @@ $isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin()
 ?>
 <footer>
 <?php if ($isAdmin) { ?>
-  <a href="<?=$responseData->getBaseUrlWithLanguage()?>backoffice/dashboard"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
+  <a href="<?=UrlBuilderUtil::getBackofficeDashboardUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
 <?php } ?>
 </footer>
