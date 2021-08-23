@@ -9,13 +9,15 @@ final class ArticleStatus
     const PUBLISHED = 1;
     const DELETED = 2;
     const DRAFT = 3;
+    const ARCHIVED = 4;
 
     public static function getAll(): array
     {
         return [
             self::PUBLISHED => new LookupTableBasicValue(self::PUBLISHED, 'Published'),
             self::DELETED =>  new LookupTableBasicValue(self::DELETED, 'Deleted'),
-            self::DRAFT =>  new LookupTableBasicValue(self::DRAFT, 'Draft')
+            self::DRAFT =>  new LookupTableBasicValue(self::DRAFT, 'Draft'),
+            self::ARCHIVED =>  new LookupTableBasicValue(self::DRAFT, 'Archived'),
         ];
     }
 

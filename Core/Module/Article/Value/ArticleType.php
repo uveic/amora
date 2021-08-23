@@ -7,7 +7,6 @@ use Amora\Core\Model\Util\LookupTableBasicValue;
 final class ArticleType
 {
     const HOMEPAGE = 1;
-    const ARCHIVED = 2;
     const BLOG = 3;
     const PAGE = 4;
 
@@ -15,7 +14,6 @@ final class ArticleType
     {
         return [
             self::HOMEPAGE => new LookupTableBasicValue(self::HOMEPAGE, 'Home'),
-            self::ARCHIVED => new LookupTableBasicValue(self::ARCHIVED, 'Archived'),
             self::BLOG => new LookupTableBasicValue(self::BLOG, 'Blog'),
             self::PAGE => new LookupTableBasicValue(self::PAGE, 'Page'),
         ];
