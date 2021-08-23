@@ -46,10 +46,11 @@ foreach ($responseData->getBlogArticles() as $article) {
   }
   $previousYear = $year;
 ?>
-  <p class="blog-item">
-    <?=$isPublishedHtml?><a class="link-title" href="<?=$href?>"><?=$title?></a>
+  <div class="blog-item">
+    <?=$isPublishedHtml?>
+    <a class="link-title" href="<?=$href?>"><?=$title?></a>
     <span class="blog-info"><?=$publishedOn?></span>
-  </p>
+  </div>
 <?php
 }
 ?>

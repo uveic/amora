@@ -758,17 +758,24 @@ svg,
 }
 
 .blog-item {
-  margin: 0;
+  margin: 0.75rem 0;
   padding: 0;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column wrap;
   justify-content: flex-start;
+}
+
+.blog-item a {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.5;
 }
 
 .blog-info {
   padding: 0;
-  margin: 0 0 0 0.5rem;
-  font-size: 0.85rem;
+  margin: 0;
+  font-size: 0.9rem;
   color: var(--light-text-color);
 }
 
