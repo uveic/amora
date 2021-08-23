@@ -199,10 +199,10 @@ final class DateUtil
 
         if (!$includeSeconds &&
             ($diff['y'] > 0
-            || $diff['m'] > 0
-            || $diff['d'] > 0
-            || $diff['h'] > 0
-            || $diff['i'] > 0)
+                || $diff['m'] > 0
+                || $diff['d'] > 0
+                || $diff['h'] > 0
+                || $diff['i'] > 0)
         ) {
             unset($string['s']);
         }
@@ -470,17 +470,17 @@ final class DateUtil
         $hours = 0;
         $days = 0;
 
-        if ($seconds > 60) {
+        if ($seconds >= 60) {
             $minutes = round($seconds / 60, 0, PHP_ROUND_HALF_DOWN);
             $seconds = $seconds % 60;
         }
 
-        if ($minutes > 60) {
+        if ($minutes >= 60) {
             $hours = round($minutes / 60, 0, PHP_ROUND_HALF_DOWN);
             $minutes = $minutes % 60;
         }
 
-        if ($hours > 24) {
+        if ($hours >= 24) {
             $days = round($hours / 24, 0, PHP_ROUND_HALF_DOWN);
             $hours = $hours % 24;
         }
