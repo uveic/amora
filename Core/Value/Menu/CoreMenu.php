@@ -34,6 +34,11 @@ final class CoreMenu
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/note-pencil-white.svg" alt="' . $localisationUtil->getValue('navAdminArticles') . '">',
                     ),
                     new MenuItem(
+                        uri: UrlBuilderUtil::getBackofficeBlogPostsUrl($languageIsoCode),
+                        text: $localisationUtil->getValue('navAdminBlogPosts'),
+                        icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/article-medium-white.svg" alt="' . $localisationUtil->getValue('navAdminBlogPosts') . '">',
+                    ),
+                    new MenuItem(
                         uri: UrlBuilderUtil::getBackofficeUsersUrl($languageIsoCode),
                         text: $localisationUtil->getValue('navAdminUsers'),
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/users-white.svg" alt="' . $localisationUtil->getValue('navAdminUsers') . '">',

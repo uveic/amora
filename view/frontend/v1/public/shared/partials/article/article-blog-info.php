@@ -15,9 +15,9 @@ $updatedAtDate = DateUtil::formatUtcDate(
     lang: $responseData->getSiteLanguage(),
     includeWeekDay: false,
     includeTime: true,
+    includeMonthYearSeparator: true,
 );
 
 ?>
-    <div class="article-info">
-      <?=$this->e($updatedAtDate)?>
-    </div>
+    <h1><?=$article->getTitle()?></h1>
+    <p class="article-blog-info"><?=$this->e($updatedAtDate)?></p>

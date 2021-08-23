@@ -21,6 +21,9 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeHtmlControllerGetNewArticlePageSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeHtmlControllerGetEditArticlePageSuccessResponse.php';
         require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeHtmlControllerGetImagesPageSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeHtmlControllerGetBlogPostsPageSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeHtmlControllerGetNewBlogPostPageSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Router/Controller/Response/BackofficeHtmlControllerGetEditBlogPostPageSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -107,6 +110,34 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function getImagesPage(Request $request): Response;
+
+    /**
+     * Endpoint: /backoffice/blog-posts
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getBlogPostsPage(Request $request): Response;
+
+    /**
+     * Endpoint: /backoffice/blog-posts/new
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getNewBlogPostPage(Request $request): Response;
+
+    /**
+     * Endpoint: /backoffice/blog-posts/{articleId}
+     * Method: GET
+     *
+     * @param int $articleId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getEditBlogPostPage(int $articleId, Request $request): Response;
 
     private function validateAndCallGetPhpInfoPage(Request $request)
     {
@@ -405,6 +436,113 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallGetBlogPostsPage(Request $request)
+    {
+        $errors = [];
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getBlogPostsPage(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getBlogPostsPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetNewBlogPostPage(Request $request)
+    {
+        $errors = [];
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getNewBlogPostPage(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getNewBlogPostPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetEditBlogPostPage(Request $request)
+    {
+        $pathParts = explode('/', $request->getPath());
+        $pathParams = $this->getPathParams(
+            ['backoffice', 'blog-posts', '{articleId}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $articleId = null;
+        if (!isset($pathParams['articleId'])) {
+            $errors[] = [
+                'field' => 'articleId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['articleId'])) {
+                $errors[] = [
+                    'field' => 'articleId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $articleId = intval($pathParams['articleId']);
+            }
+        }
+
+        if (count($errors)) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getEditBlogPostPage(
+                $articleId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getEditBlogPostPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): Response
     {
@@ -505,6 +643,36 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetImagesPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['backoffice', 'blog-posts'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetBlogPostsPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['backoffice', 'blog-posts', 'new'],
+                $pathParts,
+                ['fixed', 'fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetNewBlogPostPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['backoffice', 'blog-posts', '{articleId}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallGetEditBlogPostPage($request);
         }
 
         return Response::createNotFoundResponse();

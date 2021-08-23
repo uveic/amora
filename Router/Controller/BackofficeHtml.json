@@ -201,6 +201,65 @@
           }
         }
       }
+    },
+    "/backoffice/blog-posts": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the blog posts page",
+        "description": "",
+        "operationId": "getBlogPostsPage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/backoffice/blog-posts/new": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the new blog post page",
+        "description": "",
+        "operationId": "getNewBlogPostPage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/backoffice/blog-posts/{articleId}": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the page to edit an existing blog post",
+        "description": "",
+        "operationId": "getEditBlogPostPage",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "description": "Article ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

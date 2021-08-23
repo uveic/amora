@@ -18,7 +18,10 @@ return [
     'navAdminContent' => 'Contenido',
     'navAdminImages' => 'Imágenes',
     'navAdminArticles' => 'Artículos',
+    'navAdminBlogPosts' => 'Entradas blog',
     'navAdminArticleOptions' => 'Opciones artículo',
+
+    'editorTitlePlaceholder' => 'Título...',
 
     'authenticationActionHomeLink' => 'Ir a la página de entrada',
     'authenticationLoginSubtitle' => '¡Bienvenido/a de nuevo!',
@@ -105,6 +108,7 @@ return [
     'globalStatus' => 'Estado',
     'globalPreview' => 'Previsualizar',
     'globalArticle' => 'artículo',
+    'globalBlogPost' => 'entrada',
     'globalTags' => 'Etiquetas',
     'globalDateFormat' => 'dd/mm/aaaa',
     'globalActivated' => 'Activado',

@@ -59,7 +59,17 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       });
     };
 
-    const titleEl = document.querySelector('.' + pexegoClasses.contentTitle);
+    let titleContent = null;
+    const titleEl = document.querySelector('input[name="articleTitle"]');
+    if (titleEl) {
+      titleContent = titleEl.value;
+    }
+
+    if (!titleContent) {
+      const titlePexegoEl = document.querySelector('.' + pexegoClasses.contentTitle);
+      titleContent = titlePexegoEl ? titlePexegoEl.textContent : null;
+    }
+
     const uriEl = document.querySelector('input[name="articleUri"]');
     const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
     const statusId = Number.parseInt(status.dataset.articleStatusId);
@@ -167,7 +177,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     }
 
     const payload = JSON.stringify({
-      'title': titleEl ? titleEl.textContent : null,
+      'title': titleContent,
       'uri': articleUri,
       'contentHtml': articleContentHtml.trim().length ? articleContentHtml.trim() : null,
       'typeId': articleTypeId,

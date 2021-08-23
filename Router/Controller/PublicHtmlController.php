@@ -294,7 +294,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     {
         $articles = $this->articleService->filterArticlesBy(
             statusIds: [ArticleStatus::PUBLISHED],
-            typeIds: [ArticleType::PAGE],
+            typeIds: [ArticleType::BLOG],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
                 limit: 10
