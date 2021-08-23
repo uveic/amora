@@ -100,7 +100,6 @@ class ArticleCore extends Core
         $imageDataLayer = self::getImageDataLayer();
         $imageResizeService = self::getImageResizeService();
         $mediaBaseDir = self::getConfigValue('mediaBaseDir');
-        $mediaBaseUrl = self::getConfigValue('mediaBaseUrl');
 
         return self::getInstance(
             'ImageService',
@@ -109,7 +108,6 @@ class ArticleCore extends Core
                 $imageDataLayer,
                 $imageResizeService,
                 $mediaBaseDir,
-                $mediaBaseUrl
             ) {
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Image.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/ImagePath.php';
@@ -119,7 +117,7 @@ class ArticleCore extends Core
                     $imageDataLayer,
                     $imageResizeService,
                     $mediaBaseDir,
-                    $mediaBaseUrl);
+                );
             },
             true
         );
