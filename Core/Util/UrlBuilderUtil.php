@@ -19,6 +19,10 @@ class UrlBuilderUtil
     const BACKOFFICE_ARTICLE = '/backoffice/articles/%d';
     const BACKOFFICE_NEW_ARTICLE = '/backoffice/articles/new';
 
+    const BACKOFFICE_BLOG_POSTS = '/backoffice/blog-posts';
+    const BACKOFFICE_BLOG_POST = '/backoffice/blog-posts/%d';
+    const BACKOFFICE_NEW_BLOG_POST = '/backoffice/blog-posts/new';
+
     // Authorised URLs
     const AUTHORISED_ACCOUNT = '/account';
     const AUTHORISED_ACCOUNT_PASSWORD = '/account/password';
@@ -92,6 +96,21 @@ class UrlBuilderUtil
     public static function getBackofficeNewUserUrl(string $languageIsoCode): string
     {
         return self::getBaseUrl($languageIsoCode) . self::BACKOFFICE_NEW_USER;
+    }
+
+    public static function getBackofficeBlogPostsUrl(string $languageIsoCode): string
+    {
+        return self::getBaseUrl($languageIsoCode) . self::BACKOFFICE_BLOG_POSTS;
+    }
+
+    public static function getBackofficeBlogPostUrl(string $languageIsoCode, int $articleId): string
+    {
+        return self::getBaseUrl($languageIsoCode) . sprintf(self::BACKOFFICE_BLOG_POST, $articleId);
+    }
+
+    public static function getBackofficeNewBlogPostUrl(string $languageIsoCode): string
+    {
+        return self::getBaseUrl($languageIsoCode) . self::BACKOFFICE_NEW_BLOG_POST;
     }
 
     //////////////////////////////////////////////////////////////////////////////////

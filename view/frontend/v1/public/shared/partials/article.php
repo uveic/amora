@@ -10,15 +10,19 @@ $canEdit = $responseData->getSession() && $responseData->getSession()->isAdmin()
 $preview = $responseData->getRequest()->getGetParam('preview');
 
 if ($article) {
+    $editUrl = $article->getTypeId() === ArticleType::BLOG
+        ? UrlBuilderUtil::getBackofficeBlogPostUrl($responseData->getSiteLanguage(), $article->getId())
+        : UrlBuilderUtil::getBackofficeArticleUrl($responseData->getSiteLanguage(), $article->getId());
+
 ?>
   <article>
 <?php if ($canEdit && !$preview) { ?>
-    <a class="article-edit" href="<?=UrlBuilderUtil::getBackofficeArticleUrl($responseData->getSiteLanguage(), $article->getId())?>"><?=strtolower($responseData->getLocalValue('globalEdit'))?></a>
+    <a class="article-edit" href="<?=$editUrl?>"><?=strtolower($responseData->getLocalValue('globalEdit'))?></a>
 <?php } ?>
-    <?=$article->getContentHtml()?>
 <?php if ($article->getTypeId() === ArticleType::BLOG) {
-    $this->insert('shared/partials/article/article-info', ['responseData' => $responseData]);
+    $this->insert('shared/partials/article/article-blog-info', ['responseData' => $responseData]);
 } ?>
+    <?=$article->getContentHtml()?>
   </article>
 <?php
 }

@@ -140,7 +140,7 @@ final class ArticleEditHtmlGenerator
             : ($responseData->getFirstArticle()
                 ? $responseData->getLocalValue('globalEdit')
                 : $responseData->getLocalValue('globalNew') . ' ' .
-                $responseData->getLocalValue('globalArticle'));
+                    $responseData->getLocalValue('globalArticle'));
     }
 
     public static function generateArticleTitleHtml(

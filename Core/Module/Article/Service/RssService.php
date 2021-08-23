@@ -130,18 +130,19 @@ class RssService
         return new DateTimeImmutable($article->getPublishOn(), $utcTimezone);
     }
 
-    private function getBuildDate(array $articles): ?DateTimeImmutable
+    private function getBuildDate(array $articles): DateTimeImmutable
     {
+        $utcTimezone = new DateTimeZone('UTC');
+
         if (!$articles) {
-            return null;
+            return new DateTimeImmutable('now', $utcTimezone);;
         }
 
         $buildDate = $this->getLastPubDate($articles[0]);
-        $utcTimezone = new DateTimeZone('UTC');
 
         /** @var Article $article */
         foreach ($articles as $article) {
-            $updatedAt = new DateTimeImmutable($article->getUpdatedAt(), $utcTimezone);
+            $updatedAt = new DateTimeImmutable($article->getPublishOn(), $utcTimezone);
             if ($buildDate < $updatedAt) {
                 $buildDate = $updatedAt;
             }

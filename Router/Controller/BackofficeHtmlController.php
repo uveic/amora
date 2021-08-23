@@ -260,4 +260,84 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             )
         );
     }
+
+    /**
+     * Endpoint: /backoffice/blog-posts
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getBlogPostsPage(Request $request): Response
+    {
+        $articles = $this->articleService->filterArticlesBy(
+            typeIds: [ArticleType::BLOG],
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('updated_at', 'DESC')],
+                limit: 100
+            )
+        );
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+
+        return Response::createBackofficeHtmlResponse(
+            'blog-posts',
+            new HtmlResponseDataAuthorised(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navAdminBlogPosts'),
+                articles: $articles
+            )
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/blog-posts/new
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getNewBlogPostPage(Request $request): Response
+    {
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        return Response::createBackofficeHtmlResponse(
+            'blog-posts-edit',
+            new HtmlResponseDataAuthorised(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
+                    $localisationUtil->getValue('globalBlogPost'),
+            )
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/blog-posts/{articleId}
+     * Method: GET
+     *
+     * @param int $articleId
+     * @param Request $request
+     * @return Response
+     */
+    protected function getEditBlogPostPage(int $articleId, Request $request): Response
+    {
+        $article = $this->articleService->getArticleForId($articleId, true);
+        if (empty($article)) {
+            return Response::createFrontendPublicHtmlResponse(
+                'shared/404',
+                new HtmlResponseDataAuthorised($request)
+            );
+        }
+
+        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $articleSections = $this->articleService->getSectionsForArticleId($articleId);
+        return Response::createBackofficeHtmlResponse(
+            'blog-posts-edit',
+            new HtmlResponseDataAuthorised(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
+                    $localisationUtil->getValue('globalBlogPost'),
+                articles: [$article],
+                articleSections: $articleSections,
+            )
+        );
+    }
 }

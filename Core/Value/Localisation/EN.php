@@ -18,7 +18,10 @@ return [
     'navAdminContent' => 'Content',
     'navAdminImages' => 'Images',
     'navAdminArticles' => 'Articles',
+    'navAdminBlogPosts' => 'Blog Posts',
     'navAdminArticleOptions' => 'Article Options',
+
+    'editorTitlePlaceholder' => 'Title...',
 
     'authenticationActionHomeLink' => 'Go back to log in page',
     'authenticationLoginSubtitle' => 'Welcome back.',
@@ -105,6 +108,7 @@ return [
     'globalStatus' => 'Status',
     'globalPreview' => 'Preview',
     'globalArticle' => 'Article',
+    'globalBlogPost' => 'Post',
     'globalTags' => 'Tags',
     'globalDateFormat' => 'dd/mm/yyyy',
     'globalActivated' => 'Enabled',
