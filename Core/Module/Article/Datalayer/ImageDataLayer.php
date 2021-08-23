@@ -2,13 +2,16 @@
 
 namespace Amora\Core\Module\Article\Datalayer;
 
-use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
+use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\Article\Model\Image;
+use Amora\Core\Module\DataLayerTrait;
 
 class ImageDataLayer
 {
+    use DataLayerTrait;
+
     const IMAGE_TABLE_NAME = 'image';
 
     public function __construct(private MySqlDb $db, private Logger $logger)
@@ -19,10 +22,20 @@ class ImageDataLayer
         return $this->db;
     }
 
-    private function getImages(
-        ?int $imageId = null,
-        ?int $userId = null
+    public function filterImagesBy(
+        array $imageIds = [],
+        array $userIds = [],
+        bool $includeDeleted = false,
+        ?QueryOptions $queryOptions = null,
     ): array {
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
+        }
+
+        $orderByMapping = [
+            'id' => 'i.id',
+        ];
+
         $params = [];
         $baseSql = 'SELECT ';
         $fields = [
@@ -42,19 +55,21 @@ class ImageDataLayer
         $joins = ' FROM ' . self::IMAGE_TABLE_NAME . ' AS i';
         $where = ' WHERE 1';
 
-        if (isset($imageId)) {
-            $where .= ' AND i.id = :imageId';
-            $params[':imageId'] = $imageId;
+        if (!$includeDeleted) {
+            $where .= ' AND i.is_deleted = 1';
         }
 
-        if (isset($userId)) {
-            $where .= ' AND i.user_id = :userId';
-            $params[':userId'] = $userId;
+        if ($imageIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $imageIds, 'i.id', 'imageId');
         }
 
-        $orderBy = ' ORDER BY i.id ASC';
+        if ($userIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $userIds, 'i.user_id', 'userId');
+        }
 
-        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderBy;
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
 
         $res = $this->db->fetchAll($sql, $params);
 
@@ -66,20 +81,10 @@ class ImageDataLayer
         return $output;
     }
 
-    public function getAllImages(): array
-    {
-        return $this->getImages();
-    }
-
     public function getImageForId(int $id): ?Image
     {
-        $res = $this->getImages($id);
+        $res = $this->filterImagesBy(imageIds: [$id]);
         return empty($res[0]) ? null : $res[0];
-    }
-
-    public function getImagesForUserId(int $userId): array
-    {
-        return $this->getImages(null, $userId);
     }
 
     public function storeImage(Image $image): Image {
@@ -96,6 +101,15 @@ class ImageDataLayer
 
     public function deleteImage(int $imageId): bool
     {
-        return $this->db->delete(self::IMAGE_TABLE_NAME, ['id' => $imageId]);
+        return $this->db->execute(
+            '
+                UPDATE ' . self::IMAGE_TABLE_NAME .
+            '   SET is_deleted = 1
+                WHERE id = :imageId
+            ',
+            [
+                ':imageId' => $imageId
+            ],
+        );
     }
 }

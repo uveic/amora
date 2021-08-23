@@ -16,7 +16,6 @@ class ImageService
         private ImageDataLayer $imageDataLayer,
         private ImageResizeService $imageResizeService,
         private string $mediaBaseDir,
-        private string $mediaBaseUrl,
     ) {}
 
     public function getImageForId(int $id): ?Image
@@ -26,12 +25,7 @@ class ImageService
 
     public function getAllImages(): array
     {
-        return $this->imageDataLayer->getAllImages();
-    }
-
-    public function getImagesForUserId(int $userId): array
-    {
-        return $this->imageDataLayer->getImagesForUserId($userId);
+        return $this->imageDataLayer->filterImagesBy();
     }
 
     public function storeImage(Image $image): ?Image
@@ -47,30 +41,30 @@ class ImageService
             return false;
         }
 
-        $imgFullPath = $image->getFilePathOriginal();
-        if (file_exists($imgFullPath)) {
-            if (!unlink($imgFullPath)) {
-                return false;
-            }
-        }
-
-        if ($image->getFilePathMedium()) {
-            $imgFullPath = $image->getFilePathMedium();
-            if (file_exists($imgFullPath)) {
-                if (!unlink($imgFullPath)) {
-                    return false;
-                }
-            }
-        }
-
-        if ($image->getFilePathBig()) {
-            $imgFullPath = $image->getFilePathBig();
-            if (file_exists($imgFullPath)) {
-                if (!unlink($imgFullPath)) {
-                    return false;
-                }
-            }
-        }
+//        $imgFullPath = $image->getFilePathOriginal();
+//        if (file_exists($imgFullPath)) {
+//            if (!unlink($imgFullPath)) {
+//                return false;
+//            }
+//        }
+//
+//        if ($image->getFilePathMedium()) {
+//            $imgFullPath = $image->getFilePathMedium();
+//            if (file_exists($imgFullPath)) {
+//                if (!unlink($imgFullPath)) {
+//                    return false;
+//                }
+//            }
+//        }
+//
+//        if ($image->getFilePathBig()) {
+//            $imgFullPath = $image->getFilePathBig();
+//            if (file_exists($imgFullPath)) {
+//                if (!unlink($imgFullPath)) {
+//                    return false;
+//                }
+//            }
+//        }
 
         return true;
     }
