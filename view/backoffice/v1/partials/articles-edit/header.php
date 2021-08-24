@@ -8,8 +8,11 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 $articleTitle = ArticleEditHtmlGenerator::generateTitleHtml($responseData);
 $settings = ArticleEditHtmlGenerator::generateSettingsButtonHtml($responseData);
-// ToDo: it might be a post instead of a page/article
-$closeUrl = UrlBuilderUtil::getBackofficeArticlesUrl($responseData->getSiteLanguage());
+
+// ToDo: hacky
+$closeUrl = str_contains($responseData->getSiteUrl(), 'articles')
+    ? UrlBuilderUtil::getBackofficeArticlesUrl($responseData->getSiteLanguage())
+    : UrlBuilderUtil::getBackofficeBlogPostsUrl($responseData->getSiteLanguage());
 ?>
     <section class="page-header">
         <h1><?=$articleTitle?></h1>

@@ -79,6 +79,8 @@ return [
 
     'dashboardGoTo' => 'Ir a...',
     'dashboardHomepage' => 'Portada',
+    'dashboardShortcuts' => 'Accessos directos',
+    'dashboardNewBlogPost' => 'Crear entrada en el blog',
 
     'globalYes' => 'Sí',
     'globalNo' => 'No',
@@ -141,6 +143,7 @@ return [
     'articleTypeBlog' => 'Blog',
     'articleTypeArticle' => 'Artículo',
     'paragraphPlaceholder' => 'Escribe aquí...',
+    'articleBlogFooterInfo' => 'Gracias por leer y llegar hasta aquí 💕. No hay comentarios pero me puedes escribir a <a href="mailto:%s">%s</a>, estaré encantado de leerte.',
 
     'userRoleAdmin' => 'Administrador/a',
     'userRoleUser' => 'Usuario/a',
