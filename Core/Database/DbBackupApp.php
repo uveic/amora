@@ -131,6 +131,8 @@ final class DbBackupApp extends App
         $utcTz = new DateTimeZone('UTC');
         $oneDayAgo = new DateTime(timezone: $utcTz);
         $oneDayAgo->setTimestamp(strtotime("-1 days"));
+        $twoMonthsAgo = new DateTime(timezone: $utcTz);
+        $twoMonthsAgo->setTimestamp(strtotime("-2 months"));
 
         $files = $this->getBackupFiles();
         foreach ($files as $file) {
@@ -140,6 +142,10 @@ final class DbBackupApp extends App
                 datetime: $datePart,
                 timezone: $utcTz
             );
+
+            if ((int)$fileDate->format('G') === 4 && $fileDate > $twoMonthsAgo) {
+                continue;
+            }
 
             if ($fileDate < $oneDayAgo) {
                 $this->log('Deleting file: ' . $file);
