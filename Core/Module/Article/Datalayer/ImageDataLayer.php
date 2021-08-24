@@ -25,7 +25,7 @@ class ImageDataLayer
     public function filterImagesBy(
         array $imageIds = [],
         array $userIds = [],
-        bool $includeDeleted = false,
+        bool $excludeDeleted = true,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -55,8 +55,8 @@ class ImageDataLayer
         $joins = ' FROM ' . self::IMAGE_TABLE_NAME . ' AS i';
         $where = ' WHERE 1';
 
-        if (!$includeDeleted) {
-            $where .= ' AND i.is_deleted = 1';
+        if ($excludeDeleted) {
+            $where .= ' AND i.is_deleted = 0';
         }
 
         if ($imageIds) {
