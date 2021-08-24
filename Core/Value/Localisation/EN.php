@@ -79,6 +79,8 @@ return [
 
     'dashboardGoTo' => 'Go to...',
     'dashboardHomepage' => 'Homepage',
+    'dashboardShortcuts' => 'Shortcuts',
+    'dashboardNewBlogPost' => 'Create new blog post',
 
     'globalYes' => 'Yes',
     'globalNo' => 'No',
@@ -141,6 +143,7 @@ return [
     'articleTypeBlog' => 'Blog',
     'articleTypeArticle' => 'Article',
     'paragraphPlaceholder' => 'Type here...',
+    'articleBlogFooterInfo' => 'Thanks for reading and getting this far 💕. Comments are not enabled but you can write to me on <a href="mailto:%s">%s</a>, I would love to read your thoughts.',
 
     'userRoleAdmin' => 'Admin',
     'userRoleUser' => 'User',

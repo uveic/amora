@@ -80,7 +80,7 @@ class UrlBuilderUtil
     ): string {
         return self::getBaseUrl($languageIsoCode)
             . self::BACKOFFICE_NEW_ARTICLE
-            . ($articleTypeId ? 'new?articleType=' . $articleTypeId : '');
+            . ($articleTypeId ? '?articleType=' . $articleTypeId : '');
     }
 
     public static function getBackofficeUsersUrl(string $languageIsoCode): string

@@ -112,6 +112,10 @@ document.querySelectorAll('.article-save-button').forEach(el => {
           h1El.appendChild(aEl);
         }
 
+        if (c.classList.contains(pexegoClasses.contentImageCaption)) {
+          c.classList.add('article-section-image-caption');
+        }
+
         c.classList.remove(
           'placeholder',
           pexegoClasses.contentTitle,

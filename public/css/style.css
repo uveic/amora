@@ -548,7 +548,7 @@ article > h2 {
 
 article > p {
   margin: 0;
-  padding: 1rem;
+  padding: 0.35rem 1rem;
 }
 
 .article-edit {
@@ -565,6 +565,14 @@ article > p {
   color: var(--light-text-color);
 }
 
+.article-blog-footer {
+  padding: 0.25rem 1rem;
+  margin: 2rem 0;
+  font-size: 0.9rem;
+  color: var(--light-text-color);
+  border-top: 1px dotted var(--light-bg-color-3);
+}
+
 article > img {
   position: relative;
   margin-top: 1rem;
@@ -574,7 +582,7 @@ article > img {
 
 .article-section-image-caption {
   margin-top: 0;
-  padding: 0.25rem 0.5rem;
+  padding: 0.1rem 1rem 0.25rem 1rem;
   font-size: 0.8rem;
   color: var(--light-text-color);
   outline: 0;

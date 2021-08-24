@@ -2,12 +2,12 @@
 
 MYDIR="$(dirname "$(which "$0")")"
 
-echo "Restoring the database..."
+echo "Restoring database..."
 php "$MYDIR"/../core_migrate_db.php install
 
 if [[ $? -ne 0 ]]
 then
-  echo "Error restoring the database. Aborting..."
+  echo "Error restoring database. Aborting..."
   exit
 fi
 

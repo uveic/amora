@@ -142,6 +142,10 @@ class ImageResizeService
 
     private function getImageType(string $sourceFullPath): ?string
     {
+        if (!str_contains($sourceFullPath, '.')) {
+            return null;
+        }
+
         $parts = explode('.', $sourceFullPath);
         return empty($parts) ? null : strtolower(trim($parts[count($parts) - 1]));
     }

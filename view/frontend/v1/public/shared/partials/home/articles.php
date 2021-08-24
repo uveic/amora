@@ -6,6 +6,10 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlHomepageResponseData $responseData */
 
+if ($responseData->getSession() && $responseData->getSession()->isAdmin()) {
+  return;
+}
+
 if (!$responseData->getHomeArticles()) {
   return;
 }

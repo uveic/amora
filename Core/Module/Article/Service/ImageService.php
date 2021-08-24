@@ -75,10 +75,7 @@ class ImageService
         $key = 0;
         /** @var File $file */
         foreach ($files as $file) {
-            $cleanImgName = DateUtil::getTimestamp() . '_' .
-                StringUtil::cleanString($file->getName());
-
-            $targetPath = rtrim($this->mediaBaseDir, ' /') . '/' . $cleanImgName;
+            $targetPath = rtrim($this->mediaBaseDir, ' /') . '/' . $file->getName();
             $res = rename($file->getFullPath(), $targetPath);
             if (empty($res)) {
                 return $output;
