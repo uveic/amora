@@ -42,6 +42,8 @@ class UrlBuilderUtil
     const PUBLIC_VERIFY_USER = '/user/verify/%s';
     const PUBLIC_RESET_PASSWORD = '/user/reset/%s';
 
+    const PUBLIC_RSS = '/rss';
+
     public static function getBaseUrl(string $siteLanguage): string
     {
         $baseUrl = Core::getConfigValue('baseUrl');
@@ -212,5 +214,11 @@ class UrlBuilderUtil
         return self::getBaseUrl($languageIsoCode)
             . '/' . $uri
             . ($preview ? '?preview=true' : '');
+    }
+
+    public static function getPublicRssUrl(): string
+    {
+        $baseUrl = Core::getConfigValue('baseUrl');
+        return rtrim($baseUrl, ' /') . self::PUBLIC_RSS;
     }
 }
