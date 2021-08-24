@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Model\Response\HtmlResponseDataAbstract;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAbstract $responseData */
 
@@ -28,6 +29,7 @@ use Amora\Core\Model\Response\HtmlResponseDataAbstract;
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <link rel="manifest" href="/img/favicon/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="<?=$this->e($responseData->getSiteName())?>" href="<?=UrlBuilderUtil::getPublicRssUrl()?>" />
   <link rel="alternate" href="<?=$responseData->getSiteUrl()?>" hreflang="x-default">
   <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
