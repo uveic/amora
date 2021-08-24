@@ -4,6 +4,7 @@ return [
     'env' => 'dev',
     'siteImageUrl' => '',
     'siteAdminEmail' => '',
+    'siteAdminName' => '',
     'timezone' => 'UTC',
     'phpLocale' => 'en_GB',
     'defaultSiteLanguage' => 'en',

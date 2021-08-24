@@ -200,6 +200,11 @@ class Response
         return new Response($msg, self::HTML, self::HTTP_500_INTERNAL_ERROR);
     }
 
+    public static function createSuccessXmlResponse(string $payload): Response
+    {
+        return new Response($payload, self::XML, self::HTTP_200_OK);
+    }
+
     protected static function getResponseType($payload): array
     {
         if ($payload instanceof SimpleXMLElement) {

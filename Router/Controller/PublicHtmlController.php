@@ -306,7 +306,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             articles: $articles,
         );
 
-        return Response::createSuccessResponse($xml);
+        return Response::createSuccessXmlResponse($xml);
     }
 
     private function buildHomepageResponse(

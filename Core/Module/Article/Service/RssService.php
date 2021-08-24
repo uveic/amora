@@ -10,7 +10,6 @@ use Amora\Core\Util\LocalisationUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 use DateTimeZone;
-use SimpleXMLElement;
 
 class RssService
 {
@@ -23,7 +22,7 @@ class RssService
     public function buildRss(
         string $siteLanguage,
         array $articles,
-    ): SimpleXMLElement {
+    ): string {
         $this->localisationUtil = Core::getLocalisationUtil(strtoupper($siteLanguage));
 
         $this->logger->logInfo('Building RSS...');
@@ -51,7 +50,7 @@ class RssService
             ]
         );
 
-        return new SimpleXMLElement(implode('', $xml), LIBXML_NOCDATA);
+        return implode('', $xml);
     }
 
     private function buildMainItems(
@@ -61,6 +60,7 @@ class RssService
     ): array {
         $baseUrl = Core::getConfigValue('baseUrl');
         $siteAdminEmail = Core::getConfigValue('siteAdminEmail');
+        $siteAdminName = Core::getConfigValue('siteAdminName');
         $siteTitle = $this->getSiteTitle();
         $siteDescription = $this->localisationUtil->getValue('siteDescription');
 
@@ -75,9 +75,9 @@ class RssService
             '<generator>' . $siteTitle . '</generator>',
         ];
 
-        if ($siteAdminEmail) {
-            $output[] = '<managingEditor>' . $siteAdminEmail . '</managingEditor>';
-            $output[] = '<webMaster>' . $siteAdminEmail . '</webMaster>';
+        if ($siteAdminEmail && $siteAdminName) {
+            $output[] = '<managingEditor>' . $siteAdminEmail . ' (' . $siteAdminName . ')</managingEditor>';
+            $output[] = '<webMaster>' . $siteAdminEmail . ' (' . $siteAdminName . ')</webMaster>';
         }
 
         return $output;
@@ -93,11 +93,11 @@ class RssService
             $link = UrlBuilderUtil::getPublicArticleUrl($siteLanguage, $article->getUri());
 
             $output[] = '<item>';
-            $output[] = '<title>' . htmlentities($article->getTitle()) . '</title>';
+            $output[] = '<title>' . htmlspecialchars($article->getTitle()) . '</title>';
             $output[] = '<link>' . $link . '</link>';
             $output[] = '<guid>' . $link . '</guid>';
-            $output[] = '<author>' . $article->getUser()->getNameOrEmail() . '</author>';
-            $output[] = '<description>' . htmlentities($article->getContentHtml()) . '</description>';
+            $output[] = '<author>' . $article->getUser()->getEmail() . ' (' . $article->getUser()->getName() . ')</author>';
+            $output[] = '<description>' . htmlspecialchars($article->getContentHtml()) . '</description>';
             $output[] = '<pubDate>' . $pubDate->format('r') . '</pubDate>';
 
             /** @var Tag $tag */
