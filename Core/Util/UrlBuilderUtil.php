@@ -52,6 +52,12 @@ class UrlBuilderUtil
         return trim($baseUrl, ' /') . '/' . $siteLanguage;
     }
 
+    public static function getBaseUrlWithoutLanguage(): string
+    {
+        $baseUrl = Core::getConfigValue('baseUrl');
+        return trim($baseUrl, ' /') . '/';
+    }
+
     //////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////
     /// Backoffice URLs

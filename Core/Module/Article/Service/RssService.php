@@ -32,10 +32,10 @@ class RssService
         $xml = array_merge(
             [
                 '<?xml version="1.0"?>',
-                '<rss version="2.0">',
+                '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
                 '<channel>',
             ],
-            $this->buildMainItems(
+            $this->buildHeader(
                 siteLanguage: $siteLanguage,
                 lastPubDate: $this->getLastPubDate($articles[0] ?? null),
                 lastBuildDate: $lastBuildDate,
@@ -53,7 +53,7 @@ class RssService
         return implode('', $xml);
     }
 
-    private function buildMainItems(
+    private function buildHeader(
         string $siteLanguage,
         DateTimeImmutable $lastPubDate,
         DateTimeImmutable $lastBuildDate,
@@ -73,6 +73,7 @@ class RssService
             '<lastBuildDate>' . $lastBuildDate->format('r') . '</lastBuildDate>',
             '<docs>http://blogs.law.harvard.edu/tech/rss</docs>',
             '<generator>' . $siteTitle . '</generator>',
+            '<atom:link href="' . UrlBuilderUtil::getPublicRssUrl() . '" rel="self" type="application/rss+xml" />',
         ];
 
         if ($siteAdminEmail && $siteAdminName) {
@@ -91,13 +92,14 @@ class RssService
         foreach ($articles as $article) {
             $pubDate = new DateTimeImmutable($article->getPublishOn());
             $link = UrlBuilderUtil::getPublicArticleUrl($siteLanguage, $article->getUri());
+            $content = $this->getContent($article);
 
             $output[] = '<item>';
             $output[] = '<title>' . htmlspecialchars($article->getTitle()) . '</title>';
             $output[] = '<link>' . $link . '</link>';
             $output[] = '<guid>' . $link . '</guid>';
             $output[] = '<author>' . $article->getUser()->getEmail() . ' (' . $article->getUser()->getName() . ')</author>';
-            $output[] = '<description>' . htmlspecialchars($article->getContentHtml()) . '</description>';
+            $output[] = '<description>' . htmlspecialchars($content) . '</description>';
             $output[] = '<pubDate>' . $pubDate->format('r') . '</pubDate>';
 
             /** @var Tag $tag */
@@ -109,6 +111,15 @@ class RssService
         }
 
         return $output;
+    }
+
+    private function getContent(Article $article): string
+    {
+        return str_replace(
+            search: 'src="/',
+            replace: 'src="' . UrlBuilderUtil::getBaseUrlWithoutLanguage(),
+            subject: $article->getContentHtml()
+        );
     }
 
     private function getSiteTitle(): string
