@@ -315,7 +315,7 @@ ul.nav-dropdown-menu a:hover {
   padding: 0.6rem 1.5rem;
   border: none;
   cursor: pointer;
-  margin: 0 !important;
+  margin: 0.5rem 0 !important;
 }
 
 .dropdown-menu-option {
@@ -625,6 +625,11 @@ a.link-title:focus {
 .article-section-image,
 .article-section-paragraph {
   overflow: hidden;
+}
+
+.article-disable-controls,
+.article-preview {
+  padding: 0.5rem;
 }
 /* Article styles ends here */
 

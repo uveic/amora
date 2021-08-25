@@ -54,7 +54,9 @@ class Global {
       "editorVideoUrlTitle": "Video URL? (Only YouTube for now)",
       "editorSectionRemove": "Remove from article",
       "editorSectionMoveUp": "Move Up",
-      "editorSectionMoveDown": "Move Down"
+      "editorSectionMoveDown": "Move Down",
+      "editorDisableControls": "Disable controls",
+      "editorEnableControls": "Enable controls",
     },
     "es": {
       "genericError": "Ha ocurrido un error inesperado, por favor inténtalo de nuevo.",
@@ -100,7 +102,9 @@ class Global {
       "editorVideoUrlTitle": "Introduce la direccioón URL del vídeo (Solo YouTube por ahora)",
       "editorSectionRemove": "Eliminar sección del artículo",
       "editorSectionMoveUp": "Mover para arriba",
-      "editorSectionMoveDown": "Mover para abajo"
+      "editorSectionMoveDown": "Mover para abajo",
+      "editorDisableControls": "Desactivar controles",
+      "editorEnableControls": "Activar controles",
     },
     "gl": {
       "genericError": "Algo non foi ben, por favor inténtao de novo.",
@@ -147,6 +151,8 @@ class Global {
       "editorSectionRemove": "Eliminar do artigo",
       "editorSectionMoveUp": "Mover para arriba",
       "editorSectionMoveDown": "Mover para abaixo",
+      "editorDisableControls": "Desactivar controis",
+      "editorEnableControls": "Activar controis",
     }
   }
 

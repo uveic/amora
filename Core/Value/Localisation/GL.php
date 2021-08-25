@@ -22,6 +22,8 @@ return [
     'navAdminArticleOptions' => 'Configuración artigo',
 
     'editorTitlePlaceholder' => 'Título...',
+    'editorDisableControls' => 'Desactivar controles',
+    'editorEnableControls' => 'Activar controles',
 
     'authenticationActionHomeLink' => 'Ir á páxina de entrada',
     'authenticationLoginSubtitle' => 'Benvida/o de volta. Adiante!',

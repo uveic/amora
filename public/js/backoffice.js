@@ -544,3 +544,18 @@ document.querySelectorAll('a.search-results-close').forEach(el => {
 document.querySelectorAll('.tag-result-selected-delete').forEach(i => {
   i.addEventListener('click', (e) => handleRemoveArticleTag(e));
 });
+
+document.querySelectorAll('.article-disable-controls').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    document.querySelectorAll('.pexego-section-controls').forEach(d => {
+      d.classList.toggle('null');
+    });
+
+    const controlsEnabled = document.querySelector('.pexego-section-controls').classList.contains('null');
+    a.textContent = controlsEnabled
+      ? global.get('editorEnableControls')
+      : global.get('editorDisableControls');
+  });
+});

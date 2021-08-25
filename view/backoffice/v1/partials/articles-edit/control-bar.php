@@ -41,7 +41,8 @@ $random = StringUtil::getRandomString(5);
 ?>
   <div class="control-bar-wrapper m-b-3 m-t-1">
     <div class="control-bar-buttons">
-      <button class="article-save-button button m-r-1"><?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?></button>
+      <button class="article-save-button button"><?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?></button>
+      <a class="article-disable-controls" href="#"><?=$responseData->getLocalValue('editorEnableControls')?></a>
 <?php if ($article) {?>
         <a class="article-preview" href="<?=UrlBuilderUtil::getPublicArticleUrl($responseData->getSiteLanguage(), $article->getUri(), true)?>" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
 <?php } ?>

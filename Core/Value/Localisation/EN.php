@@ -22,6 +22,8 @@ return [
     'navAdminArticleOptions' => 'Article Options',
 
     'editorTitlePlaceholder' => 'Title...',
+    'editorDisableControls' => 'Disable controls',
+    'editorEnableControls' => 'Enable controls',
 
     'authenticationActionHomeLink' => 'Go back to log in page',
     'authenticationLoginSubtitle' => 'Welcome back.',

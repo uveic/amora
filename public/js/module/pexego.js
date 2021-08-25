@@ -399,7 +399,7 @@ const generateSectionWrapperFor = function(pexegoSectionElement, id) {
 
   let sectionControls = document.createElement('div');
   sectionControls.id = 'pexego-section-controls-' + id;
-  sectionControls.className = 'pexego-section-controls';
+  sectionControls.className = classes.sectionControls + ' null';
 
   sectionControls.appendChild(moveUpButton);
   sectionControls.appendChild(moveDownButton);
