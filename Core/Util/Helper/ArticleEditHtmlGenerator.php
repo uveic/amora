@@ -64,17 +64,17 @@ final class ArticleEditHtmlGenerator
         }
 
         $typeIdGetParam = $responseData->getRequest()->getGetParam('articleType');
-        if (empty($typeIdGetParam)) {
-            return ArticleType::PAGE;
-        }
-
-        foreach (ArticleType::getAll() as $articleType) {
-            if ((int)$typeIdGetParam === $articleType->getId()) {
-                return $articleType->getId();
+        if (!empty($typeIdGetParam)) {
+            foreach (ArticleType::getAll() as $articleType) {
+                if ((int)$typeIdGetParam === $articleType->getId()) {
+                    return $articleType->getId();
+                }
             }
         }
 
-        return ArticleType::PAGE;
+        return str_contains($responseData->getSiteUrl(), 'articles')
+            ? ArticleType::PAGE
+            : ArticleType::BLOG;
     }
 
     public static function generateStatusDropdownSelectHtml(
@@ -133,14 +133,19 @@ final class ArticleEditHtmlGenerator
     public static function generateTitleHtml(
         HtmlResponseDataAuthorised $responseData
     ): string {
+        if ($responseData->getFirstArticle()) {
+            return $responseData->getLocalValue('globalEdit');
+        }
+
         $articleTypeId = self::getArticleTypeId($responseData);
 
-        return $articleTypeId === ArticleType::HOMEPAGE
-            ? $responseData->getLocalValue('articleEditHomepageTitle')
-            : ($responseData->getFirstArticle()
-                ? $responseData->getLocalValue('globalEdit')
-                : $responseData->getLocalValue('globalNew') . ' ' .
-                    $responseData->getLocalValue('globalArticle'));
+        if ($articleTypeId === ArticleType::HOMEPAGE) {
+            return $responseData->getLocalValue('articleEditHomepageTitle');
+        }
+
+        return $articleTypeId === ArticleType::PAGE
+            ? $responseData->getLocalValue('globalNew') . ' ' . $responseData->getLocalValue('globalArticle')
+            : $responseData->getLocalValue('globalNew') . ' ' . $responseData->getLocalValue('globalBlogPost');
     }
 
     public static function generateArticleTitleHtml(

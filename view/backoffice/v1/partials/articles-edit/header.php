@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 
@@ -9,8 +10,8 @@ use Amora\Core\Util\UrlBuilderUtil;
 $articleTitle = ArticleEditHtmlGenerator::generateTitleHtml($responseData);
 $settings = ArticleEditHtmlGenerator::generateSettingsButtonHtml($responseData);
 
-// ToDo: hacky
-$closeUrl = str_contains($responseData->getSiteUrl(), 'articles')
+$articleTypeId = ArticleEditHtmlGenerator::getArticleTypeId($responseData);
+$closeUrl = $articleTypeId === ArticleType::PAGE
     ? UrlBuilderUtil::getBackofficeArticlesUrl($responseData->getSiteLanguage())
     : UrlBuilderUtil::getBackofficeBlogPostsUrl($responseData->getSiteLanguage());
 ?>
