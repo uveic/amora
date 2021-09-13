@@ -389,6 +389,7 @@ ul.nav-dropdown-menu a:hover {
   font-size: .75rem;
   margin-top: .25rem;
   text-align: left;
+  min-height: 1rem;
 }
 
 .help .is-danger {

@@ -293,9 +293,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $now = DateUtil::getCurrentDateForMySql();
         $uri = $this->articleService->getAvailableUriForArticle(articleTitle: $title);
 
-        if (empty($publishOn)) {
-            $publishOn = $statusId === ArticleStatus::PUBLISHED ? $now : null;
-        }
+        $publishOnMySql = $publishOn
+            ? DateUtil::convertDateFromISOToMySQLFormat($publishOn)
+            : ($statusId === ArticleStatus::PUBLISHED ? $now : null);
 
         $res = $this->articleService->createNewArticle(
             new Article(
@@ -305,7 +305,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 typeId: $typeId ?? ArticleType::PAGE,
                 createdAt: $now,
                 updatedAt: $now,
-                publishOn: $publishOn,
+                publishOn: $publishOnMySql,
                 title: $title,
                 contentHtml: html_entity_decode($contentHtml),
                 mainImageId: $mainImageId,
@@ -366,10 +366,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $contentHtml = html_entity_decode($contentHtml);
         $now = DateUtil::getCurrentDateForMySql();
 
-        // ToDo: Implement publishOn in JS and remove this
-        if (empty($publishOn)) {
-            $publishOn = $existingArticle->getPublishOn() ?? $now;
-        }
+        $publishOnMySql = $publishOn
+            ? DateUtil::convertDateFromISOToMySQLFormat($publishOn)
+            : ($existingArticle->getPublishOn() ?? $now);
 
         $res = $this->articleService->updateArticle(
             new Article(
@@ -379,7 +378,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 typeId: $typeId ?? $existingArticle->getTypeId(),
                 createdAt: $existingArticle->getCreatedAt(),
                 updatedAt: $now,
-                publishOn: $publishOn,
+                publishOn: $publishOnMySql,
                 title: $title ?? $existingArticle->getTitle(),
                 contentHtml: $contentHtml ?? $existingArticle->getContentHtml(),
                 mainImageId: $mainImageId ?? $existingArticle->getMainImage()?->getId(),

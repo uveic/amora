@@ -8,11 +8,21 @@ use Amora\Core\Util\UrlBuilderUtil;
 $article = $responseData->getFirstArticle();
 
 $articleTags = $article ? $article->getTags() : [];
-$d = new DateTime();
-$minPublishAt = $d->format('Y-m-d');
 
 $publishOn = $article && $article->getPublishOn()
-    ? DateUtil::transformFromUtcTo($article->getPublishOn(), $responseData->getSession()->getTimezone(), 'Y-m-d')
+    ? DateUtil::transformFromUtcTo(
+        stringDate: $article->getPublishOn(),
+        timezone: $responseData->getTimezone(),
+        outputFormat: 'Y-m-d',
+    )
+    : '';
+
+$publishOnTime = $article && $article->getPublishOn()
+    ? DateUtil::transformFromUtcTo(
+        stringDate: $article->getPublishOn(),
+        timezone: $responseData->getTimezone(),
+        outputFormat: 'H:i',
+    )
     : '';
 
 $createdAtContent = '';
@@ -70,10 +80,12 @@ if ($article) {
   </div>
   <div class="field">
     <label for="publishOn" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
-    <div class="control">
-      <input class="input" id="publishOn" name="publishOn" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" min="<?=$minPublishAt?>" value="<?=$publishOn?>" required>
+    <div class="control" style="display: flex;align-content: space-between;">
+      <input style="flex-grow:4;" class="input" id="publishOnDate" name="publishOnDate" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOn?>" required>
+      <div style="padding: 0 0.5rem;"></div>
+      <input style="flex-grow:1;width: 130px;" class="input" id="publishOnTime" name="publishOnTime" type="time" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnTime?>" required>
     </div>
-    <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span><?=$responseData->getLocalValue('globalFormat')?>: <i><?=$responseData->getLocalValue('globalDateFormat')?></i></p>
+    <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
   </div>
   <div class="control">
     <button class="article-save-button button is-success m-b-1" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
