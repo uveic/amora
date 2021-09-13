@@ -330,7 +330,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             typeIds: [ArticleType::BLOG],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
-                limit: 10
+                limit: 100
             ),
         );
 
