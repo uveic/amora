@@ -10,9 +10,10 @@ if (!$article) {
   return '';
 }
 
-$updatedAtDate = DateUtil::formatUtcDate(
-    stringDate: $article->getUpdatedAt(),
+$publishedOnDate = DateUtil::formatUtcDate(
+    stringDate: $article->getPublishOn() ?? $article->getUpdatedAt(),
     lang: $responseData->getSiteLanguage(),
+    timezone: $responseData->getTimezone(),
     includeWeekDay: false,
     includeTime: true,
     includeMonthYearSeparator: true,
@@ -20,4 +21,4 @@ $updatedAtDate = DateUtil::formatUtcDate(
 
 ?>
     <h1><?=$article->getTitle()?></h1>
-    <p class="article-blog-info"><?=$this->e($updatedAtDate)?></p>
+    <p class="article-blog-info"><?=$this->e($publishedOnDate)?></p>

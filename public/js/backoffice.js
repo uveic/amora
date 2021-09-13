@@ -78,6 +78,12 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       ? Number.parseInt(articleTypeIdEl.value)
       : null;
     const articleUri = uriEl && uriEl.value ? uriEl.value : null;
+    const publishOnDateEl = document.querySelector('input[name="publishOnDate"]');
+    const publishOnTimeEl = document.querySelector('input[name="publishOnTime"]');
+
+    const publishOn = publishOnDateEl.value && publishOnTimeEl.value
+      ? new Date(publishOnDateEl.value + 'T' + publishOnTimeEl.value + ':00').toISOString()
+      : null;
 
     document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
 
@@ -189,7 +195,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       'mainImageId': mainImageId,
       'sections': sections,
       'tags': tags,
-      'publishOn': null
+      'publishOn': publishOn,
     });
 
     const url = '/back/article';

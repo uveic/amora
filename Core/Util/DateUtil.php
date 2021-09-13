@@ -26,7 +26,17 @@ final class DateUtil
 
         $dateObj = DateTimeImmutable::createFromFormat(DateTimeImmutable::ISO8601, $isoDate);
         if ($dateObj === false) {
-            return false;
+            // Check if it is from Javascript and it contains milliseconds. Remove milliseconds if found.
+            $isoDate = preg_replace(
+                pattern: "/\.[0-9]{3}Z/",
+                replacement: 'Z',
+                subject: $isoDate,
+            );
+
+            $dateObj = DateTimeImmutable::createFromFormat(DateTimeImmutable::ISO8601, $isoDate);
+            if ($dateObj === false) {
+                return false;
+            }
         }
 
         $errors = DateTimeImmutable::getLastErrors();
