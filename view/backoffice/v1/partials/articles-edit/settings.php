@@ -9,7 +9,7 @@ $article = $responseData->getFirstArticle();
 
 $articleTags = $article ? $article->getTags() : [];
 
-$publishOn = $article && $article->getPublishOn()
+$publishOnDate = $article && $article->getPublishOn()
     ? DateUtil::transformFromUtcTo(
         stringDate: $article->getPublishOn(),
         timezone: $responseData->getTimezone(),
@@ -81,7 +81,7 @@ if ($article) {
   <div class="field">
     <label for="publishOn" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
     <div class="control" style="display: flex;align-content: space-between;">
-      <input style="flex-grow:4;" class="input" id="publishOnDate" name="publishOnDate" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOn?>" required>
+      <input style="flex-grow:4;" class="input" id="publishOnDate" name="publishOnDate" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnDate?>" required>
       <div style="padding: 0 0.5rem;"></div>
       <input style="flex-grow:1;width: 130px;" class="input" id="publishOnTime" name="publishOnTime" type="time" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnTime?>" required>
     </div>
