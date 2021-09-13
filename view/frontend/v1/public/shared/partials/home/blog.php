@@ -25,10 +25,9 @@ foreach ($responseData->getBlogArticles() as $article) {
 
     $title = $article->getTitle() ?: $responseData->getLocalValue('globalNoTitle');
     $publishedOn = $article->getPublishOn()
-        ? DateUtil::formatUtcDate(
-            stringDate: $article->getPublishOn(),
+        ? DateUtil::formatDate(
+            date: DateUtil::convertStringToDateTimeImmutable($article->getPublishOn()),
             lang: $responseData->getSiteLanguage(),
-            timezone: $article->getUser()->getTimezone(),
             includeYear: false,
             includeWeekDay: false,
         )

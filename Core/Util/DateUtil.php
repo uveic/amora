@@ -139,31 +139,23 @@ final class DateUtil
      * 4 months ago
      * 4 months, 2 weeks, 3 days, 1 hour, 49 minutes, 15 seconds ago
      *
-     * @param string $datetime
+     * @param DateTimeImmutable|DateTime $date
      * @param string $language
      * @param bool $full
      * @param bool $includePrefixAndOrSuffix
      * @param bool $includeSeconds
-     * @param string $timezone
      * @return string
      * @throws \Exception
      */
     public static function getElapsedTimeString(
-        string $datetime,
+        DateTimeImmutable|DateTime $date,
         string $language = 'EN',
         bool $full = false,
         bool $includePrefixAndOrSuffix = false,
         bool $includeSeconds = false,
-        string $timezone = 'UTC',
     ): string {
-        try {
-            $tz = new DateTimeZone($timezone);
-        } catch (Throwable) {
-            $tz = new DateTimeZone('UTC');
-        }
-        $now = new DateTimeImmutable('now', $tz);
-        $ago = new DateTimeImmutable($datetime, $tz);
-        $diff = (array)$now->diff($ago);
+        $now = new DateTimeImmutable('now', $date->getTimezone());
+        $diff = (array)$now->diff($date);
 
         switch (strtoupper($language)) {
             case 'GL':
@@ -254,77 +246,41 @@ final class DateUtil
         return $prefix . $output . $suffix;
     }
 
+    public static function convertStringToDateTimeImmutable(string $date): DateTimeImmutable
+    {
+        try {
+            return new DateTimeImmutable(datetime: $date);
+        } catch (Throwable) {
+            Core::getDefaultLogger()->logError('Error converting string to DateTimeImmutable: ' . $date);
+            return new DateTimeImmutable();
+        }
+    }
+
     public static function formatUtcDateShort(
-        ?string $stringDate = null,
-        string $timezone = 'UTC',
+        DateTimeImmutable|DateTime $date,
         bool $includeTime = true,
         bool $includeSeconds = false,
     ): string {
-        if (!isset($stringDate)) {
-            $stringDate = 'now';
-        }
-
-        $utcDate = new DateTime($stringDate, new DateTimeZone('UTC'));
-        $outputTzDate = $utcDate->setTimezone(new DateTimeZone($timezone));
-
         $format = 'd/m/Y';
         $format .= $includeTime
             ? ' H:i' . ($includeSeconds ? ':s' : '')
             : '';
 
-        return $outputTzDate->format($format);
-    }
-
-    public static function formatUtcDate(
-        ?string $stringDate = null,
-        string $lang = 'EN',
-        string $timezone = 'UTC',
-        bool $includeDay = true,
-        bool $includeYear = true,
-        bool $includeWeekDay = true,
-        bool $includeTime = false,
-        bool $includeDayTimeSeparator = true,
-        bool $includeSeconds = false,
-        bool $includeMonthYearSeparator = false,
-        bool $includeDayMonthSeparator = true,
-    ): string {
-        if (!isset($stringDate)) {
-            $stringDate = 'now';
-        }
-
-        $utcDate = new DateTime($stringDate, new DateTimeZone('UTC'));
-        $outputTzDate = $utcDate->setTimezone(new DateTimeZone($timezone));
-
-        return self::formatDate(
-            date: $outputTzDate,
-            lang: $lang,
-            timezone: $timezone,
-            includeDay: $includeDay,
-            includeYear: $includeYear,
-            includeWeekDay: $includeWeekDay,
-            includeTime: $includeTime,
-            includeDayTimeSeparator: $includeDayTimeSeparator,
-            includeSeconds: $includeSeconds,
-            includeMonthYearSeparator: $includeMonthYearSeparator,
-            includeDayMonthSeparator: $includeDayMonthSeparator,
-        );
+        return $date->format($format);
     }
 
     public static function formatDate(
         DateTimeImmutable|DateTime $date,
         string $lang = 'EN',
-        string $timezone = 'UTC',
         bool $includeDay = true,
         bool $includeYear = true,
         bool $includeWeekDay = true,
         bool $includeTime = false,
-        bool $includeDayTimeSeparator = true,
         bool $includeSeconds = false,
+        bool $includeDayTimeSeparator = true,
         bool $includeMonthYearSeparator = false,
         bool $includeDayMonthSeparator = true,
     ): string {
-        $outputTzDate = $date->setTimezone(new DateTimeZone($timezone));
-
         $timeFormat = 'H:i' . ($includeSeconds ? ':s' : '');
 
         $lang = strtoupper($lang);
@@ -332,39 +288,39 @@ final class DateUtil
             case 'GL':
                 $days = ['luns', 'martes', 'mércores', 'xoves', 'venres', 'sábado', 'domingo'];
 
-                $weekDay = $includeWeekDay ? $days[$outputTzDate->format('N') - 1] . ', ' : '';
-                $day = $includeDay ? $outputTzDate->format('j')
+                $weekDay = $includeWeekDay ? $days[$date->format('N') - 1] . ', ' : '';
+                $day = $includeDay ? $date->format('j')
                     . ($includeDayMonthSeparator ? ' de ' : ' ')
                     : '';
                 $time = $includeTime
-                    ? ($includeDayTimeSeparator ? ' ás ' : ' ') . $outputTzDate->format($timeFormat)
+                    ? ($includeDayTimeSeparator ? ' ás ' : ' ') . $date->format($timeFormat)
                     : '';
                 $year = $includeYear
-                    ? ($includeMonthYearSeparator ? ' de ' : ' ') . $outputTzDate->format('Y')
+                    ? ($includeMonthYearSeparator ? ' de ' : ' ') . $date->format('Y')
                     : '';
 
                 return $weekDay
                     . $day
-                    . self::getMonthName($outputTzDate->format('n'), $lang)
+                    . self::getMonthName($date->format('n'), $lang)
                     . $year
                     . $time;
             case 'ES':
                 $days = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
-                $weekDay = $includeWeekDay ? $days[$outputTzDate->format('N') - 1] . ', ' : '';
-                $day = $includeDay ? $outputTzDate->format('j')
+                $weekDay = $includeWeekDay ? $days[$date->format('N') - 1] . ', ' : '';
+                $day = $includeDay ? $date->format('j')
                     . ($includeDayMonthSeparator ? ' de ' : ' ')
                     : '';
                 $time = $includeTime
-                    ? ($includeDayTimeSeparator ? ' a las ' : ' ') . $outputTzDate->format($timeFormat)
+                    ? ($includeDayTimeSeparator ? ' a las ' : ' ') . $date->format($timeFormat)
                     : '';
                 $year = $includeYear
-                    ? ($includeMonthYearSeparator ? ' de ' : ' ') . $outputTzDate->format('Y')
+                    ? ($includeMonthYearSeparator ? ' de ' : ' ') . $date->format('Y')
                     : '';
 
                 return $weekDay
                     . $day
-                    . self::getMonthName($outputTzDate->format('n'), $lang)
+                    . self::getMonthName($date->format('n'), $lang)
                     . $year
                     . $time;
             default:
@@ -374,7 +330,7 @@ final class DateUtil
                     . ($includeYear ? ' Y' : '')
                     . ($includeTime ? ' \a\t ' . $timeFormat : '');
 
-                return $outputTzDate->format($format);
+                return $date->format($format);
         }
     }
 
@@ -401,17 +357,6 @@ final class DateUtil
     public static function getTimezoneFromUtcOffset(int $offsetMinutes): string
     {
         return timezone_name_from_abbr('', $offsetMinutes * 60, 0);
-    }
-
-    public static function transformFromUtcTo(
-        string $stringDate,
-        string $timezone = 'UTC',
-        string $outputFormat = 'Y-m-d H:i:s'
-    ): string
-    {
-        $utcDate = new DateTime($stringDate, new DateTimeZone('UTC'));
-        $outputTzDate = $utcDate->setTimezone(new DateTimeZone($timezone));
-        return $outputTzDate->format($outputFormat);
     }
 
     public static function getMySqlAggregateFormat(string $range): string

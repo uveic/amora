@@ -13,16 +13,10 @@ class SessionDataLayer
 {
     const SESSION_TABLE_NAME = 'session';
 
-    private MySqlDb $db;
-    private Logger $logger;
-    private UserDataLayer $userDatalayer;
-
-    public function __construct(MySqlDb $db, Logger $logger, UserDataLayer $userDatalayer)
-    {
-        $this->db = $db;
-        $this->logger = $logger;
-        $this->userDatalayer = $userDatalayer;
-    }
+    public function __construct(
+        private MySqlDb $db,
+        private Logger $logger
+    ) {}
 
     public function getSessionForSessionId(string $sessionId): ?Session
     {

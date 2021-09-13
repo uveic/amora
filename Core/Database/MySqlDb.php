@@ -35,6 +35,11 @@ final class MySqlDb
         return $this->password;
     }
 
+    public function updateTimezone(): bool
+    {
+        return $this->execute("SET time_zone = '" . date('P') . "';");
+    }
+
     public function fetchAll(string $sql, array $params = []): array
     {
         $this->connect();

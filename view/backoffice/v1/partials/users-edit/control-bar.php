@@ -12,28 +12,26 @@ $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
 $updatedAtContent = '';
 $createdAtContent = '';
 if ($userToEdit) {
-    $updatedAtDate = DateUtil::formatUtcDate(
-        stringDate: $userToEdit->getUpdatedAt(),
+    $updatedAtDate = DateUtil::formatDate(
+        date: DateUtil::convertStringToDateTimeImmutable($userToEdit->getUpdatedAt()),
         lang: $responseData->getSiteLanguage(),
-        timezone: $responseData->getTimezone(),
         includeTime: true,
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
-        datetime: $userToEdit->getUpdatedAt(),
+        date: DateUtil::convertStringToDateTimeImmutable($userToEdit->getUpdatedAt()),
         language: $responseData->getSiteLanguage(),
         includePrefixAndOrSuffix: true
     );
 
-    $createdAtDate = DateUtil::formatUtcDate(
-        stringDate: $userToEdit->getCreatedAt(),
+    $createdAtDate = DateUtil::formatDate(
+        date: DateUtil::convertStringToDateTimeImmutable($userToEdit->getCreatedAt()),
         lang: $responseData->getSiteLanguage(),
-        timezone: $responseData->getTimezone(),
         includeTime: true,
     );
 
     $createdAtEta = DateUtil::getElapsedTimeString(
-        datetime: $userToEdit->getCreatedAt(),
+        date: DateUtil::convertStringToDateTimeImmutable($userToEdit->getCreatedAt()),
         language: $responseData->getSiteLanguage(),
         includePrefixAndOrSuffix: true
     );

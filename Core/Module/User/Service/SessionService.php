@@ -105,6 +105,7 @@ class SessionService
         }
 
         $this->session = $this->dataLayer->getSessionForSessionId($sessionId);
+        Core::updateTimezone($this->session->getTimezone());
 
         return $this->session;
     }
