@@ -115,6 +115,16 @@ class Core
         return self::$config->get('env') === 'live';
     }
 
+    public static function updateTimezone(string $newTimezone) {
+        if (self::getDefaultTimezone() !== $newTimezone) {
+            self::$timezone = $newTimezone;
+            date_default_timezone_set(self::getDefaultTimezone());
+            self::getCoreDb()->updateTimezone();
+            self::getActionDb()->updateTimezone();
+            self::getMailerDb()->updateTimezone();
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // DI manager

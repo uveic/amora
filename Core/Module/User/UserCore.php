@@ -67,14 +67,15 @@ class UserCore extends Core
     {
         $db = self::getDb();
         $logger = self::getUserLogger();
-        $userDataLayer = self::getUserDataLayer();
 
         return self::getInstance(
             'SessionDataLayer',
-            function () use ($db, $logger, $userDataLayer) {
+            function () use ($db, $logger) {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/Session.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Datalayer/UserDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Datalayer/SessionDataLayer.php';
-                return new SessionDataLayer($db, $logger, $userDataLayer);
+                return new SessionDataLayer($db, $logger);
             },
             true
         );

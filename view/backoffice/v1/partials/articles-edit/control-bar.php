@@ -14,15 +14,14 @@ $article = $responseData->getFirstArticle();
 $updatedAtContent = '<span class="article-updated-at"></span>';
 
 if ($article) {
-    $updatedAtDate = DateUtil::formatUtcDate(
-        stringDate: $article->getUpdatedAt(),
+    $updatedAtDate = DateUtil::formatDate(
+        date: DateUtil::convertStringToDateTimeImmutable($article->getUpdatedAt()),
         lang: $responseData->getSiteLanguage(),
-        timezone: $responseData->getTimezone(),
         includeTime: true,
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
-        datetime: $article->getUpdatedAt(),
+        date: DateUtil::convertStringToDateTimeImmutable($article->getUpdatedAt()),
         language: $responseData->getSiteLanguage(),
         includePrefixAndOrSuffix: true,
     );

@@ -9,34 +9,26 @@ $article = $responseData->getFirstArticle();
 
 $articleTags = $article ? $article->getTags() : [];
 
-$publishOnDate = $article && $article->getPublishOn()
-    ? DateUtil::transformFromUtcTo(
-        stringDate: $article->getPublishOn(),
-        timezone: $responseData->getTimezone(),
-        outputFormat: 'Y-m-d',
-    )
-    : '';
+$publishOnDate = '';
+$publishOnTime = '';
+if ($article && $article->getPublishOn()) {
+    $publishOn = DateUtil::convertStringToDateTimeImmutable($article->getPublishOn());
 
-$publishOnTime = $article && $article->getPublishOn()
-    ? DateUtil::transformFromUtcTo(
-        stringDate: $article->getPublishOn(),
-        timezone: $responseData->getTimezone(),
-        outputFormat: 'H:i',
-    )
-    : '';
+    $publishOnDate = $publishOn->format('Y-m-d');
+    $publishOnTime = $publishOn->format('H:i');
+}
 
 $createdAtContent = '';
 if ($article) {
     $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
         DateUtil::getElapsedTimeString(
-            datetime: $article->getCreatedAt(),
+            date: DateUtil::convertStringToDateTimeImmutable($article->getCreatedAt()),
             language: $responseData->getSiteLanguage(),
             includePrefixAndOrSuffix: true
         ) . ' ('
-        . DateUtil::formatUtcDate(
-            stringDate: $article->getCreatedAt(),
+        . DateUtil::formatDate(
+            date: DateUtil::convertStringToDateTimeImmutable($article->getCreatedAt()),
             lang: $responseData->getSiteLanguage(),
-            timezone: $responseData->getTimezone(),
             includeWeekDay: true,
             includeTime: true,
         ) . ')'

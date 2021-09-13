@@ -102,6 +102,8 @@ class UserService
                         $user->getId(),
                         $user->getTimezone()
                     );
+
+                    Core::updateTimezone($user->getTimezone());
                 }
 
                 return new TransactionResponse(true);
@@ -157,7 +159,10 @@ class UserService
             return new UserFeedback(false);
         }
 
-        $localisationUtil = Core::getLocalisationUtil($existingUser->getLanguageId());
+        $localisationUtil = Core::getLocalisationUtil(
+            Language::getIsoCodeForId($existingUser->getLanguageId())
+        );
+
         if (isset($currentPassword) || isset($newPassword) || isset($repeatPassword)) {
             if (empty($currentPassword) || empty($newPassword) || empty($repeatPassword)) {
                 $this->logger->logError(

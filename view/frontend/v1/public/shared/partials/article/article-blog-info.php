@@ -10,10 +10,11 @@ if (!$article) {
   return '';
 }
 
-$publishedOnDate = DateUtil::formatUtcDate(
-    stringDate: $article->getPublishOn() ?? $article->getUpdatedAt(),
+$publishedOnDate = DateUtil::formatDate(
+    date: DateUtil::convertStringToDateTimeImmutable(
+        $article->getPublishOn() ?? $article->getUpdatedAt()
+    ),
     lang: $responseData->getSiteLanguage(),
-    timezone: $responseData->getTimezone(),
     includeWeekDay: false,
     includeTime: true,
     includeMonthYearSeparator: true,
