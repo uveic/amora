@@ -584,6 +584,7 @@ article > img {
   margin-top: 0;
   padding: 0.1rem 1rem 0.25rem 1rem;
   font-size: 0.8rem;
+  line-height: 1.1rem;
   color: var(--light-text-color);
   outline: 0;
 }
