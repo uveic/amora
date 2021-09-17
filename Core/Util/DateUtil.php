@@ -255,7 +255,7 @@ final class DateUtil
         }
     }
 
-    public static function formatUtcDateShort(
+    public static function formatDateShort(
         DateTimeImmutable|DateTime $date,
         bool $includeTime = true,
         bool $includeSeconds = false,
