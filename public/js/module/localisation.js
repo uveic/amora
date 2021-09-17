@@ -15,6 +15,7 @@ class Global {
       "genericErrorGetInTouch": "An unexpected error has occurred. Please, refresh the page and try it again. Get in touch with support if the error persists. Error: ",
       "feedbackSaving": "Nothing to save...",
 
+      "globalSave": "Save",
       "globalRemove": "Remove",
       "globalPreview": "Preview",
       "globalUpdate": "Update",
@@ -23,6 +24,7 @@ class Global {
       "globalLoading": "Loading...",
       "globalAt": "at",
 
+      "feedbackDeleteGeneric": "Are you sure you want to delete it?",
       "feedbackPasswordsDoNotMatch": "The passwords do not match. Please, fix it and try it again.",
       "feedbackPasswordTooShort": "The password is too short. Please, fix it and try it again.",
       "feedbackDeleteSectionConfirmation": "Are you sure you want to delete this section?",
@@ -57,12 +59,15 @@ class Global {
       "editorSectionMoveDown": "Move Down",
       "editorDisableControls": "Disable controls",
       "editorEnableControls": "Enable controls",
+
+      "appGroupPeriodPartialData": "current period: partial data",
     },
     "es": {
       "genericError": "Ha ocurrido un error inesperado, por favor inténtalo de nuevo.",
       "genericErrorGetInTouch": "Ha ocurrido un error inesperado. Por favor, actualiza la página e intétalo de nuevo. Ponte en contacto con el soporte técnico si el error continúa. Error: ",
       "feedbackSaving": "Nada que guardar...",
 
+      "globalSave": "Guardar",
       "globalRemove": "Eliminar",
       "globalPreview": "Previsualizar",
       "globalUpdate": "Actualizar",
@@ -71,6 +76,7 @@ class Global {
       "globalLoading": "Cargando...",
       "globalAt": "a las",
 
+      "feedbackDeleteGeneric": "¿Estás seguro/a de querer borrarlo?",
       "feedbackPasswordsDoNotMatch": "Las contraseñas no coinciden. Corrígelo y vuelve a intentarlo.",
       "feedbackPasswordTooShort": "La contraseña es demasiado corta. Corrígelo y vuelve a intentarlo.",
       "feedbackDeleteSectionConfirmation": "¿Estás seguro de querer borrar esta sección?",
@@ -105,12 +111,15 @@ class Global {
       "editorSectionMoveDown": "Mover para abajo",
       "editorDisableControls": "Desactivar controles",
       "editorEnableControls": "Activar controles",
+
+      "appGroupPeriodPartialData": "período en curso: datos parciales",
     },
     "gl": {
       "genericError": "Algo non foi ben, por favor inténtao de novo.",
       "genericErrorGetInTouch": "Erro inesperado. Por favor, actualiza a páxina e inténtao de novo. Ponte en contacto co soporte técnico se o erro persiste. Erro: ",
       "feedbackSaving": "Nada que gardar...",
 
+      "globalSave": "Gardar",
       "globalRemove": "Eliminar",
       "globalPreview": "Previsualizar",
       "globalUpdate": "Actualizar",
@@ -119,6 +128,7 @@ class Global {
       "globalLoading": "Cargando...",
       "globalAt": "ás",
 
+      "feedbackDeleteGeneric": "Estás seguro/a de querer borralo?",
       "feedbackPasswordsDoNotMatch": "Os contrasinais non coinciden. Corríxeo e volve a intentalo.",
       "feedbackPasswordTooShort": "Contrasinal demasiado curto. Corríxeo e volve a intentalo.",
       "feedbackDeleteSectionConfirmation": "Estás seguro de querer eliminar esta sección?",
@@ -153,6 +163,8 @@ class Global {
       "editorSectionMoveDown": "Mover para abaixo",
       "editorDisableControls": "Desactivar controis",
       "editorEnableControls": "Activar controis",
+
+      "appGroupPeriodPartialData": "período en curso: datos parciais",
     }
   }
 
@@ -160,14 +172,22 @@ class Global {
     return this.values[this.locale][key] ?? '';
   }
 
-  formatDate(dateObj) {
+  formatDate(
+    dateObj,
+    includeWeedDay = true,
+    includeMonthDay = true,
+    includeYear = true,
+    includeYearSeparator = true,
+  ) {
     if (this.locale === 'gl') {
       const months = ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo',
         'agosto', 'setembro', 'outubro', 'novembro', 'decembro'];
       const days = ['domingo', 'luns', 'martes', 'mércores', 'xoves', 'venres', 'sábado'];
 
-      return days[dateObj.getDay()] + ', ' + dateObj.getDate() + ' de '
-        + months[dateObj.getMonth()] + ' de ' + dateObj.getFullYear();
+      return (includeWeedDay ? days[dateObj.getDay()] + ', ' : '')
+        + (includeMonthDay ? dateObj.getDate() + ' de ' : '')
+        + months[dateObj.getMonth()]
+        + (includeYear ? (includeYearSeparator ? ' de ' : ' ') + dateObj.getFullYear() : '');
     }
 
     if (this.locale === 'es') {
@@ -175,16 +195,20 @@ class Global {
         'agosto', 'septiembre', 'octubre', 'noviembre', 'dieciembre'];
       const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 
-      return days[dateObj.getDay()] + ', ' + dateObj.getDate() + ' de '
-        + months[dateObj.getMonth()] + ' de ' + dateObj.getFullYear();
+      return (includeWeedDay ? days[dateObj.getDay()] + ', ' : '')
+        + (includeMonthDay ? dateObj.getDate() + ' de ' : '')
+        + months[dateObj.getMonth()]
+        + (includeYear ? (includeYearSeparator ? ' de ' : ' ') + dateObj.getFullYear() : '');
     }
 
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', 'December'];
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-    return days[dateObj.getDay()] + ', ' + dateObj.getDate() + ' '
-      + months[dateObj.getMonth()] + ' ' + dateObj.getFullYear();
+    return (includeWeedDay ? days[dateObj.getDay()] + ', ' : '')
+      + (includeMonthDay ? dateObj.getDate() + ' ' : '')
+      + months[dateObj.getMonth()] + ' '
+      + (includeYear ? dateObj.getFullYear() : '');
   }
 }
 
