@@ -154,6 +154,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $articles = $this->articleService->filterArticlesBy(
             typeIds: [ArticleType::PAGE],
+            includeTags: true,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('updated_at', 'DESC')],
                 limit: 100
@@ -272,6 +273,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $articles = $this->articleService->filterArticlesBy(
             typeIds: [ArticleType::BLOG],
+            includeTags: true,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('updated_at', 'DESC')],
                 limit: 100

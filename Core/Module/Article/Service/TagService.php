@@ -25,7 +25,7 @@ class TagService
 
     public function getAllTags(bool $asPlainArray = false): array
     {
-        $tags = $this->tagDataLayer->getAllTags();
+        $tags = $this->tagDataLayer->filterTagsBy();
 
         if ($asPlainArray) {
             $output = [];

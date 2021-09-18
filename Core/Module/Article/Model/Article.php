@@ -39,20 +39,19 @@ class Article
             : $article['article_updated_at'];
 
         return new self(
-            $id,
-            User::fromArray($article),
-            $article['status_id'],
-            $article['type_id'],
-            $createdAt,
-            $updatedAt,
-            $article['published_at'],
-            $article['title'] ?? null,
-            $article['content_html'],
-            empty($article['main_image_id']) ? null : (int)$article['main_image_id'],
-            empty($article['main_image_id']) ? null : Image::fromArray($article),
-            $article['uri'],
-            $article['sections'] ?? [],
-            $article['tags'] ?? [],
+            id: $id,
+            user: User::fromArray($article),
+            statusId: $article['status_id'],
+            typeId: $article['type_id'],
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
+            publishOn: $article['published_at'],
+            title: $article['title'] ?? null,
+            contentHtml: $article['content_html'],
+            mainImageId: empty($article['main_image_id']) ? null : (int)$article['main_image_id'],
+            mainImage: empty($article['main_image_id']) ? null : Image::fromArray($article),
+            uri: $article['uri'],
+            tags: $article['tags'] ?? [],
         );
     }
 

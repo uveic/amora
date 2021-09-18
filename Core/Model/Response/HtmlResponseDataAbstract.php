@@ -52,7 +52,7 @@ abstract class HtmlResponseDataAbstract
         $this->pageTitle = isset($pageTitle) && $pageTitle
             ? $pageTitle . ' - ' . $this->getSiteName()
             : $this->getSiteNameAndTitle();
-        $this->pageTitleWithoutSiteName = $this->pageTitle ?? '';
+        $this->pageTitleWithoutSiteName = $pageTitle ?? '';
         $this->pageDescription = $pageDescription
             ?? $this->localisationUtil->getValue('siteDescription');
         $this->baseUrlWithLanguage = $this->getBaseUrl() .

@@ -9,8 +9,10 @@ use Amora\Core\Module\Article\Model\ArticleSection;
 use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
+use DateTimeImmutable;
 
 final class ArticleEditHtmlGenerator
 {
@@ -165,9 +167,40 @@ final class ArticleEditHtmlGenerator
             uri: $article->getUri(),
         );
 
-        $output = $article->getStatusId() === ArticleStatus::PUBLISHED
+        $output = '<div class="m-r-05">';
+        $output .= '<span class="light-text-color" style="margin-right: 0.1rem;">' . $article->getId() . '. </span>';
+        $output .= $article->getStatusId() === ArticleStatus::PUBLISHED
             ? '<a href="' . $articleUrl . '">' . $articleTitle . '</a>'
             : $articleTitle;
+
+        if ($article->getPublishOn()) {
+            $publishOn = DateUtil::formatDate(
+                date: new DateTimeImmutable($article->getPublishOn()),
+                lang: $responseData->getSiteLanguage(),
+                includeTime: true,
+                includeMonthYearSeparator: true,
+            );
+            $output .= '<p class="article-tags"><strong>'
+                . $responseData->getLocalValue('globalPublishOn') . '</strong>: ' . $publishOn
+                . '</p>';
+        } else {
+            $updatedAt = DateUtil::formatDate(
+                date: new DateTimeImmutable($article->getUpdatedAt()),
+                lang: $responseData->getSiteLanguage(),
+                includeTime: true,
+                includeMonthYearSeparator: true,
+            );
+            $output .= '<p class="article-tags"><strong>'
+                . $responseData->getLocalValue('globalUpdatedAt') . '</strong>: ' . $updatedAt
+                . '</p>';
+        }
+
+        $output .= $article->getTags()
+            ? '<p class="article-tags">'
+                . '<strong>' . $responseData->getLocalValue('globalTags') . '</strong>: ' . $article->getTagsAsString()
+                . '</p>'
+            : '';
+        $output .= '</div>';
 
         $output .= '<span class="article-status ' . $statusClassname . '">' .
             $responseData->getLocalValue('articleStatus' . $article->getStatusName()) .

@@ -6,9 +6,12 @@ use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
 use Amora\Core\Module\Article\Model\Tag;
+use Amora\Core\Module\DataLayerTrait;
 
 class TagDataLayer
 {
+    use DataLayerTrait;
+
     const TAG_TABLE_NAME = 'tag';
 
     public function __construct(private MySqlDb $db, private Logger $logger)
@@ -19,9 +22,9 @@ class TagDataLayer
         return $this->db;
     }
 
-    private function getTags(
-        ?int $tagId = null,
-        ?int $articleId = null,
+    public function filterTagsBy(
+        array $tagIds = [],
+        array $articleIds = [],
         ?string $tagName = null,
     ): array {
         $params = [];
@@ -34,21 +37,23 @@ class TagDataLayer
         $joins = ' FROM ' . self::TAG_TABLE_NAME . ' AS t';
         $where = ' WHERE 1';
 
-        if (isset($tagId)) {
-            $where .= ' AND t.id = :tagId';
-            $params[':tagId'] = $tagId;
+        if ($tagIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $tagIds, 't.id', 'tagId');
         }
 
         if (isset($tagName)) {
-            $where .= ' AND t.name = :tagName';
-            $params[':tagName'] = $tagName;
+            $where .= $this->generateWhereSqlCodeForIds($params, [$tagName], 't.name', 'tagName');
         }
 
-        if (isset($articleId)) {
+        if ($articleIds) {
             $joins .= ' LEFT JOIN ' . ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE . ' AS at'
                 . ' ON at.tag_id = t.id';
-            $where .= ' AND at.article_id = :articleId';
-            $params[':articleId'] = $articleId;
+            $where .= $this->generateWhereSqlCodeForIds(
+                params: $params,
+                ids: $articleIds,
+                dbColumnName: 'at.article_id',
+                keyName: 'articleId',
+            );
         }
 
         $orderBy = ' ORDER BY t.id ASC';
@@ -65,26 +70,21 @@ class TagDataLayer
         return $output;
     }
 
-    public function getAllTags(): array
-    {
-        return $this->getTags();
-    }
-
     public function getTagForId(int $id): ?Tag
     {
-        $res = $this->getTags($id);
+        $res = $this->filterTagsBy(tagIds: [$id]);
         return empty($res[0]) ? null : $res[0];
     }
 
     public function getTagForName(string $name): ?Tag
     {
-        $res = $this->getTags(null, null, $name);
+        $res = $this->filterTagsBy(tagName: $name);
         return empty($res[0]) ? null : $res[0];
     }
 
     public function getTagsForArticleId(int $articleId): array
     {
-        return $this->getTags(null, $articleId);
+        return $this->filterTagsBy(articleIds: [$articleId]);
     }
 
     public function storeTag(Tag $tag): Tag {
