@@ -2,7 +2,7 @@
 
 namespace Amora\Router;
 
-use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Module\Action\Service\ActionService;
 use Exception;
 use Throwable;
 use Amora\Core\Core;
@@ -15,6 +15,10 @@ use Amora\Core\Util\StringUtil;
 
 class Router
 {
+    public function __construct(
+        private ActionService $actionService,
+    ) {}
+
     public function handleRequest(Request $request): void
     {
         try {
@@ -117,6 +121,8 @@ class Router
 
     private function getArticlePage(string $articleUri, Request $request): Response
     {
+        $this->actionService->logAction($request, $request->getSession());
+
         $article = ArticleCore::getArticleService()->getArticleForUri($articleUri);
         if (empty($article)) {
             return Response::createFrontendPublicHtmlResponse(

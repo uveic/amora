@@ -4,6 +4,7 @@ namespace Amora\Core;
 
 use Amora\App\AppCore;
 use Amora\Core\Database\DbBackupApp;
+use Amora\Core\Module\Action\ActionLoggerCore;
 use Closure;
 use Exception;
 use Amora\Core\App\SyncLookupTablesApp;
@@ -184,13 +185,15 @@ class Core
 
     public static function getRouter(): Router
     {
+        $actionService = ActionLoggerCore::getActionService();
+
         return self::getInstance(
             'Router',
-            function () {
+            function () use ($actionService) {
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Router/RouterCore.php';
                 require_once self::getPathRoot() . '/Router/Router.php';
-                return new Router();
+                return new Router($actionService);
             },
             true
         );
