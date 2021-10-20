@@ -1,29 +1,31 @@
 const util = require('./lib/util');
 
-module.exports = function generate(jsonFileName, operations, allResponseClassNames) {
-  return util.flatten(renderMain(jsonFileName, operations, allResponseClassNames)).join('\n');
+module.exports = function generate(jsonFileName, operations, allResponseClassNames, classPrefix) {
+  return util.flatten(renderMain(jsonFileName, operations, allResponseClassNames, classPrefix)).join('\n');
 };
 
-function renderMain(jsonFileName, operations, allResponseClassNames) {
+function renderMain(jsonFileName, operations, allResponseClassNames, classPrefix) {
   return [
     `<?php
 
-namespace Amora\\Router;
+namespace Amora\\${classPrefix}\\Router;
 
-use Throwable;
 use Amora\\Core\\Core;
 use Amora\\Core\\Model\\Request;
 use Amora\\Core\\Model\\Response;
+use Amora\\Core\\Router\\AbstractController;
+use Amora\\Core\\Router\\RouterCore;
 use Amora\\Core\\Util\\StringUtil;
+use Throwable;
 `,
-    renderAbstractClass(jsonFileName, operations, allResponseClassNames),
+    renderAbstractClass(jsonFileName, operations, allResponseClassNames, classPrefix),
     ``
   ];
 }
 
-function renderAbstractClass(jsonFileName, operations, allResponseClassNames) {
+function renderAbstractClass(jsonFileName, operations, allResponseClassNames, classPrefix) {
   const lineToPrint = allResponseClassNames.map(r => {
-    return `        require_once Core::getPathRoot() . '/Router/Controller/Response/${r}.php';`;
+    return `        require_once Core::getPathRoot() . '/${classPrefix}/Router/Controller/Response/${r}.php';`;
   }).join('\n');
 
   return [
@@ -97,7 +99,7 @@ function renderOperationValidator(jsonFileName, operation) {
 
   return [
     `
-    private function validateAndCall${functionName}(Request $request)
+    private function validateAndCall${functionName}(Request $request): Response
     {${pathParams}`,
     parameters.find(p => p.in === 'formData')
       ? `        $formDataParams = $request->getPostParams();`
@@ -120,13 +122,7 @@ function renderOperationValidator(jsonFileName, operation) {
 }
 
 function renderResponse(operationId, newParamList, jsonFileName) {
-  const responseClassName = util.generateResponseClassName(
-    jsonFileName,
-    operationId,
-    'FailureResponse'
-  );
-
-  return     `        if (count($errors)) {
+  return     `        if ($errors) {
             return Response::createBadRequestResponse(
                 [
                     'success' => false,
@@ -290,9 +286,7 @@ function renderParameterTypeValidation(varName, type, name, format) {
   }
 
   return `
-            $${util.snakeToCamel(name)} = isset(${varName})
-                ? ${varName}
-                : null;`;
+            $${util.snakeToCamel(name)} = ${varName} ?? null;`;
 }
 
 function renderNotRequiredParameterIf(varName, type, name) {
@@ -329,20 +323,17 @@ function renderNotRequiredParameterIf(varName, type, name) {
   }
 
   return `
-        $${util.snakeToCamel(name)} = isset(${varName})
-            ? ${varName}
-            : null;`;
+        $${util.snakeToCamel(name)} = ${varName} ?? null;`;
 }
 
 function renderAbstractRouter(jsonFileName, operations) {
-  const redirectExceptions = ['BackofficeHtml', 'AuthorisedHtml', 'PublicHtml'];
-  const response = redirectExceptions.indexOf(jsonFileName) >= 0
+  const response = util.htmlControllers.indexOf(jsonFileName) >= 0
     ? `Response::createUnauthorisedRedirectLoginResponse($request->getSiteLanguage())`
     : 'Response::createUnauthorizedJsonResponse()';
 
   return [
     `   
-    public function route(Request $request): Response
+    public function route(Request $request): ?Response
     {
         $auth = $this->authenticate($request);
         if ($auth !== true) {
@@ -354,7 +345,7 @@ function renderAbstractRouter(jsonFileName, operations) {
         $method = $request->getMethod();`,
     operations.map(renderRouteMatcher),
     `
-        return Response::createNotFoundResponse();
+        return null;
     }`
   ];
 }

@@ -1,0 +1,1069 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API",
+    "description": "Accessed directly from the web/browser",
+    "version": "0.0.1"
+  },
+  "host": "localhost:8888",
+  "basePath": "/",
+  "securityDefinitions": {
+    "key": {
+      "type": "apiKey",
+      "in": "query",
+      "name": "access_token"
+    }
+  },
+  "security": [
+    {
+      "key": []
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "consumes": [
+    "application/json",
+    "multipart/form-data",
+    "application/x-www-form-urlencoded"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/back/user": {
+      "post": {
+        "tags": [],
+        "summary": "Store/create new user",
+        "description": "",
+        "operationId": "storeUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "name": {
+                  "description": "User name",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "User email address",
+                  "type": "string"
+                },
+                "bio": {
+                  "description": "User bio",
+                  "type": "string"
+                },
+                "languageId": {
+                  "description": "Language ID",
+                  "type": "integer"
+                },
+                "roleId": {
+                  "description": "User role ID",
+                  "type": "integer"
+                },
+                "timezone": {
+                  "description": "PHP timezone name",
+                  "type": "string"
+                },
+                "isEnabled": {
+                  "description": "Is the user enabled?",
+                  "type": "boolean"
+                },
+                "newPassword": {
+                  "description": "New password",
+                  "type": "string"
+                },
+                "repeatPassword": {
+                  "description": "Repeat password",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "id": {
+                  "type": "integer",
+                  "description": "User ID"
+                },
+                "redirect": {
+                  "type": "string",
+                  "description": "Redirect URL (if any)"
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "401": {
+            "description": "Unauthorised",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [],
+        "summary": "Get list of users",
+        "description": "Get list of users",
+        "operationId": "getUsers",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search text to filter results",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "users": {
+                  "type": "array",
+                  "description": "List of users",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "User ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "User name"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "User email address"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "email"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "users"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/user/{userId}": {
+      "put": {
+        "tags": [],
+        "summary": "Update user",
+        "description": "",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "name": {
+                  "description": "User name",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "User email address",
+                  "type": "string"
+                },
+                "bio": {
+                  "description": "User bio",
+                  "type": "string"
+                },
+                "languageId": {
+                  "description": "Language ID",
+                  "type": "integer"
+                },
+                "roleId": {
+                  "description": "User role ID",
+                  "type": "integer"
+                },
+                "timezone": {
+                  "description": "PHP timezone name",
+                  "type": "string"
+                },
+                "isEnabled": {
+                  "description": "Is the user enabled?",
+                  "type": "boolean"
+                },
+                "currentPassword": {
+                  "description": "Current password",
+                  "type": "string"
+                },
+                "newPassword": {
+                  "description": "New password",
+                  "type": "string"
+                },
+                "repeatPassword": {
+                  "description": "Repeat password",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "redirect": {
+                  "type": "string",
+                  "description": "Redirect URL (if any)"
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "401": {
+            "description": "Unauthorised",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "summary": "Delete user",
+        "description": "",
+        "operationId": "destroyUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/article": {
+      "post": {
+        "tags": [],
+        "summary": "Store article",
+        "description": "Store article",
+        "operationId": "storeArticle",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "statusId": {
+                  "description": "Article status ID",
+                  "type": "integer"
+                },
+                "typeId": {
+                  "description": "Article type ID",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Article title",
+                  "type": "string"
+                },
+                "contentHtml": {
+                  "description": "Article content",
+                  "type": "string"
+                },
+                "uri": {
+                  "description": "Article URI",
+                  "type": "string"
+                },
+                "mainImageId": {
+                  "description": "Article main image Id",
+                  "type": "integer"
+                },
+                "publishOn": {
+                  "description": "Publish the article on this date. Format:",
+                  "type": "string"
+                },
+                "sections": {
+                  "description": "Array with article's sections",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Article's section",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Section ID"
+                      },
+                      "sectionTypeId": {
+                        "type": "integer",
+                        "description": "Section Type ID"
+                      },
+                      "contentHtml": {
+                        "type": "string",
+                        "description": "Content HTML"
+                      },
+                      "order": {
+                        "type": "integer",
+                        "description": "Section order"
+                      },
+                      "imageId": {
+                        "type": "integer",
+                        "description": "Image ID"
+                      },
+                      "imageCaption": {
+                        "type": "string",
+                        "description": "Image caption"
+                      }
+                    },
+                    "required": [
+                      "sectionTypeId",
+                      "contentHtml"
+                    ]
+                  }
+                },
+                "tags": {
+                  "description": "Array with article's tags",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Article's tags",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Tag ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Section Type ID"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "statusId",
+                "contentHtml",
+                "sections"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "articleId": {
+                  "type": "integer",
+                  "description": "New article ID"
+                },
+                "uri": {
+                  "type": "string",
+                  "description": "Article URI"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/article/{articleId}": {
+      "put": {
+        "tags": [],
+        "summary": "Update existing article",
+        "description": "Update existing article",
+        "operationId": "updateArticle",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "description": "Article ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "statusId": {
+                  "description": "Article status ID",
+                  "type": "integer"
+                },
+                "typeId": {
+                  "description": "Article type ID",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Article title",
+                  "type": "string"
+                },
+                "contentHtml": {
+                  "description": "Article content",
+                  "type": "string"
+                },
+                "uri": {
+                  "description": "Article URI",
+                  "type": "string"
+                },
+                "mainImageId": {
+                  "description": "Article main image ID",
+                  "type": "integer"
+                },
+                "publishOn": {
+                  "description": "Publish the article on this date. Format:",
+                  "type": "string"
+                },
+                "sections": {
+                  "description": "Array with article's sections",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Article's section",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Section ID"
+                      },
+                      "sectionTypeId": {
+                        "type": "integer",
+                        "description": "Section Type ID"
+                      },
+                      "contentHtml": {
+                        "type": "string",
+                        "description": "Content HTML"
+                      },
+                      "order": {
+                        "type": "integer",
+                        "description": "Section order"
+                      },
+                      "imageId": {
+                        "type": "integer",
+                        "description": "Image ID"
+                      },
+                      "imageCaption": {
+                        "type": "string",
+                        "description": "Image caption"
+                      }
+                    },
+                    "required": [
+                      "sectionTypeId",
+                      "contentHtml"
+                    ]
+                  }
+                },
+                "tags": {
+                  "description": "Array with article's tags",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Article's tags",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Tag ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Section Type ID"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "statusId",
+                "contentHtml",
+                "sections"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "articleId": {
+                  "type": "integer",
+                  "description": "New article ID"
+                },
+                "uri": {
+                  "type": "string",
+                  "description": "Article URI"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "description": "Delete an article",
+        "operationId": "destroyArticle",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "description": "Article ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message (if any)"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/tag": {
+      "post": {
+        "tags": [],
+        "summary": "Create a new tag",
+        "description": "Create a new tag",
+        "operationId": "storeTag",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "name": {
+                  "description": "Tag name",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "id": {
+                  "type": "integer",
+                  "description": "New tag ID"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [],
+        "summary": "Get available tags",
+        "description": "Get available tags",
+        "operationId": "getTags",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Tag name to filter results",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "tags": {
+                  "type": "array",
+                  "description": "List of tags",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Tag ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Tag name"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "tags"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {}
+}

@@ -1,13 +1,13 @@
 const util = require('./lib/util');
 
-module.exports = function generate(className, operationId, httpStatus, responseSchema) {
-  return util.flatten(renderMain(className, operationId, httpStatus, responseSchema)).join('\n');
+module.exports = function generate(className, operationId, httpStatus, responseSchema, classPrefix) {
+  return util.flatten(renderMain(className, operationId, httpStatus, responseSchema, classPrefix)).join('\n');
 };
 
-function renderMain(className, operationId, httpStatus, responseSchema) {
+function renderMain(className, operationId, httpStatus, responseSchema, classPrefix) {
   return [
     `<?php
-namespace Amora\\Router\\Controller\\Response;
+namespace Amora\\${classPrefix}\\Router\\Controller\\Response;
 
 use Amora\\Core\\Model\\Response;
 `,

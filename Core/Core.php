@@ -4,14 +4,13 @@ namespace Amora\Core;
 
 use Amora\App\AppCore;
 use Amora\Core\Database\DbBackupApp;
-use Amora\Core\Module\Action\ActionLoggerCore;
+use Amora\Core\Router\Router;
 use Closure;
 use Exception;
 use Amora\Core\App\SyncLookupTablesApp;
 use Amora\Core\Database\Migration\MigrationDbApp;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Util\LocalisationUtil;
-use Amora\Router\Router;
 
 class Core
 {
@@ -185,15 +184,15 @@ class Core
 
     public static function getRouter(): Router
     {
-        $actionService = ActionLoggerCore::getActionService();
-
         return self::getInstance(
             'Router',
-            function () use ($actionService) {
+            function () {
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
-                require_once self::getPathRoot() . '/Router/RouterCore.php';
-                require_once self::getPathRoot() . '/Router/Router.php';
-                return new Router($actionService);
+                require_once self::getPathRoot() . '/App/Router/AppRouterCore.php';
+                require_once self::getPathRoot() . '/App/Router/AppRouter.php';
+                require_once self::getPathRoot() . '/Core/Router/RouterCore.php';
+                require_once self::getPathRoot() . '/Core/Router/Router.php';
+                return new Router();
             },
             true
         );
