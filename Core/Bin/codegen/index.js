@@ -3,7 +3,16 @@ const fs = require('fs');
 const path = require('path');
 const util = require('./lib/util');
 
-const controllerFolderPath = __dirname + '/../../../Router/Controller/';
+const controllersData = [
+  {
+    prefix: 'Core',
+    path: __dirname + '/../../../Core/Router/Controller/',
+  },
+  {
+    prefix: 'App',
+    path: __dirname + '/../../../App/Router/Controller/',
+  },
+];
 const phpControllerTemplate = require('./class.php');
 const phpResponsesTemplate = require('./responses.php');
 
@@ -11,25 +20,32 @@ process.on('unhandledRejection', error => {
   console.error(error);
 });
 
-fs.readdir(controllerFolderPath, (err, list) => {
-  if (err) {
-    throw err;
-  }
+controllersData.forEach(cd => {
+  const controllerFolderPath = cd.path;
+  const classPrefix = cd.prefix;
 
-  list.forEach(file => {
-    if (path.extname(file) === '.json') {
-      let jsonFileName = path.basename(file, '.json');
-      parseSwaggerFile(controllerFolderPath + file,
-        function (fileOperations) {
-          generateControllerCode(
-            jsonFileName,
-            fileOperations,
-            getAllResponseClassNames(jsonFileName, fileOperations)
-          );
-          generateResponsesCode(jsonFileName, fileOperations);
-        }
-      );
+  fs.readdir(controllerFolderPath, (err, list) => {
+    if (err) {
+      throw err;
     }
+
+    list.forEach(file => {
+      if (path.extname(file) === '.json') {
+        let jsonFileName = path.basename(file, '.json');
+        parseSwaggerFile(controllerFolderPath + file,
+          function (fileOperations) {
+            generateControllerCode(
+              jsonFileName,
+              fileOperations,
+              getAllResponseClassNames(jsonFileName, fileOperations),
+              controllerFolderPath,
+              classPrefix,
+            );
+            generateResponsesCode(jsonFileName, fileOperations, controllerFolderPath, classPrefix);
+          }
+        );
+      }
+    });
   });
 });
 
@@ -116,15 +132,19 @@ function parseSwaggerFile(filename, callback) {
   });
 }
 
-function generateControllerCode(jsonFileName, operations, allResponseClassNames) {
-  const phpCodeString = phpControllerTemplate(jsonFileName, operations, allResponseClassNames);
+function generateControllerCode(jsonFileName, operations, allResponseClassNames, controllerFolderPath, classPrefix) {
+  const phpCodeString = phpControllerTemplate(jsonFileName, operations, allResponseClassNames, classPrefix);
   saveAndLog(
     controllerFolderPath + jsonFileName + 'ControllerAbstract.php',
     phpCodeString
   );
 }
 
-function generateResponsesCode(jsonFileName, operations) {
+function generateResponsesCode(jsonFileName, operations, controllerFolderPath, classPrefix) {
+  if (util.htmlControllers.indexOf(jsonFileName) >= 0) {
+    return;
+  }
+
   operations.map(operation => {
     const {operationId, responses} = operation;
 
@@ -133,7 +153,7 @@ function generateResponsesCode(jsonFileName, operations) {
         let response = responses[responseCode];
         let { type, httpStatus } = util.httpResponseStatus(responseCode);
         let className = util.generateResponseClassName(jsonFileName, operationId, type);
-        let phpCodeString = phpResponsesTemplate(className, operationId, httpStatus, response.schema);
+        let phpCodeString = phpResponsesTemplate(className, operationId, httpStatus, response.schema, classPrefix);
 
         saveAndLog(
           controllerFolderPath + 'response/' + className + '.php',
@@ -148,6 +168,10 @@ function generateResponsesCode(jsonFileName, operations) {
 }
 
 function getAllResponseClassNames(jsonFileName, operations) {
+  if (util.htmlControllers.indexOf(jsonFileName) >= 0) {
+    return [];
+  }
+
   let output = [];
 
   operations.map(operation => {

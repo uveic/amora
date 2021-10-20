@@ -81,3 +81,12 @@ exports.httpResponseStatus = function(responseCode) {
 exports.generateResponseClassName = function(jsonFileName, operationId, responseTypeName) {
   return jsonFileName + 'Controller' + capitalise(operationId + responseTypeName);
 }
+
+exports.htmlControllers = [
+  'BackofficeHtml',
+  'AuthorisedHtml',
+  'PublicHtml',
+  'AppBackofficeHtml',
+  'AppAuthorisedHtml',
+  'AppPublicHtml',
+];
