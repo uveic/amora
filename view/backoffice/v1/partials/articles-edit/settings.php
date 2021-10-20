@@ -22,7 +22,7 @@ $createdAtContent = '';
 if ($article) {
     $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
         DateUtil::getElapsedTimeString(
-            date: DateUtil::convertStringToDateTimeImmutable($article->getCreatedAt()),
+            from: DateUtil::convertStringToDateTimeImmutable($article->getCreatedAt()),
             language: $responseData->getSiteLanguage(),
             includePrefixAndOrSuffix: true
         ) . ' ('

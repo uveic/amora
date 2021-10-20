@@ -138,7 +138,8 @@ final class DateUtil
      * 4 months ago
      * 4 months, 2 weeks, 3 days, 1 hour, 49 minutes, 15 seconds ago
      *
-     * @param DateTimeImmutable|DateTime $date
+     * @param DateTimeImmutable|DateTime $from
+     * @param DateTimeImmutable|DateTime|null $to
      * @param string $language
      * @param bool $full
      * @param bool $includePrefixAndOrSuffix
@@ -147,14 +148,17 @@ final class DateUtil
      * @throws \Exception
      */
     public static function getElapsedTimeString(
-        DateTimeImmutable|DateTime $date,
+        DateTimeImmutable|DateTime $from,
+        DateTimeImmutable|DateTime|null $to = null,
         string $language = 'EN',
         bool $full = false,
         bool $includePrefixAndOrSuffix = false,
         bool $includeSeconds = false,
     ): string {
-        $now = new DateTimeImmutable('now', $date->getTimezone());
-        $diff = (array)$now->diff($date);
+        if (!isset($to)) {
+            $to = new DateTimeImmutable('now', $from->getTimezone());
+        }
+        $diff = (array)$to->diff($from);
 
         switch (strtoupper($language)) {
             case 'GL':

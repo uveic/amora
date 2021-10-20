@@ -21,7 +21,7 @@ if ($article) {
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
-        date: DateUtil::convertStringToDateTimeImmutable($article->getUpdatedAt()),
+        from: DateUtil::convertStringToDateTimeImmutable($article->getUpdatedAt()),
         language: $responseData->getSiteLanguage(),
         includePrefixAndOrSuffix: true,
     );

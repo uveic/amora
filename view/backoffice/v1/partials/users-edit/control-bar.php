@@ -19,7 +19,7 @@ if ($userToEdit) {
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
-        date: DateUtil::convertStringToDateTimeImmutable($userToEdit->getUpdatedAt()),
+        from: DateUtil::convertStringToDateTimeImmutable($userToEdit->getUpdatedAt()),
         language: $responseData->getSiteLanguage(),
         includePrefixAndOrSuffix: true
     );
@@ -31,7 +31,7 @@ if ($userToEdit) {
     );
 
     $createdAtEta = DateUtil::getElapsedTimeString(
-        date: DateUtil::convertStringToDateTimeImmutable($userToEdit->getCreatedAt()),
+        from: DateUtil::convertStringToDateTimeImmutable($userToEdit->getCreatedAt()),
         language: $responseData->getSiteLanguage(),
         includePrefixAndOrSuffix: true
     );
