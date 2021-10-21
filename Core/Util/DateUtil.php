@@ -281,7 +281,7 @@ final class DateUtil
         bool $includeTime = false,
         bool $includeSeconds = false,
         bool $includeDayTimeSeparator = true,
-        bool $includeMonthYearSeparator = false,
+        bool $includeMonthYearSeparator = true,
         bool $includeDayMonthSeparator = true,
     ): string {
         $timeFormat = 'H:i' . ($includeSeconds ? ':s' : '');

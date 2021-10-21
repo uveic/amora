@@ -178,7 +178,6 @@ final class ArticleEditHtmlGenerator
                 date: new DateTimeImmutable($article->getPublishOn()),
                 lang: $responseData->getSiteLanguage(),
                 includeTime: true,
-                includeMonthYearSeparator: true,
             );
             $output .= '<p class="article-tags"><strong>'
                 . $responseData->getLocalValue('globalPublishOn') . '</strong>: ' . $publishOn
@@ -188,7 +187,6 @@ final class ArticleEditHtmlGenerator
                 date: new DateTimeImmutable($article->getUpdatedAt()),
                 lang: $responseData->getSiteLanguage(),
                 includeTime: true,
-                includeMonthYearSeparator: true,
             );
             $output .= '<p class="article-tags"><strong>'
                 . $responseData->getLocalValue('globalUpdatedAt') . '</strong>: ' . $updatedAt

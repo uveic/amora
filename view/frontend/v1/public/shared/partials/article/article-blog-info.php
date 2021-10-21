@@ -17,7 +17,6 @@ $publishedOnDate = DateUtil::formatDate(
     lang: $responseData->getSiteLanguage(),
     includeWeekDay: false,
     includeTime: true,
-    includeMonthYearSeparator: true,
 );
 
 ?>
