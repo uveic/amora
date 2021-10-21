@@ -24,7 +24,7 @@ class ActionService
         $this->logger = $logger;
     }
 
-    public function logAction(Request $request, ?Session $session = null): void
+    public function logAction(Request $request): void
     {
         try {
             $logEnabled = Core::getConfigValue('actionLoggerEnabled');
@@ -32,11 +32,13 @@ class ActionService
                 return;
             }
 
+            $session = $request->getSession();
+
             $this->storeActionFromValues(
                 substr($request->getPath(), 0, 2000),
                 substr($request->getReferrer(), 0, 2000),
-                $session ? $session->getUser()->getId() : null,
-                $session ? $session->getSessionId() : null,
+                $session?->getUser()->getId(),
+                $session?->getSessionId(),
                 $request->getSourceIp(),
                 substr($request->getUserAgent(), 0, 255),
                 substr($request->getClientLanguage(), 0, 255),

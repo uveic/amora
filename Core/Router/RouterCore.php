@@ -5,7 +5,6 @@ namespace Amora\Core\Router;
 use Exception;
 use Amora\Core\Core;
 use Amora\Core\Logger;
-use Amora\Core\Module\Action\ActionLoggerCore;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\User\UserCore;
 
@@ -24,7 +23,6 @@ class RouterCore extends Core
     {
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
-        $actionService = ActionLoggerCore::getActionService();
         $rssService = ArticleCore::getRssService();
 
         return self::getInstance(
@@ -32,7 +30,6 @@ class RouterCore extends Core
             function () use (
                 $userService,
                 $articleService,
-                $actionService,
                 $rssService,
             ) {
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlHomepageResponseData.php';
@@ -45,7 +42,6 @@ class RouterCore extends Core
                 return new PublicHtmlController(
                     $userService,
                     $articleService,
-                    $actionService,
                     $rssService,
                 );
             },
@@ -60,13 +56,11 @@ class RouterCore extends Core
     public static function getAuthorisedHtmlController(): AuthorisedHtmlController
     {
         $sessionService = UserCore::getSessionService();
-        $actionService = ActionLoggerCore::getActionService();
 
         return self::getInstance(
             'AuthorisedHtmlController',
             function () use (
                 $sessionService,
-                $actionService,
             ) {
                 require_once self::getPathRoot() . '/Core/Util/CsvWriterUtil.php';
                 require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
@@ -77,7 +71,6 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedHtmlController.php';
                 return new AuthorisedHtmlController(
                     $sessionService,
-                    $actionService,
                 );
             },
             true
@@ -90,7 +83,6 @@ class RouterCore extends Core
      */
     public static function getBackofficeHtmlController(): BackofficeHtmlController
     {
-        $actionService = ActionLoggerCore::getActionService();
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
         $imageService = ArticleCore::getImageService();
@@ -98,7 +90,6 @@ class RouterCore extends Core
         return self::getInstance(
             'BackofficeHtmlController',
             function () use (
-                $actionService,
                 $userService,
                 $articleService,
                 $imageService,
@@ -113,7 +104,6 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeHtmlController.php';
                 return new BackofficeHtmlController(
-                    $actionService,
                     $userService,
                     $articleService,
                     $imageService,
@@ -130,7 +120,6 @@ class RouterCore extends Core
     public static function getBackofficeApiController(): BackofficeApiController
     {
         $logger = self::getRouterLogger();
-        $actionService = ActionLoggerCore::getActionService();
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
         $tagService = ArticleCore::getTagService();
@@ -139,7 +128,6 @@ class RouterCore extends Core
             'BackofficeApiController',
             function () use (
                 $logger,
-                $actionService,
                 $userService,
                 $articleService,
                 $tagService,
@@ -151,7 +139,6 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeApiController.php';
                 return new BackofficeApiController(
                     $logger,
-                    $actionService,
                     $userService,
                     $articleService,
                     $tagService,
@@ -171,7 +158,6 @@ class RouterCore extends Core
         $imageService = ArticleCore::getImageService();
         $userService = UserCore::getUserService();
         $userMailService = UserCore::getUserMailService();
-        $actionService = ActionLoggerCore::getActionService();
 
         return self::getInstance(
             'AuthorisedApiController',
@@ -180,7 +166,6 @@ class RouterCore extends Core
                 $imageService,
                 $userService,
                 $userMailService,
-                $actionService,
             ) {
                 require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
@@ -193,7 +178,6 @@ class RouterCore extends Core
                     $imageService,
                     $userService,
                     $userMailService,
-                    $actionService,
                 );
             },
             true
@@ -210,7 +194,6 @@ class RouterCore extends Core
         $userService = UserCore::getUserService();
         $sessionService = UserCore::getSessionService();
         $mailService = UserCore::getUserMailService();
-        $actionService = ActionLoggerCore::getActionService();
 
         return self::getInstance(
             'PublicApiController',
@@ -219,7 +202,6 @@ class RouterCore extends Core
                 $userService,
                 $sessionService,
                 $mailService,
-                $actionService,
             ) {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
@@ -230,7 +212,6 @@ class RouterCore extends Core
                     $userService,
                     $sessionService,
                     $mailService,
-                    $actionService,
                 );
             },
             true

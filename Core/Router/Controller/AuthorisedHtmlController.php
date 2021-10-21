@@ -6,7 +6,6 @@ use Amora\Core\Core;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
 use Amora\Core\Model\Response\HtmlResponseData;
-use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Util\UrlBuilderUtil;
 use Exception;
@@ -15,7 +14,6 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
 {
     public function __construct(
         private SessionService $sessionService,
-        private ActionService $actionService,
     ) {
         parent::__construct();
     }
@@ -23,7 +21,6 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     protected function authenticate(Request $request): bool
     {
         $session = $request->getSession();
-        $this->actionService->logAction($request, $session);
 
         if (empty($session) || !$session->isAuthenticated()) {
             return false;

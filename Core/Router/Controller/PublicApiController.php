@@ -8,7 +8,6 @@ use Amora\Core\Util\DateUtil;
 use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Logger;
-use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
@@ -39,15 +38,12 @@ final class PublicApiController extends PublicApiControllerAbstract
         private UserService $userService,
         private SessionService $sessionService,
         private UserMailService $mailService,
-        private ActionService $actionService,
     ) {
         parent::__construct();
     }
 
     public function authenticate(Request $request): bool
     {
-        $this->actionService->logAction($request, $request->getSession());
-
         return true;
     }
 

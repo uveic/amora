@@ -8,7 +8,6 @@ use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Model\Response\UserFeedback;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
-use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\RssService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
@@ -23,7 +22,6 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     public function __construct(
         private UserService $userService,
         private ArticleService $articleService,
-        private ActionService $actionService,
         private RssService $rssService,
     ) {
         parent::__construct();
@@ -31,8 +29,6 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
     protected function authenticate(Request $request): bool
     {
-        $this->actionService->logAction($request, $request->getSession());
-
         return true;
     }
 

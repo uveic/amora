@@ -12,7 +12,6 @@ use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Logger;
 use Amora\Core\Model\Response;
-use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Module\Article\Service\ArticleService;
@@ -44,7 +43,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 {
     public function __construct(
         private Logger $logger,
-        private ActionService $actionService,
         private UserService $userService,
         private ArticleService $articleService,
         private TagService $tagService,
@@ -55,7 +53,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     public function authenticate(Request $request): bool
     {
         $session = $request->getSession();
-        $this->actionService->logAction($request, $session);
         if (empty($session) || !$session->isAuthenticated() || !$session->isAdmin()) {
             return false;
         }
