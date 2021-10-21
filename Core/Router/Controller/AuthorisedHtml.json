@@ -7,18 +7,8 @@
   },
   "host": "localhost:8888",
   "basePath": "/",
-  "securityDefinitions": {
-    "key": {
-      "type": "apiKey",
-      "in": "query",
-      "name": "access_token"
-    }
-  },
-  "security": [
-    {
-      "key": []
-    }
-  ],
+  "securityDefinitions": {},
+  "security": [],
   "schemes": [
     "https",
     "http"
