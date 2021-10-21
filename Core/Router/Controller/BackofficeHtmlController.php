@@ -9,7 +9,6 @@ use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
-use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Module\Article\Value\ArticleType;
@@ -19,7 +18,6 @@ use Amora\Core\Util\UrlBuilderUtil;
 final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 {
     public function __construct(
-        private ActionService $actionService,
         private UserService $userService,
         private ArticleService $articleService,
         private ImageService $imageService,
@@ -30,7 +28,6 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function authenticate(Request $request): bool
     {
         $session = $request->getSession();
-        $this->actionService->logAction($request, $session);
         if (empty($session) || !$session->isAuthenticated() || !$session->isAdmin()) {
             return false;
         }

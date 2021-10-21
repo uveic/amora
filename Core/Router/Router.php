@@ -4,6 +4,7 @@ namespace Amora\Core\Router;
 
 use Amora\App\Router\AppRouter;
 use Amora\App\Router\AppRouterCore;
+use Amora\Core\Module\Action\Service\ActionService;
 use Exception;
 use Throwable;
 use Amora\Core\Core;
@@ -47,6 +48,10 @@ class Router
         'back' => true,
     ];
 
+    public function __construct(
+        private ActionService $actionService,
+    ) {}
+
     public function handleRequest(Request $request): void
     {
         try {
@@ -74,6 +79,8 @@ class Router
      */
     private function route(Request $request): Response
     {
+        $this->actionService->logAction($request);
+
         $path = $request->getPath();
 
         $arrayPath = explode('/', $path);

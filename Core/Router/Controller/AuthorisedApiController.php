@@ -4,7 +4,6 @@ namespace Amora\Core\Router;
 
 use Throwable;
 use Amora\Core\Logger;
-use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Model\Image;
@@ -28,7 +27,6 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         private ImageService $imageService,
         private UserService $userService,
         private UserMailService $userMailService,
-        private ActionService $actionService,
     ) {
         parent::__construct();
     }
@@ -36,7 +34,6 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
     public function authenticate(Request $request): bool
     {
         $session = $request->getSession();
-        $this->actionService->logAction($request, $session);
 
         if (empty($session) || !$session->isAuthenticated()) {
             return false;
