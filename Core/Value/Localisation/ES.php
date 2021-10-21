@@ -135,6 +135,8 @@ return [
     'globalGenericError' => 'Ha ocurrido un error inesperado, por favor inténtalo de nuevo.',
     'globalPageNotFoundTitle' => 'Página no encontrada :(',
     'globalPageNotFoundContent' => 'La página que buscas no existe.',
+    'globalPageDeactivatedTitle' => 'Temporalmente desactivada',
+    'globalPageDeactivatedContent' => 'La página que buscas está desactivada temporalmente. Si tienes alguna consulta puedes ponerte en contacto con nosotros en <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Disculpa las molestias.',
 
     'articleEditHomepageTitle' => 'Editar el contenido de la portada',
     'articleStatusDraft' => 'Borrador',

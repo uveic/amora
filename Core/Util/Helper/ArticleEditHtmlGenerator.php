@@ -109,7 +109,7 @@ final class ArticleEditHtmlGenerator
                 '" class="dropdown-menu-option article-status-option ' .
                 ($status->getId() === ArticleStatus::PUBLISHED ? 'feedback-success' : 'background-light-color') .
                 '" href="#">' . $responseData->getLocalValue('articleStatus' . $status->getName()) .
-                 '</a></li>';
+                '</a></li>';
         }
 
         $html .= '</ul>';
