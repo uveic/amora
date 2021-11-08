@@ -55,7 +55,7 @@ class UrlBuilderUtil
     public static function getBaseUrlWithoutLanguage(): string
     {
         $baseUrl = Core::getConfigValue('baseUrl');
-        return trim($baseUrl, ' /') . '/';
+        return trim($baseUrl, ' /');
     }
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -213,11 +213,11 @@ class UrlBuilderUtil
     }
 
     public static function getPublicArticleUrl(
-        string $languageIsoCode,
         string $uri,
+        ?string $languageIsoCode = null,
         bool $preview = false,
     ): string {
-        return self::getBaseUrl($languageIsoCode)
+        return $languageIsoCode ? self::getBaseUrl($languageIsoCode) : self::getBaseUrlWithoutLanguage()
             . '/' . $uri
             . ($preview ? '?preview=true' : '');
     }

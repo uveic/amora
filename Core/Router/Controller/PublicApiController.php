@@ -2,9 +2,17 @@
 
 namespace Amora\Core\Router;
 
+use Amora\Core\Model\Response\Pagination;
+use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Module\Article\Model\Article;
+use Amora\Core\Module\Article\Service\ArticleService;
+use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Value\VerificationType;
+use Amora\Core\Router\Controller\Response\PublicApiControllerGetBlogPostsSuccessResponse;
 use Amora\Core\Util\DateUtil;
+use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Logger;
@@ -38,6 +46,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         private UserService $userService,
         private SessionService $sessionService,
         private UserMailService $mailService,
+        private ArticleService $articleService,
     ) {
         parent::__construct();
     }
@@ -425,5 +434,51 @@ final class PublicApiController extends PublicApiControllerAbstract
         );
 
         return new PublicApiControllerRequestRegistrationInviteSuccessResponse((bool)$res);
+    }
+
+    /**
+     * Endpoint: /papi/blog/post
+     * Method: GET
+     *
+     * @param int $offset
+     * @param int|null $itemsPerPage
+     * @param Request $request
+     * @return Response
+     */
+    protected function getBlogPosts(
+        int $offset,
+        ?int $itemsPerPage,
+        Request $request
+    ): Response {
+        $pagination = new Pagination(itemsPerPage: $itemsPerPage, offset: $offset);
+        $articles = $this->articleService->filterArticlesBy(
+            typeIds: [ArticleType::BLOG],
+            includeTags: false,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('published_at', 'DESC')],
+                pagination: $pagination,
+            )
+        );
+
+        $output = [];
+        /** @var Article $article */
+        foreach ($articles as $article) {
+            $output[] = [
+                'postUri' => UrlBuilderUtil::getPublicArticleUrl(uri: $article->getUri()),
+                'postTitle' => $article->getTitle(),
+                'publishedOn' => $article->getPublishOn()
+                    ? DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $article->getPublishOn())->format('c')
+                    : null
+            ];
+        }
+
+        return new PublicApiControllerGetBlogPostsSuccessResponse(
+            success: true,
+            blogPosts: $output,
+            pagination: (new Pagination(
+                itemsPerPage: $itemsPerPage,
+                offset: $offset + count($output),
+            ))->asArray(),
+        );
     }
 }

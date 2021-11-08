@@ -12,13 +12,18 @@ if (!$responseData->getBlogArticles()) {
   return;
 }
 
+$articles = $responseData->getBlogArticles();
+$itemsPerPage = $responseData->getPagination()->getItemsPerPage();
+$offset = $responseData->getPagination()->getOffset() + $itemsPerPage;
+
 ?>
 <section class="home-blog">
   <h1>Blog</h1>
+  <div class="blog-items">
 <?php
 $previousYear = null;
 /** @var Article $article */
-foreach ($responseData->getBlogArticles() as $article) {
+foreach ($articles as $article) {
     if (!$article->isPublished() && !$isAdmin) {
         continue;
     }
@@ -45,14 +50,16 @@ foreach ($responseData->getBlogArticles() as $article) {
   }
   $previousYear = $year;
 ?>
-  <div class="blog-item">
-    <?=$isPublishedHtml?>
-    <a class="link-title" href="<?=$href?>"><?=$title?></a>
-    <span class="blog-info"><?=$publishedOn?></span>
-  </div>
+    <div class="blog-item">
+      <?=$isPublishedHtml?><a class="link-title" href="<?=$href?>"><?=$title?></a>
+      <span class="blog-info"><?=$publishedOn?></span>
+    </div>
 <?php
 }
 ?>
+  </div>
   <div class="loading-blog-posts loading null"><img src="/img/loading.gif" class="img-svg img-svg-50" alt="<?=$responseData->getLocalValue('globalLoading')?>"></div>
-  <a href="#" class="blog-posts-load-more">Máis</a>
+<?php if (count($articles) >= $itemsPerPage) { ?>
+  <a href="#" class="blog-posts-load-more" data-offset="<?=$offset?>" data-items-per-page="<?=$itemsPerPage?>"><?=$responseData->getLocalValue('globalMore')?></a>
+<?php } ?>
 </section>
