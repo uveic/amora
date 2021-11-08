@@ -7,6 +7,7 @@ use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Service\ArticleService;
+use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Value\VerificationType;
@@ -452,12 +453,12 @@ final class PublicApiController extends PublicApiControllerAbstract
     ): Response {
         $pagination = new Pagination(itemsPerPage: $itemsPerPage, offset: $offset);
         $articles = $this->articleService->filterArticlesBy(
+            statusIds: [ArticleStatus::PUBLISHED],
             typeIds: [ArticleType::BLOG],
-            includeTags: false,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
                 pagination: $pagination,
-            )
+            ),
         );
 
         $output = [];
