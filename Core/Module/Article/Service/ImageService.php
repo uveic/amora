@@ -7,8 +7,6 @@ use Amora\Core\Model\File;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\Article\Datalayer\ImageDataLayer;
 use Amora\Core\Module\Article\Model\Image;
-use Amora\Core\Util\DateUtil;
-use Amora\Core\Util\StringUtil;
 
 class ImageService
 {

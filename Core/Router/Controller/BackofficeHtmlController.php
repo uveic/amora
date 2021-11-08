@@ -251,7 +251,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $images = $this->imageService->filterImagesBy(
             queryOptions: new QueryOptions(
-                pagination: new Response\Pagination(itemsPerPage: 10),
+                pagination: new Response\Pagination(itemsPerPage: 50),
             ),
         );
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
