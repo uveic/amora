@@ -15,9 +15,16 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         protected ?array $articles = [],
         protected ?UserFeedback $userFeedback = null,
         protected ?string $verificationHash = null,
-        private ?int $passwordUserId = null
+        private ?int $passwordUserId = null,
+        protected ?Pagination $pagination = null,
     ) {
-        parent::__construct($request, $pageTitle, $pageDescription, $mainImageSiteUri);
+        parent::__construct(
+            request: $request,
+            pageTitle: $pageTitle,
+            pageDescription: $pageDescription,
+            siteImageUri: $mainImageSiteUri,
+            pagination: $pagination,
+        );
     }
 
     public function getArticles(): array

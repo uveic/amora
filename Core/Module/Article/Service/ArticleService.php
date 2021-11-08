@@ -47,6 +47,7 @@ class ArticleService
         ?string $uri = null,
         array $tagIds = [],
         bool $includeTags = false,
+        bool $includePublishedAtInTheFuture = false,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->articleDataLayer->filterArticlesBy(
@@ -56,6 +57,7 @@ class ArticleService
             uri: $uri,
             tagIds: $tagIds,
             includeTags: $includeTags,
+            includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
             queryOptions: $queryOptions,
         );
     }

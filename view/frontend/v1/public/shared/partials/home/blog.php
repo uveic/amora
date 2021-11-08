@@ -53,4 +53,6 @@ foreach ($responseData->getBlogArticles() as $article) {
 <?php
 }
 ?>
+  <div class="loading-blog-posts loading null"><img src="/img/loading.gif" class="img-svg img-svg-50" alt="<?=$responseData->getLocalValue('globalLoading')?>"></div>
+  <a href="#" class="blog-posts-load-more">Máis</a>
 </section>

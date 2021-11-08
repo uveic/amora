@@ -22,5 +22,6 @@ if ($responseData->getUserFeedback()) {
 <?=$this->insert('shared/partials/home/articles', ['responseData' => $responseData])?>
 <?=$this->insert('shared/partials/home/blog', ['responseData' => $responseData])?>
 <?=$this->insert('shared/partials/home/footer', ['responseData' => $responseData])?>
+<script type="module" src="/js/main.js"></script>
 </body>
 </html>

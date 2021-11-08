@@ -293,7 +293,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             typeIds: [ArticleType::BLOG],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
-                limit: 10
+                pagination: new Response\Pagination(itemsPerPage: 10),
             ),
         );
 
@@ -317,16 +317,17 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             tagIds: $tagIds,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
-                limit: 10
+                pagination: new Response\Pagination(itemsPerPage: 10),
             ),
         );
 
+        $pagination = new Response\Pagination(itemsPerPage: 15);
         $blogArticles = $this->articleService->filterArticlesBy(
             statusIds: [ArticleStatus::PUBLISHED],
             typeIds: [ArticleType::BLOG],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
-                limit: 100
+                pagination: $pagination,
             ),
         );
 
@@ -340,6 +341,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 homeArticles: $homeArticles,
                 blogArticles: $blogArticles,
                 userFeedback: $userFeedback,
+                pagination: $pagination,
             )
         );
     }

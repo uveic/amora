@@ -18,18 +18,15 @@ abstract class HtmlResponseDataAbstract
     protected string $sitePath;
     protected string $siteLanguage;
     protected string $siteName;
-    protected string $siteImageUri;
     protected int $lastUpdatedTimestamp;
-
-    protected string $pageTitle;
     protected string $pageTitleWithoutSiteName;
-    protected string $pageDescription;
 
     public function __construct(
         private Request $request,
-        ?string $pageTitle = null,
-        ?string $pageDescription = null,
-        ?string $siteImageUri = null
+        protected ?string $pageTitle = null,
+        protected ?string $pageDescription = null,
+        protected ?string $siteImageUri = null,
+        protected ?Pagination $pagination = null,
     ) {
         $this->session = $request->getSession();
         $this->localisationUtil = Core::getLocalisationUtil(strtoupper($request->getSiteLanguage()));
@@ -132,6 +129,11 @@ abstract class HtmlResponseDataAbstract
     public function getSiteUrl(): string
     {
         return $this->siteUrl;
+    }
+
+    public function getPagination(): ?Pagination
+    {
+        return $this->pagination;
     }
 
     public function getSiteDomain(): string

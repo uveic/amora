@@ -40,6 +40,7 @@ class Core
         require_once self::getPathRoot() . '/Core/Model/Response.php';
         require_once self::getPathRoot() . '/Core/Model/Menu/MenuItem.php';
         require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseDataAbstract.php';
+        require_once self::getPathRoot() . '/Core/Model/Response/Pagination.php';
         require_once self::getPathRoot() . '/Core/Model/Util/LookupTableBasicValue.php';
         require_once self::getPathRoot() . '/Core/Logger.php';
         require_once self::getPathRoot() . '/Core/Config.php';

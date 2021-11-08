@@ -57,6 +57,6 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
     </form>
   </div>
 </main>
-<script type="module" src="/js/main.js"></script>
+<script type="module" src="/js/login.js"></script>
 </body>
 </html>

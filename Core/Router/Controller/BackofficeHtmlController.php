@@ -149,12 +149,14 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getArticlesPage(Request $request): Response
     {
+        $pagination = new Response\Pagination(itemsPerPage: 25);
         $articles = $this->articleService->filterArticlesBy(
             typeIds: [ArticleType::PAGE],
             includeTags: true,
+            includePublishedAtInTheFuture: true,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('updated_at', 'DESC')],
-                limit: 100
+                pagination: $pagination,
             )
         );
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
@@ -164,7 +166,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminArticles'),
-                articles: $articles
+                articles: $articles,
+                pagination: $pagination,
             )
         );
     }
@@ -268,12 +271,14 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getBlogPostsPage(Request $request): Response
     {
+        $pagination = new Response\Pagination(itemsPerPage: 25);
         $articles = $this->articleService->filterArticlesBy(
             typeIds: [ArticleType::BLOG],
             includeTags: true,
+            includePublishedAtInTheFuture: true,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('updated_at', 'DESC')],
-                limit: 100
+                pagination: $pagination,
             )
         );
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
@@ -283,7 +288,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminBlogPosts'),
-                articles: $articles
+                articles: $articles,
+                pagination: $pagination,
             )
         );
     }
