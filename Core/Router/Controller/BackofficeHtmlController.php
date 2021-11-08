@@ -249,7 +249,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getImagesPage(Request $request): Response
     {
-        $images = $this->imageService->getAllImages();
+        $images = $this->imageService->filterImagesBy(
+            queryOptions: new QueryOptions(
+                pagination: new Response\Pagination(itemsPerPage: 10),
+            ),
+        );
         $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
 
         return Response::createBackofficeHtmlResponse(
