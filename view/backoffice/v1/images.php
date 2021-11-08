@@ -8,6 +8,7 @@ use Amora\Core\Module\Article\Model\Image;
 $this->layout('base', ['responseData' => $responseData]);
 
 $images = $responseData->getImages();
+$count = 0;
 
 ?>
   <div id="feedback" class="feedback null"></div>
@@ -28,9 +29,11 @@ $images = $responseData->getImages();
 <?php
     /** @var Image $image */
     foreach ($images as $image) {
+        $count++;
+        $lazyLoading = $count > 10 ? ' loading="lazy"' : '';
 ?>
         <div class="image-item" data-image-id="<?=$this->e($image->getId())?>">
-          <img src="<?=$image->getFullUrlMedium()?>" title="<?=$this->e($image->getCaption())?>" alt="<?=$this->e($image->getCaption())?>" data-image-id="<?=$image->getId()?>">
+          <img src="<?=$image->getFullUrlMedium()?>" title="<?=$this->e($image->getCaption())?>" alt="<?=$this->e($image->getCaption())?>" data-image-id="<?=$image->getId()?>"<?=$lazyLoading?>>
           <div id="image-options-<?=$this->e($image->getId())?>" class="options null">
             <a class="image-delete" href="#">&#10006;</a>
           </div>
