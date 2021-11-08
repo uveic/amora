@@ -21,7 +21,10 @@ if (!$responseData->getHomeArticles()) {
 <?php
 /** @var Article $article */
 foreach ($responseData->getHomeArticles() as $article) {
-    $href = UrlBuilderUtil::getPublicArticleUrl($responseData->getSiteLanguage(), $article->getUri());
+    $href = UrlBuilderUtil::getPublicArticleUrl(
+        uri: $article->getUri(),
+        languageIsoCode: $responseData->getSiteLanguage(),
+    );
     $link = $article->getTitle()
         ? '<a class="link-title" href="' . $href . '">' . $article->getTitle() . '</a>'
         : '';

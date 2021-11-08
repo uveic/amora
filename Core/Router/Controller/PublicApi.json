@@ -755,6 +755,90 @@
           }
         }
       }
+    },
+    "/papi/blog/post": {
+      "get": {
+        "tags": [],
+        "summary": "Get blog posts",
+        "description": "",
+        "operationId": "getBlogPosts",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Query offset",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "itemsPerPage",
+            "in": "query",
+            "description": "Items per page",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [true, false]
+                },
+                "blogPosts": {
+                  "type": "object",
+                  "description": "",
+                  "properties": {
+                    "postUri": {
+                      "type": "string",
+                      "description": "Blog post URI"
+                    },
+                    "postTitle": {
+                      "type": "string",
+                      "description": "Post title"
+                    },
+                    "publishedOn": {
+                      "type": "string",
+                      "description": "Published On - ISO format"
+                    }
+                  },
+                  "required": [
+                    "postUri",
+                    "postTitle",
+                    "publishedOn"
+                  ]
+                },
+                "pagination": {
+                  "type": "object",
+                  "description": "Pagination",
+                  "properties": {
+                    "offset": {
+                      "type": "integer",
+                      "description": "Offset"
+                    },
+                    "itemsPerPage": {
+                      "type": "integer",
+                      "description": "Items per page"
+                    }
+                  },
+                  "required": [
+                    "offset",
+                    "itemsPerPage"
+                  ]
+                }
+              },
+              "required": [
+                "success",
+                "blogPosts",
+                "pagination"
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

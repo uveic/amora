@@ -29,6 +29,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserRegistrationFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerRequestRegistrationInviteSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerRequestRegistrationInviteFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerGetBlogPostsSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -178,6 +179,21 @@ abstract class PublicApiControllerAbstract extends AbstractController
     abstract protected function requestRegistrationInvite(
         string $email,
         ?string $languageIsoCode,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /papi/blog/post
+     * Method: GET
+     *
+     * @param int $offset
+     * @param int|null $itemsPerPage
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getBlogPosts(
+        int $offset,
+        ?int $itemsPerPage,
         Request $request
     ): Response;
 
@@ -740,6 +756,60 @@ abstract class PublicApiControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallGetBlogPosts(Request $request): Response
+    {
+        $queryParams = $request->getGetParams();
+        $errors = [];
+
+        $offset = null;
+        if (!isset($queryParams['offset'])) {
+            $errors[] = [
+                'field' => 'offset',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($queryParams['offset'])) {
+                $errors[] = [
+                    'field' => 'offset',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $offset = intval($queryParams['offset']);
+            }
+        }
+
+
+        if (isset($queryParams['itemsPerPage']) && strlen($queryParams['itemsPerPage']) > 0) {
+            $itemsPerPage = intval($queryParams['itemsPerPage']);
+        } else {
+            $itemsPerPage = null;
+        }
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getBlogPosts(
+                $offset,
+                $itemsPerPage,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicApiControllerAbstract - Method: getBlogPosts()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): ?Response
     {
@@ -840,6 +910,16 @@ abstract class PublicApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallRequestRegistrationInvite($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['papi', 'blog', 'post'],
+                $pathParts,
+                ['fixed', 'fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetBlogPosts($request);
         }
 
         return null;

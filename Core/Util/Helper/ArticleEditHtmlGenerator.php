@@ -163,8 +163,8 @@ final class ArticleEditHtmlGenerator
 
         $articleTitle = $article->getTitle() ?: $responseData->getLocalValue('globalNoTitle');
         $articleUrl = UrlBuilderUtil::getPublicArticleUrl(
-            languageIsoCode: $responseData->getSiteLanguage(),
             uri: $article->getUri(),
+            languageIsoCode: $responseData->getSiteLanguage(),
         );
 
         $output = '<div class="m-r-05">';

@@ -37,13 +37,21 @@ $isPublished = $article && $articleStatusId === ArticleStatus::PUBLISHED;
 
 $random = StringUtil::getRandomString(5);
 
+$articleUrl = $article
+    ? UrlBuilderUtil::getPublicArticleUrl(
+        uri: $article->getUri(),
+        languageIsoCode: $responseData->getSiteLanguage(),
+        preview: true,
+    )
+    : null;
+
 ?>
   <div class="control-bar-wrapper m-b-3 m-t-1">
     <div class="control-bar-buttons">
       <button class="article-save-button button"><?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?></button>
       <a class="article-disable-controls" href="#"><?=$responseData->getLocalValue('editorEnableControls')?></a>
 <?php if ($article) {?>
-        <a class="article-preview" href="<?=UrlBuilderUtil::getPublicArticleUrl($responseData->getSiteLanguage(), $article->getUri(), true)?>" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
+        <a class="article-preview" href="<?=$articleUrl?>" target="_blank"><?=$responseData->getLocalValue('globalPreview')?></a>
 <?php } ?>
     </div>
     <div class="control-bar-creation<?=$article ? '' : ' hidden'?>"><span><?=$updatedAtContent?></span></div>

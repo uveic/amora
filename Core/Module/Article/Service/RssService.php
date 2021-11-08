@@ -91,7 +91,10 @@ class RssService
         /** @var Article $article */
         foreach ($articles as $article) {
             $pubDate = new DateTimeImmutable($article->getPublishOn());
-            $link = UrlBuilderUtil::getPublicArticleUrl($siteLanguage, $article->getUri());
+            $link = UrlBuilderUtil::getPublicArticleUrl(
+                uri: $article->getUri(),
+                languageIsoCode: $siteLanguage,
+            );
             $content = $this->getContent($article);
 
             $output[] = '<item>';

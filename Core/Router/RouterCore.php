@@ -194,6 +194,7 @@ class RouterCore extends Core
         $userService = UserCore::getUserService();
         $sessionService = UserCore::getSessionService();
         $mailService = UserCore::getUserMailService();
+        $articleService = ArticleCore::getArticleService();
 
         return self::getInstance(
             'PublicApiController',
@@ -202,6 +203,7 @@ class RouterCore extends Core
                 $userService,
                 $sessionService,
                 $mailService,
+                $articleService,
             ) {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
@@ -212,6 +214,7 @@ class RouterCore extends Core
                     $userService,
                     $sessionService,
                     $mailService,
+                    $articleService,
                 );
             },
             true
