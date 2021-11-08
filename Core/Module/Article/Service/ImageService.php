@@ -4,6 +4,7 @@ namespace Amora\Core\Module\Article\Service;
 
 use Amora\Core\Logger;
 use Amora\Core\Model\File;
+use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\Article\Datalayer\ImageDataLayer;
 use Amora\Core\Module\Article\Model\Image;
 use Amora\Core\Util\DateUtil;
@@ -23,9 +24,18 @@ class ImageService
         return $this->imageDataLayer->getImageForId($id);
     }
 
-    public function getAllImages(): array
-    {
-        return $this->imageDataLayer->filterImagesBy();
+    public function filterImagesBy(
+        array $imageIds = [],
+        array $userIds = [],
+        bool $excludeDeleted = true,
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        return $this->imageDataLayer->filterImagesBy(
+            imageIds: $imageIds,
+            userIds: $userIds,
+            excludeDeleted: $excludeDeleted,
+            queryOptions: $queryOptions,
+        );
     }
 
     public function storeImage(Image $image): ?Image
