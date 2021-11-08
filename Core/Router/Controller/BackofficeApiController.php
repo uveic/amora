@@ -163,7 +163,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             searchText: $q,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('name', 'ASC')],
-                limit: 5
+                pagination: new Response\Pagination(itemsPerPage: 25),
             ),
         );
 

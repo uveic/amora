@@ -19,15 +19,16 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         protected ?array $usersList = [],
         protected ?array $images = [],
         protected ?array $articleSections = [],
+        protected ?Pagination $pagination = null,
     ) {
         $this->usersList = $usersList ?? [];
 
         parent::__construct(
-            $request,
-            $pageTitle,
-            $pageDescription,
-            null,
-            $articles,
+            request: $request,
+            pageTitle: $pageTitle,
+            pageDescription: $pageDescription,
+            articles: $articles,
+            pagination: $pagination,
         );
     }
 

@@ -5,6 +5,7 @@ namespace Amora\Core\Module\Article\Datalayer;
 use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\DataLayerTrait;
+use Amora\Core\Util\DateUtil;
 use Throwable;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
@@ -45,6 +46,7 @@ class ArticleDataLayer
         ?string $uri = null,
         array $tagIds = [],
         bool $includeTags = false,
+        bool $includePublishedAtInTheFuture = false,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -129,6 +131,11 @@ class ArticleDataLayer
             $where .= $this->generateWhereSqlCodeForIds($params, $tagIds, 'at.tag_id', 'tagId');
         }
 
+        if (!$includePublishedAtInTheFuture) {
+            $where .= ' AND a.published_at <= :publishedAt';
+            $params[':publishedAt'] = DateUtil::getCurrentDateForMySql();
+        }
+
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
 
         $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
@@ -150,7 +157,8 @@ class ArticleDataLayer
     {
         $res = $this->filterArticlesBy(
             articleIds: [$id],
-            includeTags: $includeTags
+            includeTags: $includeTags,
+            includePublishedAtInTheFuture: true,
         );
 
         return empty($res[0]) ? null : $res[0];

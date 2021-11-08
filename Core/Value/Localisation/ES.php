@@ -123,6 +123,7 @@ return [
     'globalNext' => 'Siguiente',
     'globalNoTitle' => 'Sin título',
     'globalComingSoon' => 'Próximamente...',
+    'globalLoading' => 'Cargando...',
 
     'globalUploadImage' => 'Subir imagen(es)',
     'globalAddImage' => 'Añadir imagen(es)',

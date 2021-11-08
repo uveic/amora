@@ -13,8 +13,12 @@ class HtmlHomepageResponseData extends HtmlResponseDataAbstract
         private array $homeArticles = [],
         private array $blogArticles = [],
         private ?UserFeedback $userFeedback = null,
+        protected ?Pagination $pagination = null,
     ) {
-        parent::__construct($request);
+        parent::__construct(
+            request: $request,
+            pagination: $pagination,
+        );
     }
 
     public function getHomepageContent(): ?Article
