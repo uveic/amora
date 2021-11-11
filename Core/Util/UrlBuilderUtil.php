@@ -217,7 +217,10 @@ class UrlBuilderUtil
         ?string $languageIsoCode = null,
         bool $preview = false,
     ): string {
-        return $languageIsoCode ? self::getBaseUrl($languageIsoCode) : self::getBaseUrlWithoutLanguage()
+        return ($languageIsoCode
+                ? self::getBaseUrl($languageIsoCode)
+                : self::getBaseUrlWithoutLanguage()
+            )
             . '/' . $uri
             . ($preview ? '?preview=true' : '');
     }
