@@ -10,6 +10,7 @@ use Throwable;
 
 final class DateUtil
 {
+    const MYSQL_DATETIME_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * Check if the date is a valid ISO8601 date: YYYY-mm-ddTHH:mm:ssZ
@@ -63,7 +64,7 @@ final class DateUtil
             return false;
         }
 
-        $tmpDate = DateTime::createFromFormat("Y-m-d H:i:s", $date);
+        $tmpDate = DateTime::createFromFormat(self::MYSQL_DATETIME_FORMAT, $date);
         if ($tmpDate === false) {
             return false;
         }
@@ -90,7 +91,7 @@ final class DateUtil
             );
             return null;
         }
-        return date('Y-m-d H:i:s', strtotime($isoDate));
+        return date(self::MYSQL_DATETIME_FORMAT, strtotime($isoDate));
     }
 
     public static function convertDateFromMySQLFormatToISO(string $date): ?string
@@ -107,18 +108,18 @@ final class DateUtil
 
     public static function getCurrentDateForMySql(): string
     {
-        return date('Y-m-d H:i:s');
+        return date(self::MYSQL_DATETIME_FORMAT);
     }
 
     public static function getDateForMySqlFrom(string $dateString = 'now'): string
     {
         $d = new DateTimeImmutable($dateString);
-        return $d->format('Y-m-d H:i:s');
+        return $d->format(self::MYSQL_DATETIME_FORMAT);
     }
 
     public static function getMySqlDateFromUnixTime(int $unixTime): string
     {
-        return date('Y-m-d H:i:s', $unixTime);
+        return date(self::MYSQL_DATETIME_FORMAT, $unixTime);
     }
 
     public static function getTimestamp(): string
@@ -419,7 +420,7 @@ final class DateUtil
         }
 
         $now = new DateTimeImmutable('now');
-        return $now->format('Y-m-d H:i:s');
+        return $now->format(self::MYSQL_DATETIME_FORMAT);
     }
 
     public static function convertSecondsToDateInterval(int $seconds): DateInterval
