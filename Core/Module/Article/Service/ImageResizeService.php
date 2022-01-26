@@ -12,12 +12,12 @@ use Amora\Core\Util\StringUtil;
 class ImageResizeService
 {
     const IMAGE_SIZE_MEDIUM = 2;
-    const IMAGE_SIZE_BIG = 3;
+    const IMAGE_SIZE_LARGE = 3;
 
     const IMAGE_SIZE_MEDIUM_MAX_HEIGHT = 800;
     const IMAGE_SIZE_MEDIUM_MAX_WIDTH = 1200;
-    const IMAGE_SIZE_BIG_MAX_HEIGHT = 1800;
-    const IMAGE_SIZE_BIG_MAX_WIDTH = 2400;
+    const IMAGE_SIZE_LARGE_MAX_HEIGHT = 1800;
+    const IMAGE_SIZE_LARGE_MAX_WIDTH = 2400;
 
     private Logger $logger;
     private string $mediaBaseDir;
@@ -43,7 +43,7 @@ class ImageResizeService
 
         $imageOriginal = new ImagePath($filePathOriginal, $fullUrlOriginal);
         $imageMedium = $this->resizeImageDefault($imageOriginal, self::IMAGE_SIZE_MEDIUM);
-        $imageBig = $this->resizeImageDefault($imageOriginal, self::IMAGE_SIZE_BIG);
+        $imageLarge = $this->resizeImageDefault($imageOriginal, self::IMAGE_SIZE_LARGE);
 
         $now = DateUtil::getCurrentDateForMySql();
 
@@ -52,10 +52,10 @@ class ImageResizeService
             $userId,
             $imageOriginal->getFullUrl(),
             $imageMedium->getFullUrl(),
-            $imageBig->getFullUrl(),
+            $imageLarge->getFullUrl(),
             $imageOriginal->getFilePath(),
             $imageMedium->getFilePath(),
-            $imageBig->getFilePath(),
+            $imageLarge->getFilePath(),
             $caption,
             $now,
             $now
@@ -89,11 +89,11 @@ class ImageResizeService
 
         $ratio = $newMaxWidth / $originalWidth;
         $newWidth = $newMaxWidth;
-        $newHeight = $originalHeight * $ratio;
+        $newHeight = (int)round($originalHeight * $ratio);
 
         if ($newHeight > $newMaxHeight) {
             $ratio = $newMaxHeight / $originalHeight;
-            $newWidth = $originalWidth * $ratio;
+            $newWidth = (int)round($originalWidth * $ratio);
             $newHeight = $newMaxHeight;
         }
 
@@ -127,7 +127,7 @@ class ImageResizeService
 
     private function resizeImageDefault(
         ImagePath $image,
-        int $newImageSizeConstant
+        int $newImageSizeConstant,
     ): ?ImagePath {
         $newWidth = $this->getDefaultWidthSize($newImageSizeConstant);
         $newHeight = $this->getDefaultHeightSize($newImageSizeConstant);
@@ -161,8 +161,8 @@ class ImageResizeService
         switch ($imageDefaultSize) {
             case self::IMAGE_SIZE_MEDIUM:
                 return self::IMAGE_SIZE_MEDIUM_MAX_WIDTH;
-            case self::IMAGE_SIZE_BIG:
-                return self::IMAGE_SIZE_BIG_MAX_WIDTH;
+            case self::IMAGE_SIZE_LARGE:
+                return self::IMAGE_SIZE_LARGE_MAX_WIDTH;
             default:
                 $this->logger->logWarning('No default image size found, returning medium');
                 return self::IMAGE_SIZE_MEDIUM_MAX_WIDTH;
@@ -174,8 +174,8 @@ class ImageResizeService
         switch ($imageDefaultSize) {
             case self::IMAGE_SIZE_MEDIUM:
                 return self::IMAGE_SIZE_MEDIUM_MAX_HEIGHT;
-            case self::IMAGE_SIZE_BIG:
-                return self::IMAGE_SIZE_BIG_MAX_HEIGHT;
+            case self::IMAGE_SIZE_LARGE:
+                return self::IMAGE_SIZE_LARGE_MAX_HEIGHT;
             default:
                 $this->logger->logWarning('No default image size found, returning medium');
                 return self::IMAGE_SIZE_MEDIUM_MAX_HEIGHT;

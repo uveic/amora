@@ -82,7 +82,7 @@ class Image
             'user_id' => $this->getUserId(),
             'full_url_original' => $this->getFullUrlOriginal(),
             'full_url_medium' => $this->getFullUrlMedium(),
-            'full_url_big' => $this->getFullUrlBig(),
+            'full_url_big' => $this->getFullUrlLarge(),
             'file_path_original' => $this->getFilePathOriginal(),
             'file_path_medium' => $this->getFilePathMedium(),
             'file_path_big' => $this->getFilePathBig(),
@@ -114,10 +114,10 @@ class Image
 
     public function getFullUrlMedium(): ?string
     {
-        return $this->fullUrlMedium ?? ($this->getFullUrlBig() ?? $this->getFullUrlOriginal());
+        return $this->fullUrlMedium ?? ($this->getFullUrlLarge() ?? $this->getFullUrlOriginal());
     }
 
-    public function getFullUrlBig(): ?string
+    public function getFullUrlLarge(): ?string
     {
         return $this->fullUrlBig ?? $this->getFullUrlOriginal();
     }

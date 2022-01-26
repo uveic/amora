@@ -54,8 +54,8 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         try {
             $session = $request->getSession();
             $images = $this->imageService->processImages(
-                $request->getFiles(),
-                $session->getUser()->getId()
+                files: $request->getFiles(),
+                userId: $session->getUser()->getId(),
             );
 
             $imgSaved = [];
@@ -71,7 +71,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             foreach ($imgSaved as $img) {
                 $output[] = [
                     'id' => $img->getId(),
-                    'url' => $img->getFullUrlBig(),
+                    'url' => $img->getFullUrlMedium(),
                     'caption' => $img->getCaption()
                 ];
             }

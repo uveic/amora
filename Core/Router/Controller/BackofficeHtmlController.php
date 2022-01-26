@@ -186,7 +186,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             : null;
 
         if ($articleTypeIdGetParam === ArticleType::HOMEPAGE) {
-            $articles = $this->articleService->getArticlesForTypeIds([$articleTypeIdGetParam]);
+            $articles = $this->articleService->filterArticlesBy(typeIds: [$articleTypeIdGetParam]);
             if ($articles) {
                 return Response::createRedirectResponse(
                     UrlBuilderUtil::getBackofficeArticleUrl(

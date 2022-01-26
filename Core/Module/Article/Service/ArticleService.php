@@ -27,17 +27,19 @@ class ArticleService
 
     public function getArticleForId(int $id, bool $includeTags = false): ?Article
     {
-        return $this->articleDataLayer->getArticleForId($id, $includeTags);
-    }
+        $res = $this->filterArticlesBy(
+            articleIds: [$id],
+            includeTags: $includeTags,
+            includePublishedAtInTheFuture: true,
+        );
 
-    public function getArticlesForTypeIds(array $articleTypeIds): array
-    {
-        return $this->articleDataLayer->getArticlesForTypeIds($articleTypeIds);
+        return empty($res[0]) ? null : $res[0];
     }
 
     public function getArticleForUri(string $uri): ?Article
     {
-        return $this->articleDataLayer->getArticleForUri($uri);
+        $res = $this->filterArticlesBy(uri: $uri);
+        return empty($res[0]) ? null : $res[0];
     }
 
     public function filterArticlesBy(

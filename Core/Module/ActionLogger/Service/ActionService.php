@@ -8,7 +8,6 @@ use Amora\Core\Logger;
 use Amora\Core\Model\Request;
 use Amora\Core\Module\Action\Datalayer\ActionDataLayer;
 use Amora\Core\Module\Action\Model\Action;
-use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Util\DateUtil;
 
 class ActionService
@@ -35,13 +34,13 @@ class ActionService
             $session = $request->getSession();
 
             $this->storeActionFromValues(
-                substr($request->getPath(), 0, 2000),
-                substr($request->getReferrer(), 0, 2000),
-                $session?->getUser()->getId(),
-                $session?->getSessionId(),
-                $request->getSourceIp(),
-                substr($request->getUserAgent(), 0, 255),
-                substr($request->getClientLanguage(), 0, 255),
+                url: substr($request->getPath(), 0, 2000),
+                referrer: $request->getReferrer() ? substr($request->getReferrer(), 0, 2000) : null,
+                userId: $session?->getUser()->getId(),
+                sessionId: $session?->getSessionId(),
+                ip: $request->getSourceIp(),
+                userAgent: $request->getUserAgent() ? substr($request->getUserAgent(), 0, 255) : null,
+                clientLanguage: $request->getClientLanguage() ? substr($request->getClientLanguage(), 0, 255) : null,
             );
         } catch (Throwable $t) {
             $this->logger->logError('Error logging action');

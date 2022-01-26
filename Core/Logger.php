@@ -19,9 +19,9 @@ final class Logger
     ///////////////////////////////////////////////////////////////////////////
     // Timer helpers
 
-    public function getMicroTime(): float
+    public function getMicroTime(): int
     {
-        return round(microtime(true), 8) * 1000;
+        return (int)round(microtime(true), 8) * 1000;
     }
 
     public function getCheckpointTime(): float

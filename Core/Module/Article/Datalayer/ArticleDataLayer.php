@@ -3,7 +3,6 @@
 namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\Core\Database\Model\TransactionResponse;
-use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\DateUtil;
 use Throwable;
@@ -151,28 +150,6 @@ class ArticleDataLayer
         }
 
         return $output;
-    }
-
-    public function getArticleForId(int $id, bool $includeTags = false): ?Article
-    {
-        $res = $this->filterArticlesBy(
-            articleIds: [$id],
-            includeTags: $includeTags,
-            includePublishedAtInTheFuture: true,
-        );
-
-        return empty($res[0]) ? null : $res[0];
-    }
-
-    public function getArticlesForTypeIds(array $articleTypeIds): array
-    {
-        return $this->filterArticlesBy(typeIds: $articleTypeIds);
-    }
-
-    public function getArticleForUri(string $uri): ?Article
-    {
-        $res = $this->filterArticlesBy(uri: $uri);
-        return empty($res[0]) ? null : $res[0];
     }
 
     public function updateArticle(Article $article): bool
@@ -334,7 +311,7 @@ class ArticleDataLayer
             return null;
         }
 
-        $articleSection->setId((int)$resInsert);
+        $articleSection->setId($resInsert);
 
         return $articleSection;
     }
