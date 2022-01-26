@@ -4,20 +4,20 @@ namespace Amora\Core\Module\Article\Value;
 
 use Amora\Core\Model\Util\LookupTableBasicValue;
 
-final class ArticleStatus
+enum ArticleStatus: int
 {
-    const PUBLISHED = 1;
-    const DELETED = 2;
-    const DRAFT = 3;
-    const ARCHIVED = 4;
+    case PUBLISHED = 1;
+    case DELETED = 2;
+    case DRAFT = 3;
+    case PRIVATE = 4;
 
     public static function getAll(): array
     {
         return [
-            self::PUBLISHED => new LookupTableBasicValue(self::PUBLISHED, 'Published'),
-            self::DELETED =>  new LookupTableBasicValue(self::DELETED, 'Deleted'),
-            self::DRAFT =>  new LookupTableBasicValue(self::DRAFT, 'Draft'),
-            self::ARCHIVED =>  new LookupTableBasicValue(self::DRAFT, 'Archived'),
+            self::PUBLISHED->value => new LookupTableBasicValue(self::PUBLISHED->value, 'Published'),
+            self::DELETED->value =>  new LookupTableBasicValue(self::DELETED->value, 'Deleted'),
+            self::DRAFT->value =>  new LookupTableBasicValue(self::DRAFT->value, 'Draft'),
+            self::PRIVATE->value =>  new LookupTableBasicValue(self::DRAFT->value, 'Private'),
         ];
     }
 

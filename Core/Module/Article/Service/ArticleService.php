@@ -72,7 +72,7 @@ class ArticleService
     public function getHomepageArticle(): ?Article
     {
         $res = $this->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED],
+            statusIds: [ArticleStatus::PUBLISHED->value],
             typeIds: [ArticleType::HOMEPAGE],
         );
 

@@ -31,9 +31,9 @@ if ($article) {
         '">' . $this->e($updatedAtEta) . '</span>.';
 }
 
-$articleStatusId = $article ? $article->getStatusId() : ArticleStatus::DRAFT;
+$articleStatusId = $article ? $article->getStatusId() : ArticleStatus::DRAFT->value;
 $articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::getNameForId($articleStatusId));
-$isPublished = $article && $articleStatusId === ArticleStatus::PUBLISHED;
+$isPublished = $article && $articleStatusId === ArticleStatus::PUBLISHED->value;
 
 $random = StringUtil::getRandomString(5);
 

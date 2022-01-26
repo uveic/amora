@@ -6,7 +6,7 @@ use Amora\Core\Util\DateUtil;
 /** @var HtmlResponseData $responseData */
 $article = $responseData->getFirstArticle();
 
-if (!$article) {
+if (!$article || !$article->getTitle()) {
   return '';
 }
 
@@ -16,7 +16,7 @@ $publishedOnDate = DateUtil::formatDate(
     ),
     lang: $responseData->getSiteLanguage(),
     includeWeekDay: false,
-    includeTime: true,
+    includeTime: false,
 );
 
 ?>

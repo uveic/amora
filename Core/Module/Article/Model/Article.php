@@ -173,7 +173,7 @@ class Article
 
     public function isPublished(): bool
     {
-        if ($this->getStatusId() !== ArticleStatus::PUBLISHED) {
+        if ($this->getStatusId() !== ArticleStatus::PUBLISHED->value) {
             return false;
         }
 

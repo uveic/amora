@@ -144,7 +144,7 @@ return [
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',
     'articleStatusDeleted' => 'Deleted',
-    'articleStatusArchived' => 'Archived',
+    'articleStatusPrivate' => 'Private',
     'articleTypeHome' => 'Homepage',
     'articleTypeBlog' => 'Blog',
     'articleTypeArticle' => 'Article',

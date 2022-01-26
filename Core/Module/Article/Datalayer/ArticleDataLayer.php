@@ -230,7 +230,7 @@ class ArticleDataLayer
                     self::ARTICLE_TABLE,
                     $article->getId(),
                     [
-                        'status_id' => ArticleStatus::DELETED
+                        'status_id' => ArticleStatus::DELETED->value
                     ]
                 );
 

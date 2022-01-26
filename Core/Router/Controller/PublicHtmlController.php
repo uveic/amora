@@ -289,7 +289,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     protected function getRss(Request $request): Response
     {
         $articles = $this->articleService->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED],
+            statusIds: [ArticleStatus::PUBLISHED->value],
             typeIds: [ArticleType::BLOG],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
@@ -312,7 +312,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         // ToDo: Move tagIdsForHomepage to some kind of settings
         $tagIds = Core::getConfigValue('tagIdsForHomepage') ?? [];
         $homeArticles = $this->articleService->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED],
+            statusIds: [ArticleStatus::PUBLISHED->value],
             typeIds: [ArticleType::PAGE],
             tagIds: $tagIds,
             queryOptions: new QueryOptions(
@@ -323,7 +323,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
         $pagination = new Response\Pagination(itemsPerPage: 15);
         $blogArticles = $this->articleService->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED],
+            statusIds: [ArticleStatus::PUBLISHED->value],
             typeIds: [ArticleType::BLOG],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],

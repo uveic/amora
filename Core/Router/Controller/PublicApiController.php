@@ -453,7 +453,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     ): Response {
         $pagination = new Pagination(itemsPerPage: $itemsPerPage, offset: $offset);
         $articles = $this->articleService->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED],
+            statusIds: [ArticleStatus::PUBLISHED->value],
             typeIds: [ArticleType::BLOG],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],

@@ -303,7 +303,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $publishOnMySql = $publishOn
             ? DateUtil::convertDateFromISOToMySQLFormat($publishOn)
-            : ($statusId === ArticleStatus::PUBLISHED ? $now : null);
+            : ($statusId === ArticleStatus::PUBLISHED->value ? $now : null);
 
         $res = $this->articleService->createNewArticle(
             new Article(
@@ -425,7 +425,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             new Article(
                 id: $existingArticle->getId(),
                 user: $existingArticle->getUser(),
-                statusId: ArticleStatus::DELETED,
+                statusId: ArticleStatus::DELETED->value,
                 typeId: $existingArticle->getTypeId(),
                 createdAt: $existingArticle->getCreatedAt(),
                 updatedAt: DateUtil::getCurrentDateForMySql(),

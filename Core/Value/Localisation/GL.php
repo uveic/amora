@@ -144,7 +144,7 @@ return [
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
     'articleStatusDeleted' => 'Eliminado',
-    'articleStatusArchived' => 'Arquivado',
+    'articleStatusPrivate' => 'Privado',
     'articleTypeHome' => 'Portada',
     'articleTypeBlog' => 'Blog',
     'articleTypeArticle' => 'Artigo',

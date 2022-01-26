@@ -86,15 +86,15 @@ final class ArticleEditHtmlGenerator
         $isHomepage = $articleTypeId === ArticleType::HOMEPAGE;
         $articleStatusId = $responseData->getFirstArticle()
             ? $responseData->getFirstArticle()->getStatusId()
-            : ($isHomepage ? ArticleStatus::PUBLISHED : ArticleStatus::DRAFT);
+            : ($isHomepage ? ArticleStatus::PUBLISHED->value : ArticleStatus::DRAFT->value);
         $articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::getNameForId($articleStatusId));
         $isPublished = $responseData->getFirstArticle()
-            ? $articleStatusId === ArticleStatus::PUBLISHED
+            ? $articleStatusId === ArticleStatus::PUBLISHED->value
             : $isHomepage;
         $random = StringUtil::getRandomString(5);
 
         $articleStatuses = $isHomepage
-            ? [ArticleStatus::getStatusForId(ArticleStatus::PUBLISHED)]
+            ? [ArticleStatus::getStatusForId(ArticleStatus::PUBLISHED->value)]
             : $responseData->getArticleStatuses();
 
         $html = '';
@@ -107,7 +107,7 @@ final class ArticleEditHtmlGenerator
             $html .= '<li><a data-checked="' . ($status->getId() === $articleStatusId ? '1' : '0') .
                 '" data-article-status-id="' . $status->getId() .
                 '" class="dropdown-menu-option article-status-option ' .
-                ($status->getId() === ArticleStatus::PUBLISHED ? 'feedback-success' : 'background-light-color') .
+                ($status->getId() === ArticleStatus::PUBLISHED->value ? 'feedback-success' : 'background-light-color') .
                 '" href="#">' . $responseData->getLocalValue('articleStatus' . $status->getName()) .
                 '</a></li>';
         }
@@ -155,9 +155,9 @@ final class ArticleEditHtmlGenerator
         Article $article
     ): string {
         $statusClassname = match ($article->getStatusId()) {
-            ArticleStatus::PUBLISHED => 'status-published',
-            ArticleStatus::DELETED => 'status-deleted',
-            ArticleStatus::DRAFT => 'status-draft',
+            ArticleStatus::PUBLISHED->value => 'status-published',
+            ArticleStatus::DELETED->value => 'status-deleted',
+            ArticleStatus::DRAFT->value => 'status-draft',
             default => ''
         };
 
@@ -169,7 +169,7 @@ final class ArticleEditHtmlGenerator
 
         $output = '<div class="m-r-05">';
         $output .= '<span class="light-text-color" style="margin-right: 0.1rem;">' . $article->getId() . '. </span>';
-        $output .= $article->getStatusId() === ArticleStatus::PUBLISHED
+        $output .= $article->getStatusId() === ArticleStatus::PUBLISHED->value
             ? '<a href="' . $articleUrl . '">' . $articleTitle . '</a>'
             : $articleTitle;
 

@@ -177,7 +177,7 @@ class Router
         }
 
         $preview = $request->getGetParam('preview');
-        if ($article->getStatusId() !== ArticleStatus::PUBLISHED
+        if ($article->getStatusId() !== ArticleStatus::PUBLISHED->value
             && (!$request->getSession()
                 || !$request->getSession()->isAdmin()
                 || !StringUtil::isTrue($preview)
