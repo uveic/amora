@@ -211,6 +211,6 @@ final class ArticleEditHtmlGenerator
     {
         return $article->isPublished()
             ? ''
-            : '<span class="enabled-icon enabled-icon-failure m-r-05"></span>';
+            : '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/lock.svg" alt="">';
     }
 }
