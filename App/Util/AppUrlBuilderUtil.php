@@ -14,6 +14,6 @@ final class AppUrlBuilderUtil extends UrlBuilderUtil
 
     public static function getAuthorisedDashboardUrl(string $languageIsoCode): string
     {
-        return self::getBaseUrl($languageIsoCode) . self::AUTHORISED_DASHBOARD;
+        return self::buildBaseUrl($languageIsoCode) . self::AUTHORISED_DASHBOARD;
     }
 }

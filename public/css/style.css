@@ -530,7 +530,7 @@ label:not(:last-child) {
   font-size: 1.5rem;
 }
 
-.register-forgot {
+.text-right {
   text-align: right;
 }
 /* Register/Login style ends here */
@@ -539,6 +539,12 @@ label:not(:last-child) {
 article {
   max-width: var(--content-max-width);
   margin: 2rem auto;
+}
+
+article img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
 }
 
 article > h1 {
@@ -576,6 +582,19 @@ article > p {
   font-weight: normal;
   font-family: var(--font-paragraph);
   color: var(--light-text-color);
+}
+
+.article-blog-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.article-blog-bottom a {
+  min-width: 100px;
+  flex-shrink: 1;
+  flex-grow: 1;
 }
 
 .article-blog-footer {

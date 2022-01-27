@@ -5,6 +5,7 @@ namespace Amora\Core\Module\Article\Datalayer;
 use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\DateUtil;
+use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Logger;
@@ -46,6 +47,8 @@ class ArticleDataLayer
         array $tagIds = [],
         bool $includeTags = false,
         bool $includePublishedAtInTheFuture = false,
+        ?DateTimeImmutable $publishedBefore = null,
+        ?DateTimeImmutable $publishedAfter = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -133,6 +136,16 @@ class ArticleDataLayer
         if (!$includePublishedAtInTheFuture) {
             $where .= ' AND a.published_at <= :publishedAt';
             $params[':publishedAt'] = DateUtil::getCurrentDateForMySql();
+        }
+
+        if (isset($publishedBefore)) {
+            $where .= ' AND a.published_at < :publishedBefore';
+            $params[':publishedBefore'] = $publishedBefore->format(DateUtil::MYSQL_DATETIME_FORMAT);
+        }
+
+        if (isset($publishedAfter)) {
+            $where .= ' AND a.published_at > :publishedAfter';
+            $params[':publishedAfter'] = $publishedAfter->format(DateUtil::MYSQL_DATETIME_FORMAT);
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);

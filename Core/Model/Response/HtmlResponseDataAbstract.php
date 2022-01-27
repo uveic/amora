@@ -52,7 +52,7 @@ abstract class HtmlResponseDataAbstract
         $this->pageTitleWithoutSiteName = $pageTitle ?? '';
         $this->pageDescription = $pageDescription
             ?? $this->localisationUtil->getValue('siteDescription');
-        $this->baseUrlWithLanguage = $this->getBaseUrl() .
+        $this->baseUrlWithLanguage = $this->buildBaseUrl() .
             strtolower($this->getSiteLanguage()) . '/';
     }
 
@@ -66,12 +66,12 @@ abstract class HtmlResponseDataAbstract
         return $this->session;
     }
 
-    public function getBaseUrl(): string
+    public function buildBaseUrl(): string
     {
         return $this->baseUrl;
     }
 
-    public function getBaseUrlWithLanguage(): string
+    public function buildBaseUrlWithLanguage(): string
     {
         return $this->baseUrlWithLanguage;
     }
@@ -138,7 +138,7 @@ abstract class HtmlResponseDataAbstract
 
     public function getSiteDomain(): string
     {
-        return parse_url($this->getBaseUrl(), PHP_URL_HOST);
+        return parse_url($this->buildBaseUrl(), PHP_URL_HOST);
     }
 
     public function getLocalValue(string $key): string

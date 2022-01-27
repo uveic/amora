@@ -31,4 +31,7 @@ $editUrl = $article->getTypeId() === ArticleType::BLOG
 <?php if ($article->getTypeId() === ArticleType::BLOG) { ?>
     <p class="article-blog-footer"><?=sprintf($responseData->getLocalValue('articleBlogFooterInfo'), $email, $email)?></p>
 <?php } ?>
+<?php if ($article->getTypeId() === ArticleType::BLOG) {
+    $this->insert('shared/partials/article/article-blog-bottom', ['responseData' => $responseData]);
+} ?>
   </article>

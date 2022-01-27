@@ -39,7 +39,7 @@ foreach ($articles as $article) {
         )
         : '';
 
-    $href = $this->e($responseData->getBaseUrl() . $article->getUri());
+    $href = $this->e($responseData->buildBaseUrl() . $article->getUri());
     $isPublishedHtml = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article);
 
     $year = $article->getPublishOn() ? date('Y', strtotime($article->getPublishOn())) : '???';

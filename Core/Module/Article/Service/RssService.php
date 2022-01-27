@@ -73,7 +73,7 @@ class RssService
             '<lastBuildDate>' . $lastBuildDate->format('r') . '</lastBuildDate>',
             '<docs>http://blogs.law.harvard.edu/tech/rss</docs>',
             '<generator>' . $siteTitle . '</generator>',
-            '<atom:link href="' . UrlBuilderUtil::getPublicRssUrl() . '" rel="self" type="application/rss+xml" />',
+            '<atom:link href="' . UrlBuilderUtil::buildPublicRssUrl() . '" rel="self" type="application/rss+xml" />',
         ];
 
         if ($siteAdminEmail && $siteAdminName) {
@@ -91,7 +91,7 @@ class RssService
         /** @var Article $article */
         foreach ($articles as $article) {
             $pubDate = new DateTimeImmutable($article->getPublishOn());
-            $link = UrlBuilderUtil::getPublicArticleUrl(
+            $link = UrlBuilderUtil::buildPublicArticleUrl(
                 uri: $article->getUri(),
                 languageIsoCode: $siteLanguage,
             );
@@ -120,7 +120,7 @@ class RssService
     {
         return str_replace(
             search: 'src="/',
-            replace: 'src="' . UrlBuilderUtil::getBaseUrlWithoutLanguage(),
+            replace: 'src="' . UrlBuilderUtil::buildBaseUrlWithoutLanguage(),
             subject: $article->getContentHtml(),
         );
     }

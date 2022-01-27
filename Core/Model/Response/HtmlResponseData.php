@@ -13,6 +13,8 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         ?string $pageDescription = null,
         ?string $mainImageSiteUri = null,
         protected ?array $articles = [],
+        private ?Article $previousBlogPost = null,
+        private ?Article $nextBlogPost = null,
         protected ?UserFeedback $userFeedback = null,
         protected ?string $verificationHash = null,
         private ?int $passwordUserId = null,
@@ -36,6 +38,16 @@ class HtmlResponseData extends HtmlResponseDataAbstract
     {
         $allArticles = $this->getArticles();
         return $allArticles[0] ?? null;
+    }
+
+    public function getPreviousBlogPost(): ?Article
+    {
+        return $this->previousBlogPost;
+    }
+
+    public function getNextBlogPost(): ?Article
+    {
+        return $this->nextBlogPost;
     }
 
     public function getUserFeedback(): ?UserFeedback

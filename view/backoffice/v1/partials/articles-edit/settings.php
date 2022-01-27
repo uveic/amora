@@ -65,7 +65,7 @@ if ($article) {
   <div class="field">
     <label for="articleUri" class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</label>
     <div class="control">
-      <div class="article-edit-uri"><?=UrlBuilderUtil::getBaseUrl($responseData->getSiteLanguage()) . '/'?>
+      <div class="article-edit-uri"><?=UrlBuilderUtil::buildBaseUrl($responseData->getSiteLanguage()) . '/'?>
         <input id="articleUri" name="articleUri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->getUri() : ''); ?>">
       </div>
     </div>

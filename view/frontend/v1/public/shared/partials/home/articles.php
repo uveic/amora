@@ -21,7 +21,7 @@ if (!$responseData->getHomeArticles()) {
 <?php
 /** @var Article $article */
 foreach ($responseData->getHomeArticles() as $article) {
-    $href = UrlBuilderUtil::getPublicArticleUrl(
+    $href = UrlBuilderUtil::buildPublicArticleUrl(
         uri: $article->getUri(),
         languageIsoCode: $responseData->getSiteLanguage(),
     );

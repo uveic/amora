@@ -12,7 +12,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
   </div>
 <?php } ?>
 <header>
-  <h1 class="logo"><a class="white" href="<?=$responseData->getBaseUrlWithLanguage()?>"><?=$this->e($responseData->getSiteName())?></a></h1>
+  <h1 class="logo"><a class="white" href="<?=$responseData->buildBaseUrlWithLanguage()?>"><?=$this->e($responseData->getSiteName())?></a></h1>
   <input type="checkbox" id="mobile-nav" class="mobile-nav">
   <nav>
     <ul>

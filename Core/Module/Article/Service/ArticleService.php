@@ -5,6 +5,7 @@ namespace Amora\Core\Module\Article\Service;
 use Amora\Core\Core;
 use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Logger;
+use Amora\Core\Model\Response\Pagination;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
@@ -16,6 +17,7 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
+use DateTimeImmutable;
 
 class ArticleService
 {
@@ -42,6 +44,46 @@ class ArticleService
         return empty($res[0]) ? null : $res[0];
     }
 
+    public function getPreviousBlogPost(
+        DateTimeImmutable $publishedBefore,
+        bool $isAdmin = false,
+    ): ?Article {
+        $statusIds = $isAdmin
+            ? [ArticleStatus::PRIVATE->value, ArticleStatus::PUBLISHED->value]
+            : [ArticleStatus::PUBLISHED->value];
+
+        $res = $this->filterArticlesBy(
+            statusIds: $statusIds,
+            typeIds: [ArticleType::BLOG],
+            publishedBefore: $publishedBefore,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: 'DESC')],
+                pagination: new Pagination(itemsPerPage: 1),
+            ),
+        );
+
+        return empty($res[0]) ? null : $res[0];
+    }
+
+    public function getNextBlogPost(DateTimeImmutable $publishedAfter, bool $isAdmin = false): ?Article
+    {
+        $statusIds = $isAdmin
+            ? [ArticleStatus::PRIVATE->value, ArticleStatus::PUBLISHED->value]
+            : [ArticleStatus::PUBLISHED->value];
+
+        $res = $this->filterArticlesBy(
+            statusIds: $statusIds,
+            typeIds: [ArticleType::BLOG],
+            publishedAfter: $publishedAfter,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: 'ASC')],
+                pagination: new Pagination(itemsPerPage: 1),
+            ),
+        );
+
+        return empty($res[0]) ? null : $res[0];
+    }
+
     public function filterArticlesBy(
         array $articleIds = [],
         array $statusIds = [],
@@ -50,6 +92,8 @@ class ArticleService
         array $tagIds = [],
         bool $includeTags = false,
         bool $includePublishedAtInTheFuture = false,
+        ?DateTimeImmutable $publishedBefore = null,
+        ?DateTimeImmutable $publishedAfter = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->articleDataLayer->filterArticlesBy(
@@ -60,6 +104,8 @@ class ArticleService
             tagIds: $tagIds,
             includeTags: $includeTags,
             includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
+            publishedBefore: $publishedBefore,
+            publishedAfter: $publishedAfter,
             queryOptions: $queryOptions,
         );
     }
