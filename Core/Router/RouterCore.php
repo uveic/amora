@@ -36,6 +36,7 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseDataPublic.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
+                require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicHtmlController.php';
@@ -205,6 +206,7 @@ class RouterCore extends Core
                 $mailService,
                 $articleService,
             ) {
+                require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicApiControllerAbstract.php';

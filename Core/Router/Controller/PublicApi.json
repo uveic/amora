@@ -792,6 +792,10 @@
                   "type": "object",
                   "description": "",
                   "properties": {
+                    "icon": {
+                      "type": "string",
+                      "description": "Icon to display if the post is published or not"
+                    },
                     "postUri": {
                       "type": "string",
                       "description": "Blog post URI"
@@ -806,6 +810,7 @@
                     }
                   },
                   "required": [
+                    "icon",
                     "postUri",
                     "postTitle",
                     "publishedOn"

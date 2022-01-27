@@ -13,6 +13,7 @@ use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\PublicApiControllerGetBlogPostsSuccessResponse;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
@@ -451,9 +452,12 @@ final class PublicApiController extends PublicApiControllerAbstract
         ?int $itemsPerPage,
         Request $request
     ): Response {
+        $statusIds = $request->getSession()->isAdmin()
+            ? [ArticleStatus::PUBLISHED->value, ArticleStatus::PRIVATE->value]
+            : [ArticleStatus::PUBLISHED->value];
         $pagination = new Pagination(itemsPerPage: $itemsPerPage, offset: $offset);
         $articles = $this->articleService->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED->value],
+            statusIds: $statusIds,
             typeIds: [ArticleType::BLOG],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
@@ -465,6 +469,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         /** @var Article $article */
         foreach ($articles as $article) {
             $output[] = [
+                'icon' => ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article),
                 'postUri' => UrlBuilderUtil::getPublicArticleUrl(uri: $article->getUri()),
                 'postTitle' => $article->getTitle(),
                 'publishedOn' => $article->getPublishOn()

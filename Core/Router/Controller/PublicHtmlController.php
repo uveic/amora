@@ -321,9 +321,12 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             ),
         );
 
+        $statusIds = $request->getSession()->isAdmin()
+            ? [ArticleStatus::PUBLISHED->value, ArticleStatus::PRIVATE->value]
+            : [ArticleStatus::PUBLISHED->value];
         $pagination = new Response\Pagination(itemsPerPage: 15);
         $blogArticles = $this->articleService->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED->value],
+            statusIds: $statusIds,
             typeIds: [ArticleType::BLOG],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],

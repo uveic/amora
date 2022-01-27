@@ -41,7 +41,6 @@ $articleUrl = $article
     ? UrlBuilderUtil::getPublicArticleUrl(
         uri: $article->getUri(),
         languageIsoCode: $responseData->getSiteLanguage(),
-        preview: true,
     )
     : null;
 

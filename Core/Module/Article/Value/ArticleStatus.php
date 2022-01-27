@@ -17,7 +17,7 @@ enum ArticleStatus: int
             self::PUBLISHED->value => new LookupTableBasicValue(self::PUBLISHED->value, 'Published'),
             self::DELETED->value =>  new LookupTableBasicValue(self::DELETED->value, 'Deleted'),
             self::DRAFT->value =>  new LookupTableBasicValue(self::DRAFT->value, 'Draft'),
-            self::PRIVATE->value =>  new LookupTableBasicValue(self::DRAFT->value, 'Private'),
+            self::PRIVATE->value =>  new LookupTableBasicValue(self::PRIVATE->value, 'Private'),
         ];
     }
 

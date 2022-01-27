@@ -566,7 +566,7 @@ article > p {
 
 .article-edit {
   float: right;
-  padding: 0.5rem
+  padding: 0.5rem 1rem;
 }
 
 .article-blog-info {
@@ -832,6 +832,11 @@ svg,
   display: flex;
   flex-flow: column wrap;
   justify-content: flex-start;
+}
+
+.blog-item-title {
+  display: flex;
+  align-items: center;
 }
 
 .blog-item a {
