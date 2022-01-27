@@ -28,7 +28,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       const previewExists = document.querySelector('.article-preview');
       if (!previewExists) {
         const previewLink = document.createElement('a');
-        previewLink.href = '/' + articleUri + '?preview=true';
+        previewLink.href = '/' + articleUri;
         previewLink.target = '_blank';
         previewLink.className = 'article-preview m-l-1';
         previewLink.textContent = global.get('globalPreview');
@@ -51,9 +51,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       document.querySelectorAll('.article-save-button').forEach(b => {
         b.value = global.get('globalUpdate');
       });
-      document.querySelectorAll('.article-preview').forEach(b => {
-        b.href = response.uri + '?preview=true';
-      });
+      document.querySelectorAll('.article-preview').forEach(b => b.href = response.uri);
       document.querySelectorAll('input[name="articleUri"]').forEach(i => {
         i.value = response.uri.trim().replace(/^\//,"");
       });

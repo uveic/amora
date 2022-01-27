@@ -5,6 +5,7 @@ namespace Amora\Core\Router;
 use Amora\App\Router\AppRouter;
 use Amora\App\Router\AppRouterCore;
 use Amora\Core\Module\Action\Service\ActionService;
+use Amora\Core\Module\Article\Model\Article;
 use Exception;
 use Throwable;
 use Amora\Core\Core;
@@ -13,7 +14,6 @@ use Amora\Core\Model\Response;
 use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Value\ArticleStatus;
-use Amora\Core\Util\StringUtil;
 
 class Router
 {
@@ -171,21 +171,15 @@ class Router
         $article = ArticleCore::getArticleService()->getArticleForUri($articleUri);
         if (empty($article)) {
             return Response::createFrontendPublicHtmlResponse(
-                'shared/404',
-                new HtmlResponseData($request)
+                template: 'shared/404',
+                responseData: new HtmlResponseData($request),
             );
         }
 
-        $preview = $request->getGetParam('preview');
-        if ($article->getStatusId() !== ArticleStatus::PUBLISHED->value
-            && (!$request->getSession()
-                || !$request->getSession()->isAdmin()
-                || !StringUtil::isTrue($preview)
-            )
-        ) {
+        if (!$this->displayArticle($article, $request->getSession()?->isAdmin())) {
             return Response::createFrontendPublicHtmlResponse(
-                'shared/404',
-                new HtmlResponseData($request)
+                template: 'shared/404',
+                responseData: new HtmlResponseData($request),
             );
         }
 
@@ -197,14 +191,26 @@ class Router
             : null;
 
         return Response::createFrontendPublicHtmlResponse(
-            'shared/home-article',
-            new HtmlResponseData(
+            template: 'shared/home-article',
+            responseData: new HtmlResponseData(
                 $request,
                 $article->getTitle(),
                 $article->getContentExcerpt(),
                 $siteImageUrl,
                 [$article],
-            )
+            ),
         );
+    }
+
+    private function displayArticle(Article $article, ?bool $isAdmin): bool {
+        if ($isAdmin) {
+            return true;
+        }
+
+        if ($article->getStatusId() === ArticleStatus::PUBLISHED->value) {
+            return true;
+        }
+
+        return false;
     }
 }

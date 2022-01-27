@@ -215,14 +215,12 @@ class UrlBuilderUtil
     public static function getPublicArticleUrl(
         string $uri,
         ?string $languageIsoCode = null,
-        bool $preview = false,
     ): string {
         return ($languageIsoCode
                 ? self::getBaseUrl($languageIsoCode)
                 : self::getBaseUrlWithoutLanguage()
             )
-            . '/' . $uri
-            . ($preview ? '?preview=true' : '');
+            . '/' . $uri;
     }
 
     public static function getPublicRssUrl(): string

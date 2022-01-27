@@ -22,21 +22,45 @@ use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\VerificationType;
 
 return [
-    new LookupTableSettings(Core::getCoreDb(), 'language', Language::getAll()),
-    new LookupTableSettings(Core::getCoreDb(), 'user_role', UserRole::asArray()),
-    new LookupTableSettings(Core::getCoreDb(), 'article_type', ArticleType::asArray()),
-    new LookupTableSettings(Core::getCoreDb(), 'article_status', ArticleStatus::asArray()),
     new LookupTableSettings(
-        Core::getCoreDb(),
-        'article_section_type',
-        ArticleSectionType::asArray()
+        database: Core::getCoreDb(),
+        tableName: 'language',
+        tableFieldsToValues: Language::getAll(),
     ),
-    new LookupTableSettings(Core::getCoreDb(), 'user_journey_status', UserJourneyStatus::asArray()),
     new LookupTableSettings(
-        Core::getCoreDb(),
-        'user_verification_type',
-        VerificationType::asArray()
+        database: Core::getCoreDb(),
+        tableName: 'user_role',
+        tableFieldsToValues: UserRole::asArray(),
+    ),
+    new LookupTableSettings(
+        database: Core::getCoreDb(),
+        tableName: 'article_type',
+        tableFieldsToValues: ArticleType::asArray(),
+    ),
+    new LookupTableSettings(
+        database: Core::getCoreDb(),
+        tableName: 'article_status',
+        tableFieldsToValues: ArticleStatus::asArray(),
+    ),
+    new LookupTableSettings(
+        database: Core::getCoreDb(),
+        tableName: 'article_section_type',
+        tableFieldsToValues: ArticleSectionType::asArray(),
+    ),
+    new LookupTableSettings(
+        database: Core::getCoreDb(),
+        tableName: 'user_journey_status',
+        tableFieldsToValues: UserJourneyStatus::asArray(),
+    ),
+    new LookupTableSettings(
+        database: Core::getCoreDb(),
+        tableName: 'user_verification_type',
+        tableFieldsToValues: VerificationType::asArray(),
     ),
 
-    new LookupTableSettings(Core::getMailerDb(), 'mailer_template', MailerTemplate::asArray()),
+    new LookupTableSettings(
+        database: Core::getMailerDb(),
+        tableName: 'mailer_template',
+        tableFieldsToValues: MailerTemplate::asArray(),
+    ),
 ];

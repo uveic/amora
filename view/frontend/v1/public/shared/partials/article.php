@@ -2,24 +2,26 @@
 
 use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 $article = $responseData->getFirstArticle();
+
+if ($article === null) {
+    return;
+}
+
 $canEdit = $responseData->getSession() && $responseData->getSession()->isAdmin();
-$preview = $responseData->getRequest()->getGetParam('preview');
 
 $email = Core::getConfigValue('siteAdminEmail');
-
-if ($article) {
-    $editUrl = $article->getTypeId() === ArticleType::BLOG
-        ? UrlBuilderUtil::getBackofficeBlogPostUrl($responseData->getSiteLanguage(), $article->getId())
-        : UrlBuilderUtil::getBackofficeArticleUrl($responseData->getSiteLanguage(), $article->getId());
-
+$editUrl = $article->getTypeId() === ArticleType::BLOG
+    ? UrlBuilderUtil::getBackofficeBlogPostUrl($responseData->getSiteLanguage(), $article->getId())
+    : UrlBuilderUtil::getBackofficeArticleUrl($responseData->getSiteLanguage(), $article->getId());
 ?>
   <article>
-<?php if ($canEdit && !$preview) { ?>
+<?php if ($canEdit && $article->getStatusId() !== ArticleStatus::DRAFT->value) { ?>
     <a class="article-edit" href="<?=$editUrl?>"><?=strtolower($responseData->getLocalValue('globalEdit'))?></a>
 <?php } ?>
 <?php if ($article->getTypeId() === ArticleType::BLOG) {
@@ -30,6 +32,3 @@ if ($article) {
     <p class="article-blog-footer"><?=sprintf($responseData->getLocalValue('articleBlogFooterInfo'), $email, $email)?></p>
 <?php } ?>
   </article>
-<?php
-}
-?>

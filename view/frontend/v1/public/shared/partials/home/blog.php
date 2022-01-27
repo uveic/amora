@@ -3,6 +3,7 @@
 use Amora\Core\Model\Response\HtmlHomepageResponseData;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 
 /** @var HtmlHomepageResponseData $responseData */
 
@@ -38,9 +39,8 @@ foreach ($articles as $article) {
         )
         : '';
 
-    $href = $this->e($responseData->getBaseUrl() . $article->getUri()) .
-        ($article->isPublished() ? '' : '?preview=true');
-    $isPublishedHtml = $article->isPublished() ? '' : '<span class="enabled-icon enabled-icon-failure m-r-05"></span>';
+    $href = $this->e($responseData->getBaseUrl() . $article->getUri());
+    $isPublishedHtml = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article);
 
     $year = $article->getPublishOn() ? date('Y', strtotime($article->getPublishOn())) : '???';
     if ($previousYear !== $year) {
@@ -51,7 +51,7 @@ foreach ($articles as $article) {
   $previousYear = $year;
 ?>
     <div class="blog-item">
-      <?=$isPublishedHtml?><a class="link-title" href="<?=$href?>"><?=$title?></a>
+      <span class="blog-item-title"><?=$isPublishedHtml?><a class="link-title" href="<?=$href?>"><?=$title?></a></span>
       <span class="blog-info"><?=$publishedOn?></span>
     </div>
 <?php

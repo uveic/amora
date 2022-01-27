@@ -206,4 +206,11 @@ final class ArticleEditHtmlGenerator
 
         return $output;
     }
+
+    public static function generateArticlePublishedIconHtml(Article $article): string
+    {
+        return $article->isPublished()
+            ? ''
+            : '<span class="enabled-icon enabled-icon-failure m-r-05"></span>';
+    }
 }

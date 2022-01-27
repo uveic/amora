@@ -29,7 +29,13 @@ document.querySelectorAll('.blog-posts-load-more').forEach(el => {
           const postItem = document.createElement('div');
           postItem.className = 'blog-item';
 
-          postItem.appendChild(postLink);
+          const postItemTitle = document.createElement('span');
+          const icon = document.createElement('span');
+          icon.innerHTML = bp.icon;
+          postItemTitle.appendChild(icon);
+          postItemTitle.appendChild(postLink);
+
+          postItem.appendChild(postItemTitle);
           postItem.appendChild(spanBlogInfo);
           postsParent.appendChild(postItem);
         });
