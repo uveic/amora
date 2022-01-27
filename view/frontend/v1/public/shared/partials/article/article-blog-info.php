@@ -2,6 +2,7 @@
 
 use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 
 /** @var HtmlResponseData $responseData */
 $article = $responseData->getFirstArticle();
@@ -19,6 +20,10 @@ $publishedOnDate = DateUtil::formatDate(
     includeTime: false,
 );
 
+$icon = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml(
+    article: $article,
+);
+
 ?>
-    <h1><?=$article->getTitle()?></h1>
+    <h1><?=$icon . $article->getTitle()?></h1>
     <p class="article-blog-info"><?=$this->e($publishedOnDate)?></p>

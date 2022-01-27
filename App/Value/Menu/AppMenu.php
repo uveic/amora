@@ -43,7 +43,7 @@ final class AppMenu
 
         if ($includeAdminLink) {
             $output[] = new MenuItem(
-                uri: UrlBuilderUtil::getBackofficeDashboardUrl($languageIsoCode),
+                uri: UrlBuilderUtil::buildBackofficeDashboardUrl($languageIsoCode),
                 text: $localisationUtil->getValue('navAdministrator'),
                 order: 1
             );

@@ -60,17 +60,17 @@ $timezones = DateTimeZone::listIdentifiers();
         </form>
         <div class="field">
           <div class="control">
-            <a href="<?=UrlBuilderUtil::getAuthorisedAccountPasswordUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navChangePassword')?></a>
+            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountPasswordUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navChangePassword')?></a>
           </div>
         </div>
         <div class="field">
           <div class="control">
-            <a href="<?=UrlBuilderUtil::getAuthorisedAccountDownloadUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
+            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountDownloadUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
           </div>
         </div>
         <div class="field m-b-6">
           <div class="control">
-            <a class="is-danger" href="<?=UrlBuilderUtil::getAuthorisedAccountDeleteUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
+            <a class="is-danger" href="<?=UrlBuilderUtil::buildAuthorisedAccountDeleteUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
           </div>
         </div>
       </div>

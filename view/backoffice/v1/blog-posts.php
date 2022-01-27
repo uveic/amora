@@ -14,7 +14,7 @@ $this->layout('base', ['responseData' => $responseData,])
     <section class="page-header">
       <h1><?=$responseData->getLocalValue('navAdminBlogPosts')?></h1>
       <div class="links">
-        <a href="<?=UrlBuilderUtil::getBackofficeNewBlogPostUrl($responseData->getSiteLanguage())?>" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeNewBlogPostUrl($responseData->getSiteLanguage())?>" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
       </div>
     </section>
     <section class="content-flex-block">
@@ -29,7 +29,7 @@ foreach ($responseData->getArticles() as $article) {
 ?>
             <div class="table-row">
               <div class="table-item flex-grow-2" style="align-items: flex-start;"><?=$articleItemHtml?></div>
-              <div class="table-item edit flex-no-grow" style="justify-content: flex-end;"><a href="<?=UrlBuilderUtil::getBackofficeBlogPostUrl($responseData->getSiteLanguage(), $article->getId())?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('globalEdit')?>"></a></div>
+              <div class="table-item edit flex-no-grow" style="justify-content: flex-end;"><a href="<?=UrlBuilderUtil::buildBackofficeBlogPostUrl($responseData->getSiteLanguage(), $article->getId())?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('globalEdit')?>"></a></div>
             </div>
 <?php } ?>
       </div>

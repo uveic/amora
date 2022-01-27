@@ -210,6 +210,10 @@ input.is-light {
   background-color: var(--feedback-success-color);
 }
 
+.status-private {
+  background-color: var(--feedback-success-light-color);
+}
+
 .status-deleted {
   background-color: var(--feedback-failure-color);
 }

@@ -189,7 +189,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             $articles = $this->articleService->filterArticlesBy(typeIds: [$articleTypeIdGetParam]);
             if ($articles) {
                 return Response::createRedirectResponse(
-                    UrlBuilderUtil::getBackofficeArticleUrl(
+                    UrlBuilderUtil::buildBackofficeArticleUrl(
                         languageIsoCode: $request->getSiteLanguage(),
                         articleId: $articles[0]->getId()
                     )

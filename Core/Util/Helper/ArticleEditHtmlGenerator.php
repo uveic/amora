@@ -156,6 +156,7 @@ final class ArticleEditHtmlGenerator
     ): string {
         $statusClassname = match ($article->getStatusId()) {
             ArticleStatus::PUBLISHED->value => 'status-published',
+            ArticleStatus::PRIVATE->value => 'status-private',
             ArticleStatus::DELETED->value => 'status-deleted',
             ArticleStatus::DRAFT->value => 'status-draft',
             default => ''

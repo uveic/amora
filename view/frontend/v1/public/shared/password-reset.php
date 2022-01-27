@@ -8,7 +8,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 $titleHtml = $responseData->getLocalValue('authenticationPasswordResetSubtitle');
 $subtitleHtml = sprintf(
     $responseData->getLocalValue('authenticationPasswordResetAlreadyLogin'),
-    UrlBuilderUtil::getPublicLoginUrl($responseData->getSiteLanguage())
+    UrlBuilderUtil::buildPublicLoginUrl($responseData->getSiteLanguage())
 );
 
 ?>
@@ -52,7 +52,7 @@ $subtitleHtml = sprintf(
       </div>
       <div id="password-reset-success" class="field null">
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationPasswordResetActionSuccess')?></p>
-        <a class="button is-success" href="<?=UrlBuilderUtil::getPublicLoginUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('authenticationActionHomeLink')?></a>
+        <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('authenticationActionHomeLink')?></a>
       </div>
     </form>
   </div>

@@ -105,7 +105,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 success: false,
                 errorMessage: sprintf(
                     $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
-                    UrlBuilderUtil::getPublicLoginUrl($request->getSiteLanguage())
+                    UrlBuilderUtil::buildPublicLoginUrl($request->getSiteLanguage())
                 ),
             );
         }
@@ -145,7 +145,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerStoreUserSuccessResponse(
             success: true,
             id: $newUser?->getId(),
-            redirect: UrlBuilderUtil::getBackofficeUsersUrl($request->getSiteLanguage()),
+            redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->getSiteLanguage()),
         );
     }
 
@@ -239,7 +239,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerUpdateUserSuccessResponse(
             true,
-            UrlBuilderUtil::getBackofficeUsersUrl($request->getSiteLanguage())
+            UrlBuilderUtil::buildBackofficeUsersUrl($request->getSiteLanguage())
         );
     }
 

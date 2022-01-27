@@ -43,7 +43,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
         </div>
       </div>
       <p class="text-right no-margin">
-        <a href="<?=UrlBuilderUtil::getPublicLoginForgotUrl($responseData->getSiteLanguage())?>">
+        <a href="<?=UrlBuilderUtil::buildPublicLoginForgotUrl($responseData->getSiteLanguage())?>">
             <?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?>
         </a>
       </p>

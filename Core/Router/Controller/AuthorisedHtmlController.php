@@ -61,7 +61,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     {
         $this->sessionService->logout($request->getSession());
         return Response::createRedirectResponse(
-            UrlBuilderUtil::getPublicHomepageUrl($request->getSiteLanguage())
+            UrlBuilderUtil::buildPublicHomepageUrl($request->getSiteLanguage())
         );
     }
 
