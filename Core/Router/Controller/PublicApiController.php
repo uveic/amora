@@ -452,7 +452,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         ?int $itemsPerPage,
         Request $request
     ): Response {
-        $statusIds = $request->getSession()->isAdmin()
+        $statusIds = $request->getSession() && $request->getSession()->isAdmin()
             ? [ArticleStatus::PUBLISHED->value, ArticleStatus::PRIVATE->value]
             : [ArticleStatus::PUBLISHED->value];
         $pagination = new Pagination(itemsPerPage: $itemsPerPage, offset: $offset);
