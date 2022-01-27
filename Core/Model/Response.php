@@ -171,7 +171,7 @@ class Response
 
     public static function createUnauthorisedRedirectLoginResponse(string $siteLanguage): Response
     {
-        return Response::createRedirectResponse(UrlBuilderUtil::getPublicLoginUrl($siteLanguage));
+        return Response::createRedirectResponse(UrlBuilderUtil::buildPublicLoginUrl($siteLanguage));
     }
 
     public static function createUnauthorizedJsonResponse(): Response

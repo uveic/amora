@@ -170,7 +170,7 @@ class UserMailService
     {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getPublicPasswordResetUrl(
+        $linkUrl = UrlBuilderUtil::buildPublicPasswordResetUrl(
             languageIsoCode: $languageIsoCode,
             verificationIdentifier: $verificationIdentifier,
         );
@@ -207,7 +207,7 @@ class UserMailService
     ): MailerItem {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getPublicVerificationEmailUrl(
+        $linkUrl = UrlBuilderUtil::buildPublicVerificationEmailUrl(
             languageIsoCode: $languageIsoCode,
             verificationIdentifier: $verificationIdentifier,
         );
@@ -244,7 +244,7 @@ class UserMailService
     ): MailerItem {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getPublicEmailUpdateUrl(
+        $linkUrl = UrlBuilderUtil::buildPublicEmailUpdateUrl(
             languageIsoCode: $languageIsoCode,
             verificationIdentifier: $verificationIdentifier,
         );
@@ -278,7 +278,7 @@ class UserMailService
     ): MailerItem {
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
-        $linkUrl = UrlBuilderUtil::getPublicCreatePasswordUrl(
+        $linkUrl = UrlBuilderUtil::buildPublicCreatePasswordUrl(
             languageIsoCode: $languageIsoCode,
             verificationIdentifier: $verificationIdentifier,
         );

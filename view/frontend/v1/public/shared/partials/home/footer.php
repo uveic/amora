@@ -10,6 +10,6 @@ $isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin()
 ?>
 <footer>
 <?php if ($isAdmin) { ?>
-  <a href="<?=UrlBuilderUtil::getBackofficeDashboardUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
+  <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
 <?php } ?>
 </footer>

@@ -50,7 +50,7 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
       </div>
       <div id="password-reset-success" class="field null">
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationPasswordCreationActionSuccess')?></p>
-        <a class="button is-success" href="<?=UrlBuilderUtil::getPublicLoginUrl($responseData->getSiteLanguage())?>">
+        <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->getSiteLanguage())?>">
             <?=$responseData->getLocalValue('authenticationActionHomeLink')?>
         </a>
       </div>

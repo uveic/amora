@@ -182,8 +182,8 @@ final class PublicApiController extends PublicApiControllerAbstract
         return new PublicApiControllerUserLoginSuccessResponse(
             true,
             $session->isAdmin()
-                ? UrlBuilderUtil::getBackofficeDashboardUrl($languageIsoCode)
-                : UrlBuilderUtil::getAppDashboardUrl($languageIsoCode)
+                ? UrlBuilderUtil::buildBackofficeDashboardUrl($languageIsoCode)
+                : UrlBuilderUtil::buildAppDashboardUrl($languageIsoCode)
         );
     }
 
@@ -265,7 +265,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                     null,
                     sprintf(
                         $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
-                        UrlBuilderUtil::getPublicLoginUrl($languageIsoCode)
+                        UrlBuilderUtil::buildPublicLoginUrl($languageIsoCode)
                     )
                 );
             }
@@ -301,8 +301,8 @@ final class PublicApiController extends PublicApiControllerAbstract
             return new PublicApiControllerUserRegistrationSuccessResponse(
                 $res,
                 $session->isAdmin()
-                    ? UrlBuilderUtil::getBackofficeDashboardUrl($languageIsoCode)
-                    : UrlBuilderUtil::getAppDashboardUrl($languageIsoCode)
+                    ? UrlBuilderUtil::buildBackofficeDashboardUrl($languageIsoCode)
+                    : UrlBuilderUtil::buildAppDashboardUrl($languageIsoCode)
             );
         } catch (Throwable $t) {
             $this->logger->logError('Error registering user: ' . $t->getMessage());

@@ -56,13 +56,13 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $session = $request->getSession();
         if ($session && $session->isAdmin()) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildBackofficeDashboardUrl($request->getSiteLanguage())
             );
         }
 
         if ($session && $session->isAuthenticated()) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getAppDashboardUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildAppDashboardUrl($request->getSiteLanguage())
             );
         }
 
@@ -89,7 +89,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildBackofficeDashboardUrl($request->getSiteLanguage())
             );
         }
 
@@ -117,8 +117,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         if ($isAuthenticated) {
             return Response::createRedirectResponse(
                 $session->isAdmin()
-                    ? UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
-                    : UrlBuilderUtil::getAppDashboardUrl($request->getSiteLanguage())
+                    ? UrlBuilderUtil::buildBackofficeDashboardUrl($request->getSiteLanguage())
+                    : UrlBuilderUtil::buildAppDashboardUrl($request->getSiteLanguage())
             );
         }
 
@@ -127,12 +127,12 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
             if ($isInvitationEnabled) {
                 return Response::createRedirectResponse(
-                    UrlBuilderUtil::getPublicInviteRequestUrl($request->getSiteLanguage())
+                    UrlBuilderUtil::buildPublicInviteRequestUrl($request->getSiteLanguage())
                 );
             }
 
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getPublicHomepageUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildPublicHomepageUrl($request->getSiteLanguage())
             );
         }
 
@@ -259,14 +259,14 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getBackofficeDashboardUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildBackofficeDashboardUrl($request->getSiteLanguage())
             );
         }
 
         $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
         if (!$isInvitationEnabled) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::getPublicHomepageUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildPublicHomepageUrl($request->getSiteLanguage())
             );
         }
 
@@ -321,7 +321,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             ),
         );
 
-        $statusIds = $request->getSession()->isAdmin()
+        $isAdmin = $request->getSession() && $request->getSession()->isAdmin();
+        $statusIds = $isAdmin
             ? [ArticleStatus::PUBLISHED->value, ArticleStatus::PRIVATE->value]
             : [ArticleStatus::PUBLISHED->value];
         $pagination = new Response\Pagination(itemsPerPage: 15);
