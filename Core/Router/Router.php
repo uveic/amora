@@ -6,6 +6,7 @@ use Amora\App\Router\AppRouter;
 use Amora\App\Router\AppRouterCore;
 use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Model\Article;
+use DateTimeImmutable;
 use Exception;
 use Throwable;
 use Amora\Core\Core;
@@ -168,7 +169,8 @@ class Router
 
     private function getArticlePage(string $articleUri, Request $request): Response
     {
-        $article = ArticleCore::getArticleService()->getArticleForUri($articleUri);
+        $articleService = ArticleCore::getArticleService();
+        $article = $articleService->getArticleForUri($articleUri);
         if (empty($article)) {
             return Response::createFrontendPublicHtmlResponse(
                 template: 'shared/404',
@@ -189,15 +191,24 @@ class Router
         $siteImageUrl = $img
             ? rtrim(Core::getConfigValue('baseUrl'), ' /') . $img->getFullUrlMedium()
             : null;
+        $isAdmin = $request->getSession() && $request->getSession()->isAdmin();
 
         return Response::createFrontendPublicHtmlResponse(
             template: 'shared/home-article',
             responseData: new HtmlResponseData(
-                $request,
-                $article->getTitle(),
-                $article->getContentExcerpt(),
-                $siteImageUrl,
-                [$article],
+                request: $request,
+                pageTitle: $article->getTitle(),
+                pageDescription: $article->getContentExcerpt(),
+                mainImageSiteUri: $siteImageUrl,
+                articles: [$article],
+                previousBlogPost: $articleService->getPreviousBlogPost(
+                    publishedBefore: new DateTimeImmutable($article->getPublishOn()),
+                    isAdmin: $isAdmin,
+                ),
+                nextBlogPost: $articleService->getNextBlogPost(
+                    publishedAfter: new DateTimeImmutable($article->getPublishOn()),
+                    isAdmin: $isAdmin,
+                ),
             ),
         );
     }

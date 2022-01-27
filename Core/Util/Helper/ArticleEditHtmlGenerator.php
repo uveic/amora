@@ -162,7 +162,7 @@ final class ArticleEditHtmlGenerator
         };
 
         $articleTitle = $article->getTitle() ?: $responseData->getLocalValue('globalNoTitle');
-        $articleUrl = UrlBuilderUtil::getPublicArticleUrl(
+        $articleUrl = UrlBuilderUtil::buildPublicArticleUrl(
             uri: $article->getUri(),
             languageIsoCode: $responseData->getSiteLanguage(),
         );

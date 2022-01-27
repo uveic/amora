@@ -38,7 +38,7 @@ $isPublished = $article && $articleStatusId === ArticleStatus::PUBLISHED->value;
 $random = StringUtil::getRandomString(5);
 
 $articleUrl = $article
-    ? UrlBuilderUtil::getPublicArticleUrl(
+    ? UrlBuilderUtil::buildPublicArticleUrl(
         uri: $article->getUri(),
         languageIsoCode: $responseData->getSiteLanguage(),
     )

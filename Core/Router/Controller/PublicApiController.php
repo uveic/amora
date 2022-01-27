@@ -470,7 +470,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         foreach ($articles as $article) {
             $output[] = [
                 'icon' => ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article),
-                'postUri' => UrlBuilderUtil::getPublicArticleUrl(uri: $article->getUri()),
+                'postUri' => UrlBuilderUtil::buildPublicArticleUrl(uri: $article->getUri()),
                 'postTitle' => $article->getTitle(),
                 'publishedOn' => $article->getPublishOn()
                     ? DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $article->getPublishOn())->format('c')

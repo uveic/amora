@@ -14,7 +14,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">
+    <a id="register-close" href="<?=$responseData->buildBaseUrlWithLanguage()?>">
       <img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>">
     </a>
     <form method="POST" id="form-invite-request">
@@ -36,7 +36,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
         <div id="login-failure-message" class="field is-failure null"></div>
         <div id="request-form-feedback" class="field null">
           <p class="m-b-3"><?=$responseData->getLocalValue('authenticationInviteRequestActionSuccess')?></p>
-          <a class="button is-success m-t-3" href="<?=$responseData->getBaseUrlWithLanguage()?>"><?=$this->e($responseData->getLocalValue('authenticationInviteRequestHomeLink'))?></a>
+          <a class="button is-success m-t-3" href="<?=$responseData->buildBaseUrlWithLanguage()?>"><?=$this->e($responseData->getLocalValue('authenticationInviteRequestHomeLink'))?></a>
         </div>
       </div>
     </form>

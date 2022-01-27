@@ -13,7 +13,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">
+    <a id="register-close" href="<?=$responseData->buildBaseUrlWithLanguage()?>">
       <img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>">
     </a>
     <form method="POST" id="form-login-forgot">
