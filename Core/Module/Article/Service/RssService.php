@@ -120,7 +120,7 @@ class RssService
     {
         return str_replace(
             search: 'src="/',
-            replace: 'src="' . UrlBuilderUtil::buildBaseUrlWithoutLanguage(),
+            replace: 'src="' . UrlBuilderUtil::buildBaseUrlWithoutLanguage() . '/',
             subject: $article->getContentHtml(),
         );
     }
