@@ -15,10 +15,5 @@ use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
       </div>
       <div class="pexego-add-section-group">
         <button class="pexego-add-section pexego-add-section-paragraph"><img class="img-svg m-r-05" src="/img/svg/article.svg" alt="<?=$responseData->getLocalValue('globalAddParagraph')?>"><?=$responseData->getLocalValue('globalAddParagraph')?></button>
-        <button class="pexego-add-section pexego-add-section-title"><img class="img-svg m-r-05" src="/img/svg/text-t.svg" alt="<?=$responseData->getLocalValue('globalAddTextTitle')?>"><?=$responseData->getLocalValue('globalAddTextTitle')?></button>
-        <button class="pexego-add-section pexego-add-section-subtitle"><img class="img-svg m-r-05" src="/img/svg/text-t.svg" alt="<?=$responseData->getLocalValue('globalAddTextSubtitle')?>"><?=$responseData->getLocalValue('globalAddTextSubtitle')?></button>
-      </div>
-      <div class="pexego-add-section-group">
-        <button class="pexego-add-section pexego-add-section-html"><img class="img-svg m-r-05" src="/img/svg/code.svg" alt="<?=$responseData->getLocalValue('globalAddHtml')?>"><?=$responseData->getLocalValue('globalAddHtml')?></button>
       </div>
     </div>
