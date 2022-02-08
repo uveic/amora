@@ -284,6 +284,7 @@ final class DateUtil
         bool $includeDayTimeSeparator = true,
         bool $includeMonthYearSeparator = true,
         bool $includeDayMonthSeparator = true,
+        bool $shortMonthName = false,
     ): string {
         $timeFormat = 'H:i' . ($includeSeconds ? ':s' : '');
 
@@ -305,7 +306,7 @@ final class DateUtil
 
                 return $weekDay
                     . $day
-                    . self::getMonthName($date->format('n'), $lang)
+                    . self::getMonthName($date->format('n'), $lang, $shortMonthName)
                     . $year
                     . $time;
             case 'ES':
@@ -324,13 +325,13 @@ final class DateUtil
 
                 return $weekDay
                     . $day
-                    . self::getMonthName($date->format('n'), $lang)
+                    . self::getMonthName($date->format('n'), $lang, $shortMonthName)
                     . $year
                     . $time;
             default:
                 $format = ($includeWeekDay ? 'l, ' : '')
                     . ($includeDay ? 'jS ' : '')
-                    . 'F'
+                    . ($shortMonthName ? 'M' : 'F')
                     . ($includeYear ? ' Y' : '')
                     . ($includeTime ? ' \a\t ' . $timeFormat : '');
 
@@ -338,7 +339,7 @@ final class DateUtil
         }
     }
 
-    public static function getMonthName(int $month, string $lang = 'EN'): string
+    public static function getMonthName(int $month, string $lang = 'EN', bool $shorName = false): string
     {
         $lang = strtoupper($lang);
         $months = match($lang) {
@@ -350,7 +351,9 @@ final class DateUtil
                 'August', 'September', 'October', 'November', 'December'],
         };
 
-        return $months[$month - 1] ?? '';
+        $month = $months[$month - 1] ?? '';
+
+        return $shorName ? substr($month, 0, 3) : $month;
     }
 
     public static function isSummerTime(): bool
