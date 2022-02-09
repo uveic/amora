@@ -206,6 +206,15 @@ input.is-light {
   color: var(--light-text-color);
 }
 
+.pexego-content-title {
+  border: none;
+  background-color: var(--main-bg-color);
+  font-size: 2rem;
+  line-height: 3rem;
+  margin: 0.67em 0;
+  font-family: var(--font-h1-title);
+}
+
 .status-published {
   background-color: var(--feedback-success-color);
 }

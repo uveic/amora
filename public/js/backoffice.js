@@ -2,7 +2,7 @@ import {cleanString, getUpdatedAtTime} from './module/util.js';
 import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
 import {global} from "./module/localisation.js";
-import {classes as pexegoClasses, getSectionTypeIdFromClassList} from "./module/pexego.js";
+import {classes as pexegoClasses} from "./module/pexego.js";
 import {uploadImage} from "./module/imageUploader.js";
 
 let globalTags = [];
@@ -12,6 +12,28 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     e.preventDefault();
 
     const articleIdEl = document.querySelector('input[name="articleId"]');
+
+    const getSectionTypeIdFromClassList = (classList) => {
+      if (classList.contains(pexegoClasses.sectionParagraph)) {
+        return 1;
+      }
+
+      if (classList.contains(pexegoClasses.sectionImage)) {
+        return 2;
+      }
+
+      if (classList.contains(pexegoClasses.sectionVideo)) {
+        return 3;
+      }
+
+      if (classList.contains(pexegoClasses.sectionTitle)) {
+        return 4;
+      }
+
+      if (classList.contains(pexegoClasses.sectionSubtitle)) {
+        return 5;
+      }
+    };
 
     const afterApiCall = function(response, articleUri) {
       if (response.articleId) {

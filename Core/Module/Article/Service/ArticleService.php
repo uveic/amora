@@ -12,6 +12,7 @@ use Amora\Core\Module\Article\Datalayer\TagDataLayer;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;
 use Amora\Core\Module\Article\Model\Tag;
+use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
@@ -160,7 +161,7 @@ class ArticleService
         return $validUri;
     }
 
-    public function updateArticle(
+    public function workflowUpdateArticle(
         Article $article,
         array $sections,
         array $tags,
@@ -224,47 +225,47 @@ class ArticleService
         $articleSectionsById = [];
         /** @var ArticleSection $existingSection */
         foreach ($existingSections as $existingSection) {
-            $articleSectionsById[$existingSection->getId()] = $existingSection;
+            $articleSectionsById[$existingSection->id] = $existingSection;
         }
 
-        $now = DateUtil::getCurrentDateForMySql();
+        $now = new DateTimeImmutable();
         $newSections = [];
         foreach ($sections as $section) {
             $newSectionId = isset($section['id']) ? (int)$section['id'] : null;
             $newSections[] = new ArticleSection(
-                $newSectionId,
-                $articleId,
-                (int)$section['sectionTypeId'],
-                html_entity_decode($section['contentHtml']),
-                isset($section['order']) ? (int)$section['order'] : null,
-                isset($section['imageId']) ? (int)$section['imageId'] : null,
-                $section['imageCaption'] ?? null,
-                $newSectionId && isset($articleSectionsById[$newSectionId])
-                    ? $articleSectionsById[$newSectionId]->getUpdatedAt()
+                id: $newSectionId,
+                articleId: $articleId,
+                articleSectionType: ArticleSectionType::from($section['sectionTypeId']),
+                contentHtml: html_entity_decode($section['contentHtml']),
+                order: isset($section['order']) ? (int)$section['order'] : null,
+                imageId: isset($section['imageId']) ? (int)$section['imageId'] : null,
+                imageCaption: $section['imageCaption'] ?? null,
+                createdAt: $newSectionId && isset($articleSectionsById[$newSectionId])
+                    ? $articleSectionsById[$newSectionId]->updatedAt
                     : $now,
-                $now
+                updatedAt: $now,
             );
         }
 
         /** @var ArticleSection $section */
         foreach ($newSections as $nSection) {
-            if ($nSection->getId() && $articleSectionsById[$nSection->getId()]) {
+            if ($nSection->id && $articleSectionsById[$nSection->id]) {
                 $res = $this->updateArticleSection($nSection);
 
                 if (empty($res)) {
                     $this->logger->logError(
-                        'Error updating article section. Article Section ID: ' . $nSection->getId()
+                        'Error updating article section. Article Section ID: ' . $nSection->id
                     );
                     return false;
                 }
 
-                unset($articleSectionsById[$nSection->getId()]);
+                unset($articleSectionsById[$nSection->id]);
             } else {
                 $res = $this->createArticleSection($nSection);
 
                 if (empty($res)) {
                     $this->logger->logError(
-                        'Error updating inserting section. Article Section ID: ' . $nSection->getId()
+                        'Error updating inserting section. Article Section ID: ' . $nSection->id
                     );
                     return false;
                 }
@@ -272,13 +273,13 @@ class ArticleService
         }
 
         foreach ($articleSectionsById as $articleSection) {
-            if ($articleSection->getImageId()) {
+            if ($articleSection->imageId) {
                 $this->articleDataLayer->deleteArticleSectionImage(
-                    $articleSection->getId(),
-                    $articleSection->getImageId()
+                    $articleSection->id,
+                    $articleSection->imageId,
                 );
             }
-            $this->articleDataLayer->deleteArticleSection($articleSection->getId());
+            $this->articleDataLayer->deleteArticleSection($articleSection->id);
         }
 
         return true;
@@ -360,7 +361,7 @@ class ArticleService
 
                 $resSections = $this->updateCreateOrDeleteArticleSections(
                     $article->getId(),
-                    $sections
+                    $sections,
                 );
 
                 $resTags = $this->addOrRemoveTagsToArticle($article->getId(), $tags);
@@ -393,11 +394,11 @@ class ArticleService
             return false;
         }
 
-        if ($section->getImageId()) {
+        if ($section->imageId) {
             $resImage = $this->articleDataLayer->createArticleSectionImage(
-                $section->getId(),
-                $section->getImageId(),
-                $section->getImageCaption()
+                $section->id,
+                $section->imageId,
+                $section->imageCaption,
             );
 
             if (empty($resImage)) {
@@ -416,11 +417,11 @@ class ArticleService
             return false;
         }
 
-        if ($section->getImageId()) {
+        if ($section->imageId) {
             $resImage = $this->articleDataLayer->updateArticleSectionImage(
-                $section->getId(),
-                $section->getImageId(),
-                $section->getImageCaption()
+                $section->id,
+                $section->imageId,
+                $section->imageCaption,
             );
 
             if (empty($resImage)) {

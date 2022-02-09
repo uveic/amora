@@ -16,14 +16,14 @@ use DateTimeImmutable;
 
 final class ArticleEditHtmlGenerator
 {
-    public static function getClassName(int $sectionTypeId): string
+    public static function getClassName(ArticleSectionType $sectionType): string
     {
-        return match ($sectionTypeId) {
-            ArticleSectionType::TEXT_PARAGRAPH => 'pexego-section-paragraph',
-            ArticleSectionType::TEXT_TITLE => 'pexego-section-title',
-            ArticleSectionType::TEXT_SUBTITLE => 'pexego-section-subtitle',
-            ArticleSectionType::IMAGE => 'pexego-section-image',
-            ArticleSectionType::YOUTUBE_VIDEO => 'pexego-section-video'
+        return match ($sectionType) {
+            ArticleSectionType::TextParagraph => 'pexego-section-paragraph',
+            ArticleSectionType::TextTitle => 'pexego-section-title',
+            ArticleSectionType::TextSubtitle => 'pexego-section-subtitle',
+            ArticleSectionType::Image => 'pexego-section-image',
+            ArticleSectionType::YoutubeVideo => 'pexego-section-video'
         };
     }
 
@@ -45,17 +45,17 @@ final class ArticleEditHtmlGenerator
         HtmlResponseDataAuthorised $responseData,
         ArticleSection $articleSection
     ): string {
-        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
-            $class = self::getClassName($articleSection->getArticleSectionTypeId());
-            $id = $class . '-' . $articleSection->getId();
-            return '<section id="' . $id . '" data-editor-id="' . $articleSection->getId() . '" class="pexego-section pexego-section-paragraph">' . PHP_EOL
-                . '<div class="pexego-content-paragraph placeholder" data-placeholder="' . $responseData->getLocalValue('paragraphPlaceholder') . '" contenteditable="true">' . $articleSection->getContentHtml() . '</div>' . PHP_EOL
+        if ($articleSection->articleSectionType === ArticleSectionType::TextParagraph) {
+            $class = self::getClassName($articleSection->articleSectionType);
+            $id = $class . '-' . $articleSection->id;
+            return '<section id="' . $id . '" data-editor-id="' . $articleSection->id . '" class="pexego-section pexego-section-paragraph">' . PHP_EOL
+                . '<div class="pexego-content-paragraph placeholder" data-placeholder="' . $responseData->getLocalValue('paragraphPlaceholder') . '" contenteditable="true">' . $articleSection->contentHtml . '</div>' . PHP_EOL
                 . '</section>';
         }
 
-        $class = 'pexego-section ' . self::getClassName($articleSection->getArticleSectionTypeId());
-        return '<section class="' . $class . '" data-section-id="' . $articleSection->getId() . '">'  . PHP_EOL
-            . $articleSection->getContentHtml() . PHP_EOL
+        $class = 'pexego-section ' . self::getClassName($articleSection->articleSectionType);
+        return '<section class="' . $class . '" data-section-id="' . $articleSection->id . '">'  . PHP_EOL
+            . $articleSection->contentHtml . PHP_EOL
             . '</section>';
     }
 

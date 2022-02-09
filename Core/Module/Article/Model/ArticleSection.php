@@ -2,18 +2,22 @@
 
 namespace Amora\Core\Module\Article\Model;
 
+use Amora\Core\Module\Article\Value\ArticleSectionType;
+use Amora\Core\Util\DateUtil;
+use DateTimeImmutable;
+
 class ArticleSection
 {
     public function __construct(
-        private ?int $id,
-        private int $articleId,
-        private int $articleSectionTypeId,
-        private string $contentHtml,
-        private ?int $order,
-        private ?int $imageId,
-        private ?string $imageCaption,
-        private string $createdAt,
-        private string $updatedAt,
+        public ?int $id,
+        public readonly int $articleId,
+        public readonly ArticleSectionType $articleSectionType,
+        public readonly string $contentHtml,
+        public readonly ?int $order,
+        public readonly ?int $imageId,
+        public readonly ?string $imageCaption,
+        public readonly DateTimeImmutable $createdAt,
+        public readonly DateTimeImmutable $updatedAt,
     ) {}
 
     public static function fromArray(array $articleSection): self
@@ -23,12 +27,12 @@ class ArticleSection
             : (int)$articleSection['id'];
 
         $createdAt = empty($articleSection['article_section_created_at'])
-            ? $articleSection['created_at']
-            : $articleSection['article_section_created_at'];
+            ? DateUtil::convertStringToDateTimeImmutable($articleSection['created_at'])
+            : DateUtil::convertStringToDateTimeImmutable($articleSection['article_section_created_at']);
 
         $updatedAt = empty($articleSection['article_section_updated_at'])
-            ? $articleSection['updated_at']
-            : $articleSection['article_section_updated_at'];
+            ? DateUtil::convertStringToDateTimeImmutable($articleSection['updated_at'])
+            : DateUtil::convertStringToDateTimeImmutable($articleSection['article_section_updated_at']);
 
         return new self(
             $id,
@@ -46,65 +50,15 @@ class ArticleSection
     public function asArray(): array
     {
         return [
-            'id' => $this->getId(),
-            'article_id' => $this->getArticleId(),
-            'article_section_type_id' => $this->getArticleSectionTypeId(),
-            'content_html' => $this->getContentHtml(),
-            'order' => $this->getOrder(),
-            'image_id' => $this->getImageId(),
-            'image_caption' => $this->getImageCaption(),
-            'created_at' => $this->getCreatedAt(),
-            'updated_at' => $this->getUpdatedAt()
+            'id' => $this->id,
+            'article_id' => $this->articleId,
+            'article_section_type_id' => $this->articleSectionType->value,
+            'content_html' => $this->contentHtml,
+            'order' => $this->order,
+            'image_id' => $this->imageId,
+            'image_caption' => $this->imageCaption,
+            'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
         ];
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getArticleId(): int
-    {
-        return $this->articleId;
-    }
-
-    public function getArticleSectionTypeId(): int
-    {
-        return $this->articleSectionTypeId;
-    }
-
-    public function getContentHtml(): string
-    {
-        return $this->contentHtml;
-    }
-
-    public function getOrder(): ?int
-    {
-        return $this->order;
-    }
-
-    public function getImageId(): ?int
-    {
-        return $this->imageId;
-    }
-
-    public function getImageCaption(): ?string
-    {
-        return $this->imageCaption;
-    }
-
-    public function getCreatedAt(): string
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): string
-    {
-        return $this->updatedAt;
     }
 }

@@ -4,22 +4,22 @@ namespace Amora\Core\Module\Article\Value;
 
 use Amora\Core\Model\Util\LookupTableBasicValue;
 
-final class ArticleSectionType
+enum ArticleSectionType: int
 {
-    const TEXT_PARAGRAPH = 1;
-    const IMAGE = 2;
-    const YOUTUBE_VIDEO = 3;
-    const TEXT_TITLE = 4;
-    const TEXT_SUBTITLE = 5;
+    case TextParagraph = 1;
+    case Image = 2;
+    case YoutubeVideo = 3;
+    case TextTitle = 4;
+    case TextSubtitle = 5;
 
     public static function getAll(): array
     {
         return [
-            self::TEXT_PARAGRAPH => new LookupTableBasicValue(self::TEXT_PARAGRAPH, 'Text - Paragraph'),
-            self::TEXT_TITLE => new LookupTableBasicValue(self::TEXT_TITLE, 'Text - Title'),
-            self::TEXT_SUBTITLE => new LookupTableBasicValue(self::TEXT_SUBTITLE, 'Text - Subtitle'),
-            self::IMAGE => new LookupTableBasicValue(self::IMAGE, 'Image'),
-            self::YOUTUBE_VIDEO => new LookupTableBasicValue(self::YOUTUBE_VIDEO, 'YouTube Video'),
+            self::TextParagraph->value => new LookupTableBasicValue(self::TextParagraph->value, self::TextParagraph->name),
+            self::TextTitle->value => new LookupTableBasicValue(self::TextTitle->value, self::TextTitle->name),
+            self::TextSubtitle->value => new LookupTableBasicValue(self::TextSubtitle->value, self::TextSubtitle->name),
+            self::Image->value => new LookupTableBasicValue(self::Image->value, self::Image->name),
+            self::YoutubeVideo->value => new LookupTableBasicValue(self::YoutubeVideo->value, self::YoutubeVideo->name),
         ];
     }
 
