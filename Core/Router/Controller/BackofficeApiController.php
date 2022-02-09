@@ -378,7 +378,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             ? DateUtil::convertDateFromISOToMySQLFormat($publishOn)
             : ($existingArticle->getPublishOn() ?? $now);
 
-        $res = $this->articleService->updateArticle(
+        $res = $this->articleService->workflowUpdateArticle(
             new Article(
                 id: $articleId,
                 user: $request->getSession()->getUser(),

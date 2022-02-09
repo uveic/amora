@@ -602,7 +602,10 @@ document.querySelectorAll('.' + classes.sectionControlsButtonDown).forEach(el =>
   el.addEventListener('click', e => moveSectionDown(e, el.parentNode.parentNode.dataset.sectionId));
 });
 
-document.querySelectorAll('.' + classes.sectionParagraph).forEach(s => loadEditor(s.id));
+document.querySelectorAll('.' + classes.sectionParagraph).forEach(s => {
+  loadEditor(s.id);
+  s.querySelector('.' + classes.contentParagraph).focus();
+});
 
 document.body.addEventListener('click', hideActionBar);
 

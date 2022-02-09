@@ -324,7 +324,7 @@ class ArticleDataLayer
             return null;
         }
 
-        $articleSection->setId($resInsert);
+        $articleSection->id = $resInsert;
 
         return $articleSection;
     }
@@ -335,13 +335,13 @@ class ArticleDataLayer
         unset($array['created_at']);
         $resUpdate = $this->db->update(
             self::ARTICLE_SECTION_TABLE,
-            $articleSection->getId(),
+            $articleSection->id,
             $array
         );
 
         if (empty($resUpdate)) {
             $this->logger->logError(
-                'Error updating article section. Article Section ID: ' . $articleSection->getId()
+                'Error updating article section. Article Section ID: ' . $articleSection->id
             );
             return false;
         }

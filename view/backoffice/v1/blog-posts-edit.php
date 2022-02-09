@@ -10,11 +10,24 @@ use Amora\Core\Util\StringUtil;
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
 $articleSections = $responseData->getArticleSections();
-$images = [];
+$articleTypeId = ArticleType::BLOG;
+
+if (!$articleSections) {
+    $now = new DateTimeImmutable();
+    $articleSections[] = new ArticleSection(
+        id: 0,
+        articleId: 0,
+        articleSectionType: ArticleSectionType::TextParagraph,
+        contentHtml: '',
+        order: null,
+        imageId: null,
+        imageCaption: null,
+        createdAt: $now,
+        updatedAt: $now,
+    );
+}
 
 $this->layout('base', ['responseData' => $responseData]);
-
-$articleTypeId = ArticleType::BLOG;
 
 ?>
 <?=$this->insert('partials/articles-edit/settings', ['responseData' => $responseData])?>
@@ -34,11 +47,11 @@ $articleTypeId = ArticleType::BLOG;
     /** @var ArticleSection $articleSection */
     foreach ($articleSections as $articleSection) {
 ?>
-        <div id="pexego-section-wrapper-<?=$articleSection->getId()?>" class="pexego-section-wrapper" data-section-id="<?=$articleSection->getId()?>">
+        <div id="pexego-section-wrapper-<?=$articleSection->id?>" class="pexego-section-wrapper" data-section-id="<?=$articleSection->id?>">
           <?=ArticleEditHtmlGenerator::generateSection($responseData, $articleSection)?>
           <?=ArticleEditHtmlGenerator::getControlButtonsHtml(
               $responseData,
-              $articleSection->getId(),
+              $articleSection->id,
               $count === 0,
               $count === $total - 1
           );?>
@@ -52,11 +65,11 @@ $articleTypeId = ArticleType::BLOG;
         <div id="pexego-section-paragraph-<?=StringUtil::getRandomString(5)?>"></div>
 <?php
     foreach ($articleSections as $articleSection) {
-        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
-            $editorId = ArticleEditHtmlGenerator::getClassName($articleSection->getArticleSectionTypeId()) . '-' . $articleSection->getId();
+        if ($articleSection->articleSectionType === ArticleSectionType::TextParagraph) {
+            $editorId = ArticleEditHtmlGenerator::getClassName($articleSection->articleSectionType) . '-' . $articleSection->id;
 ?>
         <div id="<?=$editorId?>-html">
-          <?=$articleSection->getContentHtml() . PHP_EOL?>
+          <?=$articleSection->contentHtml . PHP_EOL?>
         </div>
 <?php } } ?>
       </div>
@@ -65,10 +78,3 @@ $articleTypeId = ArticleType::BLOG;
 <?=$this->insert('partials/articles-edit/control-bar', ['responseData' => $responseData])?>
   </form>
 </section>
-<?php if (!$article && !$articleSections) { ?>
-<script type="module">
-  import {addSectionParagraph} from "../../../js/module/pexego.js";
-
-  addSectionParagraph();
-</script>
-<?php } ?>

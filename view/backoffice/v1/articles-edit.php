@@ -31,11 +31,13 @@ $articleTypeId = ArticleEditHtmlGenerator::getArticleTypeId($responseData);
     /** @var ArticleSection $articleSection */
     foreach ($articleSections as $articleSection) {
 ?>
-        <div id="pexego-section-wrapper-<?=$articleSection->getId()?>" class="pexego-section-wrapper" data-section-id="<?=$articleSection->getId()?>">
+        <div id="pexego-section-wrapper-<?=$articleSection->id?>" class="pexego-section-wrapper" data-section-id="<?=$articleSection->id?>">
           <?=ArticleEditHtmlGenerator::generateSection($responseData, $articleSection)?>
           <?=ArticleEditHtmlGenerator::getControlButtonsHtml(
-              $responseData,
-              $articleSection->getId(), $count === 0, $count === $total - 1
+              responseData: $responseData,
+              sectionId: $articleSection->id,
+              isFirst: $count === 0,
+              isLast: $count === $total - 1,
           )?>
         </div>
 <?php
@@ -46,11 +48,11 @@ $articleTypeId = ArticleEditHtmlGenerator::getArticleTypeId($responseData);
       <div class="pexego-container-output null">
 <?php
     foreach ($articleSections as $articleSection) {
-        if ($articleSection->getArticleSectionTypeId() === ArticleSectionType::TEXT_PARAGRAPH) {
-            $editorId = ArticleEditHtmlGenerator::getClassName($articleSection->getArticleSectionTypeId()) . '-' . $articleSection->getId();
+        if ($articleSection->articleSectionType === ArticleSectionType::TextParagraph) {
+            $editorId = ArticleEditHtmlGenerator::getClassName($articleSection->articleSectionType) . '-' . $articleSection->id;
 ?>
         <div id="<?=$editorId?>-html">
-          <?=$articleSection->getContentHtml() . PHP_EOL?>
+          <?=$articleSection->contentHtml . PHP_EOL?>
         </div>
 <?php } } ?>
       </div>
