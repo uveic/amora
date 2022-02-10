@@ -11,7 +11,9 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 $article = $responseData->getFirstArticle();
 
-$updatedAtContent = '<span class="article-updated-at"></span>';
+$updatedAtContent = $responseData->getLocalValue('globalUpdated')
+    . ' '
+    . '<span class="article-updated-at"></span>';
 
 if ($article) {
     $updatedAtDate = DateUtil::formatDate(
@@ -63,7 +65,7 @@ $articleUrl = $article
           <a href="#" class="pexego-rearrange-sections-button">
             <img class="img-svg img-svg-30" src="/img/svg/arrows-down-up.svg" title="<?=$responseData->getLocalValue('editorEnableControls')?>" alt="<?=$responseData->getLocalValue('editorEnableControls')?>">
           </a>
-          <a href="<?=$articleUrl?>" class="pexego-preview<?=$article ? '' : ' null'?>">
+          <a href="<?=$articleUrl?>" class="pexego-preview<?=$article ? '' : ' null'?>" target="_blank">
             <img class="img-svg img-svg-30" src="/img/svg/arrow-square-out.svg" alt="<?=$responseData->getLocalValue('globalPreview')?>" title="<?=$responseData->getLocalValue('globalPreview')?>">
           </a>
         </div>

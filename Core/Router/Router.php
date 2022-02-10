@@ -201,14 +201,16 @@ class Router
                 pageDescription: $article->getContentExcerpt(),
                 mainImageSiteUri: $siteImageUrl,
                 articles: [$article],
-                previousBlogPost: $articleService->getPreviousBlogPost(
-                    publishedBefore: new DateTimeImmutable($article->getPublishOn()),
-                    isAdmin: $isAdmin,
-                ),
-                nextBlogPost: $articleService->getNextBlogPost(
-                    publishedAfter: new DateTimeImmutable($article->getPublishOn()),
-                    isAdmin: $isAdmin,
-                ),
+                previousBlogPost: $article->getPublishOn()
+                    ? $articleService->getPreviousBlogPost(
+                        publishedBefore: new DateTimeImmutable($article->getPublishOn()),
+                        isAdmin: $isAdmin,
+                    ) : null,
+                nextBlogPost: $article->getPublishOn()
+                    ? $articleService->getNextBlogPost(
+                        publishedAfter: new DateTimeImmutable($article->getPublishOn()),
+                        isAdmin: $isAdmin,
+                    ) : null,
             ),
         );
     }

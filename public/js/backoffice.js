@@ -27,15 +27,11 @@ document.querySelectorAll('.article-save-button').forEach(el => {
 
     const afterApiCall = function(articleId, articlePublicUri, articleBackofficeUri) {
       history.pushState("", document.title, articleBackofficeUri);
+      document.querySelector('input[name="articleId"]').value = articleId;
 
       document.querySelectorAll('.control-bar-creation').forEach(a => a.classList.remove('hidden'));
       document.querySelectorAll('span.article-updated-at').forEach(s => {
         s.textContent = getUpdatedAtTime();
-      });
-      document.querySelectorAll('span.article-created-at').forEach(s => {
-        if (!s.textContent.trim().length) {
-          s.textContent = getUpdatedAtTime();
-        }
       });
 
       document.querySelectorAll('#side-options').forEach(i => i.classList.add('null'));
@@ -94,6 +90,15 @@ document.querySelectorAll('.article-save-button').forEach(el => {
 
           if (c.classList.contains(pexegoClasses.contentImageCaption)) {
             c.classList.add('article-section-image-caption');
+            if (c.textContent.trim() === c.dataset.placeholder) {
+              c.textContent = '';
+            }
+          }
+
+          if (c.classList.contains(pexegoClasses.contentParagraph)
+            && c.textContent.trim() === c.dataset.placeholder
+          ) {
+            c.textContent = '';
           }
 
           c.classList.remove(
@@ -207,13 +212,13 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     const url = '/back/article';
     if (articleIdEl && articleIdEl.value) {
       xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, global.get('globalUpdated'))
-        .then((response) => afterApiCall(response.articleId, response.articlePublicUri, response.articleBackofficeUri))
+        .then((res) => afterApiCall(res.articleId, res.articlePublicUri, res.articleBackofficeUri))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
     } else {
       xhr.post(url, payload, feedbackDiv, global.get('globalSaved'))
-        .then((response) => afterApiCall(response.articleId, response.articlePublicUri, response.articleBackofficeUri))
+        .then((res) => afterApiCall(res.articleId, res.articlePublicUri, res.articleBackofficeUri))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
