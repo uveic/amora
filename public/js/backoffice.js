@@ -25,31 +25,9 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       }
     };
 
-    const afterApiCall = function(articleId, articleUri) {
-      if (articleId) {
-        const articleIdEl = document.querySelector('input[name="articleId"]');
-        articleIdEl.value = articleId;
-        const lang = document.documentElement.lang
-          ? document.documentElement.lang.toLowerCase().trim()
-          : 'en';
-        history.pushState(
-          "",
-          document.title,
-          '/' + lang + '/backoffice/articles/' + articleId
-        );
-      }
-      const previewExists = document.querySelector('.article-preview');
-      if (!previewExists) {
-        const previewLink = document.createElement('a');
-        previewLink.href = '/' + articleUri;
-        previewLink.target = '_blank';
-        previewLink.className = 'article-preview m-l-1';
-        previewLink.textContent = global.get('globalPreview');
-        document.querySelectorAll('.control-bar-buttons').forEach(b => {
-          const newButton = previewLink.cloneNode(true);
-          b.appendChild(newButton);
-        });
-      }
+    const afterApiCall = function(articleId, articlePublicUri, articleBackofficeUri) {
+      history.pushState("", document.title, articleBackofficeUri);
+
       document.querySelectorAll('.control-bar-creation').forEach(a => a.classList.remove('hidden'));
       document.querySelectorAll('span.article-updated-at').forEach(s => {
         s.textContent = getUpdatedAtTime();
@@ -64,9 +42,12 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       document.querySelectorAll('.article-save-button').forEach(b => {
         b.value = global.get('globalUpdate');
       });
-      document.querySelectorAll('.article-preview').forEach(b => b.href = articleUri);
+      document.querySelectorAll('.pexego-preview').forEach(b => {
+        b.href = articlePublicUri;
+        b.classList.remove('null');
+      });
       document.querySelectorAll('input[name="articleUri"]').forEach(i => {
-        i.value = articleUri.trim().replace(/^\//,"");
+        i.value = articlePublicUri.trim().replace(/^\//,"");
       });
     };
 
@@ -193,9 +174,10 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       return Number.parseInt(status.dataset.articleStatusId);
     };
 
+    const articleTitle = getTitleContent();
     const content = getContentHtmlAndSections();
 
-    if (!content.contentHtml.length) {
+    if (!articleTitle && !content.contentHtml) {
       feedbackDiv.textContent = global.get('feedbackSaving');
       feedbackDiv.classList.remove('feedback-error');
       feedbackDiv.classList.add('feedback-success');
@@ -209,7 +191,8 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
 
     const payload = JSON.stringify({
-      title: getTitleContent(),
+      languageIsoCode: document.documentElement.lang ?? null,
+      title: articleTitle,
       uri: articleUri,
       contentHtml: content.contentHtml,
       typeId: getArticleTypeId(),
@@ -224,13 +207,13 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     const url = '/back/article';
     if (articleIdEl && articleIdEl.value) {
       xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, global.get('globalUpdated'))
-        .then((response) => afterApiCall(response.articleId, response.uri))
+        .then((response) => afterApiCall(response.articleId, response.articlePublicUri, response.articleBackofficeUri))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
     } else {
       xhr.post(url, payload, feedbackDiv, global.get('globalSaved'))
-        .then((response) => afterApiCall(response.articleId, response.uri))
+        .then((response) => afterApiCall(response.articleId, response.articlePublicUri, response.articleBackofficeUri))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
@@ -574,17 +557,26 @@ document.querySelectorAll('.tag-result-selected-delete').forEach(i => {
   i.addEventListener('click', (e) => handleRemoveArticleTag(e));
 });
 
-document.querySelectorAll('.article-disable-controls').forEach(a => {
+document.querySelectorAll('.pexego-rearrange-sections-button').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
 
+    document.querySelector('.pexego-actions-amora').classList.add('null');
+    document.querySelector('.pexego-rearrange-sections-close').classList.remove('null');
     document.querySelectorAll('.pexego-section-controls').forEach(d => {
-      d.classList.toggle('null');
+      d.classList.remove('null');
     });
+  });
+});
 
-    const controlsEnabled = document.querySelector('.pexego-section-controls').classList.contains('null');
-    a.textContent = controlsEnabled
-      ? global.get('editorEnableControls')
-      : global.get('editorDisableControls');
+document.querySelectorAll('.pexego-rearrange-sections-close').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    document.querySelector('.pexego-actions-amora').classList.remove('null');
+    document.querySelector('.pexego-rearrange-sections-close').classList.add('null');
+    document.querySelectorAll('.pexego-section-controls').forEach(d => {
+      d.classList.add('null');
+    });
   });
 });

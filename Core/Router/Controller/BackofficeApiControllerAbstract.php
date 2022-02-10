@@ -122,6 +122,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Endpoint: /back/article
      * Method: POST
      *
+     * @param string|null $languageIsoCode
      * @param int $statusId
      * @param int|null $typeId
      * @param string|null $title
@@ -135,6 +136,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function storeArticle(
+        ?string $languageIsoCode,
         int $statusId,
         ?int $typeId,
         ?string $title,
@@ -152,6 +154,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Method: PUT
      *
      * @param int $articleId
+     * @param string|null $languageIsoCode
      * @param int $statusId
      * @param int|null $typeId
      * @param string|null $title
@@ -166,6 +169,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      */
     abstract protected function updateArticle(
         int $articleId,
+        ?string $languageIsoCode,
         int $statusId,
         ?int $typeId,
         ?string $title,
@@ -456,6 +460,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
+        $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
         $statusId = null;
         if (!isset($bodyParams['statusId'])) {
             $errors[] = [
@@ -505,6 +510,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         try {
             return $this->storeArticle(
+                $languageIsoCode,
                 $statusId,
                 $typeId,
                 $title,
@@ -560,6 +566,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
+        $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
         $statusId = null;
         if (!isset($bodyParams['statusId'])) {
             $errors[] = [
@@ -610,6 +617,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         try {
             return $this->updateArticle(
                 $articleId,
+                $languageIsoCode,
                 $statusId,
                 $typeId,
                 $title,

@@ -74,7 +74,6 @@ $this->layout('base', ['responseData' => $responseData]);
 <?php } } ?>
       </div>
     </div>
-<?=$this->insert('partials/articles-edit/add-sections', ['responseData' => $responseData])?>
 <?=$this->insert('partials/articles-edit/control-bar', ['responseData' => $responseData])?>
   </form>
 </section>

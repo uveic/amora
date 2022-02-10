@@ -8,7 +8,8 @@ class BackofficeApiControllerStoreArticleSuccessResponse extends Response
     public function __construct(
         bool $success,
         ?int $articleId = null,
-        ?string $uri = null
+        ?string $articleBackofficeUri = null,
+        ?string $articlePublicUri = null
     ) {
         // Required parameters
         $responseData = [
@@ -19,9 +20,13 @@ class BackofficeApiControllerStoreArticleSuccessResponse extends Response
             ? null
             : $articleId;
 
-        $responseData['uri'] = is_null($uri)
+        $responseData['articleBackofficeUri'] = is_null($articleBackofficeUri)
             ? null
-            : $uri;
+            : $articleBackofficeUri;
+
+        $responseData['articlePublicUri'] = is_null($articlePublicUri)
+            ? null
+            : $articlePublicUri;
 
         list($output, $contentType) = self::getResponseType($responseData);
         parent::__construct($output, $contentType, Response::HTTP_200_OK);

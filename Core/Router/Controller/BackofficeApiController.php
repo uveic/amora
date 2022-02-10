@@ -274,6 +274,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Endpoint: /back/article
      * Method: POST
      *
+     * @param string|null $languageIsoCode
      * @param int $statusId
      * @param int|null $typeId
      * @param string|null $title
@@ -287,6 +288,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @return Response
      */
     public function storeArticle(
+        ?string $languageIsoCode,
         int $statusId,
         ?int $typeId,
         ?string $title,
@@ -327,10 +329,16 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $request->getUserAgent()
         );
 
+        $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
+        $backofficeUri = $typeId === ArticleType::BLOG
+            ? UrlBuilderUtil::buildBackofficeBlogPostUrl($languageIsoCode, $res->getId())
+            : UrlBuilderUtil::buildBackofficeArticleUrl($languageIsoCode, $res->getId());
+
         return new BackofficeApiControllerStoreArticleSuccessResponse(
-            $res ? true : false,
-            $res?->getId(),
-            $res ? '/' . $res->getUri() : null
+            success: (bool)$res,
+            articleId: $res?->getId(),
+            articleBackofficeUri: $backofficeUri,
+            articlePublicUri: $res ? '/' . $res->getUri() : null,
         );
     }
 
@@ -339,6 +347,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Method: PUT
      *
      * @param int $articleId
+     * @param string|null $languageIsoCode
      * @param int $statusId
      * @param int|null $typeId
      * @param string|null $title
@@ -353,6 +362,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     public function updateArticle(
         int $articleId,
+        ?string $languageIsoCode,
         int $statusId,
         ?int $typeId,
         ?string $title,
@@ -378,12 +388,13 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             ? DateUtil::convertDateFromISOToMySQLFormat($publishOn)
             : ($existingArticle->getPublishOn() ?? $now);
 
+        $typeId = $typeId ?? $existingArticle->getTypeId();
         $res = $this->articleService->workflowUpdateArticle(
             new Article(
                 id: $articleId,
                 user: $request->getSession()->getUser(),
                 statusId: $statusId ?? $existingArticle->getStatusId(),
-                typeId: $typeId ?? $existingArticle->getTypeId(),
+                typeId: $typeId,
                 createdAt: $existingArticle->getCreatedAt(),
                 updatedAt: $now,
                 publishOn: $publishOnMySql,
@@ -399,10 +410,16 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $request->getUserAgent()
         );
 
+        $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
+        $backofficeUri = $typeId === ArticleType::BLOG
+            ? UrlBuilderUtil::buildBackofficeBlogPostUrl($languageIsoCode, $articleId)
+            : UrlBuilderUtil::buildBackofficeArticleUrl($languageIsoCode, $articleId);
+
         return new BackofficeApiControllerUpdateArticleSuccessResponse(
-            $res,
-            $res ? $articleId : null,
-            $res ? '/' . $uri : null
+            success: $res,
+            articleId: $res ? $articleId : null,
+            articleBackofficeUri: $backofficeUri,
+            articlePublicUri: $res ? '/' . $uri : null,
         );
     }
 
