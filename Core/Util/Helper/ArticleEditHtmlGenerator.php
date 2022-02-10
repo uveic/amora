@@ -48,8 +48,12 @@ final class ArticleEditHtmlGenerator
         if ($articleSection->articleSectionType === ArticleSectionType::TextParagraph) {
             $class = self::getClassName($articleSection->articleSectionType);
             $id = $class . '-' . $articleSection->id;
+            $contentHtml = strlen($articleSection->contentHtml) > 0
+                ? $articleSection->contentHtml
+                : $responseData->getLocalValue('paragraphPlaceholder');
+            $placeholderClass = strlen($articleSection->contentHtml) > 0 ? '' : ' pexego-section-paragraph-placeholder';
             return '<section id="' . $id . '" data-editor-id="' . $articleSection->id . '" class="pexego-section pexego-section-paragraph">' . PHP_EOL
-                . '<div class="pexego-content-paragraph placeholder" data-placeholder="' . $responseData->getLocalValue('paragraphPlaceholder') . '" contenteditable="true">' . $articleSection->contentHtml . '</div>' . PHP_EOL
+                . '<div class="pexego-content-paragraph' . $placeholderClass . '" data-placeholder="' . $responseData->getLocalValue('paragraphPlaceholder') . '" spellcheck="true" autocapitalize="sentences" translate="no" role="textbox" aria-multiline="true" contenteditable="true"><p>' . $contentHtml . '</p></div>' . PHP_EOL
                 . '</section>';
         }
 

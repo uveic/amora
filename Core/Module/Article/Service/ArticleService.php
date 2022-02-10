@@ -15,7 +15,6 @@ use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
-use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use DateTimeImmutable;
 
@@ -40,7 +39,11 @@ class ArticleService
 
     public function getArticleForUri(string $uri): ?Article
     {
-        $res = $this->filterArticlesBy(uri: $uri);
+        $res = $this->filterArticlesBy(
+            uri: $uri,
+            includePublishedAtInTheFuture: true,
+        );
+
         return empty($res[0]) ? null : $res[0];
     }
 
