@@ -37,7 +37,7 @@ class ArticleSection
         return new self(
             $id,
             $articleSection['article_id'],
-            $articleSection['article_section_type_id'],
+            ArticleSectionType::from($articleSection['article_section_type_id']),
             $articleSection['content_html'],
             $articleSection['order'],
             $articleSection['image_id'],

@@ -11,8 +11,6 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
 
-    const articleIdEl = document.querySelector('input[name="articleId"]');
-
     const getSectionTypeIdFromClassList = (classList) => {
       if (classList.contains(pexegoClasses.sectionParagraph)) {
         return 1;
@@ -25,26 +23,19 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       if (classList.contains(pexegoClasses.sectionVideo)) {
         return 3;
       }
-
-      if (classList.contains(pexegoClasses.sectionTitle)) {
-        return 4;
-      }
-
-      if (classList.contains(pexegoClasses.sectionSubtitle)) {
-        return 5;
-      }
     };
 
-    const afterApiCall = function(response, articleUri) {
-      if (response.articleId) {
-        articleIdEl.value = response.articleId;
+    const afterApiCall = function(articleId, articleUri) {
+      if (articleId) {
+        const articleIdEl = document.querySelector('input[name="articleId"]');
+        articleIdEl.value = articleId;
         const lang = document.documentElement.lang
           ? document.documentElement.lang.toLowerCase().trim()
           : 'en';
         history.pushState(
           "",
           document.title,
-          '/' + lang + '/backoffice/articles/' + response.articleId
+          '/' + lang + '/backoffice/articles/' + articleId
         );
       }
       const previewExists = document.querySelector('.article-preview');
@@ -73,130 +64,138 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       document.querySelectorAll('.article-save-button').forEach(b => {
         b.value = global.get('globalUpdate');
       });
-      document.querySelectorAll('.article-preview').forEach(b => b.href = response.uri);
+      document.querySelectorAll('.article-preview').forEach(b => b.href = articleUri);
       document.querySelectorAll('input[name="articleUri"]').forEach(i => {
-        i.value = response.uri.trim().replace(/^\//,"");
+        i.value = articleUri.trim().replace(/^\//,"");
       });
     };
 
-    let titleContent = null;
-    const titleEl = document.querySelector('input[name="articleTitle"]');
-    if (titleEl) {
-      titleContent = titleEl.value;
-    }
-
-    if (!titleContent) {
-      const titlePexegoEl = document.querySelector('.' + pexegoClasses.contentTitle);
-      titleContent = titlePexegoEl ? titlePexegoEl.textContent : null;
-    }
-
-    const uriEl = document.querySelector('input[name="articleUri"]');
-    const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
-    const statusId = Number.parseInt(status.dataset.articleStatusId);
-    const articleTypeIdEl = document.querySelector('input[name="articleTypeId"]');
-    const articleTypeId = articleTypeIdEl && articleTypeIdEl.value
-      ? Number.parseInt(articleTypeIdEl.value)
-      : null;
-    const articleUri = uriEl && uriEl.value ? uriEl.value : null;
-    const publishOnDateEl = document.querySelector('input[name="publishOnDate"]');
-    const publishOnTimeEl = document.querySelector('input[name="publishOnTime"]');
-
-    const publishOn = publishOnDateEl.value && publishOnTimeEl.value
-      ? new Date(publishOnDateEl.value + 'T' + publishOnTimeEl.value + ':00').toISOString()
-      : null;
-
-    document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
-
-    let tags = [];
-    let sections = [];
-    let articleContentHtml = '';
-    let order = 1;
-    let mainImageId = null;
-    let count = 0;
-    document.querySelectorAll('.pexego-section').forEach(originalSection => {
-      let section = originalSection.cloneNode(true);
-      let editorId = section.dataset.sectionId ?? section.dataset.editorId;
-
-      let sectionElement = section.classList.contains(pexegoClasses.sectionParagraph)
-        ? document.querySelector('#' + pexegoClasses.sectionParagraph + '-' + editorId + '-html')
-        : section;
-
-      let sectionContentHtml = sectionElement.innerHTML.trim();
-
-      for (let i = 0; i < sectionElement.children.length; i++) {
-        let c = sectionElement.children[i];
-
-        // If it's the first title section convert it into a link to the article
-        if (c.classList.contains(pexegoClasses.contentTitle) && count === 0 && articleUri) {
-          let aEl = document.createElement('a');
-          aEl.href = '/' + articleUri;
-          aEl.target = '_blank';
-          aEl.className = 'link-title';
-          aEl.innerHTML = c.innerHTML.trim();
-          let h1El = sectionElement.querySelector('h1');
-          h1El.textContent = '';
-          h1El.appendChild(aEl);
-        }
-
-        if (c.classList.contains(pexegoClasses.contentImageCaption)) {
-          c.classList.add('article-section-image-caption');
-        }
-
-        c.classList.remove(
-          'placeholder',
-          pexegoClasses.contentTitle,
-          pexegoClasses.contentSubtitle,
-          pexegoClasses.contentParagraph,
-          pexegoClasses.contentImage,
-          pexegoClasses.contentImageCaption
-        );
-        if (!c.classList.length) {
-          c.removeAttribute('class');
-        }
-        c.removeAttribute('id');
-        c.removeAttribute('contenteditable');
-        delete c.dataset.placeholder;
-        delete c.dataset.imageId;
-
-        if (c.nodeName !== 'IMG' && !c.innerHTML.trim().length) {
-          sectionElement.removeChild(c);
-        }
+    const getTitleContent = () => {
+      const titleEl = document.querySelector('input[name="articleTitle"]');
+      if (titleEl && titleEl.value.trim().length) {
+        return titleEl.value.trim();
       }
 
-      let elementContent = sectionElement.innerHTML.trim();
-      if (elementContent.length) {
-        articleContentHtml += elementContent;
-      }
+      return null;
+    };
 
-      let currentSection = {
-        id: section.dataset.sectionId ? Number.parseInt(section.dataset.sectionId) : null,
-        sectionTypeId: getSectionTypeIdFromClassList(section.classList),
-        contentHtml: sectionContentHtml,
-        order: order++
-      };
-
-      if (section.classList.contains(pexegoClasses.sectionImage)) {
-        const imageCaption = originalSection.getElementsByClassName(pexegoClasses.contentImageCaption);
-        currentSection.imageCaption = imageCaption.length > 0 ? imageCaption[0].textContent : null;
-        const image = originalSection.getElementsByClassName(pexegoClasses.contentImage);
-        currentSection.imageId = image.length > 0 ? Number.parseInt(image[0].dataset.imageId) : null;
-        if (!mainImageId && currentSection.imageId) {
-          mainImageId = currentSection.imageId;
-        }
-      }
-
-      sections.push(currentSection);
-      count++;
-    });
-    document.querySelectorAll('#tags-selected > .result-selected')
-      .forEach(t => {
-        tags.push({
-          id: t.dataset.tagId ? Number.parseInt(t.dataset.tagId) : null,
-          name: t.dataset.tagName
+    const getTags = () => {
+      let tags = [];
+      document.querySelectorAll('#tags-selected > .result-selected')
+        .forEach(t => {
+          tags.push({
+            id: t.dataset.tagId ? Number.parseInt(t.dataset.tagId) : null,
+            name: t.dataset.tagName
+          });
         });
+
+      return tags;
+    };
+
+    const getContentHtmlAndSections = () => {
+      let articleContentHtml = '';
+      let sections = [];
+      let order = 1;
+      let mainImageId = null;
+
+      document.querySelectorAll('.pexego-section').forEach(originalSection => {
+        let section = originalSection.cloneNode(true);
+        let editorId = section.dataset.sectionId ?? section.dataset.editorId;
+
+        let sectionElement = section.classList.contains(pexegoClasses.sectionParagraph)
+          ? document.querySelector('#' + pexegoClasses.sectionParagraph + '-' + editorId + '-html')
+          : section;
+
+        let sectionContentHtml = sectionElement.innerHTML.trim();
+
+        for (let i = 0; i < sectionElement.children.length; i++) {
+          let c = sectionElement.children[i];
+
+          if (c.classList.contains(pexegoClasses.contentImageCaption)) {
+            c.classList.add('article-section-image-caption');
+          }
+
+          c.classList.remove(
+            pexegoClasses.contentParagraph,
+            pexegoClasses.contentImage,
+            pexegoClasses.contentImageCaption
+          );
+          if (!c.classList.length) {
+            c.removeAttribute('class');
+          }
+          c.removeAttribute('id');
+          c.removeAttribute('contenteditable');
+          delete c.dataset.placeholder;
+          delete c.dataset.imageId;
+
+          if (c.nodeName !== 'IMG' && !c.innerHTML.trim().length) {
+            sectionElement.removeChild(c);
+          }
+        }
+
+        let elementContent = sectionElement.innerHTML.trim();
+        if (elementContent.length) {
+          articleContentHtml += elementContent;
+        }
+
+        let currentSection = {
+          id: section.dataset.sectionId ? Number.parseInt(section.dataset.sectionId) : null,
+          sectionTypeId: getSectionTypeIdFromClassList(section.classList),
+          contentHtml: sectionContentHtml,
+          order: order++
+        };
+
+        if (section.classList.contains(pexegoClasses.sectionImage)) {
+          const imageCaption = originalSection.querySelector('.' + pexegoClasses.contentImageCaption);
+          currentSection.imageCaption = imageCaption && imageCaption.length && imageCaption.dataset.placeholder !== imageCaption.textContent.trim()
+            ? imageCaption.textContent.trim()
+            : null;
+          const image = originalSection.querySelector('.' + pexegoClasses.contentImage);
+          currentSection.imageId = image ? Number.parseInt(image.dataset.imageId) : null;
+          if (!mainImageId && currentSection.imageId) {
+            mainImageId = currentSection.imageId;
+          }
+        }
+
+        sections.push(currentSection);
       });
 
-    if (!articleContentHtml || !articleContentHtml.trim().length) {
+      return {
+        sections: sections,
+        contentHtml: articleContentHtml.trim().length ? articleContentHtml.trim() : null,
+        mainImageId: mainImageId,
+      };
+    };
+
+    const getPublishOnDateIsoString = () => {
+      const publishOnDateEl = document.querySelector('input[name="publishOnDate"]');
+      const publishOnTimeEl = document.querySelector('input[name="publishOnTime"]');
+
+      return publishOnDateEl.value && publishOnTimeEl.value
+        ? new Date(publishOnDateEl.value + 'T' + publishOnTimeEl.value + ':00').toISOString()
+        : null;
+    };
+
+    const getArticleTypeId = () => {
+      const articleTypeIdEl = document.querySelector('input[name="articleTypeId"]');
+      return articleTypeIdEl && articleTypeIdEl.value.length
+        ? Number.parseInt(articleTypeIdEl.value)
+        : null;
+    }
+
+    const getUri = () => {
+      const uriEl = document.querySelector('input[name="articleUri"]');
+      return uriEl && uriEl.value.trim().length ? uriEl.value.trim() : null;
+    }
+
+    const getStatusId = () => {
+      const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
+      return Number.parseInt(status.dataset.articleStatusId);
+    };
+
+    const content = getContentHtmlAndSections();
+
+    if (!content.contentHtml.length) {
       feedbackDiv.textContent = global.get('feedbackSaving');
       feedbackDiv.classList.remove('feedback-error');
       feedbackDiv.classList.add('feedback-success');
@@ -206,28 +205,32 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       return;
     }
 
+    const articleUri = getUri();
+    document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
+
     const payload = JSON.stringify({
-      'title': titleContent,
-      'uri': articleUri,
-      'contentHtml': articleContentHtml.trim().length ? articleContentHtml.trim() : null,
-      'typeId': articleTypeId,
-      'statusId': statusId,
-      'mainImageId': mainImageId,
-      'sections': sections,
-      'tags': tags,
-      'publishOn': publishOn,
+      title: getTitleContent(),
+      uri: articleUri,
+      contentHtml: content.contentHtml,
+      typeId: getArticleTypeId(),
+      statusId: getStatusId(),
+      mainImageId: content.mainImageId,
+      sections: content.sections,
+      tags: getTags(),
+      publishOn: getPublishOnDateIsoString(),
     });
 
+    const articleIdEl = document.querySelector('input[name="articleId"]');
     const url = '/back/article';
     if (articleIdEl && articleIdEl.value) {
       xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, global.get('globalUpdated'))
-        .then((response) => afterApiCall(response, uriEl.value))
+        .then((response) => afterApiCall(response.articleId, response.uri))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
     } else {
       xhr.post(url, payload, feedbackDiv, global.get('globalSaved'))
-        .then((response) => afterApiCall(response, uriEl.value))
+        .then((response) => afterApiCall(response.articleId, response.uri))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
