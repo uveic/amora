@@ -661,10 +661,6 @@ a.link-title:focus {
   overflow: hidden;
 }
 
-.article-disable-controls,
-.article-preview {
-  padding: 0.5rem;
-}
 /* Article styles ends here */
 
 /* Feedback style starts here */

@@ -6,6 +6,7 @@ use Amora\App\AppCore;
 use Amora\Core\Database\DbBackupApp;
 use Amora\Core\Module\Action\ActionLoggerCore;
 use Amora\Core\Router\Router;
+use Amora\Core\Value\Language;
 use Closure;
 use Exception;
 use Amora\Core\App\SyncLookupTablesApp;
@@ -105,6 +106,12 @@ class Core
     public static function getDefaultTimezone(): string
     {
         return self::$timezone;
+    }
+
+    public static function getDefaultLanguageIsoCode(): string
+    {
+        $defaultSiteLanguageIso = self::$config->get('defaultSiteLanguage');
+        return $defaultSiteLanguageIso ?? Language::getNameForId(Language::ENGLISH);
     }
 
     public static function getConfigValue(string $key)

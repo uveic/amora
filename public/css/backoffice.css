@@ -65,9 +65,37 @@
   margin: 0.5rem;
 }
 
-.control-bar-buttons {
+.pexego-tools-amora {
+  display: flex;
+  flex-flow: row nowrap;
   flex-grow: 1;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.pexego-actions-amora-wrapper {
+  display: flex;
   flex-shrink: 1;
+  flex-grow: 0;
+  gap: 1rem;
+  justify-content: space-between;
+  position: relative;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.pexego-actions-amora {
+  display: flex;
+  flex-shrink: 1;
+  flex-grow: 0;
+  gap: 1rem;
+  position: relative;
+  align-items: center;
+  margin: 0;
+  padding: 0.25rem 0;
 }
 
 .control-bar-creation {
@@ -209,10 +237,17 @@ input.is-light {
 .pexego-content-title {
   border: none;
   background-color: var(--main-bg-color);
-  font-size: 2rem;
-  line-height: 3rem;
-  margin: 0.67em 0;
   font-family: var(--font-h1-title);
+  margin: 0;
+  padding: 0 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 2rem;
+  color: var(--main-text-color);
+}
+
+input.pexego-content-title {
+  min-height: revert;
 }
 
 .status-published {

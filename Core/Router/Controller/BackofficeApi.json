@@ -476,6 +476,12 @@
             "required": true,
             "schema": {
               "properties": {
+                "languageIsoCode": {
+                  "description": "Language ISO code",
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 2
+                },
                 "statusId": {
                   "description": "Article status ID",
                   "type": "integer"
@@ -591,9 +597,13 @@
                   "type": "integer",
                   "description": "New article ID"
                 },
-                "uri": {
+                "articleBackofficeUri": {
                   "type": "string",
-                  "description": "Article URI"
+                  "description": "Article backoffice URI"
+                },
+                "articlePublicUri": {
+                  "type": "string",
+                  "description": "Article public URI"
                 }
               },
               "required": [
@@ -663,6 +673,12 @@
             "required": true,
             "schema": {
               "properties": {
+                "languageIsoCode": {
+                  "description": "Language ISO code",
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 2
+                },
                 "statusId": {
                   "description": "Article status ID",
                   "type": "integer"
@@ -778,9 +794,13 @@
                   "type": "integer",
                   "description": "New article ID"
                 },
-                "uri": {
+                "articleBackofficeUri": {
                   "type": "string",
-                  "description": "Article URI"
+                  "description": "Article backoffice URI"
+                },
+                "articlePublicUri": {
+                  "type": "string",
+                  "description": "Article public URI"
                 }
               },
               "required": [
