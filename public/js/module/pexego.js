@@ -121,17 +121,13 @@ const classes = {
   sectionControlsButtonDown: 'pexego-section-button-down',
   sectionControlsButtonDelete: 'pexego-section-button-delete',
   sectionWrapper: 'pexego-section-wrapper',
-  sectionTitle: 'pexego-section-title',
-  sectionSubtitle: 'pexego-section-subtitle',
   sectionParagraph: 'pexego-section-paragraph',
   sectionParagraphPlaceholder: 'pexego-section-paragraph-placeholder',
   sectionImage: 'pexego-section-image',
   sectionVideo: 'pexego-section-video',
-  contentTitle: 'pexego-content-title',
-  contentSubtitle: 'pexego-content-subtitle',
   contentParagraph: 'pexego-content-paragraph',
   contentImage: 'pexego-content-image',
-  contentImageCaption: 'pexego-content-image-caption'
+  contentImageCaption: 'pexego-content-image-caption',
 };
 
 const init = function(settings) {
@@ -395,7 +391,7 @@ const generateSectionWrapperFor = function(pexegoSectionElement, id) {
   sectionWrapper.dataset.sectionId = id;
 
   let trashImg = new Image();
-  trashImg.className = 'img-svg img-svg-35';
+  trashImg.className = 'img-svg img-svg-30';
   trashImg.title = global.get('editorSectionRemove');
   trashImg.alt = global.get('editorSectionRemove');
   trashImg.src = '/img/svg/trash.svg';
@@ -408,7 +404,7 @@ const generateSectionWrapperFor = function(pexegoSectionElement, id) {
   deleteButton.appendChild(trashImg);
 
   let arrowUpImg = new Image();
-  arrowUpImg.className = 'img-svg img-svg-35';
+  arrowUpImg.className = 'img-svg img-svg-30';
   arrowUpImg.title = global.get('editorSectionMoveUp');
   arrowUpImg.alt = global.get('editorSectionMoveUp');
   arrowUpImg.src = '/img/svg/arrow-fat-up.svg';
@@ -421,7 +417,7 @@ const generateSectionWrapperFor = function(pexegoSectionElement, id) {
   moveUpButton.appendChild(arrowUpImg);
 
   let arrowDownImg = new Image();
-  arrowDownImg.className = 'img-svg img-svg-35';
+  arrowDownImg.className = 'img-svg img-svg-30';
   arrowDownImg.title = global.get('editorSectionMoveDown');
   arrowDownImg.alt = global.get('editorSectionMoveDown');
   arrowDownImg.src = '/img/svg/arrow-fat-down.svg';
@@ -475,47 +471,65 @@ const displayUpAndDownArrowsWhenAppropriate = function() {
   });
 };
 
+const addNewParagraph = (focus = false) => {
+  const existingSections = document.querySelectorAll('.' + classes.section);
+  if (existingSections.length &&
+    existingSections[existingSections.length - 1].classList.contains(classes.sectionParagraph)
+  ) {
+    let id = existingSections[existingSections.length - 1].dataset.sectionId
+      ?? existingSections[existingSections.length - 1].dataset.editorId;
+    const divEditor =document.querySelector('#' + classes.sectionParagraph + '-' + id)
+      .querySelector('.' + classes.contentParagraph);
+    divEditor.scrollIntoView();
+    divEditor.focus();
+    return;
+  }
+
+  const pexegoContentHtml = document.querySelector('.' + classes.container + '-output');
+  const id = generateRandomString(5);
+  const sectionId = classes.sectionParagraph + '-' + id;
+
+  let pexegoSectionParagraphHtml = document.createElement('div');
+  pexegoSectionParagraphHtml.id = sectionId + '-html';
+
+  let pexegoSectionParagraph = document.createElement('section');
+  pexegoSectionParagraph.id = sectionId;
+  pexegoSectionParagraph.dataset.editorId = id;
+  pexegoSectionParagraph.className =  classes.section + ' ' + classes.sectionParagraph;
+
+  let divEditor = document.createElement('div');
+  divEditor.contentEditable = 'true';
+  divEditor.spellcheck = true;
+  divEditor.autocapitalize = 'sentences';
+  divEditor.translate = false;
+  divEditor.role = 'textbox';
+  divEditor.ariaMultiline = 'true';
+
+  divEditor.classList.add(classes.contentParagraph);
+  divEditor.classList.add(classes.sectionParagraphPlaceholder);
+  divEditor.dataset.placeholder = global.get('editorParagraphPlaceholder');
+  let firstParagraph = document.createElement('p');
+  firstParagraph.textContent = global.get('editorParagraphPlaceholder');
+  divEditor.appendChild(firstParagraph);
+
+  pexegoSectionParagraph.appendChild(divEditor);
+
+  generateSectionWrapperFor(pexegoSectionParagraph, id);
+  pexegoContentHtml.appendChild(pexegoSectionParagraphHtml);
+
+  loadEditor(sectionId);
+
+  if (focus) {
+    divEditor.scrollIntoView();
+    divEditor.focus();
+  }
+};
+
 document.querySelectorAll('.pexego-add-section-paragraph').forEach(bu => {
   bu.addEventListener('click', (e) => {
     e.preventDefault();
 
-    const existingSections = document.querySelectorAll('.' + classes.section);
-    if (existingSections.length &&
-      existingSections[existingSections.length - 1].classList.contains(classes.sectionParagraph)
-    ) {
-      let id = existingSections[existingSections.length - 1].dataset.sectionId
-        ?? existingSections[existingSections.length - 1].dataset.editorId;
-      document.querySelector('#' + classes.sectionParagraph + '-' + id)
-        .querySelector('.' + classes.contentParagraph)
-        .focus();
-      return;
-    }
-
-    const pexegoContentHtml = document.querySelector('.' + classes.container + '-output');
-    const id = generateRandomString(5);
-    const sectionId = classes.sectionParagraph + '-' + id;
-
-    let pexegoSectionParagraphHtml = document.createElement('div');
-    pexegoSectionParagraphHtml.id = sectionId + '-html';
-
-    let pexegoSectionParagraph = document.createElement('section');
-    pexegoSectionParagraph.id = sectionId;
-    pexegoSectionParagraph.dataset.editorId = id;
-    pexegoSectionParagraph.className =  classes.section + ' ' + classes.sectionParagraph;
-
-    let divEditor = document.createElement('div');
-    divEditor.className = classes.contentParagraph;
-    divEditor.contentEditable = 'true';
-    divEditor.dataset.placeholder = global.get('editorParagraphPlaceholder');
-    divEditor.appendChild(document.createElement('p'));
-
-    pexegoSectionParagraph.appendChild(divEditor);
-
-    generateSectionWrapperFor(pexegoSectionParagraph, id);
-    pexegoContentHtml.appendChild(pexegoSectionParagraphHtml);
-
-    loadEditor(sectionId);
-    divEditor.focus();
+    addNewParagraph(true);
   });
 });
 
@@ -546,6 +560,7 @@ document.querySelectorAll('.pexego-add-section-video').forEach(bu => {
       pexegoSectionVideo.appendChild(iframeWrapper);
 
       generateSectionWrapperFor(pexegoSectionVideo, generateRandomString(5));
+      addNewParagraph();
     }
   });
 });
@@ -587,6 +602,8 @@ document.querySelectorAll('input[name="pexego-add-image-input"]').forEach(pi => 
         }
       );
     }
+
+    addNewParagraph();
   });
 });
 
@@ -602,10 +619,7 @@ document.querySelectorAll('.' + classes.sectionControlsButtonDown).forEach(el =>
   el.addEventListener('click', e => moveSectionDown(e, el.parentNode.parentNode.dataset.sectionId));
 });
 
-document.querySelectorAll('.' + classes.sectionParagraph).forEach(s => {
-  loadEditor(s.id);
-  s.querySelector('.' + classes.contentParagraph).focus();
-});
+document.querySelectorAll('.' + classes.sectionParagraph).forEach(s => loadEditor(s.id));
 
 document.body.addEventListener('click', hideActionBar);
 

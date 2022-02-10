@@ -134,6 +134,7 @@ class RouterCore extends Core
                 $tagService,
             ) {
                 require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeApiControllerAbstract.php';
