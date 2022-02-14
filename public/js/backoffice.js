@@ -566,11 +566,9 @@ document.querySelectorAll('.pexego-rearrange-sections-button').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
 
-    document.querySelector('.pexego-actions-amora').classList.add('null');
-    document.querySelector('.pexego-rearrange-sections-close').classList.remove('null');
-    document.querySelectorAll('.pexego-section-controls').forEach(d => {
-      d.classList.remove('null');
-    });
+    document.querySelectorAll('.pexego-actions-amora').forEach(i => i.classList.add('null'));
+    document.querySelectorAll('.pexego-rearrange-sections-close').forEach(i => i.classList.remove('null'));
+    document.querySelectorAll('.pexego-section-controls').forEach(d => d.classList.remove('null'));
   });
 });
 
@@ -578,10 +576,8 @@ document.querySelectorAll('.pexego-rearrange-sections-close').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
 
-    document.querySelector('.pexego-actions-amora').classList.remove('null');
-    document.querySelector('.pexego-rearrange-sections-close').classList.add('null');
-    document.querySelectorAll('.pexego-section-controls').forEach(d => {
-      d.classList.add('null');
-    });
+    document.querySelectorAll('.pexego-actions-amora').forEach(i => i.classList.remove('null'));
+    document.querySelectorAll('.pexego-rearrange-sections-close').forEach(i => i.classList.add('null'));
+    document.querySelectorAll('.pexego-section-controls').forEach(d => d.classList.add('null'));
   });
 });

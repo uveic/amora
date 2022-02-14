@@ -621,6 +621,11 @@ document.querySelectorAll('.' + classes.sectionControlsButtonDown).forEach(el =>
 
 document.querySelectorAll('.' + classes.sectionParagraph).forEach(s => loadEditor(s.id));
 
+document.querySelectorAll('.' + classes.contentImageCaption).forEach(s => {
+  s.addEventListener('focus', displayPlaceholderFocus);
+  s.addEventListener('blur', displayPlaceholderBlur);
+});
+
 document.body.addEventListener('click', hideActionBar);
 
 export {classes};
