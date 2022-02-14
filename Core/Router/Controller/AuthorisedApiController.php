@@ -71,7 +71,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             foreach ($imgSaved as $img) {
                 $output[] = [
                     'id' => $img->getId(),
-                    'url' => $img->getFullUrlMedium(),
+                    'url' => $img->getFullUrlLarge(),
                     'caption' => $img->getCaption()
                 ];
             }

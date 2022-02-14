@@ -14,10 +14,10 @@ class ImageResizeService
     const IMAGE_SIZE_MEDIUM = 2;
     const IMAGE_SIZE_LARGE = 3;
 
-    const IMAGE_SIZE_MEDIUM_MAX_HEIGHT = 800;
+    const IMAGE_SIZE_MEDIUM_MAX_HEIGHT = 1200;
     const IMAGE_SIZE_MEDIUM_MAX_WIDTH = 1200;
-    const IMAGE_SIZE_LARGE_MAX_HEIGHT = 1800;
-    const IMAGE_SIZE_LARGE_MAX_WIDTH = 2400;
+    const IMAGE_SIZE_LARGE_MAX_HEIGHT = 1600;
+    const IMAGE_SIZE_LARGE_MAX_WIDTH = 1600;
 
     private Logger $logger;
     private string $mediaBaseDir;
