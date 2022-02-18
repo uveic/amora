@@ -759,7 +759,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
 
     private function validateAndCallGetBlogPosts(Request $request): Response
     {
-        $queryParams = $request->getGetParams();
+        $queryParams = $request->getParams;
         $errors = [];
 
         $offset = null;
@@ -820,7 +820,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
 
         $path = $request->getPath();
         $pathParts = explode('/', $path);
-        $method = $request->getMethod();
+        $method = $request->method;
 
         if ($method === 'GET' &&
             $this->pathParamsMatcher(

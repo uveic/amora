@@ -14,7 +14,7 @@ $timezones = DateTimeZone::listIdentifiers();
       <h1><?=$responseData->getLocalValue('formYourAccount')?></h1>
       <div class="content-main">
         <form action="#" method="post" id="form-user-account-update">
-          <input type="hidden" name="userId" id="userId" value="<?=$user->getId()?>">
+          <input type="hidden" name="userId" id="userId" value="<?=$user->id?>">
           <div class="field">
             <label for="name" class="label"><?=$responseData->getLocalValue('formPlaceholderUserName')?>:</label>
             <div class="control">
@@ -28,17 +28,17 @@ $timezones = DateTimeZone::listIdentifiers();
               <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" value="<?=$this->e($responseData->getSession()->getUser()->getEmail())?>">
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
-<?php if ($user->getChangeEmailTo()) { ?>
-            <p class="warning m-t-3 m-b-3"><?=sprintf($responseData->getLocalValue('formEmailUpdateWarning'), '<i>' . $user->getChangeEmailTo() . '</i>')?></p>
+<?php if ($user->changeEmailAddressTo) { ?>
+            <p class="warning m-t-3 m-b-3"><?=sprintf($responseData->getLocalValue('formEmailUpdateWarning'), '<i>' . $user->changeEmailAddressTo . '</i>')?></p>
 <?php } ?>
           </div>
           <div class="field">
             <label for="languageId" class="label"><?=$responseData->getLocalValue('globalLanguage')?>:</label>
             <div class="control">
               <select name="languageId" id="languageId">
-                <option value="<?=Language::GALEGO?>" <?=$user->getLanguageId() === Language::GALEGO ? ' selected="selected"' : ''?>><?=Language::getNameForId(Language::GALEGO)?></option>
-                <option value="<?=Language::ESPANOL?>" <?=$user->getLanguageId() === Language::ESPANOL ? ' selected="selected"' : ''?>><?=Language::getNameForId(Language::ESPANOL)?></option>
-                <option value="<?=Language::ENGLISH?>" <?=$user->getLanguageId() === Language::ENGLISH ? ' selected="selected"' : ''?>><?=Language::getNameForId(Language::ENGLISH)?></option>
+                <option value="<?=Language::GALEGO?>" <?=$user->languageId === Language::GALEGO ? ' selected="selected"' : ''?>><?=Language::getNameForId(Language::GALEGO)?></option>
+                <option value="<?=Language::ESPANOL?>" <?=$user->languageId === Language::ESPANOL ? ' selected="selected"' : ''?>><?=Language::getNameForId(Language::ESPANOL)?></option>
+                <option value="<?=Language::ENGLISH?>" <?=$user->languageId === Language::ENGLISH ? ' selected="selected"' : ''?>><?=Language::getNameForId(Language::ENGLISH)?></option>
               </select>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
@@ -48,7 +48,7 @@ $timezones = DateTimeZone::listIdentifiers();
             <div class="control">
               <select name="timezone" id="timezone">
 <?php foreach ($timezones as $timezone) { ?>
-                <option value="<?=$timezone?>" <?=$user->getTimezone() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
+                <option value="<?=$timezone?>" <?=$user->timezone->getName() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
 <?php } ?>
               </select>
             </div>

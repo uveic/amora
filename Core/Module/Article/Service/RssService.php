@@ -90,7 +90,6 @@ class RssService
 
         /** @var Article $article */
         foreach ($articles as $article) {
-            $pubDate = new DateTimeImmutable($article->getPublishOn());
             $link = UrlBuilderUtil::buildPublicArticleUrl(
                 uri: $article->getUri(),
                 languageIsoCode: $siteLanguage,
@@ -98,16 +97,16 @@ class RssService
             $content = $this->getContent($article);
 
             $output[] = '<item>';
-            $output[] = '<title>' . htmlspecialchars($article->getTitle()) . '</title>';
+            $output[] = '<title>' . htmlspecialchars($article->title) . '</title>';
             $output[] = '<link>' . $link . '</link>';
             $output[] = '<guid>' . $link . '</guid>';
-            $output[] = '<author>' . $article->getUser()->getEmail() . ' (' . $article->getUser()->getName() . ')</author>';
+            $output[] = '<author>' . $article->user->email . ' (' . $article->user->name . ')</author>';
             $output[] = '<description>' . htmlspecialchars($content) . '</description>';
-            $output[] = '<pubDate>' . $pubDate->format('r') . '</pubDate>';
+            $output[] = '<pubDate>' . $article->publishOn->format('r') . '</pubDate>';
 
             /** @var Tag $tag */
             foreach ($article->getTags() as $tag) {
-                $output[] = '<category>' . $tag->getName() . '</category>';
+                $output[] = '<category>' . $tag->name . '</category>';
             }
 
             $output[] = '</item>';

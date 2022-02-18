@@ -1,7 +1,7 @@
 <?php
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
-use Amora\Core\Model\Util\LookupTableBasicValue;
+use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
@@ -11,11 +11,11 @@ $userToEdit = $responseData->getUserToEdit();
 $timezones = DateTimeZone::listIdentifiers();
 $emailHelpCopy = $userToEdit ? '' : $responseData->getLocalValue('formEmailNewUserHelp');
 $defaultTimezone = $userToEdit
-    ? $userToEdit->getTimezone()
-    : $responseData->getSession()->getUser()->getTimezone();
+    ? $userToEdit->timezone
+    : $responseData->getSession()->user->timezone;
 $defaultLanguage = $userToEdit
-    ? $userToEdit->getLanguageId()
-    : $responseData->getSession()->getUser()->getLanguageId();
+    ? $userToEdit->languageId
+    : $responseData->getSession()->user->languageId;
 
 ?>
   <section>
@@ -56,7 +56,7 @@ $defaultLanguage = $userToEdit
         <div class="field">
           <label for="bio" class="label"><?=$responseData->getLocalValue('globalBio')?></label>
           <div class="control">
-            <textarea id="bio" name="bio"><?=$this->e($userToEdit ? $userToEdit->getBio() : '')?></textarea>
+            <textarea id="bio" name="bio"><?=$this->e($userToEdit ? $userToEdit->bio : '')?></textarea>
           </div>
         </div>
         <div class="field">
@@ -80,11 +80,11 @@ $defaultLanguage = $userToEdit
           <div class="control">
             <select id="roleId" name="roleId">
 <?php
-    /** @var LookupTableBasicValue $role */
-foreach ($responseData->getUserRoles() as $role) {
-        $selected = $userToEdit && $role->getId() == $userToEdit->getRoleId();
+    /** @var \BackedEnum $role */
+foreach (UserRole::getAll() as $role) {
+        $selected = $userToEdit && $role == $userToEdit->role;
 ?>
-                <option <?php echo $selected ? 'selected ' : ''; ?>value="<?=$role->getId()?>"><?=$responseData->getLocalValue('userRole' . $role->getName())?></option>
+                <option <?php echo $selected ? 'selected ' : ''; ?>value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>
 <?php
   }
 ?>
@@ -99,7 +99,7 @@ foreach ($responseData->getUserRoles() as $role) {
 <?php foreach ($timezones as $timezone) {
     $selected = $timezone === $defaultTimezone;
 ?>
-                  <option  <?php echo $selected ? 'selected ' : ''; ?>value="<?=$this->e($timezone)?>" <?=$this->e($userToEdit && $userToEdit->getTimezone() === $timezone ? ' selected="selected"' : '')?>><?=$this->e($timezone)?></option>
+                  <option  <?php echo $selected ? 'selected ' : ''; ?>value="<?=$this->e($timezone)?>" <?=$this->e($userToEdit && $userToEdit->timezone->getName() === $timezone ? ' selected="selected"' : '')?>><?=$this->e($timezone)?></option>
 <?php } ?>
             </select>
           </div>

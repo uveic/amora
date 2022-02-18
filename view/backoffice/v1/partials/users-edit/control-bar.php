@@ -13,27 +13,27 @@ $updatedAtContent = '';
 $createdAtContent = '';
 if ($userToEdit) {
     $updatedAtDate = DateUtil::formatDate(
-        date: DateUtil::convertStringToDateTimeImmutable($userToEdit->getUpdatedAt()),
+        date: $userToEdit->updatedAt,
         lang: $responseData->getSiteLanguage(),
         includeTime: true,
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
-        from: DateUtil::convertStringToDateTimeImmutable($userToEdit->getUpdatedAt()),
+        from: $userToEdit->updatedAt,
         language: $responseData->getSiteLanguage(),
         includePrefixAndOrSuffix: true
     );
 
     $createdAtDate = DateUtil::formatDate(
-        date: DateUtil::convertStringToDateTimeImmutable($userToEdit->getCreatedAt()),
+        date: $userToEdit->createdAt,
         lang: $responseData->getSiteLanguage(),
         includeTime: true,
     );
 
     $createdAtEta = DateUtil::getElapsedTimeString(
-        from: DateUtil::convertStringToDateTimeImmutable($userToEdit->getCreatedAt()),
+        from: $userToEdit->createdAt,
         language: $responseData->getSiteLanguage(),
-        includePrefixAndOrSuffix: true
+        includePrefixAndOrSuffix: true,
     );
 
     $updatedAtContent = $responseData->getLocalValue('globalUpdated') .
@@ -43,7 +43,7 @@ if ($userToEdit) {
         ' <span title="' . $this->e($createdAtDate) . '">' . $this->e($createdAtEta) . '</span>.';
 }
 
-$isEnabled = $userToEdit ? $userToEdit->isEnabled() : true;
+$isEnabled = $userToEdit ? $userToEdit->isEnabled : true;
 $random = StringUtil::getRandomString(5);
 
 ?>

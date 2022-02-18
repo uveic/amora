@@ -9,30 +9,30 @@ use Amora\Core\Value\Language;
 
 final class Request
 {
-    private ?string $sessionId;
-    private ?Session $session;
-    private string $siteLanguage;
-    private ?string $clientLanguage;
+    private ?array $parsedHeaders = null;
+
+    public readonly ?Session $session;
+    public readonly string $siteLanguageIsoCode;
+    public readonly ?string $clientLanguage;
+    public readonly array $processedFiles;
 
     public function __construct(
-        private ?string $sourceIp,
-        private ?string $userAgent,
-        private string $verb, // The HTTP request verb (GET, POST, PUT, etc.)
+        public readonly ?string $sourceIp,
+        public readonly ?string $userAgent,
+        public readonly string $method, // The HTTP request verb (GET, POST, PUT, etc.)
         private string $path, // The request URI
-        private ?string $referrer,
+        public readonly ?string $referrer,
         private string $body,
-        private array $getParams,
-        private array $postParams,
-        private array $files,
+        public readonly array $getParams,
+        public readonly array $postParams,
+        array $files,
         private array $cookies,
-        private array $headers
+        private array $headers,
     ) {
-        $this->verb = strtoupper($verb);
-        $this->files = $this->processFiles($files);
-        $this->sessionId = $this->getCookie('sid');
+        $this->processedFiles = $this->processFiles($files);
         $this->session = $this->loadSession();
         $this->clientLanguage = $headers['HTTP_ACCEPT_LANGUAGE'] ?? null;
-        $this->siteLanguage = $this->calculateSiteLanguage();
+        $this->siteLanguageIsoCode = $this->calculateSiteLanguageAndUpdatePath();
 
         if (empty($this->path)) {
             $this->path = 'home';
@@ -42,56 +42,20 @@ final class Request
     ////////////////////////////////////////////////////////////////////////////
     // Getters / Setters
 
-    public function getSessionId(): ?string
-    {
-        return $this->sessionId;
-    }
-
-    public function getSession(): ?Session
-    {
-        return $this->session;
-    }
-
-    public function getSourceIp(): ?string
-    {
-        return empty($this->sourceIp) ? null : $this->sourceIp;
-    }
-
-    public function getUserAgent(): ?string
-    {
-        return empty($this->userAgent) ? null : $this->userAgent;
-    }
-
-    public function getMethod(): string
-    {
-        return $this->verb;
-    }
-
     public function getPath(): string
     {
         return $this->path;
     }
 
-    public function getReferrer(): ?string
-    {
-        return $this->referrer;
-    }
-
-    public function getSiteLanguage(): string
-    {
-        return $this->siteLanguage;
-    }
-
-    public function getHeaders(): array
-    {
-        return $this->headers;
-    }
-
     public function getParsedHeaders(): array
     {
+        if (isset($this->parsedHeaders)) {
+            return $this->parsedHeaders;
+        }
+
         $headers = array();
-        foreach($_SERVER as $key => $value) {
-            if (substr($key, 0, 5) !== 'HTTP_') {
+        foreach($this->headers as $key => $value) {
+            if (!str_starts_with($key, 'HTTP_')) {
                 continue;
             }
 
@@ -103,60 +67,31 @@ final class Request
             $headers[$header] = $value;
         }
 
+        $this->parsedHeaders = $headers;
         return $headers;
-    }
-
-    public function getBody(): string
-    {
-        return $this->body;
     }
 
     public function getBodyPayload(): array
     {
-        return empty($this->getBody()) ? [] : json_decode($this->getBody(), true);
-    }
-
-    public function getGetParams(): array
-    {
-        return $this->getParams;
+        return empty($this->body) ? [] : json_decode($this->body, true);
     }
 
     public function getGetParam(string $paramName): ?string
     {
-        $getParams = $this->getGetParams();
+        $getParams = $this->getParams;
         return $getParams[$paramName] ?? null;
-    }
-
-    public function getPostParams(): array
-    {
-        return $this->postParams;
-    }
-
-    public function getFiles(): array
-    {
-        return $this->files;
-    }
-
-    public function getCookies(): array
-    {
-        return $this->cookies;
-    }
-
-    public function getClientLanguage(): ?string
-    {
-        return $this->clientLanguage;
     }
 
     public function getCookie(string $cookieName): ?string
     {
-        $cookies = $this->getCookies();
+        $cookies = $this->cookies;
         return empty($cookies[$cookieName]) ? null : $cookies[$cookieName];
     }
 
     public function getBodyParam(string $paramName)
     {
         $bodyParams = $this->getBodyPayload();
-        return isset($bodyParams[$paramName]) ? $bodyParams[$paramName] : null;
+        return $bodyParams[$paramName] ?? null;
     }
 
     private function processFiles(array $files): array
@@ -168,7 +103,7 @@ final class Request
         }
 
         $key = 0;
-        foreach ($files['files']['name'] as $file) {
+        foreach ($files['files']['name'] as $ignored) {
             $output[] = new File(
                 $files['files']['name'][$key],
                 $files['files']['tmp_name'][$key],
@@ -183,9 +118,9 @@ final class Request
         return $output;
     }
 
-    private function calculateSiteLanguage(): string
+    private function calculateSiteLanguageAndUpdatePath(): string
     {
-        $arrayPath = explode('/', $this->getPath());
+        $arrayPath = explode('/', $this->path);
         if (!empty($arrayPath[0]) && strlen($arrayPath[0]) == 2) {
             if (in_array(strtoupper($arrayPath[0]), Language::getAvailableIsoCodes())) {
                 $siteLanguage = strtoupper($arrayPath[0]);
@@ -200,8 +135,8 @@ final class Request
 
     public function getSiteLanguageFromClientLanguage(): string
     {
-        if ($this->getSession()) {
-            return Language::getIsoCodeForId($this->getSession()->getUser()->getLanguageId());
+        if ($this->session) {
+            return Language::getIsoCodeForId($this->session->getUser()->getLanguageId());
         }
 
         $parts = explode(',', $this->clientLanguage);
@@ -226,6 +161,7 @@ final class Request
     }
 
     private function loadSession(): ?Session {
-        return UserCore::getSessionService()->loadSession($this->getSessionId());
+        $sessionId = $this->getCookie('sid');
+        return UserCore::getSessionService()->loadSession($sessionId);
     }
 }

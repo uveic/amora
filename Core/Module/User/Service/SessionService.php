@@ -2,13 +2,13 @@
 
 namespace Amora\Core\Module\User\Service;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use UserAgentParserUtil;
 use Amora\Core\Core;
-use Amora\Core\Logger;
 use Amora\Core\Module\User\Datalayer\SessionDataLayer;
 use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Module\User\Model\User;
-use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 
 class SessionService
@@ -17,55 +17,49 @@ class SessionService
     const SESSION_ID_COOKIE_VALID_FOR_SECONDS = 2592000; // 30 days
 
     private ?Session $session = null;
-    private SessionDataLayer $dataLayer;
-    private Logger $logger;
 
-    public function __construct(SessionDataLayer $dataLayer, Logger $logger)
-    {
-        $this->dataLayer = $dataLayer;
-        $this->logger = $logger;
-    }
+    public function __construct(
+        private readonly SessionDataLayer $dataLayer,
+    ) {}
 
     public function generateSessionId(): string
     {
         return  date('YmdHis') . StringUtil::getRandomString(16);
     }
 
-    public function generateNewValidUntil(?string $from = null): int
+    private function generateNewValidUntil(?DateTimeImmutable $from = null): DateTimeImmutable
     {
-        if (empty($from)) {
-            $from = DateUtil::getCurrentDateForMySql();
-        } elseif (!DateUtil::isValidDateForMySql($from)) {
-            $this->logger->logError('From date not valid: ' . $from);
-            $from = DateUtil::getCurrentDateForMySql();
-        }
-
-        $fromTimestamp = strtotime($from);
-        return $fromTimestamp + self::SESSION_ID_COOKIE_VALID_FOR_SECONDS;
+        return DateTimeImmutable::createFromFormat(
+            'U',
+            $from
+                ? $from->getTimestamp() + self::SESSION_ID_COOKIE_VALID_FOR_SECONDS
+                : time() + self::SESSION_ID_COOKIE_VALID_FOR_SECONDS
+        );
     }
 
     public function login(
         User $user,
-        string $timezone,
+        DateTimeZone $timezone,
         ?string $ip = null,
-        ?string $userAgent = null
+        ?string $userAgent = null,
     ): ?Session {
-        $now = DateUtil::getCurrentDateForMySql();
-        $newValidUntilTimestamp = $this->generateNewValidUntil($now);
+        $now = new DateTimeImmutable();
+        $newValidUntil = $this->generateNewValidUntil($now);
+
         $session = new Session(
-            null,
-            $this->generateSessionId(),
-            $user,
-            $now,
-            $now,
-            DateUtil::getMySqlDateFromUnixTime($newValidUntilTimestamp),
-            null,
-            $timezone,
-            $ip,
-            UserAgentParserUtil::parse($userAgent)->getBrowserAndPlatform()
+            id: null,
+            sessionId: $this->generateSessionId(),
+            user: $user,
+            timezone: $timezone,
+            createdAt: $now,
+            lastVisitedAt: $now,
+            validUntil: $this->generateNewValidUntil($now),
+            forcedExpirationAt: null,
+            ip: $ip,
+            browserAndPlatform: UserAgentParserUtil::parse($userAgent)->getBrowserAndPlatform(),
         );
 
-        $this->updateBrowserCookie($session->getSessionId(), $newValidUntilTimestamp);
+        $this->updateBrowserCookie($session->sessionId, $newValidUntil->getTimestamp());
         return $this->dataLayer->createNewSession($session);
     }
 
@@ -75,13 +69,13 @@ class SessionService
         return $this->dataLayer->expireSession($session->getId());
     }
 
-    private function updateBrowserCookie(string $sid, string $newExpiryTimestamp)
+    private function updateBrowserCookie(string $sid, int $newExpiryTimestamp)
     {
         $isLive = Core::isRunningInLiveEnv();
         $options = [
             'expires' => $newExpiryTimestamp,
             'path' => '/',
-            'secure' => $isLive ? true : false,
+            'secure' => $isLive,
             'httponly' => true,
             'samesite' => 'Strict',
         ];
@@ -106,13 +100,13 @@ class SessionService
 
         $this->session = $this->dataLayer->getSessionForSessionId($sessionId);
         if ($this->session) {
-            Core::updateTimezone($this->session->getTimezone());
+            Core::updateTimezone($this->session->timezone);
         }
 
         return $this->session;
     }
 
-    public function updateTimezoneForUserId(int $userId, string $newTimezone): bool
+    public function updateTimezoneForUserId(int $userId, DateTimeZone $newTimezone): bool
     {
         return $this->dataLayer->updateTimezoneForUserId($userId, $newTimezone);
     }

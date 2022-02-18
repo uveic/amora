@@ -67,16 +67,6 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         return $allUsers[0] ?? null;
     }
 
-    public function getArticleStatuses(): array
-    {
-        return ArticleStatus::getAll();
-    }
-
-    public function getArticleTypes(): array
-    {
-        return ArticleType::getAll();
-    }
-
     public function getUserRoles(): array
     {
         return UserRole::getAll();

@@ -16,6 +16,7 @@ use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\Language;
+use DateTimeImmutable;
 
 class UserMailService
 {
@@ -47,9 +48,9 @@ class UserMailService
         $verification = new UserVerification(
             id: null,
             userId: $user->getId(),
-            typeId: VerificationType::EMAIL_ADDRESS,
+            type: VerificationType::EmailAddress,
             email: $emailToVerify,
-            createdAt: DateUtil::getCurrentDateForMySql(),
+            createdAt: new DateTimeImmutable(),
             verifiedAt: null,
             verificationIdentifier: $verificationIdentifier,
             isEnabled: true
@@ -68,7 +69,7 @@ class UserMailService
                 $verification = new UserVerification(
                     id: null,
                     userId: $user->getId(),
-                    typeId: VerificationType::EMAIL_ADDRESS,
+                    typeId: VerificationType::EmailAddress,
                     email: $emailToVerify,
                     createdAt: DateUtil::getCurrentDateForMySql(),
                     verifiedAt: null,
@@ -109,7 +110,7 @@ class UserMailService
                 $verification = new UserVerification(
                     null,
                     $user->getId(),
-                    VerificationType::PASSWORD_RESET,
+                    VerificationType::PasswordReset,
                     null,
                     DateUtil::getCurrentDateForMySql(),
                     null,
@@ -140,9 +141,9 @@ class UserMailService
         $verification = new UserVerification(
             id: null,
             userId: $user->getId(),
-            typeId: VerificationType::PASSWORD_CREATION,
+            type: VerificationType::PasswordCreation,
             email: null,
-            createdAt: DateUtil::getCurrentDateForMySql(),
+            createdAt: new DateTimeImmutable(),
             verifiedAt: null,
             verificationIdentifier: $verificationIdentifier,
             isEnabled: true
@@ -187,16 +188,16 @@ class UserMailService
         );
 
         return new MailerItem(
-            null,
-            MailerTemplate::PASSWORD_RESET,
-            null,
-            null,
-            $user->getEmail(),
-            $user->getName(),
-            $emailSubject,
-            $emailContent,
-            null,
-            DateUtil::getCurrentDateForMySql()
+            id: null,
+            template: MailerTemplate::PasswordReset,
+            replyToEmailAddress: null,
+            senderName: null,
+            receiverEmailAddress: $user->email,
+            receiverName: $user->name,
+            subject: $emailSubject,
+            contentHtml: $emailContent,
+            fieldsJson: null,
+            new DateTimeImmutable(),
         );
     }
 
@@ -260,7 +261,7 @@ class UserMailService
 
         return new MailerItem(
             id: null,
-            templateId: MailerTemplate::ACCOUNT_VERIFICATION,
+            template: MailerTemplate::AccountVerification,
             replyToEmailAddress: null,
             senderName: null,
             receiverEmailAddress: $emailToVerify,
@@ -268,7 +269,7 @@ class UserMailService
             subject: $emailSubject,
             contentHtml: $emailContent,
             fieldsJson: null,
-            createdAt: DateUtil::getCurrentDateForMySql()
+            createdAt: new DateTimeImmutable(),
         );
     }
 
@@ -290,24 +291,24 @@ class UserMailService
         );
         $emailContent = sprintf(
             $localisationUtil->getValue('emailPasswordCreationContent'),
-            $user->getName(),
+            $user->name,
             $siteName,
-            $user->getEmail(),
+            $user->email,
             $linkUrl,
             $siteName,
         );
 
         return new MailerItem(
             id: null,
-            templateId: MailerTemplate::PASSWORD_CREATION,
+            template: MailerTemplate::PasswordCreation,
             replyToEmailAddress: null,
             senderName: null,
-            receiverEmailAddress: $user->getEmail(),
-            receiverName: $user->getName(),
+            receiverEmailAddress: $user->email,
+            receiverName: $user->name,
             subject: $emailSubject,
             contentHtml: $emailContent,
             fieldsJson: null,
-            createdAt: DateUtil::getCurrentDateForMySql()
+            createdAt: new DateTimeImmutable(),
         );
     }
 

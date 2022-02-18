@@ -9,6 +9,8 @@ use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserRegistrationRequest;
 use Amora\Core\Module\User\Model\UserVerification;
+use Amora\Core\Module\User\Value\UserJourneyStatus;
+use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\DateUtil;
 
 class UserDataLayer
@@ -48,12 +50,12 @@ class UserDataLayer
         $params = [];
         $baseSql = 'SELECT ';
         $fields = [
-            'u.id',
+            'u.id AS user_id',
             'u.language_id',
             'u.role_id',
             'u.journey_id',
-            'u.created_at',
-            'u.updated_at',
+            'u.created_at AS user_created_at',
+            'u.updated_at AS user_updated_at',
             'u.email',
             'u.name',
             'u.password_hash',
@@ -139,7 +141,7 @@ class UserDataLayer
             $this->logger->logError('Error updating user. User ID: ' . $userId);
         }
 
-        $user->setId($userId);
+        $user->id = $userId;
         return $user;
     }
 
@@ -151,7 +153,7 @@ class UserDataLayer
             $this->logger->logError('Error inserting user');
         }
 
-        $user->setId((int)$resUser);
+        $user->id = (int)$resUser;
 
         return $user;
     }
@@ -169,7 +171,7 @@ class UserDataLayer
             $this->logger->logError('Error inserting user verification data');
         }
 
-        $data->setId((int)$res);
+        $data->id = (int)$res;
 
         return $data;
     }
@@ -190,12 +192,12 @@ class UserDataLayer
 
     public function getUserVerification(
         string $verificationIdentifier,
-        ?int $typeId = null,
+        ?VerificationType $type = null,
         ?bool $isEnabled = null
     ): ?UserVerification {
         $sql = '
             SELECT
-                u.id,
+                u.id AS user_verification_id,
                 u.user_id,
                 u.type_id,
                 u.email,
@@ -212,9 +214,9 @@ class UserDataLayer
             ':verificationIdentifier' => $verificationIdentifier
         ];
 
-        if (isset($typeId)) {
+        if (isset($type)) {
             $sql .= ' AND u.type_id = :typeId';
-            $params[':typeId'] = $typeId;
+            $params[':typeId'] = $type->value;
         }
 
         if (isset($isEnabled)) {
@@ -235,11 +237,11 @@ class UserDataLayer
             'change_email_to' => null
         ];
 
-        if ($verification->getEmail()) {
-            $data['email'] = $verification->getEmail();
+        if ($verification->email) {
+            $data['email'] = $verification->email;
         }
 
-        $res = $this->db->update(self::USER_TABLE, $user->getId(), $data);
+        $res = $this->db->update(self::USER_TABLE, $user->id, $data);
 
         if (empty($res)) {
             return false;
@@ -247,7 +249,7 @@ class UserDataLayer
 
         $res2 = $this->db->update(
             self::USER_VERIFICATION_TABLE,
-            $verification->getId(),
+            $verification->id,
             [
                 'is_enabled' => 0,
                 'verified_at' => DateUtil::getCurrentDateForMySql()
@@ -273,13 +275,13 @@ class UserDataLayer
         );
     }
 
-    public function updateUserJourney(int $userId, int $userJourneyId): bool
+    public function updateUserJourney(int $userId, UserJourneyStatus $userJourney): bool
     {
         return $this->db->update(
             self::USER_TABLE,
             $userId,
             [
-                'journey_id' => $userJourneyId,
+                'journey_id' => $userJourney->value,
                 'updated_at' => DateUtil::getCurrentDateForMySql(),
             ]
         );
@@ -296,7 +298,7 @@ class UserDataLayer
         $params = [];
         $sql = '
             SELECT
-                urr.id,
+                urr.id AS user_registration_request_id,
                 urr.email,
                 urr.language_id,
                 urr.created_at,
@@ -327,7 +329,7 @@ class UserDataLayer
     }
 
     public function storeRegistrationInviteRequest(
-        UserRegistrationRequest $data
+        UserRegistrationRequest $data,
     ): UserRegistrationRequest {
         $res = $this->db->insert(self::USER_REGISTRATION_REQUEST_TABLE, $data->asArray());
 
@@ -335,7 +337,7 @@ class UserDataLayer
             $this->logger->logError('Error inserting user registration request data');
         }
 
-        $data->setId((int)$res);
+        $data->id = (int)$res;
 
         return $data;
     }

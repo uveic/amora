@@ -5,23 +5,24 @@ namespace Amora\Core\Module\Article\Model;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
+use DateTimeImmutable;
 
 class Article
 {
     public function __construct(
-        private ?int $id,
-        private User $user,
-        private int $statusId,
-        private int $typeId,
-        private string $createdAt,
-        private string $updatedAt,
-        private ?string $publishOn,
-        private ?string $title,
-        private string $contentHtml,
-        private ?int $mainImageId,
-        private ?Image $mainImage,
-        private string $uri,
-        private array $tags = [],
+        public ?int $id,
+        public readonly User $user,
+        public readonly ArticleStatus $status,
+        public readonly ArticleType $type,
+        public readonly DateTimeImmutable $createdAt,
+        public readonly DateTimeImmutable $updatedAt,
+        public readonly ?DateTimeImmutable $publishOn,
+        public readonly ?string $title,
+        public readonly string $contentHtml,
+        public readonly ?int $mainImageId,
+        public readonly ?Image $mainImage,
+        public readonly string $uri,
+        public readonly array $tags = [],
     ) {}
 
     public static function fromArray(array $article): self
@@ -41,8 +42,8 @@ class Article
         return new self(
             id: $id,
             user: User::fromArray($article),
-            statusId: $article['status_id'],
-            typeId: $article['type_id'],
+            status: ArticleStatus::from($article['status_id']),
+            type: ArticleType::from($article['type_id']),
             createdAt: $createdAt,
             updatedAt: $updatedAt,
             publishOn: $article['published_at'],
@@ -97,7 +98,7 @@ class Article
 
     public function getStatusName(): string
     {
-        return ArticleStatus::getNameForId($this->getStatusId());
+        return ArticleStatus::from($this->statusId)->name;
     }
 
     public function getTypeId(): int
@@ -107,7 +108,7 @@ class Article
 
     public function getTypeName(): string
     {
-        return ArticleType::getNameForId($this->getTypeId());
+        return ArticleType::from($this->type)->name;
     }
 
     public function getCreatedAt(): string

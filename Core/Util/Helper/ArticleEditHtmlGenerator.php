@@ -3,7 +3,6 @@
 namespace Amora\Core\Util\Helper;
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
-use Amora\Core\Model\Util\LookupTableBasicValue;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;
 use Amora\Core\Module\Article\Value\ArticleSectionType;
@@ -71,48 +70,45 @@ final class ArticleEditHtmlGenerator
 
         $typeIdGetParam = $responseData->getRequest()->getGetParam('articleType');
         if (!empty($typeIdGetParam)) {
+            /** @var \BackedEnum $articleType */
             foreach (ArticleType::getAll() as $articleType) {
-                if ((int)$typeIdGetParam === $articleType->getId()) {
-                    return $articleType->getId();
+                if ((int)$typeIdGetParam === $articleType->value) {
+                    return $articleType->value;
                 }
             }
         }
 
         return str_contains($responseData->getSiteUrl(), 'articles')
-            ? ArticleType::PAGE
-            : ArticleType::BLOG;
+            ? ArticleType::Page->name
+            : ArticleType::Blog->name;
     }
 
     public static function generateStatusDropdownSelectHtml(
         HtmlResponseDataAuthorised $responseData
     ): string {
         $articleTypeId = self::getArticleTypeId($responseData);
-        $isHomepage = $articleTypeId === ArticleType::HOMEPAGE;
+        $isHomepage = $articleTypeId === ArticleType::Homepage;
         $articleStatusId = $responseData->getFirstArticle()
             ? $responseData->getFirstArticle()->getStatusId()
             : ($isHomepage ? ArticleStatus::PUBLISHED->value : ArticleStatus::DRAFT->value);
-        $articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::getNameForId($articleStatusId));
+        $articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::from($articleStatusId)->name);
         $isPublished = $responseData->getFirstArticle()
             ? $articleStatusId === ArticleStatus::PUBLISHED->value
             : $isHomepage;
         $random = StringUtil::getRandomString(5);
-
-        $articleStatuses = $isHomepage
-            ? [ArticleStatus::getStatusForId(ArticleStatus::PUBLISHED->value)]
-            : $responseData->getArticleStatuses();
 
         $html = '';
         $html .= '<input type="checkbox" id="dropdown-menu-' . $random . '" class="dropdown-menu">';
         $html .= '<div class="dropdown-container">';
         $html .= '<ul>';
 
-        /** @var LookupTableBasicValue $status */
-        foreach ($articleStatuses as $status) {
-            $html .= '<li><a data-checked="' . ($status->getId() === $articleStatusId ? '1' : '0') .
-                '" data-article-status-id="' . $status->getId() .
+        /** @var \BackedEnum $status */
+        foreach (ArticleStatus::getAll() as $status) {
+            $html .= '<li><a data-checked="' . ($status->value === $articleStatusId ? '1' : '0') .
+                '" data-article-status-id="' . $status->value .
                 '" class="dropdown-menu-option article-status-option ' .
-                ($status->getId() === ArticleStatus::PUBLISHED->value ? 'feedback-success' : 'background-light-color') .
-                '" href="#">' . $responseData->getLocalValue('articleStatus' . $status->getName()) .
+                ($status->value === ArticleStatus::PUBLISHED->value ? 'feedback-success' : 'background-light-color') .
+                '" href="#">' . $responseData->getLocalValue('articleStatus' . $status->name) .
                 '</a></li>';
         }
 

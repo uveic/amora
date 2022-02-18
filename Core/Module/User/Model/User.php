@@ -2,72 +2,68 @@
 
 namespace Amora\Core\Module\User\Model;
 
-use Amora\Core\Value\Language;
+use Amora\Core\Module\User\Value\UserJourneyStatus;
+use Amora\Core\Util\DateUtil;
 use Amora\Core\Module\User\Value\UserRole;
+use DateTimeImmutable;
+use DateTimeZone;
 
 class User
 {
     public function __construct(
-        private ?int $id,
-        private int $languageId,
-        private int $roleId,
-        private int $journeyStatusId,
-        private string $createdAt,
-        private string $updatedAt,
-        private ?string $email,
-        private ?string $name,
-        private ?string $passwordHash,
-        private ?string $bio,
-        private bool $isEnabled,
-        private bool $verified,
-        private string $timezone,
-        private ?string $changeEmailAddressTo = null
+        public ?int $id,
+        public readonly int $languageId,
+        public readonly UserRole $role,
+        public readonly UserJourneyStatus $journeyStatus,
+        public readonly DateTimeImmutable $createdAt,
+        public readonly DateTimeImmutable $updatedAt,
+        public readonly ?string $email,
+        public readonly ?string $name,
+        public readonly ?string $passwordHash,
+        public readonly ?string $bio,
+        public readonly bool $isEnabled,
+        public readonly bool $verified,
+        public readonly DateTimeZone $timezone,
+        public readonly ?string $changeEmailAddressTo = null,
     ) {}
 
     public static function fromArray(array $user): User
     {
-        $id = isset($user['user_id'])
-            ? (int)$user['user_id']
-            : (isset($user['id']) ? (int)$user['id'] : null);
-
-        $createdAt = $user['user_created_at'] ?? $user['created_at'];
-        $updatedAt = $user['user_updated_at'] ?? $user['updated_at'];
-
         return new User(
-            $id,
-            $user['language_id'],
-            $user['role_id'],
-            $user['journey_id'],
-            $createdAt,
-            $updatedAt,
-            $user['email'] ?? null,
-            $user['user_name'] ?? ($user['name'] ?? null),
-            $user['password_hash'] ?? null,
-            $user['bio'] ?? null,
-            empty($user['is_enabled']) ? false : true,
-            empty($user['verified']) ? false : true,
-            $user['timezone'],
-            $user['change_email_to'] ?? null
+            id: (int)$user['user_id'],
+            languageId: $user['language_id'],
+            role: UserRole::from($user['role_id']),
+            journeyStatus: UserJourneyStatus::from($user['journey_id']),
+            createdAt: DateUtil::convertStringToDateTimeImmutable($user['user_created_at']),
+            updatedAt: DateUtil::convertStringToDateTimeImmutable($user['user_updated_at']),
+            email: $user['email'] ?? null,
+            name: $user['user_name'] ?? ($user['name'] ?? null),
+            passwordHash: $user['password_hash'] ?? null,
+            bio: $user['bio'] ?? null,
+            isEnabled: !empty($user['is_enabled']),
+            verified: !empty($user['verified']),
+            timezone: $user['timezone'],
+            changeEmailAddressTo: $user['change_email_to'] ?? null,
         );
     }
 
     public function asArray(): array
     {
         return [
-            'id' => $this->getId(),
-            'language_id' => $this->getLanguageId(),
-            'role_id' => $this->getRoleId(),
-            'journey_id' => $this->getJourneyStatusId(),
-            'created_at' => $this->getCreatedAt(),
-            'updated_at' => $this->getUpdatedAt(),
-            'email' => $this->getEmail(),
-            'name' => $this->getName(),
-            'password_hash' => $this->getPasswordHash(),
-            'bio' => $this->getBio(),
-            'is_enabled' => $this->isEnabled(),
-            'verified' => $this->isVerified(),
-            'timezone' => $this->getTimezone(),
-            'change_email_to' => $this->getChangeEmailTo()
+            'id' => $this->id,
+            'language_id' => $this->languageId,
+            'role_id' => $this->role->value,
+            'journey_id' => $this->journeyStatus->value,
+            'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'email' => $this->email,
+            'name' => $this->name,
+            'password_hash' => $this->passwordHash,
+            'bio' => $this->bio,
+            'is_enabled' => $this->isEnabled,
+            'verified' => $this->verified,
+            'timezone' => $this->timezone->getName(),
+            'change_email_to' => $this->changeEmailAddressTo,
         ];
     }
 
@@ -76,34 +72,9 @@ class User
         return $this->id;
     }
 
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
     public function getLanguageId(): int
     {
         return $this->languageId;
-    }
-
-    public function getRoleId(): int
-    {
-        return $this->roleId;
-    }
-
-    public function getJourneyStatusId(): int
-    {
-        return $this->journeyStatusId;
-    }
-
-    public function getCreatedAt(): string
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): string
-    {
-        return $this->updatedAt;
     }
 
     public function getEmail(): ?string
@@ -116,60 +87,20 @@ class User
         return $this->name;
     }
 
-    public function getPasswordHash(): ?string
-    {
-        return $this->passwordHash;
-    }
-
-    public function getBio(): ?string
-    {
-        return $this->bio;
-    }
-
-    public function isEnabled(): bool
-    {
-        return $this->isEnabled;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->verified;
-    }
-
-    public function getTimezone(): string
-    {
-        return $this->timezone;
-    }
-
-    public function getChangeEmailTo(): ?string
-    {
-        return $this->changeEmailAddressTo;
-    }
-
-    public function getLanguageName(): string
-    {
-        return Language::getNameForId($this->getLanguageId());
-    }
-
-    public function getRoleName(): string
-    {
-        return UserRole::getNameForId($this->getRoleId());
-    }
-
     public function getNameOrEmail(): string
     {
-        if ($this->getName()) {
-            return $this->getName();
+        if ($this->name) {
+            return $this->name;
         }
 
-        return $this->getEmail();
+        return $this->email;
     }
 
     public function getValidationHash(): string
     {
         return hash(
             'SHA512',
-            $this->getId() . $this->getName() . $this->getEmail() . $this->getCreatedAt()
+            $this->id . $this->name . $this->email . $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT)
         );
     }
 

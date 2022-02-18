@@ -316,6 +316,6 @@ final class MigrationDbApp
 
     private function getLineOutputPrefix(): string
     {
-        return 'DB: ' . $this->db->getDbName() . ' ::: ';
+        return 'DB: ' . $this->db->name . ' ::: ';
     }
 }

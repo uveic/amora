@@ -2,22 +2,25 @@
 
 namespace Amora\Core\Module\Mailer\Model;
 
+use Amora\Core\Module\Mailer\Value\MailerTemplate;
+use DateTimeImmutable;
+
 class MailerItem
 {
     public function __construct(
-        private ?int $id,
-        private int $templateId,
-        private ?string $replyToEmailAddress,
-        private ?string $senderName,
-        private string $receiverEmailAddress,
-        private ?string $receiverName,
-        private ?string $subject,
-        private ?string $contentHtml,
-        private ?string $fieldsJson,
-        private string $createdAt,
-        private ?string $processedAt = null,
-        private ?bool $hasError = null,
-        private ?string $lockId = null,
+        public ?int $id,
+        public readonly MailerTemplate $template,
+        public readonly ?string $replyToEmailAddress,
+        public readonly ?string $senderName,
+        public readonly string $receiverEmailAddress,
+        public readonly ?string $receiverName,
+        public readonly ?string $subject,
+        public readonly ?string $contentHtml,
+        public readonly ?string $fieldsJson,
+        public readonly DateTimeImmutable $createdAt,
+        public readonly ?DateTimeImmutable $processedAt = null,
+        public readonly ?bool $hasError = null,
+        public readonly ?string $lockId = null,
     ) {}
 
     public static function fromArray(array $item): MailerItem
@@ -27,19 +30,19 @@ class MailerItem
             : (int)$item['id'];
 
         return new MailerItem(
-            $id,
-            $item['template_id'],
-            $item['reply_to_email'] ?? null,
-            $item['sender_name'] ?? null,
-            $item['receiver_email'],
-            $item['receiver_name'] ?? null,
-            $item['subject'] ?? null,
-            $item['content_html'] ?? null,
-            $item['fields_json'] ?? null,
-            $item['created_at'],
-            $item['processed_at'] ?? null,
-            isset($item['has_error']) ? (empty($item['has_error']) ? false : true) : null,
-            $item['lock_id'] ?? null
+            id: $id,
+            template: $item['template_id'],
+            replyToEmailAddress: $item['reply_to_email'] ?? null,
+            senderName: $item['sender_name'] ?? null,
+            receiverEmailAddress: $item['receiver_email'],
+            receiverName: $item['receiver_name'] ?? null,
+            subject: $item['subject'] ?? null,
+            contentHtml: $item['content_html'] ?? null,
+            fieldsJson: $item['fields_json'] ?? null,
+            createdAt: $item['created_at'],
+            processedAt: $item['processed_at'] ?? null,
+            hasError: isset($item['has_error']) ? !empty($item['has_error']) : null,
+            lockId: $item['lock_id'] ?? null,
         );
     }
 

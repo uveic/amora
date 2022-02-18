@@ -178,7 +178,7 @@ class Router
             );
         }
 
-        if (!$this->displayArticle($article, $request->getSession()?->isAdmin())) {
+        if (!$this->displayArticle($article, $request->session?->isAdmin())) {
             return Response::createFrontendPublicHtmlResponse(
                 template: 'shared/404',
                 responseData: new HtmlResponseData($request),
@@ -191,7 +191,7 @@ class Router
         $siteImageUrl = $img
             ? rtrim(Core::getConfigValue('baseUrl'), ' /') . $img->getFullUrlMedium()
             : null;
-        $isAdmin = $request->getSession() && $request->getSession()->isAdmin();
+        $isAdmin = $request->session && $request->session->isAdmin();
 
         return Response::createFrontendPublicHtmlResponse(
             template: 'shared/home-article',

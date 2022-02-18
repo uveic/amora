@@ -20,7 +20,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
 
     protected function authenticate(Request $request): bool
     {
-        $session = $request->getSession();
+        $session = $request->session;
 
         if (empty($session) || !$session->isAuthenticated()) {
             return false;
@@ -39,7 +39,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
      */
     protected function getAppDashboardHtml(Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
 
         return Response::createFrontendPrivateHtmlResponse(
             'dashboard',
@@ -59,9 +59,9 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
      */
     protected function logout(Request $request): Response
     {
-        $this->sessionService->logout($request->getSession());
+        $this->sessionService->logout($request->session);
         return Response::createRedirectResponse(
-            UrlBuilderUtil::buildPublicHomepageUrl($request->getSiteLanguage())
+            UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode)
         );
     }
 
@@ -74,7 +74,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
      */
     protected function getUserAccountHtml(Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
         return Response::createFrontendPrivateHtmlResponse(
             'account',
             new HtmlResponseData(
@@ -94,7 +94,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
      */
     protected function getUserAccountSettingsHtml(string $settingsPage, Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
         return Response::createFrontendPrivateHtmlResponse(
             'account',
             new HtmlResponseData(

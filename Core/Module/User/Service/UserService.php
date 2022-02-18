@@ -8,6 +8,7 @@ use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Util\LocalisationUtil;
 use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use Amora\Core\Logger;
 use Amora\Core\Model\Response\UserFeedback;
@@ -42,19 +43,19 @@ class UserService
         $this->userMailService = $userMailService;
     }
 
-    public function storeUser(User $user, ?int $verificationEmailId = null): ?User
+    public function storeUser(User $user, ?VerificationType $verificationType = null): ?User
     {
         $res = $this->userDataLayer->getDb()->withTransaction(
-            function () use ($user, $verificationEmailId) {
+            function () use ($user, $verificationType) {
                 $resUser = $this->userDataLayer->createNewUser($user);
                 if (empty($resUser)) {
                     return new TransactionResponse(false);
                 }
 
-                $resEmail = match ($verificationEmailId) {
-                    VerificationType::PASSWORD_CREATION =>
+                $resEmail = match ($verificationType) {
+                    VerificationType::PasswordCreation =>
                         $this->userMailService->sendPasswordCreationEmail($resUser),
-                    VerificationType::EMAIL_ADDRESS =>
+                    VerificationType::EmailAddress =>
                         $this->userMailService->sendVerificationEmail(
                             $resUser,
                             $resUser->getEmail()
@@ -80,7 +81,7 @@ class UserService
 
     private function updateUser(
         User $user,
-        bool $updateSessionTimezone = false
+        bool $updateSessionTimezone = false,
     ): bool {
         $res = $this->userDataLayer->getDb()->withTransaction(
             function() use ($user, $updateSessionTimezone) {
@@ -90,20 +91,20 @@ class UserService
                     return new TransactionResponse(false);
                 }
 
-                if ($user->getChangeEmailTo()) {
+                if ($user->changeEmailAddressTo) {
                     $this->userMailService->sendUpdateEmailVerificationEmail(
-                        $user,
-                        $user->getChangeEmailTo()
+                        user: $user,
+                        emailToVerify: $user->changeEmailAddressTo,
                     );
                 }
 
                 if ($updateSessionTimezone) {
                     $this->sessionService->updateTimezoneForUserId(
-                        $user->getId(),
-                        $user->getTimezone()
+                        $user->id,
+                        $user->timezone
                     );
 
-                    Core::updateTimezone($user->getTimezone());
+                    Core::updateTimezone($user->timezone->getName());
                 }
 
                 return new TransactionResponse(true);
@@ -124,16 +125,16 @@ class UserService
             return null;
         }
 
-        if (empty($res->getPasswordHash())) {
+        if (empty($res->passwordHash)) {
             return null;
         }
 
-        $validPass = StringUtil::verifyPassword($unHashedPassword, $res->getPasswordHash());
+        $validPass = StringUtil::verifyPassword($unHashedPassword, $res->passwordHash);
         if (empty($validPass)) {
             return null;
         }
 
-        if (!$res->isEnabled()) {
+        if (!$res->isEnabled) {
             return null;
         }
 
@@ -173,9 +174,10 @@ class UserService
             }
 
             $validPass = StringUtil::verifyPassword(
-                $currentPassword,
-                $existingUser->getPasswordHash()
+                unHashedPassword: $currentPassword,
+                hashedPassword: $existingUser->passwordHash,
             );
+
             if (!$validPass) {
                 return new UserFeedback(
                     false,
@@ -244,18 +246,18 @@ class UserService
     ): UserFeedback {
         $verification = $this->userDataLayer->getUserVerification(
             $verificationIdentifier,
-            VerificationType::EMAIL_ADDRESS
+            VerificationType::EmailAddress,
         );
 
-        if (empty($verification) || !$verification->isEnabled()) {
+        if (empty($verification) || !$verification->isEnabled) {
             return new UserFeedback(false, $localisationUtil->getValue('globalGenericError'));
         }
 
-        $message = $verification->getTypeId() === VerificationType::EMAIL_ADDRESS
+        $message = $verification->type === VerificationType::EmailAddress
             ? $localisationUtil->getValue('authenticationEmailVerifiedExpired')
             : $localisationUtil->getValue('authenticationEmailVerifiedError');
 
-        $user = $this->getUserForId($verification->getUserId());
+        $user = $this->getUserForId($verification->userId);
         if (empty($user)) {
             return new UserFeedback(
                 false,
@@ -263,13 +265,12 @@ class UserService
             );
         }
 
-        if (!$verification->isEnabled()) {
+        if (!$verification->isEnabled) {
             return new UserFeedback(false, $message);
         }
 
-        $verificationDate = new DateTime($verification->getCreatedAt());
         $now = new DateTime();
-        $dateDiff = $now->diff($verificationDate);
+        $dateDiff = $now->diff($verification->createdAt);
         if ($dateDiff->days > self::VERIFICATION_LINK_VALID_FOR_DAYS) {
             return new UserFeedback(false, $message);
         }
@@ -293,16 +294,16 @@ class UserService
         string $verificationIdentifier
     ): ?UserVerification {
         $verification = $this->userDataLayer->getUserVerification(
-            $verificationIdentifier,
-            VerificationType::PASSWORD_RESET,
-            true
+            verificationIdentifier: $verificationIdentifier,
+            type: VerificationType::PasswordReset,
+            isEnabled: true,
         );
 
-        if (empty($verification) || !$verification->isEnabled()) {
+        if (empty($verification) || !$verification->isEnabled) {
             return null;
         }
 
-        $user = $this->getUserForId($verification->getUserId());
+        $user = $this->getUserForId($verification->userId);
         if (empty($user)) {
             return null;
         }
@@ -314,16 +315,16 @@ class UserService
         string $verificationIdentifier
     ): ?UserVerification {
         $verification = $this->userDataLayer->getUserVerification(
-            $verificationIdentifier,
-            VerificationType::PASSWORD_CREATION,
-            true
+            verificationIdentifier: $verificationIdentifier,
+            type: VerificationType::PasswordCreation,
+            isEnabled: true,
         );
 
-        if (empty($verification) || !$verification->isEnabled()) {
+        if (empty($verification) || !$verification->isEnabled) {
             return null;
         }
 
-        $user = $this->getUserForId($verification->getUserId());
+        $user = $this->getUserForId($verification->userId);
         if (empty($user)) {
             return null;
         }
@@ -356,11 +357,11 @@ class UserService
                 }
 
                 $verification = $this->userDataLayer->getUserVerification(
-                    $verificationIdentifier,
-                    VerificationType::PASSWORD_CREATION
+                    verificationIdentifier: $verificationIdentifier,
+                    type: VerificationType::PasswordCreation,
                 );
 
-                if (empty($verification) || !$verification->isEnabled()) {
+                if (empty($verification) || !$verification->isEnabled) {
                     return new TransactionResponse(false);
                 }
 
@@ -370,8 +371,8 @@ class UserService
                 }
 
                 $journeyRes = $this->userDataLayer->updateUserJourney(
-                    $user->getId(),
-                    UserJourneyStatus::REGISTRATION
+                    userId: $user->id,
+                    userJourney: UserJourneyStatus::Registration,
                 );
 
                 return new TransactionResponse($journeyRes);
@@ -409,25 +410,27 @@ class UserService
         $hasEmailChanged = isset($email)
             && $existingUser->getEmail() !== StringUtil::normaliseEmail($email);
         $res = $this->updateUser(
-            new User(
-                id: $existingUser->getId(),
-                languageId: $languageId ?? $existingUser->getLanguageId(),
-                roleId: $existingUser->getRoleId(),
-                journeyStatusId: $existingUser->getJourneyStatusId(),
-                createdAt: $existingUser->getCreatedAt(),
-                updatedAt: DateUtil::getCurrentDateForMySql(),
-                email: $existingUser->getEmail(),
-                name: $name ?? $existingUser->getName(),
+            user: new User(
+                id: $existingUser->id,
+                languageId: $languageId ?? $existingUser->languageId,
+                role: $existingUser->role,
+                journeyStatus: $existingUser->journeyStatus,
+                createdAt: $existingUser->createdAt,
+                updatedAt: new DateTimeImmutable(),
+                email: $existingUser->email,
+                name: $name ?? $existingUser->name,
                 passwordHash: $newPassword
                     ? StringUtil::hashPassword($newPassword)
-                    : $existingUser->getPasswordHash(),
-                bio: $existingUser->getBio(),
-                isEnabled: isset($isEnabled) ? $isEnabled : $existingUser->isEnabled(),
-                verified: $existingUser->isVerified(),
-                timezone: $timezone ?? $existingUser->getTimezone(),
-                changeEmailAddressTo: $hasEmailChanged ? StringUtil::normaliseEmail($email) : null
+                    : $existingUser->passwordHash,
+                bio: $existingUser->bio,
+                isEnabled: $isEnabled ?? $existingUser->isEnabled,
+                verified: $existingUser->verified,
+                timezone: $timezone
+                    ? DateUtil::convertStringToDateTimeZone($timezone)
+                    : $existingUser->timezone,
+                changeEmailAddressTo: $hasEmailChanged ? StringUtil::normaliseEmail($email) : null,
             ),
-            isset($timezone)
+            updateSessionTimezone: isset($timezone),
         );
 
         if (empty($res)) {

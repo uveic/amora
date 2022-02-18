@@ -2,35 +2,18 @@
 
 namespace Amora\Core\Module\User\Value;
 
-use Amora\Core\Model\Util\LookupTableBasicValue;
-
-final class VerificationType
+enum VerificationType: int
 {
-    const EMAIL_ADDRESS = 1;
-    const PASSWORD_RESET = 2;
-    const PASSWORD_CREATION = 3;
+    case EmailAddress = 1;
+    case PasswordReset = 2;
+    case PasswordCreation = 3;
 
     public static function getAll(): array
     {
         return [
-            self::EMAIL_ADDRESS => new LookupTableBasicValue(self::EMAIL_ADDRESS, 'Email Address Verification'),
-            self::PASSWORD_RESET => new LookupTableBasicValue(self::PASSWORD_RESET, 'Password Reset'),
-            self::PASSWORD_CREATION => new LookupTableBasicValue(self::PASSWORD_CREATION, 'Create password for new user'),
+            self::EmailAddress,
+            self::PasswordReset,
+            self::PasswordCreation,
         ];
-    }
-
-    public static function asArray(): array
-    {
-        $output = [];
-        foreach (self::getAll() as $item) {
-            $output[] = $item->asArray();
-        }
-        return $output;
-    }
-
-    public static function getNameForId(int $id): string
-    {
-        $all = self::getAll();
-        return empty($all[$id]) ? 'Unknown' : $all[$id]->getName();
     }
 }

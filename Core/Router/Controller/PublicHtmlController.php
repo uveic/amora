@@ -53,16 +53,16 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getLoginPage(Request $request): Response
     {
-        $session = $request->getSession();
+        $session = $request->session;
         if ($session && $session->isAdmin()) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildBackofficeDashboardUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode)
             );
         }
 
         if ($session && $session->isAuthenticated()) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildAppDashboardUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildAppDashboardUrl($request->siteLanguageIsoCode)
             );
         }
 
@@ -70,7 +70,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             'shared/login',
             new HtmlResponseData(
                 request: $request,
-                pageTitle: Core::getLocalisationUtil($request->getSiteLanguage())
+                pageTitle: Core::getLocalisationUtil($request->siteLanguageIsoCode)
                     ->getValue('formLoginAction'),
             )
         );
@@ -85,11 +85,11 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getForgotPasswordPage(Request $request): Response
     {
-        $session = $request->getSession();
+        $session = $request->session;
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildBackofficeDashboardUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode)
             );
         }
 
@@ -97,7 +97,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             'shared/login-forgot',
             new HtmlResponseData(
                 request: $request,
-                pageTitle: Core::getLocalisationUtil($request->getSiteLanguage())
+                pageTitle: Core::getLocalisationUtil($request->siteLanguageIsoCode)
                     ->getValue('authenticationForgotPassword'),
             )
         );
@@ -112,13 +112,13 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getRegistrationPage(Request $request): Response
     {
-        $session = $request->getSession();
+        $session = $request->session;
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
             return Response::createRedirectResponse(
                 $session->isAdmin()
-                    ? UrlBuilderUtil::buildBackofficeDashboardUrl($request->getSiteLanguage())
-                    : UrlBuilderUtil::buildAppDashboardUrl($request->getSiteLanguage())
+                    ? UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode)
+                    : UrlBuilderUtil::buildAppDashboardUrl($request->siteLanguageIsoCode)
             );
         }
 
@@ -127,12 +127,12 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
             if ($isInvitationEnabled) {
                 return Response::createRedirectResponse(
-                    UrlBuilderUtil::buildPublicInviteRequestUrl($request->getSiteLanguage())
+                    UrlBuilderUtil::buildPublicInviteRequestUrl($request->siteLanguageIsoCode)
                 );
             }
 
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildPublicHomepageUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode)
             );
         }
 
@@ -140,7 +140,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             'shared/register',
             new HtmlResponseData(
                 request: $request,
-                pageTitle: Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navSignUp'),
+                pageTitle: Core::getLocalisationUtil($request->siteLanguageIsoCode)->getValue('navSignUp'),
             )
         );
     }
@@ -157,7 +157,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         string $verificationIdentifier,
         Request $request
     ): Response {
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
         $userFeedback = $this->userService->verifyEmailAddress(
             $verificationIdentifier,
             $localisationUtil
@@ -182,7 +182,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         Request $request
     ): Response {
         $res = $this->userService->validatePasswordResetVerificationPage($verificationIdentifier);
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
 
         if (empty($res)) {
             return $this->buildHomepageResponse(
@@ -194,15 +194,15 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        $user = $this->userService->getUserForId($res->getUserId());
+        $user = $this->userService->getUserForId($res->userId);
         return Response::createFrontendPublicHtmlResponse(
-            'shared/password-reset',
-            new HtmlResponseData(
+            template: 'shared/password-reset',
+            responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navChangePassword'),
                 verificationHash: $user->getValidationHash(),
                 passwordUserId: $user->getId()
-            )
+            ),
         );
     }
 
@@ -219,7 +219,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         Request $request
     ): Response {
         $res = $this->userService->validateCreateUserPasswordPage($verificationIdentifier);
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
 
         if (empty($res)) {
             return Response::createFrontendPublicHtmlResponse(
@@ -234,15 +234,15 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        $user = $this->userService->getUserForId($res->getUserId());
+        $user = $this->userService->getUserForId($res->userId);
         return Response::createFrontendPublicHtmlResponse(
-            'shared/password-creation',
-            new HtmlResponseData(
+            template: 'shared/password-creation',
+            responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navCreatePassword'),
                 verificationHash: $user->getValidationHash(),
                 passwordUserId: $user->getId()
-            )
+            ),
         );
     }
 
@@ -255,18 +255,18 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getInviteRequestPage(Request $request): Response
     {
-        $session = $request->getSession();
+        $session = $request->session;
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildBackofficeDashboardUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode)
             );
         }
 
         $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
         if (!$isInvitationEnabled) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildPublicHomepageUrl($request->getSiteLanguage())
+                UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode)
             );
         }
 
@@ -274,7 +274,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             'shared/invite-request',
             new HtmlResponseData(
                 request: $request,
-                pageTitle: Core::getLocalisationUtil($request->getSiteLanguage())->getValue('navSignUp'),
+                pageTitle: Core::getLocalisationUtil($request->siteLanguageIsoCode)->getValue('navSignUp'),
             )
         );
     }
@@ -298,7 +298,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         );
 
         $xml = $this->rssService->buildRss(
-            siteLanguage: $request->getSiteLanguage(),
+            siteLanguage: $request->siteLanguageIsoCode,
             articles: $articles,
         );
 
@@ -321,7 +321,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             ),
         );
 
-        $isAdmin = $request->getSession() && $request->getSession()->isAdmin();
+        $isAdmin = $request->session && $request->session->isAdmin();
         $statusIds = $isAdmin
             ? [ArticleStatus::PUBLISHED->value, ArticleStatus::PRIVATE->value]
             : [ArticleStatus::PUBLISHED->value];

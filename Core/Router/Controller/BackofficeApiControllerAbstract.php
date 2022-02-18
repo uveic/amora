@@ -287,7 +287,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
     private function validateAndCallGetUsers(Request $request): Response
     {
-        $queryParams = $request->getGetParams();
+        $queryParams = $request->getParams;
         $errors = [];
 
 
@@ -740,7 +740,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
     private function validateAndCallGetTags(Request $request): Response
     {
-        $queryParams = $request->getGetParams();
+        $queryParams = $request->getParams;
         $errors = [];
 
 
@@ -779,7 +779,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         $path = $request->getPath();
         $pathParts = explode('/', $path);
-        $method = $request->getMethod();
+        $method = $request->method;
 
         if ($method === 'POST' &&
             $this->pathParamsMatcher(

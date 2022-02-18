@@ -2,35 +2,18 @@
 
 namespace Amora\Core\Module\Article\Value;
 
-use Amora\Core\Model\Util\LookupTableBasicValue;
-
-final class ArticleType
+enum ArticleType: int
 {
-    const HOMEPAGE = 1;
-    const BLOG = 3;
-    const PAGE = 4;
+    const Homepage = 1;
+    const Blog = 3;
+    const Page = 4;
 
     public static function getAll(): array
     {
         return [
-            self::HOMEPAGE => new LookupTableBasicValue(self::HOMEPAGE, 'Home'),
-            self::BLOG => new LookupTableBasicValue(self::BLOG, 'Blog'),
-            self::PAGE => new LookupTableBasicValue(self::PAGE, 'Page'),
+            self::Homepage,
+            self::Blog,
+            self::Page,
         ];
-    }
-
-    public static function asArray(): array
-    {
-        $output = [];
-        foreach (self::getAll() as $item) {
-            $output[] = $item->asArray();
-        }
-        return $output;
-    }
-
-    public static function getNameForId(int $id): string
-    {
-        $all = self::getAll();
-        return empty($all[$id]) ? 'Unknown' : $all[$id]->getName();
     }
 }

@@ -34,7 +34,7 @@ if ($article) {
 }
 
 $articleStatusId = $article ? $article->getStatusId() : ArticleStatus::DRAFT->value;
-$articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::getNameForId($articleStatusId));
+$articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::from($articleStatusId)->name);
 $isPublished = $article && $articleStatusId === ArticleStatus::PUBLISHED->value;
 
 $random = StringUtil::getRandomString(5);
