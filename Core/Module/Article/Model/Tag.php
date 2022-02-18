@@ -5,8 +5,8 @@ namespace Amora\Core\Module\Article\Model;
 class Tag
 {
     public function __construct(
-        private ?int $id,
-        private string $name
+        public ?int $id,
+        public readonly string $name
     ) {}
 
     public static function fromArray(array $data): self

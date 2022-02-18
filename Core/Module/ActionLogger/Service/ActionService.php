@@ -31,16 +31,16 @@ class ActionService
                 return;
             }
 
-            $session = $request->getSession();
+            $session = $request->session;
 
             $this->storeActionFromValues(
                 url: substr($request->getPath(), 0, 2000),
-                referrer: $request->getReferrer() ? substr($request->getReferrer(), 0, 2000) : null,
-                userId: $session?->getUser()->getId(),
-                sessionId: $session?->getSessionId(),
-                ip: $request->getSourceIp(),
-                userAgent: $request->getUserAgent() ? substr($request->getUserAgent(), 0, 255) : null,
-                clientLanguage: $request->getClientLanguage() ? substr($request->getClientLanguage(), 0, 255) : null,
+                referrer: $request->referrer ? substr($request->referrer, 0, 2000) : null,
+                userId: $session?->user->id,
+                sessionId: $session?->sessionId,
+                ip: $request->sourceIp,
+                userAgent: $request->userAgent ? substr($request->userAgent, 0, 255) : null,
+                clientLanguage: $request->clientLanguage ? substr($request->clientLanguage, 0, 255) : null,
             );
         } catch (Throwable $t) {
             $this->logger->logError('Error logging action');

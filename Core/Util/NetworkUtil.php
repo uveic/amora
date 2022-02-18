@@ -22,11 +22,11 @@ final class NetworkUtil
      * Takes an array of HTTP request headers, and works out the IP of
      * the connecting client.
      *
-     * @return string The client IP
+     * @return string|null The client IP
      */
-    public static function determineClientIp(): string
+    public static function determineClientIp(): ?string
     {
-        $ipString = '';
+        $ipString = null;
 
         if (!empty($_SERVER['HTTP_INCAP_CLIENT_IP'])) {
             $ipString = $_SERVER['HTTP_INCAP_CLIENT_IP'];
@@ -66,15 +66,15 @@ final class NetworkUtil
      * the value is looked up using `determineClientIp()` above.
      *
      * @param string|null $ip Optional IP address to look up the country for
-     * @return string The two-letter ISO code for the relevant IP if one can be found, empty String otherwise
+     * @return string|null The two-letter ISO code for the relevant IP if one can be found, empty String otherwise
      */
-    public static function getCountryCodeFromIP(?string $ip = null): string
+    public static function getCountryCodeFromIP(?string $ip = null): ?string
     {
         if (empty($ip)) {
             $ip = self::determineClientIp();
         }
 
-        $countryCode = '';
+        $countryCode = null;
         if (!empty($ip)) {
             try {
                 if (!isset(self::$geoliteCountryReader)) {
@@ -100,15 +100,15 @@ final class NetworkUtil
      * the value is looked up using `determineClientIp()` above.
      *
      * @param string|null $ip Optional IP address to look up the city for
-     * @return string The two-letter ISO code for the relevant IP if one can be found, empty String otherwise
+     * @return string|null The two-letter ISO code for the relevant IP if one can be found, empty String otherwise
      */
-    public static function getCityFromIP(?string $ip = null): string
+    public static function getCityFromIP(?string $ip = null): ?string
     {
         if (empty($ip)) {
             $ip = self::determineClientIp();
         }
 
-        $city = '';
+        $city = null;
         if (!empty($ip)) {
             try {
                 if (empty(self::$geoliteCityReader)) {

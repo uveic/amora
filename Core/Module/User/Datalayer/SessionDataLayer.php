@@ -8,6 +8,7 @@ use Amora\Core\Logger;
 use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\DateUtil;
+use DateTimeZone;
 
 class SessionDataLayer
 {
@@ -115,7 +116,7 @@ class SessionDataLayer
         return $session;
     }
 
-    public function updateTimezoneForUserId(int $userId, string $newTimezone): bool
+    public function updateTimezoneForUserId(int $userId, DateTimeZone $newTimezone): bool
     {
         $res = $this->db->execute(
             '
@@ -126,7 +127,7 @@ class SessionDataLayer
                     AND forced_expiration_at IS NULL
             ',
             [
-                ':timezone' => $newTimezone,
+                ':timezone' => $newTimezone->getName(),
                 ':userId' => $userId,
                 ':now' => DateUtil::getCurrentDateForMySql()
             ]
@@ -135,7 +136,7 @@ class SessionDataLayer
         if (!$res) {
             $this->logger->logError(
                 'Error updating timezone. User ID: ' . $userId .
-                ' - New timezone: ' . $newTimezone
+                ' - New timezone: ' . $newTimezone->getName()
             );
         }
 

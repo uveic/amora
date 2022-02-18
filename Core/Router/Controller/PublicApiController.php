@@ -117,14 +117,14 @@ final class PublicApiController extends PublicApiControllerAbstract
      */
     protected function getSession(Request $request): Response
     {
-        $user = $request->getSession()?->getUser();
+        $user = $request->session?->getUser();
 
         $userArray = [];
         if ($user) {
             $userArray = $user->asArray();
             $userArray['language_name'] = Language::getNameForId($user->getLanguageId());
-            $userArray['role_name'] = UserRole::getNameForId($user->getRoleId());
-            $userArray['journey_status_name'] = UserJourneyStatus::getNameForId($user->getJourneyStatusId());
+            $userArray['role_name'] = $user->role->name;
+            $userArray['journey_status_name'] = $user->journeyStatus->name;
             unset($userArray['password_hash']);
         }
 
@@ -166,9 +166,9 @@ final class PublicApiController extends PublicApiControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
         $session = $this->sessionService->login(
             $user,
-            $user->getTimezone(),
-            $request->getSourceIp(),
-            $request->getUserAgent()
+            DateUtil::convertStringToDateTimeZone($user->timezone),
+            $request->sourceIp,
+            $request->userAgent
         );
 
         if (empty($session)) {
@@ -198,7 +198,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     protected function forgotPassword(string $email, Request $request): Response
     {
         $existingUser =$this->userService->getUserForEmail($email);
-        if (empty($existingUser) || !$existingUser->isEnabled()) {
+        if (empty($existingUser) || !$existingUser->isEnabled) {
             return new PublicApiControllerForgotPasswordSuccessResponse(true);
         }
 
@@ -293,9 +293,9 @@ final class PublicApiController extends PublicApiControllerAbstract
 
             $session = $this->sessionService->login(
                 $user,
-                $user->getTimezone(),
-                $request->getSourceIp(),
-                $request->getUserAgent()
+                DateUtil::convertStringToDateTimeZone($user->timezone),
+                $request->sourceIp,
+                $request->userAgent
             );
 
             return new PublicApiControllerUserRegistrationSuccessResponse(
@@ -452,7 +452,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         ?int $itemsPerPage,
         Request $request
     ): Response {
-        $statusIds = $request->getSession() && $request->getSession()->isAdmin()
+        $statusIds = $request->session && $request->session->isAdmin()
             ? [ArticleStatus::PUBLISHED->value, ArticleStatus::PRIVATE->value]
             : [ArticleStatus::PUBLISHED->value];
         $pagination = new Pagination(itemsPerPage: $itemsPerPage, offset: $offset);

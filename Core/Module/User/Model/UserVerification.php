@@ -2,93 +2,50 @@
 
 namespace Amora\Core\Module\User\Model;
 
+use Amora\Core\Module\User\Value\VerificationType;
+use Amora\Core\Util\DateUtil;
+use DateTimeImmutable;
+
 class UserVerification
 {
     public function __construct(
-        private ?int $id,
-        private int $userId,
-        private int $typeId,
-        private ?string $email,
-        private string $createdAt,
-        private ?string $verifiedAt,
-        private string $verificationIdentifier,
-        private bool $isEnabled
+        public ?int $id,
+        public readonly int $userId,
+        public readonly VerificationType $type,
+        public readonly ?string $email,
+        public readonly DateTimeImmutable $createdAt,
+        public readonly ?DateTimeImmutable $verifiedAt,
+        public readonly string $verificationIdentifier,
+        public readonly bool $isEnabled
     ) {}
 
     public static function fromArray(array $item): self
     {
-        $id = empty($item['user_verification_id'])
-            ? (empty($item['id']) ? null : (int)$item['id'])
-            : (int)$item['user_verification_id'];
-
         return new self(
-            $id,
+            (int)$item['user_verification_id'],
             $item['user_id'],
-            $item['type_id'],
+            VerificationType::from($item['type_id']),
             $item['email'] ?? null,
-            $item['created_at'],
-            $item['verified_at'] ?? null,
+            DateUtil::convertStringToDateTimeImmutable($item['created_at']),
+            isset($item['verified_at'])
+                ? DateUtil::convertStringToDateTimeImmutable($item['verified_at'])
+                : null,
             $item['verification_identifier'],
-            empty($item['is_enabled']) ? false : true
+            !empty($item['is_enabled']),
         );
     }
 
     public function asArray(): array
     {
         return [
-            'id' => $this->getId(),
-            'user_id' => $this->getUserId(),
-            'type_id' => $this->getTypeId(),
-            'email' => $this->getEmail(),
-            'created_at' => $this->getCreatedAt(),
-            'verified_at' => $this->getVerifiedAt(),
-            'verification_identifier' => $this->getVerificationIdentifier(),
-            'is_enabled' => $this->isEnabled()
+            'id' => $this->id,
+            'user_id' => $this->userId,
+            'type_id' => $this->type->value,
+            'email' => $this->email,
+            'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'verified_at' => $this->verifiedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'verification_identifier' => $this->verificationIdentifier,
+            'is_enabled' => $this->isEnabled,
         ];
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    public function getTypeId(): int
-    {
-        return $this->typeId;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function getCreatedAt(): string
-    {
-        return $this->createdAt;
-    }
-
-    public function getVerifiedAt(): ?string
-    {
-        return $this->verifiedAt;
-    }
-
-    public function getVerificationIdentifier(): string
-    {
-        return $this->verificationIdentifier;
-    }
-
-    public function isEnabled(): bool
-    {
-        return $this->isEnabled;
     }
 }

@@ -102,10 +102,10 @@ function renderOperationValidator(jsonFileName, operation) {
     private function validateAndCall${functionName}(Request $request): Response
     {${pathParams}`,
     parameters.find(p => p.in === 'formData')
-      ? `        $formDataParams = $request->getPostParams();`
+      ? `        $formDataParams = $request->postParams;`
       : [],
     parameters.find(p => p.in === 'query')
-      ? `        $queryParams = $request->getGetParams();`
+      ? `        $queryParams = $request->getParams;`
       : [],
     parameters.find(p => p.in === 'body')
       ? `        $bodyParams = $request->getBodyPayload();`
@@ -328,7 +328,7 @@ function renderNotRequiredParameterIf(varName, type, name) {
 
 function renderAbstractRouter(jsonFileName, operations) {
   const response = util.htmlControllers.indexOf(jsonFileName) >= 0
-    ? `Response::createUnauthorisedRedirectLoginResponse($request->getSiteLanguage())`
+    ? `Response::createUnauthorisedRedirectLoginResponse($request->siteLanguageIsoCode)`
     : 'Response::createUnauthorizedJsonResponse()';
 
   return [
@@ -342,7 +342,7 @@ function renderAbstractRouter(jsonFileName, operations) {
 
         $path = $request->getPath();
         $pathParts = explode('/', $path);
-        $method = $request->getMethod();`,
+        $method = $request->method;`,
     operations.map(renderRouteMatcher),
     `
         return null;

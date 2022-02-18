@@ -6,6 +6,7 @@ use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use Amora\Core\Core;
+use DateTimeZone;
 use Throwable;
 
 final class DateUtil
@@ -257,6 +258,16 @@ final class DateUtil
         } catch (Throwable) {
             Core::getDefaultLogger()->logError('Error converting string to DateTimeImmutable: ' . $date);
             return new DateTimeImmutable();
+        }
+    }
+
+    public static function convertStringToDateTimeZone(string $timezone): DateTimeZone
+    {
+        try {
+            return new DateTimeZone($timezone);
+        } catch (Throwable) {
+            Core::getDefaultLogger()->logError('Error converting string to DateTimeZone: ' . $timezone);
+            return new DateTimeZone(Core::getDefaultTimezone());
         }
     }
 

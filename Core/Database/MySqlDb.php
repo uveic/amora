@@ -14,26 +14,11 @@ final class MySqlDb
 
     public function __construct(
         private Logger $logger,
-        private string $host,
-        private string $user,
-        private string $password,
-        private string $name
+        public readonly string $host,
+        public readonly string $user,
+        public readonly string $password,
+        public readonly string $name
     ) {}
-
-    public function getDbName(): string
-    {
-        return $this->name;
-    }
-
-    public function getUser(): string
-    {
-        return $this->user;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
 
     public function updateTimezone(): bool
     {

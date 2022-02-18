@@ -23,19 +23,20 @@ require_once Core::getPathRoot() . '/vendor/autoload.php';
 
 $body = file_get_contents('php://input');
 $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), " /");
+$path = empty($path) ? 'home' : $path;
 
 $request = new Request(
-    NetworkUtil::determineClientIp(),
-    $_SERVER['HTTP_USER_AGENT'] ?? null,
-    $_SERVER['REQUEST_METHOD'],
-    $path,
-    $_SERVER['HTTP_REFERER'] ?? null,
-    $body,
-    $_GET,
-    $_POST,
-    $_FILES,
-    $_COOKIE,
-    $_SERVER
+    sourceIp: NetworkUtil::determineClientIp(),
+    userAgent: $_SERVER['HTTP_USER_AGENT'] ?? null,
+    method: strtoupper($_SERVER['REQUEST_METHOD']),
+    path: $path,
+    referrer: $_SERVER['HTTP_REFERER'] ?? null,
+    body: $body,
+    getParams: $_GET,
+    postParams: $_POST,
+    files: $_FILES,
+    cookies: $_COOKIE,
+    headers: $_SERVER,
 );
 
 try {

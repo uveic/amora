@@ -33,7 +33,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
     public function authenticate(Request $request): bool
     {
-        $session = $request->getSession();
+        $session = $request->session;
 
         if (empty($session) || !$session->isAuthenticated()) {
             return false;
@@ -52,9 +52,9 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
     public function storeImage(Request $request): Response
     {
         try {
-            $session = $request->getSession();
+            $session = $request->session;
             $images = $this->imageService->processImages(
-                files: $request->getFiles(),
+                files: $request->processedFiles,
                 userId: $session->getUser()->getId(),
             );
 
@@ -107,7 +107,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             return new AuthorisedApiControllerDestroyImageFailureResponse();
         }
 
-        $session = $request->getSession();
+        $session = $request->session;
         if (!$session->isAdmin()
             && $image->getUserId() != $session->getUser()->getId()
         ) {
@@ -172,7 +172,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             return new AuthorisedApiControllerUpdateUserAccountFailureResponse();
         }
 
-        $session = $request->getSession();
+        $session = $request->session;
         if ($session->getUser()->getId() !== $existingUser->getId()) {
             return new AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse();
         }

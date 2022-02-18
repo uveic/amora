@@ -23,12 +23,12 @@ abstract class AppBackofficeHtmlControllerAbstract extends AbstractController
     {
         $auth = $this->authenticate($request);
         if ($auth !== true) {
-            return Response::createUnauthorisedRedirectLoginResponse($request->getSiteLanguage());
+            return Response::createUnauthorisedRedirectLoginResponse($request->siteLanguageIsoCode);
         }
 
         $path = $request->getPath();
         $pathParts = explode('/', $path);
-        $method = $request->getMethod();
+        $method = $request->method;
 
         return null;
     }

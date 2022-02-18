@@ -20,6 +20,22 @@ use Amora\Core\Module\Mailer\Value\MailerTemplate;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\VerificationType;
+use BackedEnum;
+
+function asArray(array $values): array
+{
+    $output = [];
+    /** @var BackedEnum $value */
+    foreach ($values as $value) {
+        $output[] = [
+            'id' => $value->value,
+            'name' => $value->name,
+        ];
+    }
+
+    return $output;
+}
+
 
 return [
     new LookupTableSettings(
@@ -30,37 +46,37 @@ return [
     new LookupTableSettings(
         database: Core::getCoreDb(),
         tableName: 'user_role',
-        tableFieldsToValues: UserRole::asArray(),
+        tableFieldsToValues: asArray(UserRole::getAll()),
     ),
     new LookupTableSettings(
         database: Core::getCoreDb(),
         tableName: 'article_type',
-        tableFieldsToValues: ArticleType::asArray(),
+        tableFieldsToValues: asArray(ArticleType::getAll()),
     ),
     new LookupTableSettings(
         database: Core::getCoreDb(),
         tableName: 'article_status',
-        tableFieldsToValues: ArticleStatus::asArray(),
+        tableFieldsToValues: asArray(ArticleStatus::getAll()),
     ),
     new LookupTableSettings(
         database: Core::getCoreDb(),
         tableName: 'article_section_type',
-        tableFieldsToValues: ArticleSectionType::asArray(),
+        tableFieldsToValues: asArray(ArticleSectionType::getAll()),
     ),
     new LookupTableSettings(
         database: Core::getCoreDb(),
         tableName: 'user_journey_status',
-        tableFieldsToValues: UserJourneyStatus::asArray(),
+        tableFieldsToValues: asArray(UserJourneyStatus::getAll()),
     ),
     new LookupTableSettings(
         database: Core::getCoreDb(),
         tableName: 'user_verification_type',
-        tableFieldsToValues: VerificationType::asArray(),
+        tableFieldsToValues: asArray(VerificationType::getAll()),
     ),
 
     new LookupTableSettings(
         database: Core::getMailerDb(),
         tableName: 'mailer_template',
-        tableFieldsToValues: MailerTemplate::asArray(),
+        tableFieldsToValues: asArray(MailerTemplate::getAll()),
     ),
 ];

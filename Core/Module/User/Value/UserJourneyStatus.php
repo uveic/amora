@@ -2,47 +2,25 @@
 
 namespace Amora\Core\Module\User\Value;
 
-use Amora\Core\Model\Util\LookupTableBasicValue;
-
-final class UserJourneyStatus
+enum UserJourneyStatus: int
 {
-    const USER_CREATED_PENDING_PASSWORD = 500;
-    const REGISTRATION = 1000;
+    case PendingPasswordCreation = 500;
+    case Registration = 1000;
 
     public static function getAll(): array
     {
         return [
-            self::USER_CREATED_PENDING_PASSWORD => new LookupTableBasicValue(
-                self::USER_CREATED_PENDING_PASSWORD,
-                'Pending Password'
-            ),
-            self::REGISTRATION => new LookupTableBasicValue(self::REGISTRATION, 'Registered'),
+            self::PendingPasswordCreation,
+            self::Registration,
         ];
     }
 
-    public static function asArray(): array
+    public static function getInitialUserJourneyStatusFromRole(UserRole $role): self
     {
-        $output = [];
-        foreach (self::getAll() as $item) {
-            $output[] = $item->asArray();
-        }
-        return $output;
-    }
-
-    public static function getNameForId(int $id): string
-    {
-        $all = self::getAll();
-        return isset($all[$id]) ? $all[$id]->getName() : 'Unknown';
-    }
-
-    public static function getInitialJourneyIdFromRoleId(int $roleId): int
-    {
-        switch ($roleId) {
-            case UserRole::ADMIN:
-            case UserRole::USER:
-                return self::USER_CREATED_PENDING_PASSWORD;
-        }
-
-        return self::REGISTRATION;
+        return match ($role) {
+            UserRole::Admin,
+            UserRole::User => self::PendingPasswordCreation,
+            default => self::Registration,
+        };
     }
 }

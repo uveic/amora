@@ -28,8 +28,8 @@ abstract class HtmlResponseDataAbstract
         protected ?string $siteImageUri = null,
         protected ?Pagination $pagination = null,
     ) {
-        $this->session = $request->getSession();
-        $this->localisationUtil = Core::getLocalisationUtil(strtoupper($request->getSiteLanguage()));
+        $this->session = $request->session;
+        $this->localisationUtil = Core::getLocalisationUtil(strtoupper($request->siteLanguageIsoCode));
 
         $baseUrl = Core::getConfigValue('baseUrl');
         $siteImageUrl = Core::getConfigValue('siteImageUrl');
@@ -41,7 +41,7 @@ abstract class HtmlResponseDataAbstract
         $this->baseUrl = empty($baseUrl) ? '' : $baseUrl;
         $this->sitePath = $sitePath;
         $this->siteUrl = trim($this->baseUrl, ' /') . '/' . ltrim($this->sitePath, ' /');
-        $this->siteLanguage = $request->getSiteLanguage();
+        $this->siteLanguage = $request->siteLanguageIsoCode;
         $this->siteName = $this->localisationUtil->getValue('siteName');
         $this->siteImageUri = $siteImageUri ?? ($siteImageUrl ?? '');
         $this->lastUpdatedTimestamp = time();
@@ -152,7 +152,7 @@ abstract class HtmlResponseDataAbstract
             return Core::getDefaultTimezone();
         }
 
-        return $this->getSession()->getTimezone();
+        return $this->getSession()->timezone;
     }
 
     public function getMenu(bool $forceCustomerMenu = false): array
@@ -180,7 +180,7 @@ abstract class HtmlResponseDataAbstract
         if (empty($this->getSession())) {
             return false;
         }
-        return $this->getSession()->getUser()->isVerified();
+        return $this->getSession()->user->verified;
     }
 
     public function minutesSinceUserRegistration(): int
@@ -189,6 +189,6 @@ abstract class HtmlResponseDataAbstract
             return 0;
         }
 
-        return round((time() - strtotime($this->getSession()->getUser()->getCreatedAt())) / 60);
+        return round((time() - $this->getSession()->user->createdAt->getTimestamp()) / 60);
     }
 }

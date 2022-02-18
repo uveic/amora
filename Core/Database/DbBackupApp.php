@@ -19,7 +19,7 @@ final class DbBackupApp extends App
     ) {
         parent::__construct(
             logger: $logger,
-            appName: 'Db Backup App - DB: ' . $this->db->getDbName(),
+            appName: 'Db Backup App - DB: ' . $this->db->name,
             lockMaxTimeSinceLastSyncSeconds: 3600,
             isPersistent: false
         );
@@ -42,7 +42,7 @@ final class DbBackupApp extends App
     {
         $now = new DateTime(timezone: new DateTimeZone('UTC'));
 
-        return 'backup_' . $this->db->getDbName()
+        return 'backup_' . $this->db->name
             . $now->format("_Y-m-d_H\hi\m")
             . ".sql.gz";
     }
@@ -57,8 +57,8 @@ final class DbBackupApp extends App
         $this->log('Backing up to ' . $backupFileFullPath);
 
         exec(
-            "{$this->mysqlDumpCommand} -u {$this->db->getUser()} \
-            -p'{$this->db->getPassword()}' \
+            "{$this->mysqlDumpCommand} -u {$this->db->user} \
+            -p'{$this->db->password}' \
             --single-transaction \
             --flush-logs \
             --add-drop-table \
@@ -68,7 +68,7 @@ final class DbBackupApp extends App
             --extended-insert \
             --quick \
             --set-charset \
-            {$this->db->getDbName()} \
+            {$this->db->name} \
             | {$this->gzipCommand} > {$backupFileFullPath}"
         );
 
@@ -102,9 +102,9 @@ final class DbBackupApp extends App
         $unzippedFullPath = $this->backupFolderPath . $backupFilenameUnzipped;
 
         exec(
-            "{$this->mysqlCommand} -u {$this->db->getUser()} \
-             -p'{$this->db->getPassword()}' \
-             {$this->db->getDbName()} \
+            "{$this->mysqlCommand} -u {$this->db->user} \
+             -p'{$this->db->password}' \
+             {$this->db->name} \
              < {$unzippedFullPath}"
         );
 
@@ -172,7 +172,7 @@ final class DbBackupApp extends App
         }
 
         // Check if files are in this format 'backup_DdName_YYYY-mm-dd_HHhMMm.sql.gz'
-        $regex = "/backup_{$this->db->getDbName()}_\d{4}-\d{2}-\d{2}_\d{2}h\d{2}m.sql.gz/";
+        $regex = "/backup_{$this->db->name}_\d{4}-\d{2}-\d{2}_\d{2}h\d{2}m.sql.gz/";
         $files = scandir($this->backupFolderPath);
 
         foreach ($files as $key => $file) {

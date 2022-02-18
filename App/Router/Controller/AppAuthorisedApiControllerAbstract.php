@@ -28,7 +28,7 @@ abstract class AppAuthorisedApiControllerAbstract extends AbstractController
 
         $path = $request->getPath();
         $pathParts = explode('/', $path);
-        $method = $request->getMethod();
+        $method = $request->method;
 
         return null;
     }

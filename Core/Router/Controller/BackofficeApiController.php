@@ -8,6 +8,7 @@ use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\Language;
+use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Logger;
@@ -52,7 +53,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
     public function authenticate(Request $request): bool
     {
-        $session = $request->getSession();
+        $session = $request->session;
         if (empty($session) || !$session->isAuthenticated() || !$session->isAdmin()) {
             return false;
         }
@@ -88,9 +89,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $repeatPassword,
         Request $request
     ): Response {
-        $now = DateUtil::getCurrentDateForMySql();
+        $now = new DateTimeImmutable();
         $email = StringUtil::normaliseEmail($email);
-        $localisationUtil = Core::getLocalisationUtil($request->getSiteLanguage());
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
 
         if (!StringUtil::isEmailAddressValid($email)) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
@@ -105,14 +106,18 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 success: false,
                 errorMessage: sprintf(
                     $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
-                    UrlBuilderUtil::buildPublicLoginUrl($request->getSiteLanguage())
+                    UrlBuilderUtil::buildPublicLoginUrl($request->siteLanguageIsoCode)
                 ),
             );
         }
 
-        $languageId = $languageId ?? Language::getIdForIsoCode($request->getSiteLanguage());
-        $roleId = $roleId ?? UserRole::USER;
-        $timezone = $timezone ?? $request->getSession()->getUser()->getTimezone();
+        $languageId = $languageId ?? Language::getIdForIsoCode($request->siteLanguageIsoCode);
+        $userRole = $roleId
+            ? UserRole::from($roleId)
+            : UserRole::User;
+        $timezone = $timezone
+            ? DateUtil::convertStringToDateTimeZone($timezone)
+            : $request->session->user->timezone;
         $isEnabled = $isEnabled ?? true;
 
         try {
@@ -120,8 +125,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 user: new User(
                     id: null,
                     languageId: $languageId,
-                    roleId: $roleId,
-                    journeyStatusId: UserJourneyStatus::getInitialJourneyIdFromRoleId($roleId),
+                    role: $userRole,
+                    journeyStatus: UserJourneyStatus::getInitialUserJourneyStatusFromRole($userRole),
                     createdAt: $now,
                     updatedAt: $now,
                     email: $email,
@@ -130,9 +135,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                     bio: $bio,
                     isEnabled: $isEnabled,
                     verified: false,
-                    timezone: $timezone
+                    timezone: $timezone,
                 ),
-                verificationEmailId: VerificationType::PASSWORD_CREATION,
+                verificationType: VerificationType::PasswordCreation,
             );
         } catch (Throwable $t) {
             $this->logger->logError('Error creating new user: ' . $t->getMessage());
@@ -145,7 +150,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerStoreUserSuccessResponse(
             success: true,
             id: $newUser?->getId(),
-            redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->getSiteLanguage()),
+            redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguageIsoCode),
         );
     }
 
@@ -239,7 +244,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerUpdateUserSuccessResponse(
             true,
-            UrlBuilderUtil::buildBackofficeUsersUrl($request->getSiteLanguage())
+            UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguageIsoCode)
         );
     }
 
@@ -265,7 +270,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $res
                 ? null
                 : Core::getLocalisationUtil(
-                    $request->getSiteLanguage()
+                    $request->siteLanguageIsoCode
                 )->getValue('globalGenericError')
         );
     }
@@ -308,9 +313,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             : ($statusId === ArticleStatus::PUBLISHED->value ? $now : null);
 
         $res = $this->articleService->createNewArticle(
-            new Article(
+            article: new Article(
                 id: null,
-                user: $request->getSession()->getUser(),
+                user: $request->session->getUser(),
                 statusId: $statusId,
                 typeId: $typeId ?? ArticleType::PAGE,
                 createdAt: $now,
@@ -323,10 +328,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 uri: $uri,
                 tags: [],
             ),
-            $sections ?? [],
-            $tags ?? [],
-            $request->getSourceIp(),
-            $request->getUserAgent()
+            sections: $sections ?? [],
+            tags: $tags ?? [],
+            userIp: $request->sourceIp,
+            userAgent: $request->userAgent,
         );
 
         $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
@@ -392,7 +397,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $res = $this->articleService->workflowUpdateArticle(
             new Article(
                 id: $articleId,
-                user: $request->getSession()->getUser(),
+                user: $request->session->getUser(),
                 statusId: $statusId ?? $existingArticle->getStatusId(),
                 typeId: $typeId,
                 createdAt: $existingArticle->getCreatedAt(),
@@ -406,8 +411,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             ),
             $sections,
             $tags ?? [],
-            $request->getSourceIp(),
-            $request->getUserAgent()
+            $request->sourceIp,
+            $request->userAgent
         );
 
         $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
@@ -453,8 +458,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 mainImage: $existingArticle->getMainImage(),
                 uri: $existingArticle->getUri(),
             ),
-            $request->getSourceIp(),
-            $request->getUserAgent()
+            $request->sourceIp,
+            $request->userAgent
         );
 
         return new BackofficeApiControllerDestroyArticleSuccessResponse($deleteRes);

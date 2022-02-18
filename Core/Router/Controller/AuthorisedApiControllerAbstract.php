@@ -315,7 +315,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
         $path = $request->getPath();
         $pathParts = explode('/', $path);
-        $method = $request->getMethod();
+        $method = $request->method;
 
         if ($method === 'POST' &&
             $this->pathParamsMatcher(

@@ -83,8 +83,8 @@ class ImageService
         $key = 0;
         /** @var File $file */
         foreach ($files as $file) {
-            $targetPath = rtrim($this->mediaBaseDir, ' /') . '/' . $file->getName();
-            $res = rename($file->getFullPath(), $targetPath);
+            $targetPath = rtrim($this->mediaBaseDir, ' /') . '/' . $file->name;
+            $res = rename($file->fullPath, $targetPath);
             if (empty($res)) {
                 return $output;
             }

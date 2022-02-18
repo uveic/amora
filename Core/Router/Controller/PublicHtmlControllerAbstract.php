@@ -416,12 +416,12 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
     {
         $auth = $this->authenticate($request);
         if ($auth !== true) {
-            return Response::createUnauthorisedRedirectLoginResponse($request->getSiteLanguage());
+            return Response::createUnauthorisedRedirectLoginResponse($request->siteLanguageIsoCode);
         }
 
         $path = $request->getPath();
         $pathParts = explode('/', $path);
-        $method = $request->getMethod();
+        $method = $request->method;
 
         if ($method === 'GET' &&
             $this->pathParamsMatcher(
