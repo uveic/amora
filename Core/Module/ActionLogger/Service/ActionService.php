@@ -37,7 +37,11 @@ class ActionService
                 clientLanguage: $request->clientLanguage ? substr($request->clientLanguage, 0, 255) : null,
             );
         } catch (Throwable $t) {
-            $this->logger->logError('Error logging action');
+            $this->logger->logError(
+                'Error logging action => '
+                . PHP_EOL . $t->getMessage()
+                . PHP_EOL . $t->getTraceAsString(),
+            );
         }
     }
 

@@ -37,12 +37,12 @@ trait DataLayerTrait {
 
     private function generateLimitCode(QueryOptions $queryOptions): string
     {
-        return ' LIMIT ' . $queryOptions->getLimit() . ' OFFSET ' . $queryOptions->getOffset();
+        return ' LIMIT ' . $queryOptions->getItemsPerPage() . ' OFFSET ' . $queryOptions->getOffset();
     }
 
     private function generateOrderByCode(QueryOptions $queryOptions, array $orderByMapping): string
     {
-        if ($queryOptions->orderRandomly()) {
+        if ($queryOptions->orderRandomly) {
             return ' ORDER BY RAND()';
         }
 
@@ -54,7 +54,7 @@ trait DataLayerTrait {
                     continue;
                 }
 
-                $orderByParts[] = $orderByMapping[$item->field] . ' ' . $item->direction;
+                $orderByParts[] = $orderByMapping[$item->field] . ' ' . $item->direction->value;
             }
 
             if (empty($orderByParts)) {

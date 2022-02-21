@@ -67,26 +67,6 @@ class User
         ];
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getLanguageId(): int
-    {
-        return $this->languageId;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
     public function getNameOrEmail(): string
     {
         if ($this->name) {

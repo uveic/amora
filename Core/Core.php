@@ -38,6 +38,8 @@ class Core
 
         require_once self::getPathRoot() . '/Core/Model/File.php';
         require_once self::getPathRoot() . '/Core/Model/Request.php';
+        require_once self::getPathRoot() . '/Core/Value/Response/ContentType.php';
+        require_once self::getPathRoot() . '/Core/Value/Response/HttpStatusCode.php';
         require_once self::getPathRoot() . '/Core/Model/Response.php';
         require_once self::getPathRoot() . '/Core/Model/Menu/MenuItem.php';
         require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseDataAbstract.php';
@@ -267,6 +269,7 @@ class Core
                 $pass = $config['database'][$dbIdentifier]['password'];
                 $dbName = $config['database'][$dbIdentifier]['name'];
 
+                require_once self::getPathRoot() . '/Core/Value/QueryOrderDirection.php';
                 require_once self::getPathRoot() . '/Core/Model/Util/QueryOrderBy.php';
                 require_once self::getPathRoot() . '/Core/Model/Util/QueryOptions.php';
                 require_once self::getPathRoot() . '/Core/Database/Model/TransactionResponse.php';

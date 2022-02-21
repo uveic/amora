@@ -7,6 +7,7 @@ use Amora\Core\Logger;
 use Amora\Core\Model\Response\Pagination;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
 use Amora\Core\Module\Article\Datalayer\TagDataLayer;
 use Amora\Core\Module\Article\Model\Article;
@@ -16,6 +17,7 @@ use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 
 class ArticleService
@@ -60,7 +62,7 @@ class ArticleService
             typeIds: [ArticleType::Blog->value],
             publishedBefore: $publishedBefore,
             queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy(field: 'published_at', direction: 'DESC')],
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
                 pagination: new Pagination(itemsPerPage: 1),
             ),
         );
@@ -79,7 +81,7 @@ class ArticleService
             typeIds: [ArticleType::Blog->value],
             publishedAfter: $publishedAfter,
             queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy(field: 'published_at', direction: 'ASC')],
+            orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::ASC)],
                 pagination: new Pagination(itemsPerPage: 1),
             ),
         );

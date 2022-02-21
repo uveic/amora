@@ -8,6 +8,7 @@ use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\Language;
+use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
@@ -149,7 +150,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerStoreUserSuccessResponse(
             success: true,
-            id: $newUser?->getId(),
+            id: $newUser?->id,
             redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguageIsoCode),
         );
     }
@@ -167,7 +168,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $users = $this->userService->filterUsersBy(
             searchText: $q,
             queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy('name', 'ASC')],
+                orderBy: [new QueryOrderBy(field: 'name', direction: QueryOrderDirection::ASC)],
                 pagination: new Response\Pagination(itemsPerPage: 25),
             ),
         );
@@ -176,13 +177,16 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         /** @var User $user */
         foreach ($users as $user) {
             $output[] = [
-                'id' => $user->getId(),
-                'name' => $user->getName(),
-                'email' => $user->getEmail(),
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
             ];
         }
 
-        return new BackofficeApiControllerGetUsersSuccessResponse(true, $output);
+        return new BackofficeApiControllerGetUsersSuccessResponse(
+            success: true,
+            users: $output,
+        );
     }
 
     /**
@@ -234,17 +238,17 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             StringUtil::isTrue($isEnabled)
         );
 
-        if (!$updateRes->isSuccess()) {
+        if (!$updateRes->isSuccess) {
             return new BackofficeApiControllerUpdateUserSuccessResponse(
-                false,
-                null,
-                $updateRes->getMessage()
+                success: false,
+                redirect: null,
+                errorMessage: $updateRes->message,
             );
         }
 
         return new BackofficeApiControllerUpdateUserSuccessResponse(
-            true,
-            UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguageIsoCode)
+            success: true,
+            redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguageIsoCode),
         );
     }
 
@@ -266,12 +270,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $res = $this->userService->deleteUser($user);
 
         return new BackofficeApiControllerDestroyUserSuccessResponse(
-            $res,
-            $res
+            success: $res,
+            errorMessage: $res
                 ? null
-                : Core::getLocalisationUtil(
-                    $request->siteLanguageIsoCode
-                )->getValue('globalGenericError')
+                : Core::getLocalisationUtil($request->siteLanguageIsoCode)->getValue('globalGenericError')
         );
     }
 
@@ -329,7 +331,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $newArticle = $this->articleService->createNewArticle(
             article: new Article(
                 id: null,
-                user: $request->session->getUser(),
+                user: $request->session->user,
                 status: $status,
                 type: $typeId ? ArticleType::from($typeId) : ArticleType::Page,
                 createdAt: $now,
@@ -426,7 +428,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $res = $this->articleService->workflowUpdateArticle(
             article: new Article(
                 id: $articleId,
-                user: $request->session->getUser(),
+                user: $request->session->user,
                 status: $status,
                 type: $type,
                 createdAt: $existingArticle->createdAt,
@@ -535,6 +537,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     protected function getTags(?string $name, Request $request): Response
     {
         $tags = $this->tagService->getAllTags(true);
-        return new BackofficeApiControllerGetTagsSuccessResponse(true, $tags);
+        return new BackofficeApiControllerGetTagsSuccessResponse(
+            success: true,
+            tags: $tags,
+        );
     }
 }

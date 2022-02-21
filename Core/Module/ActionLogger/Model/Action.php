@@ -8,7 +8,7 @@ use DateTimeImmutable;
 class Action
 {
     public function __construct(
-        public readonly ?int $id,
+        public ?int $id,
         public readonly ?int $userId,
         public readonly ?string $sessionId,
         public readonly DateTimeImmutable $createdAt,

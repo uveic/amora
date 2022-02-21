@@ -8,7 +8,7 @@ use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 $userRegisteredMoreThan24HoursAgo = $responseData->minutesSinceUserRegistration() > 24 * 60;
 if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
   <div id="feedback-banner" class="feedback-success">
-      <?=sprintf($responseData->getLocalValue('authenticationVerifyEmailBanner'), $responseData->getSession()->getUser()->getEmail(), $responseData->getSession()->getUser()->getId())?>
+      <?=sprintf($responseData->getLocalValue('authenticationVerifyEmailBanner'), $responseData->getSession()->user->email, $responseData->getSession()->user->id)?>
   </div>
 <?php } ?>
 <header>

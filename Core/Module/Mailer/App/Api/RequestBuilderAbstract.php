@@ -6,25 +6,13 @@ use Amora\Core\Logger;
 
 abstract class RequestBuilderAbstract
 {
-    private Logger $logger;
-    private string $fromEmail;
-    private string $fromName;
-    private ?string $replyToEmail;
-    private ?string $replyToName;
-
     public function __construct(
-        Logger $logger,
-        string $fromEmail,
-        string $fromName,
-        ?string $replyToEmail = null,
-        ?string $replyToName = null
-    ) {
-        $this->logger = $logger;
-        $this->fromEmail = $fromEmail;
-        $this->fromName = $fromName;
-        $this->replyToEmail = $replyToEmail;
-        $this->replyToName = $replyToName;
-    }
+        public readonly Logger $logger,
+        public readonly string $fromEmail,
+        public readonly string $fromName,
+        public readonly ?string $replyToEmail = null,
+        public readonly ?string $replyToName = null,
+    ) {}
 
     abstract public function buildMailRequest(
         array $emailReceivers,
@@ -33,29 +21,4 @@ abstract class RequestBuilderAbstract
         string $contentType = 'text/html',
         ?string $overwriteFromName = null
     ): string;
-
-    public function getLogger(): Logger
-    {
-        return $this->logger;
-    }
-
-    public function getFromEmail(): string
-    {
-        return $this->fromEmail;
-    }
-
-    public function getFromName(): string
-    {
-        return $this->fromName;
-    }
-
-    public function getReplyToEmail(): ?string
-    {
-        return $this->replyToEmail;
-    }
-
-    public function getReplyToName(): ?string
-    {
-        return $this->replyToName;
-    }
 }

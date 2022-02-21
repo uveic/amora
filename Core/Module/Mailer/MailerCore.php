@@ -31,14 +31,13 @@ class MailerCore extends Core
             className: 'MailerDataLayer',
             factory: function () {
                 $db = self::getDb();
-                $logger = self::getMailerLogger();
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerLogItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Datalayer/MailerDataLayer.php';
 
-                return new MailerDataLayer($db, $logger);
+                return new MailerDataLayer($db);
             },
             isSingleton: true,
         );
@@ -49,14 +48,13 @@ class MailerCore extends Core
         return self::getInstance(
             className: 'MailerService',
             factory: function () {
-                $logger = self::getMailerLogger();
                 $mailerDataLayer = self::getMailerDataLayer();
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerLogItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Service/MailerService.php';
-                return new MailerService($logger, $mailerDataLayer);
+                return new MailerService($mailerDataLayer);
             },
             isSingleton: true,
         );

@@ -2,6 +2,7 @@
 namespace Amora\Core\Router\Controller\Response;
 
 use Amora\Core\Model\Response;
+use Amora\Core\Value\Response\HttpStatusCode;
 
 class BackofficeApiControllerStoreUserSuccessResponse extends Response
 {
@@ -29,6 +30,6 @@ class BackofficeApiControllerStoreUserSuccessResponse extends Response
             : $errorMessage;
 
         list($output, $contentType) = self::getResponseType($responseData);
-        parent::__construct($output, $contentType, Response::HTTP_200_OK);
+        parent::__construct($output, $contentType, HttpStatusCode::HTTP_200_OK);
     }
 }

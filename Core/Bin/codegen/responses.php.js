@@ -10,6 +10,7 @@ function renderMain(className, operationId, httpStatus, responseSchema, classPre
 namespace Amora\\${classPrefix}\\Router\\Controller\\Response;
 
 use Amora\\Core\\Model\\Response;
+use Amora\\Core\\Value\\Response\\HttpStatusCode;
 `,
     renderResponseClass(className, operationId, httpStatus, responseSchema),
     ``
@@ -115,7 +116,7 @@ function renderResponseClass(responseClassName, operationId, httpStatus, schema)
             : $${util.snakeToCamel(param.name)};\n`
     ]),
     `        list($output, $contentType) = self::getResponseType($responseData);`,
-    `        parent::__construct($output, $contentType, Response::${httpStatus});`,
+    `        parent::__construct($output, $contentType, HttpStatusCode::${httpStatus});`,
     `    }`,
     `}`
   ];

@@ -23,8 +23,8 @@ $subtitleHtml = sprintf(
       <img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>">
     </a>
     <form method="POST" id="form-password-reset">
-      <input class="input" type="hidden" id="userId" name="userId" value="<?=$responseData->getPasswordUserId()?>">
-      <input class="input" type="hidden" id="verificationHash" name="verificationHash" value="<?=$responseData->getVerificationHash()?>">
+      <input class="input" type="hidden" id="userId" name="userId" value="<?=$responseData->passwordUserId?>">
+      <input class="input" type="hidden" id="verificationHash" name="verificationHash" value="<?=$responseData->verificationHash?>">
       <input class="input" type="hidden" id="postUrl" name="postUrl" value="<?= UrlBuilderUtil::PUBLIC_API_PASSWORD_RESET?>">
       <div>
         <h1 id="register-title" class="m-b-6"><?=$this->e($responseData->getSiteName())?></h1>

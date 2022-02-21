@@ -28,7 +28,7 @@ class UserMailService
         UserVerification $verification,
         MailerItem $mailerItem
     ): bool {
-        $this->userDataLayer->disableVerificationDataForUserId($user->getId());
+        $this->userDataLayer->disableVerificationDataForUserId($user->id);
         $res = $this->userDataLayer->storeUserVerification($verification);
 
         if (empty($res)) {
@@ -44,7 +44,7 @@ class UserMailService
         $verificationIdentifier = $this->getUniqueVerificationIdentifier();
         $verification = new UserVerification(
             id: null,
-            userId: $user->getId(),
+            userId: $user->id,
             type: VerificationType::EmailAddress,
             email: $emailToVerify,
             createdAt: new DateTimeImmutable(),
@@ -65,7 +65,7 @@ class UserMailService
                 $verificationIdentifier = $this->getUniqueVerificationIdentifier();
                 $verification = new UserVerification(
                     id: null,
-                    userId: $user->getId(),
+                    userId: $user->id,
                     type: VerificationType::EmailAddress,
                     email: $emailToVerify,
                     createdAt: new DateTimeImmutable(),
@@ -106,7 +106,7 @@ class UserMailService
 
                 $verification = new UserVerification(
                     id: null,
-                    userId: $user->getId(),
+                    userId: $user->id,
                     type: VerificationType::PasswordReset,
                     email: null,
                     createdAt: new DateTimeImmutable(),
@@ -137,7 +137,7 @@ class UserMailService
         $verificationIdentifier = $this->getUniqueVerificationIdentifier();
         $verification = new UserVerification(
             id: null,
-            userId: $user->getId(),
+            userId: $user->id,
             type: VerificationType::PasswordCreation,
             email: null,
             createdAt: new DateTimeImmutable(),
@@ -166,7 +166,7 @@ class UserMailService
 
     private function buildPasswordResetEmail(User $user, string $verificationIdentifier): MailerItem
     {
-        $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
+        $languageIsoCode = Language::getIsoCodeForId($user->languageId);
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
         $linkUrl = UrlBuilderUtil::buildPublicPasswordResetUrl(
             languageIsoCode: $languageIsoCode,
@@ -203,7 +203,7 @@ class UserMailService
         string $emailToVerify,
         string $verificationIdentifier
     ): MailerItem {
-        $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
+        $languageIsoCode = Language::getIsoCodeForId($user->languageId);
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
         $linkUrl = UrlBuilderUtil::buildPublicVerificationEmailUrl(
             languageIsoCode: $languageIsoCode,
@@ -227,7 +227,7 @@ class UserMailService
             replyToEmailAddress: null,
             senderName: null,
             receiverEmailAddress: $emailToVerify,
-            receiverName: $user->getName(),
+            receiverName: $user->name,
             subject: $emailSubject,
             contentHtml: $emailContent,
             fieldsJson: null,
@@ -240,7 +240,7 @@ class UserMailService
         string $emailToVerify,
         string $verificationIdentifier
     ): MailerItem {
-        $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
+        $languageIsoCode = Language::getIsoCodeForId($user->languageId);
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
         $linkUrl = UrlBuilderUtil::buildPublicEmailUpdateUrl(
             languageIsoCode: $languageIsoCode,
@@ -262,7 +262,7 @@ class UserMailService
             replyToEmailAddress: null,
             senderName: null,
             receiverEmailAddress: $emailToVerify,
-            receiverName: $user->getName(),
+            receiverName: $user->name,
             subject: $emailSubject,
             contentHtml: $emailContent,
             fieldsJson: null,
@@ -274,7 +274,7 @@ class UserMailService
         User $user,
         string $verificationIdentifier
     ): MailerItem {
-        $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
+        $languageIsoCode = Language::getIsoCodeForId($user->languageId);
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
         $linkUrl = UrlBuilderUtil::buildPublicCreatePasswordUrl(
             languageIsoCode: $languageIsoCode,

@@ -160,7 +160,7 @@ class UserDataLayer
 
     public function deleteUser(User $user): bool
     {
-        return $this->db->delete(self::USER_TABLE, ['id' => $user->getId()]);
+        return $this->db->delete(self::USER_TABLE, ['id' => $user->id]);
     }
 
     public function storeUserVerification(UserVerification $data): UserVerification

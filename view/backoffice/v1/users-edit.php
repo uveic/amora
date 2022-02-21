@@ -3,6 +3,7 @@
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\Language;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
@@ -64,7 +65,7 @@ $defaultLanguage = $userToEdit
           <div class="control">
             <select id="languageId" name="languageId">
 <?php
-                  foreach ($responseData->getLanguages() as $language) {
+                  foreach (Language::getAll() as $language) {
                       $selected = $language['id'] === $defaultLanguage;
 ?>
               <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$language['id']?>"><?=$language['name']?></option>

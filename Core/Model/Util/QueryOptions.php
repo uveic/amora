@@ -10,32 +10,19 @@ class QueryOptions
         public readonly array $orderBy = [],
         public readonly ?Pagination $pagination = null,
         public readonly bool $orderRandomly = false,
-    ) {
-        $this->pagination = $this->pagination ?? new Pagination();
-    }
+    ) {}
 
-    public function getOrderBy(): array
+    public function getItemsPerPage(): int
     {
-        return $this->orderBy;
-    }
-
-    public function getPagination(): Pagination
-    {
-        return $this->pagination;
-    }
-
-    public function getLimit(): int
-    {
-        return $this->pagination->itemsPerPage;
+        return $this->pagination
+            ? $this->pagination->itemsPerPage
+            : 10000;
     }
 
     public function getOffset(): int
     {
-        return $this->pagination->offset;
-    }
-
-    public function orderRandomly(): bool
-    {
-        return $this->orderRandomly;
+        return $this->pagination
+            ? $this->pagination->offset
+            : 0;
     }
 }

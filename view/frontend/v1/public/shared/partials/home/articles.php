@@ -10,7 +10,7 @@ if ($responseData->getSession() && $responseData->getSession()->isAdmin()) {
   return;
 }
 
-if (!$responseData->getHomeArticles()) {
+if (!$responseData->homeArticles) {
   return;
 }
 
@@ -20,7 +20,7 @@ if (!$responseData->getHomeArticles()) {
   <div class="home-tag-items">
 <?php
 /** @var Article $article */
-foreach ($responseData->getHomeArticles() as $article) {
+foreach ($responseData->homeArticles as $article) {
     $href = UrlBuilderUtil::buildPublicArticleUrl(
         uri: $article->uri,
         languageIsoCode: $responseData->getSiteLanguage(),

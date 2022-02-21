@@ -30,7 +30,7 @@ $this->layout('base', ['responseData' => $responseData,])
         </div>
 <?php
 /** @var User $user */
-foreach ($responseData->getListOfUsers() as $user) {
+foreach ($responseData->listOfUsers as $user) {
 ?>
         <div class="table-row">
           <div class="table-item edit flex-no-grow"><a href="<?=UrlBuilderUtil::buildBackofficeUserUrl($responseData->getSiteLanguage(), $user->id)?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('globalEdit')?>"></a></div>

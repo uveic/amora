@@ -7,7 +7,7 @@ use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
-$articleSections = $responseData->getArticleSections();
+$articleSections = $responseData->articleSections;
 $images = [];
 
 $this->layout('base', ['responseData' => $responseData]);

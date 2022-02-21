@@ -4,8 +4,8 @@ use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
-$previousArticle = $responseData->getPreviousBlogPost();
-$nextArticle = $responseData->getNextBlogPost();
+$previousArticle = $responseData->previousBlogPost;
+$nextArticle = $responseData->nextBlogPost;
 
 if (!$previousArticle && !$nextArticle) {
   return;

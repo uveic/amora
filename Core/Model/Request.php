@@ -136,7 +136,7 @@ final class Request
     public function getSiteLanguageFromClientLanguage(): string
     {
         if ($this->session) {
-            return Language::getIsoCodeForId($this->session->getUser()->getLanguageId());
+            return Language::getIsoCodeForId($this->session->user->languageId);
         }
 
         $parts = explode(',', $this->clientLanguage);

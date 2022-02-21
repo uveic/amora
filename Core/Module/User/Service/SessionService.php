@@ -65,8 +65,8 @@ class SessionService
 
     public function logout(Session $session)
     {
-        $this->updateBrowserCookie($session->getSessionId(), time() - 60 * 60 * 24);
-        return $this->dataLayer->expireSession($session->getId());
+        $this->updateBrowserCookie($session->sessionId, time() - 60 * 60 * 24);
+        return $this->dataLayer->expireSession($session->id);
     }
 
     private function updateBrowserCookie(string $sid, int $newExpiryTimestamp)

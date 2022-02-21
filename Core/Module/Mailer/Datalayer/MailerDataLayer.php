@@ -3,7 +3,6 @@
 namespace Amora\Core\Module\Mailer\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Logger;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Model\MailerLogItem;
 use Amora\Core\Util\DateUtil;
@@ -14,14 +13,9 @@ class MailerDataLayer
     const MAILER_QUEUE_TABLE_NAME = 'mailer_queue';
     const MAILER_LOG_TABLE_NAME = 'mailer_log';
 
-    private MySqlDb $db;
-    private Logger $logger;
-
-    public function __construct(MySqlDb $db, Logger $logger)
-    {
-        $this->db = $db;
-        $this->logger = $logger;
-    }
+    public function __construct(
+        private MySqlDb $db,
+    ) {}
 
     private function getMailerQueue(
         ?string $lockId = null,
@@ -35,7 +29,7 @@ class MailerDataLayer
         $params = [];
         $sql = '
             SELECT
-                q.id,
+                q.id AS mail_id,
                 q.template_id,
                 q.reply_to_email,
                 q.sender_name,
@@ -77,7 +71,7 @@ class MailerDataLayer
     {
         $res = $this->db->insert(self::MAILER_QUEUE_TABLE_NAME, $mailerItem->asArray());
 
-        $mailerItem->setId($res);
+        $mailerItem->id = (int)$res;
         return $mailerItem;
     }
 
@@ -151,7 +145,7 @@ class MailerDataLayer
             WHERE id = :id
         ';
         $params = [
-            ':id' => $mailerItem->getId(),
+            ':id' => $mailerItem->id,
             ':error' => empty($hasError) ? 0 : 1
         ];
 
@@ -162,7 +156,7 @@ class MailerDataLayer
     {
         $res = $this->db->insert(self::MAILER_LOG_TABLE_NAME, $item->asArray());
 
-        $item->setId($res);
+        $item->id = (int)$res;
         return $item;
     }
 

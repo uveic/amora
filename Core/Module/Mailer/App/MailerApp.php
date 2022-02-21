@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Mailer\App;
 
+use DateTimeImmutable;
 use Throwable;
 use Amora\Core\App\App;
 use Amora\Core\Logger;
@@ -12,7 +13,6 @@ use Amora\Core\Module\Mailer\Datalayer\MailerDataLayer;
 use Amora\Core\Module\Mailer\Model\Email;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Model\MailerLogItem;
-use Amora\Core\Util\DateUtil;
 
 class MailerApp extends App
 {
@@ -53,25 +53,25 @@ class MailerApp extends App
     private function processMailItem(MailerItem $item): bool
     {
         $this->logger->logInfo(
-            $this->getLogPrefix() . 'Building request for email ID: ' . $item->getId()
+            $this->getLogPrefix() . 'Building request for email ID: ' . $item->id
         );
 
-        $emailReceivers = [new Email($item->getReceiverEmailAddress(), $item->getReceiverName())];
+        $emailReceivers = [new Email($item->receiverEmailAddress, $item->receiverName)];
         $contentData = $this->requestBuilder->buildMailRequest(
-            $emailReceivers,
-            $item->getSubject(),
-            $item->getContentHtml(),
-            'text/html',
-            $item->getSenderName()
+            emailReceivers: $emailReceivers,
+            subject: $item->subject,
+            content: $item->contentHtml,
+            contentType: 'text/html',
+            overwriteFromName: $item->senderName,
         );
         $this->logger->logDebug($contentData);
 
         $this->logger->logInfo(
-            $this->getLogPrefix() . 'Logging API request for email ID: ' . $item->getId()
+            $this->getLogPrefix() . 'Logging API request for email ID: ' . $item->id
         );
-        $newLogItemId = $this->logApiRequest($item->getId(), $contentData);
+        $newLogItemId = $this->logApiRequest($item->id, $contentData);
 
-        $this->logger->logInfo($this->getLogPrefix() . 'Sending email ID: ' . $item->getId());
+        $this->logger->logInfo($this->getLogPrefix() . 'Sending email ID: ' . $item->id);
         $apiResponse = $this->apiClient->post(
             $this->getLogPrefix(),
             '/mail/send',
@@ -79,20 +79,20 @@ class MailerApp extends App
         );
 
         $this->logger->logInfo(
-            $this->getLogPrefix() . 'Logging API response for email ID: ' . $item->getId()
+            $this->getLogPrefix() . 'Logging API response for email ID: ' . $item->id
         );
         $this->logApiResponse($newLogItemId, $apiResponse);
 
         $this->logger->logInfo(
-            $this->getLogPrefix() . 'Marking email as processed ID: ' . $item->getId()
+            $this->getLogPrefix() . 'Marking email as processed ID: ' . $item->id
         );
-        $res = $this->dataLayer->markMailAsProcessed($item, $apiResponse->hasError());
+        $res = $this->dataLayer->markMailAsProcessed($item, $apiResponse->hasError);
 
         if ($res) {
-            $this->logger->logInfo($this->getLogPrefix() . 'Email sent ID: ' . $item->getId());
+            $this->logger->logInfo($this->getLogPrefix() . 'Email sent ID: ' . $item->id);
         } else {
             $this->logger->logError(
-                $this->getLogPrefix() . 'Error sending email ID: ' . $item->getId()
+                $this->getLogPrefix() . 'Error sending email ID: ' . $item->id
             );
         }
 
@@ -104,10 +104,10 @@ class MailerApp extends App
         try {
             $newMailerItem = $this->dataLayer->storeMailerLog(
                 new MailerLogItem(
-                    null,
-                    $mailerQueueId,
-                    DateUtil::getCurrentDateForMySql(),
-                    $requestData
+                    id: null,
+                    mailerQueueId: $mailerQueueId,
+                    createdAt: new DateTimeImmutable(),
+                    request: $requestData,
                 )
             );
         } catch (Throwable $t) {
@@ -122,10 +122,10 @@ class MailerApp extends App
     {
         try {
             $this->dataLayer->updateMailerLog(
-                $newLogItemId,
-                $res->getResponse(),
-                $res->getErrorMessage(),
-                !$res->hasError()
+                id: $newLogItemId,
+                response: $res->response,
+                errorMessage: $res->errorMessage,
+                sent: !$res->hasError,
             );
         } catch (Throwable $t) {
             $this->logger->logError(

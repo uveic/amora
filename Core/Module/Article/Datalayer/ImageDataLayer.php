@@ -17,11 +17,6 @@ class ImageDataLayer
     public function __construct(private MySqlDb $db, private Logger $logger)
     {}
 
-    public function getDb(): MySqlDb
-    {
-        return $this->db;
-    }
-
     public function filterImagesBy(
         array $imageIds = [],
         array $userIds = [],

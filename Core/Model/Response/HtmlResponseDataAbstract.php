@@ -148,27 +148,27 @@ abstract class HtmlResponseDataAbstract
 
     public function getTimezone(): string
     {
-        if (!$this->getSession()) {
+        if (!$this->session) {
             return Core::getDefaultTimezone();
         }
 
-        return $this->getSession()->timezone;
+        return $this->session->timezone->getName();
     }
 
     public function getMenu(bool $forceCustomerMenu = false): array
     {
-        if ($this->getSession() && $this->getSession()->isAdmin() && !$forceCustomerMenu) {
+        if ($this->session && $this->session->isAdmin() && !$forceCustomerMenu) {
             return AppMenu::getAdminAll(
                 languageIsoCode: $this->getSiteLanguage(),
-                username: $this->getSession()->getUser()->getNameOrEmail(),
+                username: $this->session->user->getNameOrEmail(),
             );
         }
 
-        if ($this->getSession()) {
+        if ($this->session) {
             return AppMenu::getCustomerAll(
                 languageIsoCode: $this->getSiteLanguage(),
-                username: $this->getSession()->getUser()->getNameOrEmail(),
-                includeAdminLink: $this->getSession()->isAdmin(),
+                username: $this->session->user->getNameOrEmail(),
+                includeAdminLink: $this->session->isAdmin(),
             );
         }
 
@@ -177,18 +177,18 @@ abstract class HtmlResponseDataAbstract
 
     public function isUserVerified(): bool
     {
-        if (empty($this->getSession())) {
+        if (empty($this->session)) {
             return false;
         }
-        return $this->getSession()->user->verified;
+        return $this->session->user->verified;
     }
 
     public function minutesSinceUserRegistration(): int
     {
-        if (empty($this->getSession())) {
+        if (empty($this->session)) {
             return 0;
         }
 
-        return round((time() - $this->getSession()->user->createdAt->getTimestamp()) / 60);
+        return round((time() - $this->session->user->createdAt->getTimestamp()) / 60);
     }
 }

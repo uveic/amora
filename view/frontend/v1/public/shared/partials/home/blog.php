@@ -9,11 +9,11 @@ use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 
 $isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin();
 
-if (!$responseData->getBlogArticles()) {
+if (!$responseData->blogArticles) {
   return;
 }
 
-$articles = $responseData->getBlogArticles();
+$articles = $responseData->blogArticles;
 $itemsPerPage = $responseData->getPagination()->itemsPerPage;
 $offset = $responseData->getPagination()->offset + $itemsPerPage;
 
