@@ -16,14 +16,14 @@ class AppRouterCore extends Core
     public static function getAppPublicHtmlController(): AppPublicHtmlController
     {
         return self::getInstance(
-            'AppPublicHtmlController',
-            function () {
+            className: 'AppPublicHtmlController',
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicHtmlController.php';
                 return new AppPublicHtmlController();
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -34,14 +34,14 @@ class AppRouterCore extends Core
     public static function getAppAuthorisedHtmlController(): AppAuthorisedHtmlController
     {
         return self::getInstance(
-            'AppAuthorisedHtmlController',
-            function () {
+            className: 'AppAuthorisedHtmlController',
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedHtmlController.php';
                 return new AppAuthorisedHtmlController();
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -52,14 +52,14 @@ class AppRouterCore extends Core
     public static function getAppBackofficeHtmlController(): AppBackofficeHtmlController
     {
         return self::getInstance(
-            'AppBackofficeHtmlController',
-            function () {
+            className: 'AppBackofficeHtmlController',
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeHtmlController.php';
                 return new AppBackofficeHtmlController();
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -70,14 +70,14 @@ class AppRouterCore extends Core
     public static function getAppBackofficeApiController(): AppBackofficeApiController
     {
         return self::getInstance(
-            'AppBackofficeApiController',
-            function () {
+            className: 'AppBackofficeApiController',
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeApiController.php';
                 return new AppBackofficeApiController();
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -88,14 +88,14 @@ class AppRouterCore extends Core
     public static function getAppAuthorisedApiController(): AppAuthorisedApiController
     {
         return self::getInstance(
-            'AppAuthorisedApiController',
-            function () {
+            className: 'AppAuthorisedApiController',
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedApiController.php';
                 return new AppAuthorisedApiController();
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -106,14 +106,14 @@ class AppRouterCore extends Core
     public static function getAppPublicApiController(): AppPublicApiController
     {
         return self::getInstance(
-            'AppPublicApiController',
-            function () {
+            className: 'AppPublicApiController',
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicApiController.php';
                 return new AppPublicApiController();
             },
-            true
+            isSingleton: true,
         );
     }
 }
