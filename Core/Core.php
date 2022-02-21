@@ -179,11 +179,11 @@ class Core
         $isRunningInCli = self::isRunningInCli();
 
         return self::getInstance(
-            'Logger',
-            function () use ($appName, $isRunningInCli) {
+            className: 'Logger',
+            factory: function () use ($appName, $isRunningInCli) {
                 return new Logger($appName, $isRunningInCli);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -197,8 +197,8 @@ class Core
         $actionService = ActionLoggerCore::getActionService();
 
         return self::getInstance(
-            'Router',
-            function () use ($actionService) {
+            className: 'Router',
+            factory: function () use ($actionService) {
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/App/Router/AppRouterCore.php';
                 require_once self::getPathRoot() . '/App/Router/AppRouter.php';
@@ -206,7 +206,7 @@ class Core
                 require_once self::getPathRoot() . '/Core/Router/Router.php';
                 return new Router($actionService);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -230,8 +230,8 @@ class Core
         $dbClassname = ucfirst($dbIdentifier) . 'Database';
 
         return self::getInstance(
-            $dbClassname,
-            function () use ($dbIdentifier) {
+            className: $dbClassname,
+            factory: function () use ($dbIdentifier) {
                 $config = self::getConfig();
                 if (empty($config['database'])) {
                     self::getDefaultLogger()->logError("Missing 'database' section from config");
@@ -276,7 +276,7 @@ class Core
                 require_once self::getPathRoot() . '/Core/Database/MySqlDb.php';
                 return new MySqlDb($logger, $host, $user, $pass, $dbName);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -291,12 +291,12 @@ class Core
         string $pathToMigrationFiles
     ): MigrationDbApp {
         return self::getInstance(
-            'MigrationDbApp',
-            function () use ($db, $pathToMigrationFiles) {
+            className: 'MigrationDbApp',
+            factory: function () use ($db, $pathToMigrationFiles) {
                 require_once self::getPathRoot() . '/Core/Database/Migration/MigrationDbApp.php';
                 return new MigrationDbApp($db, $pathToMigrationFiles);
             },
-            false
+            isSingleton: false,
         );
     }
 
@@ -311,8 +311,8 @@ class Core
         $config = Core::getConfig();
 
         return self::getInstance(
-            'DbBackupApp',
-            function () use ($db, $config) {
+            className: 'DbBackupApp',
+            factory: function () use ($db, $config) {
                 $backupFolderPath = $config['databaseBackup']['folderPath'] ?? '/tmp/';
                 $mysqlCommand = $config['databaseBackup']['mysqlCommandPath'] ?? 'mysql';
                 $mysqlDumpCommand = $config['databaseBackup']['mysqlDumpCommandPath'] ?? 'mysqldump';
@@ -330,7 +330,7 @@ class Core
                     gzipCommand: $gzipCommand,
                 );
             },
-            false
+            isSingleton: false,
         );
     }
 
@@ -343,13 +343,13 @@ class Core
         $logger = self::getLogger('SyncLookupTables');
 
         return self::getInstance(
-            'SyncLookupTablesApp',
-            function () use ($logger) {
+            className: 'SyncLookupTablesApp',
+            factory: function () use ($logger) {
                 require_once self::getPathRoot() . '/Core/Model/Util/LookupTableSettings.php';
                 require_once self::getPathRoot() . '/Core/App/SyncLookupTablesApp.php';
                 return new SyncLookupTablesApp($logger);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -366,13 +366,13 @@ class Core
         $defaultSiteLanguage = strtoupper(self::getConfigValue('defaultSiteLanguage') ?? 'EN');
 
         return self::getInstance(
-            'LocalisationUtil',
-            function () use ($logger, $defaultSiteLanguage, $languageIsoCode) {
+            className: 'LocalisationUtil',
+            factory: function () use ($logger, $defaultSiteLanguage, $languageIsoCode) {
                 require_once self::getPathRoot() . '/Core/Module/User/Service/UserService.php';
                 require_once self::getPathRoot() . '/Core/Util/LocalisationUtil.php';
                 return new LocalisationUtil($logger, $defaultSiteLanguage, $languageIsoCode);
             },
-            $isSingleton
+            isSingleton: $isSingleton,
         );
     }
 }
