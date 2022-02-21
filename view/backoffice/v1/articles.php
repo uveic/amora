@@ -24,7 +24,7 @@ $this->layout('base', ['responseData' => $responseData,])
         </div>
 <?php
 /** @var Article $article */
-foreach ($responseData->getArticles() as $article) {
+foreach ($responseData->articles as $article) {
     $articleItemHtml = ArticleEditHtmlGenerator::generateArticleTitleHtml($responseData, $article);
 ?>
             <div class="table-row">

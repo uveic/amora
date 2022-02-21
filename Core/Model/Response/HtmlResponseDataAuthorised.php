@@ -4,8 +4,6 @@ namespace Amora\Core\Model\Response;
 
 use Amora\Core\Model\Request;
 use Amora\Core\Module\User\Model\User;
-use Amora\Core\Value\Language;
-use Amora\Core\Module\User\Value\UserRole;
 
 class HtmlResponseDataAuthorised extends HtmlResponseData
 {
@@ -14,19 +12,17 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         ?string $pageTitle = null,
         ?string $pageDescription = null,
         ?array $articles = [],
-        protected ?array $usersList = [],
-        protected ?array $images = [],
-        protected ?array $articleSections = [],
-        protected ?Pagination $pagination = null,
+        ?Pagination $pagination = null,
+        public readonly ?array $listOfUsers = [],
+        public readonly ?array $images = [],
+        public readonly ?array $articleSections = [],
     ) {
-        $this->usersList = $usersList ?? [];
-
         parent::__construct(
             request: $request,
             pageTitle: $pageTitle,
             pageDescription: $pageDescription,
-            articles: $articles,
             pagination: $pagination,
+            articles: $articles,
         );
     }
 
@@ -36,7 +32,7 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
             return null;
         }
 
-        return $this->session->getUser();
+        return $this->session->user;
     }
 
     public function getUserName(): string
@@ -44,34 +40,9 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         return $this->getUser() ? $this->getUser()->getNameOrEmail() : '';
     }
 
-    public function getListOfUsers(): array
-    {
-        return $this->usersList ?? [];
-    }
-
-    public function getImages(): array
-    {
-        return $this->images ?? [];
-    }
-
-    public function getArticleSections(): array
-    {
-        return $this->articleSections ?? [];
-    }
-
     public function getUserToEdit(): ?User
     {
-        $allUsers = $this->getListOfUsers();
+        $allUsers = $this->listOfUsers;
         return $allUsers[0] ?? null;
-    }
-
-    public function getUserRoles(): array
-    {
-        return UserRole::getAll();
-    }
-
-    public function getLanguages(): array
-    {
-        return Language::getAll();
     }
 }

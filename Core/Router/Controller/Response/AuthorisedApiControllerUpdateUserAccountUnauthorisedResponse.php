@@ -2,6 +2,7 @@
 namespace Amora\Core\Router\Controller\Response;
 
 use Amora\Core\Model\Response;
+use Amora\Core\Value\Response\HttpStatusCode;
 
 class AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse extends Response
 {
@@ -13,6 +14,6 @@ class AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse extends Respo
         ];
 
         list($output, $contentType) = self::getResponseType($responseData);
-        parent::__construct($output, $contentType, Response::HTTP_401_UNAUTHORIZED);
+        parent::__construct($output, $contentType, HttpStatusCode::HTTP_401_UNAUTHORIZED);
     }
 }

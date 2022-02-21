@@ -5,11 +5,11 @@ use Amora\Core\Model\Response\HtmlHomepageResponseData;
 /** @var HtmlHomepageResponseData $responseData */
 
 $userFeedbackHtml = '';
-if ($responseData->getUserFeedback()) {
-    $class = $responseData->getUserFeedback()->isSuccess()
+if ($responseData->userFeedback) {
+    $class = $responseData->userFeedback->isSuccess
         ? 'feedback-success'
         : 'feedback-error';
-    $userFeedbackHtml = '<div id="feedback-banner" class="' . $class . '">' . $responseData->getUserFeedback()->getMessage() . '</div>';
+    $userFeedbackHtml = '<div id="feedback-banner" class="' . $class . '">' . $responseData->userFeedback->message . '</div>';
 }
 
 ?>

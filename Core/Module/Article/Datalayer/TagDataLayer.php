@@ -17,11 +17,6 @@ class TagDataLayer
     public function __construct(private MySqlDb $db, private Logger $logger)
     {}
 
-    public function getDb(): MySqlDb
-    {
-        return $this->db;
-    }
-
     public function filterTagsBy(
         array $tagIds = [],
         array $articleIds = [],

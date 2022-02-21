@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Mailer\Model;
 
 use Amora\Core\Module\Mailer\Value\MailerTemplate;
+use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
 
 class MailerItem
@@ -25,13 +26,9 @@ class MailerItem
 
     public static function fromArray(array $item): MailerItem
     {
-        $id = empty($item['id'])
-            ? (empty($item['mail_id']) ? null : $item['mail_id'])
-            : (int)$item['id'];
-
         return new MailerItem(
-            id: $id,
-            template: $item['template_id'],
+            id: (int)$item['mail_id'],
+            template: MailerTemplate::from($item['template_id']),
             replyToEmailAddress: $item['reply_to_email'] ?? null,
             senderName: $item['sender_name'] ?? null,
             receiverEmailAddress: $item['receiver_email'],
@@ -39,8 +36,10 @@ class MailerItem
             subject: $item['subject'] ?? null,
             contentHtml: $item['content_html'] ?? null,
             fieldsJson: $item['fields_json'] ?? null,
-            createdAt: $item['created_at'],
-            processedAt: $item['processed_at'] ?? null,
+            createdAt: DateUtil::convertStringToDateTimeImmutable($item['created_at']),
+            processedAt: isset($item['processed_at'])
+                ? DateUtil::convertStringToDateTimeImmutable($item['processed_at'])
+                : null,
             hasError: isset($item['has_error']) ? !empty($item['has_error']) : null,
             lockId: $item['lock_id'] ?? null,
         );
@@ -50,88 +49,18 @@ class MailerItem
     {
         return [
             'id' => $this->id,
-            'template_id' => $this->getTemplateId(),
-            'reply_to_email' => $this->getReplyToEmailAddress(),
-            'sender_name' => $this->getSenderName(),
-            'receiver_email' => $this->getReceiverEmailAddress(),
-            'receiver_name' => $this->getReceiverName(),
-            'subject' => $this->getSubject(),
-            'content_html' => $this->getContentHtml(),
-            'fields_json' => $this->getFieldsJson(),
-            'created_at' => $this->getCreatedAt(),
-            'processed_at' => $this->getProcessedAt(),
-            'has_error' => $this->getHasError(),
-            'lock_id' => $this->getLockId()
+            'template_id' => $this->template->value,
+            'reply_to_email' => $this->replyToEmailAddress,
+            'sender_name' => $this->senderName,
+            'receiver_email' => $this->receiverEmailAddress,
+            'receiver_name' => $this->receiverName,
+            'subject' => $this->subject,
+            'content_html' => $this->contentHtml,
+            'fields_json' => $this->fieldsJson,
+            'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'processed_at' => $this->processedAt?->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'has_error' => $this->hasError,
+            'lock_id' => $this->lockId,
         ];
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getTemplateId(): int
-    {
-        return $this->templateId;
-    }
-
-    public function getReplyToEmailAddress(): ?string
-    {
-        return $this->replyToEmailAddress;
-    }
-
-    public function getSenderName(): ?string
-    {
-        return $this->senderName;
-    }
-
-    public function getReceiverEmailAddress(): string
-    {
-        return $this->receiverEmailAddress;
-    }
-
-    public function getReceiverName(): ?string
-    {
-        return $this->receiverName;
-    }
-
-    public function getSubject(): ?string
-    {
-        return $this->subject;
-    }
-
-    public function getContentHtml(): ?string
-    {
-        return $this->contentHtml;
-    }
-
-    public function getFieldsJson(): ?string
-    {
-        return $this->fieldsJson;
-    }
-
-    public function getCreatedAt(): string
-    {
-        return $this->createdAt;
-    }
-
-    public function getProcessedAt(): ?string
-    {
-        return $this->processedAt;
-    }
-
-    public function getHasError(): ?bool
-    {
-        return $this->hasError;
-    }
-
-    public function getLockId(): ?string
-    {
-        return $this->lockId;
     }
 }

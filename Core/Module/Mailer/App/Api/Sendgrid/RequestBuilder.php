@@ -15,7 +15,13 @@ class RequestBuilder extends RequestBuilderAbstract
         ?string $replyToEmail = null,
         ?string $replyToName = null
     ) {
-        parent::__construct($logger, $fromEmail, $fromName, $replyToEmail, $replyToName);
+        parent::__construct(
+            logger: $logger,
+            fromEmail: $fromEmail,
+            fromName: $fromName,
+            replyToEmail: $replyToEmail,
+            replyToName: $replyToName,
+        );
     }
 
     public function buildMailRequest(
@@ -26,7 +32,7 @@ class RequestBuilder extends RequestBuilderAbstract
         ?string $overwriteFromName = null
     ): string {
         if (empty($emailReceivers)) {
-            $this->getLogger()->logError('Empty email receivers when sending a Sendgrid email');
+            $this->logger->logError('Empty email receivers when sending a Sendgrid email');
             return '';
         }
 
@@ -52,24 +58,24 @@ class RequestBuilder extends RequestBuilderAbstract
                 ]
             ],
             'from' => [
-                'email' => $this->getFromEmail(),
-                'name' => $overwriteFromName ?? $this->getFromName()
+                'email' => $this->fromEmail,
+                'name' => $overwriteFromName ?? $this->fromName,
             ],
             'content' => [
                 [
                     'type' => $contentType,
-                    'value' => $content
+                    'value' => $content,
                 ]
             ]
         ];
 
-        if ($this->getReplyToEmail()) {
+        if ($this->replyToEmail) {
             $replyToData = [
-                'email' => $this->getReplyToEmail()
+                'email' => $this->replyToEmail
             ];
 
-            if ($this->getReplyToName()) {
-                $replyToData['name'] = $this->getReplyToName();
+            if ($this->replyToName) {
+                $replyToData['name'] = $this->replyToName;
             }
 
             $contentData['reply_to'] = $replyToData;

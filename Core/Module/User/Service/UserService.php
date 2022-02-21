@@ -57,8 +57,8 @@ class UserService
                         $this->userMailService->sendPasswordCreationEmail($resUser),
                     VerificationType::EmailAddress =>
                         $this->userMailService->sendVerificationEmail(
-                            $resUser,
-                            $resUser->getEmail()
+                            user: $resUser,
+                            emailToVerify: $resUser->email,
                         ),
                     default => true
                 };
@@ -85,7 +85,7 @@ class UserService
     ): bool {
         $res = $this->userDataLayer->getDb()->withTransaction(
             function() use ($user, $updateSessionTimezone) {
-                $updatedUser = $this->userDataLayer->updateUser($user, $user->getId());
+                $updatedUser = $this->userDataLayer->updateUser($user, $user->id);
 
                 if (empty($updatedUser)) {
                     return new TransactionResponse(false);
@@ -161,7 +161,7 @@ class UserService
         }
 
         $localisationUtil = Core::getLocalisationUtil(
-            Language::getIsoCodeForId($existingUser->getLanguageId())
+            Language::getIsoCodeForId($existingUser->languageId)
         );
 
         if (isset($currentPassword) || isset($newPassword) || isset($repeatPassword)) {
@@ -209,7 +209,7 @@ class UserService
             }
 
             $userForEmail = $this->getUserForEmail($email);
-            if ($userForEmail && $userForEmail->getId() !== $existingUser->getId()) {
+            if ($userForEmail && $userForEmail->id !== $existingUser->id) {
                 return new UserFeedback(
                     false,
                     $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail')
@@ -348,8 +348,8 @@ class UserService
         $res = $this->userDataLayer->getDb()->withTransaction(
             function () use ($user, $verificationIdentifier, $newPassword) {
                 $updateRes = $this->userDataLayer->updatePassword(
-                    $user->getId(),
-                    StringUtil::hashPassword($newPassword)
+                    userId: $user->id,
+                    hashedPassword: StringUtil::hashPassword($newPassword),
                 );
 
                 if (!$updateRes) {
@@ -403,12 +403,12 @@ class UserService
             $repeatPassword
         );
 
-        if (!$validation->isSuccess()) {
+        if (!$validation->isSuccess) {
             return $validation;
         }
 
         $hasEmailChanged = isset($email)
-            && $existingUser->getEmail() !== StringUtil::normaliseEmail($email);
+            && $existingUser->email !== StringUtil::normaliseEmail($email);
         $res = $this->updateUser(
             user: new User(
                 id: $existingUser->id,

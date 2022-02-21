@@ -9,7 +9,7 @@ use Amora\Core\Util\StringUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
-$articleSections = $responseData->getArticleSections();
+$articleSections = $responseData->articleSections;
 $articleType = ArticleType::Blog;
 
 if (!$articleSections) {

@@ -14,6 +14,7 @@ use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\PublicApiControllerGetBlogPostsSuccessResponse;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
+use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
@@ -117,12 +118,12 @@ final class PublicApiController extends PublicApiControllerAbstract
      */
     protected function getSession(Request $request): Response
     {
-        $user = $request->session?->getUser();
+        $user = $request->session?->user;
 
         $userArray = [];
         if ($user) {
             $userArray = $user->asArray();
-            $userArray['language_name'] = Language::getNameForId($user->getLanguageId());
+            $userArray['language_name'] = Language::getNameForId($user->languageId);
             $userArray['role_name'] = $user->role->name;
             $userArray['journey_status_name'] = $user->journeyStatus->name;
             unset($userArray['password_hash']);
@@ -162,7 +163,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
+        $languageIsoCode = Language::getIsoCodeForId($user->languageId);
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
         $session = $this->sessionService->login(
             user: $user,
@@ -460,7 +461,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             statusIds: $statusIds,
             typeIds: [ArticleType::Blog->value],
             queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy('published_at', 'DESC')],
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
                 pagination: $pagination,
             ),
         );

@@ -33,7 +33,6 @@ class RouterCore extends Core
                 $rssService,
             ) {
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlHomepageResponseData.php';
-                require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseDataPublic.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';

@@ -16,6 +16,7 @@ use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\QueryOrderDirection;
 
 final class PublicHtmlController extends PublicHtmlControllerAbstract
 {
@@ -201,7 +202,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navChangePassword'),
                 verificationHash: $user->getValidationHash(),
-                passwordUserId: $user->getId()
+                passwordUserId: $user->id,
             ),
         );
     }
@@ -241,7 +242,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navCreatePassword'),
                 verificationHash: $user->getValidationHash(),
-                passwordUserId: $user->getId()
+                passwordUserId: $user->id,
             ),
         );
     }
@@ -292,7 +293,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             statusIds: [ArticleStatus::Published->value],
             typeIds: [ArticleType::Blog->value],
             queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy('published_at', 'DESC')],
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
                 pagination: new Response\Pagination(itemsPerPage: 10),
             ),
         );
@@ -316,7 +317,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             typeIds: [ArticleType::Page->value],
             tagIds: $tagIds,
             queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy('published_at', 'DESC')],
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
                 pagination: new Response\Pagination(itemsPerPage: 10),
             ),
         );
@@ -330,7 +331,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             statusIds: $statusIds,
             typeIds: [ArticleType::Blog->value],
             queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy('published_at', 'DESC')],
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
                 pagination: $pagination,
             ),
         );
@@ -341,11 +342,11 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             'shared/home',
             new HtmlHomepageResponseData(
                 request: $request,
+                pagination: $pagination,
                 homepageContent: $homepageArticle,
                 homeArticles: $homeArticles,
                 blogArticles: $blogArticles,
                 userFeedback: $userFeedback,
-                pagination: $pagination,
             )
         );
     }

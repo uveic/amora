@@ -56,31 +56,6 @@ class Session
         ];
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id)
-    {
-        $this->id = $id;
-    }
-
-    public function getSessionId(): string
-    {
-        return $this->sessionId;
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    public function getIp(): ?string
-    {
-        return $this->ip;
-    }
-
     public function isAuthenticated(): bool
     {
         if (!empty($this->forcedExpirationAt)) {

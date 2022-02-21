@@ -7,7 +7,6 @@ use Amora\Core\Module\Article\Model\Image;
 
 $this->layout('base', ['responseData' => $responseData]);
 
-$images = $responseData->getImages();
 $count = 0;
 
 ?>
@@ -28,7 +27,7 @@ $count = 0;
       <div id="images-list">
 <?php
     /** @var Image $image */
-    foreach ($images as $image) {
+    foreach ($responseData->images as $image) {
         $count++;
         $lazyLoading = $count > 10 ? ' loading="lazy"' : '';
 ?>

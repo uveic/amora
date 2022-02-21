@@ -34,7 +34,7 @@ abstract class ApiClientAbstract
         string $method,
         string $url,
         string $data,
-        array $requestHeaders
+        array $requestHeaders,
     ): ApiResponse {
         $this->logger->logInfo($logPrefix . 'Calling API...');
 

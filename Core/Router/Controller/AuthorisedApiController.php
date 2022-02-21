@@ -134,8 +134,8 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         }
 
         $resVerification = $this->userMailService->sendVerificationEmail(
-            $user,
-            $user->getEmail()
+            user: $user,
+            emailToVerify: $user->email,
         );
 
         return new AuthorisedApiControllerSendVerificationEmailSuccessResponse($resVerification);
@@ -173,24 +173,24 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         }
 
         $session = $request->session;
-        if ($session->getUser()->getId() !== $existingUser->getId()) {
+        if ($session->user->id !== $existingUser->id) {
             return new AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse();
         }
 
         $updateRes = $this->userService->workflowUpdateUser(
-            $existingUser,
-            $name,
-            $email,
-            $languageId,
-            $timezone,
-            $currentPassword,
-            $newPassword,
-            $repeatPassword
+            existingUser: $existingUser,
+            name: $name,
+            email: $email,
+            languageId: $languageId,
+            timezone: $timezone,
+            currentPassword: $currentPassword,
+            newPassword: $newPassword,
+            repeatPassword: $repeatPassword,
         );
 
         return new AuthorisedApiControllerUpdateUserAccountSuccessResponse(
-            $updateRes->isSuccess(),
-            $updateRes->getMessage()
+            success: $updateRes->isSuccess,
+            errorMessage: $updateRes->message,
         );
     }
 }

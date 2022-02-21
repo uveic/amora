@@ -70,7 +70,7 @@ class Router
             header($header);
         }
 
-        echo $response->getOutput();
+        echo $response->output;
     }
 
     /**
