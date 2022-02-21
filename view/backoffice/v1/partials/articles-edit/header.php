@@ -10,8 +10,8 @@ use Amora\Core\Util\UrlBuilderUtil;
 $articleTitle = ArticleEditHtmlGenerator::generateTitleHtml($responseData);
 $settings = ArticleEditHtmlGenerator::generateSettingsButtonHtml($responseData);
 
-$articleTypeId = ArticleEditHtmlGenerator::getArticleTypeId($responseData);
-$closeUrl = $articleTypeId === ArticleType::PAGE
+$articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
+$closeUrl = $articleType === ArticleType::Page
     ? UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->getSiteLanguage())
     : UrlBuilderUtil::buildBackofficeBlogPostsUrl($responseData->getSiteLanguage());
 ?>

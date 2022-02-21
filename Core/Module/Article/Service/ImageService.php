@@ -43,9 +43,9 @@ class ImageService
 
     public function deleteImage(Image $image): bool
     {
-        $res = $this->imageDataLayer->deleteImage($image->getId());
+        $res = $this->imageDataLayer->deleteImage($image->id);
         if (empty($res)) {
-            $this->logger->logError('Error deleting image. Image ID: ' . $image->getId());
+            $this->logger->logError('Error deleting image. Image ID: ' . $image->id);
             return false;
         }
 

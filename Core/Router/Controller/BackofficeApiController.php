@@ -305,22 +305,36 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?array $tags,
         Request $request
     ): Response {
-        $now = DateUtil::getCurrentDateForMySql();
+        if ($typeId && !ArticleType::tryFrom($typeId)) {
+            return new BackofficeApiControllerStoreArticleSuccessResponse(
+                success: false,
+                errorMessage: 'Invalid article type',
+            );
+        }
+
+        if ($statusId && !ArticleStatus::tryFrom($statusId) === null) {
+            return new BackofficeApiControllerStoreArticleSuccessResponse(
+                success: false,
+                errorMessage: 'Invalid article status',
+            );
+        }
+
+        $now = new DateTimeImmutable();
         $uri = $this->articleService->getAvailableUriForArticle(articleTitle: $title);
+        $status = ArticleStatus::from($statusId);
+        $publishOnObj = $publishOn
+            ? DateUtil::convertStringToDateTimeImmutable($publishOn)
+            : ($status === ArticleStatus::Published ? $now : null);
 
-        $publishOnMySql = $publishOn
-            ? DateUtil::convertDateFromISOToMySQLFormat($publishOn)
-            : ($statusId === ArticleStatus::PUBLISHED->value ? $now : null);
-
-        $res = $this->articleService->createNewArticle(
+        $newArticle = $this->articleService->createNewArticle(
             article: new Article(
                 id: null,
                 user: $request->session->getUser(),
-                statusId: $statusId,
-                typeId: $typeId ?? ArticleType::PAGE,
+                status: $status,
+                type: $typeId ? ArticleType::from($typeId) : ArticleType::Page,
                 createdAt: $now,
                 updatedAt: $now,
-                publishOn: $publishOnMySql,
+                publishOn: $publishOnObj,
                 title: $title,
                 contentHtml: html_entity_decode($contentHtml),
                 mainImageId: $mainImageId,
@@ -335,15 +349,15 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
-        $backofficeUri = $typeId === ArticleType::BLOG
-            ? UrlBuilderUtil::buildBackofficeBlogPostUrl($languageIsoCode, $res->getId())
-            : UrlBuilderUtil::buildBackofficeArticleUrl($languageIsoCode, $res->getId());
+        $backofficeUri = $typeId === ArticleType::Blog
+            ? UrlBuilderUtil::buildBackofficeBlogPostUrl($languageIsoCode, $newArticle->id)
+            : UrlBuilderUtil::buildBackofficeArticleUrl($languageIsoCode, $newArticle->id);
 
         return new BackofficeApiControllerStoreArticleSuccessResponse(
-            success: (bool)$res,
-            articleId: $res?->getId(),
+            success: (bool)$newArticle,
+            articleId: $newArticle?->id,
             articleBackofficeUri: $backofficeUri,
-            articlePublicUri: $res ? '/' . $res->getUri() : null,
+            articlePublicUri: $newArticle ? '/' . $newArticle->uri : null,
         );
     }
 
@@ -379,6 +393,20 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?array $tags,
         Request $request
     ): Response {
+        if ($typeId && !ArticleType::tryFrom($typeId)) {
+            return new BackofficeApiControllerUpdateArticleSuccessResponse(
+                success: false,
+                errorMessage: 'Invalid article type',
+            );
+        }
+
+        if ($statusId && !ArticleStatus::tryFrom($statusId) === null) {
+            return new BackofficeApiControllerUpdateArticleSuccessResponse(
+                success: false,
+                errorMessage: 'Invalid article status',
+            );
+        }
+
         $existingArticle = $this->articleService->getArticleForId($articleId);
         if (empty($existingArticle)) {
             return new BackofficeApiControllerUpdateArticleFailureResponse();
@@ -387,36 +415,37 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $uri = $this->articleService->getAvailableUriForArticle($uri, $title, $existingArticle);
 
         $contentHtml = html_entity_decode($contentHtml);
-        $now = DateUtil::getCurrentDateForMySql();
+        $now = new DateTimeImmutable();
 
         $publishOnMySql = $publishOn
-            ? DateUtil::convertDateFromISOToMySQLFormat($publishOn)
-            : ($existingArticle->getPublishOn() ?? $now);
+            ? DateUtil::convertStringToDateTimeImmutable($publishOn)
+            : ($existingArticle->publishOn ?? $now);
 
-        $typeId = $typeId ?? $existingArticle->getTypeId();
+        $type = $typeId ? ArticleType::from($typeId) : $existingArticle->type;
+        $status = $statusId ? ArticleStatus::from($statusId) : $existingArticle->status;
         $res = $this->articleService->workflowUpdateArticle(
-            new Article(
+            article: new Article(
                 id: $articleId,
                 user: $request->session->getUser(),
-                statusId: $statusId ?? $existingArticle->getStatusId(),
-                typeId: $typeId,
-                createdAt: $existingArticle->getCreatedAt(),
+                status: $status,
+                type: $type,
+                createdAt: $existingArticle->createdAt,
                 updatedAt: $now,
                 publishOn: $publishOnMySql,
-                title: $title ?? $existingArticle->getTitle(),
-                contentHtml: $contentHtml ?? $existingArticle->getContentHtml(),
-                mainImageId: $mainImageId ?? $existingArticle->getMainImage()?->getId(),
+                title: $title ?? $existingArticle->title,
+                contentHtml: $contentHtml ?? $existingArticle->contentHtml,
+                mainImageId: $mainImageId ?? $existingArticle->mainImage?->id,
                 mainImage: null,
                 uri: $uri
             ),
-            $sections,
-            $tags ?? [],
-            $request->sourceIp,
-            $request->userAgent
+            sections: $sections,
+            tags: $tags ?? [],
+            userIp: $request->sourceIp,
+            userAgent: $request->userAgent,
         );
 
         $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
-        $backofficeUri = $typeId === ArticleType::BLOG
+        $backofficeUri = $type === ArticleType::Blog
             ? UrlBuilderUtil::buildBackofficeBlogPostUrl($languageIsoCode, $articleId)
             : UrlBuilderUtil::buildBackofficeArticleUrl($languageIsoCode, $articleId);
 
@@ -444,22 +473,22 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $deleteRes = $this->articleService->deleteArticle(
-            new Article(
-                id: $existingArticle->getId(),
-                user: $existingArticle->getUser(),
-                statusId: ArticleStatus::DELETED->value,
-                typeId: $existingArticle->getTypeId(),
-                createdAt: $existingArticle->getCreatedAt(),
-                updatedAt: DateUtil::getCurrentDateForMySql(),
-                publishOn: $existingArticle->getPublishOn(),
-                title: $existingArticle->getTitle(),
-                contentHtml: $existingArticle->getContentHtml(),
-                mainImageId: $existingArticle->getMainImage()?->getId(),
-                mainImage: $existingArticle->getMainImage(),
-                uri: $existingArticle->getUri(),
+            article: new Article(
+                id: $existingArticle->id,
+                user: $existingArticle->user,
+                status: ArticleStatus::Deleted,
+                type: $existingArticle->type,
+                createdAt: $existingArticle->createdAt,
+                updatedAt: new DateTimeImmutable(),
+                publishOn: $existingArticle->publishOn,
+                title: $existingArticle->title,
+                contentHtml: $existingArticle->contentHtml,
+                mainImageId: $existingArticle->mainImage?->id,
+                mainImage: $existingArticle->mainImage,
+                uri: $existingArticle->uri,
             ),
-            $request->sourceIp,
-            $request->userAgent
+            userIp: $request->sourceIp,
+            userAgent: $request->userAgent,
         );
 
         return new BackofficeApiControllerDestroyArticleSuccessResponse($deleteRes);
@@ -477,7 +506,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     {
         $existingTag = $this->tagService->getTagForName($name);
         if ($existingTag) {
-            return new BackofficeApiControllerStoreTagSuccessResponse(true, $existingTag->getId());
+            return new BackofficeApiControllerStoreTagSuccessResponse(
+                success: true,
+                id: $existingTag->id,
+            );
         }
 
         $res = $this->tagService->storeTag(new Tag(null, $name));
@@ -486,7 +518,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             return new BackofficeApiControllerStoreTagFailureResponse();
         }
 
-        return new BackofficeApiControllerStoreTagSuccessResponse(true, $res->getId());
+        return new BackofficeApiControllerStoreTagSuccessResponse(
+            success: true,
+            id: $res->id,
+        );
     }
 
     /**

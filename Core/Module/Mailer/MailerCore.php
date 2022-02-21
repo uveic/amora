@@ -28,8 +28,8 @@ class MailerCore extends Core
     public static function getMailerDataLayer(): MailerDataLayer
     {
         return self::getInstance(
-            'MailerDataLayer',
-            function () {
+            className: 'MailerDataLayer',
+            factory: function () {
                 $db = self::getDb();
                 $logger = self::getMailerLogger();
 
@@ -40,15 +40,15 @@ class MailerCore extends Core
 
                 return new MailerDataLayer($db, $logger);
             },
-            true
+            isSingleton: true,
         );
     }
 
     public static function getMailerService(): MailerService
     {
         return self::getInstance(
-            'MailerService',
-            function () {
+            className: 'MailerService',
+            factory: function () {
                 $logger = self::getMailerLogger();
                 $mailerDataLayer = self::getMailerDataLayer();
 
@@ -58,15 +58,15 @@ class MailerCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Service/MailerService.php';
                 return new MailerService($logger, $mailerDataLayer);
             },
-            true
+            isSingleton: true,
         );
     }
 
     public static function getSendGridRequestBuilder(): RequestBuilderAbstract
     {
         return self::getInstance(
-            'SendGridRequestBuilder',
-            function () {
+            className: 'SendGridRequestBuilder',
+            factory: function () {
                 $logger = self::getMailerLogger();
 
                 $config = self::getConfig();
@@ -95,14 +95,14 @@ class MailerCore extends Core
                     $replyToName
                 );
             },
-            true
+            isSingleton: true,
         );
     }
 
     public static function getMailerApp(): MailerApp {
         return self::getInstance(
-            'MailerApp',
-            function () {
+            className: 'MailerApp',
+            factory: function () {
                 $logger = self::getMailerLogger();
                 $dataLayer = self::getMailerDataLayer();
                 $apiClient = self::getSendGridMailerApiClient();
@@ -114,15 +114,15 @@ class MailerCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/MailerApp.php';
                 return new MailerApp($logger, $dataLayer, $apiClient, $requestBuilder);
             },
-            false
+            isSingleton: false,
         );
     }
 
     public static function getSendGridMailerApiClient(): ApiClientAbstract
     {
         return self::getInstance(
-            'ApiClient',
-            function () {
+            className: 'ApiClient',
+            factory: function () {
                 $logger = self::getMailerLogger();
 
                 $config = self::getConfig();
@@ -144,7 +144,7 @@ class MailerCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiResponse.php';
                 return new ApiClient($logger, $baseApiUrl, $apiKey);
             },
-            false
+            isSingleton: false,
         );
     }
 }

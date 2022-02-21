@@ -49,7 +49,7 @@ class MailerItem
     public function asArray(): array
     {
         return [
-            'id' => $this->getId(),
+            'id' => $this->id,
             'template_id' => $this->getTemplateId(),
             'reply_to_email' => $this->getReplyToEmailAddress(),
             'sender_name' => $this->getSenderName(),

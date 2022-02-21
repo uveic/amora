@@ -100,7 +100,7 @@ class SessionService
 
         $this->session = $this->dataLayer->getSessionForSessionId($sessionId);
         if ($this->session) {
-            Core::updateTimezone($this->session->timezone);
+            Core::updateTimezone($this->session->timezone->getName());
         }
 
         return $this->session;

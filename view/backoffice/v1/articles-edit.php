@@ -12,7 +12,7 @@ $images = [];
 
 $this->layout('base', ['responseData' => $responseData]);
 
-$articleTypeId = ArticleEditHtmlGenerator::getArticleTypeId($responseData);
+$articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
 
 ?>
 <?=$this->insert('partials/articles-edit/settings', ['responseData' => $responseData])?>
@@ -22,8 +22,8 @@ $articleTypeId = ArticleEditHtmlGenerator::getArticleTypeId($responseData);
 <?=$this->insert('partials/articles-edit/header', ['responseData' => $responseData])?>
 <?=$this->insert('partials/articles-edit/control-bar', ['responseData' => $responseData])?>
     <div>
-      <input name="articleId" type="hidden" value="<?=$article ? $article->getId() : ''?>">
-      <input name="articleTypeId" type="hidden" value="<?=$articleTypeId?>">
+      <input name="articleId" type="hidden" value="<?=$article ? $article->id : ''?>">
+      <input name="articleTypeId" type="hidden" value="<?=$articleType->value?>">
       <article class="pexego-container">
 <?php
     $count = 0;

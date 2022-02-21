@@ -6,7 +6,7 @@ use Amora\Core\Value\Language;
 
 /** @var HtmlResponseData $responseData */
 
-$user = $responseData->getSession()->getUser();
+$user = $responseData->getSession()->user;
 
 $timezones = DateTimeZone::listIdentifiers();
 
@@ -18,14 +18,14 @@ $timezones = DateTimeZone::listIdentifiers();
           <div class="field">
             <label for="name" class="label"><?=$responseData->getLocalValue('formPlaceholderUserName')?>:</label>
             <div class="control">
-              <input class="input" id="name" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" minlength="3" value="<?=$this->e($responseData->getSession()->getUser()->getName())?>" required>
+              <input class="input" id="name" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" minlength="3" value="<?=$responseData->getSession()->user->name?>" required>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span><?=$responseData->getLocalValue('formPlaceholderUserHelp')?></p>
           </div>
           <div class="field">
             <label for="email" class="label"><?=$responseData->getLocalValue('formEmail')?>:</label>
             <div class="control">
-              <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" value="<?=$this->e($responseData->getSession()->getUser()->getEmail())?>">
+              <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" value="<?=$responseData->getSession()->user->email?>">
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
 <?php if ($user->changeEmailAddressTo) { ?>

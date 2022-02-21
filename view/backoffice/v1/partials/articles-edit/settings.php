@@ -7,34 +7,30 @@ use Amora\Core\Util\UrlBuilderUtil;
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
 
-$articleTags = $article ? $article->getTags() : [];
-
 $publishOnDate = '';
 $publishOnTime = '';
-if ($article && $article->getPublishOn()) {
-    $publishOn = DateUtil::convertStringToDateTimeImmutable($article->getPublishOn());
-
-    $publishOnDate = $publishOn->format('Y-m-d');
-    $publishOnTime = $publishOn->format('H:i');
+if ($article && $article->publishOn) {
+    $publishOnDate = $article->publishOn->format('Y-m-d');
+    $publishOnTime = $article->publishOn->format('H:i');
 }
 
 $createdAtContent = '';
 if ($article) {
     $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
         DateUtil::getElapsedTimeString(
-            from: DateUtil::convertStringToDateTimeImmutable($article->getCreatedAt()),
+            from: $article->createdAt,
             language: $responseData->getSiteLanguage(),
-            includePrefixAndOrSuffix: true
+            includePrefixAndOrSuffix: true,
         ) . ' ('
         . DateUtil::formatDate(
-            date: DateUtil::convertStringToDateTimeImmutable($article->getCreatedAt()),
+            date: $article->createdAt,
             lang: $responseData->getSiteLanguage(),
             includeWeekDay: true,
             includeTime: true,
         ) . ')'
         . ' '
         . $responseData->getLocalValue('globalBy') . ' '
-        . $article->getUser()->getName() . '.';
+        . $article->user->name . '.';
 }
 
 ?>
@@ -48,9 +44,9 @@ if ($article) {
     <div id="tags-selected" class="search-results-selected">
 <?php
     /** @var Tag $tag */
-    foreach ($articleTags as $tag) {
+    foreach ($article->tags as $tag) {
 ?>
-      <span class="result-selected" data-tag-id="<?=$tag->getId()?>" data-tag-name="<?=$tag->getName()?>"><?=$tag->getName()?><img class="tag-result-selected-delete img-svg m-l-05" title="<?=$responseData->getLocalValue('globalRemove')?>" alt="<?=$responseData->getLocalValue('globalRemove')?>" src="/img/svg/x.svg"></span>
+      <span class="result-selected" data-tag-id="<?=$tag->id?>" data-tag-name="<?=$tag->name?>"><?=$tag->name?><img class="tag-result-selected-delete img-svg m-l-05" title="<?=$responseData->getLocalValue('globalRemove')?>" alt="<?=$responseData->getLocalValue('globalRemove')?>" src="/img/svg/x.svg"></span>
 <?php } ?>
     </div>
     <div class="control">
@@ -66,7 +62,7 @@ if ($article) {
     <label for="articleUri" class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</label>
     <div class="control">
       <div class="article-edit-uri"><?=UrlBuilderUtil::buildBaseUrl($responseData->getSiteLanguage()) . '/'?>
-        <input id="articleUri" name="articleUri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->getUri() : ''); ?>">
+        <input id="articleUri" name="articleUri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->uri : ''); ?>">
       </div>
     </div>
   </div>

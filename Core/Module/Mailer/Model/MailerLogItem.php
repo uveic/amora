@@ -4,31 +4,15 @@ namespace Amora\Core\Module\Mailer\Model;
 
 class MailerLogItem
 {
-    private ?int $id;
-    private int $mailerQueueId;
-    private string $createdAt;
-    private string $request;
-    private ?string $response;
-    private ?bool $sent;
-    private ?string $errorMessage;
-
     public function __construct(
-        ?int $id,
-        int $mailerQueueId,
-        string $createdAt,
-        string $request,
-        ?string $response = null,
-        ?bool $sent = null,
-        ?string $errorMessage = null
-    ) {
-        $this->id = $id;
-        $this->mailerQueueId = $mailerQueueId;
-        $this->createdAt = $createdAt;
-        $this->request = $request;
-        $this->response = $response;
-        $this->sent = $sent;
-        $this->errorMessage = $errorMessage;
-    }
+        public ?int $id,
+        public readonly int $mailerQueueId,
+        public readonly string $createdAt,
+        public readonly string $request,
+        public readonly ?string $response = null,
+        public readonly ?bool $sent = null,
+        public readonly ?string $errorMessage = null
+    ) {}
 
     public static function fromArray(array $item): MailerLogItem
     {
@@ -42,7 +26,7 @@ class MailerLogItem
             $item['created_at'],
             $item['request'],
             $item['response'] ?? null,
-            isset($item['sent']) ? (empty($item['sent']) ? false : true) : null,
+            isset($item['sent']) ? !empty($item['sent']) : null,
             $item['error_message'] ?? null
         );
     }

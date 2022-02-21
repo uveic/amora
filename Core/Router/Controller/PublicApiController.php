@@ -156,34 +156,34 @@ final class PublicApiController extends PublicApiControllerAbstract
         $user = $this->userService->verifyUser($user, $password);
         if (empty($user)) {
             return new PublicApiControllerUserLoginSuccessResponse(
-                false,
-                null,
-                $localisationUtil->getValue('authenticationEmailAndOrPassNotValid')
+                success: false,
+                redirect: null,
+                errorMessage: $localisationUtil->getValue('authenticationEmailAndOrPassNotValid'),
             );
         }
 
         $languageIsoCode = Language::getIsoCodeForId($user->getLanguageId());
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
         $session = $this->sessionService->login(
-            $user,
-            DateUtil::convertStringToDateTimeZone($user->timezone),
-            $request->sourceIp,
-            $request->userAgent
+            user: $user,
+            timezone: $user->timezone,
+            ip: $request->sourceIp,
+            userAgent: $request->userAgent,
         );
 
         if (empty($session)) {
             return new PublicApiControllerUserLoginSuccessResponse(
-                false,
-                null,
-                $localisationUtil->getValue('authenticationEmailAndOrPassNotValid')
+                success: false,
+                redirect: null,
+                errorMessage: $localisationUtil->getValue('authenticationEmailAndOrPassNotValid'),
             );
         }
 
         return new PublicApiControllerUserLoginSuccessResponse(
-            true,
-            $session->isAdmin()
+            success: true,
+            redirect: $session->isAdmin()
                 ? UrlBuilderUtil::buildBackofficeDashboardUrl($languageIsoCode)
-                : UrlBuilderUtil::buildAppDashboardUrl($languageIsoCode)
+                : UrlBuilderUtil::buildAppDashboardUrl($languageIsoCode),
         );
     }
 
@@ -235,48 +235,48 @@ final class PublicApiController extends PublicApiControllerAbstract
             $isRegistrationEnabled = Core::getConfigValue('registrationEnabled');
             if (!$isRegistrationEnabled) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
-                    false,
-                    null,
-                    $localisationUtil->getValue('authenticationUserRegistrationDisabled')
+                    success: false,
+                    redirect: null,
+                    errorMessage: $localisationUtil->getValue('authenticationUserRegistrationDisabled'),
                 );
             }
 
             $email = StringUtil::normaliseEmail($email);
             if (!StringUtil::isEmailAddressValid($email)) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
-                    false,
-                    null,
-                    $localisationUtil->getValue('authenticationEmailNotValid')
+                    success: false,
+                    redirect: null,
+                    errorMessage: $localisationUtil->getValue('authenticationEmailNotValid'),
                 );
             }
 
             if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
-                    false,
-                    null,
-                    $localisationUtil->getValue('authenticationPasswordTooShort')
+                    success: false,
+                    redirect: null,
+                    errorMessage: $localisationUtil->getValue('authenticationPasswordTooShort'),
                 );
             }
 
             $existingUser =$this->userService->getUserForEmail($email);
             if (!empty($existingUser)) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
-                    false,
-                    null,
-                    sprintf(
+                    success: false,
+                    redirect: null,
+                    errorMessage: sprintf(
                         $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
                         UrlBuilderUtil::buildPublicLoginUrl($languageIsoCode)
-                    )
+                    ),
                 );
             }
 
-            $now = DateUtil::getCurrentDateForMySql();
+            $now = new DateTimeImmutable();
             $user = $this->userService->storeUser(
                 user: new User(
                     id: null,
                     languageId: Language::getIdForIsoCode($languageIsoCode),
-                    roleId: UserRole::USER,
-                    journeyStatusId: UserJourneyStatus::REGISTRATION,
+                    role: UserRole::User,
+                    journeyStatus: UserJourneyStatus::Registration,
                     createdAt: $now,
                     updatedAt: $now,
                     email: $email,
@@ -285,24 +285,24 @@ final class PublicApiController extends PublicApiControllerAbstract
                     bio: null,
                     isEnabled: true,
                     verified: false,
-                    timezone: DateUtil::getTimezoneFromUtcOffset($timezoneOffsetMinutes)
+                    timezone: DateUtil::convertStringToDateTimeZone(DateUtil::getTimezoneFromUtcOffset($timezoneOffsetMinutes)),
                 ),
-                verificationEmailId: VerificationType::EMAIL_ADDRESS
+                verificationType: VerificationType::EmailAddress,
             );
             $res = !empty($user);
 
             $session = $this->sessionService->login(
-                $user,
-                DateUtil::convertStringToDateTimeZone($user->timezone),
-                $request->sourceIp,
-                $request->userAgent
+                user: $user,
+                timezone: $user->timezone,
+                ip: $request->sourceIp,
+                userAgent: $request->userAgent,
             );
 
             return new PublicApiControllerUserRegistrationSuccessResponse(
-                $res,
-                $session->isAdmin()
+                success: $res,
+                redirect: $session->isAdmin()
                     ? UrlBuilderUtil::buildBackofficeDashboardUrl($languageIsoCode)
-                    : UrlBuilderUtil::buildAppDashboardUrl($languageIsoCode)
+                    : UrlBuilderUtil::buildAppDashboardUrl($languageIsoCode),
             );
         } catch (Throwable $t) {
             $this->logger->logError('Error registering user: ' . $t->getMessage());
@@ -341,15 +341,15 @@ final class PublicApiController extends PublicApiControllerAbstract
 
         if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
             return new PublicApiControllerUserPasswordResetSuccessResponse(
-                false,
-                $localisationUtil->getValue('authenticationPasswordTooShort')
+                success: false,
+                errorMessage: $localisationUtil->getValue('authenticationPasswordTooShort'),
             );
         }
 
         if ($passwordConfirmation != $password) {
             return new PublicApiControllerUserPasswordResetSuccessResponse(
-                false,
-                $localisationUtil->getValue('authenticationPasswordsDoNotMatch')
+                success: false,
+                errorMessage: $localisationUtil->getValue('authenticationPasswordsDoNotMatch'),
             );
         }
 
@@ -391,15 +391,15 @@ final class PublicApiController extends PublicApiControllerAbstract
 
         if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
             return new PublicApiControllerUserPasswordCreationSuccessResponse(
-                false,
-                $localisationUtil->getValue('authenticationPasswordTooShort')
+                success: false,
+                errorMessage: $localisationUtil->getValue('authenticationPasswordTooShort'),
             );
         }
 
         if ($passwordConfirmation != $password) {
             return new PublicApiControllerUserPasswordCreationSuccessResponse(
-                false,
-                $localisationUtil->getValue('authenticationPasswordsDoNotMatch')
+                success: false,
+                errorMessage: $localisationUtil->getValue('authenticationPasswordsDoNotMatch'),
             );
         }
 
@@ -431,8 +431,8 @@ final class PublicApiController extends PublicApiControllerAbstract
         }
 
         $res = $this->userService->storeRegistrationInviteRequest(
-            $email,
-            Language::getIdForIsoCode($languageIsoCode)
+            email: $email,
+            languageId: Language::getIdForIsoCode($languageIsoCode),
         );
 
         return new PublicApiControllerRequestRegistrationInviteSuccessResponse((bool)$res);
@@ -453,12 +453,12 @@ final class PublicApiController extends PublicApiControllerAbstract
         Request $request
     ): Response {
         $statusIds = $request->session && $request->session->isAdmin()
-            ? [ArticleStatus::PUBLISHED->value, ArticleStatus::PRIVATE->value]
-            : [ArticleStatus::PUBLISHED->value];
+            ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
+            : [ArticleStatus::Published->value];
         $pagination = new Pagination(itemsPerPage: $itemsPerPage, offset: $offset);
         $articles = $this->articleService->filterArticlesBy(
             statusIds: $statusIds,
-            typeIds: [ArticleType::BLOG],
+            typeIds: [ArticleType::Blog->value],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
                 pagination: $pagination,
@@ -470,11 +470,9 @@ final class PublicApiController extends PublicApiControllerAbstract
         foreach ($articles as $article) {
             $output[] = [
                 'icon' => ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article),
-                'postUri' => UrlBuilderUtil::buildPublicArticleUrl(uri: $article->getUri()),
-                'postTitle' => $article->getTitle(),
-                'publishedOn' => $article->getPublishOn()
-                    ? DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $article->getPublishOn())->format('c')
-                    : null
+                'postUri' => UrlBuilderUtil::buildPublicArticleUrl(uri: $article->uri),
+                'postTitle' => $article->title,
+                'publishedOn' => $article->publishOn?->format('c'),
             ];
         }
 

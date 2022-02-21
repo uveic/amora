@@ -30,7 +30,7 @@ class TagDataLayer
         $params = [];
         $baseSql = 'SELECT ';
         $fields = [
-            't.id',
+            't.id AS tag_id',
             't.name',
         ];
 
@@ -94,7 +94,7 @@ class TagDataLayer
             $this->logger->logError('Error inserting tag');
         }
 
-        $tag->setId((int)$resInsert);
+        $tag->id = (int)$resInsert;
 
         return $tag;
     }

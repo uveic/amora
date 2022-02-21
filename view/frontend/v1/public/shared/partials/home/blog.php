@@ -14,8 +14,8 @@ if (!$responseData->getBlogArticles()) {
 }
 
 $articles = $responseData->getBlogArticles();
-$itemsPerPage = $responseData->getPagination()->getItemsPerPage();
-$offset = $responseData->getPagination()->getOffset() + $itemsPerPage;
+$itemsPerPage = $responseData->getPagination()->itemsPerPage;
+$offset = $responseData->getPagination()->offset + $itemsPerPage;
 
 ?>
 <section class="home-blog">
@@ -29,20 +29,20 @@ foreach ($articles as $article) {
         continue;
     }
 
-    $title = $article->getTitle() ?: $responseData->getLocalValue('globalNoTitle');
-    $publishedOn = $article->getPublishOn()
+    $title = $article->title ?: $responseData->getLocalValue('globalNoTitle');
+    $publishedOn = $article->publishOn
         ? DateUtil::formatDate(
-            date: DateUtil::convertStringToDateTimeImmutable($article->getPublishOn()),
+            date: $article->publishOn,
             lang: $responseData->getSiteLanguage(),
             includeYear: false,
             includeWeekDay: false,
         )
         : '';
 
-    $href = $this->e($responseData->buildBaseUrl() . $article->getUri());
+    $href = $this->e($responseData->buildBaseUrl() . $article->uri);
     $isPublishedHtml = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article);
 
-    $year = $article->getPublishOn() ? date('Y', strtotime($article->getPublishOn())) : '???';
+    $year = $article->publishOn ? $article->publishOn->format('Y') : '???';
     if ($previousYear !== $year) {
 ?>
     <h2><?=$year?></h2>

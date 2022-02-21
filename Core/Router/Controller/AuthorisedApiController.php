@@ -55,7 +55,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             $session = $request->session;
             $images = $this->imageService->processImages(
                 files: $request->processedFiles,
-                userId: $session->getUser()->getId(),
+                userId: $session->user->id,
             );
 
             $imgSaved = [];
@@ -70,9 +70,9 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             /** @var Image $img */
             foreach ($imgSaved as $img) {
                 $output[] = [
-                    'id' => $img->getId(),
-                    'url' => $img->getFullUrlLarge(),
-                    'caption' => $img->getCaption()
+                    'id' => $img->id,
+                    'url' => $img->fullUrlLarge,
+                    'caption' => $img->caption,
                 ];
             }
 
@@ -109,7 +109,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
         $session = $request->session;
         if (!$session->isAdmin()
-            && $image->getUserId() != $session->getUser()->getId()
+            && $image->userId != $session->user->id
         ) {
             return new AuthorisedApiControllerDestroyImageUnauthorisedResponse();
         }

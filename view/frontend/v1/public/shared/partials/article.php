@@ -16,22 +16,22 @@ if ($article === null) {
 $canEdit = $responseData->getSession() && $responseData->getSession()->isAdmin();
 
 $email = Core::getConfigValue('siteAdminEmail');
-$editUrl = $article->getTypeId() === ArticleType::BLOG
-    ? UrlBuilderUtil::buildBackofficeBlogPostUrl($responseData->getSiteLanguage(), $article->getId())
-    : UrlBuilderUtil::buildBackofficeArticleUrl($responseData->getSiteLanguage(), $article->getId());
+$editUrl = $article->type === ArticleType::Blog
+    ? UrlBuilderUtil::buildBackofficeBlogPostUrl($responseData->getSiteLanguage(), $article->id)
+    : UrlBuilderUtil::buildBackofficeArticleUrl($responseData->getSiteLanguage(), $article->id);
 ?>
   <article>
-<?php if ($canEdit && $article->getStatusId() !== ArticleStatus::DRAFT->value) { ?>
+<?php if ($canEdit && $article->status !== ArticleStatus::Draft) { ?>
     <a class="article-edit" href="<?=$editUrl?>"><?=strtolower($responseData->getLocalValue('globalEdit'))?></a>
 <?php } ?>
-<?php if ($article->getTypeId() === ArticleType::BLOG) {
+<?php if ($article->type === ArticleType::Blog) {
     $this->insert('shared/partials/article/article-blog-info', ['responseData' => $responseData]);
 } ?>
-    <?=$article->getContentHtml()?>
-<?php if ($article->getTypeId() === ArticleType::BLOG) { ?>
+    <?=$article->contentHtml?>
+<?php if ($article->type === ArticleType::Blog) { ?>
     <p class="article-blog-footer"><?=sprintf($responseData->getLocalValue('articleBlogFooterInfo'), $email, $email)?></p>
 <?php } ?>
-<?php if ($article->getTypeId() === ArticleType::BLOG) {
+<?php if ($article->type === ArticleType::Blog) {
     $this->insert('shared/partials/article/article-blog-bottom', ['responseData' => $responseData]);
 } ?>
   </article>

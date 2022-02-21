@@ -604,6 +604,10 @@
                 "articlePublicUri": {
                   "type": "string",
                   "description": "Article public URI"
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message"
                 }
               },
               "required": [
@@ -801,6 +805,10 @@
                 "articlePublicUri": {
                   "type": "string",
                   "description": "Article public URI"
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message"
                 }
               },
               "required": [

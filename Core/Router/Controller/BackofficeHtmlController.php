@@ -151,7 +151,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $pagination = new Response\Pagination(itemsPerPage: 25);
         $articles = $this->articleService->filterArticlesBy(
-            typeIds: [ArticleType::PAGE],
+            typeIds: [ArticleType::Page->value],
             includeTags: true,
             includePublishedAtInTheFuture: true,
             queryOptions: new QueryOptions(
@@ -185,7 +185,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             ? (int)$request->getGetParam('articleType')
             : null;
 
-        if ($articleTypeIdGetParam === ArticleType::HOMEPAGE) {
+        if ($articleTypeIdGetParam === ArticleType::Homepage->value) {
             $articles = $this->articleService->filterArticlesBy(typeIds: [$articleTypeIdGetParam]);
             if ($articles) {
                 return Response::createRedirectResponse(
@@ -277,7 +277,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $pagination = new Response\Pagination(itemsPerPage: 25);
         $articles = $this->articleService->filterArticlesBy(
-            typeIds: [ArticleType::BLOG],
+            typeIds: [ArticleType::Blog->value],
             includeTags: true,
             includePublishedAtInTheFuture: true,
             queryOptions: new QueryOptions(

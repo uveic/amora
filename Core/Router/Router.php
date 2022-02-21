@@ -185,8 +185,8 @@ class Router
             );
         }
 
-        $img = $article->getMainImageId()
-            ? ArticleCore::getImageService()->getImageForId($article->getMainImageId())
+        $img = $article->mainImageId
+            ? ArticleCore::getImageService()->getImageForId($article->mainImageId)
             : null;
         $siteImageUrl = $img
             ? rtrim(Core::getConfigValue('baseUrl'), ' /') . $img->getFullUrlMedium()
@@ -197,18 +197,18 @@ class Router
             template: 'shared/home-article',
             responseData: new HtmlResponseData(
                 request: $request,
-                pageTitle: $article->getTitle(),
+                pageTitle: $article->title,
                 pageDescription: $article->getContentExcerpt(),
                 mainImageSiteUri: $siteImageUrl,
                 articles: [$article],
-                previousBlogPost: $article->getPublishOn()
+                previousBlogPost: $article->publishOn
                     ? $articleService->getPreviousBlogPost(
-                        publishedBefore: new DateTimeImmutable($article->getPublishOn()),
+                        publishedBefore: $article->publishOn,
                         isAdmin: $isAdmin,
                     ) : null,
-                nextBlogPost: $article->getPublishOn()
+                nextBlogPost: $article->publishOn
                     ? $articleService->getNextBlogPost(
-                        publishedAfter: new DateTimeImmutable($article->getPublishOn()),
+                        publishedAfter: $article->publishOn,
                         isAdmin: $isAdmin,
                     ) : null,
             ),
@@ -220,7 +220,7 @@ class Router
             return true;
         }
 
-        if ($article->getStatusId() === ArticleStatus::PUBLISHED->value) {
+        if ($article->status === ArticleStatus::Published) {
             return true;
         }
 

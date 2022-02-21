@@ -49,12 +49,12 @@ trait DataLayerTrait {
         if ($orderByMapping) {
             $orderByParts = [];
             /** @var QueryOrderBy $item */
-            foreach ($queryOptions->getOrderBy() as $item) {
-                if (empty($orderByMapping[$item->getField()])) {
+            foreach ($queryOptions->orderBy as $item) {
+                if (empty($orderByMapping[$item->field])) {
                     continue;
                 }
 
-                $orderByParts[] = $orderByMapping[$item->getField()] . ' ' . $item->getDirection();
+                $orderByParts[] = $orderByMapping[$item->field] . ' ' . $item->direction;
             }
 
             if (empty($orderByParts)) {

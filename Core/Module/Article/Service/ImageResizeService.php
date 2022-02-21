@@ -2,11 +2,11 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use DateTimeImmutable;
 use GdImage;
 use Amora\Core\Logger;
 use Amora\Core\Module\Article\Model\Image;
 use Amora\Core\Module\Article\Model\ImagePath;
-use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 
 class ImageResizeService
@@ -45,20 +45,20 @@ class ImageResizeService
         $imageMedium = $this->resizeImageDefault($imageOriginal, self::IMAGE_SIZE_MEDIUM);
         $imageLarge = $this->resizeImageDefault($imageOriginal, self::IMAGE_SIZE_LARGE);
 
-        $now = DateUtil::getCurrentDateForMySql();
+        $now = new DateTimeImmutable();
 
         return new Image(
-            null,
-            $userId,
-            $imageOriginal->getFullUrl(),
-            $imageMedium->getFullUrl(),
-            $imageLarge->getFullUrl(),
-            $imageOriginal->getFilePath(),
-            $imageMedium->getFilePath(),
-            $imageLarge->getFilePath(),
-            $caption,
-            $now,
-            $now
+            id: null,
+            userId: $userId,
+            fullUrlOriginal: $imageOriginal->fullUrl,
+            fullUrlMedium: $imageMedium->fullUrl,
+            fullUrlLarge: $imageLarge->fullUrl,
+            filePathOriginal: $imageOriginal->filePath,
+            filePathMedium: $imageMedium->filePath,
+            filePathLarge: $imageLarge->filePath,
+            caption: $caption,
+            createdAt: $now,
+            updatedAt: $now,
         );
     }
 
@@ -67,12 +67,12 @@ class ImageResizeService
         int $newMaxWidth,
         int $newMaxHeight
     ): ?ImagePath {
-        list($originalWidth, $originalHeight) = getimagesize($image->getFilePath());
+        list($originalWidth, $originalHeight) = getimagesize($image->filePath);
 
         if (!$originalWidth || !$originalHeight) {
             $this->logger->logError(
                 'Error getting width and/or height of image' .
-                ' - Original full path: ' . $image->getFilePath()
+                ' - Original full path: ' . $image->filePath
             );
 
             return null;
@@ -81,7 +81,7 @@ class ImageResizeService
         if ($newMaxWidth >= $originalWidth && $newMaxHeight >= $originalHeight) {
             $this->logger->logInfo(
                 'Returning original image. New size smaller than original.' .
-                ' - Original full path: ' . $image->getFilePath()
+                ' - Original full path: ' . $image->filePath
             );
 
             return $image;
@@ -97,14 +97,14 @@ class ImageResizeService
             $newHeight = $newMaxHeight;
         }
 
-        $imageTypeExtension = $this->getImageType($image->getFilePath());
+        $imageTypeExtension = $this->getImageType($image->filePath);
         $newFilename = $this->getNewImageName($imageTypeExtension);
         $outputFullPath = rtrim($this->mediaBaseDir, ' /') . '/'  . $newFilename;
         $outputFullUrl = rtrim($this->mediaBaseUrl, ' /') . '/' . $newFilename;
 
         $this->detectImageTypeAndResize(
             $imageTypeExtension,
-            $image->getFilePath(),
+            $image->filePath,
             $outputFullPath,
             $newWidth,
             $newHeight,
@@ -115,11 +115,11 @@ class ImageResizeService
         if (!file_exists($outputFullPath)) {
             $this->logger->logError(
                 'Error resizing image - Keeping original image' .
-                ' - Image: ' . $image->getFilePath()
+                ' - Image: ' . $image->filePath
             );
-            $originalFilename = $this->getFilenameFromPath($image->getFilePath());
+            $originalFilename = $this->getFilenameFromPath($image->filePath);
             $originalFullUrl = rtrim($this->mediaBaseUrl, ' /') . '/' . $originalFilename;
-            return new ImagePath($image->getFilePath(), $originalFullUrl);
+            return new ImagePath($image->filePath, $originalFullUrl);
         }
 
         return new ImagePath($outputFullPath, $outputFullUrl);
@@ -326,15 +326,12 @@ class ImageResizeService
             return $image;
         }
 
-        switch($orientation) {
-            case 8:
-                return imagerotate($image, 90, 0);
-            case 3:
-                return imagerotate($image, 180, 0);
-            case 6:
-                return imagerotate($image, -90, 0);
-        }
+        return match ($orientation) {
+            8 => imagerotate($image, 90, 0),
+            3 => imagerotate($image, 180, 0),
+            6 => imagerotate($image, -90, 0),
+            default => $image,
+        };
 
-        return $image;
     }
 }

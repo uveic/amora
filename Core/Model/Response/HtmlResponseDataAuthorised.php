@@ -4,8 +4,6 @@ namespace Amora\Core\Model\Response;
 
 use Amora\Core\Model\Request;
 use Amora\Core\Module\User\Model\User;
-use Amora\Core\Module\Article\Value\ArticleStatus;
-use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Value\Language;
 use Amora\Core\Module\User\Value\UserRole;
 

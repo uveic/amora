@@ -7,9 +7,9 @@ use Amora\Core\Model\Response\Pagination;
 class QueryOptions
 {
     public function __construct(
-        private array $orderBy = [],
-        private ?Pagination $pagination = null,
-        private bool $orderRandomly = false,
+        public readonly array $orderBy = [],
+        public readonly ?Pagination $pagination = null,
+        public readonly bool $orderRandomly = false,
     ) {
         $this->pagination = $this->pagination ?? new Pagination();
     }
@@ -26,12 +26,12 @@ class QueryOptions
 
     public function getLimit(): int
     {
-        return $this->getPagination()->getItemsPerPage();
+        return $this->pagination->itemsPerPage;
     }
 
     public function getOffset(): int
     {
-        return $this->getPagination()->getOffset();
+        return $this->pagination->offset;
     }
 
     public function orderRandomly(): bool

@@ -91,21 +91,22 @@ class RssService
         /** @var Article $article */
         foreach ($articles as $article) {
             $link = UrlBuilderUtil::buildPublicArticleUrl(
-                uri: $article->getUri(),
+                uri: $article->uri,
                 languageIsoCode: $siteLanguage,
             );
+            $title = $article->title ? htmlspecialchars($article->title) : '';
             $content = $this->getContent($article);
 
             $output[] = '<item>';
-            $output[] = '<title>' . htmlspecialchars($article->title) . '</title>';
+            $output[] = '<title>' . $title . '</title>';
             $output[] = '<link>' . $link . '</link>';
             $output[] = '<guid>' . $link . '</guid>';
             $output[] = '<author>' . $article->user->email . ' (' . $article->user->name . ')</author>';
-            $output[] = '<description>' . htmlspecialchars($content) . '</description>';
+            $output[] = '<description>' . $content . '</description>';
             $output[] = '<pubDate>' . $article->publishOn->format('r') . '</pubDate>';
 
             /** @var Tag $tag */
-            foreach ($article->getTags() as $tag) {
+            foreach ($article->tags as $tag) {
                 $output[] = '<category>' . $tag->name . '</category>';
             }
 
@@ -117,10 +118,12 @@ class RssService
 
     private function getContent(Article $article): string
     {
-        return str_replace(
-            search: 'src="/',
-            replace: 'src="' . UrlBuilderUtil::buildBaseUrlWithoutLanguage() . '/',
-            subject: $article->getContentHtml(),
+        return htmlspecialchars(
+            str_replace(
+                search: 'src="/',
+                replace: 'src="' . UrlBuilderUtil::buildBaseUrlWithoutLanguage() . '/',
+                subject: $article->contentHtml,
+            )
         );
     }
 
@@ -140,27 +143,25 @@ class RssService
             return new DateTimeImmutable('now', $utcTimezone);
         }
 
-        return new DateTimeImmutable($article->getPublishOn(), $utcTimezone);
+        return new DateTimeImmutable($article->publishOn, $utcTimezone);
     }
 
     private function getBuildDate(array $articles): DateTimeImmutable
     {
-        $utcTimezone = new DateTimeZone('UTC');
-
         if (!$articles) {
-            return new DateTimeImmutable('now', $utcTimezone);;
+            return new DateTimeImmutable();
         }
 
         $buildDate = $this->getLastPubDate($articles[0]);
 
         /** @var Article $article */
         foreach ($articles as $article) {
-            $updatedAt = new DateTimeImmutable($article->getPublishOn(), $utcTimezone);
+            $updatedAt = $article->publishOn;
             if ($buildDate < $updatedAt) {
                 $buildDate = $updatedAt;
             }
         }
 
-        return $buildDate;
+        return $buildDate->setTimezone(new DateTimeZone('UTC'));
     }
 }

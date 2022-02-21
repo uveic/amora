@@ -170,7 +170,7 @@ class ArticleDataLayer
         $articleArray = $article->asArray();
         unset($articleArray['created_at']);
         unset($articleArray['user_id']); // Keep the user ID that originally created it
-        $articleId = $article->getId();
+        $articleId = $article->id;
         $resUpdate = $this->db->update(self::ARTICLE_TABLE, $articleId, $articleArray);
 
         if (empty($resUpdate)) {
@@ -194,7 +194,7 @@ class ArticleDataLayer
             return null;
         }
 
-        $article->setId((int)$resInsert);
+        $article->id = $resInsert;
 
         $resHistory = $this->insertArticleHistory($article, $userIp, $userAgent);
         if (empty($resHistory)) {
@@ -208,15 +208,15 @@ class ArticleDataLayer
     public function insertArticleHistory(Article $article, ?string $userIp, ?string $userAgent): bool
     {
         $data = [
-            'article_id' => $article->getId(),
-            'user_id' => $article->getUser()->getId(),
-            'status_id' => $article->getStatusId(),
-            'type_id' => $article->getTypeId(),
-            'created_at' => $article->getCreatedAt(),
-            'title' => $article->getTitle(),
-            'content_html' => $article->getContentHtml(),
-            'main_image_id' => $article->getMainImageId(),
-            'uri' => $article->getUri(),
+            'article_id' => $article->id,
+            'user_id' => $article->user->id,
+            'status_id' => $article->status->value,
+            'type_id' => $article->type->value,
+            'created_at' => $article->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'title' => $article->title,
+            'content_html' => $article->contentHtml,
+            'main_image_id' => $article->mainImageId,
+            'uri' => $article->uri,
             'ip' => $userIp,
             'user_agent' => $userAgent
         ];
@@ -241,9 +241,9 @@ class ArticleDataLayer
 
                 $resDe = $this->db->update(
                     self::ARTICLE_TABLE,
-                    $article->getId(),
+                    $article->id,
                     [
-                        'status_id' => ArticleStatus::DELETED->value
+                        'status_id' => ArticleStatus::Deleted->value
                     ]
                 );
 

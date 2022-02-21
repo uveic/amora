@@ -2,102 +2,35 @@
 
 namespace Amora\Core\Module\Action\Model;
 
+use Amora\Core\Util\DateUtil;
+use DateTimeImmutable;
+
 class Action
 {
-    private ?int $id;
-    private ?int $userId;
-    private ?string $sessionId;
-    private string $createdAt;
-    private string $url;
-    private ?string $referrer;
-    private ?string $ip;
-    private ?string $userAgent;
-    private ?string $clientLanguage;
-
     public function __construct(
-        ?int $id,
-        ?int $userId,
-        ?string $sessionId,
-        string $createdAt,
-        string $url,
-        ?string $referrer = null,
-        ?string $ip = null,
-        ?string $userAgent = null,
-        ?string $clientLanguage = null
-    ) {
-        $this->id = $id;
-        $this->userId = $userId;
-        $this->sessionId = $sessionId;
-        $this->createdAt = $createdAt;
-        $this->url = $url;
-        $this->referrer = $referrer;
-        $this->ip = $ip;
-        $this->userAgent = $userAgent;
-        $this->clientLanguage = $clientLanguage;
-    }
+        public readonly ?int $id,
+        public readonly ?int $userId,
+        public readonly ?string $sessionId,
+        public readonly DateTimeImmutable $createdAt,
+        public readonly string $url,
+        public readonly ?string $referrer = null,
+        public readonly ?string $ip = null,
+        public readonly ?string $userAgent = null,
+        public readonly ?string $clientLanguage = null
+    ) {}
 
     public function asArray(): array
     {
         return [
-            'id' => $this->getId(),
-            'user_id' => $this->getUserId(),
-            'session_id' => $this->getSessionId(),
-            'created_at' => $this->getCreatedAt(),
-            'url' => $this->getUrl(),
-            'referrer' => $this->getReferrer(),
-            'ip' => $this->getIp(),
-            'user_agent' => $this->getUserAgent(),
-            'client_language' => $this->getClientLanguage()
+            'id' => $this->id,
+            'user_id' => $this->userId,
+            'session_id' => $this->sessionId,
+            'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'url' => $this->url,
+            'referrer' => $this->referrer,
+            'ip' => $this->ip,
+            'user_agent' => $this->userAgent,
+            'client_language' => $this->clientLanguage,
         ];
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    public function getSessionId(): ?string
-    {
-        return $this->sessionId;
-    }
-
-    public function getUrl(): string
-    {
-        return $this->url;
-    }
-
-    public function getReferrer(): ?string
-    {
-        return $this->referrer;
-    }
-
-    public function getCreatedAt(): string
-    {
-        return $this->createdAt;
-    }
-
-    public function getIp(): ?string
-    {
-        return $this->ip;
-    }
-
-    public function getUserAgent(): ?string
-    {
-        return $this->userAgent;
-    }
-
-    public function getClientLanguage(): ?string
-    {
-        return $this->clientLanguage;
     }
 }

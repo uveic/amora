@@ -22,16 +22,15 @@ if (!$responseData->getHomeArticles()) {
 /** @var Article $article */
 foreach ($responseData->getHomeArticles() as $article) {
     $href = UrlBuilderUtil::buildPublicArticleUrl(
-        uri: $article->getUri(),
+        uri: $article->uri,
         languageIsoCode: $responseData->getSiteLanguage(),
     );
-    $link = $article->getTitle()
-        ? '<a class="link-title" href="' . $href . '">' . $article->getTitle() . '</a>'
+    $link = $article->title
+        ? '<a class="link-title" href="' . $href . '">' . $article->title . '</a>'
         : '';
-    $imgStyle = $article->getMainImage()
-        ? 'style="background: url(\'' . $article->getMainImage()->getFullUrlMedium() . '\') center center / cover no-repeat;"'
+    $imgStyle = $article->mainImage
+        ? 'style="background: url(\'' . $article->mainImage->fullUrlMedium . '\') center center / cover no-repeat;"'
         : 'style="background: url(\'/img/roof.webp\') center center / cover no-repeat;"';
-        // ToDo: pick default background image when the article does not have a default image
 ?>
     <div class="home-tag-item">
       <a href="<?=$href?>">

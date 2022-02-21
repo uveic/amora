@@ -12,11 +12,11 @@ if (!$previousArticle && !$nextArticle) {
 }
 
 $previousArticleHtml = $previousArticle
-    ? '<a href="' . UrlBuilderUtil::buildPublicArticleUrl($previousArticle->getUri(), $responseData->getSiteLanguage()) . '">« ' . $previousArticle->getTitle() . '</a>'
+    ? '<a href="' . UrlBuilderUtil::buildPublicArticleUrl($previousArticle->uri, $responseData->getSiteLanguage()) . '">« ' . $previousArticle->title . '</a>'
     : '';
 
 $nextArticleHtml = $nextArticle
-    ? '<a class="text-right" href="' . UrlBuilderUtil::buildPublicArticleUrl($nextArticle->getUri(), $responseData->getSiteLanguage()) . '">' . $nextArticle->getTitle() . ' »</a>'
+    ? '<a class="text-right" href="' . UrlBuilderUtil::buildPublicArticleUrl($nextArticle->uri, $responseData->getSiteLanguage()) . '">' . $nextArticle->title . ' »</a>'
     : '';
 
 ?>

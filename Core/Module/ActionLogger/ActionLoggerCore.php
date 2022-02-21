@@ -24,16 +24,15 @@ class ActionLoggerCore extends Core
     public static function getActionDataLayer(): ActionDataLayer
     {
         $db = self::getDb();
-        $logger = self::getActionLogger();
 
         return self::getInstance(
-            'ActionDataLayer',
-            function () use ($db, $logger) {
+            className: 'ActionDataLayer',
+            factory: function () use ($db) {
                 require_once self::getPathRoot() . '/Core/Module/ActionLogger/Model/Action.php';
                 require_once self::getPathRoot() . '/Core/Module/ActionLogger/Datalayer/ActionDataLayer.php';
-                return new ActionDataLayer($db, $logger);
+                return new ActionDataLayer($db);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -43,13 +42,13 @@ class ActionLoggerCore extends Core
         $actionDataLayer = self::getActionDataLayer();
 
         return self::getInstance(
-            'ActionService',
-            function () use ($logger, $actionDataLayer) {
+            className: 'ActionService',
+            factory: function () use ($logger, $actionDataLayer) {
                 require_once self::getPathRoot() . '/Core/Module/ActionLogger/Model/Action.php';
                 require_once self::getPathRoot() . '/Core/Module/ActionLogger/Service/ActionService.php';
                 return new ActionService($logger, $actionDataLayer);
             },
-            true
+            isSingleton: true,
         );
     }
 }

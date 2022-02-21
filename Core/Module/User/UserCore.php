@@ -31,13 +31,13 @@ class UserCore extends Core
         $logger = self::getUserLogger();
 
         return self::getInstance(
-            'UserDataLayer',
-            function () use ($db, $logger) {
+            className: 'UserDataLayer',
+            factory: function () use ($db, $logger) {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Datalayer/UserDataLayer.php';
                 return new UserDataLayer($db, $logger);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -49,17 +49,18 @@ class UserCore extends Core
         $userMailService = self::getUserMailService();
 
         return self::getInstance(
-            'UserService',
-            function () use ($logger, $userDataLayer, $sessionService, $userMailService) {
-                require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
+            className: 'UserService',
+            factory: function () use ($logger, $userDataLayer, $sessionService, $userMailService) {
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserVerification.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserRegistrationRequest.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Service/UserService.php';
                 return new UserService($logger, $userDataLayer, $sessionService, $userMailService);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -69,54 +70,54 @@ class UserCore extends Core
         $logger = self::getUserLogger();
 
         return self::getInstance(
-            'SessionDataLayer',
-            function () use ($db, $logger) {
+            className: 'SessionDataLayer',
+            factory: function () use ($db, $logger) {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/Session.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Datalayer/UserDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Datalayer/SessionDataLayer.php';
                 return new SessionDataLayer($db, $logger);
             },
-            true
+            isSingleton: true,
         );
     }
 
     public static function getSessionService(): SessionService
     {
         $dataLayer = self::getSessionDataLayer();
-        $logger = self::getUserLogger();
 
         return self::getInstance(
-            'SessionService',
-            function () use ($dataLayer, $logger) {
+            className: 'SessionService',
+            factory: function () use ($dataLayer) {
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/Session.php';
                 require_once self::getPathRoot() . '/Core/Model/Util/UserAgentInfo.php';
                 require_once self::getPathRoot() . '/Core/Util/UserAgentParserUtil.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Service/SessionService.php';
-                return new SessionService($dataLayer, $logger);
+                return new SessionService($dataLayer);
             },
-            true
+            isSingleton: true,
         );
     }
 
     public static function getUserMailService(): UserMailService
     {
-        $logger = self::getUserLogger();
         $dataLayer = self::getUserDataLayer();
         $mailerService = MailerCore::getMailerService();
 
         return self::getInstance(
-            'UserMailService',
-            function () use ($dataLayer, $logger, $mailerService) {
+            className: 'UserMailService',
+            factory: function () use ($dataLayer, $mailerService) {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserVerification.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Service/UserMailService.php';
-                return new UserMailService($logger, $dataLayer, $mailerService);
+                return new UserMailService($dataLayer, $mailerService);
             },
-            true
+            isSingleton: true,
         );
     }
 }

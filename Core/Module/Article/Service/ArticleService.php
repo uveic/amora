@@ -52,12 +52,12 @@ class ArticleService
         bool $isAdmin = false,
     ): ?Article {
         $statusIds = $isAdmin
-            ? [ArticleStatus::PRIVATE->value, ArticleStatus::PUBLISHED->value]
-            : [ArticleStatus::PUBLISHED->value];
+            ? [ArticleStatus::Private->value, ArticleStatus::Published->value]
+            : [ArticleStatus::Published->value];
 
         $res = $this->filterArticlesBy(
             statusIds: $statusIds,
-            typeIds: [ArticleType::BLOG],
+            typeIds: [ArticleType::Blog->value],
             publishedBefore: $publishedBefore,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy(field: 'published_at', direction: 'DESC')],
@@ -71,12 +71,12 @@ class ArticleService
     public function getNextBlogPost(DateTimeImmutable $publishedAfter, bool $isAdmin = false): ?Article
     {
         $statusIds = $isAdmin
-            ? [ArticleStatus::PRIVATE->value, ArticleStatus::PUBLISHED->value]
-            : [ArticleStatus::PUBLISHED->value];
+            ? [ArticleStatus::Private->value, ArticleStatus::Published->value]
+            : [ArticleStatus::Published->value];
 
         $res = $this->filterArticlesBy(
             statusIds: $statusIds,
-            typeIds: [ArticleType::BLOG],
+            typeIds: [ArticleType::Blog->value],
             publishedAfter: $publishedAfter,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy(field: 'published_at', direction: 'ASC')],
@@ -121,8 +121,8 @@ class ArticleService
     public function getHomepageArticle(): ?Article
     {
         $res = $this->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED->value],
-            typeIds: [ArticleType::HOMEPAGE],
+            statusIds: [ArticleStatus::Published->value],
+            typeIds: [ArticleType::Homepage->value],
         );
 
         if (count($res) > 1) {
@@ -139,14 +139,14 @@ class ArticleService
         ?string $articleTitle = null,
         ?Article $existingArticle = null
     ): string {
-        $articleId = $existingArticle?->getId();
+        $articleId = $existingArticle?->id;
 
         if (!$uri && !$articleTitle) {
             $uri = strtolower(StringUtil::getRandomString(32));
         } else if (!$uri && $articleTitle) {
             $uri = strtolower(StringUtil::cleanString($articleTitle));
         } else {
-            $uri = $uri === $existingArticle->getUri() && $articleTitle
+            $uri = $uri === $existingArticle->uri && $articleTitle
                 ? strtolower(StringUtil::cleanString($articleTitle))
                 : $uri;
         }
@@ -155,7 +155,7 @@ class ArticleService
         do {
             $validUri = $uri . ($count > 0 ? '-' . $count : '');
             $res = $this->getArticleForUri($validUri);
-            if ($articleId && $res && $res->getId() === $articleId) {
+            if ($articleId && $res && $res->id === $articleId) {
                 $res = null;
             }
             $count++;
@@ -177,40 +177,40 @@ class ArticleService
 
                 if (empty($resUpdate)) {
                     $this->logger->logError(
-                        'Error updating article. Article ID: ' . $article->getId()
+                        'Error updating article. Article ID: ' . $article->id
                     );
                     return new TransactionResponse(false);
                 }
 
                 $resSections = $this->updateCreateOrDeleteArticleSections(
-                    $article->getId(),
+                    $article->id,
                     $sections
                 );
 
                 if (empty($resSections)) {
                     $this->logger->logError(
-                        'Error updating article sections. Article ID: ' . $article->getId()
+                        'Error updating article sections. Article ID: ' . $article->id
                     );
                     return new TransactionResponse(false);
                 }
 
-                $resTags = $this->addOrRemoveTagsToArticle($article->getId(), $tags);
+                $resTags = $this->addOrRemoveTagsToArticle($article->id, $tags);
                 if (empty($resTags)) {
                     $this->logger->logError(
-                        'Error updating article tags. Article ID: ' . $article->getId()
+                        'Error updating article tags. Article ID: ' . $article->id
                     );
                     return new TransactionResponse(false);
                 }
 
                 $resHistory = $this->articleDataLayer->insertArticleHistory(
-                    $article,
-                    $userIp,
-                    $userAgent
+                    article: $article,
+                    userIp: $userIp,
+                    userAgent: $userAgent,
                 );
 
                 if (empty($resHistory)) {
                     $this->logger->logError(
-                        'Error inserting article history. Article ID: ' . $article->getId()
+                        'Error inserting article history. Article ID: ' . $article->id
                     );
                     return new TransactionResponse(false);
                 }
@@ -294,7 +294,7 @@ class ArticleService
         $existingTagsById = [];
         /** @var Tag $existingTag */
         foreach ($existingTags as $existingTag) {
-            $existingTagsById[$existingTag->getId()] = $existingTag;
+            $existingTagsById[$existingTag->id] = $existingTag;
         }
 
         $newTags = [];
@@ -305,21 +305,21 @@ class ArticleService
 
         /** @var Tag $nTag */
         foreach ($newTags as $nTag) {
-            if (empty($nTag->getId())) {
+            if (empty($nTag->id)) {
                 // ToDo: implement validation at controller level to avoid getting here
                 // This shouldn't happen ever
                 $this->logger->logError('Tag missing ID. This should not have happened.');
                 continue;
             }
 
-            if (isset($existingTagsById[$nTag->getId()])) {
-                unset($existingTagsById[$nTag->getId()]);
+            if (isset($existingTagsById[$nTag->id])) {
+                unset($existingTagsById[$nTag->id]);
                 continue;
             }
 
             $resRelation = $this->tagDataLayer->insertArticleTagRelation(
-                $nTag->getId(),
-                $articleId
+                tagId: $nTag->id,
+                articleId: $articleId,
             );
 
             if (empty($resRelation)) {
@@ -329,7 +329,7 @@ class ArticleService
         }
 
         foreach ($existingTagsById as $tag) {
-            $this->tagDataLayer->deleteArticleTagRelation($tag->getId(), $articleId);
+            $this->tagDataLayer->deleteArticleTagRelation($tag->id, $articleId);
         }
 
         return true;
@@ -350,34 +350,34 @@ class ArticleService
         $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
             function () use ($article, $sections, $tags, $userIp, $userAgent) {
                 $article = $this->articleDataLayer->createNewArticle(
-                    $article,
-                    $userIp,
-                    $userAgent
+                    article: $article,
+                    userIp: $userIp,
+                    userAgent: $userAgent,
                 );
 
                 if (empty($article)) {
                     $this->logger->logError(
-                        'Error creating article. Article ID: ' . $article->getId()
+                        'Error creating article. Article ID: ' . $article->id
                     );
                     return new TransactionResponse(false);
                 }
 
                 $resSections = $this->updateCreateOrDeleteArticleSections(
-                    $article->getId(),
-                    $sections,
+                    articleId: $article->id,
+                    sections: $sections,
                 );
 
-                $resTags = $this->addOrRemoveTagsToArticle($article->getId(), $tags);
+                $resTags = $this->addOrRemoveTagsToArticle($article->id, $tags);
                 if (empty($resTags)) {
                     $this->logger->logError(
-                        'Error updating article tags. Article ID: ' . $article->getId()
+                        'Error updating article tags. Article ID: ' . $article->id
                     );
                     return new TransactionResponse(false);
                 }
 
                 if (empty($resSections)) {
                     $this->logger->logError(
-                        'Error updating article sections. Article ID: ' . $article->getId()
+                        'Error updating article sections. Article ID: ' . $article->id
                     );
                     return new TransactionResponse(false);
                 }

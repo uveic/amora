@@ -4,7 +4,6 @@ namespace Amora\Core\Module\User\Service;
 
 use Amora\Core\Core;
 use Amora\Core\Database\Model\TransactionResponse;
-use Amora\Core\Logger;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Service\MailerService;
 use Amora\Core\Module\Mailer\Value\MailerTemplate;
@@ -12,7 +11,6 @@ use Amora\Core\Module\User\Datalayer\UserDataLayer;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserVerification;
 use Amora\Core\Module\User\Value\VerificationType;
-use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\Language;
@@ -21,7 +19,6 @@ use DateTimeImmutable;
 class UserMailService
 {
     public function __construct(
-        private Logger $logger,
         private UserDataLayer $userDataLayer,
         private MailerService $mailerService,
     ) {}
@@ -39,7 +36,7 @@ class UserMailService
         }
 
         $res2 = $this->mailerService->storeMail($mailerItem);
-        return empty($res2) ? false : true;
+        return !empty($res2);
     }
 
     public function sendUpdateEmailVerificationEmail(User $user, string $emailToVerify): bool
@@ -69,9 +66,9 @@ class UserMailService
                 $verification = new UserVerification(
                     id: null,
                     userId: $user->getId(),
-                    typeId: VerificationType::EmailAddress,
+                    type: VerificationType::EmailAddress,
                     email: $emailToVerify,
-                    createdAt: DateUtil::getCurrentDateForMySql(),
+                    createdAt: new DateTimeImmutable(),
                     verifiedAt: null,
                     verificationIdentifier: $verificationIdentifier,
                     isEnabled: true
@@ -108,14 +105,14 @@ class UserMailService
                 $mailerItem = $this->buildPasswordResetEmail($user, $verificationIdentifier);
 
                 $verification = new UserVerification(
-                    null,
-                    $user->getId(),
-                    VerificationType::PasswordReset,
-                    null,
-                    DateUtil::getCurrentDateForMySql(),
-                    null,
-                    $verificationIdentifier,
-                    true
+                    id: null,
+                    userId: $user->getId(),
+                    type: VerificationType::PasswordReset,
+                    email: null,
+                    createdAt: new DateTimeImmutable(),
+                    verifiedAt: null,
+                    verificationIdentifier: $verificationIdentifier,
+                    isEnabled: true,
                 );
 
                 $resEmail = $this->sendEmailAndDisablePreviousVerifications(
@@ -197,7 +194,7 @@ class UserMailService
             subject: $emailSubject,
             contentHtml: $emailContent,
             fieldsJson: null,
-            new DateTimeImmutable(),
+            createdAt: new DateTimeImmutable(),
         );
     }
 
@@ -226,7 +223,7 @@ class UserMailService
 
         return new MailerItem(
             id: null,
-            templateId: MailerTemplate::ACCOUNT_VERIFICATION,
+            template: MailerTemplate::AccountVerification,
             replyToEmailAddress: null,
             senderName: null,
             receiverEmailAddress: $emailToVerify,
@@ -234,7 +231,7 @@ class UserMailService
             subject: $emailSubject,
             contentHtml: $emailContent,
             fieldsJson: null,
-            createdAt: DateUtil::getCurrentDateForMySql()
+            createdAt: new DateTimeImmutable(),
         );
     }
 

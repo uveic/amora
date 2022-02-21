@@ -22,16 +22,16 @@ class UserVerification
     public static function fromArray(array $item): self
     {
         return new self(
-            (int)$item['user_verification_id'],
-            $item['user_id'],
-            VerificationType::from($item['type_id']),
-            $item['email'] ?? null,
-            DateUtil::convertStringToDateTimeImmutable($item['created_at']),
-            isset($item['verified_at'])
+            id: (int)$item['user_verification_id'],
+            userId: $item['user_id'],
+            type: VerificationType::from($item['type_id']),
+            email: $item['email'] ?? null,
+            createdAt: DateUtil::convertStringToDateTimeImmutable($item['created_at']),
+            verifiedAt: isset($item['verified_at'])
                 ? DateUtil::convertStringToDateTimeImmutable($item['verified_at'])
                 : null,
-            $item['verification_identifier'],
-            !empty($item['is_enabled']),
+            verificationIdentifier: $item['verification_identifier'],
+            isEnabled: !empty($item['is_enabled']),
         );
     }
 

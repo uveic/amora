@@ -2,26 +2,20 @@
 
 namespace Amora\Core\Module\Action\Service;
 
+use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Logger;
 use Amora\Core\Model\Request;
 use Amora\Core\Module\Action\Datalayer\ActionDataLayer;
 use Amora\Core\Module\Action\Model\Action;
-use Amora\Core\Util\DateUtil;
 
 class ActionService
 {
-    private ActionDataLayer $actionDataLayer;
-    private Logger $logger;
-
     public function __construct(
-        Logger $logger,
-        ActionDataLayer $actionDataLayer
-    ) {
-        $this->actionDataLayer = $actionDataLayer;
-        $this->logger = $logger;
-    }
+        private Logger $logger,
+        private ActionDataLayer $actionDataLayer,
+    ) {}
 
     public function logAction(Request $request): void
     {
@@ -58,15 +52,15 @@ class ActionService
     ): Action {
         return $this->actionDataLayer->storeAction(
             new Action(
-                null,
-                $userId,
-                $sessionId,
-                DateUtil::getCurrentDateForMySql(),
-                $url,
-                $referrer,
-                $ip,
-                $userAgent,
-                $clientLanguage
+                id: null,
+                userId: $userId,
+                sessionId: $sessionId,
+                createdAt: new DateTimeImmutable(),
+                url: $url,
+                referrer: $referrer,
+                ip: $ip,
+                userAgent: $userAgent,
+                clientLanguage: $clientLanguage,
             )
         );
     }

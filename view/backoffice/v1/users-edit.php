@@ -30,19 +30,19 @@ $defaultLanguage = $userToEdit
 <?=$this->insert('partials/users-edit/control-bar', ['responseData' => $responseData])?>
       <div class="content-narrow-width">
 <?php if ($userToEdit) { ?>
-        <input id="userId" class="input" name="userId" type="hidden" value="<?=$this->e($userToEdit->getId()); ?>">
+        <input id="userId" class="input" name="userId" type="hidden" value="<?=$userToEdit->id; ?>">
 <?php } ?>
         <div class="field">
           <label for="name" class="label"><?=$responseData->getLocalValue('globalName')?></label>
           <div class="control">
-            <input class="input" id="name" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" minlength="3" value="<?=$this->e($userToEdit ? $userToEdit->getName() : ''); ?>" required>
+            <input class="input" id="name" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" minlength="3" value="<?=$userToEdit ? htmlspecialchars($userToEdit->name) : ''; ?>" required>
           </div>
           <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span><?=$responseData->getLocalValue('formPlaceholderUserHelp')?></p>
         </div>
         <div class="field">
           <label for="email" class="label"><?=$responseData->getLocalValue('globalEmail')?></label>
           <div class="control">
-            <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" value="<?=$this->e($userToEdit ? $userToEdit->getEmail() : ''); ?>" required>
+            <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" value="<?=$userToEdit ? htmlspecialchars($userToEdit->email) : ''?>" required>
           </div>
           <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
         </div>
@@ -56,7 +56,7 @@ $defaultLanguage = $userToEdit
         <div class="field">
           <label for="bio" class="label"><?=$responseData->getLocalValue('globalBio')?></label>
           <div class="control">
-            <textarea id="bio" name="bio"><?=$this->e($userToEdit ? $userToEdit->bio : '')?></textarea>
+            <textarea id="bio" name="bio"><?=$userToEdit ? $userToEdit->bio : ''?></textarea>
           </div>
         </div>
         <div class="field">
@@ -67,7 +67,7 @@ $defaultLanguage = $userToEdit
                   foreach ($responseData->getLanguages() as $language) {
                       $selected = $language['id'] === $defaultLanguage;
 ?>
-              <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$this->e($language['id'])?>"><?=$this->e($language['name'])?></option>
+              <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$language['id']?>"><?=$language['name']?></option>
 <?php
 }
 ?>
@@ -99,7 +99,7 @@ foreach (UserRole::getAll() as $role) {
 <?php foreach ($timezones as $timezone) {
     $selected = $timezone === $defaultTimezone;
 ?>
-                  <option  <?php echo $selected ? 'selected ' : ''; ?>value="<?=$this->e($timezone)?>" <?=$this->e($userToEdit && $userToEdit->timezone->getName() === $timezone ? ' selected="selected"' : '')?>><?=$this->e($timezone)?></option>
+                  <option  <?php echo $selected ? 'selected ' : ''; ?>value="<?=$timezone?>" <?=$userToEdit && $userToEdit->timezone->getName() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
 <?php } ?>
             </select>
           </div>

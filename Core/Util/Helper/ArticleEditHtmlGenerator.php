@@ -62,10 +62,10 @@ final class ArticleEditHtmlGenerator
             . '</section>';
     }
 
-    public static function getArticleTypeId(HtmlResponseDataAuthorised $responseData): int
+    public static function getArticleType(HtmlResponseDataAuthorised $responseData): ArticleType
     {
         if ($responseData->getFirstArticle()) {
-            return $responseData->getFirstArticle()->getTypeId();
+            return $responseData->getFirstArticle()->type;
         }
 
         $typeIdGetParam = $responseData->getRequest()->getGetParam('articleType');
@@ -73,41 +73,39 @@ final class ArticleEditHtmlGenerator
             /** @var \BackedEnum $articleType */
             foreach (ArticleType::getAll() as $articleType) {
                 if ((int)$typeIdGetParam === $articleType->value) {
-                    return $articleType->value;
+                    return $articleType;
                 }
             }
         }
 
         return str_contains($responseData->getSiteUrl(), 'articles')
-            ? ArticleType::Page->name
-            : ArticleType::Blog->name;
+            ? ArticleType::Page
+            : ArticleType::Blog;
     }
 
     public static function generateStatusDropdownSelectHtml(
         HtmlResponseDataAuthorised $responseData
     ): string {
-        $articleTypeId = self::getArticleTypeId($responseData);
-        $isHomepage = $articleTypeId === ArticleType::Homepage;
-        $articleStatusId = $responseData->getFirstArticle()
-            ? $responseData->getFirstArticle()->getStatusId()
-            : ($isHomepage ? ArticleStatus::PUBLISHED->value : ArticleStatus::DRAFT->value);
-        $articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::from($articleStatusId)->name);
+        $isHomepage = self::getArticleType($responseData) === ArticleType::Homepage;
+        $articleStatus = $responseData->getFirstArticle()
+            ? $responseData->getFirstArticle()->status
+            : ($isHomepage ? ArticleStatus::Published : ArticleStatus::Draft);
+        $articleStatusName = $responseData->getLocalValue('articleStatus' . $articleStatus->name);
         $isPublished = $responseData->getFirstArticle()
-            ? $articleStatusId === ArticleStatus::PUBLISHED->value
+            ? $articleStatus === ArticleStatus::Published
             : $isHomepage;
         $random = StringUtil::getRandomString(5);
 
-        $html = '';
-        $html .= '<input type="checkbox" id="dropdown-menu-' . $random . '" class="dropdown-menu">';
+        $html = '<input type="checkbox" id="dropdown-menu-' . $random . '" class="dropdown-menu">';
         $html .= '<div class="dropdown-container">';
         $html .= '<ul>';
 
         /** @var \BackedEnum $status */
         foreach (ArticleStatus::getAll() as $status) {
-            $html .= '<li><a data-checked="' . ($status->value === $articleStatusId ? '1' : '0') .
+            $html .= '<li><a data-checked="' . ($status === $articleStatus ? '1' : '0') .
                 '" data-article-status-id="' . $status->value .
                 '" class="dropdown-menu-option article-status-option ' .
-                ($status->value === ArticleStatus::PUBLISHED->value ? 'feedback-success' : 'background-light-color') .
+                ($status === ArticleStatus::Published ? 'feedback-success' : 'background-light-color') .
                 '" href="#">' . $responseData->getLocalValue('articleStatus' . $status->name) .
                 '</a></li>';
         }
@@ -125,9 +123,9 @@ final class ArticleEditHtmlGenerator
     public static function generateSettingsButtonHtml(
         HtmlResponseDataAuthorised $responseData
     ): string {
-        $articleTypeId = self::getArticleTypeId($responseData);
+        $articleType = self::getArticleType($responseData);
 
-        return $articleTypeId === ArticleType::HOMEPAGE
+        return $articleType === ArticleType::Homepage
             ? ''
             : '<a href="#" class="article-settings m-r-1"><img src="/img/svg/gear.svg" class="img-svg m-t-0" alt="' . $responseData->getLocalValue('globalSettings') . '"></a>';
     }
@@ -139,13 +137,13 @@ final class ArticleEditHtmlGenerator
             return $responseData->getLocalValue('globalEdit');
         }
 
-        $articleTypeId = self::getArticleTypeId($responseData);
+        $articleType = self::getArticleType($responseData);
 
-        if ($articleTypeId === ArticleType::HOMEPAGE) {
+        if ($articleType === ArticleType::Homepage) {
             return $responseData->getLocalValue('articleEditHomepageTitle');
         }
 
-        return $articleTypeId === ArticleType::PAGE
+        return $articleType === ArticleType::Page
             ? $responseData->getLocalValue('globalNew') . ' ' . $responseData->getLocalValue('globalArticle')
             : $responseData->getLocalValue('globalNew') . ' ' . $responseData->getLocalValue('globalBlogPost');
     }
@@ -154,29 +152,28 @@ final class ArticleEditHtmlGenerator
         HtmlResponseDataAuthorised $responseData,
         Article $article
     ): string {
-        $statusClassname = match ($article->getStatusId()) {
-            ArticleStatus::PUBLISHED->value => 'status-published',
-            ArticleStatus::PRIVATE->value => 'status-private',
-            ArticleStatus::DELETED->value => 'status-deleted',
-            ArticleStatus::DRAFT->value => 'status-draft',
-            default => ''
+        $statusClassname = match ($article->status) {
+            ArticleStatus::Published => 'status-published',
+            ArticleStatus::Private => 'status-private',
+            ArticleStatus::Deleted => 'status-deleted',
+            ArticleStatus::Draft => 'status-draft',
         };
 
-        $articleTitle = $article->getTitle() ?: $responseData->getLocalValue('globalNoTitle');
+        $articleTitle = $article->title ?: $responseData->getLocalValue('globalNoTitle');
         $articleUrl = UrlBuilderUtil::buildPublicArticleUrl(
-            uri: $article->getUri(),
+            uri: $article->uri,
             languageIsoCode: $responseData->getSiteLanguage(),
         );
 
         $output = '<div class="m-r-05">';
-        $output .= '<span class="light-text-color" style="margin-right: 0.1rem;">' . $article->getId() . '. </span>';
-        $output .= $article->getStatusId() === ArticleStatus::PUBLISHED->value
+        $output .= '<span class="light-text-color" style="margin-right: 0.1rem;">' . $article->id . '. </span>';
+        $output .= $article->status === ArticleStatus::Published
             ? '<a href="' . $articleUrl . '">' . $articleTitle . '</a>'
             : $articleTitle;
 
-        if ($article->getPublishOn()) {
+        if ($article->publishOn) {
             $publishOn = DateUtil::formatDate(
-                date: new DateTimeImmutable($article->getPublishOn()),
+                date: $article->publishOn,
                 lang: $responseData->getSiteLanguage(),
                 includeTime: true,
             );
@@ -185,7 +182,7 @@ final class ArticleEditHtmlGenerator
                 . '</p>';
         } else {
             $updatedAt = DateUtil::formatDate(
-                date: new DateTimeImmutable($article->getUpdatedAt()),
+                date: $article->updatedAt,
                 lang: $responseData->getSiteLanguage(),
                 includeTime: true,
             );
@@ -194,7 +191,7 @@ final class ArticleEditHtmlGenerator
                 . '</p>';
         }
 
-        $output .= $article->getTags()
+        $output .= $article->tags
             ? '<p class="article-tags">'
                 . '<strong>' . $responseData->getLocalValue('globalTags') . '</strong>: ' . $article->getTagsAsString()
                 . '</p>'
@@ -202,7 +199,7 @@ final class ArticleEditHtmlGenerator
         $output .= '</div>';
 
         $output .= '<span class="article-status ' . $statusClassname . '">' .
-            $responseData->getLocalValue('articleStatus' . $article->getStatusName()) .
+            $responseData->getLocalValue('articleStatus' . $article->status->name) .
             '</span>';
 
         return $output;
