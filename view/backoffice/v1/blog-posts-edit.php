@@ -10,7 +10,7 @@ use Amora\Core\Util\StringUtil;
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
 $articleSections = $responseData->getArticleSections();
-$articleTypeId = ArticleType::BLOG;
+$articleType = ArticleType::Blog;
 
 if (!$articleSections) {
     $now = new DateTimeImmutable();
@@ -37,10 +37,10 @@ $this->layout('base', ['responseData' => $responseData]);
 <?=$this->insert('partials/articles-edit/header', ['responseData' => $responseData])?>
 <?=$this->insert('partials/articles-edit/control-bar', ['responseData' => $responseData])?>
     <div>
-      <input name="articleId" type="hidden" value="<?=$article ? $article->getId() : ''?>">
-      <input name="articleTypeId" type="hidden" value="<?=$articleTypeId?>">
+      <input name="articleId" type="hidden" value="<?=$article ? $article->id : ''?>">
+      <input name="articleTypeId" type="hidden" value="<?=$articleType->value?>">
       <article class="pexego-container">
-        <input name="articleTitle" type="text" value="<?=$article ? $article->getTitle() : ''?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" class="pexego-content-title placeholder">
+        <input name="articleTitle" type="text" value="<?=$article ? $article->title: ''?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" class="pexego-content-title placeholder">
 <?php
     $count = 0;
     $total = count($articleSections);

@@ -34,15 +34,15 @@ class ArticleCore extends Core
         $tagDataLayer = self::getTagDataLayer();
 
         return self::getInstance(
-            'ArticleDataLayer',
-            function () use ($db, $logger, $imageDataLayer, $tagDataLayer) {
+            className: 'ArticleDataLayer',
+            factory: function () use ($db, $logger, $imageDataLayer, $tagDataLayer) {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Datalayer/UserDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/ArticleDataLayer.php';
                 return new ArticleDataLayer($db, $logger, $imageDataLayer, $tagDataLayer);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -53,17 +53,18 @@ class ArticleCore extends Core
         $tagDataLayer = self::getTagDataLayer();
 
         return self::getInstance(
-            'ArticleService',
-            function () use ($logger, $articleDataLayer, $tagDataLayer) {
+            className: 'ArticleService',
+            factory: function () use ($logger, $articleDataLayer, $tagDataLayer) {
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/ArticleSection.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/ArticleService.php';
                 return new ArticleService($logger, $articleDataLayer, $tagDataLayer);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -73,15 +74,15 @@ class ArticleCore extends Core
         $logger = self::getArticleLogger();
 
         return self::getInstance(
-            'ImageDataLayer',
-            function () use ($db, $logger) {
+            className: 'ImageDataLayer',
+            factory: function () use ($db, $logger) {
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Image.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/ImageDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/ArticleDataLayer.php';
                 return new ImageDataLayer($db, $logger);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -103,8 +104,8 @@ class ArticleCore extends Core
         $mediaBaseDir = self::getConfigValue('mediaBaseDir');
 
         return self::getInstance(
-            'ImageService',
-            function () use (
+            className: 'ImageService',
+            factory: function () use (
                 $logger,
                 $imageDataLayer,
                 $imageResizeService,
@@ -120,7 +121,7 @@ class ArticleCore extends Core
                     $mediaBaseDir,
                 );
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -141,14 +142,14 @@ class ArticleCore extends Core
         $mediaBaseUrl = self::getConfigValue('mediaBaseUrl');
 
         return self::getInstance(
-            'ImageResizeService',
-            function () use ($logger, $mediaBaseDir, $mediaBaseUrl) {
+            className: 'ImageResizeService',
+            factory: function () use ($logger, $mediaBaseDir, $mediaBaseUrl) {
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Image.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/ImagePath.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/ImageResizeService.php';
                 return new ImageResizeService($logger, $mediaBaseDir, $mediaBaseUrl);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -158,13 +159,13 @@ class ArticleCore extends Core
         $logger = self::getArticleLogger();
 
         return self::getInstance(
-            'TagDataLayer',
-            function () use ($db, $logger) {
+            className: 'TagDataLayer',
+            factory: function () use ($db, $logger) {
                 require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/TagDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Tag.php';
                 return new TagDataLayer($db, $logger);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -174,13 +175,13 @@ class ArticleCore extends Core
         $tagDatalayer = self::getTagDataLayer();
 
         return self::getInstance(
-            'TagService',
-            function () use ($logger, $tagDatalayer) {
+            className: 'TagService',
+            factory: function () use ($logger, $tagDatalayer) {
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/TagService.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Tag.php';
                 return new TagService($logger, $tagDatalayer);
             },
-            true
+            isSingleton: true,
         );
     }
 
@@ -189,12 +190,12 @@ class ArticleCore extends Core
         $logger = self::getArticleLogger();
 
         return self::getInstance(
-            'RssService',
-            function () use ($logger) {
+            className: 'RssService',
+            factory: function () use ($logger) {
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/RssService.php';
                 return new RssService($logger);
             },
-            true
+            isSingleton: true,
         );
     }
 }

@@ -4,9 +4,9 @@ namespace Amora\Core\Module\Article\Value;
 
 enum ArticleType: int
 {
-    const Homepage = 1;
-    const Blog = 3;
-    const Page = 4;
+    case Homepage = 1;
+    case Blog = 3;
+    case Page = 4;
 
     public static function getAll(): array
     {

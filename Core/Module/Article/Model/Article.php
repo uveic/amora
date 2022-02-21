@@ -5,6 +5,7 @@ namespace Amora\Core\Module\Article\Model;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
 
 class Article
@@ -27,26 +28,16 @@ class Article
 
     public static function fromArray(array $article): self
     {
-        $id = empty($article['id'])
-            ? (empty($article['article_id']) ? null : $article['article_id'])
-            : (int)$article['id'];
-
-        $createdAt = empty($article['article_created_at'])
-            ? $article['created_at']
-            : $article['article_created_at'];
-
-        $updatedAt = empty($article['article_updated_at'])
-            ? $article['updated_at']
-            : $article['article_updated_at'];
-
         return new self(
-            id: $id,
+            id: (int)$article['article_id'],
             user: User::fromArray($article),
             status: ArticleStatus::from($article['status_id']),
             type: ArticleType::from($article['type_id']),
-            createdAt: $createdAt,
-            updatedAt: $updatedAt,
-            publishOn: $article['published_at'],
+            createdAt: DateUtil::convertStringToDateTimeImmutable($article['article_created_at']),
+            updatedAt: DateUtil::convertStringToDateTimeImmutable($article['article_updated_at']),
+            publishOn: isset($article['published_at'])
+                ? DateUtil::convertStringToDateTimeImmutable($article['published_at'])
+                : null,
             title: $article['title'] ?? null,
             contentHtml: $article['content_html'],
             mainImageId: empty($article['main_image_id']) ? null : (int)$article['main_image_id'],
@@ -59,114 +50,39 @@ class Article
     public function asArray(): array
     {
         return [
-            'id' => $this->getId(),
-            'user' => $this->getUser()->asArray(),
-            'user_id' => $this->getUser()->getId(),
-            'status_id' => $this->getStatusId(),
-            'type_id' => $this->getTypeId(),
-            'created_at' => $this->getCreatedAt(),
-            'updated_at' => $this->getUpdatedAt(),
-            'published_at' => $this->getPublishOn(),
-            'title' => $this->getTitle(),
-            'content_html' => $this->getContentHtml(),
-            'main_image' => $this->getMainImage() ? $this->getMainImage()->asArray() : [],
-            'main_image_id' => $this->getMainImageId(),
-            'uri' => $this->getUri(),
-            'tags' => $this->getTags()
+            'id' => $this->id,
+            'user_id' => $this->user->id,
+            'status_id' => $this->status->value,
+            'type_id' => $this->type->value,
+            'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'published_at' => $this->publishOn?->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'title' => $this->title,
+            'content_html' => $this->contentHtml,
+            'main_image_id' => $this->mainImageId,
+            'uri' => $this->uri,
+            'tags' => $this->tags,
         ];
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    public function getStatusId(): int
-    {
-        return $this->statusId;
-    }
-
-    public function getStatusName(): string
-    {
-        return ArticleStatus::from($this->statusId)->name;
-    }
-
-    public function getTypeId(): int
-    {
-        return $this->typeId;
-    }
-
-    public function getTypeName(): string
-    {
-        return ArticleType::from($this->type)->name;
-    }
-
-    public function getCreatedAt(): string
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): string
-    {
-        return $this->updatedAt;
-    }
-
-    public function getPublishOn(): ?string
-    {
-        return $this->publishOn;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function getContentHtml(): string
-    {
-        return $this->contentHtml;
     }
 
     public function getContentExcerpt(): string
     {
-        return '';
-    }
-
-    public function getMainImageId(): ?int
-    {
-        return $this->mainImageId;
-    }
-
-    public function getMainImage(): ?Image
-    {
-        return $this->mainImage;
-    }
-
-    public function getUri(): string
-    {
-        return $this->uri;
-    }
-
-    public function getTags(): array
-    {
-        return $this->tags;
+        $content = strip_tags($this->contentHtml);
+        return trim(
+            substr(
+                string: $content,
+                offset: 0,
+                length: 250,
+            )
+        );
     }
 
     public function getTagsAsString(): string
     {
         $output = [];
         /** @var Tag $tag */
-        foreach ($this->getTags() as $tag) {
-            $output[] = $tag->getName();
+        foreach ($this->tags as $tag) {
+            $output[] = $tag->name;
         }
 
         return implode(', ', $output);
@@ -174,15 +90,15 @@ class Article
 
     public function isPublished(): bool
     {
-        if ($this->getStatusId() !== ArticleStatus::PUBLISHED->value) {
+        if ($this->status !== ArticleStatus::Published) {
             return false;
         }
 
-        if (!$this->getPublishOn()) {
+        if (!$this->publishOn) {
             return false;
         }
 
-        if (strtotime($this->getPublishOn()) > time()) {
+        if ($this->publishOn->getTimestamp() > time()) {
             return false;
         }
 

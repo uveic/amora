@@ -39,7 +39,7 @@ class ImageDataLayer
         $params = [];
         $baseSql = 'SELECT ';
         $fields = [
-            'i.id',
+            'i.id AS image_id',
             'i.user_id',
             'i.file_path_original',
             'i.file_path_big',
@@ -48,8 +48,8 @@ class ImageDataLayer
             'i.full_url_big',
             'i.full_url_medium',
             'i.caption',
-            'i.created_at',
-            'i.updated_at'
+            'i.created_at AS image_created_at',
+            'i.updated_at AS image_updated_at',
         ];
 
         $joins = ' FROM ' . self::IMAGE_TABLE_NAME . ' AS i';
@@ -94,7 +94,7 @@ class ImageDataLayer
             $this->logger->logError('Error inserting image');
         }
 
-        $image->setId((int)$resInsert);
+        $image->id = (int)$resInsert;
 
         return $image;
     }

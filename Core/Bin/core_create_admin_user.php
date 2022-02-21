@@ -3,7 +3,7 @@
 
 namespace Amora\Core\Bin;
 
-use Amora\Core\Database\Model\TransactionResponse;
+use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Core;
@@ -46,24 +46,22 @@ if (empty($argv[1])) {
     exit;
 }
 
-if (!empty($argv[1])) {
-    foreach ($argv as $item) {
-        if (substr($item, 0, 7) === '--pass=') {
-            $pass = substr($item, 7, strlen($item) - 7);
-            continue;
-        }
+foreach ($argv as $item) {
+    if (str_starts_with($item, '--pass=')) {
+        $pass = substr($item, 7, strlen($item) - 7);
+        continue;
+    }
 
-        if (substr($item, 0, 11) === '--password=') {
-            $pass = substr($item, 11, strlen($item) - 11);
-        }
+    if (str_starts_with($item, '--password=')) {
+        $pass = substr($item, 11, strlen($item) - 11);
+    }
 
-        if (substr($item, 0, 8) === '--email=') {
-            $email = substr($item, 8, strlen($item) - 8);
-        }
+    if (str_starts_with($item, '--email=')) {
+        $email = substr($item, 8, strlen($item) - 8);
+    }
 
-        if (substr($item, 0, 7) === '--name=') {
-            $name = substr($item, 7, strlen($item) - 7);
-        }
+    if (str_starts_with($item, '--name=')) {
+        $name = substr($item, 7, strlen($item) - 7);
     }
 }
 
@@ -76,13 +74,13 @@ if (empty($pass)) {
     $pass = StringUtil::getRandomString(10);
 }
 
-$now = DateUtil::getCurrentDateForMySql();
+$now = new DateTimeImmutable();
 $res = UserCore::getUserService()->storeUser(
     new User(
         id: null,
         languageId: Language::ENGLISH,
-        roleId: UserRole::ADMIN,
-        journeyStatusId: UserJourneyStatus::REGISTRATION,
+        role: UserRole::Admin,
+        journeyStatus: UserJourneyStatus::Registration,
         createdAt: $now,
         updatedAt: $now,
         email: $email,
@@ -91,7 +89,7 @@ $res = UserCore::getUserService()->storeUser(
         bio: null,
         isEnabled: true,
         verified: true,
-        timezone: 'Europe/Madrid'
+        timezone: DateUtil::convertStringToDateTimeZone('Europe/Madrid'),
     )
 );
 

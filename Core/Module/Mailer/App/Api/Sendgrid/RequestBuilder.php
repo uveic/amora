@@ -34,11 +34,11 @@ class RequestBuilder extends RequestBuilderAbstract
         /** @var Email $emailReceiver */
         foreach ($emailReceivers as $emailReceiver) {
             $new = [
-                'email' => $emailReceiver->getEmailAddress()
+                'email' => $emailReceiver->email
             ];
 
-            if ($emailReceiver->getName()) {
-                $new['name'] = $emailReceiver->getName();
+            if ($emailReceiver->name) {
+                $new['name'] = $emailReceiver->name;
             }
 
             $receivers[] = $new;

@@ -10,7 +10,7 @@ $this->layout('base', ['responseData' => $responseData])
     <section>
       <div id="feedback" class="feedback null"></div>
       <div class="m-r-1 m-l-1">
-        <h1><?=$this->e($responseData->getLocalValue('navDashboard'))?></h1>
+        <h1><?=$responseData->getLocalValue('navDashboard')?></h1>
       </div
       <div class="content-flex">
 

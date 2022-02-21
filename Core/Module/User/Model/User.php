@@ -42,7 +42,7 @@ class User
             bio: $user['bio'] ?? null,
             isEnabled: !empty($user['is_enabled']),
             verified: !empty($user['verified']),
-            timezone: $user['timezone'],
+            timezone: DateUtil::convertStringToDateTimeZone($user['timezone']),
             changeEmailAddressTo: $user['change_email_to'] ?? null,
         );
     }

@@ -32,9 +32,9 @@ $count = 0;
         $count++;
         $lazyLoading = $count > 10 ? ' loading="lazy"' : '';
 ?>
-        <div class="image-item" data-image-id="<?=$this->e($image->getId())?>">
-          <img src="<?=$image->getFullUrlMedium()?>" title="<?=$this->e($image->getCaption())?>" alt="<?=$this->e($image->getCaption())?>" data-image-id="<?=$image->getId()?>"<?=$lazyLoading?>>
-          <div id="image-options-<?=$this->e($image->getId())?>" class="options null">
+        <div class="image-item" data-image-id="<?=$image->id?>">
+          <img src="<?=$image->getFullUrlMedium()?>" title="<?=$this->e($image->caption)?>" alt="<?=$this->e($image->caption)?>" data-image-id="<?=$image->id?>"<?=$lazyLoading?>>
+          <div id="image-options-<?=$image->id?>" class="options null">
             <a class="image-delete" href="#">&#10006;</a>
           </div>
         </div>

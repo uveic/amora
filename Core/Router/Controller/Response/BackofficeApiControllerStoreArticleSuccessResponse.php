@@ -9,7 +9,8 @@ class BackofficeApiControllerStoreArticleSuccessResponse extends Response
         bool $success,
         ?int $articleId = null,
         ?string $articleBackofficeUri = null,
-        ?string $articlePublicUri = null
+        ?string $articlePublicUri = null,
+        ?string $errorMessage = null
     ) {
         // Required parameters
         $responseData = [
@@ -27,6 +28,10 @@ class BackofficeApiControllerStoreArticleSuccessResponse extends Response
         $responseData['articlePublicUri'] = is_null($articlePublicUri)
             ? null
             : $articlePublicUri;
+
+        $responseData['errorMessage'] = is_null($errorMessage)
+            ? null
+            : $errorMessage;
 
         list($output, $contentType) = self::getResponseType($responseData);
         parent::__construct($output, $contentType, Response::HTTP_200_OK);

@@ -44,7 +44,7 @@ class TagService
         $tag = $this->tagDataLayer->storeTag($tag);
 
         if ($articleId) {
-            $res = $this->tagDataLayer->insertArticleTagRelation($tag->getId(), $articleId);
+            $res = $this->tagDataLayer->insertArticleTagRelation($tag->id, $articleId);
 
             if (empty($res)) {
                 return null;
@@ -56,9 +56,9 @@ class TagService
 
     public function destroyTag(Tag $tag): bool
     {
-        $res = $this->tagDataLayer->destroyTag($tag->getId());
+        $res = $this->tagDataLayer->destroyTag($tag->id);
         if (empty($res)) {
-            $this->logger->logError('Error deleting tag. Tag ID: ' . $tag->getId());
+            $this->logger->logError('Error deleting tag. Tag ID: ' . $tag->id);
             return false;
         }
 

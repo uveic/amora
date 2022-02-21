@@ -20,7 +20,6 @@ enum UserJourneyStatus: int
         return match ($role) {
             UserRole::Admin,
             UserRole::User => self::PendingPasswordCreation,
-            default => self::Registration,
         };
     }
 }

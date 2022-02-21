@@ -9,11 +9,11 @@ use Amora\Core\Util\UrlBuilderUtil;
 $articleEditUrl = $responseData->getFirstArticle()
     ? UrlBuilderUtil::buildBackofficeArticleUrl(
         $responseData->getSiteLanguage(),
-        $responseData->getFirstArticle()->getId()
+        $responseData->getFirstArticle()->id,
     )
     : UrlBuilderUtil::buildBackofficeNewArticleUrl(
         languageIsoCode: $responseData->getSiteLanguage(),
-        articleTypeId: ArticleType::HOMEPAGE,
+        articleTypeId: ArticleType::Homepage->value,
     );
 ?>
         <div class="content-flex-block width-45-percent">

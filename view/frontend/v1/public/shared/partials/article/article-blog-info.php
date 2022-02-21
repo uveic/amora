@@ -7,14 +7,12 @@ use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 /** @var HtmlResponseData $responseData */
 $article = $responseData->getFirstArticle();
 
-if (!$article || !$article->getTitle()) {
+if (!$article || !$article->title) {
   return '';
 }
 
 $publishedOnDate = DateUtil::formatDate(
-    date: DateUtil::convertStringToDateTimeImmutable(
-        $article->getPublishOn() ?? $article->getUpdatedAt()
-    ),
+    date: $article->publishOn ?? $article->updatedAt,
     lang: $responseData->getSiteLanguage(),
     includeWeekDay: false,
     includeTime: false,
@@ -25,5 +23,5 @@ $icon = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml(
 );
 
 ?>
-    <h1><?=$icon . $article->getTitle()?></h1>
+    <h1><?=$icon . $article->title?></h1>
     <p class="article-blog-info"><?=$this->e($publishedOnDate)?></p>

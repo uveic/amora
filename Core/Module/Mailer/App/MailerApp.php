@@ -16,20 +16,13 @@ use Amora\Core\Util\DateUtil;
 
 class MailerApp extends App
 {
-    private MailerDataLayer $dataLayer;
-    private ApiClientAbstract $apiClient;
-    private RequestBuilderAbstract $requestBuilder;
-
     public function __construct(
         Logger $logger,
-        MailerDataLayer $dataLayer,
-        ApiClientAbstract $apiClient,
-        RequestBuilderAbstract $requestBuilder
+        private MailerDataLayer $dataLayer,
+        private ApiClientAbstract $apiClient,
+        private RequestBuilderAbstract $requestBuilder
     ) {
         parent::__construct($logger, 'Mailer App');
-        $this->dataLayer = $dataLayer;
-        $this->apiClient = $apiClient;
-        $this->requestBuilder = $requestBuilder;
     }
 
     public function run() {
@@ -108,7 +101,6 @@ class MailerApp extends App
 
     private function logApiRequest(int $mailerQueueId, string $requestData): int
     {
-        $newMailerItem = null;
         try {
             $newMailerItem = $this->dataLayer->storeMailerLog(
                 new MailerLogItem(
@@ -123,7 +115,7 @@ class MailerApp extends App
             return 0;
         }
 
-        return $newMailerItem->getId();
+        return $newMailerItem->id;
     }
 
     private function logApiResponse(int $newLogItemId, ApiResponse $res): void

@@ -17,13 +17,13 @@ $updatedAtContent = $responseData->getLocalValue('globalUpdated')
 
 if ($article) {
     $updatedAtDate = DateUtil::formatDate(
-        date: DateUtil::convertStringToDateTimeImmutable($article->getUpdatedAt()),
+        date: $article->updatedAt,
         lang: $responseData->getSiteLanguage(),
         includeTime: true,
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
-        from: DateUtil::convertStringToDateTimeImmutable($article->getUpdatedAt()),
+        from: $article->updatedAt,
         language: $responseData->getSiteLanguage(),
         includePrefixAndOrSuffix: true,
     );
@@ -33,15 +33,15 @@ if ($article) {
         '">' . $this->e($updatedAtEta) . '</span>.';
 }
 
-$articleStatusId = $article ? $article->getStatusId() : ArticleStatus::DRAFT->value;
-$articleStatusName = $responseData->getLocalValue('articleStatus' . ArticleStatus::from($articleStatusId)->name);
-$isPublished = $article && $articleStatusId === ArticleStatus::PUBLISHED->value;
+$articleStatus = $article ? $article->status : ArticleStatus::Draft;
+$articleStatusName = $responseData->getLocalValue('articleStatus' . $articleStatus->name);
+$isPublished = $article && $articleStatus === ArticleStatus::Published;
 
 $random = StringUtil::getRandomString(5);
 
 $articleUrl = $article
     ? UrlBuilderUtil::buildPublicArticleUrl(
-        uri: $article->getUri(),
+        uri: $article->uri,
         languageIsoCode: $responseData->getSiteLanguage(),
     )
     : '#';

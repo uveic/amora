@@ -289,8 +289,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     protected function getRss(Request $request): Response
     {
         $articles = $this->articleService->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED->value],
-            typeIds: [ArticleType::BLOG],
+            statusIds: [ArticleStatus::Published->value],
+            typeIds: [ArticleType::Blog->value],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
                 pagination: new Response\Pagination(itemsPerPage: 10),
@@ -312,8 +312,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         // ToDo: Move tagIdsForHomepage to some kind of settings
         $tagIds = Core::getConfigValue('tagIdsForHomepage') ?? [];
         $homeArticles = $this->articleService->filterArticlesBy(
-            statusIds: [ArticleStatus::PUBLISHED->value],
-            typeIds: [ArticleType::PAGE],
+            statusIds: [ArticleStatus::Published->value],
+            typeIds: [ArticleType::Page->value],
             tagIds: $tagIds,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
@@ -323,12 +323,12 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
         $isAdmin = $request->session && $request->session->isAdmin();
         $statusIds = $isAdmin
-            ? [ArticleStatus::PUBLISHED->value, ArticleStatus::PRIVATE->value]
-            : [ArticleStatus::PUBLISHED->value];
+            ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
+            : [ArticleStatus::Published->value];
         $pagination = new Response\Pagination(itemsPerPage: 15);
         $blogArticles = $this->articleService->filterArticlesBy(
             statusIds: $statusIds,
-            typeIds: [ArticleType::BLOG],
+            typeIds: [ArticleType::Blog->value],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('published_at', 'DESC')],
                 pagination: $pagination,
