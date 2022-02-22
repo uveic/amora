@@ -69,9 +69,10 @@ final class ArticleEditHtmlGenerator
 
         $typeIdGetParam = $responseData->request->getGetParam('articleType');
         if (!empty($typeIdGetParam)) {
-            foreach (ArticleType::getAll() as $value => $name) {
-                if ((int)$typeIdGetParam === $value) {
-                    return ArticleType::from($value);
+            /** @var \BackedEnum $articleType */
+            foreach (ArticleType::getAll() as $articleType) {
+                if ((int)$typeIdGetParam === $articleType->value) {
+                    return $articleType;
                 }
             }
         }
@@ -98,8 +99,8 @@ final class ArticleEditHtmlGenerator
         $html .= '<div class="dropdown-container">';
         $html .= '<ul>';
 
-        foreach (ArticleStatus::getAll() as $value => $name) {
-            $status = ArticleStatus::from($value);
+        /** @var \BackedEnum $status */
+        foreach (ArticleStatus::getAll() as $status) {
             $html .= '<li><a data-checked="' . ($status === $articleStatus ? '1' : '0') .
                 '" data-article-status-id="' . $status->value .
                 '" class="dropdown-menu-option article-status-option ' .

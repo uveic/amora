@@ -14,8 +14,10 @@ if ($article && $article->publishOn) {
     $publishOnTime = $article->publishOn->format('H:i');
 }
 
+$tags = [];
 $createdAtContent = '';
 if ($article) {
+    $tags = $article->tags;
     $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
         DateUtil::getElapsedTimeString(
             from: $article->createdAt,
@@ -44,7 +46,7 @@ if ($article) {
     <div id="tags-selected" class="search-results-selected">
 <?php
     /** @var Tag $tag */
-    foreach ($article->tags as $tag) {
+    foreach ($tags as $tag) {
 ?>
       <span class="result-selected" data-tag-id="<?=$tag->id?>" data-tag-name="<?=$tag->name?>"><?=$tag->name?><img class="tag-result-selected-delete img-svg m-l-05" title="<?=$responseData->getLocalValue('globalRemove')?>" alt="<?=$responseData->getLocalValue('globalRemove')?>" src="/img/svg/x.svg"></span>
 <?php } ?>
