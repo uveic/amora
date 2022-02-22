@@ -6,7 +6,7 @@ use Amora\Core\Model\Response\HtmlResponseData;
 
 ?>
 <!DOCTYPE html>
-<html lang="<?=$this->e(strtolower($responseData->getSiteLanguage()))?>">
+<html lang="<?=$this->e(strtolower($responseData->siteLanguageIsoCode))?>">
 <?= $this->insert('shared/partials/head', ['responseData' => $responseData]) ?>
 <body>
 <?= $this->insert('shared/partials/header', ['responseData' => $responseData]) ?>

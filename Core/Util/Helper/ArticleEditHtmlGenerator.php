@@ -11,7 +11,6 @@ use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
-use DateTimeImmutable;
 
 final class ArticleEditHtmlGenerator
 {
@@ -68,17 +67,16 @@ final class ArticleEditHtmlGenerator
             return $responseData->getFirstArticle()->type;
         }
 
-        $typeIdGetParam = $responseData->getRequest()->getGetParam('articleType');
+        $typeIdGetParam = $responseData->request->getGetParam('articleType');
         if (!empty($typeIdGetParam)) {
-            /** @var \BackedEnum $articleType */
-            foreach (ArticleType::getAll() as $articleType) {
-                if ((int)$typeIdGetParam === $articleType->value) {
-                    return $articleType;
+            foreach (ArticleType::getAll() as $value => $name) {
+                if ((int)$typeIdGetParam === $value) {
+                    return ArticleType::from($value);
                 }
             }
         }
 
-        return str_contains($responseData->getSiteUrl(), 'articles')
+        return str_contains($responseData->siteUrl, 'articles')
             ? ArticleType::Page
             : ArticleType::Blog;
     }
@@ -100,8 +98,8 @@ final class ArticleEditHtmlGenerator
         $html .= '<div class="dropdown-container">';
         $html .= '<ul>';
 
-        /** @var \BackedEnum $status */
-        foreach (ArticleStatus::getAll() as $status) {
+        foreach (ArticleStatus::getAll() as $value => $name) {
+            $status = ArticleStatus::from($value);
             $html .= '<li><a data-checked="' . ($status === $articleStatus ? '1' : '0') .
                 '" data-article-status-id="' . $status->value .
                 '" class="dropdown-menu-option article-status-option ' .
@@ -162,7 +160,7 @@ final class ArticleEditHtmlGenerator
         $articleTitle = $article->title ?: $responseData->getLocalValue('globalNoTitle');
         $articleUrl = UrlBuilderUtil::buildPublicArticleUrl(
             uri: $article->uri,
-            languageIsoCode: $responseData->getSiteLanguage(),
+            languageIsoCode: $responseData->siteLanguageIsoCode,
         );
 
         $output = '<div class="m-r-05">';
@@ -174,7 +172,7 @@ final class ArticleEditHtmlGenerator
         if ($article->publishOn) {
             $publishOn = DateUtil::formatDate(
                 date: $article->publishOn,
-                lang: $responseData->getSiteLanguage(),
+                lang: $responseData->siteLanguageIsoCode,
                 includeTime: true,
             );
             $output .= '<p class="article-tags"><strong>'
@@ -183,7 +181,7 @@ final class ArticleEditHtmlGenerator
         } else {
             $updatedAt = DateUtil::formatDate(
                 date: $article->updatedAt,
-                lang: $responseData->getSiteLanguage(),
+                lang: $responseData->siteLanguageIsoCode,
                 includeTime: true,
             );
             $output .= '<p class="article-tags"><strong>'

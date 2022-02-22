@@ -14,7 +14,7 @@ if ($responseData->userFeedback) {
 
 ?>
 <!DOCTYPE html>
-<html lang="<?=$this->e(strtolower($responseData->getSiteLanguage()))?>">
+<html lang="<?=$this->e(strtolower($responseData->siteLanguageIsoCode))?>">
 <?= $this->insert('shared/partials/head', ['responseData' => $responseData]) ?>
 <body>
 <?=$userFeedbackHtml?>

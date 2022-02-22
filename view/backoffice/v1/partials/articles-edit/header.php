@@ -12,8 +12,8 @@ $settings = ArticleEditHtmlGenerator::generateSettingsButtonHtml($responseData);
 
 $articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
 $closeUrl = $articleType === ArticleType::Page
-    ? UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->getSiteLanguage())
-    : UrlBuilderUtil::buildBackofficeBlogPostsUrl($responseData->getSiteLanguage());
+    ? UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguageIsoCode)
+    : UrlBuilderUtil::buildBackofficeBlogPostsUrl($responseData->siteLanguageIsoCode);
 ?>
     <section class="page-header">
         <h1><?=$articleTitle?></h1>

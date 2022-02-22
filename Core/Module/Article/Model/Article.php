@@ -6,6 +6,7 @@ use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\StringUtil;
 use DateTimeImmutable;
 
 class Article
@@ -67,7 +68,7 @@ class Article
 
     public function getContentExcerpt(): string
     {
-        $content = strip_tags($this->contentHtml);
+        $content = StringUtil::stripHtmlTags($this->contentHtml);
         return trim(
             substr(
                 string: $content,

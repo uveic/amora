@@ -13,12 +13,12 @@ if ($article === null) {
     return;
 }
 
-$canEdit = $responseData->getSession() && $responseData->getSession()->isAdmin();
+$canEdit = $responseData->request->session && $responseData->request->session->isAdmin();
 
 $email = Core::getConfigValue('siteAdminEmail');
 $editUrl = $article->type === ArticleType::Blog
-    ? UrlBuilderUtil::buildBackofficeBlogPostUrl($responseData->getSiteLanguage(), $article->id)
-    : UrlBuilderUtil::buildBackofficeArticleUrl($responseData->getSiteLanguage(), $article->id);
+    ? UrlBuilderUtil::buildBackofficeBlogPostUrl($responseData->siteLanguageIsoCode, $article->id)
+    : UrlBuilderUtil::buildBackofficeArticleUrl($responseData->siteLanguageIsoCode, $article->id);
 ?>
   <article>
 <?php if ($canEdit && $article->status !== ArticleStatus::Draft) { ?>

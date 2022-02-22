@@ -6,7 +6,7 @@ use Amora\Core\Value\Language;
 
 /** @var HtmlResponseData $responseData */
 
-$user = $responseData->getSession()->user;
+$user = $responseData->request->session->user;
 
 $timezones = DateTimeZone::listIdentifiers();
 
@@ -18,14 +18,14 @@ $timezones = DateTimeZone::listIdentifiers();
           <div class="field">
             <label for="name" class="label"><?=$responseData->getLocalValue('formPlaceholderUserName')?>:</label>
             <div class="control">
-              <input class="input" id="name" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" minlength="3" value="<?=$responseData->getSession()->user->name?>" required>
+              <input class="input" id="name" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" minlength="3" value="<?=$responseData->request->session->user->name?>" required>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span><?=$responseData->getLocalValue('formPlaceholderUserHelp')?></p>
           </div>
           <div class="field">
             <label for="email" class="label"><?=$responseData->getLocalValue('formEmail')?>:</label>
             <div class="control">
-              <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" value="<?=$responseData->getSession()->user->email?>">
+              <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" value="<?=$responseData->request->session->user->email?>">
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
 <?php if ($user->changeEmailAddressTo) { ?>
@@ -60,17 +60,17 @@ $timezones = DateTimeZone::listIdentifiers();
         </form>
         <div class="field">
           <div class="control">
-            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountPasswordUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navChangePassword')?></a>
+            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountPasswordUrl($responseData->siteLanguageIsoCode)?>"><?=$responseData->getLocalValue('navChangePassword')?></a>
           </div>
         </div>
         <div class="field">
           <div class="control">
-            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountDownloadUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
+            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountDownloadUrl($responseData->siteLanguageIsoCode)?>"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
           </div>
         </div>
         <div class="field m-b-6">
           <div class="control">
-            <a class="is-danger" href="<?=UrlBuilderUtil::buildAuthorisedAccountDeleteUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
+            <a class="is-danger" href="<?=UrlBuilderUtil::buildAuthorisedAccountDeleteUrl($responseData->siteLanguageIsoCode)?>"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
           </div>
         </div>
       </div>

@@ -8,20 +8,20 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 ?>
 <!DOCTYPE html>
-<html lang="<?=$this->e(strtolower($responseData->getSiteLanguage()))?>">
+<html lang="<?=$this->e(strtolower($responseData->siteLanguageIsoCode))?>">
 <?= $this->insert('shared/partials/head', ['responseData' => $responseData]) ?>
 <body>
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$responseData->buildBaseUrlWithLanguage()?>">
+    <a id="register-close" href="<?=$responseData->baseUrlWithLanguage?>">
       <img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>">
     </a>
     <form method="POST" id="form-register">
       <div>
-        <h1 id="register-title" class="logo m-b-4"><?=$this->e($responseData->getSiteName())?></h1>
+        <h1 id="register-title" class="logo m-b-4"><?=$this->e($responseData->siteName)?></h1>
         <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationRegisterSubtitle'))?></h2>
-        <p class="light-text-color m-b-3"><?=$responseData->getLocalValue('authenticationRegisterAlreadyLogin')?> <a href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navSignIn')?></a>.</p>
+        <p class="light-text-color m-b-3"><?=$responseData->getLocalValue('authenticationRegisterAlreadyLogin')?> <a href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguageIsoCode)?>"><?=$responseData->getLocalValue('navSignIn')?></a>.</p>
         <div class="field">
           <div class="control">
             <input class="input" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" value="" required>

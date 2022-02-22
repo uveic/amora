@@ -23,6 +23,7 @@ class Global {
       "globalSaved": "Saved",
       "globalLoading": "Loading...",
       "globalAt": "at",
+      "globalMinutes": "minutes",
       "globalClose": "Close",
 
       "feedbackDeleteGeneric": "Are you sure you want to delete it?",
@@ -76,6 +77,7 @@ class Global {
       "globalSaved": "Guardado",
       "globalLoading": "Cargando...",
       "globalAt": "a las",
+      "globalMinutes": "minutos",
       "globalClose": "Cerrar",
 
       "feedbackDeleteGeneric": "¿Estás seguro/a de querer borrarlo?",
@@ -129,6 +131,7 @@ class Global {
       "globalSaved": "Gardado",
       "globalLoading": "Cargando...",
       "globalAt": "ás",
+      "globalMinutes": "minutos",
       "globalClose": "Pechar",
 
       "feedbackDeleteGeneric": "Estás seguro/a de querer borralo?",
@@ -181,6 +184,7 @@ class Global {
     includeMonthDay = true,
     includeYear = true,
     includeYearSeparator = true,
+    includeTime = false,
   ) {
     if (this.locale === 'gl') {
       const months = ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo',
@@ -190,7 +194,8 @@ class Global {
       return (includeWeedDay ? days[dateObj.getDay()] + ', ' : '')
         + (includeMonthDay ? dateObj.getDate() + ' de ' : '')
         + months[dateObj.getMonth()]
-        + (includeYear ? (includeYearSeparator ? ' de ' : ' ') + dateObj.getFullYear() : '');
+        + (includeYear ? (includeYearSeparator ? ' de ' : ' ') + dateObj.getFullYear() : '')
+        + (includeTime ? ' ás ' + (('0' + dateObj.getHours()).slice(-2) + ':' + ('0' + dateObj.getMinutes()).slice(-2)) : '');
     }
 
     if (this.locale === 'es') {
@@ -201,7 +206,8 @@ class Global {
       return (includeWeedDay ? days[dateObj.getDay()] + ', ' : '')
         + (includeMonthDay ? dateObj.getDate() + ' de ' : '')
         + months[dateObj.getMonth()]
-        + (includeYear ? (includeYearSeparator ? ' de ' : ' ') + dateObj.getFullYear() : '');
+        + (includeYear ? (includeYearSeparator ? ' de ' : ' ') + dateObj.getFullYear() : '')
+        + (includeTime ? ' a las ' + (('0' + dateObj.getHours()).slice(-2) + ':' + ('0' + dateObj.getMinutes()).slice(-2)) : '');
     }
 
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -211,7 +217,8 @@ class Global {
     return (includeWeedDay ? days[dateObj.getDay()] + ', ' : '')
       + (includeMonthDay ? dateObj.getDate() + ' ' : '')
       + months[dateObj.getMonth()] + ' '
-      + (includeYear ? dateObj.getFullYear() : '');
+      + (includeYear ? dateObj.getFullYear() : '')
+      + (includeTime ? ' at ' + (('0' + dateObj.getHours()).slice(-2) + ':' + ('0' + dateObj.getMinutes()).slice(-2)) : '');
   }
 }
 
