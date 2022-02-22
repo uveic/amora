@@ -55,4 +55,11 @@ document.querySelectorAll('.nav-dropdown-toggle-label').forEach(el => {
   });
 });
 
+document.querySelectorAll('.modal-close-button').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    el.parentElement.parentElement.classList.add('null');
+  });
+});
+
 export {feedbackDiv};

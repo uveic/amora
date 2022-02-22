@@ -4,7 +4,7 @@ use Amora\Core\Model\Response\HtmlResponseData;
 
 /** @var HtmlResponseData $responseData */
 
-$user = $responseData->getSession()->user;
+$user = $responseData->request->session->user;
 
 ?>
       <h1><?=$responseData->getLocalValue('navDownloadAccountData')?></h1>

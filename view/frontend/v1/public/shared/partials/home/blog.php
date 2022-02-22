@@ -7,15 +7,15 @@ use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 
 /** @var HtmlHomepageResponseData $responseData */
 
-$isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin();
+$isAdmin = $responseData->request->session && $responseData->request->session->isAdmin();
 
 if (!$responseData->blogArticles) {
   return;
 }
 
 $articles = $responseData->blogArticles;
-$itemsPerPage = $responseData->getPagination()->itemsPerPage;
-$offset = $responseData->getPagination()->offset + $itemsPerPage;
+$itemsPerPage = $responseData->pagination->itemsPerPage;
+$offset = $responseData->pagination->offset + $itemsPerPage;
 
 ?>
 <section class="home-blog">
@@ -33,13 +33,13 @@ foreach ($articles as $article) {
     $publishedOn = $article->publishOn
         ? DateUtil::formatDate(
             date: $article->publishOn,
-            lang: $responseData->getSiteLanguage(),
+            lang: $responseData->siteLanguageIsoCode,
             includeYear: false,
             includeWeekDay: false,
         )
         : '';
 
-    $href = $this->e($responseData->buildBaseUrl() . $article->uri);
+    $href = $responseData->baseUrl . $article->uri;
     $isPublishedHtml = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article);
 
     $year = $article->publishOn ? $article->publishOn->format('Y') : '???';

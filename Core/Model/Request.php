@@ -22,7 +22,7 @@ final class Request
         public readonly string $method, // The HTTP request verb (GET, POST, PUT, etc.)
         private string $path, // The request URI
         public readonly ?string $referrer,
-        private string $body,
+        public readonly string $body,
         public readonly array $getParams,
         public readonly array $postParams,
         array $files,

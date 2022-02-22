@@ -5,7 +5,7 @@ use Amora\Core\Module\User\Service\UserService;
 
 /** @var HtmlResponseData $responseData */
 
-$user = $responseData->getSession()->user;
+$user = $responseData->request->session->user;
 
 ?>
       <h1><?=$responseData->getLocalValue('navChangePassword')?></h1>

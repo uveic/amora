@@ -14,7 +14,7 @@ $this->layout('base', ['responseData' => $responseData,])
     <section class="page-header">
       <h1>Users</h1>
       <div class="links">
-        <a href="<?=UrlBuilderUtil::buildBackofficeNewUserUrl($responseData->getSiteLanguage())?>" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeNewUserUrl($responseData->siteLanguageIsoCode)?>" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
       </div>
     </section>
     <section class="content-flex-block">
@@ -33,7 +33,7 @@ $this->layout('base', ['responseData' => $responseData,])
 foreach ($responseData->listOfUsers as $user) {
 ?>
         <div class="table-row">
-          <div class="table-item edit flex-no-grow"><a href="<?=UrlBuilderUtil::buildBackofficeUserUrl($responseData->getSiteLanguage(), $user->id)?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('globalEdit')?>"></a></div>
+          <div class="table-item edit flex-no-grow"><a href="<?=UrlBuilderUtil::buildBackofficeUserUrl($responseData->siteLanguageIsoCode, $user->id)?>"><img class="img-svg no-margin" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('globalEdit')?>"></a></div>
           <div class="table-item flex-no-grow"><?=$this->e($user->id)?></div>
           <div class="table-item flex-no-grow"><span class="enabled-icon <?=$this->e($user->isEnabled ? 'feedback-success' : 'feedback-error'); ?>"></span></div>
           <div class="table-item flex-grow-2"><?=$this->e($user->name); ?></div>

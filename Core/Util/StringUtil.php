@@ -157,4 +157,16 @@ final class StringUtil
 
         return number_format($number, $decimals, $decimalsSeparator, $thousandsSeparator);
     }
+
+    public static function filterCommaSeparatedIntegers(?string $commaSeparatedValues): array
+    {
+        if (empty($commaSeparatedValues)) {
+            return [];
+        }
+
+        $values = $commaSeparatedValues ? explode(',', $commaSeparatedValues) : [];
+        return array_filter($values, function ($value) {
+            return is_numeric($value);
+        });
+    }
 }

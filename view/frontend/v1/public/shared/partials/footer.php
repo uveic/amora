@@ -5,11 +5,11 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAbstract $responseData */
 
-$isAdmin = $responseData->getSession() && $responseData->getSession()->isAdmin();
+$isAdmin = $responseData->request->session && $responseData->request->session->isAdmin();
 
 ?>
 <footer>
 <?php if ($isAdmin) { ?>
-  <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->getSiteLanguage())?>"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
+  <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguageIsoCode)?>"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
 <?php } ?>
 </footer>

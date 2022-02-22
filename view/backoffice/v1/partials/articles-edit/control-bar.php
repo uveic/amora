@@ -18,13 +18,13 @@ $updatedAtContent = $responseData->getLocalValue('globalUpdated')
 if ($article) {
     $updatedAtDate = DateUtil::formatDate(
         date: $article->updatedAt,
-        lang: $responseData->getSiteLanguage(),
+        lang: $responseData->siteLanguageIsoCode,
         includeTime: true,
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
         from: $article->updatedAt,
-        language: $responseData->getSiteLanguage(),
+        language: $responseData->siteLanguageIsoCode,
         includePrefixAndOrSuffix: true,
     );
 
@@ -42,7 +42,7 @@ $random = StringUtil::getRandomString(5);
 $articleUrl = $article
     ? UrlBuilderUtil::buildPublicArticleUrl(
         uri: $article->uri,
-        languageIsoCode: $responseData->getSiteLanguage(),
+        languageIsoCode: $responseData->siteLanguageIsoCode,
     )
     : '#';
 

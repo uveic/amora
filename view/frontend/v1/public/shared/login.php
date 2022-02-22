@@ -5,11 +5,11 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 $siteLogo = $responseData->getSiteLogoUrl()
-    ? '<img src="' . $responseData->getSiteLogoUrl() . '" alt="' . $responseData->getSiteName() . '">'
-    : $this->e($responseData->getSiteName());
+    ? '<img src="' . $responseData->getSiteLogoUrl() . '" alt="' . $responseData->siteName . '">'
+    : $this->e($responseData->siteName);
 ?>
 <!DOCTYPE html>
-<html lang="<?=$this->e(strtolower($responseData->getSiteLanguage()))?>">
+<html lang="<?=$this->e(strtolower($responseData->siteLanguageIsoCode))?>">
 <?=
 $this->insert('shared/partials/head', ['responseData' => $responseData])
 ?>
@@ -17,7 +17,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$responseData->buildBaseUrlWithLanguage()?>">
+    <a id="register-close" href="<?=$responseData->baseUrlWithLanguage?>">
       <img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>">
     </a>
     <form method="POST" id="form-login">
@@ -43,7 +43,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
         </div>
       </div>
       <p class="text-right no-margin">
-        <a href="<?=UrlBuilderUtil::buildPublicLoginForgotUrl($responseData->getSiteLanguage())?>">
+        <a href="<?=UrlBuilderUtil::buildPublicLoginForgotUrl($responseData->siteLanguageIsoCode)?>">
             <?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?>
         </a>
       </p>

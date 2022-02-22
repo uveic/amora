@@ -6,7 +6,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlHomepageResponseData $responseData */
 
-if ($responseData->getSession() && $responseData->getSession()->isAdmin()) {
+if ($responseData->request->session && $responseData->request->session->isAdmin()) {
   return;
 }
 
@@ -23,7 +23,7 @@ if (!$responseData->homeArticles) {
 foreach ($responseData->homeArticles as $article) {
     $href = UrlBuilderUtil::buildPublicArticleUrl(
         uri: $article->uri,
-        languageIsoCode: $responseData->getSiteLanguage(),
+        languageIsoCode: $responseData->siteLanguageIsoCode,
     );
     $link = $article->title
         ? '<a class="link-title" href="' . $href . '">' . $article->title . '</a>'

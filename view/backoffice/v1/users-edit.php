@@ -13,10 +13,10 @@ $timezones = DateTimeZone::listIdentifiers();
 $emailHelpCopy = $userToEdit ? '' : $responseData->getLocalValue('formEmailNewUserHelp');
 $defaultTimezone = $userToEdit
     ? $userToEdit->timezone
-    : $responseData->getSession()->user->timezone;
+    : $responseData->request->session->user->timezone;
 $defaultLanguage = $userToEdit
     ? $userToEdit->languageId
-    : $responseData->getSession()->user->languageId;
+    : $responseData->request->session->user->languageId;
 
 ?>
   <section>
@@ -24,7 +24,7 @@ $defaultLanguage = $userToEdit
     <section class="page-header">
       <h1><?=($userToEdit ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></h1>
       <div class="links">
-        <a href="<?=UrlBuilderUtil::buildBackofficeUsersUrl($responseData->getSiteLanguage())?>" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeUsersUrl($responseData->siteLanguageIsoCode)?>" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
       </div>
     </section>
     <form action="#" method="post" id="form-user-creation">
@@ -81,11 +81,10 @@ $defaultLanguage = $userToEdit
           <div class="control">
             <select id="roleId" name="roleId">
 <?php
-    /** @var \BackedEnum $role */
-foreach (UserRole::getAll() as $role) {
-        $selected = $userToEdit && $role == $userToEdit->role;
+foreach (UserRole::getAll() as $value => $name) {
+        $selected = $userToEdit && $value == $userToEdit->role->value;
 ?>
-                <option <?php echo $selected ? 'selected ' : ''; ?>value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>
+                <option <?php echo $selected ? 'selected ' : ''; ?>value="<?=$value?>"><?=$responseData->getLocalValue('userRole' . $name)?></option>
 <?php
   }
 ?>
