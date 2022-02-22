@@ -81,10 +81,11 @@ $defaultLanguage = $userToEdit
           <div class="control">
             <select id="roleId" name="roleId">
 <?php
-foreach (UserRole::getAll() as $value => $name) {
-        $selected = $userToEdit && $value == $userToEdit->role->value;
+/** @var \BackedEnum $role */
+foreach (UserRole::getAll() as $role) {
+        $selected = $userToEdit && $role == $userToEdit->role;
 ?>
-                <option <?php echo $selected ? 'selected ' : ''; ?>value="<?=$value?>"><?=$responseData->getLocalValue('userRole' . $name)?></option>
+                <option <?php echo $selected ? 'selected ' : ''; ?>value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>
 <?php
   }
 ?>
