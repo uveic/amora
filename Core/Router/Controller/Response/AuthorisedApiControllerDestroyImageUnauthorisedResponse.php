@@ -2,7 +2,7 @@
 namespace Amora\Core\Router\Controller\Response;
 
 use Amora\Core\Model\Response;
-use Amora\Core\Value\Response\HttpStatusCode;
+use Amora\Core\Model\HttpStatusCode;
 
 class AuthorisedApiControllerDestroyImageUnauthorisedResponse extends Response
 {

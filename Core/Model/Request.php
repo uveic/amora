@@ -139,7 +139,7 @@ final class Request
             return Language::getIsoCodeForId($this->session->user->languageId);
         }
 
-        $parts = explode(',', $this->clientLanguage);
+        $parts = $this->clientLanguage ? explode(',', $this->clientLanguage) : [];
         $availableLanguageIsoCodes = array_column(Language::getAvailableLanguages(), 'iso_code');
 
         foreach ($parts as $part) {

@@ -10,7 +10,7 @@ function renderMain(className, operationId, httpStatus, responseSchema, classPre
 namespace Amora\\${classPrefix}\\Router\\Controller\\Response;
 
 use Amora\\Core\\Model\\Response;
-use Amora\\Core\\Value\\Response\\HttpStatusCode;
+use Amora\\Core\\Model\\HttpStatusCode;
 `,
     renderResponseClass(className, operationId, httpStatus, responseSchema),
     ``
