@@ -42,11 +42,11 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
 
         return Response::createFrontendPrivateHtmlResponse(
-            'dashboard',
-            new HtmlResponseData(
+            template: 'dashboard',
+            responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navDashboard'),
-            )
+            ),
         );
     }
 
@@ -61,7 +61,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     {
         $this->sessionService->logout($request->session);
         return Response::createRedirectResponse(
-            UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode)
+            url: UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode),
         );
     }
 
@@ -76,11 +76,11 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
         return Response::createFrontendPrivateHtmlResponse(
-            'account',
-            new HtmlResponseData(
+            template: 'account',
+            responseData: new HtmlResponseData(
                 request: $request,
-                pageTitle: $localisationUtil->getValue('globalUserAccount')
-            )
+                pageTitle: $localisationUtil->getValue('globalUserAccount'),
+            ),
         );
     }
 
@@ -96,11 +96,11 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
         return Response::createFrontendPrivateHtmlResponse(
-            'account',
-            new HtmlResponseData(
+            template: 'account',
+            responseData: new HtmlResponseData(
                 request: $request,
-                pageTitle: $localisationUtil->getValue('globalUserAccount')
-            )
+                pageTitle: $localisationUtil->getValue('globalUserAccount'),
+            ),
         );
     }
 }

@@ -11,7 +11,7 @@ $user = $responseData->request->session->user;
       <h1><?=$responseData->getLocalValue('navChangePassword')?></h1>
       <div class="content-main">
         <form action="#" method="post" id="form-user-account-update">
-          <input type="hidden" name="userId" id="userId" value="<?=$$user->id?>">
+          <input type="hidden" name="userId" id="userId" value="<?=$user->id?>">
           <div class="field">
             <label for="currentPassword" class="label"><?=$responseData->getLocalValue('formPlaceholderPassword')?>:</label>
             <div class="control">

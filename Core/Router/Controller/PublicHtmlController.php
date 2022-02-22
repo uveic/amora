@@ -57,23 +57,23 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $session = $request->session;
         if ($session && $session->isAdmin()) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode)
+                url: UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode),
             );
         }
 
         if ($session && $session->isAuthenticated()) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildAppDashboardUrl($request->siteLanguageIsoCode)
+                url: UrlBuilderUtil::buildAppDashboardUrl($request->siteLanguageIsoCode),
             );
         }
 
         return Response::createFrontendPublicHtmlResponse(
-            'shared/login',
-            new HtmlResponseData(
+            template: 'shared/login',
+            responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguageIsoCode)
                     ->getValue('formLoginAction'),
-            )
+            ),
         );
     }
 
@@ -90,17 +90,17 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode)
+                url: UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode),
             );
         }
 
         return Response::createFrontendPublicHtmlResponse(
-            'shared/login-forgot',
-            new HtmlResponseData(
+            template: 'shared/login-forgot',
+            responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguageIsoCode)
                     ->getValue('authenticationForgotPassword'),
-            )
+            ),
         );
     }
 
@@ -117,7 +117,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
             return Response::createRedirectResponse(
-                $session->isAdmin()
+                url: $session->isAdmin()
                     ? UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode)
                     : UrlBuilderUtil::buildAppDashboardUrl($request->siteLanguageIsoCode)
             );
@@ -128,21 +128,21 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
             if ($isInvitationEnabled) {
                 return Response::createRedirectResponse(
-                    UrlBuilderUtil::buildPublicInviteRequestUrl($request->siteLanguageIsoCode)
+                    url: UrlBuilderUtil::buildPublicInviteRequestUrl($request->siteLanguageIsoCode),
                 );
             }
 
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode)
+                url: UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode),
             );
         }
 
         return Response::createFrontendPublicHtmlResponse(
-            'shared/register',
-            new HtmlResponseData(
+            template: 'shared/register',
+            responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguageIsoCode)->getValue('navSignUp'),
-            )
+            ),
         );
     }
 
@@ -224,13 +224,13 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
         if (empty($res)) {
             return Response::createFrontendPublicHtmlResponse(
-                'shared/home',
-                new HtmlHomepageResponseData(
+                template: 'shared/home',
+                responseData: new HtmlHomepageResponseData(
                     request: $request,
                     userFeedback: new UserFeedback(
-                        false,
-                        $localisationUtil->getValue('authenticationPasswordCreationLinkError')
-                    )
+                        isSuccess: false,
+                        message: $localisationUtil->getValue('authenticationPasswordCreationLinkError'),
+                    ),
                 )
             );
         }
@@ -260,23 +260,23 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $isAuthenticated = $session && $session->isAuthenticated();
         if ($isAuthenticated) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode)
+                url: UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguageIsoCode),
             );
         }
 
         $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
         if (!$isInvitationEnabled) {
             return Response::createRedirectResponse(
-                UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode)
+                url: UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode),
             );
         }
 
         return Response::createFrontendPublicHtmlResponse(
-            'shared/invite-request',
-            new HtmlResponseData(
+            template: 'shared/invite-request',
+            responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguageIsoCode)->getValue('navSignUp'),
-            )
+            ),
         );
     }
 
@@ -339,15 +339,15 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $homepageArticle = $this->articleService->getHomepageArticle();
 
         return Response::createFrontendPublicHtmlResponse(
-            'shared/home',
-            new HtmlHomepageResponseData(
+            template: 'shared/home',
+            responseData: new HtmlHomepageResponseData(
                 request: $request,
                 pagination: $pagination,
                 homepageContent: $homepageArticle,
                 homeArticles: $homeArticles,
                 blogArticles: $blogArticles,
                 userFeedback: $userFeedback,
-            )
+            ),
         );
     }
 }
