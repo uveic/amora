@@ -11,7 +11,7 @@ final class CsvWriterUtil
         array $data,
         bool $includeArrayKeysAsHeader = true,
     ): bool {
-        $logger = Core::getLogger('CsvWriterUtil');
+        $logger = Core::getLogger();
         if (empty($fileName)) {
             $logger->logError('No valid file: ' . $fileName);
             return false;

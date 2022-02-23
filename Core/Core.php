@@ -168,18 +168,17 @@ class Core
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Class factories
 
-    public static function getLogger(string $appName): Logger
+    public static function getLogger(?string $identifier = null): Logger
     {
-        if (empty($appName)) {
-            $appName = 'AmoraCore';
-        }
-
         $isRunningInCli = self::isRunningInCli();
 
         return self::getInstance(
-            className: 'Logger',
-            factory: function () use ($appName, $isRunningInCli) {
-                return new Logger($appName, $isRunningInCli);
+            className: 'AmoraLogger',
+            factory: function () use ($isRunningInCli, $identifier) {
+                return new Logger(
+                    identifier: $identifier,
+                    isRunningInCli: $isRunningInCli,
+                );
             },
             isSingleton: true,
         );
@@ -187,7 +186,7 @@ class Core
 
     public static function getDefaultLogger(): Logger
     {
-        return self::getLogger('CoreDefaultLogger');
+        return self::getLogger();
     }
 
     public static function getRouter(): Router
@@ -261,7 +260,7 @@ class Core
                     exit;
                 }
 
-                $logger = self::getLogger($dbIdentifier . 'Database');
+                $logger = self::getLogger();
                 $host = $config['database'][$dbIdentifier]['host'];
                 $user = $config['database'][$dbIdentifier]['user'];
                 $pass = $config['database'][$dbIdentifier]['password'];
@@ -338,7 +337,7 @@ class Core
      */
     public static function getSyncLookupTablesApp(): SyncLookupTablesApp
     {
-        $logger = self::getLogger('SyncLookupTables');
+        $logger = self::getLogger();
 
         return self::getInstance(
             className: 'SyncLookupTablesApp',
@@ -360,7 +359,7 @@ class Core
         string $languageIsoCode,
         bool $isSingleton = true
     ): LocalisationUtil {
-        $logger = self::getLogger('LocalisationUtil');
+        $logger = self::getLogger();
         $defaultSiteLanguage = strtoupper(self::getConfigValue('defaultSiteLanguage') ?? 'EN');
 
         return self::getInstance(

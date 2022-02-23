@@ -12,7 +12,7 @@ class RouterCore extends Core
 {
     private static function getRouterLogger(): Logger
     {
-        return self::getLogger('RouterLogger');
+        return self::getLogger();
     }
 
     /**

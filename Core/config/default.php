@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'appName' => 'Amora',
+    'isLoggingEnabled' => true,
     'env' => 'dev',
     'siteImageUrl' => '',
     'siteAdminEmail' => '',

@@ -22,7 +22,7 @@ class UserCore extends Core
 
     public static function getUserLogger(): Logger
     {
-        return self::getLogger('UserModuleLogger');
+        return self::getLogger();
     }
 
     public static function getUserDataLayer(): UserDataLayer

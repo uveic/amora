@@ -2,17 +2,33 @@
 
 namespace Amora\Core;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Throwable;
+
+enum LogPriority
+{
+    case DEBUG;
+    case INFO;
+    case WARNING;
+    case ERROR;
+}
 
 final class Logger
 {
+    private readonly string $appName;
+    private readonly string $prefix;
+    private readonly bool $isEnabled;
     private int $startTime;
     private int $lastCheckpointTime = 0;
 
     public function __construct(
-        private string $appName,
-        private bool $isRunningInCli = false
+        private readonly ?string $identifier = null,
+        private readonly bool $isRunningInCli = false,
     ) {
+        $this->appName = Core::getConfigValue('appName') ?? 'Amora';
+        $this->isEnabled = Core::getConfigValue('isLoggingEnabled') ?? true;
+        $this->prefix = $this->getPrefix();
         $this->startTime = $this->getMicroTime();
     }
 
@@ -43,29 +59,61 @@ final class Logger
     ///////////////////////////////////////////////////////////////////////////
     // Logging helpers
 
+    public function logDebug(string $message, $pre = false): void
+    {
+        if (!$this->isEnabled) {
+            return;
+        }
+
+        if (Core::isRunningInLiveEnv()) {
+            return;
+        }
+
+        if ($pre) {
+            echo '<pre>' . print_r($message, true) . '</pre>';
+            return;
+        }
+
+        $this->logInfo($message);
+    }
+
     public function logInfo(string $msg): void
     {
-        $this->logMessage("== [INFO] $msg (" . $this->getCheckpointTime() . ' ms)', LOG_INFO);
+        if (!$this->isEnabled) {
+            return;
+        }
+
+        $this->logMessage("[INFO] $msg (" . $this->getCheckpointTime() . ' ms)', LogPriority::INFO);
     }
 
     public function logWarning(string $msg, array $metaData = []): void
     {
-        $message = "== [WARNING] $msg (" .
+        if (!$this->isEnabled) {
+            return;
+        }
+
+        $message = "[WARNING] $msg (" .
             $this->getCheckpointTime() . ' ms), Metadata: ' .
             json_encode($metaData);
-        error_log($message);
-        $this->logMessage($message, LOG_WARNING);
+        $this->logMessage($message, LogPriority::WARNING);
     }
 
     public function logError(string $msg): void
     {
-        $message = "== [ERROR] $msg (" . $this->getCheckpointTime() . ' ms)';
-        error_log($message);
-        $this->logMessage($message, LOG_ERR);
+        if (!$this->isEnabled) {
+            return;
+        }
+
+        $message = "[ERROR] $msg (" . $this->getCheckpointTime() . ' ms)';
+        $this->logMessage($message, LogPriority::ERROR);
     }
 
     public function logException(Throwable $e): void
     {
+        if (!$this->isEnabled) {
+            return;
+        }
+
         $msg = preg_replace("#(\s{2,})#", " ", $e->getMessage());
 
         // Build stack trace
@@ -104,37 +152,48 @@ final class Logger
 
     /**
      * @param string $msg
-     * @param int $priority
+     * @param LogPriority $priority
      */
-    private function logMessage(string $msg, int $priority): void
+    private function logMessage(string $msg, LogPriority $priority): void
     {
-        if ($this->isRunningInCli) {
-            echo $msg, PHP_EOL;
-            return;
-        }
+        try {
+            $msg = $this->prefix . $msg;
 
-        if (!Core::isRunningInLiveEnv()) {
-            $f = fopen('php://stdout', 'w');
+            if (!Core::isRunningInLiveEnv()) {
+                $f = fopen('php://stdout', 'w');
+                fwrite($f, $msg . PHP_EOL);
+                fclose($f);
+
+                return;
+            }
+
+            if ($priority === LogPriority::WARNING || $priority === LogPriority::ERROR) {
+                error_log($msg);
+            }
+
+            if ($this->isRunningInCli) {
+                echo $msg, PHP_EOL;
+            }
+
+            $outPath = '/tmp/' . $this->appName . '_' . date('Ymd') . '.log';
+            $f = fopen($outPath, 'a');
+
+            if (empty($f)) {
+                error_log("Failed to open log file: $outPath");
+                return;
+            }
+
             fwrite($f, $msg . PHP_EOL);
             fclose($f);
-        } else {
-            openlog($this->appName, LOG_PID, LOG_LOCAL1);
-            syslog($priority, $msg);
-            closelog();
+        } catch (Throwable $t) {
+            error_log($t->getMessage() . PHP_EOL . $t->getTraceAsString());
         }
     }
 
-    public function logDebug(string $message, $pre = false): void
+    private function getPrefix(): string
     {
-        if (Core::isRunningInLiveEnv()) {
-            return;
-        }
-
-        if ($pre) {
-            echo '<pre>' . print_r($message, true) . '</pre>';
-            return;
-        }
-
-        $this->logInfo($message);
+        $now = new DateTimeImmutable(timezone: new DateTimeZone('UTC'));
+        $identifier = $this->identifier ? '[' . $this->identifier . ']' : '';
+        return '[' . $now->format('D M d H:i:s Y') . ']' . $identifier . ' == ';
     }
 }

@@ -17,7 +17,7 @@ use Amora\Core\Util\UrlBuilderUtil;
   <meta property="og:image" content="<?=$responseData->getSiteImageUri()?>">
   <meta property="og:url" content="<?=$responseData->siteUrl?>">
   <meta property="og:type" content="website">
-  <meta property="og:updated_time" content="<?=$responseData->lasUpdatedTimestamp?>">
+  <meta property="og:updated_time" content="<?=$responseData->lastUpdatedTimestamp?>">
   <meta name="twitter:card" content="summary_large_image">
   <meta property="twitter:domain" content="<?=$responseData->getSiteDomain()?>">
   <meta property="twitter:url" content="<?=$responseData->siteUrl?>">

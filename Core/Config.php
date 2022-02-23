@@ -86,7 +86,7 @@ final class Config
             // Add values present in localConfig but not present in defaultConfig
             // ToDo: make it work for nested values/arrays
             foreach ($localConfig as $key => $value) {
-                $this->add($key, $localConfig[$key], $this->config);
+                $this->add($key, $value, $this->config);
             }
 
             foreach ($this->config as $key => $value) {

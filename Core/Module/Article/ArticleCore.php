@@ -23,7 +23,7 @@ class ArticleCore extends Core
 
     public static function getArticleLogger(): Logger
     {
-        return self::getLogger('ArticleCoreModuleLogger');
+        return self::getLogger();
     }
 
     public static function getArticleDataLayer(): ArticleDataLayer

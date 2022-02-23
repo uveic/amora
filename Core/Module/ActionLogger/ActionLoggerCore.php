@@ -18,7 +18,7 @@ class ActionLoggerCore extends Core
 
     public static function getActionLogger(): Logger
     {
-        return self::getLogger('ActionModuleLogger');
+        return self::getLogger();
     }
 
     public static function getActionDataLayer(): ActionDataLayer

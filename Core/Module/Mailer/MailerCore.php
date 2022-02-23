@@ -22,7 +22,7 @@ class MailerCore extends Core
 
     public static function getMailerLogger(): Logger
     {
-        return self::getLogger('MailerModuleLogger');
+        return self::getLogger();
     }
 
     public static function getMailerDataLayer(): MailerDataLayer

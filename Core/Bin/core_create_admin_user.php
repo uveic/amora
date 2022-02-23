@@ -30,7 +30,7 @@ require_once Core::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.ph
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
 require_once Core::getPathRoot() . '/Core/Util/DateUtil.php';
 
-$logger = Core::getLogger('BinCoreCreateAdminUser');
+$logger = Core::getLogger();
 
 $logger->logInfo('Creating user...');
 
