@@ -4,7 +4,7 @@ namespace Amora\Core\Module\Article\Service;
 
 use DateTimeImmutable;
 use GdImage;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Model\Image;
 use Amora\Core\Module\Article\Model\ImagePath;
 use Amora\Core\Util\StringUtil;

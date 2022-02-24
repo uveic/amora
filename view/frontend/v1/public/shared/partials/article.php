@@ -15,7 +15,7 @@ if ($article === null) {
 
 $canEdit = $responseData->request->session && $responseData->request->session->isAdmin();
 
-$email = Core::getConfigValue('siteAdminEmail');
+$email = Core::getConfig()->siteAdminEmail;
 $editUrl = $article->type === ArticleType::Blog
     ? UrlBuilderUtil::buildBackofficeBlogPostUrl($responseData->siteLanguageIsoCode, $article->id)
     : UrlBuilderUtil::buildBackofficeArticleUrl($responseData->siteLanguageIsoCode, $article->id);

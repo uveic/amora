@@ -4,7 +4,7 @@ namespace Amora\Core\Module\Action;
 
 use Amora\Core\Core;
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\Action\Datalayer\ActionDataLayer;
 use Amora\Core\Module\Action\Service\ActionService;
 

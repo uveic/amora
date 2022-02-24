@@ -3,7 +3,7 @@
 namespace Amora\Core\App;
 
 use Throwable;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 
 abstract class App
 {

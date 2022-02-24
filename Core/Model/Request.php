@@ -157,7 +157,7 @@ final class Request
             }
         }
 
-        return strtoupper(Core::getConfigValue('defaultSiteLanguage'));
+        return strtoupper(Core::getConfig()->defaultSiteLanguageIsoCode);
     }
 
     private function loadSession(): ?Session {

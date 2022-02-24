@@ -1,7 +1,8 @@
 <?php
 
-namespace Amora\Core;
+namespace Amora\Core\Util;
 
+use Amora\Core\Core;
 use DateTimeImmutable;
 use DateTimeZone;
 use Throwable;
@@ -26,8 +27,8 @@ final class Logger
         private readonly ?string $identifier = null,
         private readonly bool $isRunningInCli = false,
     ) {
-        $this->appName = Core::getConfigValue('appName') ?? 'Amora';
-        $this->isEnabled = Core::getConfigValue('isLoggingEnabled') ?? true;
+        $this->appName = Core::getConfig()->appName;
+        $this->isEnabled = Core::getConfig()->isLoggingEnabled;
         $this->prefix = $this->getPrefix();
         $this->startTime = $this->getMicroTime();
     }

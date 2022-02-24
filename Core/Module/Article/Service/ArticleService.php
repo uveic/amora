@@ -3,7 +3,7 @@
 namespace Amora\Core\Module\Article\Service;
 
 use Amora\Core\Database\Model\TransactionResponse;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Model\Response\Pagination;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;

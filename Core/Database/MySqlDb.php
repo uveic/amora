@@ -5,7 +5,7 @@ namespace Amora\Core\Database;
 use Amora\Core\Database\Model\TransactionResponse;
 use PDO;
 use Throwable;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 
 final class MySqlDb
 {

@@ -3,7 +3,7 @@
 namespace Amora\Core\Module\Article\Service;
 
 use Amora\Core\Core;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Util\LocalisationUtil;
@@ -58,9 +58,9 @@ class RssService
         DateTimeImmutable $lastPubDate,
         DateTimeImmutable $lastBuildDate,
     ): array {
-        $baseUrl = Core::getConfigValue('baseUrl');
-        $siteAdminEmail = Core::getConfigValue('siteAdminEmail');
-        $siteAdminName = Core::getConfigValue('siteAdminName');
+        $baseUrl = Core::getConfig()->baseUrl;
+        $siteAdminEmail = Core::getConfig()->siteAdminEmail;
+        $siteAdminName = Core::getConfig()->siteAdminName;
         $siteTitle = $this->getSiteTitle();
         $siteDescription = $this->localisationUtil->getValue('siteDescription');
 

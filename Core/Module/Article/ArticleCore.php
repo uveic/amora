@@ -4,7 +4,7 @@ namespace Amora\Core\Module\Article;
 
 use Amora\Core\Core;
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
 use Amora\Core\Module\Article\Datalayer\TagDataLayer;
 use Amora\Core\Module\Article\Service\ArticleService;
@@ -88,20 +88,15 @@ class ArticleCore extends Core
 
     public static function getImageService(): ImageService
     {
-        if (empty(self::getConfigValue('mediaBaseDir'))) {
+        if (empty(self::getConfig()->mediaBaseDir)) {
             self::getDefaultLogger()->logError("Missing 'mediaBaseDir' section from config");
-            exit;
-        }
-
-        if (empty(self::getConfigValue('mediaBaseUrl'))) {
-            self::getDefaultLogger()->logError("Missing 'mediaBaseUrl' section from config");
             exit;
         }
 
         $logger = self::getArticleLogger();
         $imageDataLayer = self::getImageDataLayer();
         $imageResizeService = self::getImageResizeService();
-        $mediaBaseDir = self::getConfigValue('mediaBaseDir');
+        $mediaBaseDir = self::getConfig()->mediaBaseDir;
 
         return self::getInstance(
             className: 'ImageService',
@@ -127,19 +122,19 @@ class ArticleCore extends Core
 
     public static function getImageResizeService(): ImageResizeService
     {
-        if (empty(self::getConfigValue('mediaBaseDir'))) {
+        if (empty(self::getConfig()->mediaBaseDir)) {
             self::getDefaultLogger()->logError("Missing 'mediaBaseDir' section from config");
             exit;
         }
 
-        if (empty(self::getConfigValue('mediaBaseUrl'))) {
+        if (empty(self::getConfig()->mediaBaseUrl)) {
             self::getDefaultLogger()->logError("Missing 'mediaBaseUrl' section from config");
             exit;
         }
 
         $logger = self::getArticleLogger();
-        $mediaBaseDir = self::getConfigValue('mediaBaseDir');
-        $mediaBaseUrl = self::getConfigValue('mediaBaseUrl');
+        $mediaBaseDir = self::getConfig()->mediaBaseDir;
+        $mediaBaseUrl = self::getConfig()->mediaBaseUrl;
 
         return self::getInstance(
             className: 'ImageResizeService',

@@ -3,7 +3,7 @@
 namespace Amora\Core\Module\Mailer\App\Api\Sendgrid;
 
 use Throwable;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\Mailer\App\Api\ApiClientAbstract;
 use Amora\Core\Module\Mailer\App\Api\ApiResponse;
 

@@ -26,9 +26,9 @@ if (!Core::isRunningInCli()) {
 }
 
 try {
-    Core::getDbBackupApp(Core::getCoreDb())->run();
-    Core::getDbBackupApp(Core::getActionDb())->run();
-    Core::getDbBackupApp(Core::getMailerDb())->run();
+    Core::getDbBackupApp(Core::getCoreDb(), Core::getConfig()->databaseBackup)->run();
+    Core::getDbBackupApp(Core::getActionDb(), Core::getConfig()->databaseBackup)->run();
+    Core::getDbBackupApp(Core::getMailerDb(), Core::getConfig()->databaseBackup)->run();
 } catch (Throwable $t) {
     $logger->logError(
         'Error running migration: ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString()

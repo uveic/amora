@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Datalayer\TagDataLayer;
 use Amora\Core\Module\Article\Model\Tag;
 

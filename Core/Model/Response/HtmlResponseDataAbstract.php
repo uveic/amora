@@ -28,8 +28,8 @@ abstract class HtmlResponseDataAbstract
     ) {
         $this->localisationUtil = Core::getLocalisationUtil(strtoupper($request->siteLanguageIsoCode));
 
-        $baseUrl = Core::getConfigValue('baseUrl');
-        $siteImageUrl = Core::getConfigValue('siteImageUrl');
+        $baseUrl = Core::getConfig()->baseUrl;
+        $siteImageUrl = Core::getConfig()->siteImageUrl;
 
         $this->baseUrl = empty($baseUrl) ? '' : $baseUrl;
         $this->sitePath = !$request->getPath() || $request->getPath() === 'home'
@@ -62,7 +62,7 @@ abstract class HtmlResponseDataAbstract
     }
 
     public function getSiteLogoUrl(): ?string {
-        return Core::getConfigValue('logoUrl');
+        return Core::getConfig()->logoImageUrl;
     }
 
     private function getSiteNameAndTitle(): string

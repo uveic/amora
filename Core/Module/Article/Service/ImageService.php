@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Model\File;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\Article\Datalayer\ImageDataLayer;

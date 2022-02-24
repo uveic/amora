@@ -3,10 +3,14 @@
 namespace Amora\Core;
 
 use Amora\App\AppCore;
+use Amora\App\Config\AppConfig;
+use Amora\Core\Config\Database;
+use Amora\Core\Config\DatabaseBackup;
+use Amora\Core\Config\Env;
 use Amora\Core\Database\DbBackupApp;
 use Amora\Core\Module\Action\ActionLoggerCore;
 use Amora\Core\Router\Router;
-use Amora\Core\Value\Language;
+use Amora\Core\Util\Logger;
 use Closure;
 use Exception;
 use Amora\Core\App\SyncLookupTablesApp;
@@ -17,12 +21,9 @@ use Amora\Core\Util\LocalisationUtil;
 class Core
 {
     private static bool $initiated = false;
-    private static Config $config;
+    private static AppConfig $config;
     private static array $registry = array();
-
     private static string $pathToRoot;
-    private static string $timezone;
-    private static string $phpLocale;
 
     /**
      * @param string $pathToRoot
@@ -36,40 +37,39 @@ class Core
 
         self::$pathToRoot = $pathToRoot;
 
-        require_once self::getPathRoot() . '/Core/Model/File.php';
-        require_once self::getPathRoot() . '/Core/Model/Request.php';
-        require_once self::getPathRoot() . '/Core/Model/Response.php';
-        require_once self::getPathRoot() . '/Core/Model/Menu/MenuItem.php';
-        require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseDataAbstract.php';
-        require_once self::getPathRoot() . '/Core/Model/Response/Pagination.php';
-        require_once self::getPathRoot() . '/Core/Logger.php';
-        require_once self::getPathRoot() . '/Core/Config.php';
+        require_once self::$pathToRoot . '/Core/Model/File.php';
+        require_once self::$pathToRoot . '/Core/Model/Request.php';
+        require_once self::$pathToRoot . '/Core/Model/Response.php';
+        require_once self::$pathToRoot . '/Core/Model/Menu/MenuItem.php';
+        require_once self::$pathToRoot . '/Core/Model/Response/HtmlResponseDataAbstract.php';
+        require_once self::$pathToRoot . '/Core/Model/Response/Pagination.php';
+        require_once self::$pathToRoot . '/Core/Config/AbstractConfig.php';
+        require_once self::$pathToRoot . '/App/Config/AppConfig.php';
 
-        require_once self::getPathRoot() . '/Core/Util/NetworkUtil.php';
-        require_once self::getPathRoot() . '/Core/Util/DateUtil.php';
-        require_once self::getPathRoot() . '/Core/Util/StringUtil.php';
-        require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
+        require_once self::$pathToRoot . '/Core/Util/Logger.php';
+        require_once self::$pathToRoot . '/Core/Util/NetworkUtil.php';
+        require_once self::$pathToRoot . '/Core/Util/DateUtil.php';
+        require_once self::$pathToRoot . '/Core/Util/StringUtil.php';
+        require_once self::$pathToRoot . '/Core/Util/UrlBuilderUtil.php';
 
-        require_once self::getPathRoot() . '/Core/Value/Language/Language.php';
-        require_once self::getPathRoot() . '/Core/Value/Menu/CoreMenu.php';
+        require_once self::$pathToRoot . '/Core/Value/Language/Language.php';
+        require_once self::$pathToRoot . '/Core/Value/Menu/CoreMenu.php';
 
-        require_once self::getPathRoot() . '/Core/Module/DataLayerTrait.php';
+        require_once self::$pathToRoot . '/Core/Module/DataLayerTrait.php';
 
-        require_once self::getPathRoot() . '/App/AppCore.php';
-        require_once self::getPathRoot() . '/Core/Module/User/UserCore.php';
-        require_once self::getPathRoot() . '/Core/Module/Article/ArticleCore.php';
-        require_once self::getPathRoot() . '/Core/Module/ActionLogger/ActionLoggerCore.php';
-        require_once self::getPathRoot() . '/Core/Module/Mailer/MailerCore.php';
+        require_once self::$pathToRoot . '/App/AppCore.php';
+        require_once self::$pathToRoot . '/Core/Module/User/UserCore.php';
+        require_once self::$pathToRoot . '/Core/Module/Article/ArticleCore.php';
+        require_once self::$pathToRoot . '/Core/Module/ActionLogger/ActionLoggerCore.php';
+        require_once self::$pathToRoot . '/Core/Module/Mailer/MailerCore.php';
 
         // Application include paths
-        set_include_path(get_include_path() . PATH_SEPARATOR . self::getPathRoot());
+        set_include_path(get_include_path() . PATH_SEPARATOR . self::$pathToRoot);
 
-        self::$config = new Config();
-        self::$timezone = self::$config->get('timezone') ?? 'UTC';
-        self::$phpLocale = self::$config->get('phpLocale') ?? 'en';
+        self::$config = AppConfig::get();
 
         date_default_timezone_set(self::getDefaultTimezone());
-        setlocale(LC_ALL, self::getPhpLocale());
+        setlocale(LC_ALL, self::$config->phpLocale);
 
         if (!self::isRunningInLiveEnv()) {
             ini_set('display_errors', 1);
@@ -87,45 +87,34 @@ class Core
         return self::$pathToRoot;
     }
 
-    public static function getPhpLocale(): string
-    {
-        return self::$phpLocale;
-    }
-
     public static function isRunningInCli(): bool
     {
         return php_sapi_name() == 'cli';
     }
 
-    public static function getConfig(): array
+    public static function getConfig(): AppConfig
     {
-        return self::$config->getConfig();
+        return self::$config;
     }
 
     public static function getDefaultTimezone(): string
     {
-        return self::$timezone;
+        return self::$config->timezone;
     }
 
     public static function getDefaultLanguageIsoCode(): string
     {
-        $defaultSiteLanguageIso = self::$config->get('defaultSiteLanguage');
-        return $defaultSiteLanguageIso ?? Language::getNameForId(Language::ENGLISH);
-    }
-
-    public static function getConfigValue(string $key)
-    {
-        return self::$config->get($key);
+        return self::$config->defaultSiteLanguageIsoCode;
     }
 
     public static function isRunningInLiveEnv(): bool
     {
-        return self::$config->get('env') === 'live';
+        return self::$config->env === Env::Live;
     }
 
     public static function updateTimezone(string $newTimezone) {
         if (self::getDefaultTimezone() !== $newTimezone) {
-            self::$timezone = $newTimezone;
+            self::$config->timezone = $newTimezone;
             date_default_timezone_set(self::getDefaultTimezone());
             self::getCoreDb()->updateTimezone();
             self::getActionDb()->updateTimezone();
@@ -196,11 +185,11 @@ class Core
         return self::getInstance(
             className: 'Router',
             factory: function () use ($actionService) {
-                require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
-                require_once self::getPathRoot() . '/App/Router/AppRouterCore.php';
-                require_once self::getPathRoot() . '/App/Router/AppRouter.php';
-                require_once self::getPathRoot() . '/Core/Router/RouterCore.php';
-                require_once self::getPathRoot() . '/Core/Router/Router.php';
+                require_once self::$pathToRoot . '/Core/Model/Response/HtmlResponseData.php';
+                require_once self::$pathToRoot . '/App/Router/AppRouterCore.php';
+                require_once self::$pathToRoot . '/App/Router/AppRouter.php';
+                require_once self::$pathToRoot . '/Core/Router/RouterCore.php';
+                require_once self::$pathToRoot . '/Core/Router/Router.php';
                 return new Router($actionService);
             },
             isSingleton: true,
@@ -209,69 +198,39 @@ class Core
 
     public static function getCoreDb(): MySqlDb
     {
-        return self::getDb('core');
+        return self::getDb(self::getConfig()->coreDb);
     }
 
     public static function getActionDb(): MySqlDb
     {
-        return self::getDb('action');
+        return self::getDb(self::getConfig()->actionDb);
     }
 
     public static function getMailerDb(): MySqlDb
     {
-        return self::getDb('mailer');
+        return self::getDb(self::getConfig()->mailerDb);
     }
 
-    private static function getDb(string $dbIdentifier): MySqlDb
+    private static function getDb(Database $database): MySqlDb
     {
-        $dbClassname = ucfirst($dbIdentifier) . 'Database';
-
         return self::getInstance(
-            className: $dbClassname,
-            factory: function () use ($dbIdentifier) {
-                $config = self::getConfig();
-                if (empty($config['database'])) {
-                    self::getDefaultLogger()->logError("Missing 'database' section from config");
-                    exit;
-                }
-
-                if (empty($config['database'][$dbIdentifier])) {
-                    self::getDefaultLogger()->logError("Missing database section from config");
-                    exit;
-                }
-
-                if (empty($config['database'][$dbIdentifier]['host'])) {
-                    self::getDefaultLogger()->logError("Missing 'database.host' from config");
-                    exit;
-                }
-
-                if (empty($config['database'][$dbIdentifier]['user'])) {
-                    self::getDefaultLogger()->logError("Missing 'database.user' from config");
-                    exit;
-                }
-
-                if (!isset($config['database'][$dbIdentifier]['password'])) {
-                    self::getDefaultLogger()->logError("Missing 'database.password' from config");
-                    exit;
-                }
-
-                if (empty($config['database'][$dbIdentifier]['name'])) {
-                    self::getDefaultLogger()->logError("Missing 'database.name' from config");
-                    exit;
-                }
+            className: $database->name . 'Database',
+            factory: function () use ($database) {
 
                 $logger = self::getLogger();
-                $host = $config['database'][$dbIdentifier]['host'];
-                $user = $config['database'][$dbIdentifier]['user'];
-                $pass = $config['database'][$dbIdentifier]['password'];
-                $dbName = $config['database'][$dbIdentifier]['name'];
 
-                require_once self::getPathRoot() . '/Core/Value/QueryOrderDirection.php';
-                require_once self::getPathRoot() . '/Core/Model/Util/QueryOrderBy.php';
-                require_once self::getPathRoot() . '/Core/Model/Util/QueryOptions.php';
-                require_once self::getPathRoot() . '/Core/Database/Model/TransactionResponse.php';
-                require_once self::getPathRoot() . '/Core/Database/MySqlDb.php';
-                return new MySqlDb($logger, $host, $user, $pass, $dbName);
+                require_once self::$pathToRoot . '/Core/Value/QueryOrderDirection.php';
+                require_once self::$pathToRoot . '/Core/Model/Util/QueryOrderBy.php';
+                require_once self::$pathToRoot . '/Core/Model/Util/QueryOptions.php';
+                require_once self::$pathToRoot . '/Core/Database/Model/TransactionResponse.php';
+                require_once self::$pathToRoot . '/Core/Database/MySqlDb.php';
+                return new MySqlDb(
+                    logger: $logger,
+                    host: $database->host,
+                    user: $database->user,
+                    password: $database->password,
+                    name: $database->name,
+                );
             },
             isSingleton: true,
         );
@@ -290,7 +249,7 @@ class Core
         return self::getInstance(
             className: 'MigrationDbApp',
             factory: function () use ($db, $pathToMigrationFiles) {
-                require_once self::getPathRoot() . '/Core/Database/Migration/MigrationDbApp.php';
+                require_once self::$pathToRoot . '/Core/Database/Migration/MigrationDbApp.php';
                 return new MigrationDbApp($db, $pathToMigrationFiles);
             },
             isSingleton: false,
@@ -299,32 +258,26 @@ class Core
 
     /**
      * @param MySqlDb $db
+     * @param DatabaseBackup $dbBackupConfig
      * @return DbBackupApp
-     * @throws Exception
      */
     public static function getDbBackupApp(
-        MySqlDb $db
+        MySqlDb $db,
+        DatabaseBackup $dbBackupConfig,
     ): DbBackupApp {
-        $config = Core::getConfig();
-
         return self::getInstance(
             className: 'DbBackupApp',
-            factory: function () use ($db, $config) {
-                $backupFolderPath = $config['databaseBackup']['folderPath'] ?? '/tmp/';
-                $mysqlCommand = $config['databaseBackup']['mysqlCommandPath'] ?? 'mysql';
-                $mysqlDumpCommand = $config['databaseBackup']['mysqlDumpCommandPath'] ?? 'mysqldump';
-                $gzipCommand = $config['databaseBackup']['gzipCommandPath'] ?? 'gzip';
-
-                require_once self::getPathRoot() . '/Core/App/LockManager.php';
-                require_once self::getPathRoot() . '/Core/App/App.php';
-                require_once self::getPathRoot() . '/Core/Database/DbBackupApp.php';
+            factory: function () use ($db, $dbBackupConfig) {
+                require_once self::$pathToRoot . '/Core/App/LockManager.php';
+                require_once self::$pathToRoot . '/Core/App/App.php';
+                require_once self::$pathToRoot . '/Core/Database/DbBackupApp.php';
                 return new DbBackupApp(
                     logger: self::getDefaultLogger(),
                     db: $db,
-                    backupFolderPath: $backupFolderPath,
-                    mysqlCommand: $mysqlCommand,
-                    mysqlDumpCommand: $mysqlDumpCommand,
-                    gzipCommand: $gzipCommand,
+                    backupFolderPath: $dbBackupConfig->folderPath,
+                    mysqlCommand: $dbBackupConfig->mysqlCommandPath,
+                    mysqlDumpCommand: $dbBackupConfig->mysqlDumpCommandPath,
+                    gzipCommand: $dbBackupConfig->gzipCommandPath,
                 );
             },
             isSingleton: false,
@@ -342,8 +295,8 @@ class Core
         return self::getInstance(
             className: 'SyncLookupTablesApp',
             factory: function () use ($logger) {
-                require_once self::getPathRoot() . '/Core/Model/Util/LookupTableSettings.php';
-                require_once self::getPathRoot() . '/Core/App/SyncLookupTablesApp.php';
+                require_once self::$pathToRoot . '/Core/Model/Util/LookupTableSettings.php';
+                require_once self::$pathToRoot . '/Core/App/SyncLookupTablesApp.php';
                 return new SyncLookupTablesApp($logger);
             },
             isSingleton: true,
@@ -360,13 +313,13 @@ class Core
         bool $isSingleton = true
     ): LocalisationUtil {
         $logger = self::getLogger();
-        $defaultSiteLanguage = strtoupper(self::getConfigValue('defaultSiteLanguage') ?? 'EN');
+        $defaultSiteLanguage = strtoupper(self::$config->defaultSiteLanguageIsoCode);
 
         return self::getInstance(
             className: 'LocalisationUtil',
             factory: function () use ($logger, $defaultSiteLanguage, $languageIsoCode) {
-                require_once self::getPathRoot() . '/Core/Module/User/Service/UserService.php';
-                require_once self::getPathRoot() . '/Core/Util/LocalisationUtil.php';
+                require_once self::$pathToRoot . '/Core/Module/User/Service/UserService.php';
+                require_once self::$pathToRoot . '/Core/Util/LocalisationUtil.php';
                 return new LocalisationUtil($logger, $defaultSiteLanguage, $languageIsoCode);
             },
             isSingleton: $isSingleton,

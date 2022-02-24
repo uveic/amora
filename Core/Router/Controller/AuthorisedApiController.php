@@ -3,7 +3,7 @@
 namespace Amora\Core\Router;
 
 use Throwable;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Model\Image;
