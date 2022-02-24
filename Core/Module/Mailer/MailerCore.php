@@ -32,6 +32,7 @@ class MailerCore extends Core
             factory: function () {
                 $db = self::getDb();
 
+                require_once self::getPathRoot() . '/App/Value/Mailer/AppMailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerLogItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
@@ -50,6 +51,7 @@ class MailerCore extends Core
             factory: function () {
                 $mailerDataLayer = self::getMailerDataLayer();
 
+                require_once self::getPathRoot() . '/App/Value/Mailer/AppMailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerLogItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';

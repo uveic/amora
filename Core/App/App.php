@@ -23,9 +23,9 @@ abstract class App
         }
 
         $this->lockManager = new LockManager(
-            $this->logger,
-            $this->appName,
-            $lockMaxTimeSinceLastSyncSeconds
+            logger: $this->logger,
+            lockName: $this->appName,
+            secondsToRemoveLock: $lockMaxTimeSinceLastSyncSeconds,
         );
 
         $this->logPrefix = $this->appName . ' ::: ';

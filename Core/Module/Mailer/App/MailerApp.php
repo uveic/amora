@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Mailer\App;
 
+use Amora\Core\Core;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\App\App;
@@ -22,7 +23,10 @@ class MailerApp extends App
         private ApiClientAbstract $apiClient,
         private RequestBuilderAbstract $requestBuilder
     ) {
-        parent::__construct($logger, 'Mailer App');
+        parent::__construct(
+            logger: $logger,
+            appName: Core::getConfig()->appName . 'MailerApp',
+        );
     }
 
     public function run() {

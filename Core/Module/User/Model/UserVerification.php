@@ -43,7 +43,7 @@ class UserVerification
             'type_id' => $this->type->value,
             'email' => $this->email,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
-            'verified_at' => $this->verifiedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'verified_at' => $this->verifiedAt?->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'verification_identifier' => $this->verificationIdentifier,
             'is_enabled' => $this->isEnabled,
         ];
