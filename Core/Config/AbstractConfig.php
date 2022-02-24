@@ -59,6 +59,9 @@ abstract class AbstractConfig {
         public readonly bool $isInvitationEnabled,
         public readonly Env $env,
 
+        public readonly string $siteAdminEmail,
+        public readonly string $siteAdminName,
+
         public string $timezone,
         public readonly string $phpLocale,
         public readonly string $defaultSiteLanguageIsoCode,
@@ -68,9 +71,6 @@ abstract class AbstractConfig {
         public readonly string $logoImageUrl,
         public readonly string $mediaBaseDir,
         public readonly string $mediaBaseUrl,
-
-        public readonly string $siteAdminEmail,
-        public readonly string $siteAdminName,
 
         public readonly DatabaseBackup $databaseBackup,
 
