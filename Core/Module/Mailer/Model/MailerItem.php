@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Mailer\Model;
 
+use Amora\App\Value\Mailer\AppMailerTemplate;
 use Amora\Core\Module\Mailer\Value\MailerTemplate;
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
@@ -26,9 +27,14 @@ class MailerItem
 
     public static function fromArray(array $item): MailerItem
     {
+        /** @noinspection PhpCaseWithValueNotFoundInEnumInspection */
+        $template = AppMailerTemplate::tryfrom($item['template_id'])
+            ? AppMailerTemplate::from($item['template_id'])
+            : MailerTemplate::from($item['template_id']);
+
         return new MailerItem(
             id: (int)$item['mail_id'],
-            template: MailerTemplate::from($item['template_id']),
+            template: $template,
             replyToEmailAddress: $item['reply_to_email'] ?? null,
             senderName: $item['sender_name'] ?? null,
             receiverEmailAddress: $item['receiver_email'],

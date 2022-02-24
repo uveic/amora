@@ -10,7 +10,6 @@ require_once Core::getPathRoot() . '/Core/Module/User/Value/VerificationType.php
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
-require_once Core::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
 
 use Amora\Core\Model\Util\LookupTableSettings;
 use Amora\Core\Module\Article\Value\ArticleSectionType;
@@ -72,11 +71,5 @@ return [
         database: Core::getCoreDb(),
         tableName: 'user_verification_type',
         tableFieldsToValues: asArray(VerificationType::getAll()),
-    ),
-
-    new LookupTableSettings(
-        database: Core::getMailerDb(),
-        tableName: 'mailer_template',
-        tableFieldsToValues: asArray(MailerTemplate::getAll()),
     ),
 ];

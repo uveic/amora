@@ -3,9 +3,9 @@
 namespace Amora\Core\App;
 
 use Amora\Core\Model\Util\LookupTableSettings;
-use Exception;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Util\Logger;
+use Throwable;
 
 /**
  * Class SyncLookupTablesApp
@@ -109,7 +109,7 @@ final class SyncLookupTablesApp
 
         try {
             $currentValuesInDbTable = $db->select($tableName, $tableFields);
-        } catch (Exception $e) {
+        } catch (Throwable) {
             $this->logger->logError(
                 "Table name '$tableName' or field names '" .
                 implode(', ', $tableFields) . "' misspelled or missed on DB"
@@ -151,7 +151,7 @@ final class SyncLookupTablesApp
                     "Value in 'name' field has been assigned to a previously existing ID. " .
                     "Please check the class in PHP and make sure existing values haven't been " .
                     "reassigned to previously existing IDs" .
-                    " - Value in DB: {$currentValuesInDbTableByName[$name]} => $name" .
+                    " - Value in DB: $currentValuesInDbTableByName[$name] => $name" .
                     " - Value in config file: $id => $name" .
                     " - Aborting..."
                 );
@@ -211,11 +211,11 @@ final class SyncLookupTablesApp
         }
 
         foreach ($theirs as $fieldName => $fieldValue) {
-            if ($fieldName != 'id' && $ours[$fieldName] != $theirs[$fieldName]) {
+            if ($fieldName != 'id' && $ours[$fieldName] != $fieldValue) {
                 $db->update($tableName, $rowId, [$fieldName => $fieldValue]);
 
                 $this->logger->logInfo(
-                    "Updating row ID '$rowId' in '$tableName' - Field: $fieldName - New value: {$theirs[$fieldName]}"
+                    "Updating row ID '$rowId' in '$tableName' - Field: $fieldName - New value: {$fieldValue}"
                 );
             }
         }
