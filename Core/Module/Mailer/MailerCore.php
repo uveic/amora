@@ -4,7 +4,7 @@ namespace Amora\Core\Module\mailer;
 
 use Amora\Core\Core;
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\Mailer\App\MailerApp;
 use Amora\Core\Module\Mailer\App\Api\ApiClientAbstract;
 use Amora\Core\Module\Mailer\App\Api\RequestBuilderAbstract;
@@ -66,31 +66,16 @@ class MailerCore extends Core
             className: 'SendGridRequestBuilder',
             factory: function () {
                 $logger = self::getMailerLogger();
-
-                $config = self::getConfig();
-                if (empty($config['mailer']['from']['email'])) {
-                    $logger->logError("Missing 'mailer.from.email' section from config");
-                    exit;
-                }
-
-                if (empty($config['mailer']['from']['name'])) {
-                    $logger->logError("Missing 'mailer.from.name' section from config");
-                    exit;
-                }
-
-                $fromMail = $config['mailer']['from']['email'];
-                $fromName = $config['mailer']['from']['name'];
-                $replyToEmail = $config['mailer']['replyTo']['email'] ?? null;
-                $replyToName = $config['mailer']['replyTo']['name'] ?? null;
+                $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/RequestBuilderAbstract.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/Sendgrid/RequestBuilder.php';
                 return new RequestBuilder(
-                    $logger,
-                    $fromMail,
-                    $fromName,
-                    $replyToEmail,
-                    $replyToName
+                    logger: $logger,
+                    fromEmail: $mailerConfig->from->email,
+                    fromName: $mailerConfig->from->name,
+                    replyToEmail: $mailerConfig->replyTo->email,
+                    replyToName: $mailerConfig->replyTo->name,
                 );
             },
             isSingleton: true,
@@ -122,25 +107,16 @@ class MailerCore extends Core
             className: 'ApiClient',
             factory: function () {
                 $logger = self::getMailerLogger();
-
-                $config = self::getConfig();
-                if (empty($config['mailer']['sendgrid']['baseApiUrl'])) {
-                    $logger->logError("Missing 'mailer.sendgrid.baseApiUrl' section from config");
-                    exit;
-                }
-
-                if (empty($config['mailer']['sendgrid']['apiKey'])) {
-                    $logger->logError("Missing 'mailer.sendgrid.apiKey' section from config");
-                    exit;
-                }
-
-                $baseApiUrl = $config['mailer']['sendgrid']['baseApiUrl'];
-                $apiKey = $config['mailer']['sendgrid']['apiKey'];
+                $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiClientAbstract.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/Sendgrid/ApiClient.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiResponse.php';
-                return new ApiClient($logger, $baseApiUrl, $apiKey);
+                return new ApiClient(
+                    logger: $logger,
+                    baseApiUrl: $mailerConfig->sendGrid->baseApiUrl,
+                    apiKey: $mailerConfig->sendGrid->apiKey,
+                );
             },
             isSingleton: false,
         );

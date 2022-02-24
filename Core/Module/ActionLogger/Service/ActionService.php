@@ -5,7 +5,7 @@ namespace Amora\Core\Module\Action\Service;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Model\Request;
 use Amora\Core\Module\Action\Datalayer\ActionDataLayer;
 use Amora\Core\Module\Action\Model\Action;
@@ -20,8 +20,7 @@ class ActionService
     public function logAction(Request $request): void
     {
         try {
-            $logEnabled = Core::getConfigValue('actionLoggerEnabled');
-            if (!$logEnabled) {
+            if (!Core::getConfig()->isActionLoggingEnabled) {
                 return;
             }
 

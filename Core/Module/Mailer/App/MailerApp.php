@@ -5,7 +5,7 @@ namespace Amora\Core\Module\Mailer\App;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\App\App;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\Mailer\App\Api\ApiResponse;
 use Amora\Core\Module\Mailer\App\Api\ApiClientAbstract;
 use Amora\Core\Module\Mailer\App\Api\RequestBuilderAbstract;

@@ -3,7 +3,7 @@
 namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\Article\Model\Image;
 use Amora\Core\Module\DataLayerTrait;

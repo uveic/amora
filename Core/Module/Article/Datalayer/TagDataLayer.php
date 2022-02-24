@@ -4,7 +4,7 @@ namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Module\DataLayerTrait;
 

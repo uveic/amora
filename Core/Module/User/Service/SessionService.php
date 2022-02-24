@@ -81,7 +81,7 @@ class SessionService
         ];
 
         if ($isLive) {
-            $options['domain'] = parse_url(Core::getConfigValue('baseUrl'), PHP_URL_HOST);
+            $options['domain'] = parse_url(Core::getConfig()->baseUrl, PHP_URL_HOST);
         }
 
         setcookie(self::SESSION_ID_COOKIE_NAME, $sid, $options);

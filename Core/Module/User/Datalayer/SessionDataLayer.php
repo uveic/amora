@@ -4,7 +4,7 @@
 namespace Amora\Core\Module\User\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\DateUtil;

@@ -8,7 +8,7 @@ use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;

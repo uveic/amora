@@ -4,7 +4,7 @@ namespace Amora\Core\Router;
 
 use Exception;
 use Amora\Core\Core;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\User\UserCore;
 

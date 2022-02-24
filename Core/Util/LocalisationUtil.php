@@ -3,7 +3,7 @@
 namespace Amora\Core\Util;
 
 use Amora\Core\Core;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Value\Language;
 
 final class LocalisationUtil

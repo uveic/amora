@@ -129,11 +129,9 @@ class Response
     private static function getTemplatePath(bool $isBackoffice, bool $isFrontendPrivate): string
     {
         if ($isBackoffice) {
-            $templatePath = 'backoffice/' . (Core::getConfigValue('backoffice_template') ?? 'v1');
+            $templatePath = 'backoffice/v1';
         } else {
-            $templatePath = 'frontend/'
-                . (Core::getConfigValue('site_template') ?? 'v1')
-                . ($isFrontendPrivate ? '/private' : '/public');
+            $templatePath = 'frontend/v1' . ($isFrontendPrivate ? '/private' : '/public');
         }
 
         return Core::getPathRoot() . '/view/' . $templatePath;

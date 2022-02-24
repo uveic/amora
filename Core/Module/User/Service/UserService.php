@@ -10,7 +10,7 @@ use Amora\Core\Util\LocalisationUtil;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Model\Response\UserFeedback;
 use Amora\Core\Module\User\Datalayer\UserDataLayer;
 use Amora\Core\Module\User\Model\User;

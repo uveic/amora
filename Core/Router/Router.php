@@ -189,7 +189,7 @@ class Router
             ? ArticleCore::getImageService()->getImageForId($article->mainImageId)
             : null;
         $siteImageUrl = $img
-            ? rtrim(Core::getConfigValue('baseUrl'), ' /') . $img->getFullUrlMedium()
+            ? rtrim(Core::getConfig()->baseUrl, ' /') . $img->getFullUrlMedium()
             : null;
         $isAdmin = $request->session && $request->session->isAdmin();
 

@@ -18,7 +18,7 @@ use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
@@ -151,7 +151,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     ): Response {
         $languageIsoCode = in_array(strtoupper($languageIsoCode), Language::getAvailableIsoCodes())
             ? strtolower($languageIsoCode)
-            : Core::getConfigValue('defaultSiteLanguage');
+            : Core::getConfig()->defaultSiteLanguageIsoCode;
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
 
         $user = $this->userService->verifyUser($user, $password);
@@ -229,12 +229,11 @@ final class PublicApiController extends PublicApiControllerAbstract
     ): Response {
         $languageIsoCode = in_array(strtoupper($languageIsoCode), Language::getAvailableIsoCodes())
             ? strtolower($languageIsoCode)
-            : Core::getConfigValue('defaultSiteLanguage');
+            : Core::getConfig()->defaultSiteLanguageIsoCode;
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
 
         try {
-            $isRegistrationEnabled = Core::getConfigValue('registrationEnabled');
-            if (!$isRegistrationEnabled) {
+            if (!Core::getConfig()->isRegistrationEnabled) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     success: false,
                     redirect: null,
@@ -333,7 +332,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     ): Response {
         $languageIsoCode = in_array(strtoupper($languageIsoCode), Language::getAvailableIsoCodes())
             ? strtolower($languageIsoCode)
-            : Core::getConfigValue('defaultSiteLanguage');
+            : Core::getConfig()->defaultSiteLanguageIsoCode;
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
         $user = $this->userService->getUserForId($userId);
         if (empty($user) || !$user->validateValidationHash($verificationHash)) {
@@ -387,7 +386,7 @@ final class PublicApiController extends PublicApiControllerAbstract
 
         $languageIsoCode = in_array(strtoupper($languageIsoCode), Language::getAvailableIsoCodes())
             ? strtolower($languageIsoCode)
-            : Core::getConfigValue('defaultSiteLanguage');
+            : Core::getConfig()->defaultSiteLanguageIsoCode;
         $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
 
         if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
@@ -426,7 +425,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         ?string $languageIsoCode,
         Request $request
     ): Response {
-        $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
+        $isInvitationEnabled = Core::getConfig()->isInvitationEnabled;
         if (!$isInvitationEnabled) {
             return new PublicApiControllerRequestRegistrationInviteFailureResponse();
         }

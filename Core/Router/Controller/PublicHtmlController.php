@@ -123,9 +123,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        $isRegistrationEnabled = Core::getConfigValue('registrationEnabled');
+        $isRegistrationEnabled = Core::getConfig()->isRegistrationEnabled;
         if (!$isRegistrationEnabled) {
-            $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
+            $isInvitationEnabled = Core::getConfig()->isInvitationEnabled;
             if ($isInvitationEnabled) {
                 return Response::createRedirectResponse(
                     url: UrlBuilderUtil::buildPublicInviteRequestUrl($request->siteLanguageIsoCode),
@@ -264,8 +264,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        $isInvitationEnabled = Core::getConfigValue('invitationEnabled');
-        if (!$isInvitationEnabled) {
+        if (!Core::getConfig()->isInvitationEnabled) {
             return Response::createRedirectResponse(
                 url: UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode),
             );
@@ -310,18 +309,6 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         Request $request,
         ?UserFeedback $userFeedback = null,
     ): Response {
-        // ToDo: Move tagIdsForHomepage to some kind of settings
-        $tagIds = Core::getConfigValue('tagIdsForHomepage') ?? [];
-        $homeArticles = $this->articleService->filterArticlesBy(
-            statusIds: [ArticleStatus::Published->value],
-            typeIds: [ArticleType::Page->value],
-            tagIds: $tagIds,
-            queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
-                pagination: new Response\Pagination(itemsPerPage: 10),
-            ),
-        );
-
         $isAdmin = $request->session && $request->session->isAdmin();
         $statusIds = $isAdmin
             ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
@@ -344,7 +331,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 request: $request,
                 pagination: $pagination,
                 homepageContent: $homepageArticle,
-                homeArticles: $homeArticles,
+                homeArticles: [],
                 blogArticles: $blogArticles,
                 userFeedback: $userFeedback,
             ),

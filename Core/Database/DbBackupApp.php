@@ -3,7 +3,7 @@
 namespace Amora\Core\Database;
 
 use Amora\Core\App\App;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use DateTime;
 use DateTimeZone;
 

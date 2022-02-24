@@ -12,7 +12,7 @@ use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Model\Response;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Tag;

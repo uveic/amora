@@ -5,7 +5,7 @@ namespace Amora\Core\App;
 use Amora\Core\Model\Util\LookupTableSettings;
 use Exception;
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 
 /**
  * Class SyncLookupTablesApp

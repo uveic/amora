@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Module\Mailer\App\Api;
 
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 
 abstract class ApiClientAbstract
 {

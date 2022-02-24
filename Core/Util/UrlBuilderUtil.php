@@ -46,7 +46,7 @@ class UrlBuilderUtil
 
     public static function buildBaseUrl(string $siteLanguage): string
     {
-        $baseUrl = Core::getConfigValue('baseUrl');
+        $baseUrl = Core::getConfig()->baseUrl;
         $siteLanguage = strtolower($siteLanguage);
 
         return trim($baseUrl, ' /') . '/' . $siteLanguage;
@@ -54,7 +54,7 @@ class UrlBuilderUtil
 
     public static function buildBaseUrlWithoutLanguage(): string
     {
-        $baseUrl = Core::getConfigValue('baseUrl');
+        $baseUrl = Core::getConfig()->baseUrl;
         return trim($baseUrl, ' /');
     }
 
@@ -225,7 +225,6 @@ class UrlBuilderUtil
 
     public static function buildPublicRssUrl(): string
     {
-        $baseUrl = Core::getConfigValue('baseUrl');
-        return rtrim($baseUrl, ' /') . self::PUBLIC_RSS;
+        return self::buildBaseUrlWithoutLanguage() . self::PUBLIC_RSS;
     }
 }

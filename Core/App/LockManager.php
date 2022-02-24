@@ -2,7 +2,7 @@
 
 namespace Amora\Core\App;
 
-use Amora\Core\Logger;
+use Amora\Core\Util\Logger;
 use Amora\Core\Util\StringUtil;
 
 class LockManager
