@@ -11,7 +11,7 @@ class MailerItem
 {
     public function __construct(
         public ?int $id,
-        public readonly MailerTemplate $template,
+        public readonly MailerTemplate|AppMailerTemplate $template,
         public readonly ?string $replyToEmailAddress,
         public readonly ?string $senderName,
         public readonly string $receiverEmailAddress,
