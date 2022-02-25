@@ -16,7 +16,7 @@ class Action
         public readonly ?string $referrer = null,
         public readonly ?string $ip = null,
         public readonly ?string $userAgent = null,
-        public readonly ?string $clientLanguage = null
+        public readonly ?string $clientLanguage = null,
     ) {}
 
     public function asArray(): array
