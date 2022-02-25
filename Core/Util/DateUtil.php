@@ -221,7 +221,13 @@ final class DateUtil
 
         foreach ($string as $key => &$value) {
             if (!empty($diff[$key])) {
-                $value = $diff[$key] . ' ' . $value . ($diff[$key] > 1 ? 's' : '');
+                $value = $diff[$key]
+                    . ' '
+                    . $value
+                    . ($diff[$key] > 1
+                        ? ($key === 'm' && ($language === 'ES' || $language === 'GL') ? 'es' : 's')
+                        : ''
+                    );
             } else {
                 if (count($string) > 1) {
                     unset($string[$key]);
