@@ -21,12 +21,7 @@ $defaultLanguage = $userToEdit
 ?>
   <section>
     <div id="feedback" class="feedback null"></div>
-    <section class="page-header">
-      <h1><?=($userToEdit ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></h1>
-      <div class="links">
-        <a href="<?=UrlBuilderUtil::buildBackofficeUsersUrl($responseData->siteLanguageIsoCode)?>" style="font-size: 1.5rem;margin-right: 1rem;">&#10005;</a>
-      </div>
-    </section>
+<?=$this->insert('partials/users-edit/header', ['responseData' => $responseData])?>
     <form action="#" method="post" id="form-user-creation">
 <?=$this->insert('partials/users-edit/control-bar', ['responseData' => $responseData])?>
       <div class="content-narrow-width">

@@ -12,12 +12,12 @@ $this->layout('base', ['responseData' => $responseData,])
 ?>
   <main>
     <section class="page-header">
-      <h1>Users</h1>
+      <h3><?=$responseData->getLocalValue('navAdminUsers')?></h3>
       <div class="links">
         <a href="<?=UrlBuilderUtil::buildBackofficeNewUserUrl($responseData->siteLanguageIsoCode)?>" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
       </div>
     </section>
-    <section class="content-flex-block">
+    <div class="m-t-1 m-r-1 m-b-1 m-l-1">
       <div class="table">
         <div class="table-row header">
           <div class="table-item edit flex-no-grow"></div>
@@ -45,5 +45,5 @@ foreach ($responseData->listOfUsers as $user) {
 }
 ?>
       </div>
-    </section>
+    </div>
   </main>

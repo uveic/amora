@@ -25,18 +25,28 @@
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
-  margin: 1rem;
+  padding: 0.5rem 1rem;
+  gap: 1rem;
+  border-bottom: 1px solid var(--light-bg-color-3);
+  background-color: var(--light-bg-color);
 }
 
-.page-header > h1 {
-  flex-grow: 3;
+.page-header .header-info {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.page-header h3 {
+  flex-grow: 1;
   flex-shrink: 1;
   margin: 0;
-  line-height: 1.4;
 }
 
-.page-header > .links {
-  flex-grow: 1;
+.page-header .links {
+  flex-grow: 0;
   flex-shrink: 1;
   text-align: right;
 }
@@ -49,11 +59,15 @@
   margin: 0;
   padding: 0 1rem;
   justify-content: flex-start;
-  position: relative;
+  position: fixed;
   background-color: var(--light-bg-color);
   border-top: 1px solid var(--light-bg-color-3);
-  border-bottom: 1px solid var(--light-bg-color-3);
   width: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  gap: 0.5rem;
 }
 
 .control-bar-wrapper button {
@@ -63,6 +77,17 @@
   width: initial;
   min-height: initial;
   margin: 0.5rem;
+}
+
+.article-tools {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0;
+  gap: 0.5rem;
 }
 
 .pexego-tools-amora {

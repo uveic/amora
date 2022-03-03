@@ -2,23 +2,58 @@
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
-$articleTitle = ArticleEditHtmlGenerator::generateTitleHtml($responseData);
+$pageEditTitle = ArticleEditHtmlGenerator::generateTitleHtml($responseData);
 $settings = ArticleEditHtmlGenerator::generateSettingsButtonHtml($responseData);
 
 $articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
-$closeUrl = $articleType === ArticleType::Page
-    ? UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguageIsoCode)
-    : UrlBuilderUtil::buildBackofficeBlogPostsUrl($responseData->siteLanguageIsoCode);
+$closeUrl = match($articleType) {
+    ArticleType::Page => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguageIsoCode),
+    ArticleType::Blog => UrlBuilderUtil::buildBackofficeBlogPostsUrl($responseData->siteLanguageIsoCode),
+    ArticleType::Homepage => UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguageIsoCode),
+};
+
+$updatedAtContent = $responseData->getLocalValue('globalUpdated')
+    . ' '
+    . '<span class="article-updated-at"></span>';
+
+$article = $responseData->getFirstArticle();
+
+if ($article) {
+    $updatedAtDate = DateUtil::formatDate(
+        date: $article->updatedAt,
+        lang: $responseData->siteLanguageIsoCode,
+        includeTime: true,
+    );
+
+    $updatedAtEta = DateUtil::getElapsedTimeString(
+        from: $article->updatedAt,
+        language: $responseData->siteLanguageIsoCode,
+        includePrefixAndOrSuffix: true,
+    );
+
+    $updatedAtContent = $responseData->getLocalValue('globalUpdated') . ' ' .
+        '<span class="article-updated-at" title="' . $updatedAtDate .
+        '">' . $this->e($updatedAtEta) . '</span>.';
+}
+
 ?>
     <section class="page-header">
-        <h1><?=$articleTitle?></h1>
-        <div class="links">
-          <?=$settings?>
-          <a href="<?=$closeUrl?>" class="m-r-1"><img src="/img/svg/x.svg" class="img-svg m-t-0" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
+        <h3><?=$pageEditTitle?></h3>
+        <div class="header-info">
+          <div class="article-saving null">
+            <img src="/img/loading.gif" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalSaving')?>">
+            <span><?=$responseData->getLocalValue('globalSaving')?></span>
+          </div>
+          <div class="control-bar-creation<?=$article ? '' : ' hidden'?>"><span><?=$updatedAtContent?></span></div>
+          <div class="links">
+            <?=$settings?>
+            <a href="<?=$closeUrl?>"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
+          </div>
         </div>
     </section>
