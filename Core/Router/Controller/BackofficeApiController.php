@@ -4,6 +4,7 @@ namespace Amora\Core\Router;
 
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -322,6 +323,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $now = new DateTimeImmutable();
+        $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
         $uri = $this->articleService->getAvailableUriForArticle(articleTitle: $title);
         $status = ArticleStatus::from($statusId);
         $publishOnObj = $publishOn
@@ -331,6 +333,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $newArticle = $this->articleService->createNewArticle(
             article: new Article(
                 id: null,
+                languageId: Language::getIdForIsoCode($languageIsoCode),
                 user: $request->session->user,
                 status: $status,
                 type: $typeId ? ArticleType::from($typeId) : ArticleType::Page,
@@ -350,7 +353,13 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             userAgent: $request->userAgent,
         );
 
-        $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
+        if (empty($newArticle)) {
+            return new BackofficeApiControllerStoreArticleSuccessResponse(
+                success: false,
+                errorMessage: 'Failed to create article',
+            );
+        }
+
         $backofficeUri = $typeId === ArticleType::Blog
             ? UrlBuilderUtil::buildBackofficeBlogPostUrl($languageIsoCode, $newArticle->id)
             : UrlBuilderUtil::buildBackofficeArticleUrl($languageIsoCode, $newArticle->id);
@@ -415,6 +424,16 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $uri = $this->articleService->getAvailableUriForArticle($uri, $title, $existingArticle);
+        if ($uri !== $existingArticle->uri) {
+            $this->articleService->storeArticleUri(
+                new ArticleUri(
+                    id: null,
+                    articleId: $existingArticle->id,
+                    uri: $existingArticle->uri,
+                    createdAt: new DateTimeImmutable(),
+                )
+            );
+        }
 
         $contentHtml = html_entity_decode($contentHtml);
         $now = new DateTimeImmutable();
@@ -423,11 +442,13 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
             : ($existingArticle->publishOn ?? $now);
 
+        $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
         $type = $typeId ? ArticleType::from($typeId) : $existingArticle->type;
         $status = $statusId ? ArticleStatus::from($statusId) : $existingArticle->status;
         $res = $this->articleService->workflowUpdateArticle(
             article: new Article(
                 id: $articleId,
+                languageId: Language::getIdForIsoCode($languageIsoCode),
                 user: $request->session->user,
                 status: $status,
                 type: $type,
@@ -446,7 +467,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             userAgent: $request->userAgent,
         );
 
-        $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
         $backofficeUri = $type === ArticleType::Blog
             ? UrlBuilderUtil::buildBackofficeBlogPostUrl($languageIsoCode, $articleId)
             : UrlBuilderUtil::buildBackofficeArticleUrl($languageIsoCode, $articleId);
@@ -477,6 +497,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $deleteRes = $this->articleService->deleteArticle(
             article: new Article(
                 id: $existingArticle->id,
+                languageId: $existingArticle->languageId,
                 user: $existingArticle->user,
                 status: ArticleStatus::Deleted,
                 type: $existingArticle->type,

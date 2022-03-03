@@ -60,6 +60,7 @@ class ArticleCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/ArticleUri.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/ArticleSection.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/ArticleService.php';
                 return new ArticleService($logger, $articleDataLayer, $tagDataLayer);

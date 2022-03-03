@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\Core\Database\Model\TransactionResponse;
+use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
@@ -27,6 +28,8 @@ class ArticleDataLayer
 
     const ARTICLE_TAG_RELATION_TABLE = 'article_tag_relation';
 
+    const ARTICLE_PREVIOUS_URI_TABLE = 'article_previous_uri';
+
     public function __construct(
         private MySqlDb $db,
         private Logger $logger,
@@ -41,9 +44,11 @@ class ArticleDataLayer
 
     public function filterArticlesBy(
         array $articleIds = [],
+        array $languageIds = [],
         array $statusIds = [],
         array $typeIds = [],
         ?string $uri = null,
+        ?string $previousUri = null,
         array $tagIds = [],
         bool $includeTags = false,
         bool $includePublishedAtInTheFuture = false,
@@ -64,6 +69,7 @@ class ArticleDataLayer
         $baseSql = 'SELECT ';
         $fields = [
             'a.id AS article_id',
+            'a.language_id',
             'a.user_id',
             'a.status_id',
             'a.type_id',
@@ -113,6 +119,10 @@ class ArticleDataLayer
             $where .= $this->generateWhereSqlCodeForIds($params, $articleIds, 'a.id', 'articleId');
         }
 
+        if ($languageIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $languageIds, 'a.language_id', 'languageId');
+        }
+
         if ($statusIds) {
             $where .= $this->generateWhereSqlCodeForIds($params, $statusIds, 'a.status_id', 'statusId');
         }
@@ -124,6 +134,12 @@ class ArticleDataLayer
         if (isset($uri)) {
             $where .= ' AND a.uri = :articleUri';
             $params[':articleUri'] = $uri;
+        }
+
+        if (isset($previousUri)) {
+            $joins .= ' JOIN ' . self::ARTICLE_PREVIOUS_URI_TABLE . ' AS pu ON pu.article_id = a.id';
+            $where .= ' AND pu.uri = :previousUri';
+            $params[':previousUri'] = $previousUri;
         }
 
         if ($tagIds) {
@@ -181,13 +197,15 @@ class ArticleDataLayer
         return true;
     }
 
-    public function createNewArticle(
+    public function storeArticle(
         Article $article,
         ?string $userIp,
         ?string $userAgent
     ): ?Article {
-
-        $resInsert = $this->db->insert(self::ARTICLE_TABLE, $article->asArray());
+        $resInsert = $this->db->insert(
+            tableName: self::ARTICLE_TABLE,
+            data: $article->asArray(),
+        );
 
         if (empty($resInsert)) {
             $this->logger->logError('Error inserting article');
@@ -196,7 +214,12 @@ class ArticleDataLayer
 
         $article->id = $resInsert;
 
-        $resHistory = $this->insertArticleHistory($article, $userIp, $userAgent);
+        $resHistory = $this->storeArticleHistory(
+            article: $article,
+            userIp: $userIp,
+            userAgent: $userAgent,
+        );
+
         if (empty($resHistory)) {
             $this->logger->logError('Error inserting article history');
             return null;
@@ -205,10 +228,11 @@ class ArticleDataLayer
         return $article;
     }
 
-    public function insertArticleHistory(Article $article, ?string $userIp, ?string $userAgent): bool
+    public function storeArticleHistory(Article $article, ?string $userIp, ?string $userAgent): bool
     {
         $data = [
             'article_id' => $article->id,
+            'language_id' => $article->languageId,
             'user_id' => $article->user->id,
             'status_id' => $article->status->value,
             'type_id' => $article->type->value,
@@ -234,7 +258,7 @@ class ArticleDataLayer
     {
         $resTransaction = $this->db->withTransaction(
             function () use ($article, $userIp, $userAgent) {
-                $resHistory = $this->insertArticleHistory($article, $userIp, $userAgent);
+                $resHistory = $this->storeArticleHistory($article, $userIp, $userAgent);
                 if (empty($resHistory)) {
                     return new TransactionResponse(false);
                 }
@@ -256,6 +280,18 @@ class ArticleDataLayer
         );
 
         return $resTransaction->isSuccess();
+    }
+
+    public function storeArticleUri(ArticleUri $articleUri): ArticleUri
+    {
+        $resInsert = $this->db->insert(
+            tableName: self::ARTICLE_PREVIOUS_URI_TABLE,
+            data: $articleUri->asArray(),
+        );
+
+        $articleUri->id = $resInsert;
+
+        return $articleUri;
     }
 
     private function getArticleSections(
