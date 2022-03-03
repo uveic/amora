@@ -175,7 +175,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     }
 
     const getStatusId = () => {
-      const status = document.querySelector('.dropdown-menu-option[data-checked="1"]');
+      const status = document.querySelector('.article-status-option[data-checked="1"]');
       return Number.parseInt(status.dataset.articleStatusId);
     };
 
@@ -313,7 +313,7 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
     const languageIdEl = document.querySelector('select#languageId');
     const roleIdEl = document.querySelector('select#roleId');
     const timezoneEl = document.querySelector('select#timezone');
-    const isEnabledEl = document.querySelector('.dropdown-menu-option[data-checked="1"]');
+    const isEnabledEl = document.querySelector('.user-enabled-option[data-checked="1"]');
     const isEnabled = Number.parseInt(isEnabledEl.dataset.value) > 0;
 
     const userId = userIdEl && userIdEl.value ? Number.parseInt(userIdEl.value) : null;
@@ -350,7 +350,7 @@ document.querySelectorAll('.article-status-option').forEach(op => {
   op.addEventListener('click', (e) => {
     e.preventDefault();
 
-    document.querySelectorAll('.dropdown-menu-label').forEach(d => {
+    document.querySelectorAll('.article-status-dd-label').forEach(d => {
       if (op.dataset.articleStatusId === '1') {
         d.classList.add('feedback-success');
         d.classList.remove('background-light-color');
@@ -358,13 +358,11 @@ document.querySelectorAll('.article-status-option').forEach(op => {
         d.classList.remove('feedback-success');
         d.classList.add('background-light-color');
       }
+
+      d.querySelectorAll('span').forEach(sp => sp.textContent = op.textContent);
     });
 
-    document.querySelectorAll('.dropdown-menu-label > span').forEach(sp => {
-      sp.textContent = op.textContent;
-    });
-
-    document.querySelectorAll('.dropdown-menu').forEach(d => {
+    document.querySelectorAll('.article-status-dd').forEach(d => {
       d.checked = false;
     });
 
@@ -380,7 +378,7 @@ document.querySelectorAll('.user-enabled-option').forEach(op => {
   op.addEventListener('click', (e) => {
     e.preventDefault();
 
-    document.querySelectorAll('.dropdown-menu-label').forEach(d => {
+    document.querySelectorAll('.user-status-dd-label').forEach(d => {
       if (op.dataset.value === '1') {
         d.classList.add('feedback-success');
         d.classList.remove('background-light-color');
@@ -388,13 +386,11 @@ document.querySelectorAll('.user-enabled-option').forEach(op => {
         d.classList.remove('feedback-success');
         d.classList.add('background-light-color');
       }
+
+      d.querySelectorAll('span').forEach(sp => sp.textContent = op.textContent);
     });
 
-    document.querySelectorAll('.dropdown-menu-label > span').forEach(sp => {
-      sp.textContent = op.textContent;
-    });
-
-    document.querySelectorAll('.dropdown-menu').forEach(d => {
+    document.querySelectorAll('.user-status-dd').forEach(d => {
       d.checked = false;
     });
 

@@ -22,10 +22,10 @@ class HtmlResponseData extends HtmlResponseDataAbstract
     ) {
         parent::__construct(
             request: $request,
+            pagination: $pagination,
             pageTitle: $pageTitle,
             pageDescription: $pageDescription,
             siteImageUri: $mainImageSiteUri,
-            pagination: $pagination,
         );
     }
 

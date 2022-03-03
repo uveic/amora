@@ -134,9 +134,10 @@ class ArticleService
         return $this->articleDataLayer->getSectionsForArticleId($articleId);
     }
 
-    public function getHomepageArticle(): ?Article
+    public function getHomepageArticle(int $languageId): ?Article
     {
         $res = $this->filterArticlesBy(
+            languageIds: [$languageId],
             statusIds: [ArticleStatus::Published->value],
             typeIds: [ArticleType::Homepage->value],
         );

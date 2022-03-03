@@ -11,28 +11,6 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 $article = $responseData->getFirstArticle();
 
-$updatedAtContent = $responseData->getLocalValue('globalUpdated')
-    . ' '
-    . '<span class="article-updated-at"></span>';
-
-if ($article) {
-    $updatedAtDate = DateUtil::formatDate(
-        date: $article->updatedAt,
-        lang: $responseData->siteLanguageIsoCode,
-        includeTime: true,
-    );
-
-    $updatedAtEta = DateUtil::getElapsedTimeString(
-        from: $article->updatedAt,
-        language: $responseData->siteLanguageIsoCode,
-        includePrefixAndOrSuffix: true,
-    );
-
-    $updatedAtContent = $responseData->getLocalValue('globalUpdated') . ' ' .
-        '<span class="article-updated-at" title="' . $updatedAtDate .
-        '">' . $this->e($updatedAtEta) . '</span>.';
-}
-
 $articleStatus = $article ? $article->status : ArticleStatus::Draft;
 $articleStatusName = $responseData->getLocalValue('articleStatus' . $articleStatus->name);
 $isPublished = $article && $articleStatus === ArticleStatus::Published;
@@ -47,7 +25,7 @@ $articleUrl = $article
     : '#';
 
 ?>
-  <div class="control-bar-wrapper m-b-3 m-t-1">
+  <div class="control-bar-wrapper">
     <div class="pexego-tools-amora">
       <div class="pexego-actions-amora-wrapper">
         <button class="article-save-button button"><?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?></button>
@@ -74,10 +52,8 @@ $articleUrl = $article
         </a>
       </div>
     </div>
-    <div class="control-bar-creation<?=$article ? '' : ' hidden'?>"><span><?=$updatedAtContent?></span></div>
-    <div class="article-saving null">
-      <img src="/img/loading.gif" class="img-svg img-svg-25" alt="Saving...">
-      <span>Saving...</span>
+    <div class="article-tools">
+<?=ArticleEditHtmlGenerator::generateArticleLanguageDropdownSelectHtml($responseData)?>
+<?=ArticleEditHtmlGenerator::generateArticleStatusDropdownSelectHtml($responseData)?>
     </div>
-    <?=ArticleEditHtmlGenerator::generateStatusDropdownSelectHtml($responseData)?>
   </div>

@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Util\Helper;
 
+use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;
@@ -11,6 +12,7 @@ use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\Language;
 
 final class ArticleEditHtmlGenerator
 {
@@ -82,8 +84,8 @@ final class ArticleEditHtmlGenerator
             : ArticleType::Blog;
     }
 
-    public static function generateStatusDropdownSelectHtml(
-        HtmlResponseDataAuthorised $responseData
+    public static function generateArticleStatusDropdownSelectHtml(
+        HtmlResponseDataAuthorised $responseData,
     ): string {
         $isHomepage = self::getArticleType($responseData) === ArticleType::Homepage;
         $articleStatus = $responseData->getFirstArticle()
@@ -95,8 +97,8 @@ final class ArticleEditHtmlGenerator
             : $isHomepage;
         $random = StringUtil::getRandomString(5);
 
-        $html = '<input type="checkbox" id="dropdown-menu-' . $random . '" class="dropdown-menu">';
-        $html .= '<div class="dropdown-container">';
+        $html = '<input type="checkbox" id="article-status-dd-' . $random . '" class="dropdown-menu article-status-dd">';
+        $html .= '<div class="dropdown-container article-status-container">';
         $html .= '<ul>';
 
         /** @var \BackedEnum $status */
@@ -110,13 +112,48 @@ final class ArticleEditHtmlGenerator
         }
 
         $html .= '</ul>';
-        $html .= '<label for="dropdown-menu-' . $random . '" class="dropdown-menu-label ' . ($isPublished ? 'feedback-success' : 'background-light-color') . '">';
+        $html .= '<label for="article-status-dd-' . $random . '" class="dropdown-menu-label article-status-dd ' . ($isPublished ? 'feedback-success' : 'background-light-color') . '">';
         $html .= '<span>' . $articleStatusName . '</span>';
         $html .= '<img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
         $html .= '</label>';
         $html .= '</div>';
 
         return $html;
+    }
+
+    public static function generateArticleLanguageDropdownSelectHtml(
+        HtmlResponseDataAuthorised $responseData,
+    ): string {
+        $article = $responseData->getFirstArticle();
+        $articleLanguageId = $article
+            ? $article->languageId
+            : Language::getIdForIsoCode(Core::getDefaultLanguageIsoCode());
+
+        $random = StringUtil::getRandomString(5);
+
+        $output = [];
+        $output[] = '    <input type="checkbox" id="article-lang-dd-' . $random . '" class="dropdown-menu article-lang-dd">';
+        $output[] = '    <div class="dropdown-container article-lang-container">';
+        $output[] = '      <ul>';
+
+        foreach (Language::getAvailableLanguages() as $language) {
+            $languageId = $language['id'];
+            $languageName = $language['name'];
+
+            $output[] = '        <li><a data-checked="' . ($languageId === $articleLanguageId ? '1' : '0') .
+                '" data-article-language-id="' . $articleLanguageId .
+                '" class="dropdown-menu-option article-lang-dd-option bg-color-dark"' .
+                ' href="#">' . $languageName . '</a></li>';
+        }
+
+        $output[] = '</ul>';
+        $output[] = '<label for="article-lang-dd-' . $random . '" class="dropdown-menu-label article-lang-dd-label bg-color-dark"';
+        $output[] = '<span>' . Language::getNameForId($articleLanguageId) . '</span>';
+        $output[] = '<img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
+        $output[] = '</label>';
+        $output[] = '</div>';
+
+        return implode(PHP_EOL, $output);
     }
 
     public static function generateSettingsButtonHtml(
@@ -130,9 +167,9 @@ final class ArticleEditHtmlGenerator
     }
 
     public static function generateTitleHtml(
-        HtmlResponseDataAuthorised $responseData
+        HtmlResponseDataAuthorised $responseData,
     ): string {
-        if ($responseData->getFirstArticle()) {
+        if (!$responseData->getFirstArticle()) {
             return $responseData->getLocalValue('globalEdit');
         }
 

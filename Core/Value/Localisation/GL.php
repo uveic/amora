@@ -124,6 +124,7 @@ return [
     'globalNoTitle' => 'Sen título',
     'globalComingSoon' => 'Proximamente...',
     'globalLoading' => 'Cargando...',
+    'globalSaving' => 'Gardando...',
     'globalMore' => 'Máis...',
 
     'globalUploadImage' => 'Subir imaxe(s)',

@@ -340,7 +340,8 @@ ul.nav-dropdown-menu a:hover {
   flex-grow: 0 !important;
 }
 
-.dropdown-menu:checked ~ div > ul {
+.article-status-dd:checked ~ div.article-status-container > ul,
+.article-lang-dd:checked ~ div.article-lang-container > ul {
   display: block;
 }
 

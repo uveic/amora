@@ -17,6 +17,7 @@ use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\Language;
 use Amora\Core\Value\QueryOrderDirection;
 
 final class PublicHtmlController extends PublicHtmlControllerAbstract
@@ -324,7 +325,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             ),
         );
 
-        $homepageArticle = $this->articleService->getHomepageArticle();
+        $homepageArticle = $this->articleService->getHomepageArticle(
+            languageId: Language::getIdForIsoCode($request->siteLanguageIsoCode),
+        );
 
         return Response::createFrontendPublicHtmlResponse(
             template: 'shared/home',

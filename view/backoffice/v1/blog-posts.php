@@ -12,12 +12,12 @@ $this->layout('base', ['responseData' => $responseData,])
 ?>
   <main>
     <section class="page-header">
-      <h1><?=$responseData->getLocalValue('navAdminBlogPosts')?></h1>
+      <h3><?=$responseData->getLocalValue('navAdminBlogPosts')?></h3>
       <div class="links">
         <a href="<?=UrlBuilderUtil::buildBackofficeNewBlogPostUrl($responseData->siteLanguageIsoCode)?>" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
       </div>
     </section>
-    <section class="content-flex-block">
+    <div class="m-t-1 m-r-1 m-b-1 m-l-1">
       <div class="table">
         <div class="table-row header">
           <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalTitle')?></div>
@@ -33,5 +33,5 @@ foreach ($responseData->articles as $article) {
             </div>
 <?php } ?>
       </div>
-    </section>
+    </div>
   </main>

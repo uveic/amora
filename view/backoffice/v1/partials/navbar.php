@@ -16,34 +16,30 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
   <input type="checkbox" id="mobile-nav" class="mobile-nav">
   <nav>
     <ul>
-        <?php
-        $i = 0;
-        /** @var MenuItem $menuItem */
-        foreach ($responseData->getMenu() as $menuItem) {
-            if (empty($menuItem->children)) {
-                ?>
-              <li><a href="<?=$menuItem->uri?>" class="nav-dropdown-item"><?=$menuItem->text?></a></li>
-                <?php
-                continue;
-            }
-            ?>
-          <li>
-            <div class="nav-dropdown-menu-wrapper">
-              <input type="checkbox" id="nav-dropdown-toggle-<?=$i?>" class="nav-dropdown-toggle">
-              <label for="nav-dropdown-toggle-<?=$i++?>" class="nav-dropdown-item nav-dropdown-toggle-label">
-                  <?=$this->e($menuItem->text) . ' ' . $menuItem->icon?>
-              </label>
-              <ul class="nav-dropdown-menu">
-                  <?php
-                  /** @var MenuItem $child */
-                  foreach ($menuItem->children as $child) {
-                      ?>
-                    <li><a href="<?=$child->uri?>"><?=$child->icon . $child->text?></a></li>
-                  <?php } ?>
-              </ul>
-            </div>
-          </li>
-        <?php } ?>
+<?php
+    $i = 0;
+    /** @var MenuItem $menuItem */
+    foreach ($responseData->getMenu() as $menuItem) {
+        if (empty($menuItem->children)) {
+          echo '      <li><a href="' . $menuItem->uri . '" class="nav-dropdown-item">' . $menuItem->text . '</a></li>';
+          continue;
+        }
+?>
+      <li>
+        <div class="nav-dropdown-menu-wrapper">
+          <input type="checkbox" id="nav-dropdown-toggle-<?=$i?>" class="nav-dropdown-toggle">
+          <label for="nav-dropdown-toggle-<?=$i++?>" class="nav-dropdown-item nav-dropdown-toggle-label"><?=$this->e($menuItem->text) . ' ' . $menuItem->icon?></label>
+          <ul class="nav-dropdown-menu">
+<?php
+    /** @var MenuItem $child */
+    foreach ($menuItem->children as $child) {
+        echo '            <li><a href="' . $child->uri . '">' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
+    }
+?>
+          </ul>
+        </div>
+      </li>
+<?php } ?>
     </ul>
   </nav>
   <label for="mobile-nav" class="mobile-nav-label"><span></span></label>
