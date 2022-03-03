@@ -8,6 +8,7 @@ use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Model\Response\UserFeedback;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\RssService;
 use Amora\Core\Module\Article\Value\ArticleStatus;

@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Article\Service;
 
 use Amora\Core\Database\Model\TransactionResponse;
+use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Util\Logger;
 use Amora\Core\Model\Response\Pagination;
 use Amora\Core\Model\Util\QueryOptions;
@@ -39,11 +40,20 @@ class ArticleService
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getArticleForUri(string $uri): ?Article
+    public function getArticleForUri(string $uri, bool $includePublishedAtInTheFuture = true): ?Article
     {
         $res = $this->filterArticlesBy(
             uri: $uri,
-            includePublishedAtInTheFuture: true,
+            includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
+        );
+
+        if (isset($res[0])) {
+            return $res[0];
+        }
+
+        $res = $this->filterArticlesBy(
+            previousUri: $uri,
+            includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
         );
 
         return empty($res[0]) ? null : $res[0];
@@ -91,9 +101,11 @@ class ArticleService
 
     public function filterArticlesBy(
         array $articleIds = [],
+        array $languageIds = [],
         array $statusIds = [],
         array $typeIds = [],
         ?string $uri = null,
+        ?string $previousUri = null,
         array $tagIds = [],
         bool $includeTags = false,
         bool $includePublishedAtInTheFuture = false,
@@ -103,9 +115,11 @@ class ArticleService
     ): array {
         return $this->articleDataLayer->filterArticlesBy(
             articleIds: $articleIds,
+            languageIds: $languageIds,
             statusIds: $statusIds,
             typeIds: $typeIds,
             uri: $uri,
+            previousUri: $previousUri,
             tagIds: $tagIds,
             includeTags: $includeTags,
             includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
@@ -142,6 +156,7 @@ class ArticleService
         ?Article $existingArticle = null
     ): string {
         $articleId = $existingArticle?->id;
+        $uri = $uri ? strtolower(StringUtil::cleanString($uri)) : null;
 
         if (!$uri && !$articleTitle) {
             $uri = strtolower(StringUtil::getRandomString(32));
@@ -171,7 +186,7 @@ class ArticleService
         array $sections,
         array $tags,
         ?string $userIp,
-        ?string $userAgent
+        ?string $userAgent,
     ): bool {
         $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
             function () use ($article, $sections, $tags, $userIp, $userAgent) {
@@ -204,7 +219,7 @@ class ArticleService
                     return new TransactionResponse(false);
                 }
 
-                $resHistory = $this->articleDataLayer->insertArticleHistory(
+                $resHistory = $this->articleDataLayer->storeArticleHistory(
                     article: $article,
                     userIp: $userIp,
                     userAgent: $userAgent,
@@ -347,11 +362,11 @@ class ArticleService
         array $sections,
         array $tags,
         ?string $userIp,
-        ?string $userAgent
+        ?string $userAgent,
     ): ?Article {
         $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
             function () use ($article, $sections, $tags, $userIp, $userAgent) {
-                $article = $this->articleDataLayer->createNewArticle(
+                $article = $this->articleDataLayer->storeArticle(
                     article: $article,
                     userIp: $userIp,
                     userAgent: $userAgent,
@@ -361,6 +376,7 @@ class ArticleService
                     $this->logger->logError(
                         'Error creating article. Article ID: ' . $article->id
                     );
+
                     return new TransactionResponse(false);
                 }
 
@@ -435,5 +451,10 @@ class ArticleService
         }
 
         return true;
+    }
+
+    public function storeArticleUri(ArticleUri $articleUri): ArticleUri
+    {
+        return $this->articleDataLayer->storeArticleUri($articleUri);
     }
 }

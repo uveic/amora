@@ -169,7 +169,11 @@ class Router
     private function getArticlePage(string $articleUri, Request $request): Response
     {
         $articleService = ArticleCore::getArticleService();
-        $article = $articleService->getArticleForUri($articleUri);
+        $article = $articleService->getArticleForUri(
+            uri: $articleUri,
+            includePublishedAtInTheFuture: false,
+        );
+
         if (empty($article)) {
             return Response::createFrontendPublicHtmlResponse(
                 template: 'shared/404',

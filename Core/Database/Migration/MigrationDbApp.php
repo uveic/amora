@@ -10,20 +10,16 @@ final class MigrationDbApp
 {
     const MIGRATION_TABLE_NAME = 'migration';
 
-    private MySqlDb $db;
-    private string $pathToMigrationFiles;
-
     private array $validArguments = array(
         'install' => true,
         'migrate' => true,
         'new' => true
     );
 
-    public function __construct(MySqlDb $db, string $pathToMigrationFiles)
-    {
-        $this->db = $db;
-        $this->pathToMigrationFiles = $pathToMigrationFiles;
-    }
+    public function __construct(
+        private readonly MySqlDb $db,
+        private readonly string $pathToMigrationFiles,
+    ) {}
 
     public function run($args)
     {
@@ -106,9 +102,9 @@ final class MigrationDbApp
         return ($res == 'yes' || $res == 'y');
     }
 
-    private function printOutput($str = "\n", $newLine = true): void
+    private function printOutput($str = PHP_EOL): void
     {
-        if ($newLine && strpos($str, PHP_EOL) === false) {
+        if (!str_contains($str, PHP_EOL)) {
             $str .= PHP_EOL;
         }
 
@@ -133,8 +129,7 @@ final class MigrationDbApp
         $filename = preg_replace('~[^\p{L}\p{N}]++~u', '_', $filename);
         $filename = date("Y_m_d_His_") . $filename;
 
-        $content = "";
-        $content .= "<?php" . PHP_EOL;
+        $content = "<?php" . PHP_EOL;
         $content .= "/**" . PHP_EOL;
         $content .= " * Return SQL statement as a string" . PHP_EOL;
         $content .= " */" . PHP_EOL . PHP_EOL;
@@ -169,7 +164,7 @@ final class MigrationDbApp
         $this->printOutput('Done. Fresh database installed.');
     }
 
-    private function clearExistingDB(): bool
+    private function clearExistingDB(): void
     {
         $this->printOutput('Deleting existing tables (if any)...');
 
@@ -187,8 +182,6 @@ final class MigrationDbApp
         }
 
         $this->printOutput('Existing tables removed');
-
-        return true;
     }
 
     /**
@@ -205,7 +198,7 @@ final class MigrationDbApp
             return [];
         }
 
-        $executed = $this->db->select(self::MIGRATION_TABLE_NAME);
+        $executed = $this->fetchFilesFromDb();
 
         // Check if files are in this format YYYY_MM_DD_HH_MM_SS_filename_description.php
         $regex = "/\d{4}_\d{2}_\d{2}_\d{6}_[0-9a-zA-Z_-]+.php/";
@@ -216,7 +209,8 @@ final class MigrationDbApp
                 unset($files[$key]);
                 continue;
             }
-            if ($this->inArrayR($file, $executed)) {
+
+            if (isset($executed[$file])) {
                 unset($files[$key]);
             }
         }
@@ -281,7 +275,7 @@ final class MigrationDbApp
         return $res->isSuccess();
     }
 
-    private function isDbEmpty()
+    private function isDbEmpty(): bool
     {
         $tables = $this->db->getTables();
         return empty($tables);
@@ -291,27 +285,22 @@ final class MigrationDbApp
     //////////////////////////////////////////////////////////////////////////////////////////
     ////////// HELPER FUNCTIONS
 
-    /**
-     * Same that in_array() but for multidimensional arrays
-     * @param $needle
-     * @param $haystack
-     * @param bool $strict
-     * @return bool
-     */
-    private function inArrayR($needle, $haystack, $strict = false)
+    private function fetchFilesFromDb(): array
     {
-        foreach ($haystack as $item) {
-            if (($strict ? $item === $needle : $item == $needle)
-                || (
-                    is_array($item)
-                    && $this->inArrayR($needle, $item, $strict)
-                )
-            ) {
-                return true;
-            }
+        $files = $this->db->fetchAll(
+            '
+                SELECT `filename`
+                FROM ' . self::MIGRATION_TABLE_NAME . '
+                ORDER BY id ASC
+            '
+        );
+
+        $output = [];
+        foreach ($files as $file) {
+            $output[$file['filename']] = true;
         }
 
-        return false;
+        return $output;
     }
 
     private function getLineOutputPrefix(): string
