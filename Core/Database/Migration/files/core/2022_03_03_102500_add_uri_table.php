@@ -21,4 +21,6 @@ return "
     ALTER TABLE `article_history` ADD COLUMN `language_id` int UNSIGNED NOT NULL DEFAULT 2 AFTER `id`;
     ALTER TABLE `article_history` ADD CONSTRAINT `article_history_language_id_fk` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`);
     ALTER TABLE `article_history` MODIFY COLUMN `language_id` int UNSIGNED NOT NULL;
+
+    ALTER TABLE `article` ADD UNIQUE (`uri`);
 ";
