@@ -29,10 +29,14 @@ class ArticleService
         private TagDataLayer $tagDataLayer,
     ) {}
 
-    public function getArticleForId(int $id, bool $includeTags = false): ?Article
-    {
+    public function getArticleForId(
+        int $id,
+        bool $includeTags = false,
+        ?Language $language = null,
+    ): ?Article {
         $res = $this->filterArticlesBy(
             articleIds: [$id],
+            languageIsoCodes: $language ? [$language->value] : [],
             includeTags: $includeTags,
             includePublishedAtInTheFuture: true,
         );
@@ -43,6 +47,7 @@ class ArticleService
     public function getArticleForUri(string $uri, bool $includePublishedAtInTheFuture = true): ?Article
     {
         $res = $this->filterArticlesBy(
+            typeIds: [ArticleType::Blog->value, ArticleType::Page->value],
             uri: $uri,
             includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
         );
@@ -52,6 +57,7 @@ class ArticleService
         }
 
         $res = $this->filterArticlesBy(
+            typeIds: [ArticleType::Blog->value, ArticleType::Page->value],
             previousUri: $uri,
             includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
         );
@@ -145,6 +151,7 @@ class ArticleService
         if (count($res) > 1) {
             $this->logger->logError(
                 'There are more than one homepage article. Returning the most recently updated.'
+                . ' Language: ' . $language->value,
             );
         }
 

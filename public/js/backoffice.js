@@ -176,7 +176,12 @@ document.querySelectorAll('.article-save-button').forEach(el => {
 
     const getStatusId = () => {
       const status = document.querySelector('.article-status-dd-option[data-checked="1"]');
-      return Number.parseInt(status.dataset.articleStatusId);
+      return Number.parseInt(status.dataset.value);
+    };
+
+    const getLanguageIsoCode = () => {
+      const language = document.querySelector('.article-lang-dd-option[data-checked="1"]');
+      return language.dataset.value;
     };
 
     const articleTitle = getTitleContent();
@@ -192,13 +197,12 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       return;
     }
 
-    const articleUri = getUri();
     document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
 
     const payload = JSON.stringify({
-      languageIsoCode: document.documentElement.lang ?? null,
+      languageIsoCode: getLanguageIsoCode(),
       title: articleTitle,
-      uri: articleUri,
+      uri: getUri(),
       contentHtml: content.contentHtml,
       typeId: getArticleTypeId(),
       statusId: getStatusId(),
@@ -359,7 +363,7 @@ const handleDropdownOptionClick = (elementOption, dropDownIdentifier) => {
     elementLabel.classList.add('background-light-color');
   }
 
-  elementLabel.querySelectorAll('span').forEach(sp => sp.textContent = elementOption.textContent);
+  elementLabel.querySelector('span').innerHTML = elementOption.innerHTML;
   elementCheckbox.checked = false;
 
   document.querySelectorAll('.' + optionClassName).forEach(o => {
@@ -372,7 +376,6 @@ const handleDropdownOptionClick = (elementOption, dropDownIdentifier) => {
 document.querySelectorAll('.article-status-dd-option').forEach(op => {
   op.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log('status', new Date().getTime());
     handleDropdownOptionClick(op, 'article-status');
   });
 });
@@ -380,7 +383,6 @@ document.querySelectorAll('.article-status-dd-option').forEach(op => {
 document.querySelectorAll('.user-status-dd-option').forEach(op => {
   op.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log('user', new Date().getTime());
     handleDropdownOptionClick(op, 'user-status');
   });
 });
@@ -388,7 +390,6 @@ document.querySelectorAll('.user-status-dd-option').forEach(op => {
 document.querySelectorAll('.article-lang-dd-option').forEach(op => {
   op.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log('lang', new Date().getTime());
     handleDropdownOptionClick(op, 'article-lang');
   });
 });
@@ -414,7 +415,7 @@ document.querySelectorAll('a.article-settings').forEach(el => {
             newTag.dataset.tagId = tag.id;
             newTag.dataset.tagName = tag.name;
             newTag.textContent = tag.name;
-            newTag.addEventListener('click', () => handleSearchResultClick(tag.id, tag.name, tag.name));
+            newTag.addEventListener('click', () => handleTagSearchResultClick(tag.id, tag.name, tag.name));
             searchResultEl.appendChild(newTag);
           });
         });
@@ -436,7 +437,7 @@ const handleRemoveArticleTag = (event) => {
   event.target.parentNode.parentNode.removeChild(event.target.parentNode);
 };
 
-const handleSearchResultClick = (tagId, tagName, tagInnerHtml, tagElement = null) => {
+const handleTagSearchResultClick = (tagId, tagName, tagInnerHtml, tagElement = null) => {
   const tags = document.querySelector('#tags-selected');
   const allResults = document.querySelectorAll('.search-results > .result-item');
 
@@ -529,7 +530,7 @@ document.querySelectorAll('input[name="tags"]').forEach(el => {
       newTag.dataset.new = '1';
       newTag.innerHTML = '<span class="new">New</span>' + inputText;
       newTag.addEventListener('click', () => {
-        handleSearchResultClick(null, inputText, newTag.innerHTML, newTag);
+        handleTagSearchResultClick(null, inputText, newTag.innerHTML, newTag);
       });
       searchResultEl.appendChild(newTag);
     }

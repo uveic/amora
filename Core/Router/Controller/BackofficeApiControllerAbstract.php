@@ -154,9 +154,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Method: PUT
      *
      * @param int $articleId
-     * @param string|null $languageIsoCode
+     * @param string $languageIsoCode
      * @param int $statusId
-     * @param int|null $typeId
+     * @param int $typeId
      * @param string|null $title
      * @param string $contentHtml
      * @param string|null $uri
@@ -169,9 +169,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      */
     abstract protected function updateArticle(
         int $articleId,
-        ?string $languageIsoCode,
+        string $languageIsoCode,
         int $statusId,
-        ?int $typeId,
+        int $typeId,
         ?string $title,
         string $contentHtml,
         ?string $uri,
@@ -566,7 +566,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
-        $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
+        $languageIsoCode = null;
+        if (!isset($bodyParams['languageIsoCode'])) {
+            $errors[] = [
+                'field' => 'languageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
+        }
+
         $statusId = null;
         if (!isset($bodyParams['statusId'])) {
             $errors[] = [
@@ -577,7 +586,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             $statusId = $bodyParams['statusId'] ?? null;
         }
 
-        $typeId = $bodyParams['typeId'] ?? null;
+        $typeId = null;
+        if (!isset($bodyParams['typeId'])) {
+            $errors[] = [
+                'field' => 'typeId',
+                'message' => 'required'
+            ];
+        } else {
+            $typeId = $bodyParams['typeId'] ?? null;
+        }
+
         $title = $bodyParams['title'] ?? null;
         $contentHtml = null;
         if (!isset($bodyParams['contentHtml'])) {
