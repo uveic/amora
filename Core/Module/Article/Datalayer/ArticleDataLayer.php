@@ -183,14 +183,14 @@ class ArticleDataLayer
 
     public function updateArticle(Article $article): bool
     {
-        $articleArray = $article->asArray();
-        unset($articleArray['created_at']);
-        unset($articleArray['user_id']); // Keep the user ID that originally created it
-        $articleId = $article->id;
-        $resUpdate = $this->db->update(self::ARTICLE_TABLE, $articleId, $articleArray);
+        $resUpdate = $this->db->update(
+            tableName: self::ARTICLE_TABLE,
+            id: $article->id,
+            data: $article->asArray(),
+        );
 
         if (empty($resUpdate)) {
-            $this->logger->logError('Error updating article. Article ID: ' . $articleId);
+            $this->logger->logError('Error updating article. Article ID: ' . $article->id);
             return false;
         }
 

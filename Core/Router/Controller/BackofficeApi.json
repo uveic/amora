@@ -773,7 +773,9 @@
                 }
               },
               "required": [
+                "languageIsoCode",
                 "statusId",
+                "typeId",
                 "contentHtml",
                 "sections"
               ]

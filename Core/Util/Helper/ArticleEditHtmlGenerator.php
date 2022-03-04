@@ -56,7 +56,7 @@ final class ArticleEditHtmlGenerator
             $output = [];
             $output[] = '          <section id="' . $id . '" data-editor-id="' . $articleSection->id . '" class="pexego-section pexego-section-paragraph">';
             $output[] = '            <div class="pexego-content-paragraph' . $placeholderClass . '" data-placeholder="' . $responseData->getLocalValue('paragraphPlaceholder') . '" spellcheck="true" autocapitalize="sentences" translate="no" role="textbox" aria-multiline="true" contenteditable="true">';
-            $output[] = '              ' . $contentHtml;
+            $output[] = '              <p>' . $contentHtml . '</p>';
             $output[] = '            </div>';
             $output[] = '          </section>';
 
@@ -113,7 +113,7 @@ final class ArticleEditHtmlGenerator
         /** @var \BackedEnum $status */
         foreach (ArticleStatus::getAll() as $status) {
             $output[] = '          <li><a data-checked="' . ($status === $articleStatus ? '1' : '0') .
-                '" data-article-status-id="' . $status->value .
+                '" data-value="' . $status->value .
                 '" class="dropdown-menu-option article-status-dd-option ' .
                 ($status === ArticleStatus::Published ? 'feedback-success' : 'background-light-color') .
                 '" href="#">' . $responseData->getLocalValue('articleStatus' . $status->name) .
@@ -144,14 +144,14 @@ final class ArticleEditHtmlGenerator
         /** @var \BackedEnum $language */
         foreach (Language::getAll() as $language) {
             $output[] = '          <li><a data-checked="' . ($language === $articleLanguage ? '1' : '0') .
-                '" data-article-language-iso-code="' . $articleLanguage->value .
-                '" class="dropdown-menu-option article-lang-dd-option bg-color-dark"' .
-                ' href="#">' . $language->name . '</a></li>';
+                '" data-value="' . $language->value .
+                '" class="dropdown-menu-option article-lang-dd-option background-light-color"' .
+                ' href="#">' . Language::getIconFlag($language, 'm-r-05') . $language->name . '</a></li>';
         }
 
         $output[] = '        </ul>';
-        $output[] = '        <label id="article-lang-dd-label" for="article-lang-dd-checkbox" class="dropdown-menu-label bg-color-dark">';
-        $output[] = '          <span>' . $articleLanguage->name . '</span>';
+        $output[] = '        <label id="article-lang-dd-label" for="article-lang-dd-checkbox" class="dropdown-menu-label background-light-color">';
+        $output[] = '          <span>' . Language::getIconFlag($articleLanguage, 'm-r-05') . $articleLanguage->name . '</span>';
         $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
         $output[] = '        </label>';
         $output[] = '      </div>';

@@ -14,7 +14,7 @@ $this->layout('base', ['responseData' => $responseData])
       </div>
       <div class="content-flex">
         <?=$this->insert('partials/dashboard/links', ['responseData' => $responseData])?>
-        <?=$this->insert('partials/dashboard/homepage', ['responseData' => $responseData])?>
+        <?=$this->insert('partials/dashboard/shortcuts', ['responseData' => $responseData])?>
       </div>
     </section>
   </main>
