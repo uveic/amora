@@ -31,19 +31,21 @@ final class ArticleEditHtmlGenerator
         HtmlResponseDataAuthorised $responseData,
         int $sectionId,
         bool $isFirst,
-        bool $isLast
-    ): string
-    {
-        return PHP_EOL . '<div class="pexego-section-controls null">' . PHP_EOL
-            . '<a href="#" id="pexego-section-button-up-' . $sectionId . '" class="pexego-section-button pexego-section-button-up' . ($isFirst ? ' null' : '') . '"><img class="img-svg img-svg-30" title="' . $responseData->getLocalValue('sectionMoveUp') . '" alt="' . $responseData->getLocalValue('sectionMoveUp') . '" src="/img/svg/arrow-fat-up.svg"></a>' . PHP_EOL
-            . '<a href="#" id="pexego-section-button-down-' . $sectionId . '" class="pexego-section-button pexego-section-button-down' . ($isLast ? ' null' : '') . '"><img class="img-svg img-svg-30" title="' . $responseData->getLocalValue('sectionMoveDown') . '" alt="' . $responseData->getLocalValue('sectionMoveDown') . '" src="/img/svg/arrow-fat-down.svg"></a>' . PHP_EOL
-            . '<a href="#" id="pexego-section-button-delete-' . $sectionId . '" class="pexego-section-button pexego-section-button-delete"><img class="img-svg img-svg-30" title="' . $responseData->getLocalValue('sectionRemove') . '" alt="' . $responseData->getLocalValue('sectionRemove') . '" src="/img/svg/trash.svg"></a>' . PHP_EOL
-            . '</div>' . PHP_EOL;
+        bool $isLast,
+    ): string {
+        $output = [];
+        $output[] = '          <div class="pexego-section-controls null">';
+        $output[] = '            <a href="#" id="pexego-section-button-up-' . $sectionId . '" class="pexego-section-button pexego-section-button-up' . ($isFirst ? ' null' : '') . '"><img class="img-svg img-svg-30" title="' . $responseData->getLocalValue('sectionMoveUp') . '" alt="' . $responseData->getLocalValue('sectionMoveUp') . '" src="/img/svg/arrow-fat-up.svg"></a>';
+        $output[] = '            <a href="#" id="pexego-section-button-down-' . $sectionId . '" class="pexego-section-button pexego-section-button-down' . ($isLast ? ' null' : '') . '"><img class="img-svg img-svg-30" title="' . $responseData->getLocalValue('sectionMoveDown') . '" alt="' . $responseData->getLocalValue('sectionMoveDown') . '" src="/img/svg/arrow-fat-down.svg"></a>';
+        $output[] = '            <a href="#" id="pexego-section-button-delete-' . $sectionId . '" class="pexego-section-button pexego-section-button-delete"><img class="img-svg img-svg-30" title="' . $responseData->getLocalValue('sectionRemove') . '" alt="' . $responseData->getLocalValue('sectionRemove') . '" src="/img/svg/trash.svg"></a>';
+        $output[] = '          </div>';
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
     }
 
     public static function generateSection(
         HtmlResponseDataAuthorised $responseData,
-        ArticleSection $articleSection
+        ArticleSection $articleSection,
     ): string {
         if ($articleSection->articleSectionType === ArticleSectionType::TextParagraph) {
             $class = self::getClassName($articleSection->articleSectionType);
@@ -52,15 +54,24 @@ final class ArticleEditHtmlGenerator
                 ? $articleSection->contentHtml
                 : $responseData->getLocalValue('paragraphPlaceholder');
             $placeholderClass = strlen($articleSection->contentHtml) > 0 ? '' : ' pexego-section-paragraph-placeholder';
-            return '<section id="' . $id . '" data-editor-id="' . $articleSection->id . '" class="pexego-section pexego-section-paragraph">' . PHP_EOL
-                . '<div class="pexego-content-paragraph' . $placeholderClass . '" data-placeholder="' . $responseData->getLocalValue('paragraphPlaceholder') . '" spellcheck="true" autocapitalize="sentences" translate="no" role="textbox" aria-multiline="true" contenteditable="true"><p>' . $contentHtml . '</p></div>' . PHP_EOL
-                . '</section>';
+
+            $output = [];
+            $output[] = '          <section id="' . $id . '" data-editor-id="' . $articleSection->id . '" class="pexego-section pexego-section-paragraph">';
+            $output[] = '            <div class="pexego-content-paragraph' . $placeholderClass . '" data-placeholder="' . $responseData->getLocalValue('paragraphPlaceholder') . '" spellcheck="true" autocapitalize="sentences" translate="no" role="textbox" aria-multiline="true" contenteditable="true">';
+            $output[] = '              ' . $contentHtml;
+            $output[] = '            </div>';
+            $output[] = '          </section>';
+
+            return implode(PHP_EOL, $output) . PHP_EOL;
         }
 
         $class = 'pexego-section ' . self::getClassName($articleSection->articleSectionType);
-        return '<section class="' . $class . '" data-section-id="' . $articleSection->id . '">'  . PHP_EOL
-            . $articleSection->contentHtml . PHP_EOL
-            . '</section>';
+        $output = [];
+        $output[] = '          <section class="' . $class . '" data-section-id="' . $articleSection->id . '">';
+        $output[] = '            ' . $articleSection->contentHtml;
+        $output[] = '          </section>';
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
     }
 
     public static function getArticleType(HtmlResponseDataAuthorised $responseData): ArticleType
@@ -95,30 +106,30 @@ final class ArticleEditHtmlGenerator
         $isPublished = $responseData->getFirstArticle()
             ? $articleStatus === ArticleStatus::Published
             : $isHomepage;
-        $random = StringUtil::getRandomString(5);
 
-        $html = '<input type="checkbox" id="article-status-dd-' . $random . '" class="dropdown-menu article-status-dd">';
-        $html .= '<div class="dropdown-container article-status-container">';
-        $html .= '<ul>';
+        $output = [];
+        $output[] = '      <input type="checkbox" id="article-status-dd-checkbox" class="dropdown-menu">';
+        $output[] = '      <div class="dropdown-container article-status-container">';
+        $output[] = '        <ul>';
 
         /** @var \BackedEnum $status */
         foreach (ArticleStatus::getAll() as $status) {
-            $html .= '<li><a data-checked="' . ($status === $articleStatus ? '1' : '0') .
+            $output[] = '          <li><a data-checked="' . ($status === $articleStatus ? '1' : '0') .
                 '" data-article-status-id="' . $status->value .
-                '" class="dropdown-menu-option article-status-option ' .
+                '" class="dropdown-menu-option article-status-dd-option ' .
                 ($status === ArticleStatus::Published ? 'feedback-success' : 'background-light-color') .
                 '" href="#">' . $responseData->getLocalValue('articleStatus' . $status->name) .
                 '</a></li>';
         }
 
-        $html .= '</ul>';
-        $html .= '<label for="article-status-dd-' . $random . '" class="dropdown-menu-label article-status-dd ' . ($isPublished ? 'feedback-success' : 'background-light-color') . '">';
-        $html .= '<span>' . $articleStatusName . '</span>';
-        $html .= '<img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
-        $html .= '</label>';
-        $html .= '</div>';
+        $output[] = '        </ul>';
+        $output[] = '        <label id="article-status-dd-label" for="article-status-dd-checkbox" class="dropdown-menu-label ' . ($isPublished ? 'feedback-success' : 'background-light-color') . '">';
+        $output[] = '          <span>' . $articleStatusName . '</span>';
+        $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
+        $output[] = '        </label>';
+        $output[] = '      </div>';
 
-        return $html;
+        return implode(PHP_EOL, $output) . PHP_EOL;
     }
 
     public static function generateArticleLanguageDropdownSelectHtml(
@@ -129,31 +140,29 @@ final class ArticleEditHtmlGenerator
             ? $article->languageId
             : Language::getIdForIsoCode(Core::getDefaultLanguageIsoCode());
 
-        $random = StringUtil::getRandomString(5);
-
         $output = [];
-        $output[] = '    <input type="checkbox" id="article-lang-dd-' . $random . '" class="dropdown-menu article-lang-dd">';
-        $output[] = '    <div class="dropdown-container article-lang-container">';
-        $output[] = '      <ul>';
+        $output[] = '      <input type="checkbox" id="article-lang-dd-checkbox" class="dropdown-menu">';
+        $output[] = '      <div class="dropdown-container article-lang-container">';
+        $output[] = '        <ul>';
 
         foreach (Language::getAvailableLanguages() as $language) {
             $languageId = $language['id'];
             $languageName = $language['name'];
 
-            $output[] = '        <li><a data-checked="' . ($languageId === $articleLanguageId ? '1' : '0') .
+            $output[] = '          <li><a data-checked="' . ($languageId === $articleLanguageId ? '1' : '0') .
                 '" data-article-language-id="' . $articleLanguageId .
                 '" class="dropdown-menu-option article-lang-dd-option bg-color-dark"' .
                 ' href="#">' . $languageName . '</a></li>';
         }
 
-        $output[] = '</ul>';
-        $output[] = '<label for="article-lang-dd-' . $random . '" class="dropdown-menu-label article-lang-dd-label bg-color-dark"';
-        $output[] = '<span>' . Language::getNameForId($articleLanguageId) . '</span>';
-        $output[] = '<img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
-        $output[] = '</label>';
-        $output[] = '</div>';
+        $output[] = '        </ul>';
+        $output[] = '        <label id="article-lang-dd-label" for="article-lang-dd-checkbox" class="dropdown-menu-label bg-color-dark">';
+        $output[] = '          <span>' . Language::getNameForId($articleLanguageId) . '</span>';
+        $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
+        $output[] = '        </label>';
+        $output[] = '      </div>';
 
-        return implode(PHP_EOL, $output);
+        return implode(PHP_EOL, $output) . PHP_EOL;
     }
 
     public static function generateSettingsButtonHtml(

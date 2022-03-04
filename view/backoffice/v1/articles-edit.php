@@ -31,13 +31,13 @@ $articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
     foreach ($articleSections as $articleSection) {
 ?>
         <div id="pexego-section-wrapper-<?=$articleSection->id?>" class="pexego-section-wrapper" data-section-id="<?=$articleSection->id?>">
-          <?=ArticleEditHtmlGenerator::generateSection($responseData, $articleSection)?>
-          <?=ArticleEditHtmlGenerator::getControlButtonsHtml(
-              responseData: $responseData,
-              sectionId: $articleSection->id,
-              isFirst: $count === 0,
-              isLast: $count === $total - 1,
-          )?>
+<?=ArticleEditHtmlGenerator::generateSection($responseData, $articleSection)?>
+<?=ArticleEditHtmlGenerator::getControlButtonsHtml(
+    responseData: $responseData,
+    sectionId: $articleSection->id,
+    isFirst: $count === 0,
+    isLast: $count === $total - 1,
+)?>
         </div>
 <?php
         $count++;

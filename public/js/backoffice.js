@@ -313,7 +313,7 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
     const languageIdEl = document.querySelector('select#languageId');
     const roleIdEl = document.querySelector('select#roleId');
     const timezoneEl = document.querySelector('select#timezone');
-    const isEnabledEl = document.querySelector('.user-enabled-option[data-checked="1"]');
+    const isEnabledEl = document.querySelector('.user-status-dd-option[data-checked="1"]');
     const isEnabled = Number.parseInt(isEnabledEl.dataset.value) > 0;
 
     const userId = userIdEl && userIdEl.value ? Number.parseInt(userIdEl.value) : null;
@@ -346,59 +346,50 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
   });
 });
 
-document.querySelectorAll('.article-status-option').forEach(op => {
+const handleDropdownOptionClick = (elementOption, dropDownIdentifier) => {
+  const elementLabel = document.querySelector('#' + dropDownIdentifier + '-dd-label');
+  const elementCheckbox = document.querySelector('#' + dropDownIdentifier + '-dd-checkbox');
+  const optionClassName = dropDownIdentifier + '-dd-option';
+
+  if (elementOption.dataset.value === '1') {
+    elementLabel.classList.add('feedback-success');
+    elementLabel.classList.remove('background-light-color');
+  } else {
+    elementLabel.classList.remove('feedback-success');
+    elementLabel.classList.add('background-light-color');
+  }
+
+  elementLabel.querySelectorAll('span').forEach(sp => sp.textContent = elementOption.textContent);
+  elementCheckbox.checked = false;
+
+  document.querySelectorAll('.' + optionClassName).forEach(o => {
+    o.dataset.checked = o.dataset.value === elementOption.dataset.value
+      ? '1'
+      : '0';
+  });
+};
+
+document.querySelectorAll('.article-status-dd-option').forEach(op => {
   op.addEventListener('click', (e) => {
     e.preventDefault();
-
-    document.querySelectorAll('.article-status-dd-label').forEach(d => {
-      if (op.dataset.articleStatusId === '1') {
-        d.classList.add('feedback-success');
-        d.classList.remove('background-light-color');
-      } else {
-        d.classList.remove('feedback-success');
-        d.classList.add('background-light-color');
-      }
-
-      d.querySelectorAll('span').forEach(sp => sp.textContent = op.textContent);
-    });
-
-    document.querySelectorAll('.article-status-dd').forEach(d => {
-      d.checked = false;
-    });
-
-    document.querySelectorAll('.article-status-option').forEach(o => {
-      o.dataset.checked = o.dataset.articleStatusId === op.dataset.articleStatusId
-        ? '1'
-        : '0';
-    });
+    console.log('status', new Date().getTime());
+    handleDropdownOptionClick(op, 'article-status');
   });
 });
 
-document.querySelectorAll('.user-enabled-option').forEach(op => {
+document.querySelectorAll('.user-status-dd-option').forEach(op => {
   op.addEventListener('click', (e) => {
     e.preventDefault();
+    console.log('user', new Date().getTime());
+    handleDropdownOptionClick(op, 'user-status');
+  });
+});
 
-    document.querySelectorAll('.user-status-dd-label').forEach(d => {
-      if (op.dataset.value === '1') {
-        d.classList.add('feedback-success');
-        d.classList.remove('background-light-color');
-      } else {
-        d.classList.remove('feedback-success');
-        d.classList.add('background-light-color');
-      }
-
-      d.querySelectorAll('span').forEach(sp => sp.textContent = op.textContent);
-    });
-
-    document.querySelectorAll('.user-status-dd').forEach(d => {
-      d.checked = false;
-    });
-
-    document.querySelectorAll('.user-enabled-option').forEach(o => {
-      o.dataset.checked = o.dataset.value === op.dataset.value
-        ? '1'
-        : '0';
-    });
+document.querySelectorAll('.article-lang-dd-option').forEach(op => {
+  op.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('lang', new Date().getTime());
+    handleDropdownOptionClick(op, 'article-lang');
   });
 });
 
