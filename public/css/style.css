@@ -323,6 +323,10 @@ ul.nav-dropdown-menu a:hover {
   border: none;
   cursor: pointer;
   margin: 0.5rem 0 !important;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  min-height: 42px;
 }
 
 .dropdown-menu-option {
@@ -333,6 +337,7 @@ ul.nav-dropdown-menu a:hover {
   margin-left: 0.5rem;
   display: block;
   position: relative;
+  z-index: 999;
 }
 
 .dropdown-container {
@@ -340,9 +345,10 @@ ul.nav-dropdown-menu a:hover {
   flex-grow: 0 !important;
 }
 
-.article-status-dd:checked ~ div.article-status-container > ul,
-.article-lang-dd:checked ~ div.article-lang-container > ul {
-  display: block;
+#user-status-dd-checkbox:checked ~ div.user-status-container > ul,
+#article-status-dd-checkbox:checked ~ div.article-status-container > ul,
+#article-lang-dd-checkbox:checked ~ div.article-lang-container > ul {
+  display: block !important;
 }
 
 .dropdown-menu ~ div > ul {
@@ -350,9 +356,9 @@ ul.nav-dropdown-menu a:hover {
   list-style: none;
   position: absolute;
   right: 0;
-  top: 25px;
+  bottom: 34px;
   padding: 0;
-  z-index: 900;
+  z-index: 998;
 }
 
 .dropdown-menu ~ div > ul a {
