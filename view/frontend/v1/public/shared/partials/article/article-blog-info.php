@@ -13,7 +13,7 @@ if (!$article || !$article->title) {
 
 $publishedOnDate = DateUtil::formatDate(
     date: $article->publishOn ?? $article->updatedAt,
-    lang: $responseData->siteLanguageIsoCode,
+    lang: $responseData->siteLanguage,
     includeWeekDay: false,
     includeTime: false,
 );

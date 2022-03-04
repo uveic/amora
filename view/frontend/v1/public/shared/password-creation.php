@@ -11,7 +11,7 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
 
 ?>
 <!DOCTYPE html>
-<html lang="<?=$this->e(strtolower($responseData->siteLanguageIsoCode))?>">
+<html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <?= $this->insert('shared/partials/head', ['responseData' => $responseData]) ?>
 <body>
 <main class="main-split-screen">
@@ -50,9 +50,7 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
       </div>
       <div id="password-reset-success" class="field null">
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationPasswordCreationActionSuccess')?></p>
-        <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguageIsoCode)?>">
-            <?=$responseData->getLocalValue('authenticationActionHomeLink')?>
-        </a>
+        <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('authenticationActionHomeLink')?></a>
       </div>
     </form>
   </div>

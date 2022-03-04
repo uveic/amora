@@ -6,6 +6,7 @@ use Amora\App\Value\AppMenu;
 use Amora\Core\Core;
 use Amora\Core\Model\Request;
 use Amora\Core\Util\LocalisationUtil;
+use Amora\App\Value\Language;
 
 abstract class HtmlResponseDataAbstract
 {
@@ -14,7 +15,7 @@ abstract class HtmlResponseDataAbstract
     public readonly string $baseUrlWithLanguage;
     public readonly string $siteUrl;
     public readonly string $sitePath;
-    public readonly string $siteLanguageIsoCode;
+    public readonly Language $siteLanguage;
     public readonly string $siteName;
     public readonly int $lastUpdatedTimestamp;
     public readonly string $pageTitleWithoutSiteName;
@@ -26,7 +27,7 @@ abstract class HtmlResponseDataAbstract
         protected ?string $pageDescription = null,
         protected ?string $siteImageUri = null,
     ) {
-        $this->localisationUtil = Core::getLocalisationUtil(strtoupper($request->siteLanguageIsoCode));
+        $this->localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         $baseUrl = Core::getConfig()->baseUrl;
         $siteImageUrl = Core::getConfig()->siteImageUrl;
@@ -36,7 +37,7 @@ abstract class HtmlResponseDataAbstract
             ? '/'
             : $request->getPath();
         $this->siteUrl = trim($this->baseUrl, ' /') . '/' . ltrim($this->sitePath, ' /');
-        $this->siteLanguageIsoCode = $request->siteLanguageIsoCode;
+        $this->siteLanguage = $request->siteLanguage;
         $this->siteName = $this->localisationUtil->getValue('siteName');
         $this->siteImageUri = $siteImageUri ?? ($siteImageUrl ?? '');
         $this->lastUpdatedTimestamp = time();
@@ -48,7 +49,7 @@ abstract class HtmlResponseDataAbstract
         $this->pageDescription = $pageDescription
             ?? $this->localisationUtil->getValue('siteDescription');
         $this->baseUrlWithLanguage = $this->baseUrl .
-            strtolower($this->siteLanguageIsoCode) . '/';
+            strtolower($this->siteLanguage->value) . '/';
     }
 
     public function getPageTitle(): string
@@ -90,14 +91,14 @@ abstract class HtmlResponseDataAbstract
     {
         if ($this->request->session && $this->request->session->isAdmin() && !$forceCustomerMenu) {
             return AppMenu::getAdminAll(
-                languageIsoCode: $this->siteLanguageIsoCode,
+                language: $this->siteLanguage,
                 username: $this->request->session->user->getNameOrEmail(),
             );
         }
 
         if ($this->request->session) {
             return AppMenu::getCustomerAll(
-                languageIsoCode: $this->siteLanguageIsoCode,
+                language: $this->siteLanguage,
                 username: $this->request->session->user->getNameOrEmail(),
                 includeAdminLink: $this->request->session->isAdmin(),
             );

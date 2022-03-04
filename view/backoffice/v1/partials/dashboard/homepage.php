@@ -8,11 +8,11 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 $articleEditUrl = $responseData->getFirstArticle()
     ? UrlBuilderUtil::buildBackofficeArticleUrl(
-        $responseData->siteLanguageIsoCode,
-        $responseData->getFirstArticle()->id,
+        language: $responseData->siteLanguage,
+        articleId: $responseData->getFirstArticle()->id,
     )
     : UrlBuilderUtil::buildBackofficeNewArticleUrl(
-        languageIsoCode: $responseData->siteLanguageIsoCode,
+        language: $responseData->siteLanguage,
         articleTypeId: ArticleType::Homepage->value,
     );
 ?>
@@ -20,6 +20,6 @@ $articleEditUrl = $responseData->getFirstArticle()
           <h2><?=$responseData->getLocalValue('dashboardShortcuts')?></h2>
           <p><img class="img-svg m-r-05" width="20" height="20" src="/img/svg/pencil.svg" alt="<?=$responseData->getLocalValue('articleEditHomepageTitle')?>"><a href="<?=$articleEditUrl?>"><?=$responseData->getLocalValue('articleEditHomepageTitle')?></a></p>
           <p><img class="img-svg m-r-05" width="20" height="20" src="/img/svg/article-medium.svg" alt="' . $localisationUtil->getValue('navAdminBlogPosts') . '">
-            <a href="<?=UrlBuilderUtil::buildBackofficeNewBlogPostUrl($responseData->siteLanguageIsoCode)?>"><?=$responseData->getLocalValue('dashboardNewBlogPost')?></a>
+            <a href="<?=UrlBuilderUtil::buildBackofficeNewBlogPostUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('dashboardNewBlogPost')?></a>
           </p>
         </div>

@@ -2,13 +2,13 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use Amora\App\Value\Language;
 use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Util\Logger;
 use Amora\Core\Model\Response\Pagination;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
-use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
 use Amora\Core\Module\Article\Datalayer\TagDataLayer;
 use Amora\Core\Module\Article\Model\Article;
@@ -101,7 +101,7 @@ class ArticleService
 
     public function filterArticlesBy(
         array $articleIds = [],
-        array $languageIds = [],
+        array $languageIsoCodes = [],
         array $statusIds = [],
         array $typeIds = [],
         ?string $uri = null,
@@ -115,7 +115,7 @@ class ArticleService
     ): array {
         return $this->articleDataLayer->filterArticlesBy(
             articleIds: $articleIds,
-            languageIds: $languageIds,
+            languageIsoCodes: $languageIsoCodes,
             statusIds: $statusIds,
             typeIds: $typeIds,
             uri: $uri,
@@ -134,10 +134,10 @@ class ArticleService
         return $this->articleDataLayer->getSectionsForArticleId($articleId);
     }
 
-    public function getHomepageArticle(int $languageId): ?Article
+    public function getHomepageArticle(Language $language): ?Article
     {
         $res = $this->filterArticlesBy(
-            languageIds: [$languageId],
+            languageIsoCodes: [$language->value],
             statusIds: [ArticleStatus::Published->value],
             typeIds: [ArticleType::Homepage->value],
         );

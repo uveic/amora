@@ -7,7 +7,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 ?>
 <!DOCTYPE html>
-<html lang="<?=$this->e(strtolower($responseData->siteLanguageIsoCode))?>">
+<html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <?= $this->insert('shared/partials/head', ['responseData' => $responseData]) ?>
 <body>
 <main class="main-split-screen">
@@ -37,7 +37,7 @@ use Amora\Core\Util\UrlBuilderUtil;
       <div id="login-failure-message" class="field is-failure null"></div>
       <div id="register-back-login" class="field null">
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationForgotPasswordActionSuccess')?></p>
-        <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguageIsoCode)?>"><?=$this->e($responseData->getLocalValue('authenticationActionHomeLink'))?></a>
+        <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$this->e($responseData->getLocalValue('authenticationActionHomeLink'))?></a>
       </div>
     </form>
   </div>

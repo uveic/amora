@@ -23,7 +23,7 @@ if (!$responseData->homeArticles) {
 foreach ($responseData->homeArticles as $article) {
     $href = UrlBuilderUtil::buildPublicArticleUrl(
         uri: $article->uri,
-        languageIsoCode: $responseData->siteLanguageIsoCode,
+        language: $responseData->siteLanguage,
     );
     $link = $article->title
         ? '<a class="link-title" href="' . $href . '">' . $article->title . '</a>'

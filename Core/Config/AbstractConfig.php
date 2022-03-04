@@ -2,6 +2,8 @@
 
 namespace Amora\Core\Config;
 
+use Amora\App\Value\Language;
+
 enum Env {
     case Dev;
     case Live;
@@ -64,7 +66,7 @@ abstract class AbstractConfig {
 
         public string $timezone,
         public readonly string $phpLocale,
-        public readonly string $defaultSiteLanguageIsoCode,
+        public readonly Language $defaultSiteLanguage,
 
         public readonly string $baseUrl,
         public readonly string $siteImageUrl,

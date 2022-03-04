@@ -17,8 +17,8 @@ $canEdit = $responseData->request->session && $responseData->request->session->i
 
 $email = Core::getConfig()->siteAdminEmail;
 $editUrl = $article->type === ArticleType::Blog
-    ? UrlBuilderUtil::buildBackofficeBlogPostUrl($responseData->siteLanguageIsoCode, $article->id)
-    : UrlBuilderUtil::buildBackofficeArticleUrl($responseData->siteLanguageIsoCode, $article->id);
+    ? UrlBuilderUtil::buildBackofficeBlogPostUrl($responseData->siteLanguage, $article->id)
+    : UrlBuilderUtil::buildBackofficeArticleUrl($responseData->siteLanguage, $article->id);
 ?>
   <article>
 <?php if ($canEdit && $article->status !== ArticleStatus::Draft) { ?>

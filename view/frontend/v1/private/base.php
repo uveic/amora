@@ -6,7 +6,7 @@ use Amora\Core\Model\Response\HtmlResponseData;
 
 ?>
 <!DOCTYPE html>
-<html lang="<?=$this->e(strtolower($responseData->siteLanguageIsoCode))?>">
+<html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">

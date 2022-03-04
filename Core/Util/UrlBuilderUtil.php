@@ -3,6 +3,7 @@
 namespace Amora\Core\Util;
 
 use Amora\Core\Core;
+use Amora\App\Value\Language;
 
 class UrlBuilderUtil
 {
@@ -44,12 +45,11 @@ class UrlBuilderUtil
 
     const PUBLIC_RSS = '/rss';
 
-    public static function buildBaseUrl(string $siteLanguage): string
+    public static function buildBaseUrl(Language $siteLanguage): string
     {
         $baseUrl = Core::getConfig()->baseUrl;
-        $siteLanguage = strtolower($siteLanguage);
 
-        return trim($baseUrl, ' /') . '/' . $siteLanguage;
+        return trim($baseUrl, ' /') . '/' . strtolower($siteLanguage->value);
     }
 
     public static function buildBaseUrlWithoutLanguage(): string
@@ -62,162 +62,162 @@ class UrlBuilderUtil
     //////////////////////////////////////////////////////////////////////////////////
     /// Backoffice URLs
 
-    public static function buildBackofficeDashboardUrl(string $languageIsoCode): string
+    public static function buildBackofficeDashboardUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::BACKOFFICE_DASHBOARD_URL_PATH;
+        return self::buildBaseUrl($language) . self::BACKOFFICE_DASHBOARD_URL_PATH;
     }
 
-    public static function buildBackofficeImagesUrl(string $languageIsoCode): string
+    public static function buildBackofficeImagesUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::BACKOFFICE_IMAGES;
+        return self::buildBaseUrl($language) . self::BACKOFFICE_IMAGES;
     }
 
-    public static function buildBackofficeArticlesUrl(string $languageIsoCode): string
+    public static function buildBackofficeArticlesUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::BACKOFFICE_ARTICLES;
+        return self::buildBaseUrl($language) . self::BACKOFFICE_ARTICLES;
     }
 
-    public static function buildBackofficeArticleUrl(string $languageIsoCode, int $articleId): string
+    public static function buildBackofficeArticleUrl(Language $language, int $articleId): string
     {
-        return self::buildBaseUrl($languageIsoCode) . sprintf(self::BACKOFFICE_ARTICLE, $articleId);
+        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_ARTICLE, $articleId);
     }
 
     public static function buildBackofficeNewArticleUrl(
-        string $languageIsoCode,
+        Language $language,
         ?int $articleTypeId = null
     ): string {
-        return self::buildBaseUrl($languageIsoCode)
+        return self::buildBaseUrl($language)
             . self::BACKOFFICE_NEW_ARTICLE
             . ($articleTypeId ? '?articleType=' . $articleTypeId : '');
     }
 
-    public static function buildBackofficeUsersUrl(string $languageIsoCode): string
+    public static function buildBackofficeUsersUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::BACKOFFICE_USERS;
+        return self::buildBaseUrl($language) . self::BACKOFFICE_USERS;
     }
 
-    public static function buildBackofficeUserUrl(string $languageIsoCode, int $userId): string
+    public static function buildBackofficeUserUrl(Language $language, int $userId): string
     {
-        return self::buildBaseUrl($languageIsoCode) . sprintf(self::BACKOFFICE_USER, $userId);
+        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_USER, $userId);
     }
 
-    public static function buildBackofficeNewUserUrl(string $languageIsoCode): string
+    public static function buildBackofficeNewUserUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::BACKOFFICE_NEW_USER;
+        return self::buildBaseUrl($language) . self::BACKOFFICE_NEW_USER;
     }
 
-    public static function buildBackofficeBlogPostsUrl(string $languageIsoCode): string
+    public static function buildBackofficeBlogPostsUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::BACKOFFICE_BLOG_POSTS;
+        return self::buildBaseUrl($language) . self::BACKOFFICE_BLOG_POSTS;
     }
 
-    public static function buildBackofficeBlogPostUrl(string $languageIsoCode, int $articleId): string
+    public static function buildBackofficeBlogPostUrl(Language $language, int $articleId): string
     {
-        return self::buildBaseUrl($languageIsoCode) . sprintf(self::BACKOFFICE_BLOG_POST, $articleId);
+        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_BLOG_POST, $articleId);
     }
 
-    public static function buildBackofficeNewBlogPostUrl(string $languageIsoCode): string
+    public static function buildBackofficeNewBlogPostUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::BACKOFFICE_NEW_BLOG_POST;
+        return self::buildBaseUrl($language) . self::BACKOFFICE_NEW_BLOG_POST;
     }
 
     //////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////
     /// Authorised URLs
 
-    public static function buildAppDashboardUrl(string $languageIsoCode): string
+    public static function buildAppDashboardUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::APP_DASHBOARD_URL_PATH;
+        return self::buildBaseUrl($language) . self::APP_DASHBOARD_URL_PATH;
     }
 
-    public static function buildAuthorisedAccountUrl(string $languageIsoCode): string
+    public static function buildAuthorisedAccountUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::AUTHORISED_ACCOUNT;
+        return self::buildBaseUrl($language) . self::AUTHORISED_ACCOUNT;
     }
 
-    public static function buildAuthorisedAccountPasswordUrl(string $languageIsoCode): string
+    public static function buildAuthorisedAccountPasswordUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::AUTHORISED_ACCOUNT_PASSWORD;
+        return self::buildBaseUrl($language) . self::AUTHORISED_ACCOUNT_PASSWORD;
     }
 
-    public static function buildAuthorisedAccountDownloadUrl(string $languageIsoCode): string
+    public static function buildAuthorisedAccountDownloadUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::AUTHORISED_ACCOUNT_DOWNLOAD;
+        return self::buildBaseUrl($language) . self::AUTHORISED_ACCOUNT_DOWNLOAD;
     }
 
-    public static function buildAuthorisedAccountDeleteUrl(string $languageIsoCode): string
+    public static function buildAuthorisedAccountDeleteUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::AUTHORISED_ACCOUNT_DELETE;
+        return self::buildBaseUrl($language) . self::AUTHORISED_ACCOUNT_DELETE;
     }
 
-    public static function buildAuthorisedLogoutUrl(string $languageIsoCode): string
+    public static function buildAuthorisedLogoutUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::AUTHORISED_LOGOUT;
+        return self::buildBaseUrl($language) . self::AUTHORISED_LOGOUT;
     }
 
     //////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////
     /// Public URLs
 
-    public static function buildPublicInviteRequestUrl(string $languageIsoCode): string
+    public static function buildPublicInviteRequestUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::PUBLIC_HTML_INVITE_REQUEST;
+        return self::buildBaseUrl($language) . self::PUBLIC_HTML_INVITE_REQUEST;
     }
 
-    public static function buildPublicLoginUrl(string $languageIsoCode): string
+    public static function buildPublicLoginUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::PUBLIC_HTML_LOGIN;
+        return self::buildBaseUrl($language) . self::PUBLIC_HTML_LOGIN;
     }
 
-    public static function buildPublicLoginForgotUrl(string $languageIsoCode): string
+    public static function buildPublicLoginForgotUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode) . self::PUBLIC_HTML_LOGIN_FORGOT;
+        return self::buildBaseUrl($language) . self::PUBLIC_HTML_LOGIN_FORGOT;
     }
 
-    public static function buildPublicHomepageUrl(string $languageIsoCode): string
+    public static function buildPublicHomepageUrl(Language $language): string
     {
-        return self::buildBaseUrl($languageIsoCode);
+        return self::buildBaseUrl($language);
     }
 
     public static function buildPublicCreatePasswordUrl(
-        string $languageIsoCode,
+        Language $language,
         string $verificationIdentifier
     ): string {
-        return self::buildBaseUrl($languageIsoCode) .
+        return self::buildBaseUrl($language) .
             sprintf(self::PUBLIC_CREATE_PASSWORD, $verificationIdentifier);
     }
 
     public static function buildPublicEmailUpdateUrl(
-        string $languageIsoCode,
+        Language $language,
         string $verificationIdentifier
     ): string {
-        return self::buildBaseUrl($languageIsoCode) .
+        return self::buildBaseUrl($language) .
             sprintf(self::PUBLIC_VERIFY_USER, $verificationIdentifier);
     }
 
     public static function buildPublicVerificationEmailUrl(
-        string $languageIsoCode,
+        Language $language,
         string $verificationIdentifier
     ): string {
-        return self::buildBaseUrl($languageIsoCode) .
+        return self::buildBaseUrl($language) .
             sprintf(self::PUBLIC_VERIFY_USER, $verificationIdentifier);
     }
 
     public static function buildPublicPasswordResetUrl(
-        string $languageIsoCode,
+        Language $language,
         string $verificationIdentifier
     ): string
     {
-        return self::buildBaseUrl($languageIsoCode) .
+        return self::buildBaseUrl($language) .
             sprintf(self::PUBLIC_RESET_PASSWORD, $verificationIdentifier);
     }
 
     public static function buildPublicArticleUrl(
         string $uri,
-        ?string $languageIsoCode = null,
+        ?Language $language = null,
     ): string {
-        return ($languageIsoCode
-                ? self::buildBaseUrl($languageIsoCode)
+        return ($language
+                ? self::buildBaseUrl($language)
                 : self::buildBaseUrlWithoutLanguage()
             )
             . '/' . $uri;

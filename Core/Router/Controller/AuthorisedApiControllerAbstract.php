@@ -61,7 +61,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
      * @param int $userId
      * @param string|null $name
      * @param string|null $email
-     * @param string|null $languageId
+     * @param string|null $languageIsoCode
      * @param string|null $timezone
      * @param string|null $currentPassword
      * @param string|null $newPassword
@@ -73,7 +73,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
         int $userId,
         ?string $name,
         ?string $email,
-        ?string $languageId,
+        ?string $languageIsoCode,
         ?string $timezone,
         ?string $currentPassword,
         ?string $newPassword,
@@ -217,7 +217,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
         $name = $bodyParams['name'] ?? null;
         $email = $bodyParams['email'] ?? null;
-        $languageId = $bodyParams['languageId'] ?? null;
+        $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
         $timezone = $bodyParams['timezone'] ?? null;
         $currentPassword = $bodyParams['currentPassword'] ?? null;
         $newPassword = $bodyParams['newPassword'] ?? null;
@@ -238,7 +238,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
                 $userId,
                 $name,
                 $email,
-                $languageId,
+                $languageIsoCode,
                 $timezone,
                 $currentPassword,
                 $newPassword,

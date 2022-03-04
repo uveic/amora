@@ -11,6 +11,7 @@ use Amora\Core\Database\DbBackupApp;
 use Amora\Core\Module\Action\ActionLoggerCore;
 use Amora\Core\Router\Router;
 use Amora\Core\Util\Logger;
+use Amora\App\Value\Language;
 use Closure;
 use Exception;
 use Amora\Core\App\SyncLookupTablesApp;
@@ -52,10 +53,10 @@ class Core
         require_once self::$pathToRoot . '/Core/Util/StringUtil.php';
         require_once self::$pathToRoot . '/Core/Util/UrlBuilderUtil.php';
 
-        require_once self::$pathToRoot . '/Core/Value/Language/Language.php';
         require_once self::$pathToRoot . '/Core/Value/Menu/CoreMenu.php';
-
         require_once self::$pathToRoot . '/Core/Module/DataLayerTrait.php';
+
+        require_once self::$pathToRoot . '/App/Value/Language/Language.php';
 
         require_once self::$pathToRoot . '/App/AppCore.php';
         require_once self::$pathToRoot . '/Core/Module/User/UserCore.php';
@@ -102,9 +103,9 @@ class Core
         return self::$config->timezone;
     }
 
-    public static function getDefaultLanguageIsoCode(): string
+    public static function getDefaultLanguage(): Language
     {
-        return self::$config->defaultSiteLanguageIsoCode;
+        return self::$config->defaultSiteLanguage;
     }
 
     public static function isRunningInLiveEnv(): bool
@@ -304,23 +305,22 @@ class Core
     }
 
     /**
-     * @param string $languageIsoCode
+     * @param Language $language
      * @param bool $isSingleton
      * @return LocalisationUtil
      */
     public static function getLocalisationUtil(
-        string $languageIsoCode,
+        Language $language,
         bool $isSingleton = true
     ): LocalisationUtil {
         $logger = self::getLogger();
-        $defaultSiteLanguage = strtoupper(self::$config->defaultSiteLanguageIsoCode);
 
         return self::getInstance(
             className: 'LocalisationUtil',
-            factory: function () use ($logger, $defaultSiteLanguage, $languageIsoCode) {
+            factory: function () use ($logger, $language) {
                 require_once self::$pathToRoot . '/Core/Module/User/Service/UserService.php';
                 require_once self::$pathToRoot . '/Core/Util/LocalisationUtil.php';
-                return new LocalisationUtil($logger, $defaultSiteLanguage, $languageIsoCode);
+                return new LocalisationUtil($logger, $language);
             },
             isSingleton: $isSingleton,
         );

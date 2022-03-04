@@ -5,6 +5,7 @@ namespace Amora\Core\Module\User\Model;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Module\User\Value\UserRole;
+use Amora\App\Value\Language;
 use DateTimeImmutable;
 use DateTimeZone;
 
@@ -12,7 +13,7 @@ class User
 {
     public function __construct(
         public ?int $id,
-        public readonly int $languageId,
+        public readonly Language $language,
         public readonly UserRole $role,
         public readonly UserJourneyStatus $journeyStatus,
         public readonly DateTimeImmutable $createdAt,
@@ -31,7 +32,7 @@ class User
     {
         return new User(
             id: (int)$user['user_id'],
-            languageId: $user['language_id'],
+            language: Language::from($user['user_language_iso_code']),
             role: UserRole::from($user['role_id']),
             journeyStatus: UserJourneyStatus::from($user['journey_id']),
             createdAt: DateUtil::convertStringToDateTimeImmutable($user['user_created_at']),
@@ -51,7 +52,7 @@ class User
     {
         return [
             'id' => $this->id,
-            'language_id' => $this->languageId,
+            'language_iso_code' => $this->language->value,
             'role_id' => $this->role->value,
             'journey_id' => $this->journeyStatus->value,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),

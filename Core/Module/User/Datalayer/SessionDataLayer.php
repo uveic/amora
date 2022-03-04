@@ -33,7 +33,7 @@ class SessionDataLayer
                 s.timezone,
                 s.ip,
                 s.browser_and_platform,
-                u.language_id,
+                u.language_iso_code AS user_language_iso_code,
                 u.role_id,
                 u.journey_id,
                 u.created_at AS user_created_at,

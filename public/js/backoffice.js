@@ -175,7 +175,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     }
 
     const getStatusId = () => {
-      const status = document.querySelector('.article-status-option[data-checked="1"]');
+      const status = document.querySelector('.article-status-dd-option[data-checked="1"]');
       return Number.parseInt(status.dataset.articleStatusId);
     };
 
@@ -310,7 +310,7 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
     const nameEl = document.querySelector('input#name');
     const emailEl = document.querySelector('input#email');
     const bioEl = document.querySelector('textarea#bio');
-    const languageIdEl = document.querySelector('select#languageId');
+    const languageIsoCodeEl = document.querySelector('select#languageIsoCode');
     const roleIdEl = document.querySelector('select#roleId');
     const timezoneEl = document.querySelector('select#timezone');
     const isEnabledEl = document.querySelector('.user-status-dd-option[data-checked="1"]');
@@ -319,13 +319,13 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
     const userId = userIdEl && userIdEl.value ? Number.parseInt(userIdEl.value) : null;
 
     const payload = JSON.stringify({
-      'name': nameEl.value ?? null,
-      'email': emailEl.value ?? null,
-      'bio': bioEl.value ?? null,
-      'languageId': languageIdEl.value ?? null,
-      'roleId': roleIdEl.value ?? null,
-      'timezone': timezoneEl.value ?? null,
-      'isEnabled': isEnabled
+      name: nameEl.value ?? null,
+      email: emailEl.value ?? null,
+      bio: bioEl.value ?? null,
+      languageIsoCode: languageIsoCodeEl.value ?? null,
+      roleId: roleIdEl.value ?? null,
+      timezone: timezoneEl.value ?? null,
+      isEnabled: isEnabled,
     });
 
     if (userId) {

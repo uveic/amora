@@ -2,7 +2,7 @@
 
 use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
-use Amora\Core\Value\Language;
+use Amora\App\Value\Language;
 
 /** @var HtmlResponseData $responseData */
 
@@ -33,12 +33,15 @@ $timezones = DateTimeZone::listIdentifiers();
 <?php } ?>
           </div>
           <div class="field">
-            <label for="languageId" class="label"><?=$responseData->getLocalValue('globalLanguage')?>:</label>
+            <label for="languageIsoCode" class="label"><?=$responseData->getLocalValue('globalLanguage')?>:</label>
             <div class="control">
-              <select name="languageId" id="languageId">
-                <option value="<?=Language::GALEGO?>" <?=$user->languageId === Language::GALEGO ? ' selected="selected"' : ''?>><?=Language::getNameForId(Language::GALEGO)?></option>
-                <option value="<?=Language::ESPANOL?>" <?=$user->languageId === Language::ESPANOL ? ' selected="selected"' : ''?>><?=Language::getNameForId(Language::ESPANOL)?></option>
-                <option value="<?=Language::ENGLISH?>" <?=$user->languageId === Language::ENGLISH ? ' selected="selected"' : ''?>><?=Language::getNameForId(Language::ENGLISH)?></option>
+              <select name="languageIsoCode" id="languageIsoCode">
+<?php
+    /** @var \BackedEnum $language */
+    foreach (Language::getAll() as $language) {
+        echo '                <option value="' . $language->value . '"' . ($user->language === $language ? ' selected="selected"' : '') . '>' . $language->name . '</option>';
+    }
+?>
               </select>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
@@ -60,17 +63,17 @@ $timezones = DateTimeZone::listIdentifiers();
         </form>
         <div class="field">
           <div class="control">
-            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountPasswordUrl($responseData->siteLanguageIsoCode)?>"><?=$responseData->getLocalValue('navChangePassword')?></a>
+            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountPasswordUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navChangePassword')?></a>
           </div>
         </div>
         <div class="field">
           <div class="control">
-            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountDownloadUrl($responseData->siteLanguageIsoCode)?>"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
+            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountDownloadUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
           </div>
         </div>
         <div class="field m-b-6">
           <div class="control">
-            <a class="is-danger" href="<?=UrlBuilderUtil::buildAuthorisedAccountDeleteUrl($responseData->siteLanguageIsoCode)?>"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
+            <a class="is-danger" href="<?=UrlBuilderUtil::buildAuthorisedAccountDeleteUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
           </div>
         </div>
       </div>

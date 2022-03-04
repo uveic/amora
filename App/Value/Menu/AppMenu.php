@@ -10,13 +10,13 @@ use Amora\Core\Value\CoreMenu;
 final class AppMenu
 {
     public static function getAdminAll(
-        string $languageIsoCode,
+        Language $language,
         ?string $username = null,
     ): array {
         $appMenu = [];
 
         $output = array_merge(
-            CoreMenu::getAdminMenu($languageIsoCode, $username),
+            CoreMenu::getAdminMenu($language, $username),
             $appMenu
         );
 
@@ -28,22 +28,22 @@ final class AppMenu
     }
 
     public static function getCustomerAll(
-        string $languageIsoCode,
+        Language $language,
         string $username = null,
         bool $includeAdminLink = false,
     ): array {
-        $localisationUtil = Core::getLocalisationUtil($languageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($language, false);
 
         $appMenu = [];
 
         $output = array_merge(
-            CoreMenu::getUserMenu($languageIsoCode, $username),
+            CoreMenu::getUserMenu($language, $username),
             $appMenu
         );
 
         if ($includeAdminLink) {
             $output[] = new MenuItem(
-                uri: UrlBuilderUtil::buildBackofficeDashboardUrl($languageIsoCode),
+                uri: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
                 text: $localisationUtil->getValue('navAdministrator'),
                 order: 1
             );

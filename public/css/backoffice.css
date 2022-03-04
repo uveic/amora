@@ -90,6 +90,10 @@
   gap: 0.5rem;
 }
 
+.pexego-container {
+  margin-bottom: 150px;
+}
+
 .pexego-tools-amora {
   display: flex;
   flex-flow: row nowrap;

@@ -270,10 +270,10 @@
                   "description": "User email address",
                   "type": "string"
                 },
-                "languageId": {
-                  "description": "User language ID",
+                "languageIsoCode": {
+                  "description": "User language ISO code",
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 2
                 },
                 "timezone": {
                   "description": "User timezone",

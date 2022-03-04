@@ -20,7 +20,7 @@ document.querySelectorAll('form#form-user-account-update').forEach(f => {
     const userId = document.querySelector('input[name="userId"]');
     const name = document.querySelector('input[name="name"]');
     const email = document.querySelector('input[name="email"]');
-    const languageId = document.querySelector('select[name="languageId"]');
+    const languageIsoCode = document.querySelector('select[name="languageIsoCode"]');
     const timezone = document.querySelector('select[name="timezone"]');
     const currentPassword = document.querySelector('input[name="currentPassword"]');
     const newPassword = document.querySelector('input[name="newPassword"]');
@@ -29,7 +29,7 @@ document.querySelectorAll('form#form-user-account-update').forEach(f => {
     const payload = {
       name: name ? name.value : null,
       email: email ? email.value : null,
-      languageId: languageId ? languageId.value : null,
+      languageIsoCode: languageIsoCode ? languageIsoCode.value : null,
       timezone: timezone ? timezone.value : null,
       currentPassword: currentPassword ? currentPassword.value : null,
       newPassword: newPassword ? newPassword.value : null,

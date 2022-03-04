@@ -2,8 +2,7 @@
 
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\User\Value\UserRole;
-use Amora\Core\Util\UrlBuilderUtil;
-use Amora\Core\Value\Language;
+use Amora\App\Value\Language;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
@@ -15,8 +14,8 @@ $defaultTimezone = $userToEdit
     ? $userToEdit->timezone
     : $responseData->request->session->user->timezone;
 $defaultLanguage = $userToEdit
-    ? $userToEdit->languageId
-    : $responseData->request->session->user->languageId;
+    ? $userToEdit->language
+    : $responseData->request->session->user->language;
 
 ?>
   <section>
@@ -56,17 +55,16 @@ $defaultLanguage = $userToEdit
           </div>
         </div>
         <div class="field">
-          <label for="languageId" class="label"><?=$responseData->getLocalValue('globalLanguage')?></label>
+          <label for="languageIsoCode" class="label"><?=$responseData->getLocalValue('globalLanguage')?></label>
           <div class="control">
-            <select id="languageId" name="languageId">
+            <select id="languageIsoCode" name="languageIsoCode">
 <?php
-                  foreach (Language::getAll() as $language) {
-                      $selected = $language['id'] === $defaultLanguage;
+    /** @var \BackedEnum $language */
+    foreach (Language::getAll() as $language) {
+          $selected = $language === $defaultLanguage;
 ?>
-              <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$language['id']?>"><?=$language['name']?></option>
-<?php
-}
-?>
+              <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$language->value?>"><?=$language->name?></option>
+<?php } ?>
             </select>
           </div>
           <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>

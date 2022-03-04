@@ -7,13 +7,14 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
+use Amora\App\Value\Language;
 use DateTimeImmutable;
 
 class Article
 {
     public function __construct(
         public ?int $id,
-        public readonly int $languageId,
+        public readonly Language $language,
         public readonly User $user,
         public readonly ArticleStatus $status,
         public readonly ArticleType $type,
@@ -32,7 +33,7 @@ class Article
     {
         return new self(
             id: (int)$article['article_id'],
-            languageId: (int)$article['language_id'],
+            language: Language::from($article['article_language_iso_code']),
             user: User::fromArray($article),
             status: ArticleStatus::from($article['status_id']),
             type: ArticleType::from($article['type_id']),
@@ -54,7 +55,7 @@ class Article
     {
         return [
             'id' => $this->id,
-            'language_id' => $this->languageId,
+            'language_iso_code' => $this->language->value,
             'user_id' => $this->user->id,
             'status_id' => $this->status->value,
             'type_id' => $this->type->value,

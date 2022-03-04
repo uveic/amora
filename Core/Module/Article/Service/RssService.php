@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Model\Article;
@@ -20,10 +21,10 @@ class RssService
     ) {}
 
     public function buildRss(
-        string $siteLanguage,
+        Language $siteLanguage,
         array $articles,
     ): string {
-        $this->localisationUtil = Core::getLocalisationUtil(strtoupper($siteLanguage));
+        $this->localisationUtil = Core::getLocalisationUtil($siteLanguage);
 
         $this->logger->logInfo('Building RSS...');
 
@@ -54,7 +55,7 @@ class RssService
     }
 
     private function buildHeader(
-        string $siteLanguage,
+        Language $siteLanguage,
         DateTimeImmutable $lastPubDate,
         DateTimeImmutable $lastBuildDate,
     ): array {
@@ -68,7 +69,7 @@ class RssService
             '<title>' . $siteTitle . '</title>',
             '<link>' . $baseUrl . '</link>',
             '<description>' . $siteDescription . '</description>',
-            '<language>' . strtolower($siteLanguage) . '</language>',
+            '<language>' . strtolower($siteLanguage->value) . '</language>',
             '<pubDate>' . $lastPubDate->format('r') . '</pubDate>',
             '<lastBuildDate>' . $lastBuildDate->format('r') . '</lastBuildDate>',
             '<docs>http://blogs.law.harvard.edu/tech/rss</docs>',
@@ -84,7 +85,7 @@ class RssService
         return $output;
     }
 
-    private function buildContent(string $siteLanguage, array $articles): array
+    private function buildContent(Language $siteLanguage, array $articles): array
     {
         $output = [];
 
@@ -92,7 +93,7 @@ class RssService
         foreach ($articles as $article) {
             $link = UrlBuilderUtil::buildPublicArticleUrl(
                 uri: $article->uri,
-                languageIsoCode: $siteLanguage,
+                language: $siteLanguage,
             );
             $title = $article->title ? htmlspecialchars($article->title) : '';
             $content = $this->getContent($article);

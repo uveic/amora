@@ -39,11 +39,6 @@ function asArray(array $values): array
 return [
     new LookupTableSettings(
         database: Core::getCoreDb(),
-        tableName: 'language',
-        tableFieldsToValues: Language::getAll(),
-    ),
-    new LookupTableSettings(
-        database: Core::getCoreDb(),
         tableName: 'user_role',
         tableFieldsToValues: asArray(UserRole::getAll()),
     ),

@@ -9,7 +9,7 @@ $siteLogo = $responseData->getSiteLogoUrl()
     : $this->e($responseData->siteName);
 ?>
 <!DOCTYPE html>
-<html lang="<?=$this->e(strtolower($responseData->siteLanguageIsoCode))?>">
+<html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <?=
 $this->insert('shared/partials/head', ['responseData' => $responseData])
 ?>
@@ -43,9 +43,7 @@ $this->insert('shared/partials/head', ['responseData' => $responseData])
         </div>
       </div>
       <p class="text-right no-margin">
-        <a href="<?=UrlBuilderUtil::buildPublicLoginForgotUrl($responseData->siteLanguageIsoCode)?>">
-            <?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?>
-        </a>
+        <a href="<?=UrlBuilderUtil::buildPublicLoginForgotUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('authenticationForgotPassword')?></a>
       </p>
     </form>
   </div>

@@ -328,7 +328,7 @@ function renderNotRequiredParameterIf(varName, type, name) {
 
 function renderAbstractRouter(jsonFileName, operations) {
   const response = util.htmlControllers.indexOf(jsonFileName) >= 0
-    ? `Response::createUnauthorisedRedirectLoginResponse($request->siteLanguageIsoCode)`
+    ? `Response::createUnauthorisedRedirectLoginResponse($request->siteLanguage)`
     : 'Response::createUnauthorizedJsonResponse()';
 
   return [

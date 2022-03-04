@@ -148,7 +148,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      * @param int $userId
      * @param string|null $name
      * @param string|null $email
-     * @param string|null $languageId
+     * @param string|null $languageIsoCode
      * @param string|null $timezone
      * @param string|null $currentPassword
      * @param string|null $newPassword
@@ -160,7 +160,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         int $userId,
         ?string $name,
         ?string $email,
-        ?string $languageId,
+        ?string $languageIsoCode,
         ?string $timezone,
         ?string $currentPassword,
         ?string $newPassword,
@@ -181,7 +181,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             existingUser: $existingUser,
             name: $name,
             email: $email,
-            languageId: $languageId,
+            languageIsoCode: $languageIsoCode,
             timezone: $timezone,
             currentPassword: $currentPassword,
             newPassword: $newPassword,

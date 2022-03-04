@@ -39,7 +39,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
      */
     protected function getAppDashboardHtml(Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         return Response::createFrontendPrivateHtmlResponse(
             template: 'dashboard',
@@ -61,7 +61,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     {
         $this->sessionService->logout($request->session);
         return Response::createRedirectResponse(
-            url: UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguageIsoCode),
+            url: UrlBuilderUtil::buildPublicHomepageUrl($request->siteLanguage),
         );
     }
 
@@ -74,7 +74,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
      */
     protected function getUserAccountHtml(Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createFrontendPrivateHtmlResponse(
             template: 'account',
             responseData: new HtmlResponseData(
@@ -94,7 +94,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
      */
     protected function getUserAccountSettingsHtml(string $settingsPage, Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createFrontendPrivateHtmlResponse(
             template: 'account',
             responseData: new HtmlResponseData(

@@ -8,7 +8,7 @@ use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\UrlBuilderUtil;
-use Amora\Core\Value\Language;
+use Amora\App\Value\Language;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
@@ -70,7 +70,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string $name
      * @param string $email
      * @param string|null $bio
-     * @param int|null $languageId
+     * @param string|null $languageIsoCode
      * @param int|null $roleId
      * @param string|null $timezone
      * @param bool|null $isEnabled
@@ -83,7 +83,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         string $name,
         string $email,
         ?string $bio,
-        ?int $languageId,
+        ?string $languageIsoCode,
         ?int $roleId,
         ?string $timezone,
         ?bool $isEnabled,
@@ -93,7 +93,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     ): Response {
         $now = new DateTimeImmutable();
         $email = StringUtil::normaliseEmail($email);
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $language = Language::tryFrom(strtoupper($languageIsoCode))
+            ? Language::from(strtoupper($languageIsoCode))
+            : $request->siteLanguage;
+        $localisationUtil = Core::getLocalisationUtil($language);
 
         if (!StringUtil::isEmailAddressValid($email)) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
@@ -108,12 +111,11 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 success: false,
                 errorMessage: sprintf(
                     $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
-                    UrlBuilderUtil::buildPublicLoginUrl($request->siteLanguageIsoCode)
+                    UrlBuilderUtil::buildPublicLoginUrl($request->siteLanguage)
                 ),
             );
         }
 
-        $languageId = $languageId ?? Language::getIdForIsoCode($request->siteLanguageIsoCode);
         $userRole = $roleId
             ? UserRole::from($roleId)
             : UserRole::User;
@@ -126,7 +128,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $newUser = $this->userService->storeUser(
                 user: new User(
                     id: null,
-                    languageId: $languageId,
+                    language: $language,
                     role: $userRole,
                     journeyStatus: UserJourneyStatus::getInitialUserJourneyStatusFromRole($userRole),
                     createdAt: $now,
@@ -152,7 +154,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerStoreUserSuccessResponse(
             success: true,
             id: $newUser?->id,
-            redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguageIsoCode),
+            redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguage),
         );
     }
 
@@ -198,7 +200,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string|null $name
      * @param string|null $email
      * @param string|null $bio
-     * @param int|null $languageId
+     * @param string|null $languageIsoCode
      * @param int|null $roleId
      * @param string|null $timezone
      * @param bool $isEnabled
@@ -213,7 +215,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $name,
         ?string $email,
         ?string $bio,
-        ?int $languageId,
+        ?string $languageIsoCode,
         ?int $roleId,
         ?string $timezone,
         ?bool $isEnabled,
@@ -228,15 +230,15 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $updateRes = $this->userService->workflowUpdateUser(
-            $existingUser,
-            $name,
-            $email,
-            $languageId,
-            $timezone,
-            $currentPassword,
-            $newPassword,
-            $repeatPassword,
-            StringUtil::isTrue($isEnabled)
+            existingUser: $existingUser,
+            name: $name,
+            email: $email,
+            languageIsoCode: $languageIsoCode,
+            timezone: $timezone,
+            currentPassword: $currentPassword,
+            newPassword: $newPassword,
+            repeatPassword: $repeatPassword,
+            isEnabled: StringUtil::isTrue($isEnabled),
         );
 
         if (!$updateRes->isSuccess) {
@@ -249,7 +251,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerUpdateUserSuccessResponse(
             success: true,
-            redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguageIsoCode),
+            redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguage),
         );
     }
 
@@ -274,7 +276,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             success: $res,
             errorMessage: $res
                 ? null
-                : Core::getLocalisationUtil($request->siteLanguageIsoCode)->getValue('globalGenericError')
+                : Core::getLocalisationUtil($request->siteLanguage)->getValue('globalGenericError')
         );
     }
 
@@ -323,7 +325,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $now = new DateTimeImmutable();
-        $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
+        $language = Language::tryFrom(strtoupper($languageIsoCode))
+            ? Language::from(strtoupper($languageIsoCode))
+            : Core::getDefaultLanguage();
         $uri = $this->articleService->getAvailableUriForArticle(articleTitle: $title);
         $status = ArticleStatus::from($statusId);
         $publishOnObj = $publishOn
@@ -333,7 +337,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $newArticle = $this->articleService->createNewArticle(
             article: new Article(
                 id: null,
-                languageId: Language::getIdForIsoCode($languageIsoCode),
+                language: $language,
                 user: $request->session->user,
                 status: $status,
                 type: $typeId ? ArticleType::from($typeId) : ArticleType::Page,
@@ -361,8 +365,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $backofficeUri = $typeId === ArticleType::Blog
-            ? UrlBuilderUtil::buildBackofficeBlogPostUrl($languageIsoCode, $newArticle->id)
-            : UrlBuilderUtil::buildBackofficeArticleUrl($languageIsoCode, $newArticle->id);
+            ? UrlBuilderUtil::buildBackofficeBlogPostUrl($language, $newArticle->id)
+            : UrlBuilderUtil::buildBackofficeArticleUrl($language, $newArticle->id);
 
         return new BackofficeApiControllerStoreArticleSuccessResponse(
             success: (bool)$newArticle,
@@ -418,6 +422,13 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
+        if ($languageIsoCode && !Language::tryFrom(strtoupper($languageIsoCode))) {
+            return new BackofficeApiControllerUpdateArticleSuccessResponse(
+                success: false,
+                errorMessage: 'Invalid language',
+            );
+        }
+
         $existingArticle = $this->articleService->getArticleForId($articleId);
         if (empty($existingArticle)) {
             return new BackofficeApiControllerUpdateArticleFailureResponse();
@@ -442,13 +453,15 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
             : ($existingArticle->publishOn ?? $now);
 
-        $languageIsoCode = $languageIsoCode ?? Core::getDefaultLanguageIsoCode();
+        $language = $languageIsoCode
+            ? Language::from(strtoupper($languageIsoCode))
+            : $existingArticle->language;
         $type = $typeId ? ArticleType::from($typeId) : $existingArticle->type;
         $status = $statusId ? ArticleStatus::from($statusId) : $existingArticle->status;
         $res = $this->articleService->workflowUpdateArticle(
             article: new Article(
                 id: $articleId,
-                languageId: Language::getIdForIsoCode($languageIsoCode),
+                language: $language,
                 user: $request->session->user,
                 status: $status,
                 type: $type,
@@ -468,8 +481,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         $backofficeUri = $type === ArticleType::Blog
-            ? UrlBuilderUtil::buildBackofficeBlogPostUrl($languageIsoCode, $articleId)
-            : UrlBuilderUtil::buildBackofficeArticleUrl($languageIsoCode, $articleId);
+            ? UrlBuilderUtil::buildBackofficeBlogPostUrl($language, $articleId)
+            : UrlBuilderUtil::buildBackofficeArticleUrl($language, $articleId);
 
         return new BackofficeApiControllerUpdateArticleSuccessResponse(
             success: $res,
@@ -497,7 +510,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $deleteRes = $this->articleService->deleteArticle(
             article: new Article(
                 id: $existingArticle->id,
-                languageId: $existingArticle->languageId,
+                language: $existingArticle->language,
                 user: $existingArticle->user,
                 status: ArticleStatus::Deleted,
                 type: $existingArticle->type,

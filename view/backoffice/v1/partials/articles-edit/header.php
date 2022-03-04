@@ -13,9 +13,9 @@ $settings = ArticleEditHtmlGenerator::generateSettingsButtonHtml($responseData);
 
 $articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
 $closeUrl = match($articleType) {
-    ArticleType::Page => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguageIsoCode),
-    ArticleType::Blog => UrlBuilderUtil::buildBackofficeBlogPostsUrl($responseData->siteLanguageIsoCode),
-    ArticleType::Homepage => UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguageIsoCode),
+    ArticleType::Page => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage),
+    ArticleType::Blog => UrlBuilderUtil::buildBackofficeBlogPostsUrl($responseData->siteLanguage),
+    ArticleType::Homepage => UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage),
 };
 
 $updatedAtContent = $responseData->getLocalValue('globalUpdated')
@@ -27,13 +27,13 @@ $article = $responseData->getFirstArticle();
 if ($article) {
     $updatedAtDate = DateUtil::formatDate(
         date: $article->updatedAt,
-        lang: $responseData->siteLanguageIsoCode,
+        lang: $responseData->siteLanguage,
         includeTime: true,
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
         from: $article->updatedAt,
-        language: $responseData->siteLanguageIsoCode,
+        language: $responseData->siteLanguage,
         includePrefixAndOrSuffix: true,
     );
 

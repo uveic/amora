@@ -19,7 +19,7 @@ use Amora\Core\Module\User\Model\UserVerification;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
-use Amora\Core\Value\Language;
+use Amora\App\Value\Language;
 
 class UserService
 {
@@ -144,7 +144,7 @@ class UserService
     private function validateUpdateUserEndpoint(
         User $existingUser,
         ?string $email,
-        ?int $languageId,
+        ?string $languageIsoCode,
         ?string $timezone,
         ?string $currentPassword,
         ?string $newPassword,
@@ -155,14 +155,12 @@ class UserService
             return new UserFeedback(false);
         }
 
-        if (isset($languageId) && !in_array($languageId, array_column(Language::getAll(), 'id'))) {
-            $this->logger->logError('Language ID not valid: ' . $languageId);
+        if (isset($languageIsoCode) && Language::tryFrom(strtoupper($languageIsoCode)) === null) {
+            $this->logger->logError('Language ID not valid: ' . $languageIsoCode);
             return new UserFeedback(false);
         }
 
-        $localisationUtil = Core::getLocalisationUtil(
-            Language::getIsoCodeForId($existingUser->languageId)
-        );
+        $localisationUtil = Core::getLocalisationUtil($existingUser->language);
 
         if (isset($currentPassword) || isset($newPassword) || isset($repeatPassword)) {
             if (empty($currentPassword) || empty($newPassword) || empty($repeatPassword)) {
@@ -386,7 +384,7 @@ class UserService
         User $existingUser,
         ?string $name = null,
         ?string $email = null,
-        ?string $languageId = null,
+        ?string $languageIsoCode = null,
         ?string $timezone = null,
         ?string $currentPassword = null,
         ?string $newPassword = null,
@@ -394,13 +392,13 @@ class UserService
         ?bool $isEnabled = null
     ): UserFeedback {
         $validation = $this->validateUpdateUserEndpoint(
-            $existingUser,
-            $email,
-            $languageId,
-            $timezone,
-            $currentPassword,
-            $newPassword,
-            $repeatPassword
+            existingUser: $existingUser,
+            email: $email,
+            languageIsoCode: $languageIsoCode,
+            timezone: $timezone,
+            currentPassword: $currentPassword,
+            newPassword: $newPassword,
+            repeatPassword: $repeatPassword,
         );
 
         if (!$validation->isSuccess) {
@@ -412,7 +410,7 @@ class UserService
         $res = $this->updateUser(
             user: new User(
                 id: $existingUser->id,
-                languageId: $languageId ?? $existingUser->languageId,
+                language: Language::from(strtoupper($languageIsoCode)) ?? $existingUser->language,
                 role: $existingUser->role,
                 journeyStatus: $existingUser->journeyStatus,
                 createdAt: $existingUser->createdAt,
@@ -442,7 +440,7 @@ class UserService
 
     public function storeRegistrationInviteRequest(
         string $email,
-        int $languageId
+        Language $language,
     ): UserRegistrationRequest
     {
         $res = $this->userDataLayer->getUserRegistrationRequest(null, $email);
@@ -453,13 +451,13 @@ class UserService
         $requestCode = $this->getUniqueUserRegistrationRequestCode();
         return $this->userDataLayer->storeRegistrationInviteRequest(
             new UserRegistrationRequest(
-                null,
-                $email,
-                $languageId,
-                DateUtil::getCurrentDateForMySql(),
-                null,
-                $requestCode,
-                null
+                id: null,
+                email: $email,
+                language: $language,
+                createdAt: new DateTimeImmutable(),
+                processedAt: null,
+                requestCode: $requestCode,
+                userId: null,
             )
         );
     }

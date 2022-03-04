@@ -58,7 +58,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getAdminDashboard(Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         return Response::createBackofficeHtmlResponse(
             template: 'dashboard',
@@ -78,7 +78,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getUsersAdminPage(Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $users = $this->userService->filterUsersBy();
         return Response::createBackofficeHtmlResponse(
             template: 'users',
@@ -99,7 +99,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getNewUserPage(Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         return Response::createBackofficeHtmlResponse(
             template: 'users-edit',
@@ -121,7 +121,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getEditUserPage(int $userId, Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $user = $this->userService->getUserForId($userId, true);
         if (empty($user)) {
             return Response::createFrontendPublicHtmlResponse(
@@ -160,7 +160,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 pagination: $pagination,
             )
         );
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         return Response::createBackofficeHtmlResponse(
             template: 'articles',
@@ -191,14 +191,14 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             if ($articles) {
                 return Response::createRedirectResponse(
                     UrlBuilderUtil::buildBackofficeArticleUrl(
-                        languageIsoCode: $request->siteLanguageIsoCode,
+                        language: $request->siteLanguage,
                         articleId: $articles[0]->id,
                     )
                 );
             }
         }
 
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createBackofficeHtmlResponse(
             template: 'articles-edit',
             responseData: new HtmlResponseDataAuthorised(
@@ -227,7 +227,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             );
         }
 
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $articleSections = $this->articleService->getSectionsForArticleId($articleId);
         return Response::createBackofficeHtmlResponse(
             template: 'articles-edit',
@@ -255,7 +255,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 pagination: new Response\Pagination(itemsPerPage: 50),
             ),
         );
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         return Response::createBackofficeHtmlResponse(
             template: 'images',
@@ -286,7 +286,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 pagination: $pagination,
             )
         );
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         return Response::createBackofficeHtmlResponse(
             template: 'blog-posts',
@@ -308,7 +308,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getNewBlogPostPage(Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createBackofficeHtmlResponse(
             template: 'blog-posts-edit',
             responseData: new HtmlResponseDataAuthorised(
@@ -337,7 +337,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             );
         }
 
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguageIsoCode);
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $articleSections = $this->articleService->getSectionsForArticleId($articleId);
         return Response::createBackofficeHtmlResponse(
             template: 'blog-posts-edit',

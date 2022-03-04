@@ -3,8 +3,7 @@
 namespace Amora\Core\Util;
 
 use Amora\Core\Core;
-use Amora\Core\Util\Logger;
-use Amora\Core\Value\Language;
+use Amora\App\Value\Language;
 
 final class LocalisationUtil
 {
@@ -12,19 +11,9 @@ final class LocalisationUtil
 
     public function __construct(
         private Logger $logger,
-        private string $defaultLocalisationIsoCode,
-        private string $languageIsoCode
+        private Language $language,
     ) {
-        $this->defaultLocalisationIsoCode = strtoupper($this->defaultLocalisationIsoCode);
-        $this->languageIsoCode = strtoupper($this->languageIsoCode);
-        $availableLanguagesIsoCodes = array_column(Language::getAvailableLanguages(), 'iso_code');
-
-        if (!in_array($this->languageIsoCode, $availableLanguagesIsoCodes)) {
-            $this->logger->logError('Localisation language not found: ' . $this->languageIsoCode);
-            $this->languageIsoCode = $this->defaultLocalisationIsoCode;
-        }
-
-        $this->values = $this->loadValues($this->languageIsoCode);
+        $this->values = $this->loadValues($this->language);
     }
 
     public function getValue(string $key): string
@@ -35,24 +24,24 @@ final class LocalisationUtil
 
         $this->logger->logError(
             'Localisation not set for key: ' . $key .
-            ' - Language: ' . $this->languageIsoCode
+            ' - Language: ' . $this->language->value
         );
 
-        $defaultValues = $this->loadValues($this->defaultLocalisationIsoCode);
+        $defaultValues = $this->loadValues($this->language);
         if (isset($defaultValues[$key])) {
             return $defaultValues[$key];
         }
 
         $this->logger->logError(
             'Localisation not set for key: ' . $key .
-            ' - Site default language: ' . $this->defaultLocalisationIsoCode
+            ' - Language: ' . $this->language->value
         );
 
         return '';
     }
 
-    private function loadValues(string $languageIsoCode): array {
-        $coreFilePath = Core::getPathRoot() . '/Core/Value/Localisation/' . $languageIsoCode . '.php';
+    private function loadValues(Language $language): array {
+        $coreFilePath = Core::getPathRoot() . '/Core/Value/Localisation/' . $language->value . '.php';
 
         if (!file_exists($coreFilePath)) {
             $this->logger->logError('Localisation file not found: ' . $coreFilePath);
@@ -61,7 +50,7 @@ final class LocalisationUtil
             $coreValues = require $coreFilePath;
         }
 
-        $appFilePath = Core::getPathRoot() . '/App/Value/Localisation/' . $languageIsoCode . '.php';
+        $appFilePath = Core::getPathRoot() . '/App/Value/Localisation/' . $language->value . '.php';
 
         if (!file_exists($appFilePath)) {
             $this->logger->logError('Localisation file not found: ' . $appFilePath);

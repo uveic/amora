@@ -48,9 +48,9 @@
                   "description": "User bio",
                   "type": "string"
                 },
-                "languageId": {
-                  "description": "Language ID",
-                  "type": "integer"
+                "languageIsoCode": {
+                  "description": "Language ISO code",
+                  "type": "string"
                 },
                 "roleId": {
                   "description": "User role ID",
@@ -266,9 +266,9 @@
                   "description": "User bio",
                   "type": "string"
                 },
-                "languageId": {
-                  "description": "Language ID",
-                  "type": "integer"
+                "languageIsoCode": {
+                  "description": "Language ISO code",
+                  "type": "string"
                 },
                 "roleId": {
                   "description": "User role ID",

@@ -5,14 +5,14 @@ namespace Amora\Core\Model;
 use Amora\Core\Core;
 use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Module\User\UserCore;
-use Amora\Core\Value\Language;
+use Amora\App\Value\Language;
 
 final class Request
 {
     private ?array $parsedHeaders = null;
 
     public readonly ?Session $session;
-    public readonly string $siteLanguageIsoCode;
+    public readonly Language $siteLanguage;
     public readonly ?string $clientLanguage;
     public readonly array $processedFiles;
 
@@ -32,7 +32,7 @@ final class Request
         $this->processedFiles = $this->processFiles($files);
         $this->session = $this->loadSession();
         $this->clientLanguage = $headers['HTTP_ACCEPT_LANGUAGE'] ?? null;
-        $this->siteLanguageIsoCode = $this->calculateSiteLanguageAndUpdatePath();
+        $this->siteLanguage = $this->calculateSiteLanguageAndUpdatePath();
 
         if (empty($this->path)) {
             $this->path = 'home';
@@ -118,12 +118,12 @@ final class Request
         return $output;
     }
 
-    private function calculateSiteLanguageAndUpdatePath(): string
+    private function calculateSiteLanguageAndUpdatePath(): Language
     {
         $arrayPath = explode('/', $this->path);
         if (!empty($arrayPath[0]) && strlen($arrayPath[0]) == 2) {
-            if (in_array(strtoupper($arrayPath[0]), Language::getAvailableIsoCodes())) {
-                $siteLanguage = strtoupper($arrayPath[0]);
+            if (Language::tryFrom(strtoupper($arrayPath[0]))) {
+                $siteLanguage = Language::from(strtoupper($arrayPath[0]));
                 unset($arrayPath[0]);
                 $this->path = implode('/', $arrayPath);
                 return $siteLanguage;
@@ -133,14 +133,13 @@ final class Request
         return $this->getSiteLanguageFromClientLanguage();
     }
 
-    public function getSiteLanguageFromClientLanguage(): string
+    private function getSiteLanguageFromClientLanguage(): Language
     {
         if ($this->session) {
-            return Language::getIsoCodeForId($this->session->user->languageId);
+            return $this->session->user->language;
         }
 
         $parts = $this->clientLanguage ? explode(',', $this->clientLanguage) : [];
-        $availableLanguageIsoCodes = array_column(Language::getAvailableLanguages(), 'iso_code');
 
         foreach ($parts as $part) {
             $semicolon = strpos($part, ';');
@@ -152,12 +151,12 @@ final class Request
             $lang = $dash !== false ? substr($lang, 0, $dash) : $lang;
             $lang = strtoupper($lang);
 
-            if (in_array($lang, $availableLanguageIsoCodes)) {
-                return $lang;
+            if (Language::tryFrom($lang)) {
+                return Language::from($lang);
             }
         }
 
-        return strtoupper(Core::getConfig()->defaultSiteLanguageIsoCode);
+        return Core::getConfig()->defaultSiteLanguage;
     }
 
     private function loadSession(): ?Session {
