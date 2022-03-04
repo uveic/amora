@@ -4,6 +4,7 @@ use Amora\Core\Model\Response\HtmlHomepageResponseData;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlHomepageResponseData $responseData */
 
@@ -33,13 +34,13 @@ foreach ($articles as $article) {
     $publishedOn = $article->publishOn
         ? DateUtil::formatDate(
             date: $article->publishOn,
-            lang: $responseData->siteLanguageIsoCode,
+            lang: $responseData->siteLanguage,
             includeYear: false,
             includeWeekDay: false,
         )
         : '';
 
-    $href = $responseData->baseUrl . $article->uri;
+    $href = UrlBuilderUtil::buildPublicArticleUrl($article->uri, $article->language);
     $isPublishedHtml = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article);
 
     $year = $article->publishOn ? $article->publishOn->format('Y') : '???';

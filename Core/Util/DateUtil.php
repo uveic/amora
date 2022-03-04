@@ -2,10 +2,12 @@
 
 namespace Amora\Core\Util;
 
+use Amora\App\Value\Language;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use Amora\Core\Core;
+use DateTimeInterface;
 use DateTimeZone;
 use Throwable;
 
@@ -25,7 +27,7 @@ final class DateUtil
             return false;
         }
 
-        $dateObj = DateTimeImmutable::createFromFormat(DateTimeImmutable::ISO8601, $isoDate);
+        $dateObj = DateTimeImmutable::createFromFormat(DateTimeInterface::ISO8601, $isoDate);
         if ($dateObj === false) {
             // Check if it is from Javascript and it contains milliseconds. Remove milliseconds if found.
             $isoDate = preg_replace(
@@ -34,7 +36,7 @@ final class DateUtil
                 subject: $isoDate,
             );
 
-            $dateObj = DateTimeImmutable::createFromFormat(DateTimeImmutable::ISO8601, $isoDate);
+            $dateObj = DateTimeImmutable::createFromFormat(DateTimeInterface::ISO8601, $isoDate);
             if ($dateObj === false) {
                 return false;
             }
@@ -54,83 +56,9 @@ final class DateUtil
         return true;
     }
 
-    /**
-     * Check if the date is a valid for MySQL: Y-m-d H:i:s
-     * @param string|null $date
-     * @return bool
-     */
-    public static function isValidDateForMySql(?string $date): bool
-    {
-        if (empty($date)) {
-            return false;
-        }
-
-        $tmpDate = DateTime::createFromFormat(self::MYSQL_DATETIME_FORMAT, $date);
-        if ($tmpDate === false) {
-            return false;
-        }
-
-        $errors = DateTime::getLastErrors();
-        if (!empty($errors['warning_count'])) {
-            return false;
-        }
-
-        // For some reason DateTime::createFromFormat does not check if the year has four digits
-        // It accepts as valid strings like: 25-01-01T00:00:00Z
-        if ((int) $tmpDate->format('Y') < 1000) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public static function convertDateFromISOToMySQLFormat(string $isoDate): ?string
-    {
-        if (!self::isValidDateISO8601($isoDate)) {
-            Core::getDefaultLogger()->logWarning(
-                'DateUtil - Convert date from ISO to MySQL - ISO date not valid: ' . $isoDate
-            );
-            return null;
-        }
-        return date(self::MYSQL_DATETIME_FORMAT, strtotime($isoDate));
-    }
-
-    public static function convertDateFromMySQLFormatToISO(string $date): ?string
-    {
-        if (!self::isValidDateForMySql($date)) {
-            Core::getDefaultLogger()->logWarning(
-                'DateUtil - Convert date from MySQL to ISO - MySQL date not valid: ' . $date
-            );
-            return null;
-        }
-
-        return date('c', strtotime($date));
-    }
-
     public static function getCurrentDateForMySql(): string
     {
         return date(self::MYSQL_DATETIME_FORMAT);
-    }
-
-    public static function getDateForMySqlFrom(string $dateString = 'now'): string
-    {
-        $d = new DateTimeImmutable($dateString);
-        return $d->format(self::MYSQL_DATETIME_FORMAT);
-    }
-
-    public static function getMySqlDateFromUnixTime(int $unixTime): string
-    {
-        return date(self::MYSQL_DATETIME_FORMAT, $unixTime);
-    }
-
-    public static function getTimestamp(): string
-    {
-        $microSeconds = microtime(true);
-        $seconds = floor($microSeconds);
-
-        $microSecondsInt = (int) (($microSeconds - $seconds) * 1000);
-
-        return date('YmdHis') . $microSecondsInt;
     }
 
     /**
@@ -142,7 +70,7 @@ final class DateUtil
      *
      * @param DateTimeImmutable|DateTime $from
      * @param DateTimeImmutable|DateTime|null $to
-     * @param string $language
+     * @param \Amora\App\Value\Language $language
      * @param bool $full
      * @param bool $includePrefixAndOrSuffix
      * @param bool $includeSeconds
@@ -152,7 +80,7 @@ final class DateUtil
     public static function getElapsedTimeString(
         DateTimeImmutable|DateTime $from,
         DateTimeImmutable|DateTime|null $to = null,
-        string $language = 'EN',
+        Language $language = Language::English,
         bool $full = false,
         bool $includePrefixAndOrSuffix = false,
         bool $includeSeconds = false,
@@ -162,7 +90,7 @@ final class DateUtil
         }
         $diff = (array)$to->diff($from);
 
-        switch (strtoupper($language)) {
+        switch ($language->value) {
             case 'GL':
                 $prefix = 'hai ';
                 $suffix = '';
@@ -225,7 +153,7 @@ final class DateUtil
                     . ' '
                     . $value
                     . ($diff[$key] > 1
-                        ? ($key === 'm' && ($language === 'ES' || $language === 'GL') ? 'es' : 's')
+                        ? ($key === 'm' && ($language->value === 'ES' || $language->value === 'GL') ? 'es' : 's')
                         : ''
                     );
             } else {
@@ -292,7 +220,7 @@ final class DateUtil
 
     public static function formatDate(
         DateTimeImmutable|DateTime $date,
-        string $lang = 'EN',
+        Language $lang = Language::English,
         bool $includeDay = true,
         bool $includeYear = true,
         bool $includeWeekDay = true,
@@ -305,8 +233,7 @@ final class DateUtil
     ): string {
         $timeFormat = 'H:i' . ($includeSeconds ? ':s' : '');
 
-        $lang = strtoupper($lang);
-        switch (strtoupper($lang)) {
+        switch ($lang->value) {
             case 'GL':
                 $days = ['luns', 'martes', 'mércores', 'xoves', 'venres', 'sábado', 'domingo'];
 
@@ -356,10 +283,9 @@ final class DateUtil
         }
     }
 
-    public static function getMonthName(int $month, string $lang = 'EN', bool $shorName = false): string
+    public static function getMonthName(int $month, Language $lang, bool $shorName = false): string
     {
-        $lang = strtoupper($lang);
-        $months = match($lang) {
+        $months = match($lang->value) {
             'ES' => ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
                 'septiembre', 'octubre', 'noviembre', 'dieciembre'],
             'GL' => ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo',
@@ -371,11 +297,6 @@ final class DateUtil
         $month = $months[$month - 1] ?? '';
 
         return $shorName ? substr($month, 0, 3) : $month;
-    }
-
-    public static function isSummerTime(): bool
-    {
-        return date('I', time()) != 0;
     }
 
     public static function getTimezoneFromUtcOffset(int $offsetMinutes): string

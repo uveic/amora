@@ -2,7 +2,6 @@
 
 namespace Amora\Core\Util\Helper;
 
-use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;
@@ -10,9 +9,8 @@ use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
-use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
-use Amora\Core\Value\Language;
+use Amora\App\Value\Language;
 
 final class ArticleEditHtmlGenerator
 {
@@ -136,28 +134,24 @@ final class ArticleEditHtmlGenerator
         HtmlResponseDataAuthorised $responseData,
     ): string {
         $article = $responseData->getFirstArticle();
-        $articleLanguageId = $article
-            ? $article->languageId
-            : Language::getIdForIsoCode(Core::getDefaultLanguageIsoCode());
+        $articleLanguage = $article ? $article->language : $responseData->siteLanguage;
 
         $output = [];
         $output[] = '      <input type="checkbox" id="article-lang-dd-checkbox" class="dropdown-menu">';
         $output[] = '      <div class="dropdown-container article-lang-container">';
         $output[] = '        <ul>';
 
-        foreach (Language::getAvailableLanguages() as $language) {
-            $languageId = $language['id'];
-            $languageName = $language['name'];
-
-            $output[] = '          <li><a data-checked="' . ($languageId === $articleLanguageId ? '1' : '0') .
-                '" data-article-language-id="' . $articleLanguageId .
+        /** @var \BackedEnum $language */
+        foreach (Language::getAll() as $language) {
+            $output[] = '          <li><a data-checked="' . ($language === $articleLanguage ? '1' : '0') .
+                '" data-article-language-iso-code="' . $articleLanguage->value .
                 '" class="dropdown-menu-option article-lang-dd-option bg-color-dark"' .
-                ' href="#">' . $languageName . '</a></li>';
+                ' href="#">' . $language->name . '</a></li>';
         }
 
         $output[] = '        </ul>';
         $output[] = '        <label id="article-lang-dd-label" for="article-lang-dd-checkbox" class="dropdown-menu-label bg-color-dark">';
-        $output[] = '          <span>' . Language::getNameForId($articleLanguageId) . '</span>';
+        $output[] = '          <span>' . $articleLanguage->name . '</span>';
         $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
         $output[] = '        </label>';
         $output[] = '      </div>';
@@ -207,7 +201,7 @@ final class ArticleEditHtmlGenerator
         $articleTitle = $article->title ?: $responseData->getLocalValue('globalNoTitle');
         $articleUrl = UrlBuilderUtil::buildPublicArticleUrl(
             uri: $article->uri,
-            languageIsoCode: $responseData->siteLanguageIsoCode,
+            language: $responseData->siteLanguage,
         );
 
         $output = '<div class="m-r-05">';
@@ -219,7 +213,7 @@ final class ArticleEditHtmlGenerator
         if ($article->publishOn) {
             $publishOn = DateUtil::formatDate(
                 date: $article->publishOn,
-                lang: $responseData->siteLanguageIsoCode,
+                lang: $responseData->siteLanguage,
                 includeTime: true,
             );
             $output .= '<p class="article-tags"><strong>'
@@ -228,7 +222,7 @@ final class ArticleEditHtmlGenerator
         } else {
             $updatedAt = DateUtil::formatDate(
                 date: $article->updatedAt,
-                lang: $responseData->siteLanguageIsoCode,
+                lang: $responseData->siteLanguage,
                 includeTime: true,
             );
             $output .= '<p class="article-tags"><strong>'

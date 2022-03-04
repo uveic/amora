@@ -13,6 +13,11 @@ use function Amora\Core\Value\asArray;
 
 return [
     new LookupTableSettings(
+        database: Core::getCoreDb(),
+        tableName: 'language',
+        tableFieldsToValues: asArray(Language::getAll()),
+    ),
+    new LookupTableSettings(
         database: Core::getMailerDb(),
         tableName: 'mailer_template',
         tableFieldsToValues: asArray(AppMailerTemplate::getAll()),

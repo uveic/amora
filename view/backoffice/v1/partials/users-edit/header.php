@@ -6,7 +6,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 /** @var HtmlResponseDataAuthorised $responseData */
 
 $userToEdit = $responseData->getUserToEdit();
-$closeUrl = UrlBuilderUtil::buildBackofficeUsersUrl($responseData->siteLanguageIsoCode);
+$closeUrl = UrlBuilderUtil::buildBackofficeUsersUrl($responseData->siteLanguage);
 
 ?>
     <section class="page-header">

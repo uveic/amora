@@ -13,7 +13,6 @@ use Amora\Core\Module\User\Model\UserVerification;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
-use Amora\Core\Value\Language;
 use DateTimeImmutable;
 
 class UserMailService
@@ -166,10 +165,9 @@ class UserMailService
 
     private function buildPasswordResetEmail(User $user, string $verificationIdentifier): MailerItem
     {
-        $languageIsoCode = Language::getIsoCodeForId($user->languageId);
-        $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
+        $localisationUtil = Core::getLocalisationUtil($user->language, false);
         $linkUrl = UrlBuilderUtil::buildPublicPasswordResetUrl(
-            languageIsoCode: $languageIsoCode,
+            language: $user->language,
             verificationIdentifier: $verificationIdentifier,
         );
         $siteName = $localisationUtil->getValue('siteName');
@@ -203,10 +201,9 @@ class UserMailService
         string $emailToVerify,
         string $verificationIdentifier
     ): MailerItem {
-        $languageIsoCode = Language::getIsoCodeForId($user->languageId);
-        $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
+        $localisationUtil = Core::getLocalisationUtil($user->language, false);
         $linkUrl = UrlBuilderUtil::buildPublicVerificationEmailUrl(
-            languageIsoCode: $languageIsoCode,
+            language: $user->language,
             verificationIdentifier: $verificationIdentifier,
         );
         $siteName = $localisationUtil->getValue('siteName');
@@ -240,10 +237,9 @@ class UserMailService
         string $emailToVerify,
         string $verificationIdentifier
     ): MailerItem {
-        $languageIsoCode = Language::getIsoCodeForId($user->languageId);
-        $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
+        $localisationUtil = Core::getLocalisationUtil($user->language, false);
         $linkUrl = UrlBuilderUtil::buildPublicEmailUpdateUrl(
-            languageIsoCode: $languageIsoCode,
+            language: $user->language,
             verificationIdentifier: $verificationIdentifier,
         );
         $siteName = $localisationUtil->getValue('siteName');
@@ -272,12 +268,11 @@ class UserMailService
 
     private function buildPasswordCreationEmail(
         User $user,
-        string $verificationIdentifier
+        string $verificationIdentifier,
     ): MailerItem {
-        $languageIsoCode = Language::getIsoCodeForId($user->languageId);
-        $localisationUtil = Core::getLocalisationUtil($languageIsoCode, false);
+        $localisationUtil = Core::getLocalisationUtil($user->language, false);
         $linkUrl = UrlBuilderUtil::buildPublicCreatePasswordUrl(
-            languageIsoCode: $languageIsoCode,
+            language: $user->language,
             verificationIdentifier: $verificationIdentifier,
         );
         $siteName = $localisationUtil->getValue('siteName');

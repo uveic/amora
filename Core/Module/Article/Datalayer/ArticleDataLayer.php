@@ -44,7 +44,7 @@ class ArticleDataLayer
 
     public function filterArticlesBy(
         array $articleIds = [],
-        array $languageIds = [],
+        array $languageIsoCodes = [],
         array $statusIds = [],
         array $typeIds = [],
         ?string $uri = null,
@@ -69,7 +69,7 @@ class ArticleDataLayer
         $baseSql = 'SELECT ';
         $fields = [
             'a.id AS article_id',
-            'a.language_id',
+            'a.language_iso_code AS article_language_iso_code',
             'a.user_id',
             'a.status_id',
             'a.type_id',
@@ -81,7 +81,7 @@ class ArticleDataLayer
             'a.main_image_id',
             'a.uri',
 
-            'u.language_id',
+            'u.language_iso_code AS user_language_iso_code',
             'u.role_id',
             'u.journey_id',
             'u.created_at AS user_created_at',
@@ -119,8 +119,8 @@ class ArticleDataLayer
             $where .= $this->generateWhereSqlCodeForIds($params, $articleIds, 'a.id', 'articleId');
         }
 
-        if ($languageIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $languageIds, 'a.language_id', 'languageId');
+        if ($languageIsoCodes) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $languageIsoCodes, 'a.language_iso_code', 'languageIsoCode');
         }
 
         if ($statusIds) {
@@ -232,7 +232,7 @@ class ArticleDataLayer
     {
         $data = [
             'article_id' => $article->id,
-            'language_id' => $article->languageId,
+            'language_iso_code' => $article->language->value,
             'user_id' => $article->user->id,
             'status_id' => $article->status->value,
             'type_id' => $article->type->value,

@@ -43,7 +43,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string $name
      * @param string $email
      * @param string|null $bio
-     * @param int|null $languageId
+     * @param string|null $languageIsoCode
      * @param int|null $roleId
      * @param string|null $timezone
      * @param bool|null $isEnabled
@@ -56,7 +56,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         string $name,
         string $email,
         ?string $bio,
-        ?int $languageId,
+        ?string $languageIsoCode,
         ?int $roleId,
         ?string $timezone,
         ?bool $isEnabled,
@@ -83,7 +83,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string|null $name
      * @param string|null $email
      * @param string|null $bio
-     * @param int|null $languageId
+     * @param string|null $languageIsoCode
      * @param int|null $roleId
      * @param string|null $timezone
      * @param bool|null $isEnabled
@@ -98,7 +98,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?string $name,
         ?string $email,
         ?string $bio,
-        ?int $languageId,
+        ?string $languageIsoCode,
         ?int $roleId,
         ?string $timezone,
         ?bool $isEnabled,
@@ -245,7 +245,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         $bio = $bodyParams['bio'] ?? null;
-        $languageId = $bodyParams['languageId'] ?? null;
+        $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
         $roleId = $bodyParams['roleId'] ?? null;
         $timezone = $bodyParams['timezone'] ?? null;
         $isEnabled = $bodyParams['isEnabled'] ?? null;
@@ -267,7 +267,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $name,
                 $email,
                 $bio,
-                $languageId,
+                $languageIsoCode,
                 $roleId,
                 $timezone,
                 $isEnabled,
@@ -354,7 +354,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         $name = $bodyParams['name'] ?? null;
         $email = $bodyParams['email'] ?? null;
         $bio = $bodyParams['bio'] ?? null;
-        $languageId = $bodyParams['languageId'] ?? null;
+        $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
         $roleId = $bodyParams['roleId'] ?? null;
         $timezone = $bodyParams['timezone'] ?? null;
         $isEnabled = $bodyParams['isEnabled'] ?? null;
@@ -378,7 +378,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $name,
                 $email,
                 $bio,
-                $languageId,
+                $languageIsoCode,
                 $roleId,
                 $timezone,
                 $isEnabled,

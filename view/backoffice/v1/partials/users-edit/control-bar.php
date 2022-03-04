@@ -14,25 +14,25 @@ $createdAtContent = '';
 if ($userToEdit) {
     $updatedAtDate = DateUtil::formatDate(
         date: $userToEdit->updatedAt,
-        lang: $responseData->siteLanguageIsoCode,
+        lang: $responseData->siteLanguage,
         includeTime: true,
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
         from: $userToEdit->updatedAt,
-        language: $responseData->siteLanguageIsoCode,
+        language: $responseData->siteLanguage,
         includePrefixAndOrSuffix: true
     );
 
     $createdAtDate = DateUtil::formatDate(
         date: $userToEdit->createdAt,
-        lang: $responseData->siteLanguageIsoCode,
+        lang: $responseData->siteLanguage,
         includeTime: true,
     );
 
     $createdAtEta = DateUtil::getElapsedTimeString(
         from: $userToEdit->createdAt,
-        language: $responseData->siteLanguageIsoCode,
+        language: $responseData->siteLanguage,
         includePrefixAndOrSuffix: true,
     );
 

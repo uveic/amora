@@ -20,7 +20,7 @@ $random = StringUtil::getRandomString(5);
 $articleUrl = $article
     ? UrlBuilderUtil::buildPublicArticleUrl(
         uri: $article->uri,
-        languageIsoCode: $responseData->siteLanguageIsoCode,
+        language: $responseData->siteLanguage,
     )
     : '#';
 

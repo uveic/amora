@@ -11,7 +11,7 @@ use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\UserCore;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
-use Amora\Core\Value\Language;
+use Amora\App\Value\Language;
 use Amora\Core\Module\User\Value\UserRole;
 
 // change working directory
@@ -78,7 +78,7 @@ $now = new DateTimeImmutable();
 $res = UserCore::getUserService()->storeUser(
     new User(
         id: null,
-        languageId: Language::ENGLISH,
+        language: Language::English,
         role: UserRole::Admin,
         journeyStatus: UserJourneyStatus::Registration,
         createdAt: $now,

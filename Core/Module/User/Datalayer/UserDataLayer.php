@@ -51,7 +51,7 @@ class UserDataLayer
         $baseSql = 'SELECT ';
         $fields = [
             'u.id AS user_id',
-            'u.language_id',
+            'u.language_iso_code AS user_language_iso_code',
             'u.role_id',
             'u.journey_id',
             'u.created_at AS user_created_at',
@@ -300,7 +300,7 @@ class UserDataLayer
             SELECT
                 urr.id AS user_registration_request_id,
                 urr.email,
-                urr.language_id,
+                urr.language_iso_code,
                 urr.created_at,
                 urr.processed_at,
                 urr.request_code,

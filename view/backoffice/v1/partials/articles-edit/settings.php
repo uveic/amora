@@ -21,12 +21,12 @@ if ($article) {
     $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
         DateUtil::getElapsedTimeString(
             from: $article->createdAt,
-            language: $responseData->siteLanguageIsoCode,
+            language: $responseData->siteLanguage,
             includePrefixAndOrSuffix: true,
         ) . ' ('
         . DateUtil::formatDate(
             date: $article->createdAt,
-            lang: $responseData->siteLanguageIsoCode,
+            lang: $responseData->siteLanguage,
             includeWeekDay: true,
             includeTime: true,
         ) . ')'
@@ -63,7 +63,7 @@ if ($article) {
   <div class="field">
     <label for="articleUri" class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</label>
     <div class="control">
-      <div class="article-edit-uri"><?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguageIsoCode) . '/'?>
+      <div class="article-edit-uri"><?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage) . '/'?>
         <input id="articleUri" name="articleUri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->uri : ''); ?>">
       </div>
     </div>

@@ -23,7 +23,7 @@ abstract class AppPublicHtmlControllerAbstract extends AbstractController
     {
         $auth = $this->authenticate($request);
         if ($auth !== true) {
-            return Response::createUnauthorisedRedirectLoginResponse($request->siteLanguageIsoCode);
+            return Response::createUnauthorisedRedirectLoginResponse($request->siteLanguage);
         }
 
         $path = $request->getPath();
