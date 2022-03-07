@@ -19,6 +19,7 @@ return [
     'navAdminImages' => 'Imágenes',
     'navAdminArticles' => 'Artículos',
     'navAdminBlogPosts' => 'Entradas blog',
+    'navAdminPartialContent' => 'Contenido',
     'navAdminArticleOptions' => 'Opciones artículo',
 
     'editorTitlePlaceholder' => 'Título...',
@@ -142,13 +143,15 @@ return [
     'globalPageDeactivatedContent' => 'La página que buscas está desactivada temporalmente. Si tienes alguna consulta puedes ponerte en contacto con nosotros en <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Disculpa las molestias.',
 
     'articleEditHomepageTitle' => 'Editar el contenido de la portada',
+    'articleEditBottomBlogPostTitle' => 'Editar el contenido al final de una entrada de blog',
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
     'articleStatusDeleted' => 'Eliminado',
     'articleStatusPrivate' => 'Privado',
-    'articleTypeHome' => 'Portada',
     'articleTypeBlog' => 'Blog',
-    'articleTypeArticle' => 'Artículo',
+    'articleTypePage' => 'Página',
+    'articleTypePartialContentHomepage' => 'Portada',
+    'articleTypePartialContentBlogBottom' => 'Fondo entrada blog',
     'paragraphPlaceholder' => 'Escribe aquí...',
     'articleBlogFooterInfo' => 'Gracias por leer y llegar hasta aquí 💕. No hay comentarios pero me puedes escribir a <a href="mailto:%s">%s</a>, estaré encantado de leerte.',
 

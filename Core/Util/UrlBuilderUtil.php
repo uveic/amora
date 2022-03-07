@@ -4,6 +4,7 @@ namespace Amora\Core\Util;
 
 use Amora\Core\Core;
 use Amora\App\Value\Language;
+use Amora\Core\Module\Article\Value\ArticleType;
 
 class UrlBuilderUtil
 {
@@ -19,10 +20,6 @@ class UrlBuilderUtil
     const BACKOFFICE_ARTICLES = '/backoffice/articles';
     const BACKOFFICE_ARTICLE = '/backoffice/articles/%d';
     const BACKOFFICE_NEW_ARTICLE = '/backoffice/articles/new';
-
-    const BACKOFFICE_BLOG_POSTS = '/backoffice/blog-posts';
-    const BACKOFFICE_BLOG_POST = '/backoffice/blog-posts/%d';
-    const BACKOFFICE_NEW_BLOG_POST = '/backoffice/blog-posts/new';
 
     // Authorised URLs
     const AUTHORISED_ACCOUNT = '/account';
@@ -72,9 +69,13 @@ class UrlBuilderUtil
         return self::buildBaseUrl($language) . self::BACKOFFICE_IMAGES;
     }
 
-    public static function buildBackofficeArticlesUrl(Language $language): string
-    {
-        return self::buildBaseUrl($language) . self::BACKOFFICE_ARTICLES;
+    public static function buildBackofficeArticlesUrl(
+        Language $language,
+        ?ArticleType $type = null,
+    ): string {
+        return self::buildBaseUrl($language)
+            . self::BACKOFFICE_ARTICLES
+            . ($type ? '?type=' . $type->value : '');
     }
 
     public static function buildBackofficeArticleUrl(Language $language, int $articleId): string
@@ -84,11 +85,11 @@ class UrlBuilderUtil
 
     public static function buildBackofficeNewArticleUrl(
         Language $language,
-        ?int $articleTypeId = null
+        ArticleType $articleType,
     ): string {
         return self::buildBaseUrl($language)
             . self::BACKOFFICE_NEW_ARTICLE
-            . ($articleTypeId ? '?articleType=' . $articleTypeId : '');
+            . '?type=' . $articleType->value;
     }
 
     public static function buildBackofficeUsersUrl(Language $language): string
@@ -104,21 +105,6 @@ class UrlBuilderUtil
     public static function buildBackofficeNewUserUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::BACKOFFICE_NEW_USER;
-    }
-
-    public static function buildBackofficeBlogPostsUrl(Language $language): string
-    {
-        return self::buildBaseUrl($language) . self::BACKOFFICE_BLOG_POSTS;
-    }
-
-    public static function buildBackofficeBlogPostUrl(Language $language, int $articleId): string
-    {
-        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_BLOG_POST, $articleId);
-    }
-
-    public static function buildBackofficeNewBlogPostUrl(Language $language): string
-    {
-        return self::buildBaseUrl($language) . self::BACKOFFICE_NEW_BLOG_POST;
     }
 
     //////////////////////////////////////////////////////////////////////////////////

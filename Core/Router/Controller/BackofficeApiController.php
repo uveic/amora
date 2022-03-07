@@ -364,14 +364,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $backofficeUri = $typeId === ArticleType::Blog
-            ? UrlBuilderUtil::buildBackofficeBlogPostUrl($language, $newArticle->id)
-            : UrlBuilderUtil::buildBackofficeArticleUrl($language, $newArticle->id);
-
         return new BackofficeApiControllerStoreArticleSuccessResponse(
             success: (bool)$newArticle,
             articleId: $newArticle?->id,
-            articleBackofficeUri: $backofficeUri,
+            articleBackofficeUri: UrlBuilderUtil::buildBackofficeNewArticleUrl($language, $newArticle->type),
             articlePublicUri: $newArticle ? '/' . $newArticle->uri : null,
         );
     }
@@ -484,14 +480,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             userAgent: $request->userAgent,
         );
 
-        $backofficeUri = $type === ArticleType::Blog
-            ? UrlBuilderUtil::buildBackofficeBlogPostUrl($language, $articleId)
-            : UrlBuilderUtil::buildBackofficeArticleUrl($language, $articleId);
-
         return new BackofficeApiControllerUpdateArticleSuccessResponse(
             success: $res,
             articleId: $res ? $articleId : null,
-            articleBackofficeUri: $backofficeUri,
+            articleBackofficeUri: UrlBuilderUtil::buildBackofficeNewArticleUrl($language, $type),
             articlePublicUri: $res ? '/' . $uri : null,
         );
     }

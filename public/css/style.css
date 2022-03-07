@@ -613,6 +613,11 @@ article > p {
   border-top: 1px dotted var(--light-bg-color-3);
 }
 
+.article-blog-footer p {
+  margin: 0;
+  padding: 0;
+}
+
 article > img {
   position: relative;
   margin-top: 1rem;
@@ -846,7 +851,7 @@ svg,
   padding: 0 1rem;
 }
 
-.home-blog > h1 {
+.home-blog h1 {
   margin: 1rem 0 0;
 }
 

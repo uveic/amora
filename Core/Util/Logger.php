@@ -60,7 +60,7 @@ final class Logger
     ///////////////////////////////////////////////////////////////////////////
     // Logging helpers
 
-    public function logDebug(string $message, $pre = false): void
+    public function logDebug($message, $pre = false): void
     {
         if (!$this->isEnabled) {
             return;

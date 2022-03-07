@@ -19,6 +19,7 @@ return [
     'navAdminImages' => 'Images',
     'navAdminArticles' => 'Articles',
     'navAdminBlogPosts' => 'Blog Posts',
+    'navAdminPartialContent' => 'Partial Content',
     'navAdminArticleOptions' => 'Article Options',
 
     'editorTitlePlaceholder' => 'Title...',
@@ -142,13 +143,15 @@ return [
     'globalPageDeactivatedContent' => 'The page you are looking for is temporarily deactivated. You can get in touch at <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Sorry for the inconvenience.',
 
     'articleEditHomepageTitle' => 'Edit Homepage Content',
+    'articleEditBottomBlogPostTitle' => 'Edit Blog Post Bottom Content',
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',
     'articleStatusDeleted' => 'Deleted',
     'articleStatusPrivate' => 'Private',
-    'articleTypeHome' => 'Homepage',
     'articleTypeBlog' => 'Blog',
-    'articleTypeArticle' => 'Article',
+    'articleTypePage' => 'Page',
+    'articleTypePartialContentHomepage' => 'Homepage',
+    'articleTypePartialContentBlogBottom' => 'Bottom Blot Post',
     'paragraphPlaceholder' => 'Type here...',
     'articleBlogFooterInfo' => 'Thanks for reading and getting this far 💕. Comments are not enabled but you can write to me on <a href="mailto:%s">%s</a>, I would love to read your thoughts.',
 

@@ -14,11 +14,10 @@ if ($article === null) {
 }
 
 $canEdit = $responseData->request->session && $responseData->request->session->isAdmin();
+$postBottomContent = $responseData->postBottomContent ? $responseData->postBottomContent->contentHtml : '';
 
 $email = Core::getConfig()->siteAdminEmail;
-$editUrl = $article->type === ArticleType::Blog
-    ? UrlBuilderUtil::buildBackofficeBlogPostUrl($responseData->siteLanguage, $article->id)
-    : UrlBuilderUtil::buildBackofficeArticleUrl($responseData->siteLanguage, $article->id);
+$editUrl = UrlBuilderUtil::buildBackofficeArticleUrl($responseData->siteLanguage, $article->id);
 ?>
   <article>
 <?php if ($canEdit && $article->status !== ArticleStatus::Draft) { ?>
@@ -28,8 +27,8 @@ $editUrl = $article->type === ArticleType::Blog
     $this->insert('shared/partials/article/article-blog-info', ['responseData' => $responseData]);
 } ?>
     <?=$article->contentHtml?>
-<?php if ($article->type === ArticleType::Blog) { ?>
-    <p class="article-blog-footer"><?=sprintf($responseData->getLocalValue('articleBlogFooterInfo'), $email, $email)?></p>
+<?php if ($postBottomContent) { ?>
+    <div class="article-blog-footer"><?=$postBottomContent?></div>
 <?php } ?>
 <?php if ($article->type === ArticleType::Blog) {
     $this->insert('shared/partials/article/article-blog-bottom', ['responseData' => $responseData]);

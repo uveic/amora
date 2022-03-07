@@ -2,19 +2,33 @@
 
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
-$this->layout('base', ['responseData' => $responseData,])
+$this->layout('base', ['responseData' => $responseData,]);
 
+$articleTypeIdGetParam = $responseData->request->getGetParam('type');
+$articleType = $articleTypeIdGetParam
+    ? (ArticleType::tryFrom($articleTypeIdGetParam)
+        ? ArticleType::from($articleTypeIdGetParam)
+        : ArticleType::Page
+    ) : ArticleType::Page;
+
+$pageTitle = match ($articleType) {
+    ArticleType::Blog => $responseData->getLocalValue('navAdminBlogPosts'),
+    ArticleType::Page => $responseData->getLocalValue('navAdminArticles'),
+    ArticleType::PartialContentHomepage, ArticleType::PartialContentBlogBottom
+        => $responseData->getLocalValue('navAdminPartialContent'),
+};
 ?>
   <main>
     <section class="page-header">
-      <h3><?=$responseData->getLocalValue('navAdminArticles')?></h3>
+      <h3><?=$pageTitle?></h3>
       <div class="links">
-        <a href="<?=UrlBuilderUtil::buildBackofficeNewArticleUrl($responseData->siteLanguage)?>" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeNewArticleUrl($responseData->siteLanguage, $articleType)?>" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
       </div>
     </section>
     <div class="m-t-1 m-r-1 m-b-1 m-l-1">

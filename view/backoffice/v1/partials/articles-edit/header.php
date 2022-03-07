@@ -13,9 +13,10 @@ $settings = ArticleEditHtmlGenerator::generateSettingsButtonHtml($responseData);
 
 $articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
 $closeUrl = match($articleType) {
-    ArticleType::Page => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage),
-    ArticleType::Blog => UrlBuilderUtil::buildBackofficeBlogPostsUrl($responseData->siteLanguage),
-    ArticleType::Homepage => UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage),
+    ArticleType::Page => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Page),
+    ArticleType::Blog => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Blog),
+    ArticleType::PartialContentHomepage => UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage),
+    ArticleType::PartialContentBlogBottom => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::PartialContentBlogBottom),
 };
 
 $updatedAtContent = $responseData->getLocalValue('globalUpdated')
