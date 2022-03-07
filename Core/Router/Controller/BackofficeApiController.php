@@ -284,9 +284,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Endpoint: /back/article
      * Method: POST
      *
-     * @param string|null $languageIsoCode
+     * @param string $siteLanguageIsoCode
+     * @param string $articleLanguageIsoCode
      * @param int $statusId
-     * @param int|null $typeId
+     * @param int $typeId
      * @param string|null $title
      * @param string $contentHtml
      * @param string|null $uri
@@ -298,9 +299,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @return Response
      */
     public function storeArticle(
-        ?string $languageIsoCode,
+        string $siteLanguageIsoCode,
+        string $articleLanguageIsoCode,
         int $statusId,
-        ?int $typeId,
+        int $typeId,
         ?string $title,
         string $contentHtml,
         ?string $uri,
@@ -310,24 +312,36 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?array $tags,
         Request $request
     ): Response {
-        if ($typeId && !ArticleType::tryFrom($typeId)) {
+        if (!ArticleType::tryFrom($typeId)) {
             return new BackofficeApiControllerStoreArticleSuccessResponse(
                 success: false,
                 errorMessage: 'Invalid article type',
             );
         }
 
-        if ($statusId && !ArticleStatus::tryFrom($statusId) === null) {
+        if (!ArticleStatus::tryFrom($statusId) === null) {
             return new BackofficeApiControllerStoreArticleSuccessResponse(
                 success: false,
                 errorMessage: 'Invalid article status',
             );
         }
 
+        if (!Language::tryFrom(strtoupper($articleLanguageIsoCode))) {
+            return new BackofficeApiControllerStoreArticleSuccessResponse(
+                success: false,
+                errorMessage: 'Invalid article language',
+            );
+        }
+
+        if (!Language::tryFrom(strtoupper($siteLanguageIsoCode))) {
+            return new BackofficeApiControllerStoreArticleSuccessResponse(
+                success: false,
+                errorMessage: 'Invalid site language',
+            );
+        }
+
         $now = new DateTimeImmutable();
-        $language = Language::tryFrom(strtoupper($languageIsoCode))
-            ? Language::from(strtoupper($languageIsoCode))
-            : Core::getDefaultLanguage();
+        $articleLanguage = Language::from(strtoupper($articleLanguageIsoCode));
         $uri = $this->articleService->getAvailableUriForArticle(articleTitle: $title);
         $status = ArticleStatus::from($statusId);
         $publishOnObj = $publishOn
@@ -337,7 +351,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $newArticle = $this->articleService->createNewArticle(
             article: new Article(
                 id: null,
-                language: $language,
+                language: $articleLanguage,
                 user: $request->session->user,
                 status: $status,
                 type: $typeId ? ArticleType::from($typeId) : ArticleType::Page,
@@ -364,10 +378,13 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
+        $siteLanguage = Language::from(strtoupper($siteLanguageIsoCode));
         return new BackofficeApiControllerStoreArticleSuccessResponse(
             success: (bool)$newArticle,
             articleId: $newArticle?->id,
-            articleBackofficeUri: UrlBuilderUtil::buildBackofficeNewArticleUrl($language, $newArticle->type),
+            articleBackofficeUri: $newArticle
+                ? UrlBuilderUtil::buildBackofficeArticleUrl($siteLanguage, $newArticle->id)
+                : UrlBuilderUtil::buildBackofficeNewArticleUrl($siteLanguage, $newArticle->type),
             articlePublicUri: $newArticle ? '/' . $newArticle->uri : null,
         );
     }
@@ -377,7 +394,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Method: PUT
      *
      * @param int $articleId
-     * @param string $languageIsoCode
+     * @param string $siteLanguageIsoCode
+     * @param string $articleLanguageIsoCode
      * @param int $statusId
      * @param int $typeId
      * @param string|null $title
@@ -392,7 +410,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     public function updateArticle(
         int $articleId,
-        string $languageIsoCode,
+        string $siteLanguageIsoCode,
+        string $articleLanguageIsoCode,
         int $statusId,
         int $typeId,
         ?string $title,
@@ -418,17 +437,24 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        if (!Language::tryFrom(strtoupper($languageIsoCode))) {
+        if (!Language::tryFrom(strtoupper($articleLanguageIsoCode))) {
             return new BackofficeApiControllerUpdateArticleSuccessResponse(
                 success: false,
-                errorMessage: 'Invalid language',
+                errorMessage: 'Invalid article language',
             );
         }
 
-        $language = Language::from(strtoupper($languageIsoCode));
+        if (!Language::tryFrom(strtoupper($siteLanguageIsoCode))) {
+            return new BackofficeApiControllerUpdateArticleSuccessResponse(
+                success: false,
+                errorMessage: 'Invalid site language',
+            );
+        }
+
+        $articleLanguage = Language::from(strtoupper($articleLanguageIsoCode));
         $existingArticle = $this->articleService->getArticleForId(
             id: $articleId,
-            language: $language,
+            language: $articleLanguage,
         );
         if (empty($existingArticle)) {
             return new BackofficeApiControllerUpdateArticleSuccessResponse(
@@ -461,7 +487,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $res = $this->articleService->workflowUpdateArticle(
             article: new Article(
                 id: $articleId,
-                language: $language,
+                language: $articleLanguage,
                 user: $request->session->user,
                 status: $status,
                 type: $type,
@@ -483,7 +509,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerUpdateArticleSuccessResponse(
             success: $res,
             articleId: $res ? $articleId : null,
-            articleBackofficeUri: UrlBuilderUtil::buildBackofficeNewArticleUrl($language, $type),
+            articleBackofficeUri: UrlBuilderUtil::buildBackofficeArticleUrl(
+                language: Language::from(strtoupper($siteLanguageIsoCode)),
+                articleId: $articleId,
+            ),
             articlePublicUri: $res ? '/' . $uri : null,
         );
     }

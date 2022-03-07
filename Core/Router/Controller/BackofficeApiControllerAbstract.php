@@ -122,9 +122,10 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Endpoint: /back/article
      * Method: POST
      *
-     * @param string|null $languageIsoCode
+     * @param string $siteLanguageIsoCode
+     * @param string $articleLanguageIsoCode
      * @param int $statusId
-     * @param int|null $typeId
+     * @param int $typeId
      * @param string|null $title
      * @param string $contentHtml
      * @param string|null $uri
@@ -136,9 +137,10 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function storeArticle(
-        ?string $languageIsoCode,
+        string $siteLanguageIsoCode,
+        string $articleLanguageIsoCode,
         int $statusId,
-        ?int $typeId,
+        int $typeId,
         ?string $title,
         string $contentHtml,
         ?string $uri,
@@ -154,7 +156,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Method: PUT
      *
      * @param int $articleId
-     * @param string $languageIsoCode
+     * @param string $siteLanguageIsoCode
+     * @param string $articleLanguageIsoCode
      * @param int $statusId
      * @param int $typeId
      * @param string|null $title
@@ -169,7 +172,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      */
     abstract protected function updateArticle(
         int $articleId,
-        string $languageIsoCode,
+        string $siteLanguageIsoCode,
+        string $articleLanguageIsoCode,
         int $statusId,
         int $typeId,
         ?string $title,
@@ -460,7 +464,26 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
-        $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
+        $siteLanguageIsoCode = null;
+        if (!isset($bodyParams['siteLanguageIsoCode'])) {
+            $errors[] = [
+                'field' => 'siteLanguageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $siteLanguageIsoCode = $bodyParams['siteLanguageIsoCode'] ?? null;
+        }
+
+        $articleLanguageIsoCode = null;
+        if (!isset($bodyParams['articleLanguageIsoCode'])) {
+            $errors[] = [
+                'field' => 'articleLanguageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $articleLanguageIsoCode = $bodyParams['articleLanguageIsoCode'] ?? null;
+        }
+
         $statusId = null;
         if (!isset($bodyParams['statusId'])) {
             $errors[] = [
@@ -471,7 +494,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             $statusId = $bodyParams['statusId'] ?? null;
         }
 
-        $typeId = $bodyParams['typeId'] ?? null;
+        $typeId = null;
+        if (!isset($bodyParams['typeId'])) {
+            $errors[] = [
+                'field' => 'typeId',
+                'message' => 'required'
+            ];
+        } else {
+            $typeId = $bodyParams['typeId'] ?? null;
+        }
+
         $title = $bodyParams['title'] ?? null;
         $contentHtml = null;
         if (!isset($bodyParams['contentHtml'])) {
@@ -510,7 +542,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         try {
             return $this->storeArticle(
-                $languageIsoCode,
+                $siteLanguageIsoCode,
+                $articleLanguageIsoCode,
                 $statusId,
                 $typeId,
                 $title,
@@ -566,14 +599,24 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
-        $languageIsoCode = null;
-        if (!isset($bodyParams['languageIsoCode'])) {
+        $siteLanguageIsoCode = null;
+        if (!isset($bodyParams['siteLanguageIsoCode'])) {
             $errors[] = [
-                'field' => 'languageIsoCode',
+                'field' => 'siteLanguageIsoCode',
                 'message' => 'required'
             ];
         } else {
-            $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
+            $siteLanguageIsoCode = $bodyParams['siteLanguageIsoCode'] ?? null;
+        }
+
+        $articleLanguageIsoCode = null;
+        if (!isset($bodyParams['articleLanguageIsoCode'])) {
+            $errors[] = [
+                'field' => 'articleLanguageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $articleLanguageIsoCode = $bodyParams['articleLanguageIsoCode'] ?? null;
         }
 
         $statusId = null;
@@ -635,7 +678,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         try {
             return $this->updateArticle(
                 $articleId,
-                $languageIsoCode,
+                $siteLanguageIsoCode,
+                $articleLanguageIsoCode,
                 $statusId,
                 $typeId,
                 $title,

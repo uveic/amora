@@ -213,6 +213,7 @@ final class ArticleEditHtmlGenerator
 
         $output = '<div class="m-r-05">';
         $output .= '<span class="light-text-color" style="margin-right: 0.1rem;">' . $article->id . '. </span>';
+        $output .= Language::getIconFlag($article->language, 'm-r-05');
         $output .= $article->status === ArticleStatus::Published
             ? '<a href="' . $articleUrl . '">' . $articleTitle . '</a>'
             : $articleTitle;
