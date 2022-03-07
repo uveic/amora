@@ -571,3 +571,17 @@ document.querySelectorAll('.pexego-rearrange-sections-close').forEach(a => {
     document.querySelectorAll('.pexego-section-controls').forEach(d => d.classList.add('null'));
   });
 });
+
+document.querySelectorAll('#filter-close').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelector('#filter-container').classList.add('null');
+  });
+});
+
+document.querySelectorAll('#filter-open').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelector('#filter-container').classList.remove('null');
+  });
+});
