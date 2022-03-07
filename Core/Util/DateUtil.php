@@ -70,7 +70,7 @@ final class DateUtil
      *
      * @param DateTimeImmutable|DateTime $from
      * @param DateTimeImmutable|DateTime|null $to
-     * @param \Amora\App\Value\Language $language
+     * @param Language $language
      * @param bool $full
      * @param bool $includePrefixAndOrSuffix
      * @param bool $includeSeconds
