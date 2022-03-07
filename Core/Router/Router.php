@@ -6,6 +6,7 @@ use Amora\App\Router\AppRouter;
 use Amora\App\Router\AppRouterCore;
 use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Model\Article;
+use Amora\Core\Module\Article\Value\ArticleType;
 use Exception;
 use Throwable;
 use Amora\Core\Core;
@@ -214,6 +215,10 @@ class Router
                         publishedAfter: $article->publishOn,
                         isAdmin: $isAdmin,
                     ) : null,
+                postBottomContent: $articleService->getArticlePartialContent(
+                    articleType: ArticleType::PartialContentBlogBottom,
+                    language: $request->siteLanguage,
+                ),
             ),
         );
     }

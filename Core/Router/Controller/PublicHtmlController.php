@@ -323,7 +323,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             ),
         );
 
-        $homepageArticle = $this->articleService->getHomepageArticle(
+        $homepageArticle = $this->articleService->getArticlePartialContent(
+            articleType: ArticleType::PartialContentHomepage,
             language: $request->siteLanguage,
         );
 

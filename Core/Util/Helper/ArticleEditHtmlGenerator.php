@@ -78,7 +78,7 @@ final class ArticleEditHtmlGenerator
             return $responseData->getFirstArticle()->type;
         }
 
-        $typeIdGetParam = $responseData->request->getGetParam('articleType');
+        $typeIdGetParam = $responseData->request->getGetParam('type');
         if (!empty($typeIdGetParam)) {
             /** @var \BackedEnum $articleType */
             foreach (ArticleType::getAll() as $articleType) {
@@ -96,14 +96,14 @@ final class ArticleEditHtmlGenerator
     public static function generateArticleStatusDropdownSelectHtml(
         HtmlResponseDataAuthorised $responseData,
     ): string {
-        $isHomepage = self::getArticleType($responseData) === ArticleType::Homepage;
+        $isPartialContent = ArticleType::isPartialContent(self::getArticleType($responseData));
         $articleStatus = $responseData->getFirstArticle()
             ? $responseData->getFirstArticle()->status
-            : ($isHomepage ? ArticleStatus::Published : ArticleStatus::Draft);
+            : ($isPartialContent ? ArticleStatus::Published : ArticleStatus::Draft);
         $articleStatusName = $responseData->getLocalValue('articleStatus' . $articleStatus->name);
         $isPublished = $responseData->getFirstArticle()
             ? $articleStatus === ArticleStatus::Published
-            : $isHomepage;
+            : $isPartialContent;
 
         $output = [];
         $output[] = '      <input type="checkbox" id="article-status-dd-checkbox" class="dropdown-menu">';
@@ -164,7 +164,7 @@ final class ArticleEditHtmlGenerator
     ): string {
         $articleType = self::getArticleType($responseData);
 
-        return $articleType === ArticleType::Homepage
+        return ArticleType::isPartialContent($articleType)
             ? ''
             : '<a href="#" class="article-settings m-r-1"><img src="/img/svg/gear.svg" class="img-svg m-t-0" alt="' . $responseData->getLocalValue('globalSettings') . '"></a>';
     }
@@ -172,19 +172,26 @@ final class ArticleEditHtmlGenerator
     public static function generateTitleHtml(
         HtmlResponseDataAuthorised $responseData,
     ): string {
-        if (!$responseData->getFirstArticle()) {
-            return $responseData->getLocalValue('globalEdit');
-        }
+        $article = $responseData->getFirstArticle();
+        $articleType = $article ? $article->type : self::getArticleType($responseData);
+        $langIcon = $article
+            ? Language::getIconFlag($article->language)
+            : Language::getIconFlag($responseData->siteLanguage);
 
-        $articleType = self::getArticleType($responseData);
+        $articleId = $article
+            ? '<span style="color: var(--light-color);font-size: 0.9rem;font-weight: normal;">#' . $article->id . '</span>'
+            : '';
 
-        if ($articleType === ArticleType::Homepage) {
-            return $responseData->getLocalValue('articleEditHomepageTitle');
-        }
+        $verb = $article
+            ? $responseData->getLocalValue('globalEdit')
+            : $responseData->getLocalValue('globalNew');
 
-        return $articleType === ArticleType::Page
-            ? $responseData->getLocalValue('globalNew') . ' ' . $responseData->getLocalValue('globalArticle')
-            : $responseData->getLocalValue('globalNew') . ' ' . $responseData->getLocalValue('globalBlogPost');
+        return '<span style="display: flex;gap: 0.5rem;align-items: center;">'
+            . $articleId
+            . '<span style="padding: 0.1rem 0.4rem;">' . $verb . '</span>'
+            . '<span style="padding: 0.1rem 0.4rem;">' . $responseData->getLocalValue('articleType' . $articleType->name) . '</span>'
+            . '<span style="padding: 0.1rem 0.4rem;">' . $langIcon . '</span>'
+            . '</span>';
     }
 
     public static function generateArticleTitleHtml(

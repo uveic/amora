@@ -16,6 +16,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         public readonly ?array $articles = [],
         public readonly ?Article $previousBlogPost = null,
         public readonly ?Article $nextBlogPost = null,
+        public readonly ?Article $postBottomContent = null,
         public readonly ?UserFeedback $userFeedback = null,
         public readonly ?string $verificationHash = null,
         public readonly ?int $passwordUserId = null,
@@ -31,8 +32,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
 
     public function getFirstArticle(): ?Article
     {
-        $allArticles = $this->articles;
-        return $allArticles[0] ?? null;
+        return $this->articles[0] ?? null;
     }
 
     public function getUserName(): ?string

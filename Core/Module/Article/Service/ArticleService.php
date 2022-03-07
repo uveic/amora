@@ -140,12 +140,12 @@ class ArticleService
         return $this->articleDataLayer->getSectionsForArticleId($articleId);
     }
 
-    public function getHomepageArticle(Language $language): ?Article
+    public function getArticlePartialContent(ArticleType $articleType, Language $language): ?Article
     {
         $res = $this->filterArticlesBy(
             languageIsoCodes: [$language->value],
             statusIds: [ArticleStatus::Published->value],
-            typeIds: [ArticleType::Homepage->value],
+            typeIds: [$articleType->value],
         );
 
         if (count($res) > 1) {

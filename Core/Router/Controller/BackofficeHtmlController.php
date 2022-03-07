@@ -150,9 +150,16 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getArticlesPage(Request $request): Response
     {
+        $articleTypeIdGetParam = $request->getGetParam('type')
+            ? (int)$request->getGetParam('type')
+            : null;
+        $articleType = ArticleType::tryFrom($articleTypeIdGetParam)
+            ? ArticleType::from($articleTypeIdGetParam)
+            : ArticleType::Page;
+
         $pagination = new Response\Pagination(itemsPerPage: 25);
         $articles = $this->articleService->filterArticlesBy(
-            typeIds: [ArticleType::Page->value],
+            typeIds: [$articleType->value],
             includeTags: true,
             includePublishedAtInTheFuture: true,
             queryOptions: new QueryOptions(
@@ -182,14 +189,16 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getNewArticlePage(Request $request): Response
     {
-        $articleTypeIdGetParam = $request->getGetParam('articleType')
-            ? (int)$request->getGetParam('articleType')
-            : null;
+        $articleType = $request->getGetParam('type')
+            ? (ArticleType::tryFrom((int)$request->getGetParam('type'))
+                ? ArticleType::from((int)$request->getGetParam('type'))
+                : null
+            ) : null;
 
-        if ($articleTypeIdGetParam === ArticleType::Homepage->value) {
+        if (ArticleType::isPartialContent($articleType)) {
             $articles = $this->articleService->filterArticlesBy(
                 languageIsoCodes: [$request->siteLanguage->value],
-                typeIds: [$articleTypeIdGetParam],
+                typeIds: [$articleType->value],
             );
 
             if ($articles) {
@@ -267,90 +276,6 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminImages'),
                 images: $images
-            ),
-        );
-    }
-
-    /**
-     * Endpoint: /backoffice/blog-posts
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     */
-    protected function getBlogPostsPage(Request $request): Response
-    {
-        $pagination = new Response\Pagination(itemsPerPage: 25);
-        $articles = $this->articleService->filterArticlesBy(
-            typeIds: [ArticleType::Blog->value],
-            includeTags: true,
-            includePublishedAtInTheFuture: true,
-            queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy(field: 'updated_at', direction: QueryOrderDirection::DESC)],
-                pagination: $pagination,
-            )
-        );
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-
-        return Response::createBackofficeHtmlResponse(
-            template: 'blog-posts',
-            responseData: new HtmlResponseDataAuthorised(
-                request: $request,
-                pageTitle: $localisationUtil->getValue('navAdminBlogPosts'),
-                articles: $articles,
-                pagination: $pagination,
-            ),
-        );
-    }
-
-    /**
-     * Endpoint: /backoffice/blog-posts/new
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     */
-    protected function getNewBlogPostPage(Request $request): Response
-    {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        return Response::createBackofficeHtmlResponse(
-            template: 'blog-posts-edit',
-            responseData: new HtmlResponseDataAuthorised(
-                request: $request,
-                pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
-                    $localisationUtil->getValue('globalBlogPost'),
-            ),
-        );
-    }
-
-    /**
-     * Endpoint: /backoffice/blog-posts/{articleId}
-     * Method: GET
-     *
-     * @param int $articleId
-     * @param Request $request
-     * @return Response
-     */
-    protected function getEditBlogPostPage(int $articleId, Request $request): Response
-    {
-        $article = $this->articleService->getArticleForId($articleId, true);
-        if (empty($article)) {
-            return Response::createFrontendPublicHtmlResponse(
-                template: 'shared/404',
-                responseData: new HtmlResponseDataAuthorised($request),
-            );
-        }
-
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        $articleSections = $this->articleService->getSectionsForArticleId($articleId);
-        return Response::createBackofficeHtmlResponse(
-            template: 'blog-posts-edit',
-            responseData: new HtmlResponseDataAuthorised(
-                request: $request,
-                pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
-                    $localisationUtil->getValue('globalBlogPost'),
-                articles: [$article],
-                articleSections: $articleSections,
             ),
         );
     }
