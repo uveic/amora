@@ -722,6 +722,26 @@ input.pexego-content-title {
 }
 /* Side nav style ends here */
 
+/* Article filter style starts here */
+#filter-container {
+  border: 1px solid var(--light-bg-color-2);
+  padding: 0.5rem;
+  margin: 1rem;
+  position: relative;
+}
+
+#filter-container h3 {
+  margin: 0;
+}
+
+#filter-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+}
+/* Article filter style ends here */
+
 @media screen and (min-width: 800px) {
   #upload-images {
     flex-direction: row;
