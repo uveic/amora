@@ -114,7 +114,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
           delete c.dataset.placeholder;
           delete c.dataset.imageId;
 
-          if (c.nodeName !== 'IMG' && !c.innerHTML.trim().length) {
+          if (c.nodeName !== 'IMG' && !c.textContent.trim().length) {
             sectionElement.removeChild(c);
           }
         }
@@ -185,6 +185,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     };
 
     const articleTitle = getTitleContent();
+    const articleLanguageIsoCode = getLanguageIsoCode();
     const content = getContentHtmlAndSections();
 
     if (!articleTitle && !content.contentHtml) {
@@ -200,7 +201,8 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
 
     const payload = JSON.stringify({
-      languageIsoCode: getLanguageIsoCode(),
+      siteLanguageIsoCode: document.documentElement.lang ?? articleLanguageIsoCode,
+      articleLanguageIsoCode: articleLanguageIsoCode,
       title: articleTitle,
       uri: getUri(),
       contentHtml: content.contentHtml,

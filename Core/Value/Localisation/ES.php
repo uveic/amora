@@ -82,7 +82,7 @@ return [
 
     'dashboardGoTo' => 'Ir a...',
     'dashboardHomepage' => 'Portada',
-    'dashboardShortcuts' => 'Accessos directos',
+    'dashboardShortcuts' => 'Accesos directos',
     'dashboardNewBlogPost' => 'Crear entrada en el blog',
 
     'globalYes' => 'Sí',
