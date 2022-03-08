@@ -7,11 +7,9 @@ use Amora\Core\Util\UrlBuilderUtil;
 /** @var HtmlResponseDataAuthorised $responseData */
 
 $articleTypeIdGetParam = $responseData->request->getGetParam('type');
-$articleType = $articleTypeIdGetParam
-    ? (ArticleType::tryFrom($articleTypeIdGetParam)
-        ? ArticleType::from($articleTypeIdGetParam)
-        : ArticleType::Page
-    ) : ArticleType::Page;
+$articleType = is_int($articleTypeIdGetParam) && ArticleType::tryFrom($articleTypeIdGetParam)
+    ? ArticleType::from($articleTypeIdGetParam)
+    : ArticleType::Page;
 
 $pageTitle = match ($articleType) {
     ArticleType::Blog => $responseData->getLocalValue('navAdminBlogPosts'),

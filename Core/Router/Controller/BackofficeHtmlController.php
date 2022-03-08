@@ -152,19 +152,19 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getArticlesPage(Request $request): Response
     {
-        $articleTypeIdGetParam = $request->getGetParam('type');
-        $articleType = $articleTypeIdGetParam && ArticleType::tryFrom($articleTypeIdGetParam)
-            ? ArticleType::from($articleTypeIdGetParam)
+        $typeIdParam = $request->getGetParam('type');
+        $articleType = is_int($typeIdParam) && ArticleType::tryFrom($typeIdParam)
+            ? ArticleType::from($typeIdParam)
             : null;
 
-        $articleStatusIdGetParam = $request->getGetParam('status');
-        $articleStatus = $articleStatusIdGetParam && ArticleStatus::tryFrom($articleStatusIdGetParam)
-            ? ArticleStatus::from($articleStatusIdGetParam)
+        $statusIdParam = $request->getGetParam('status');
+        $articleStatus = is_int($statusIdParam) && ArticleStatus::tryFrom($statusIdParam)
+            ? ArticleStatus::from($statusIdParam)
             : null;
 
-        $articleLanguageIsoCodeGetParam = $request->getGetParam('lang');
-        $articleLanguage = $articleLanguageIsoCodeGetParam && Language::tryFrom($articleLanguageIsoCodeGetParam)
-            ? Language::from($articleLanguageIsoCodeGetParam)
+        $languageIsoCodeParam = $request->getGetParam('lang');
+        $articleLanguage = $languageIsoCodeParam && Language::tryFrom($languageIsoCodeParam)
+            ? Language::from($languageIsoCodeParam)
             : null;
 
         $pagination = new Response\Pagination(itemsPerPage: 25);
