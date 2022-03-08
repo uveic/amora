@@ -211,12 +211,13 @@ final class ArticleEditHtmlGenerator
             language: $responseData->siteLanguage,
         );
 
-        $output = '<div class="m-r-05">';
-        $output .= '<span class="light-text-color" style="margin-right: 0.1rem;">' . $article->id . '. </span>';
-        $output .= Language::getIconFlag($article->language, 'm-r-05');
-        $output .= $article->status === ArticleStatus::Published
+        $output = [];
+        $output[] = '            <div class="m-r-05">';
+        $output[] = '              <span class="light-text-color" style="font-size: 0.9rem;">#' . $article->id . '</span>';
+        $output[] = '              ' . Language::getIconFlag($article->language, 'm-l-05 m-r-05');
+        $output[] = '              ' . ($article->status === ArticleStatus::Published
             ? '<a href="' . $articleUrl . '">' . $articleTitle . '</a>'
-            : $articleTitle;
+            : $articleTitle);
 
         if ($article->publishOn) {
             $publishOn = DateUtil::formatDate(
@@ -224,7 +225,7 @@ final class ArticleEditHtmlGenerator
                 lang: $responseData->siteLanguage,
                 includeTime: true,
             );
-            $output .= '<p class="article-tags"><strong>'
+            $output[] = '              <p class="article-tags"><strong>'
                 . $responseData->getLocalValue('globalPublishOn') . '</strong>: ' . $publishOn
                 . '</p>';
         } else {
@@ -233,23 +234,24 @@ final class ArticleEditHtmlGenerator
                 lang: $responseData->siteLanguage,
                 includeTime: true,
             );
-            $output .= '<p class="article-tags"><strong>'
+            $output[] = '              <p class="article-tags"><strong>'
                 . $responseData->getLocalValue('globalUpdatedAt') . '</strong>: ' . $updatedAt
                 . '</p>';
         }
 
-        $output .= $article->tags
-            ? '<p class="article-tags">'
+        if ($article->tags) {
+            $output[] = '              <p class="article-tags">'
                 . '<strong>' . $responseData->getLocalValue('globalTags') . '</strong>: ' . $article->getTagsAsString()
-                . '</p>'
-            : '';
-        $output .= '</div>';
+                . '</p>';
+        }
 
-        $output .= '<span class="article-status ' . $statusClassname . '">' .
+        $output[] = '            </div>';
+
+        $output[] = '            <span class="article-status ' . $statusClassname . '">' .
             $responseData->getLocalValue('articleStatus' . $article->status->name) .
             '</span>';
 
-        return $output;
+        return implode(PHP_EOL, $output) . PHP_EOL;
     }
 
     public static function generateArticlePublishedIconHtml(Article $article): string

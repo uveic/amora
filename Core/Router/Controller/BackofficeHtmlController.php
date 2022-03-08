@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Router;
 
+use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
@@ -11,6 +12,7 @@ use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\ImageService;
+use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -150,16 +152,26 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getArticlesPage(Request $request): Response
     {
-        $articleTypeIdGetParam = $request->getGetParam('type')
-            ? (int)$request->getGetParam('type')
-            : null;
-        $articleType = ArticleType::tryFrom($articleTypeIdGetParam)
+        $articleTypeIdGetParam = $request->getGetParam('type');
+        $articleType = $articleTypeIdGetParam && ArticleType::tryFrom($articleTypeIdGetParam)
             ? ArticleType::from($articleTypeIdGetParam)
-            : ArticleType::Page;
+            : null;
+
+        $articleStatusIdGetParam = $request->getGetParam('status');
+        $articleStatus = $articleStatusIdGetParam && ArticleStatus::tryFrom($articleStatusIdGetParam)
+            ? ArticleStatus::from($articleStatusIdGetParam)
+            : null;
+
+        $articleLanguageIsoCodeGetParam = $request->getGetParam('lang');
+        $articleLanguage = $articleLanguageIsoCodeGetParam && Language::tryFrom($articleLanguageIsoCodeGetParam)
+            ? Language::from($articleLanguageIsoCodeGetParam)
+            : null;
 
         $pagination = new Response\Pagination(itemsPerPage: 25);
         $articles = $this->articleService->filterArticlesBy(
-            typeIds: [$articleType->value],
+            languageIsoCodes: $articleLanguage ? [$articleLanguage->value] : [],
+            statusIds: $articleStatus ? [$articleStatus->value] : [],
+            typeIds: $articleType ? [$articleType->value] : [],
             includeTags: true,
             includePublishedAtInTheFuture: true,
             queryOptions: new QueryOptions(

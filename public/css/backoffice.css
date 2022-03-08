@@ -725,20 +725,54 @@ input.pexego-content-title {
 /* Article filter style starts here */
 #filter-container {
   border: 1px solid var(--light-bg-color-2);
-  padding: 0.5rem;
+  padding: 0;
   margin: 1rem;
   position: relative;
 }
 
-#filter-container h3 {
+#filter-header {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  background-color: var(--light-bg-color-2);
+  padding: 0.5rem 1rem 0.25rem;
+  margin: 0;
+  border-bottom: 1px solid var(--light-bg-color-3);
+}
+
+#filter-header h3 {
+  padding: 0;
   margin: 0;
 }
 
-#filter-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.5rem;
+#filter-links {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+#filter-form-wrapper {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem;
+  gap: 2rem;
+}
+
+#filter-form-wrapper > div {
+  margin: 0;
+  flex-grow: 1;
+  min-width: 250px;
+  flex-shrink: 0;
+}
+
+.filter-button {
+  width: auto;
+  align-self: flex-end;
+  min-width: 250px;
+  flex-grow: 1;
 }
 /* Article filter style ends here */
 
