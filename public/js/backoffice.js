@@ -585,3 +585,44 @@ document.querySelectorAll('#filter-open').forEach(a => {
     document.querySelector('#filter-container').classList.remove('null');
   });
 });
+
+document.querySelectorAll('#filter-refresh').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const type = document.querySelector('select[name="articleType"]').value;
+    window.location.href = window.location.origin + window.location.pathname + '?type=' + type;
+  });
+});
+
+document.querySelectorAll('#filter-article-button').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const status = document.querySelector('select[name="articleStatus"]').value;
+    const type = document.querySelector('select[name="articleType"]').value;
+    const lang = document.querySelector('select[name="articleLanguageIsoCode"]').value;
+
+    let query = new URLSearchParams();
+
+    if (status.length) {
+      query.append('status', status);
+    }
+
+    if (type.length) {
+      query.append('type', type);
+    }
+
+    if (lang.length) {
+      query.append('lang', lang);
+    }
+
+    if (!query.entries()) {
+      document.querySelector('#filter-container').classList.remove('null');
+      return;
+    }
+
+    const queryString = query.entries() ? '?' + query.toString() : '';
+
+    window.location.href = window.location.origin + window.location.pathname + queryString;
+  });
+});

@@ -8,11 +8,25 @@ use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 /** @var HtmlResponseDataAuthorised $responseData */
 $article = $responseData->getFirstArticle();
 $articleSections = $responseData->articleSections;
-$images = [];
-
-$this->layout('base', ['responseData' => $responseData]);
 
 $articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
+
+if (!$articleSections) {
+    $now = new DateTimeImmutable();
+    $articleSections[] = new ArticleSection(
+        id: 0,
+        articleId: 0,
+        articleSectionType: ArticleSectionType::TextParagraph,
+        contentHtml: '',
+        order: null,
+        imageId: null,
+        imageCaption: null,
+        createdAt: $now,
+        updatedAt: $now,
+    );
+}
+
+$this->layout('base', ['responseData' => $responseData]);
 
 ?>
 <?=$this->insert('partials/articles-edit/settings', ['responseData' => $responseData])?>
@@ -24,6 +38,7 @@ $articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
       <input name="articleId" type="hidden" value="<?=$article ? $article->id : ''?>">
       <input name="articleTypeId" type="hidden" value="<?=$articleType->value?>">
       <article class="pexego-container">
+        <input name="articleTitle" type="text" value="<?=$article ? $article->title: ''?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" class="pexego-content-title placeholder">
 <?php
     $count = 0;
     $total = count($articleSections);
