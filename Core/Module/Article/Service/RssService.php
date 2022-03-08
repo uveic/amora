@@ -138,13 +138,11 @@ class RssService
 
     private function getLastPubDate(?Article $article): DateTimeImmutable
     {
-        $utcTimezone = new DateTimeZone('UTC');
-
         if (!$article) {
-            return new DateTimeImmutable('now', $utcTimezone);
+            return new DateTimeImmutable('now');
         }
 
-        return new DateTimeImmutable($article->publishOn, $utcTimezone);
+        return $article->publishOn;
     }
 
     private function getBuildDate(array $articles): DateTimeImmutable
