@@ -15,7 +15,7 @@ if (!$article || !$article->title) {
 
 $canEdit = $responseData->request->session && $responseData->request->session->isAdmin();
 $editUrlHtml = $canEdit
-    ? '<a class="article-edit" href="' . UrlBuilderUtil::buildBackofficeArticleUrl($responseData->siteLanguage, $article->id) . '">' . strtolower($responseData->getLocalValue('globalEdit')) . '</a>'
+    ? '<a href="' . UrlBuilderUtil::buildBackofficeArticleUrl($responseData->siteLanguage, $article->id) . '">' . strtolower($responseData->getLocalValue('globalEdit')) . '</a>'
     : '';
 
 $publishedOnDate = DateUtil::formatDate(
