@@ -8,25 +8,19 @@ use Amora\Core\Module\Article\Value\ArticleType;
 /** @var HtmlResponseDataAuthorised $responseData */
 
 $articleTypeIdGetParam = $responseData->request->getGetParam('type');
-$articleType = $articleTypeIdGetParam
-    ? (ArticleType::tryFrom($articleTypeIdGetParam)
-        ? ArticleType::from($articleTypeIdGetParam)
-        : null
-    ) : null;
+$articleType = is_int($articleTypeIdGetParam) && ArticleType::tryFrom($articleTypeIdGetParam)
+    ? ArticleType::from($articleTypeIdGetParam)
+    : null;
 
 $articleLanguageIsoCodeGetParam = $responseData->request->getGetParam('lang');
-$articleLanguage = $articleLanguageIsoCodeGetParam
-    ? (Language::tryFrom($articleLanguageIsoCodeGetParam)
-        ? Language::from($articleLanguageIsoCodeGetParam)
-        : null
-    ) : null;
+$articleLanguage = $articleLanguageIsoCodeGetParam && Language::tryFrom($articleLanguageIsoCodeGetParam)
+    ? Language::from($articleLanguageIsoCodeGetParam)
+    : null;
 
 $articleStatusGetParam = $responseData->request->getGetParam('status');
-$articleStatus = $articleStatusGetParam
-    ? (ArticleStatus::tryFrom($articleStatusGetParam)
-        ? ArticleStatus::from($articleStatusGetParam)
-        : null
-    ) : null;
+$articleStatus = is_int($articleStatusGetParam) && ArticleStatus::tryFrom($articleStatusGetParam)
+    ? ArticleStatus::from($articleStatusGetParam)
+    : null;
 
 $filterClass = $articleStatus || $articleLanguage ? '' : 'null';
 ?>
