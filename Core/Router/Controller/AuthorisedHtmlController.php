@@ -41,8 +41,8 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
-        return Response::createFrontendPrivateHtmlResponse(
-            template: 'dashboard',
+        return Response::createHtmlResponse(
+            template: 'core/frontend/private/dashboard',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navDashboard'),
@@ -75,8 +75,8 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     protected function getUserAccountHtml(Request $request): Response
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        return Response::createFrontendPrivateHtmlResponse(
-            template: 'account',
+        return Response::createHtmlResponse(
+            template: 'core/frontend/private/account',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalUserAccount'),
@@ -95,8 +95,8 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     protected function getUserAccountSettingsHtml(string $settingsPage, Request $request): Response
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        return Response::createFrontendPrivateHtmlResponse(
-            template: 'account',
+        return Response::createHtmlResponse(
+            template: 'core/frontend/private/account',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalUserAccount'),

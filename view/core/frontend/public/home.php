@@ -15,13 +15,13 @@ if ($responseData->userFeedback) {
 ?>
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
-<?= $this->insert('shared/partials/head', ['responseData' => $responseData]) ?>
+<?= $this->insert('partials/head', ['responseData' => $responseData]) ?>
 <body>
 <?=$userFeedbackHtml?>
-<?=$this->insert('shared/partials/home/main', ['responseData' => $responseData])?>
-<?=$this->insert('shared/partials/home/articles', ['responseData' => $responseData])?>
-<?=$this->insert('shared/partials/home/blog', ['responseData' => $responseData])?>
-<?=$this->insert('shared/partials/home/footer', ['responseData' => $responseData])?>
+<?=$this->insert('partials/home/main', ['responseData' => $responseData])?>
+<?=$this->insert('partials/home/articles', ['responseData' => $responseData])?>
+<?=$this->insert('partials/home/blog', ['responseData' => $responseData])?>
+<?=$this->insert('partials/home/footer', ['responseData' => $responseData])?>
 <script type="module" src="/js/main.js"></script>
 </body>
 </html>

@@ -62,6 +62,7 @@ class RouterCore extends Core
             factory: function () use (
                 $sessionService,
             ) {
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleType.php';
                 require_once self::getPathRoot() . '/Core/Util/CsvWriterUtil.php';
                 require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';

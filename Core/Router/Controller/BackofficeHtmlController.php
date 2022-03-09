@@ -62,8 +62,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
-        return Response::createBackofficeHtmlResponse(
-            template: 'dashboard',
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/dashboard',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminDashboard'),
@@ -82,8 +82,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $users = $this->userService->filterUsersBy();
-        return Response::createBackofficeHtmlResponse(
-            template: 'users',
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/users',
             responseData: new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminUsers'),
@@ -103,8 +103,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
-        return Response::createBackofficeHtmlResponse(
-            template: 'users-edit',
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/users-edit',
             responseData: new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
@@ -126,14 +126,14 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $user = $this->userService->getUserForId($userId, true);
         if (empty($user)) {
-            return Response::createFrontendPublicHtmlResponse(
-                template: 'shared/404',
+            return Response::createHtmlResponse(
+                template: 'core/frontend/public/404',
                 responseData: new HtmlResponseDataAuthorised($request),
             );
         }
 
-        return Response::createBackofficeHtmlResponse(
-            template: 'users-edit',
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/users-edit',
             responseData: new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
@@ -181,8 +181,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         );
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
-        return Response::createBackofficeHtmlResponse(
-            template: 'articles',
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/articles',
             responseData: new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminArticles'),
@@ -224,8 +224,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         }
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        return Response::createBackofficeHtmlResponse(
-            template: 'articles-edit',
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/articles-edit',
             responseData: new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
@@ -246,16 +246,16 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $article = $this->articleService->getArticleForId($articleId, true);
         if (empty($article)) {
-            return Response::createFrontendPublicHtmlResponse(
-                template: 'shared/404',
+            return Response::createHtmlResponse(
+                template: 'core/frontend/public/404',
                 responseData: new HtmlResponseDataAuthorised($request),
             );
         }
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $articleSections = $this->articleService->getSectionsForArticleId($articleId);
-        return Response::createBackofficeHtmlResponse(
-            template: 'articles-edit',
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/articles-edit',
             responseData: new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
@@ -282,8 +282,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         );
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
-        return Response::createBackofficeHtmlResponse(
-            template: 'images',
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/images',
             responseData: new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminImages'),

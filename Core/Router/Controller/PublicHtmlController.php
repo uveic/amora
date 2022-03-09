@@ -67,8 +67,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        return Response::createFrontendPublicHtmlResponse(
-            template: 'shared/login',
+        return Response::createHtmlResponse(
+            template: 'core/frontend/public/login',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)
@@ -94,8 +94,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        return Response::createFrontendPublicHtmlResponse(
-            template: 'shared/login-forgot',
+        return Response::createHtmlResponse(
+            template: 'core/frontend/public/login-forgot',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)
@@ -137,8 +137,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        return Response::createFrontendPublicHtmlResponse(
-            template: 'shared/register',
+        return Response::createHtmlResponse(
+            template: 'core/frontend/public/register',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)->getValue('navSignUp'),
@@ -196,8 +196,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         }
 
         $user = $this->userService->getUserForId($res->userId);
-        return Response::createFrontendPublicHtmlResponse(
-            template: 'shared/password-reset',
+        return Response::createHtmlResponse(
+            template: 'core/frontend/public/password-reset',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navChangePassword'),
@@ -223,8 +223,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         if (empty($res)) {
-            return Response::createFrontendPublicHtmlResponse(
-                template: 'shared/home',
+            return Response::createHtmlResponse(
+                template: 'core/frontend/public/home',
                 responseData: new HtmlHomepageResponseData(
                     request: $request,
                     userFeedback: new UserFeedback(
@@ -236,8 +236,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         }
 
         $user = $this->userService->getUserForId($res->userId);
-        return Response::createFrontendPublicHtmlResponse(
-            template: 'shared/password-creation',
+        return Response::createHtmlResponse(
+            template: 'core/frontend/public/password-creation',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navCreatePassword'),
@@ -270,8 +270,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        return Response::createFrontendPublicHtmlResponse(
-            template: 'shared/invite-request',
+        return Response::createHtmlResponse(
+            template: 'core/frontend/public/invite-request',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)->getValue('navSignUp'),
@@ -328,8 +328,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             language: $request->siteLanguage,
         );
 
-        return Response::createFrontendPublicHtmlResponse(
-            template: 'shared/home',
+        return Response::createHtmlResponse(
+            template: 'core/frontend/public/home',
             responseData: new HtmlHomepageResponseData(
                 request: $request,
                 pagination: $pagination,
