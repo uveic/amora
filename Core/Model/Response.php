@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Model;
 
+use Amora\App\Value\Language;
 use DOMDocument;
 use League\Plates\Engine;
 use SimpleXMLElement;
@@ -75,66 +76,30 @@ class Response
         );
     }
 
-    private static function createHtmlResponse(
+    public static function createHtmlResponse(
         string $template,
         HtmlResponseDataAbstract $responseData,
-        bool $isFrontendPrivate = false,
-        bool $isBackoffice = false,
     ): Response {
-        $templatePath = self::getTemplatePath($isBackoffice, $isFrontendPrivate);
-        $view = new Engine($templatePath);
-        $html = $view->render($template, ['responseData' => $responseData]);
+        $slashPos = strrpos($template, '/');
+        if ($slashPos === false) {
+            return self::createErrorResponse('Invalid template path: ' . $template);
+        }
+
+        $templateName = substr($template, $slashPos + 1);
+        $partialTemplatePath = substr($template, 0, $slashPos);
+
+        $fullTemplatePath = Core::getPathRoot() . '/view/' . $partialTemplatePath;
+        $view = new Engine($fullTemplatePath);
+        $html = $view->render(
+            name: $templateName,
+            data: ['responseData' => $responseData],
+        );
+
         return new Response(
             output: $html,
             contentType: ContentType::HTML,
             httpStatus: HttpStatusCode::HTTP_200_OK,
         );
-    }
-
-    public static function createFrontendPublicHtmlResponse(
-        string $template,
-        HtmlResponseDataAbstract $responseData,
-    ): Response {
-        return self::createHtmlResponse(
-            template: $template,
-            responseData: $responseData,
-            isFrontendPrivate: false,
-            isBackoffice: false,
-        );
-    }
-
-    public static function createFrontendPrivateHtmlResponse(
-        string $template,
-        HtmlResponseDataAbstract $responseData,
-    ): Response {
-        return self::createHtmlResponse(
-            template: $template,
-            responseData: $responseData,
-            isFrontendPrivate: true,
-        );
-    }
-
-    public static function createBackofficeHtmlResponse(
-        string $template,
-        HtmlResponseDataAbstract $responseData,
-    ): Response {
-        return self::createHtmlResponse(
-            template: $template,
-            responseData: $responseData,
-            isFrontendPrivate: false,
-            isBackoffice: true,
-        );
-    }
-
-    private static function getTemplatePath(bool $isBackoffice, bool $isFrontendPrivate): string
-    {
-        if ($isBackoffice) {
-            $templatePath = 'backoffice/v1';
-        } else {
-            $templatePath = 'frontend/v1' . ($isFrontendPrivate ? '/private' : '/public');
-        }
-
-        return Core::getPathRoot() . '/view/' . $templatePath;
     }
 
     private static function createDownloadResponse(
@@ -194,10 +159,10 @@ class Response
         );
     }
 
-    public static function createUnauthorisedRedirectLoginResponse(string $siteLanguage): Response
+    public static function createUnauthorisedRedirectLoginResponse(Language $language): Response
     {
         return Response::createRedirectResponse(
-            url: UrlBuilderUtil::buildPublicLoginUrl($siteLanguage),
+            url: UrlBuilderUtil::buildPublicLoginUrl($language),
         );
     }
 

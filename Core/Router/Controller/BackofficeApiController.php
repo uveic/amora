@@ -93,7 +93,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     ): Response {
         $now = new DateTimeImmutable();
         $email = StringUtil::normaliseEmail($email);
-        $language = Language::tryFrom(strtoupper($languageIsoCode))
+        $language = $languageIsoCode && Language::tryFrom(strtoupper($languageIsoCode))
             ? Language::from(strtoupper($languageIsoCode))
             : $request->siteLanguage;
         $localisationUtil = Core::getLocalisationUtil($language);

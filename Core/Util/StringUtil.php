@@ -2,6 +2,8 @@
 
 namespace Amora\Core\Util;
 
+use Amora\App\Value\Language;
+
 final class StringUtil
 {
     public static function cleanString(
@@ -142,12 +144,10 @@ final class StringUtil
     public static function formatNumber(
         float $number,
         int $decimals = 0,
-        string $language = 'EN',
+        Language $language = Language::English,
         bool $includeThousandsSeparator = true,
     ): string {
-        $language = strtoupper($language);
-
-        if ($language === 'ES' || $language === 'GL') {
+        if ($language->value === 'ES' || $language === Language::Galego) {
             $thousandsSeparator = $includeThousandsSeparator ? '.' : '';
             $decimalsSeparator = ',';
         } else {

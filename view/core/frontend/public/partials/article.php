@@ -18,13 +18,13 @@ $postBottomContent = $responseData->postBottomContent ? $responseData->postBotto
 ?>
   <article>
 <?php if ($article->type === ArticleType::Blog) {
-    $this->insert('shared/partials/article/article-blog-info', ['responseData' => $responseData]);
+    $this->insert('partials/article/article-blog-info', ['responseData' => $responseData]);
 } ?>
     <?=$article->contentHtml?>
 <?php if ($postBottomContent) { ?>
     <div class="article-blog-footer"><?=$postBottomContent?></div>
 <?php } ?>
 <?php if ($article->type === ArticleType::Blog) {
-    $this->insert('shared/partials/article/article-blog-bottom', ['responseData' => $responseData]);
+    $this->insert('partials/article/article-blog-bottom', ['responseData' => $responseData]);
 } ?>
   </article>

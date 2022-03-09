@@ -20,7 +20,7 @@ use Amora\Core\Model\Response\HtmlResponseData;
   <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<?=$this->insert('../../../backoffice/v1/partials/navbar', ['responseData' => $responseData])?>
+<?=$this->insert('../../backoffice/partials/navbar', ['responseData' => $responseData])?>
 <?=$this->section('content')?>
 <?=$this->insert('partials/footer')?>
 </body>

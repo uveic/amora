@@ -30,9 +30,10 @@ $count = 0;
     foreach ($responseData->images as $image) {
         $count++;
         $lazyLoading = $count > 10 ? ' loading="lazy"' : '';
+        $caption = $image->caption ?? 'This image does not exist.';
 ?>
         <div class="image-item" data-image-id="<?=$image->id?>">
-          <img src="<?=$image->getFullUrlMedium()?>" title="<?=$this->e($image->caption)?>" alt="<?=$this->e($image->caption)?>" data-image-id="<?=$image->id?>"<?=$lazyLoading?>>
+          <img src="<?=$image->getFullUrlMedium()?>" title="<?=$caption?>" alt="<?=$caption?>" data-image-id="<?=$image->id?>"<?=$lazyLoading?>>
           <div id="image-options-<?=$image->id?>" class="options null">
             <a class="image-delete" href="#">&#10006;</a>
           </div>

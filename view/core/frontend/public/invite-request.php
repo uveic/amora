@@ -8,7 +8,7 @@ use Amora\Core\Model\Response\HtmlResponseData;
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <?=
-$this->insert('shared/partials/head', ['responseData' => $responseData])
+$this->insert('partials/head', ['responseData' => $responseData])
 ?>
 <body>
 <main class="main-split-screen">
