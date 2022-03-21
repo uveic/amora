@@ -18,7 +18,6 @@ enum LogPriority
 final class Logger
 {
     private readonly string $appName;
-    private readonly string $prefix;
     private readonly bool $isEnabled;
     private int $startTime;
     private int $lastCheckpointTime = 0;
@@ -29,7 +28,6 @@ final class Logger
     ) {
         $this->appName = Core::getConfig()->appName;
         $this->isEnabled = Core::getConfig()->isLoggingEnabled;
-        $this->prefix = $this->getPrefix();
         $this->startTime = $this->getMicroTime();
     }
 
@@ -158,7 +156,7 @@ final class Logger
     private function logMessage(string $msg, LogPriority $priority): void
     {
         try {
-            $msg = $this->prefix . $msg;
+            $msg = $this->getPrefix() . $msg;
 
             if (!Core::isRunningInLiveEnv()) {
                 $f = fopen('php://stdout', 'w');
@@ -194,7 +192,8 @@ final class Logger
     private function getPrefix(): string
     {
         $now = new DateTimeImmutable(timezone: new DateTimeZone('UTC'));
-        $identifier = $this->identifier ? '[' . $this->identifier . ']' : '';
-        return '[' . $now->format('D M d H:i:s Y') . ']' . $identifier . ' == ';
+        return '[' . $now->format('D M d H:i:s Y') . ']'
+            . ($this->identifier ? '[' . $this->identifier . ']' : '')
+            . ' == ';
     }
 }
