@@ -28,7 +28,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : 'null';
       <div id="filter-header">
         <h3><?=$responseData->getLocalValue('formFilterTitle')?></h3>
         <div id="filter-links">
-          <a href="#" id="filter-refresh"><img src="/img/svg/arrow-counter-clockwise.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('formFilterClean')?>"></a>
+          <a href="#" id="filter-article-refresh"><img src="/img/svg/arrow-counter-clockwise.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('formFilterClean')?>"></a>
           <a href="#" id="filter-close"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
         </div>
       </div>
@@ -42,7 +42,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : 'null';
     foreach (ArticleType::getAll() as $type) {
         $selected = $type === $articleType;
 ?>
-              <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$type->value?>"><?=$responseData->getLocalValue('articleType' . $type->name)?></option>
+              <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$type->value?>"><?=$responseData->getLocalValue('articleType' . $type->name)?></option>
 <?php } ?>
             </select>
           </div>
@@ -57,7 +57,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : 'null';
     foreach (Language::getAll() as $language) {
         $selected = $language === $articleLanguage;
 ?>
-              <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$language->value?>"><?=$language->name?></option>
+              <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$language->value?>"><?=$language->name?></option>
 <?php } ?>
             </select>
           </div>
@@ -72,7 +72,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : 'null';
     foreach (ArticleStatus::getAll() as $status) {
         $selected = $status === $articleStatus;
 ?>
-              <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$status->value?>"><?=$responseData->getLocalValue('articleStatus' . $status->name)?></option>
+              <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$status->value?>"><?=$responseData->getLocalValue('articleStatus' . $status->name)?></option>
 <?php } ?>
             </select>
           </div>

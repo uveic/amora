@@ -589,6 +589,13 @@ document.querySelectorAll('#filter-open').forEach(a => {
 document.querySelectorAll('#filter-refresh').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
+    window.location.href = window.location.origin + window.location.pathname;
+  });
+});
+
+document.querySelectorAll('#filter-article-refresh').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
     const type = document.querySelector('select[name="articleType"]').value;
     window.location.href = window.location.origin + window.location.pathname + '?type=' + type;
   });

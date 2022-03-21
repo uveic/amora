@@ -63,7 +63,7 @@ $defaultLanguage = $userToEdit
     foreach (Language::getAll() as $language) {
           $selected = $language === $defaultLanguage;
 ?>
-              <option <?php echo $selected ? 'selected' : ''; ?> value="<?=$language->value?>"><?=$language->name?></option>
+              <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$language->value?>"><?=$language->name?></option>
 <?php } ?>
             </select>
           </div>
@@ -78,7 +78,7 @@ $defaultLanguage = $userToEdit
 foreach (UserRole::getAll() as $role) {
         $selected = $userToEdit && $role == $userToEdit->role;
 ?>
-                <option <?php echo $selected ? 'selected ' : ''; ?>value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>
+                <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>
 <?php
   }
 ?>
@@ -93,7 +93,7 @@ foreach (UserRole::getAll() as $role) {
 <?php foreach ($timezones as $timezone) {
     $selected = $timezone === $defaultTimezone;
 ?>
-                  <option  <?php echo $selected ? 'selected ' : ''; ?>value="<?=$timezone?>" <?=$userToEdit && $userToEdit->timezone->getName() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
+                  <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$timezone?>" <?=$userToEdit && $userToEdit->timezone->getName() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
 <?php } ?>
             </select>
           </div>
