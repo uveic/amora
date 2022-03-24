@@ -78,7 +78,7 @@ final class ArticleEditHtmlGenerator
             return $responseData->getFirstArticle()->type;
         }
 
-        $typeIdGetParam = $responseData->request->getGetParam('type');
+        $typeIdGetParam = $responseData->request->getGetParam('atId');
         if (!empty($typeIdGetParam)) {
             /** @var \BackedEnum $articleType */
             foreach (ArticleType::getAll() as $articleType) {
@@ -104,10 +104,11 @@ final class ArticleEditHtmlGenerator
         $isPublished = $responseData->getFirstArticle()
             ? $articleStatus === ArticleStatus::Published
             : $isPartialContent;
+        $displayClass = $isPartialContent ? ' null' : '';
 
         $output = [];
         $output[] = '      <input type="checkbox" id="article-status-dd-checkbox" class="dropdown-menu">';
-        $output[] = '      <div class="dropdown-container article-status-container">';
+        $output[] = '      <div class="dropdown-container article-status-container' . $displayClass . '">';
         $output[] = '        <ul>';
 
         /** @var \BackedEnum $status */
@@ -135,10 +136,11 @@ final class ArticleEditHtmlGenerator
     ): string {
         $article = $responseData->getFirstArticle();
         $articleLanguage = $article ? $article->language : $responseData->siteLanguage;
+        $displayClass = ArticleType::isPartialContent(self::getArticleType($responseData)) ? ' null' : '';
 
         $output = [];
         $output[] = '      <input type="checkbox" id="article-lang-dd-checkbox" class="dropdown-menu">';
-        $output[] = '      <div class="dropdown-container article-lang-container">';
+        $output[] = '      <div class="dropdown-container article-lang-container' . $displayClass . '">';
         $output[] = '        <ul>';
 
         /** @var \BackedEnum $language */
@@ -166,7 +168,7 @@ final class ArticleEditHtmlGenerator
 
         return ArticleType::isPartialContent($articleType)
             ? ''
-            : '<a href="#" class="article-settings m-r-1"><img src="/img/svg/gear.svg" class="img-svg m-t-0" alt="' . $responseData->getLocalValue('globalSettings') . '"></a>';
+            : '<a href="#" class="article-settings"><img src="/img/svg/gear.svg" class="img-svg m-t-0" alt="' . $responseData->getLocalValue('globalSettings') . '"></a>';
     }
 
     public static function generateTitleHtml(
@@ -194,9 +196,9 @@ final class ArticleEditHtmlGenerator
             . '</span>';
     }
 
-    public static function generateArticleTitleHtml(
+    public static function generateArticleRowHtml(
         HtmlResponseDataAuthorised $responseData,
-        Article $article
+        Article $article,
     ): string {
         $statusClassname = match ($article->status) {
             ArticleStatus::Published => 'status-published',
@@ -205,19 +207,22 @@ final class ArticleEditHtmlGenerator
             ArticleStatus::Draft => 'status-draft',
         };
 
-        $articleTitle = $article->title ?: $responseData->getLocalValue('globalNoTitle');
         $articleUrl = UrlBuilderUtil::buildPublicArticleUrl(
             uri: $article->uri,
             language: $responseData->siteLanguage,
         );
+        $articleTitle = ArticleType::isPartialContent($article->type)
+            ? $responseData->getLocalValue('globalNoTitle')
+            : match ($article->status) {
+                ArticleStatus::Published => '<a href="' . $articleUrl . '">' . $article->title . '</a>',
+                default => $article->title ?: $responseData->getLocalValue('globalNoTitle'),
+            };
 
         $output = [];
         $output[] = '            <div class="m-r-05">';
         $output[] = '              <span class="light-text-color" style="font-size: 0.9rem;">#' . $article->id . '</span>';
         $output[] = '              ' . Language::getIconFlag($article->language, 'm-l-05 m-r-05');
-        $output[] = '              ' . ($article->status === ArticleStatus::Published
-            ? '<a href="' . $articleUrl . '">' . $articleTitle . '</a>'
-            : $articleTitle);
+        $output[] = '              ' . $articleTitle;
 
         if ($article->publishOn) {
             $publishOn = DateUtil::formatDate(

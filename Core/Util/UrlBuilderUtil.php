@@ -75,7 +75,7 @@ class UrlBuilderUtil
     ): string {
         return self::buildBaseUrl($language)
             . self::BACKOFFICE_ARTICLES
-            . ($type ? '?type=' . $type->value : '');
+            . ($type ? '?atId=' . $type->value : '');
     }
 
     public static function buildBackofficeArticleUrl(Language $language, int $articleId): string
@@ -89,7 +89,7 @@ class UrlBuilderUtil
     ): string {
         return self::buildBaseUrl($language)
             . self::BACKOFFICE_NEW_ARTICLE
-            . '?type=' . $articleType->value;
+            . '?atId=' . $articleType->value;
     }
 
     public static function buildBackofficeUsersUrl(Language $language): string

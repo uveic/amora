@@ -3,6 +3,7 @@
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Model\ArticleSection;
 use Amora\Core\Module\Article\Value\ArticleSectionType;
+use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 
 /** @var HtmlResponseDataAuthorised $responseData */
@@ -38,8 +39,10 @@ $this->layout('base', ['responseData' => $responseData]);
       <input name="articleId" type="hidden" value="<?=$article ? $article->id : ''?>">
       <input name="articleTypeId" type="hidden" value="<?=$articleType->value?>">
       <article class="pexego-container">
+<?php if (!ArticleType::isPartialContent($articleType)) { ?>
         <input name="articleTitle" type="text" value="<?=$article ? $article->title: ''?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" class="pexego-content-title placeholder">
 <?php
+}
     $count = 0;
     $total = count($articleSections);
     /** @var ArticleSection $articleSection */

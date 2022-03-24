@@ -152,13 +152,13 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getArticlesPage(Request $request): Response
     {
-        $typeIdParam = $request->getGetParam('type');
-        $articleType = is_int($typeIdParam) && ArticleType::tryFrom($typeIdParam)
+        $typeIdParam = $request->getGetParam('atId');
+        $articleType = $typeIdParam && ArticleType::tryFrom($typeIdParam)
             ? ArticleType::from($typeIdParam)
             : null;
 
         $statusIdParam = $request->getGetParam('status');
-        $articleStatus = is_int($statusIdParam) && ArticleStatus::tryFrom($statusIdParam)
+        $articleStatus = $statusIdParam && ArticleStatus::tryFrom($statusIdParam)
             ? ArticleStatus::from($statusIdParam)
             : null;
 
@@ -201,11 +201,10 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getNewArticlePage(Request $request): Response
     {
-        $articleType = $request->getGetParam('type')
-            ? (ArticleType::tryFrom((int)$request->getGetParam('type'))
-                ? ArticleType::from((int)$request->getGetParam('type'))
-                : null
-            ) : null;
+        $articleTypeParam = $request->getGetParam('atId');
+        $articleType = $articleTypeParam && ArticleType::tryFrom($articleTypeParam)
+            ? ArticleType::from($articleTypeParam)
+            : null;
 
         if (ArticleType::isPartialContent($articleType)) {
             $articles = $this->articleService->filterArticlesBy(

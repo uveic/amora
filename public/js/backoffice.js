@@ -596,8 +596,8 @@ document.querySelectorAll('#filter-refresh').forEach(a => {
 document.querySelectorAll('#filter-article-refresh').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
-    const type = document.querySelector('select[name="articleType"]').value;
-    window.location.href = window.location.origin + window.location.pathname + '?type=' + type;
+    const articleTypeId = document.querySelector('select[name="articleType"]').value;
+    window.location.href = window.location.origin + window.location.pathname + '?atId=' + articleTypeId;
   });
 });
 
@@ -616,7 +616,7 @@ document.querySelectorAll('#filter-article-button').forEach(a => {
     }
 
     if (type.length) {
-      query.append('type', type);
+      query.append('atId', type);
     }
 
     if (lang.length) {

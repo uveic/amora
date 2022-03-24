@@ -7,8 +7,8 @@ use Amora\Core\Module\Article\Value\ArticleType;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
-$articleTypeIdGetParam = $responseData->request->getGetParam('type');
-$articleType = is_int($articleTypeIdGetParam) && ArticleType::tryFrom($articleTypeIdGetParam)
+$articleTypeIdGetParam = $responseData->request->getGetParam('atId');
+$articleType = !empty($articleTypeIdGetParam) && ArticleType::tryFrom($articleTypeIdGetParam)
     ? ArticleType::from($articleTypeIdGetParam)
     : null;
 
@@ -18,7 +18,7 @@ $articleLanguage = $articleLanguageIsoCodeGetParam && Language::tryFrom($article
     : null;
 
 $articleStatusGetParam = $responseData->request->getGetParam('status');
-$articleStatus = is_int($articleStatusGetParam) && ArticleStatus::tryFrom($articleStatusGetParam)
+$articleStatus = !empty($articleStatusGetParam) && ArticleStatus::tryFrom($articleStatusGetParam)
     ? ArticleStatus::from($articleStatusGetParam)
     : null;
 
@@ -40,9 +40,8 @@ $filterClass = $articleStatus || $articleLanguage ? '' : 'null';
 <?php
     /** @var \BackedEnum $type */
     foreach (ArticleType::getAll() as $type) {
-        $selected = $type === $articleType;
 ?>
-              <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$type->value?>"><?=$responseData->getLocalValue('articleType' . $type->name)?></option>
+              <option<?php echo $type === $articleType ? ' selected="selected"' : '';?> value="<?=$type->value?>"><?=$responseData->getLocalValue('articleType' . $type->name)?></option>
 <?php } ?>
             </select>
           </div>

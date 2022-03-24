@@ -21,7 +21,7 @@ $this->layout('base', ['responseData' => $responseData,]);
 <?php
 /** @var Article $article */
 foreach ($responseData->articles as $article) {
-    $articleItemHtml = ArticleEditHtmlGenerator::generateArticleTitleHtml($responseData, $article);
+    $articleItemHtml = ArticleEditHtmlGenerator::generateArticleRowHtml($responseData, $article);
 ?>
         <div class="table-row">
           <div class="table-item flex-grow-2" style="align-items: flex-start;">

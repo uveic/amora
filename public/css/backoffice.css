@@ -22,21 +22,22 @@
 /* Form style starts here */
 .page-header {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
-  gap: 1rem;
+  gap: 0.5rem;
   border-bottom: 1px solid var(--light-bg-color-3);
   background-color: var(--light-bg-color);
 }
 
 .page-header .header-info {
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
+  flex-flow: row wrap;
+  justify-content: flex-end;
   align-items: center;
   gap: 1rem;
+  flex-grow: 1;
 }
 
 .page-header h3 {
@@ -49,6 +50,9 @@
   flex-grow: 0;
   flex-shrink: 1;
   text-align: right;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .control-bar-wrapper {
@@ -57,7 +61,7 @@
   flex-wrap: wrap;
   align-items: center;
   margin: 0;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   justify-content: flex-start;
   position: fixed;
   background-color: var(--light-bg-color);
@@ -76,7 +80,7 @@
   padding: 10px 14px;
   width: initial;
   min-height: initial;
-  margin: 0.5rem;
+  margin: 0;
 }
 
 .article-tools {
@@ -128,7 +132,6 @@
 }
 
 .control-bar-creation {
-  padding: 0 0.5rem;
   font-size: 0.9rem;
   display: flex;
   justify-content: center;
