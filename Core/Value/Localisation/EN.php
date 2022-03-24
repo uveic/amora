@@ -151,7 +151,7 @@ return [
     'articleTypeBlog' => 'Blog',
     'articleTypePage' => 'Page',
     'articleTypePartialContentHomepage' => 'Homepage',
-    'articleTypePartialContentBlogBottom' => 'Bottom Blot Post',
+    'articleTypePartialContentBlogBottom' => 'Bottom Blog Post',
     'paragraphPlaceholder' => 'Type here...',
     'formFilterTitle' => 'Filter',
     'formFilterButton' => 'Filter',
