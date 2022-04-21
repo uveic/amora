@@ -46,7 +46,7 @@ foreach ($articles as $article) {
     $year = $article->publishOn ? $article->publishOn->format('Y') : '???';
     if ($previousYear !== $year) {
 ?>
-    <h2><?=$year?></h2>
+    <h2 class="blog-item-year"><?=$year?></h2>
 <?php
   }
   $previousYear = $year;

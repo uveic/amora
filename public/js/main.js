@@ -14,8 +14,23 @@ document.querySelectorAll('.blog-posts-load-more').forEach(el => {
     xhr.get('/papi/blog/post?offset=' + offset + '&itemsPerPage=' + itemsPerPage)
       .then(response => {
         const postsParent = document.querySelector('div.blog-items');
+        const years = [];
+        postsParent.querySelectorAll('.blog-item-year').forEach(y => {
+          years.push(Number.parseInt(y.innerText))
+        });
+        let year = years.pop();
 
         response.blogPosts.forEach(bp => {
+          const publishedOn = new Date(bp.publishedOn);
+
+          if (publishedOn.getFullYear() !== year) {
+            const yearEl = document.createElement('h2');
+            yearEl.classList.add('blog-item-year');
+            year = publishedOn.getFullYear();
+            yearEl.innerText = year;
+            postsParent.appendChild(yearEl);
+          }
+
           const postLink = document.createElement('a');
           postLink.href = bp.postUri;
           postLink.className = 'link-title';
@@ -23,7 +38,6 @@ document.querySelectorAll('.blog-posts-load-more').forEach(el => {
 
           const spanBlogInfo = document.createElement('span');
           spanBlogInfo.className = 'blog-info';
-          const publishedOn = new Date(bp.publishedOn);
           spanBlogInfo.textContent = global.formatDate(publishedOn, false, true, false);
 
           const postItem = document.createElement('div');
