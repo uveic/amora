@@ -137,7 +137,7 @@ return [
     'globalAddHtml' => 'Engadir HTML',
 
     'globalGenericError' => 'Algo non foi ben, por favor inténtao de novo.',
-    'globalPageNotFoundTitle' => 'Non se atopu a páxinga :(',
+    'globalPageNotFoundTitle' => 'Non se atopu a páxina :(',
     'globalPageNotFoundContent' => 'A páxina que buscas non existe.',
     'globalPageDeactivatedTitle' => 'Temporalmente desactivada',
     'globalPageDeactivatedContent' => 'A páxina que buscas está desactivada temporalmente. Se tes algunha consulta podes poñerte en contacto con nós en <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Desculpa as molestias.',
