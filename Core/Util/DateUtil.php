@@ -3,6 +3,7 @@
 namespace Amora\Core\Util;
 
 use Amora\App\Value\Language;
+use Amora\Core\Value\AggregateBy;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
@@ -185,9 +186,15 @@ final class DateUtil
         return $prefix . $output . $suffix;
     }
 
-    public static function convertStringToDateTimeImmutable(string $date): DateTimeImmutable
-    {
+    public static function convertStringToDateTimeImmutable(
+        string $date,
+        ?DateTimeZone $timezone = null,
+    ): DateTimeImmutable {
         try {
+            if (isset($timezone)) {
+                return new DateTimeImmutable(datetime: $date, timezone: $timezone);
+            }
+
             return new DateTimeImmutable(datetime: $date);
         } catch (Throwable) {
             Core::getDefaultLogger()->logError('Error converting string to DateTimeImmutable: ' . $date);
@@ -304,64 +311,66 @@ final class DateUtil
         return timezone_name_from_abbr('', $offsetMinutes * 60, 0);
     }
 
-    public static function getMySqlAggregateFormat(string $range): string
+    public static function getMySqlAggregateFormat(AggregateBy $range): string
     {
         return match ($range) {
-            'minute' => "'%Y-%m-%dT%H:%i'",
-            'hour' => "'%Y-%m-%dT%H'",
-            'day' => "'%Y-%m-%d'",
-            'month' => "'%Y-%m'",
-            'year' => "'%Y'",
-            default => "'%Y-%m'",
+            AggregateBy::Minute => "'%Y-%m-%dT%H:%i'",
+            AggregateBy::Hour => "'%Y-%m-%dT%H'",
+            AggregateBy::Day => "'%Y-%m-%d'",
+            AggregateBy::Week => "'%Y-%u'",
+            AggregateBy::Month => "'%Y-%m'",
+            AggregateBy::Year => "'%Y'",
         };
     }
 
-    public static function getPhpAggregateFormat(string $range): string
+    public static function getPhpAggregateFormat(AggregateBy $range): string
     {
         return match ($range) {
-            'minute' => 'Y-m-d H:i',
-            'hour' => 'Y-m-d H',
-            'day' => 'Y-m-d',
-            'month' => 'Y-m',
-            'year' => 'Y',
-            default => 'Y-m',
+            AggregateBy::Minute => 'Y-m-d H:i',
+            AggregateBy::Hour => 'Y-m-d H',
+            AggregateBy::Day => 'Y-m-d',
+            AggregateBy::Week => 'Y-W',
+            AggregateBy::Month => 'Y-m',
+            AggregateBy::Year => 'Y',
         };
     }
 
     public static function convertPartialDateFormatToFullDate(
         string $partialDate,
-        string $aggregatedBy,
-        bool $roundUp = true
-    ): string {
+        AggregateBy $aggregatedBy,
+        bool $roundUp = true,
+    ): DateTimeImmutable {
         $res = match ($aggregatedBy) {
-            'minute' => $partialDate . ($roundUp ? ':59' : ':00'),
-            'hour' => $partialDate . ($roundUp ? ':59:59' : ':00:00'),
-            'day' => $partialDate . ($roundUp ? ' 23:59:59' : ' 00:00:00'),
+            AggregateBy::Minute => $partialDate . ($roundUp ? ':59' : ':00'),
+            AggregateBy::Hour => $partialDate . ($roundUp ? ':59:59' : ':00:00'),
+            AggregateBy::Day => $partialDate . ($roundUp ? ' 23:59:59' : ' 00:00:00'),
             default => null,
         };
 
         if ($res) {
-            return $res;
+            return self::convertStringToDateTimeImmutable($res);
         }
 
-        if ($aggregatedBy === 'month') {
+        if ($aggregatedBy === AggregateBy::Month) {
             $now = new DateTimeImmutable('now');
             $month = substr($partialDate, -2);
-            $n = new DateTimeImmutable($now->format('Y-' . $month . '-d H:i:s'));
+            $n = self::convertStringToDateTimeImmutable($now->format('Y-' . $month . '-d H:i:s'));
 
-            return $partialDate .
+            $fullDate = $partialDate .
                 ($roundUp
-                    ? $n->format('n') . ' 23:59:59'
+                    ? '-' . $n->format('t') . ' 23:59:59'
                     : '-01 00:00:00'
                 );
+            return self::convertStringToDateTimeImmutable($fullDate);
         }
 
-        if ($aggregatedBy === 'year') {
-            return $partialDate . $roundUp ? '-12-31 23:59:59' : '-01-01 00:00:00';
+        if ($aggregatedBy === AggregateBy::Year) {
+            return self::convertStringToDateTimeImmutable(
+                $partialDate . ($roundUp ? '-12-31 23:59:59' : '-01-01 00:00:00')
+            );
         }
 
-        $now = new DateTimeImmutable('now');
-        return $now->format(self::MYSQL_DATETIME_FORMAT);
+        return new DateTimeImmutable();
     }
 
     public static function convertSecondsToDateInterval(int $seconds): DateInterval
