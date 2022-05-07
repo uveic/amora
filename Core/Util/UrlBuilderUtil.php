@@ -46,7 +46,11 @@ class UrlBuilderUtil
     {
         $baseUrl = Core::getConfig()->baseUrl;
 
-        return trim($baseUrl, ' /') . '/' . strtolower($siteLanguage->value);
+        return trim($baseUrl, ' /')
+            . (count(Core::getAllLanguages()) > 1
+                ? '/' . strtolower($siteLanguage->value)
+                : ''
+            );
     }
 
     public static function buildBaseUrlWithoutLanguage(): string
