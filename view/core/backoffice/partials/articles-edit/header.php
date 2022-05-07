@@ -32,8 +32,8 @@ if ($article) {
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
-        from: $article->updatedAt,
         language: $responseData->siteLanguage,
+        from: $article->updatedAt,
         includePrefixAndOrSuffix: true,
     );
 

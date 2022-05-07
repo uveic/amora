@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Util\Helper;
 
+use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;
@@ -144,7 +145,7 @@ final class ArticleEditHtmlGenerator
         $output[] = '        <ul>';
 
         /** @var \BackedEnum $language */
-        foreach (Language::getAll() as $language) {
+        foreach (Core::getAllLanguages() as $language) {
             $output[] = '          <li><a data-checked="' . ($language === $articleLanguage ? '1' : '0') .
                 '" data-value="' . $language->value .
                 '" class="dropdown-menu-option article-lang-dd-option background-light-color"' .

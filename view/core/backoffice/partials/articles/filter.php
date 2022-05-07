@@ -1,6 +1,7 @@
 <?php
 
 use Amora\App\Value\Language;
+use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
@@ -53,7 +54,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : 'null';
               <option<?php echo $articleLanguage ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
     /** @var \BackedEnum $language */
-    foreach (Language::getAll() as $language) {
+    foreach (Core::getAllLanguages() as $language) {
         $selected = $language === $articleLanguage;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$language->value?>"><?=$language->name?></option>

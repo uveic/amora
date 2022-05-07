@@ -6,12 +6,14 @@ enum Language: string
 {
     case English = 'EN';
     case Galego = 'GL';
+    case Español = 'ES';
 
     public static function getAll(): array
     {
         return [
             self::English,
             self::Galego,
+            self::Español,
         ];
     }
 
@@ -21,6 +23,7 @@ enum Language: string
         return match ($language) {
             self::English => '<img class="img-svg' . $class . '" width="20" height="20" src="/img/svg/flags/EN.svg" alt="' . self::English->name . '">',
             self::Galego => '<img class="img-svg' . $class . '" width="20" height="20" src="/img/svg/flags/GL.svg" alt="' . self::Galego->name . '">',
+            self::Español => '<img class="img-svg' . $class . '" width="20" height="20" src="/img/svg/flags/ES.svg" alt="' . self::Español->name . '">',
         };
     }
 }

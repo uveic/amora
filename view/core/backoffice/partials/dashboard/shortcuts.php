@@ -1,6 +1,7 @@
 <?php
 
 use Amora\App\Value\Language;
+use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -11,7 +12,7 @@ $homepageLinks = [];
 $partialContentLinks = [];
 
 /** @var \BackedEnum $item */
-foreach (Language::getAll() as $item) {
+foreach (Core::getAllLanguages() as $item) {
     $homepageLinks[] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeNewArticleUrl($item, ArticleType::PartialContentHomepage) . '">' . Language::getIconFlag($item) . '</a>';
     $partialContentLinks[] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeNewArticleUrl($item, ArticleType::PartialContentBlogBottom) . '">' . Language::getIconFlag($item) . '</a>';
 }

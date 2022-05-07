@@ -19,8 +19,8 @@ if ($userToEdit) {
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
-        from: $userToEdit->updatedAt,
         language: $responseData->siteLanguage,
+        from: $userToEdit->updatedAt,
         includePrefixAndOrSuffix: true
     );
 
@@ -31,8 +31,8 @@ if ($userToEdit) {
     );
 
     $createdAtEta = DateUtil::getElapsedTimeString(
-        from: $userToEdit->createdAt,
         language: $responseData->siteLanguage,
+        from: $userToEdit->createdAt,
         includePrefixAndOrSuffix: true,
     );
 

@@ -1,8 +1,8 @@
 <?php
 
+use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\User\Value\UserRole;
-use Amora\App\Value\Language;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
@@ -60,7 +60,7 @@ $defaultLanguage = $userToEdit
             <select id="languageIsoCode" name="languageIsoCode">
 <?php
     /** @var \BackedEnum $language */
-    foreach (Language::getAll() as $language) {
+    foreach (Core::getAllLanguages() as $language) {
           $selected = $language === $defaultLanguage;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$language->value?>"><?=$language->name?></option>

@@ -410,7 +410,9 @@ class UserService
         $res = $this->updateUser(
             user: new User(
                 id: $existingUser->id,
-                language: Language::from(strtoupper($languageIsoCode)) ?? $existingUser->language,
+                language: $languageIsoCode
+                    ? Language::from(strtoupper($languageIsoCode))
+                    : $existingUser->language,
                 role: $existingUser->role,
                 journeyStatus: $existingUser->journeyStatus,
                 createdAt: $existingUser->createdAt,

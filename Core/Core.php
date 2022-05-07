@@ -108,6 +108,11 @@ class Core
         return self::$config->defaultSiteLanguage;
     }
 
+    public static function getAllLanguages(): array
+    {
+        return self::$config->allSiteLanguages;
+    }
+
     public static function isRunningInLiveEnv(): bool
     {
         return self::$config->env === Env::Live;

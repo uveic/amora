@@ -20,8 +20,8 @@ if ($article) {
     $tags = $article->tags;
     $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
         DateUtil::getElapsedTimeString(
-            from: $article->createdAt,
             language: $responseData->siteLanguage,
+            from: $article->createdAt,
             includePrefixAndOrSuffix: true,
         ) . ' ('
         . DateUtil::formatDate(

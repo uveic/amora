@@ -79,9 +79,9 @@ final class DateUtil
      * @throws \Exception
      */
     public static function getElapsedTimeString(
+        Language $language,
         DateTimeImmutable|DateTime $from,
         DateTimeImmutable|DateTime|null $to = null,
-        Language $language = Language::English,
         bool $full = false,
         bool $includePrefixAndOrSuffix = false,
         bool $includeSeconds = false,
@@ -154,7 +154,7 @@ final class DateUtil
                     . ' '
                     . $value
                     . ($diff[$key] > 1
-                        ? ($key === 'm' && ($language->value === 'ES' || $language->value === 'GL') ? 'es' : 's')
+                        ? ($key === 'm' && ($language === Language::Español || $language === Language::Galego) ? 'es' : 's')
                         : ''
                     );
             } else {
@@ -227,7 +227,7 @@ final class DateUtil
 
     public static function formatDate(
         DateTimeImmutable|DateTime $date,
-        Language $lang = Language::English,
+        Language $lang,
         bool $includeDay = true,
         bool $includeYear = true,
         bool $includeWeekDay = true,

@@ -78,7 +78,7 @@ $now = new DateTimeImmutable();
 $res = UserCore::getUserService()->storeUser(
     new User(
         id: null,
-        language: Language::English,
+        language: Core::getDefaultLanguage(),
         role: UserRole::Admin,
         journeyStatus: UserJourneyStatus::Registration,
         createdAt: $now,

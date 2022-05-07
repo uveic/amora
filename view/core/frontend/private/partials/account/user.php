@@ -1,8 +1,8 @@
 <?php
 
+use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
-use Amora\App\Value\Language;
 
 /** @var HtmlResponseData $responseData */
 
@@ -38,7 +38,7 @@ $timezones = DateTimeZone::listIdentifiers();
               <select name="languageIsoCode" id="languageIsoCode">
 <?php
     /** @var \BackedEnum $language */
-    foreach (Language::getAll() as $language) {
+    foreach (Core::getAllLanguages() as $language) {
         echo '                <option value="' . $language->value . '"' . ($user->language === $language ? ' selected="selected"' : '') . '>' . $language->name . '</option>';
     }
 ?>

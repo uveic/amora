@@ -67,6 +67,7 @@ abstract class AbstractConfig {
         public string $timezone,
         public readonly string $phpLocale,
         public readonly Language $defaultSiteLanguage,
+        public readonly array $allSiteLanguages,
 
         public readonly string $baseUrl,
         public readonly string $siteImageUrl,

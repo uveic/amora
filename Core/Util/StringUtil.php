@@ -142,12 +142,12 @@ final class StringUtil
     }
 
     public static function formatNumber(
+        Language $language,
         float $number,
         int $decimals = 0,
-        Language $language = Language::English,
         bool $includeThousandsSeparator = true,
     ): string {
-        if ($language->value === 'ES' || $language === Language::Galego) {
+        if ($language === Language::Español || $language === Language::Galego) {
             $thousandsSeparator = $includeThousandsSeparator ? '.' : '';
             $decimalsSeparator = ',';
         } else {

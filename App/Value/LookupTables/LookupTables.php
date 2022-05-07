@@ -15,7 +15,7 @@ return [
     new LookupTableSettings(
         database: Core::getCoreDb(),
         tableName: 'language',
-        tableFieldsToValues: asArray(Language::getAll()),
+        tableFieldsToValues: asArray(Core::getAllLanguages()),
     ),
     new LookupTableSettings(
         database: Core::getMailerDb(),
