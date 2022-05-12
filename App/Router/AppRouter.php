@@ -22,12 +22,12 @@ class AppRouter
     {
         return array_merge(
             Router::getReservedPaths(),
-            array_values(self::PUBLIC_HTML_CONTROLLER_ACTIONS),
-            array_values(self::PUBLIC_API_CONTROLLER_ACTIONS),
-            array_values(self::AUTHORISED_HTML_CONTROLLER_ACTIONS),
-            array_values(self::AUTHORISED_API_CONTROLLER_ACTIONS),
-            array_values(self::BACKOFFICE_HTML_CONTROLLER_ACTIONS),
-            array_values(self::BACKOFFICE_API_CONTROLLER_ACTIONS),
+            array_keys(self::PUBLIC_HTML_CONTROLLER_ACTIONS),
+            array_keys(self::PUBLIC_API_CONTROLLER_ACTIONS),
+            array_keys(self::AUTHORISED_HTML_CONTROLLER_ACTIONS),
+            array_keys(self::AUTHORISED_API_CONTROLLER_ACTIONS),
+            array_keys(self::BACKOFFICE_HTML_CONTROLLER_ACTIONS),
+            array_keys(self::BACKOFFICE_API_CONTROLLER_ACTIONS),
         );
     }
 

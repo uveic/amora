@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
 use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Module\Article\Model\ArticleUri;
@@ -185,6 +186,13 @@ class ArticleService
             }
             $count++;
         } while(!empty($res));
+
+        $count = 0;
+        do {
+            $validUri = $uri . ($count > 0 ? '-' . $count : '');
+            $res = in_array($validUri, AppRouter::getReservedPaths());
+            $count++;
+        } while($res);
 
         return $validUri;
     }
