@@ -11,7 +11,7 @@ use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Datalayer\ImageDataLayer;
 use Amora\Core\Module\Article\Service\ImageResizeService;
 use Amora\Core\Module\Article\Service\ImageService;
-use Amora\Core\Module\Article\Service\RssService;
+use Amora\Core\Module\Article\Service\XmlService;
 use Amora\Core\Module\Article\Service\TagService;
 
 class ArticleCore extends Core
@@ -181,15 +181,15 @@ class ArticleCore extends Core
         );
     }
 
-    public static function getRssService(): RssService
+    public static function getXmlService(): XmlService
     {
         $logger = self::getArticleLogger();
 
         return self::getInstance(
-            className: 'RssService',
+            className: 'XmlService',
             factory: function () use ($logger) {
-                require_once self::getPathRoot() . '/Core/Module/Article/Service/RssService.php';
-                return new RssService($logger);
+                require_once self::getPathRoot() . '/Core/Module/Article/Service/XmlService.php';
+                return new XmlService($logger);
             },
             isSingleton: true,
         );

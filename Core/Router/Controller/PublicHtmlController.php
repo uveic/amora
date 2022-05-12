@@ -9,7 +9,7 @@ use Amora\Core\Model\Response\UserFeedback;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Service\ArticleService;
-use Amora\Core\Module\Article\Service\RssService;
+use Amora\Core\Module\Article\Service\XmlService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Service\UserService;
@@ -17,13 +17,14 @@ use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\QueryOrderDirection;
+use DateTimeImmutable;
 
 final class PublicHtmlController extends PublicHtmlControllerAbstract
 {
     public function __construct(
         private UserService $userService,
         private ArticleService $articleService,
-        private RssService $rssService,
+        private XmlService $xmlService,
     ) {
         parent::__construct();
     }
@@ -297,8 +298,34 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             ),
         );
 
-        $xml = $this->rssService->buildRss(
-            siteLanguage: $request->siteLanguage,
+        $xml = $this->xmlService->buildRss(
+            localisationUtil: Core::getLocalisationUtil(Core::getDefaultLanguage()),
+            articles: $articles,
+        );
+
+        return Response::createSuccessXmlResponse($xml);
+    }
+
+    /**
+     * Endpoint: /sitemap
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getSitemap(Request $request): Response
+    {
+        $articles = $this->articleService->filterArticlesBy(
+            languageIsoCodes: [Core::getDefaultLanguage()->value],
+            statusIds: [ArticleStatus::Published->value],
+            typeIds: [ArticleType::Page->value],
+            publishedBefore: new DateTimeImmutable(),
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
+            ),
+        );
+
+        $xml = $this->xmlService->buildSitemap(
             articles: $articles,
         );
 

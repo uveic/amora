@@ -11,7 +11,7 @@ final class LocalisationUtil
 
     public function __construct(
         private Logger $logger,
-        private Language $language,
+        public readonly Language $language,
     ) {
         $this->values = $this->loadValues($this->language);
     }

@@ -23,14 +23,14 @@ class RouterCore extends Core
     {
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
-        $rssService = ArticleCore::getRssService();
+        $xmlService = ArticleCore::getXmlService();
 
         return self::getInstance(
             className: 'PublicHtmlController',
             factory: function () use (
                 $userService,
                 $articleService,
-                $rssService,
+                $xmlService,
             ) {
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlHomepageResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
@@ -42,7 +42,7 @@ class RouterCore extends Core
                 return new PublicHtmlController(
                     $userService,
                     $articleService,
-                    $rssService,
+                    $xmlService,
                 );
             },
             isSingleton: true,
