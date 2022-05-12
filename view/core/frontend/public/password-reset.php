@@ -42,7 +42,7 @@ $subtitleHtml = sprintf(
               <input class="input" type="password" id="passwordConfirmation" name="passwordConfirmation" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>" required>
             </p>
           </div>
-          <div id="login-failure-message" class="field is-failure null"></div>
+          <div id="login-failure-message" class="field is-failure m-t-1 null"></div>
           <div class="field">
             <p class="control">
               <input class="button is-success" type="submit" value="<?=$responseData->getLocalValue('formPasswordResetAction')?>">
