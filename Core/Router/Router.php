@@ -23,8 +23,8 @@ class Router
         'invite-request' => true,
         'login' => true,
         'register' => true,
-        'rss' => 'true',
-        'sitemap' => 'true',
+        'rss' => true,
+        'sitemap' => true,
         'user' => true,
     ];
 
@@ -53,6 +53,18 @@ class Router
     public function __construct(
         private ActionService $actionService,
     ) {}
+
+    public static function getReservedPaths(): array
+    {
+        return array_merge(
+            array_values(self::PUBLIC_HTML_CONTROLLER_ACTIONS),
+            array_values(self::PUBLIC_API_CONTROLLER_ACTIONS),
+            array_values(self::AUTHORISED_HTML_CONTROLLER_ACTIONS),
+            array_values(self::AUTHORISED_API_CONTROLLER_ACTIONS),
+            array_values(self::BACKOFFICE_HTML_CONTROLLER_ACTIONS),
+            array_values(self::BACKOFFICE_API_CONTROLLER_ACTIONS),
+        );
+    }
 
     public function handleRequest(Request $request): void
     {

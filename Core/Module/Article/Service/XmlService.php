@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Util\Logger;
@@ -149,6 +150,12 @@ class XmlService
             $output[] = '<url>';
             $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticleUrl(uri: $article->uri) . '</loc>';
             $output[] = '<lastmod>' . $article->updatedAt->format('Y-m-d') . '</lastmod>';
+            $output[] = '</url>';
+        }
+
+        foreach (AppRouter::getPublicReservedPaths() as $path) {
+            $output[] = '<url>';
+            $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticleUrl(uri: $path) . '</loc>';
             $output[] = '</url>';
         }
 
