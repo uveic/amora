@@ -41,9 +41,9 @@ if ($article) {
     <h2><?=$responseData->getLocalValue('navAdminArticleOptions')?></h2>
     <a href="#" class="close-button"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
   </div>
-  <div class="field">
+  <div class="m-t-1">
     <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
-    <div id="tags-selected" class="search-results-selected">
+    <div id="tags-selected" class="search-results-selected<?=$tags ? '' : ' null'?>">
 <?php
     /** @var Tag $tag */
     foreach ($tags as $tag) {
@@ -60,7 +60,7 @@ if ($article) {
       </div>
     </div>
   </div>
-  <div class="field">
+  <div class="m-t-2">
     <label for="articleUri" class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</label>
     <div class="control">
       <div class="article-edit-uri"><?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage) . '/'?>
@@ -68,7 +68,7 @@ if ($article) {
       </div>
     </div>
   </div>
-  <div class="field">
+  <div class="m-t-2">
     <label for="publishOn" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
     <div class="control" style="display: flex;align-content: space-between;">
       <input style="flex-grow:4;" class="input" id="publishOnDate" name="publishOnDate" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnDate?>" required>
@@ -77,8 +77,8 @@ if ($article) {
     </div>
     <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
   </div>
-  <div class="control">
+  <div class="m-t-1">
     <button class="article-save-button button is-success m-b-1" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
   </div>
-  <p><?=$article ? $createdAtContent : ''?></p>
+  <div><?=$article ? $createdAtContent : ''?></div>
 </div>

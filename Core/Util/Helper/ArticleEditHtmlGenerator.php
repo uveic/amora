@@ -169,7 +169,7 @@ final class ArticleEditHtmlGenerator
 
         return ArticleType::isPartialContent($articleType)
             ? ''
-            : '<a href="#" class="article-settings"><img src="/img/svg/gear.svg" class="img-svg m-t-0" alt="' . $responseData->getLocalValue('globalSettings') . '"></a>';
+            : '<a href="#" class="article-settings"><img src="/img/svg/gear.svg" class="img-svg img-svg-25" alt="' . $responseData->getLocalValue('globalSettings') . '"></a>';
     }
 
     public static function generateTitleHtml(

@@ -8,15 +8,9 @@ require_once '../Core/Core.php';
 try {
     Core::initiate(realpath(__DIR__ . '/..'));
 } catch (Throwable $t) {
-    // Return a 500 Internal Error as fallback
-    Core::getDefaultLogger()->logError(
-        'Index error' .
-        ' - Error: ' . $t->getMessage() .
-        ' - Trace: ' . $t->getTraceAsString()
-    );
-
     header('HTTP/1.1 500 Internal Server Error');
     echo 'There was an unexpected error :(';
+    exit;
 }
 
 require_once Core::getPathRoot() . '/vendor/autoload.php';

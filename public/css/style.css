@@ -124,7 +124,6 @@ header {
   font-family: var(--font-h1-title);
   display: inline-block;
   margin: 0;
-  font-size: 1rem;
   max-width: 250px;
 }
 
@@ -211,6 +210,8 @@ nav ul {
   height: 100%;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  justify-content: flex-end;
 }
 
 .mobile-nav-label span,
@@ -418,10 +419,6 @@ ul.nav-dropdown-menu a:hover {
   position: relative;
   text-align: left;
   margin-bottom: 0;
-}
-
-.field {
-  margin: 1.5rem 0;
 }
 
 input, textarea, select, button, .button {

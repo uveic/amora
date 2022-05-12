@@ -152,7 +152,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         $languageIsoCode = strtoupper($languageIsoCode);
         $language = Language::tryFrom($languageIsoCode)
             ? Language::from($languageIsoCode)
-            : Core::getConfig()->defaultSiteLanguage;
+            : Core::getDefaultLanguage();
         $localisationUtil = Core::getLocalisationUtil($language, false);
 
         $user = $this->userService->verifyUser($user, $password);
@@ -229,7 +229,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         $languageIsoCode = strtoupper($languageIsoCode);
         $language = Language::tryFrom($languageIsoCode)
             ? Language::from($languageIsoCode)
-            : Core::getConfig()->defaultSiteLanguage;
+            : Core::getDefaultLanguage();
         $localisationUtil = Core::getLocalisationUtil($language, false);
 
         try {
@@ -333,7 +333,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         $languageIsoCode = strtoupper($languageIsoCode);
         $language = Language::tryFrom($languageIsoCode)
             ? Language::from($languageIsoCode)
-            : Core::getConfig()->defaultSiteLanguage;
+            : Core::getDefaultLanguage();
         $localisationUtil = Core::getLocalisationUtil($language, false);
 
         $user = $this->userService->getUserForId($userId);
@@ -389,7 +389,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         $languageIsoCode = strtoupper($languageIsoCode);
         $language = Language::tryFrom($languageIsoCode)
             ? Language::from($languageIsoCode)
-            : Core::getConfig()->defaultSiteLanguage;
+            : Core::getDefaultLanguage();
         $localisationUtil = Core::getLocalisationUtil($language, false);
 
         if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {

@@ -13,18 +13,23 @@ if ($article === null) {
     return;
 }
 
-$postBottomContent = $responseData->postBottomContent ? $responseData->postBottomContent->contentHtml : '';
+$postBottomContent = $article->type === ArticleType::Blog
+    ? $responseData->postBottomContent?->contentHtml
+    : null;
 
 ?>
   <article>
 <?php if ($article->type === ArticleType::Blog) {
     $this->insert('partials/article/article-blog-info', ['responseData' => $responseData]);
-} ?>
+}
+
+    if ($article->title) {
+        echo '    <h1>' . $article->title . '</h1>' . PHP_EOL;
+    }
+?>
+<?=$this->insert('partials/article/article-edit', ['responseData' => $responseData]);?>
     <?=$article->contentHtml?>
 <?php if ($postBottomContent) { ?>
     <div class="article-blog-footer"><?=$postBottomContent?></div>
 <?php } ?>
-<?php if ($article->type === ArticleType::Blog) {
-    $this->insert('partials/article/article-blog-bottom', ['responseData' => $responseData]);
-} ?>
   </article>

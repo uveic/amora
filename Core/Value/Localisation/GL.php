@@ -36,7 +36,7 @@ return [
     'authenticationForgotPassword' => 'Esquecíches o teu contrasinal?',
     'authenticationForgotPasswordSubtitle' => 'Non te preocupes, introduce o correo electrónico co que te rexistraches e enviarémosche unha ligazón para restaurar o teu contrasinal.',
     'authenticationForgotPasswordAction' => 'Enviar ligazón de restauración',
-    'authenticationForgotPasswordActionSuccess' => 'Se temos o teu enderezo (<b><span id="register-feedback-email"></span></b>) na nosa base de datos xa che enviamos un correo para restaurar o contrasinal. Comproba a bandexa de entrada e segue as instruccións.',
+    'authenticationForgotPasswordActionSuccess' => 'Se temos o teu correo (<b><span id="register-feedback-email"></span></b>) na nosa base de datos enviarémosche unha mensaxe con instrucións para restaurar o teu contrasinal nuns intres. Comproba a bandexa de entrada e segue as instrucións.',
     'authenticationEmailVerified' => 'Correo electrónico verificado correctamente.',
     'authenticationEmailVerifiedError' => 'A ligazón para verificar o teu correo electrónico non é válida.',
     'authenticationEmailVerifiedExpired' => 'A ligazón para verificar o teu correo electrónico caducou. Por favor, inicia o proceso de novo.',

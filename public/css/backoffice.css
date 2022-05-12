@@ -51,8 +51,9 @@
   flex-shrink: 1;
   text-align: right;
   display: flex;
-  gap: 0.5rem;
+  gap: 1.25rem;
   align-items: center;
+  padding: 0.5rem 0;
 }
 
 .control-bar-wrapper {
@@ -272,7 +273,7 @@ input.is-light {
   font-family: var(--font-h1-title);
   margin: 0;
   padding: 0 1rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
   line-height: 2rem;
   color: var(--main-text-color);

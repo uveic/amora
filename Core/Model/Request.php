@@ -135,6 +135,10 @@ final class Request
 
     private function getSiteLanguageFromClientLanguage(): Language
     {
+        if (count(Core::getAllLanguages()) == 1) {
+            return Core::getDefaultLanguage();
+        }
+
         if ($this->session) {
             return $this->session->user->language;
         }
@@ -156,7 +160,7 @@ final class Request
             }
         }
 
-        return Core::getConfig()->defaultSiteLanguage;
+        return Core::getDefaultLanguage();
     }
 
     private function loadSession(): ?Session {

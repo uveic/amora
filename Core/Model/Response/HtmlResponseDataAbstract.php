@@ -123,4 +123,13 @@ abstract class HtmlResponseDataAbstract
 
         return round((time() - $this->request->session->user->createdAt->getTimestamp()) / 60);
     }
+
+    public function getBaseUrlWithLanguage(): string
+    {
+        if (count(Core::getAllLanguages()) === 1) {
+            return $this->baseUrl;
+        }
+
+        return $this->baseUrlWithLanguage;
+    }
 }

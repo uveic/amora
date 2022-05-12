@@ -17,7 +17,7 @@ $this->insert('partials/head', ['responseData' => $responseData])
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=$responseData->baseUrlWithLanguage?>">
+    <a id="register-close" href="<?=$responseData->getBaseUrlWithLanguage()?>">
       <img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>">
     </a>
     <form method="POST" id="form-login">
@@ -42,7 +42,7 @@ $this->insert('partials/head', ['responseData' => $responseData])
           </p>
         </div>
       </div>
-      <p class="text-right no-margin">
+      <p class="text-right m-t-1">
         <a href="<?=UrlBuilderUtil::buildPublicLoginForgotUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('authenticationForgotPassword')?></a>
       </p>
     </form>

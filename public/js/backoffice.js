@@ -437,10 +437,16 @@ document.querySelectorAll('a.close-button').forEach(el => {
 
 const handleRemoveArticleTag = (event) => {
   event.target.parentNode.parentNode.removeChild(event.target.parentNode);
+
+  const allTags = document.querySelectorAll('#tags-selected span');
+  if (!allTags.length) {
+    document.querySelector('#tags-selected').classList.add('null');
+  }
 };
 
 const handleTagSearchResultClick = (tagId, tagName, tagInnerHtml, tagElement = null) => {
   const tags = document.querySelector('#tags-selected');
+  tags.classList.remove('null');
   const allResults = document.querySelectorAll('.search-results > .result-item');
 
   const generateNewTagHtml = function(id, name, html) {

@@ -36,7 +36,7 @@ return [
     'authenticationForgotPassword' => '¿Olvidaste tu contraseña?',
     'authenticationForgotPasswordSubtitle' => 'No te preocupes, introduce el correo electrónico que utilizaste para registrarte y te enviaremos un enlace para restaurar tu contraseña.',
     'authenticationForgotPasswordAction' => 'Enviar enlace de restauración',
-    'authenticationForgotPasswordActionSuccess' => 'Si tenemos tu dirección (<b><span id="register-feedback-email"></span></b>) en nuestra base de datos ya te hemos enviado un correo para restaurar tu contraseña. Comprueba la bandeja de entrada y sigue las instruciones.',
+    'authenticationForgotPasswordActionSuccess' => 'Si tenemos tu dirección (<b><span id="register-feedback-email"></span></b>) en nuestra base de datos te enviaremos un correo para restaurar tu contraseña en un instante. Comprueba la bandeja de entrada y sigue las instruciones.',
     'authenticationEmailVerified' => 'Correo electrónico verificado correctamente.',
     'authenticationEmailVerifiedError' => 'El enlace para verificar tu correo electrónico no es válido.',
     'authenticationEmailVerifiedExpired' => 'El enlace para verificar tu correo electrónico ha caducado. Por favor, inicia el proceso de nuevo.',
