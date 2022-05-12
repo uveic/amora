@@ -199,6 +199,23 @@
           }
         }
       }
+    },
+    "/sitemap": {
+      "get": {
+        "tags": [],
+        "summary": "Return sitemap XML format",
+        "description": "",
+        "operationId": "getSitemap",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return sitemap in XML format",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

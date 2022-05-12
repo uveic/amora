@@ -20,10 +20,11 @@ class Router
 {
     private const PUBLIC_HTML_CONTROLLER_ACTIONS = [
         'home' => true,
+        'invite-request' => true,
         'login' => true,
         'register' => true,
         'rss' => 'true',
-        'invite-request' => true,
+        'sitemap' => 'true',
         'user' => true,
     ];
 

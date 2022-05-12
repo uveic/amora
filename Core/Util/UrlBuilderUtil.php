@@ -206,9 +206,9 @@ class UrlBuilderUtil
         string $uri,
         ?Language $language = null,
     ): string {
-        return ($language
-                ? self::buildBaseUrl($language)
-                : self::buildBaseUrlWithoutLanguage()
+        return (empty($language) || count(Core::getAllLanguages()) === 1
+                ? self::buildBaseUrlWithoutLanguage()
+                : self::buildBaseUrl($language)
             )
             . '/' . $uri;
     }

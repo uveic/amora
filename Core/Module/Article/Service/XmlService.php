@@ -12,20 +12,38 @@ use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 use DateTimeZone;
 
-class RssService
+class XmlService
 {
-    protected LocalisationUtil $localisationUtil;
-
     public function __construct(
         private Logger $logger,
     ) {}
 
+    public function buildSitemap(array $articles): string
+    {
+        $this->logger->logInfo('Building sitemap...');
+
+        $xml = array_merge(
+            [
+                '<?xml version="1.0" encoding="UTF-8"?>',
+                '<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">',
+            ],
+            $this->buildSitemapContent(
+                articles: $articles,
+            ),
+            [
+                '</urlset>',
+            ]
+        );
+
+        $this->logger->logInfo('Building sitemap done.');
+
+        return implode('', $xml);
+    }
+
     public function buildRss(
-        Language $siteLanguage,
+        LocalisationUtil $localisationUtil,
         array $articles,
     ): string {
-        $this->localisationUtil = Core::getLocalisationUtil($siteLanguage);
-
         $this->logger->logInfo('Building RSS...');
 
         $lastBuildDate = $this->getBuildDate($articles);
@@ -36,13 +54,13 @@ class RssService
                 '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
                 '<channel>',
             ],
-            $this->buildHeader(
-                siteLanguage: $siteLanguage,
+            $this->buildRssHeader(
+                localisationUtil: $localisationUtil,
                 lastPubDate: $this->getLastPubDate($articles[0] ?? null),
                 lastBuildDate: $lastBuildDate,
             ),
-            $this->buildContent(
-                siteLanguage: $siteLanguage,
+            $this->buildRssContent(
+                siteLanguage: $localisationUtil->language,
                 articles: $articles,
             ),
             [
@@ -51,28 +69,33 @@ class RssService
             ]
         );
 
+        $this->logger->logInfo('Building RSS done.');
+
         return implode('', $xml);
     }
 
-    private function buildHeader(
-        Language $siteLanguage,
+    private function buildRssHeader(
+        LocalisationUtil $localisationUtil,
         DateTimeImmutable $lastPubDate,
         DateTimeImmutable $lastBuildDate,
     ): array {
         $baseUrl = Core::getConfig()->baseUrl;
         $siteAdminEmail = Core::getConfig()->siteAdminEmail;
         $siteAdminName = Core::getConfig()->siteAdminName;
-        $siteTitle = $this->getSiteTitle();
-        $siteDescription = $this->localisationUtil->getValue('siteDescription');
+        $siteTitle = $this->getSiteTitle(
+            siteTitle: $localisationUtil->getValue('siteTitle'),
+            siteName: $localisationUtil->getValue('siteName'),
+        );
+        $siteDescription = $localisationUtil->getValue('siteDescription');
 
         $output = [
             '<title>' . $siteTitle . '</title>',
             '<link>' . $baseUrl . '</link>',
             '<description>' . $siteDescription . '</description>',
-            '<language>' . strtolower($siteLanguage->value) . '</language>',
+            '<language>' . strtolower($localisationUtil->language->value) . '</language>',
             '<pubDate>' . $lastPubDate->format('r') . '</pubDate>',
             '<lastBuildDate>' . $lastBuildDate->format('r') . '</lastBuildDate>',
-            '<docs>http://blogs.law.harvard.edu/tech/rss</docs>',
+            '<docs>https://blogs.law.harvard.edu/tech/rss</docs>',
             '<generator>' . $siteTitle . '</generator>',
             '<atom:link href="' . UrlBuilderUtil::buildPublicRssUrl() . '" rel="self" type="application/rss+xml" />',
         ];
@@ -85,7 +108,7 @@ class RssService
         return $output;
     }
 
-    private function buildContent(Language $siteLanguage, array $articles): array
+    private function buildRssContent(Language $siteLanguage, array $articles): array
     {
         $output = [];
 
@@ -117,6 +140,21 @@ class RssService
         return $output;
     }
 
+    private function buildSitemapContent(array $articles): array
+    {
+        $output = [];
+
+        /** @var Article $article */
+        foreach ($articles as $article) {
+            $output[] = '<url>';
+            $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticleUrl(uri: $article->uri) . '</loc>';
+            $output[] = '<lastmod>' . $article->updatedAt->format('Y-m-d') . '</lastmod>';
+            $output[] = '</url>';
+        }
+
+        return $output;
+    }
+
     private function getContent(Article $article): string
     {
         return htmlspecialchars(
@@ -128,11 +166,8 @@ class RssService
         );
     }
 
-    private function getSiteTitle(): string
+    private function getSiteTitle(string $siteTitle, string $siteName): string
     {
-        $siteTitle = $this->localisationUtil->getValue('siteTitle');
-        $siteName = $this->localisationUtil->getValue('siteName');
-
         return $siteName . ($siteTitle ? ' - ' . $siteTitle : '');
     }
 
