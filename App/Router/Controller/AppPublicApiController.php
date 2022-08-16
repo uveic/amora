@@ -13,11 +13,6 @@ final class AppPublicApiController extends AppPublicApiControllerAbstract
 
     public function authenticate(Request $request): bool
     {
-        $session = $request->session;
-        if (empty($session) || !$session->isAuthenticated() || !$session->isAdmin()) {
-            return false;
-        }
-
         return true;
     }
 }
