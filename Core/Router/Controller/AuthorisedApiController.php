@@ -2,11 +2,9 @@
 
 namespace Amora\Core\Router;
 
-use Throwable;
-use Amora\Core\Util\Logger;
+use Amora\Core\Module\Article\Model\Image;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
-use Amora\Core\Module\Article\Model\Image;
 use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
@@ -23,7 +21,6 @@ use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyImageFa
 final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 {
     public function __construct(
-        private Logger $logger,
         private ImageService $imageService,
         private UserService $userService,
         private UserMailService $userMailService,
@@ -51,44 +48,28 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      */
     public function storeImage(Request $request): Response
     {
-        try {
-            $session = $request->session;
-            $images = $this->imageService->processImages(
-                files: $request->processedFiles,
-                userId: $session->user->id,
-            );
-
-            $imgSaved = [];
-            foreach ($images as $image) {
-                $res = $this->imageService->storeImage($image);
-                if ($res) {
-                    $imgSaved[] = $res;
-                }
-            }
-
-            $output = [];
-            /** @var Image $img */
-            foreach ($imgSaved as $img) {
-                $output[] = [
-                    'id' => $img->id,
-                    'url' => $img->fullUrlLarge,
-                    'caption' => $img->caption,
-                ];
-            }
-
+        if (!$request->processedFiles) {
             return new AuthorisedApiControllerStoreImageSuccessResponse(
-                !empty($output),
-                $output
+                success: false,
+                images: [],
             );
-        } catch (Throwable $t) {
-            $this->logger->logError(
-                'AuthorisedApiController - Error storing image: ' .
-                $t->getMessage() .
-                ' - Trace: ' . $t->getTraceAsString()
-            );
-
-            return new AuthorisedApiControllerStoreImageSuccessResponse(false, []);
         }
+
+        $images = $this->imageService->processAndStoreRawImages(
+            rawImages: $request->processedFiles,
+            userId: $request->session->user->id,
+        );
+
+        $output = [];
+        /** @var Image $image */
+        foreach ($images as $image) {
+            $output[] = $image->buildPublicDataArray();
+        }
+
+        return new AuthorisedApiControllerStoreImageSuccessResponse(
+            success: (bool)$output,
+            images: $output,
+        );
     }
 
     /**

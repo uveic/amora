@@ -17,10 +17,9 @@ function uploadImage(
   imageClassName,
   userFeedbackDiv,
   then = () => {},
-  catchError = () => {}
+  catchError = () => {},
+  apiUploadEndpoint = '/api/image',
 ) {
-  const apiUploadEndpoint = '/api/image';
-
   if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
     logError(userFeedbackDiv, new Error(file.name + ' is not an image'));
     return;

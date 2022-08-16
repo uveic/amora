@@ -16,4 +16,14 @@ class File
     {
         return $this->fullPath . $this->name;
     }
+
+    public function getExtension(): string
+    {
+        if (!str_contains($this->name, '.')) {
+            return '';
+        }
+
+        $parts = explode('.', $this->name);
+        return strtolower(trim($parts[count($parts) - 1]));
+    }
 }

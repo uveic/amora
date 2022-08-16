@@ -35,9 +35,9 @@ class ImageResizeService
 
     public function getImageObjectFromUploadedImageFile(
         string $imagePath,
-        int $userId,
-        ?string $caption = null
-    ): ?Image {
+        ?int $userId,
+        ?string $caption = null,
+    ): Image {
         $filePathOriginal = $imagePath;
         $fullUrlOriginal = $this->getImageUrlFromPath($filePathOriginal);
 
@@ -80,8 +80,8 @@ class ImageResizeService
 
         if ($newMaxWidth >= $originalWidth && $newMaxHeight >= $originalHeight) {
             $this->logger->logInfo(
-                'Returning original image. New size smaller than original.' .
-                ' - Original full path: ' . $image->filePath
+                'The new size is smaller than the original size' .
+                ' - Returning original full path: ' . $image->filePath
             );
 
             return $image;

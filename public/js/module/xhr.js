@@ -101,9 +101,9 @@ function put(url, stringPayload, feedbackDivEl = null, successMessage = null) {
   return request(url, stringPayload, 'PUT', headers, feedbackDivEl, successMessage);
 }
 
-function _delete(url, feedbackDivEl = null, successMessage = null) {
+function _delete(url, stringPayload = null, feedbackDivEl = null, successMessage = null) {
   const headers = {'Content-Type': 'application/json'};
-  return request(url, null, 'DELETE', headers, feedbackDivEl, successMessage);
+  return request(url, stringPayload, 'DELETE', headers, feedbackDivEl, successMessage);
 }
 
 function postImage(url, formData, feedbackDivEl = null, successMessage = null) {

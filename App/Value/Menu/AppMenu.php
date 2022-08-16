@@ -17,7 +17,7 @@ final class AppMenu
 
         $output = array_merge(
             CoreMenu::getAdminMenu($language, $username),
-            $appMenu
+            $appMenu,
         );
 
         usort($output, function($a, $b) {
@@ -38,7 +38,8 @@ final class AppMenu
 
         $output = array_merge(
             CoreMenu::getUserMenu($language, $username),
-            $appMenu
+            self::getPublicAll($language),
+            $appMenu,
         );
 
         if ($includeAdminLink) {
@@ -48,6 +49,18 @@ final class AppMenu
                 order: 1
             );
         }
+
+        usort($output, function($a, $b) {
+            return $a->order - $b->order;
+        });
+
+        return $output;
+    }
+
+    public static function getPublicAll(
+        Language $language,
+    ): array {
+        $output = [];
 
         usort($output, function($a, $b) {
             return $a->order - $b->order;

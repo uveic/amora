@@ -149,7 +149,6 @@ class RouterCore extends Core
      */
     public static function getAuthorisedApiController(): AuthorisedApiController
     {
-        $logger = self::getRouterLogger();
         $imageService = ArticleCore::getImageService();
         $userService = UserCore::getUserService();
         $userMailService = UserCore::getUserMailService();
@@ -157,7 +156,6 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'AuthorisedApiController',
             factory: function () use (
-                $logger,
                 $imageService,
                 $userService,
                 $userMailService,
@@ -167,7 +165,6 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiController.php';
                 return new AuthorisedApiController(
-                    $logger,
                     $imageService,
                     $userService,
                     $userMailService,
