@@ -104,6 +104,7 @@ return [
     'globalTimezone' => 'Zona horaria',
     'globalBio' => 'Breve biografía',
     'globalSave' => 'Gardar',
+    'globalSend' => 'Enviar',
     'globalUpdate' => 'Actualizar',
     'globalUpdated' => 'Actualizado',
     'globalUpdatedAt' => 'Actualizado',
@@ -126,6 +127,7 @@ return [
     'globalComingSoon' => 'Proximamente...',
     'globalLoading' => 'Cargando...',
     'globalSaving' => 'Gardando...',
+    'globalSending' => 'Enviando...',
     'globalMore' => 'Máis...',
 
     'globalUploadImage' => 'Subir imaxe(s)',

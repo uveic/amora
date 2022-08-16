@@ -59,6 +59,14 @@ class UrlBuilderUtil
         return trim($baseUrl, ' /');
     }
 
+    public static function buildMediaBaseUrl(): string
+    {
+        $baseUrl = Core::getConfig()->baseUrl;
+        $mediaUrl = Core::getConfig()->mediaBaseUrl;
+
+        return trim($baseUrl, ' /') . '/' . trim($mediaUrl, '/ ');
+    }
+
     //////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////
     /// Backoffice URLs

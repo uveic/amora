@@ -49,14 +49,16 @@ class MailerCore extends Core
         return self::getInstance(
             className: 'MailerService',
             factory: function () {
-                $mailerDataLayer = self::getMailerDataLayer();
-
                 require_once self::getPathRoot() . '/App/Value/Mailer/AppMailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerLogItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Service/MailerService.php';
-                return new MailerService($mailerDataLayer);
+                return new MailerService(
+                    mailerDataLayer: self::getMailerDataLayer(),
+                    mailerApp: self::getMailerApp(),
+                    sendMailSynchronously: Core::getConfig()->mailer->sendEmailSynchronously,
+                );
             },
             isSingleton: true,
         );
@@ -84,20 +86,22 @@ class MailerCore extends Core
         );
     }
 
-    public static function getMailerApp(): MailerApp {
+    public static function getMailerApp(bool $isPersistent = true): MailerApp
+    {
         return self::getInstance(
             className: 'MailerApp',
-            factory: function () {
-                $logger = self::getMailerLogger();
-                $dataLayer = self::getMailerDataLayer();
-                $apiClient = self::getSendGridMailerApiClient();
-                $requestBuilder = self::getSendGridRequestBuilder();
-
+            factory: function () use($isPersistent) {
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/Email.php';
                 require_once self::getPathRoot() . '/Core/App/LockManager.php';
                 require_once self::getPathRoot() . '/Core/App/App.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/MailerApp.php';
-                return new MailerApp($logger, $dataLayer, $apiClient, $requestBuilder);
+                return new MailerApp(
+                    logger: self::getMailerLogger(),
+                    dataLayer: self::getMailerDataLayer(),
+                    apiClient: self::getSendGridMailerApiClient(),
+                    requestBuilder: self::getSendGridRequestBuilder(),
+                    isPersistent: $isPersistent,
+                );
             },
             isSingleton: false,
         );

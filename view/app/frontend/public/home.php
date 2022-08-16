@@ -15,7 +15,7 @@ if ($responseData->userFeedback) {
 ?>
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
-<?= $this->insert('partials/head', ['responseData' => $responseData]) ?>
+<?= $this->insert('../../../core/frontend/public/partials/head', ['responseData' => $responseData]) ?>
 <body>
 <?=$userFeedbackHtml?>
 <?=$this->insert('partials/home/main', ['responseData' => $responseData])?>

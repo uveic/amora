@@ -4,21 +4,14 @@ namespace Amora\Core\Router\Controller\Response;
 use Amora\Core\Model\Response;
 use Amora\Core\Model\HttpStatusCode;
 
-class PublicApiControllerGetSessionSuccessResponse extends Response
+class PublicApiControllerTriggerEmailSenderJobSuccessResponse extends Response
 {
-    public function __construct($user = null, $session = null)
+    public function __construct()
     {
         // Required parameters
         $responseData = [
+            'success' => true,
         ];
-
-        $responseData['user'] = is_null($user)
-            ? null
-            : $user;
-
-        $responseData['session'] = is_null($session)
-            ? null
-            : $session;
 
         list($output, $contentType) = self::getResponseType($responseData);
         parent::__construct($output, $contentType, HttpStatusCode::HTTP_200_OK);

@@ -49,6 +49,7 @@ final class Mailer {
         public readonly Email $from,
         public readonly Email $replyTo,
         public readonly MailerSendGrid $sendGrid,
+        public readonly bool $sendEmailSynchronously = false,
     ) {}
 }
 
