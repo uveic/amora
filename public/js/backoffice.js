@@ -3,7 +3,7 @@ import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
 import {global} from "./module/localisation.js";
 import {classes as pexegoClasses} from "./module/pexego.js";
-import {uploadImage} from "./module/imageUploader.js";
+import {uploadImage} from "./module/uploader.js";
 
 let globalTags = [];
 

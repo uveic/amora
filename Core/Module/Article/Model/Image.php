@@ -9,7 +9,7 @@ class Image
 {
     public function __construct(
         public ?int $id,
-        public readonly int $userId,
+        public readonly ?int $userId,
         public readonly string $fullUrlOriginal,
         public readonly ?string $fullUrlMedium,
         public readonly ?string $fullUrlLarge,
@@ -23,13 +23,9 @@ class Image
 
     public static function fromArray(array $image): Image
     {
-        $userId = isset($image['image_user_id'])
-            ? (int)$image['image_user_id']
-            : (int)$image['user_id'];
-
         return new Image(
             id: (int)$image['image_id'],
-            userId: $userId,
+            userId: isset($image['image_user_id']) ? (int)$image['image_user_id'] : null,
             fullUrlOriginal: $image['full_url_original'],
             fullUrlMedium: $image['full_url_medium'] ?? null,
             fullUrlLarge: $image['full_url_large'] ?? null,
@@ -62,5 +58,14 @@ class Image
     public function getFullUrlMedium(): ?string
     {
         return $this->fullUrlMedium ?? ($this->fullUrlLarge ?? $this->fullUrlOriginal);
+    }
+
+    public function buildPublicDataArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'url' => $this->getFullUrlMedium(),
+            'caption' => $this->caption,
+        ];
     }
 }

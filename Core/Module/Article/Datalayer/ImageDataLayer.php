@@ -14,8 +14,10 @@ class ImageDataLayer
 
     const IMAGE_TABLE_NAME = 'image';
 
-    public function __construct(private MySqlDb $db, private Logger $logger)
-    {}
+    public function __construct(
+        private MySqlDb $db,
+        private Logger $logger,
+    ) {}
 
     public function filterImagesBy(
         array $imageIds = [],
@@ -35,7 +37,7 @@ class ImageDataLayer
         $baseSql = 'SELECT ';
         $fields = [
             'i.id AS image_id',
-            'i.user_id',
+            'i.user_id AS image_user_id',
             'i.file_path_original',
             'i.file_path_large',
             'i.file_path_medium',
@@ -82,7 +84,8 @@ class ImageDataLayer
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function storeImage(Image $image): Image {
+    public function storeImage(Image $image): Image
+    {
         $resInsert = $this->db->insert(self::IMAGE_TABLE_NAME, $image->asArray());
 
         if (empty($resInsert)) {

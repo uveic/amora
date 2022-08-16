@@ -107,6 +107,13 @@ abstract class HtmlResponseDataAbstract
         return [];
     }
 
+    public function getPublicMenu(): array
+    {
+        return AppMenu::getPublicAll(
+            language: $this->siteLanguage,
+        );
+    }
+
     public function isUserVerified(): bool
     {
         if (empty($this->request->session)) {

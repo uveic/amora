@@ -1,5 +1,5 @@
 import {global} from "./localisation.js";
-import {uploadImage} from "./imageUploader.js";
+import {uploadImage} from "./uploader.js";
 
 const userFeedbackBubble = document.querySelector('#feedback');
 const exec = (command, value = null) => document.execCommand(command, false, value);
