@@ -134,7 +134,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     }
 
     /**
-     * Endpoint: /api/login
+     * Endpoint: /papi/login
      * Method: POST
      *
      * @param string $user
