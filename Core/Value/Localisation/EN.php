@@ -104,6 +104,7 @@ return [
     'globalTimezone' => 'Timezone',
     'globalBio' => 'Bio',
     'globalSave' => 'Save',
+    'globalSend' => 'Send',
     'globalUpdate' => 'Update',
     'globalUpdated' => 'Updated',
     'globalUpdatedAt' => 'Updated At',
@@ -126,6 +127,7 @@ return [
     'globalComingSoon' => 'Coming soon...',
     'globalLoading' => 'Loading...',
     'globalSaving' => 'Saving...',
+    'globalSending' => 'Sending...',
     'globalMore' => 'More...',
 
     'globalUploadImage' => 'Upload image(s)',

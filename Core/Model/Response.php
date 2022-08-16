@@ -28,6 +28,7 @@ enum ContentType: string
     case PLAIN = 'text/plain;charset=UTF-8';
     case HTML = 'text/html;charset=UTF-8';
     case CSV = 'text/csv';
+    case PDF = 'application/pdf';
 }
 
 class Response
@@ -126,6 +127,25 @@ class Response
             localPath: $localPath,
             fileName: $fileName,
             contentType: ContentType::CSV,
+        );
+    }
+
+    public static function createPdfResponse(
+        string $url,
+        string $localPath,
+        string $fileName,
+    ): Response {
+        return new Response(
+            output: '',
+            contentType: ContentType::PDF,
+            httpStatus: HttpStatusCode::HTTP_200_OK,
+            headers: [
+                'Cache-Control: public',
+                'Content-Transfer-Encoding: Binary',
+                'Content-Length:' . filesize($localPath),
+                "Content-Disposition: attachment; filename={$fileName}",
+                'Location: ' . $url,
+            ],
         );
     }
 

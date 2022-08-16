@@ -23,7 +23,7 @@ final class CoreMenu
             ),
             new MenuItem(
                 text: $localisationUtil->getValue('navAdminContent'),
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256"><rect width="20" height="20" fill="none"></rect><polyline points="208 96 128 176 48 96" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline></svg>',
+                icon: '<img class="img-svg" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Menu">',
                 children: [
                     new MenuItem(
                         uri: UrlBuilderUtil::buildBackofficeImagesUrl($language),
@@ -49,17 +49,17 @@ final class CoreMenu
             ),
             new MenuItem(
                 text: $username ?? $localisationUtil->getValue('navAccount'),
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256"><rect width="20" height="20" fill="none"></rect><polyline points="208 96 128 176 48 96" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline></svg>',
+                icon: '<img class="img-svg" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Menu">',
                 children: [
                 new MenuItem(
                     uri: UrlBuilderUtil::buildAuthorisedAccountUrl($language),
                     text: $localisationUtil->getValue('navAccount'),
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="#ffffff" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="96" r="64" fill="none" stroke="#ffffff" stroke-miterlimit="10" stroke-width="16"></circle><path d="M30.989,215.99064a112.03731,112.03731,0,0,1,194.02311.002" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="#fcfcfc" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="96" r="64" fill="none" stroke="#fcfcfc" stroke-miterlimit="10" stroke-width="16"></circle><path d="M30.989,215.99064a112.03731,112.03731,0,0,1,194.02311.002" fill="none" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>',
                 ),
                 new MenuItem(
                     uri: UrlBuilderUtil::buildAuthorisedLogoutUrl($language),
                     text: $localisationUtil->getValue('navSignOut'),
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="#ffffff" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><polyline points="174.029 86 216.029 128 174.029 170" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><line x1="104" y1="128" x2="216" y2="128" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><path d="M120,216H48a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8h72" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="#fcfcfc" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><polyline points="174.029 86 216.029 128 174.029 170" fill="none" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><line x1="104" y1="128" x2="216" y2="128" fill="none" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><path d="M120,216H48a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8h72" fill="none" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>',
                 ),
             ],
                 order: 999
@@ -80,17 +80,17 @@ final class CoreMenu
             ),
             new MenuItem(
                 text: $username ?? $localisationUtil->getValue('navAccount'),
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256"><rect width="20" height="20" fill="none"></rect><polyline points="208 96 128 176 48 96" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline></svg>',
+                icon: '<img class="img-svg" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Menu">',
                 children: [
                 new MenuItem(
                     uri: UrlBuilderUtil::buildAuthorisedAccountUrl($language),
                     text: $localisationUtil->getValue('navAccount'),
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="#ffffff" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="96" r="64" fill="none" stroke="#ffffff" stroke-miterlimit="10" stroke-width="16"></circle><path d="M30.989,215.99064a112.03731,112.03731,0,0,1,194.02311.002" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="#fcfcfc" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="96" r="64" fill="none" stroke="#fcfcfc" stroke-miterlimit="10" stroke-width="16"></circle><path d="M30.989,215.99064a112.03731,112.03731,0,0,1,194.02311.002" fill="none" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>',
                 ),
                 new MenuItem(
                     uri: UrlBuilderUtil::buildAuthorisedLogoutUrl($language),
                     text: $localisationUtil->getValue('navSignOut'),
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="#ffffff" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><polyline points="174.029 86 216.029 128 174.029 170" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><line x1="104" y1="128" x2="216" y2="128" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><path d="M120,216H48a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8h72" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="#fcfcfc" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><polyline points="174.029 86 216.029 128 174.029 170" fill="none" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><line x1="104" y1="128" x2="216" y2="128" fill="none" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><path d="M120,216H48a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8h72" fill="none" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>',
                 ),
             ],
                 order: 999

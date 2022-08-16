@@ -33,18 +33,18 @@ class User
         return new User(
             id: (int)$user['user_id'],
             language: Language::from($user['user_language_iso_code']),
-            role: UserRole::from($user['role_id']),
-            journeyStatus: UserJourneyStatus::from($user['journey_id']),
+            role: UserRole::from($user['user_role_id']),
+            journeyStatus: UserJourneyStatus::from($user['user_journey_id']),
             createdAt: DateUtil::convertStringToDateTimeImmutable($user['user_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($user['user_updated_at']),
-            email: $user['email'] ?? null,
+            email: $user['user_email'] ?? null,
             name: $user['user_name'] ?? ($user['name'] ?? null),
-            passwordHash: $user['password_hash'] ?? null,
-            bio: $user['bio'] ?? null,
-            isEnabled: !empty($user['is_enabled']),
-            verified: !empty($user['verified']),
-            timezone: DateUtil::convertStringToDateTimeZone($user['timezone']),
-            changeEmailAddressTo: $user['change_email_to'] ?? null,
+            passwordHash: $user['user_password_hash'] ?? null,
+            bio: $user['user_bio'] ?? null,
+            isEnabled: !empty($user['user_is_enabled']),
+            verified: !empty($user['user_verified']),
+            timezone: DateUtil::convertStringToDateTimeZone($user['user_timezone']),
+            changeEmailAddressTo: $user['user_change_email_to'] ?? null,
         );
     }
 

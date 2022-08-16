@@ -5,9 +5,9 @@ namespace Amora\Core\Database\Model;
 class TransactionResponse
 {
     public function __construct(
-        private bool $isSuccess,
-        private mixed $response = null,
-        private ?string $message = null,
+        public readonly bool $isSuccess,
+        public readonly mixed $response = null,
+        public readonly ?string $message = null,
     ) {}
 
     public function isSuccess(): bool

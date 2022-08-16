@@ -29,7 +29,7 @@ class RequestBuilder extends RequestBuilderAbstract
         string $subject,
         string $content,
         string $contentType = 'text/html',
-        ?string $overwriteFromName = null
+        ?string $overwriteFromName = null,
     ): string {
         if (empty($emailReceivers)) {
             $this->logger->logError('Empty email receivers when sending a Sendgrid email');
@@ -66,7 +66,7 @@ class RequestBuilder extends RequestBuilderAbstract
                     'type' => $contentType,
                     'value' => $content,
                 ]
-            ]
+            ],
         ];
 
         if ($this->replyToEmail) {
@@ -81,6 +81,6 @@ class RequestBuilder extends RequestBuilderAbstract
             $contentData['reply_to'] = $replyToData;
         }
 
-        return json_encode($contentData);
+        return json_encode($contentData, JSON_UNESCAPED_UNICODE);
     }
 }

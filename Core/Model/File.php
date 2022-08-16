@@ -14,7 +14,7 @@ class File
 
     public function getFullPathWithName(): string
     {
-        return $this->fullPath . $this->name;
+        return rtrim($this->fullPath, '/ ') . '/' . $this->name;
     }
 
     public function getExtension(): string

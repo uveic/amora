@@ -26,17 +26,17 @@ class Session
     {
         return new Session(
             id: (int)$session['session_id'],
-            sessionId: $session['sid'],
+            sessionId: $session['session_sid'],
             user: $user,
-            timezone: DateUtil::convertStringToDateTimeZone($session['timezone']),
+            timezone: DateUtil::convertStringToDateTimeZone($session['session_timezone']),
             createdAt: DateUtil::convertStringToDateTimeImmutable($session['session_created_at']),
-            lastVisitedAt: DateUtil::convertStringToDateTimeImmutable($session['last_visited_at']),
-            validUntil: DateUtil::convertStringToDateTimeImmutable($session['valid_until']),
-            forcedExpirationAt: isset($session['forced_expiration_at'])
-                ? DateUtil::convertStringToDateTimeImmutable($session['forced_expiration_at'])
+            lastVisitedAt: DateUtil::convertStringToDateTimeImmutable($session['session_last_visited_at']),
+            validUntil: DateUtil::convertStringToDateTimeImmutable($session['session_valid_until']),
+            forcedExpirationAt: isset($session['session_forced_expiration_at'])
+                ? DateUtil::convertStringToDateTimeImmutable($session['session_forced_expiration_at'])
                 : null,
-            ip: $session['ip'],
-            browserAndPlatform: $session['browser_and_platform'],
+            ip: $session['session_ip'],
+            browserAndPlatform: $session['session_browser_and_platform'],
         );
     }
 

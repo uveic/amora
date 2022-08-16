@@ -105,17 +105,34 @@ class ImageService
         $output = [];
         /** @var File $file */
         foreach ($files as $file) {
-            $newImageName = $this->imageResizeService->getNewImageName($file->getExtension());
-            $targetPath = rtrim($this->mediaBaseDir, ' /') . '/' . $newImageName;
-            $res = rename($file->fullPath, $targetPath);
-            if (empty($res)) {
-                return $output;
-            }
+            try {
+                $newImageName = $this->imageResizeService->getNewImageName($file->getExtension());
+                $targetPath = rtrim($this->mediaBaseDir, ' /') . '/' . $newImageName;
 
-            $output[] = $this->imageResizeService->getImageObjectFromUploadedImageFile(
-                imagePath: $targetPath,
-                userId: $userId,
-            );
+                if (empty($file->fullPath)) {
+                    $this->logger->logError('Image not valid, empty path.');
+                    continue;
+                }
+
+                $res = rename($file->fullPath, $targetPath);
+                if (!$res) {
+                    $this->logger->logError('Image not valid: ' . $file->fullPath);
+                    continue;
+                }
+
+                $resP = chmod($targetPath, 0644);
+                if (!$resP) {
+                    $this->logger->logError('Error updating image permissions: ' . $targetPath);
+                }
+
+                $output[] = $this->imageResizeService->getImageObjectFromUploadedImageFile(
+                    imagePath: $targetPath,
+                    userId: $userId,
+                );
+            } catch (Throwable $t) {
+                $this->logger->logError('Error processing image: ' . $t->getMessage());
+                continue;
+            }
         }
 
         return $output;

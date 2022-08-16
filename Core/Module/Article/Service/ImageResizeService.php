@@ -313,7 +313,7 @@ class ImageResizeService
             $originalHeight
         );
 
-        return imagepng($outputImage, $outputFullPath, 85);
+        return imagepng($outputImage, $outputFullPath);
     }
 
     private function checkExifAndRotateIfNecessary(GdImage $image, string $imagePath): GdImage|bool

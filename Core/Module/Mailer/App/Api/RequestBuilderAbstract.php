@@ -19,6 +19,6 @@ abstract class RequestBuilderAbstract
         string $subject,
         string $content,
         string $contentType = 'text/html',
-        ?string $overwriteFromName = null
+        ?string $overwriteFromName = null,
     ): string;
 }

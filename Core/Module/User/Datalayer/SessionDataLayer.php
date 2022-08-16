@@ -4,6 +4,7 @@
 namespace Amora\Core\Module\User\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\Logger;
 use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Module\User\Model\User;
@@ -12,6 +13,8 @@ use DateTimeZone;
 
 class SessionDataLayer
 {
+    use DataLayerTrait;
+
     const SESSION_TABLE_NAME = 'session';
 
     public function __construct(
@@ -21,40 +24,42 @@ class SessionDataLayer
 
     public function getSessionForSessionId(string $sessionId): ?Session
     {
-        $sql = '
-            SELECT
-                s.id AS session_id,
-                s.user_id AS user_id,
-                s.sid,
-                s.created_at AS session_created_at,
-                s.last_visited_at,
-                s.valid_until,
-                s.forced_expiration_at,
-                s.timezone,
-                s.ip,
-                s.browser_and_platform,
-                u.language_iso_code AS user_language_iso_code,
-                u.role_id,
-                u.journey_id,
-                u.created_at AS user_created_at,
-                u.updated_at AS user_updated_at,
-                u.email,
-                u.name,
-                u.password_hash,
-                u.bio,
-                u.is_enabled,
-                u.verified,
-                u.timezone,
-                u.change_email_to
-            FROM ' . self::SESSION_TABLE_NAME . ' AS s
-                JOIN ' . UserDataLayer::USER_TABLE . ' AS u
-                    ON s.user_id = u.id
-            WHERE s.sid = :session_id
-        ';
+        $params = [];
+        $baseSql = 'SELECT ';
+        $fields = [
+            's.id AS session_id',
+            's.user_id',
+            's.sid AS session_sid',
+            's.created_at AS session_created_at',
+            's.last_visited_at AS session_last_visited_at',
+            's.valid_until AS session_valid_until',
+            's.forced_expiration_at AS session_force_expiration_at',
+            's.timezone AS session_timezone',
+            's.ip AS session_ip',
+            's.browser_and_platform AS session_browser_and_platform',
 
-        $params = [
-            ':session_id' => $sessionId
+            'u.language_iso_code AS user_language_iso_code',
+            'u.role_id AS user_role_id',
+            'u.journey_id AS user_journey_id',
+            'u.created_at AS user_created_at',
+            'u.updated_at AS user_updated_at',
+            'u.email AS user_email',
+            'u.name AS user_name',
+            'u.password_hash AS user_password_hash',
+            'u.bio AS user_bio',
+            'u.is_enabled AS user_is_enabled',
+            'u.verified AS user_verified',
+            'u.timezone AS user_timezone',
+            'u.change_email_to AS user_change_email_to',
         ];
+
+        $joins = ' FROM ' . self::SESSION_TABLE_NAME . ' AS s';
+        $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON s.user_id = u.id';
+
+        $where = ' WHERE 1';
+        $where .= $this->generateWhereSqlCodeForIds($params, [$sessionId], 's.sid', 'sessionId');
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where;
 
         $res = $this->db->fetchOne($sql, $params);
 

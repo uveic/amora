@@ -224,15 +224,12 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         if (empty($res)) {
-            return Response::createHtmlResponse(
-                template: 'core/frontend/public/home',
-                responseData: new HtmlHomepageResponseData(
-                    request: $request,
-                    userFeedback: new UserFeedback(
-                        isSuccess: false,
-                        message: $localisationUtil->getValue('authenticationPasswordCreationLinkError'),
-                    ),
-                )
+            return $this->buildHomepageResponse(
+                request: $request,
+                userFeedback: new UserFeedback(
+                    isSuccess: false,
+                    message: $localisationUtil->getValue('authenticationPasswordCreationLinkError'),
+                ),
             );
         }
 
@@ -356,7 +353,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         );
 
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/home',
+            template: 'app/frontend/public/home',
             responseData: new HtmlHomepageResponseData(
                 request: $request,
                 pagination: $pagination,

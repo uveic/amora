@@ -21,11 +21,13 @@ class MailerApp extends App
         Logger $logger,
         private MailerDataLayer $dataLayer,
         private ApiClientAbstract $apiClient,
-        private RequestBuilderAbstract $requestBuilder
+        private RequestBuilderAbstract $requestBuilder,
+        bool $isPersistent = true,
     ) {
         parent::__construct(
             logger: $logger,
             appName: Core::getConfig()->appName . 'MailerApp',
+            isPersistent: $isPersistent,
         );
     }
 
@@ -54,7 +56,7 @@ class MailerApp extends App
         });
     }
 
-    private function processMailItem(MailerItem $item): bool
+    public function processMailItem(MailerItem $item): bool
     {
         $this->logger->logInfo(
             $this->getLogPrefix() . 'Building request for email ID: ' . $item->id
@@ -76,11 +78,17 @@ class MailerApp extends App
         $newLogItemId = $this->logApiRequest($item->id, $contentData);
 
         $this->logger->logInfo($this->getLogPrefix() . 'Sending email ID: ' . $item->id);
-        $apiResponse = $this->apiClient->post(
-            $this->getLogPrefix(),
-            '/mail/send',
-            $contentData
-        );
+        $apiResponse = Core::isRunningInLiveEnv()
+            ? $this->apiClient->post(
+                $this->getLogPrefix(),
+                '/mail/send',
+                $contentData
+            )
+            : new ApiResponse(
+                response: 'DevEnvironment: sent',
+                responseCode: 200,
+                hasError: false,
+            );
 
         $this->logger->logInfo(
             $this->getLogPrefix() . 'Logging API response for email ID: ' . $item->id
