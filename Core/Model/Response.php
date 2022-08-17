@@ -13,6 +13,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 enum HttpStatusCode: string
 {
     case HTTP_200_OK = 'HTTP/1.1 200 OK';
+    case HTTP_301_PERMANENT_REDIRECT = 'HTTP/1.1 301 Moved Permanently';
     case HTTP_307_TEMPORARY_REDIRECT = 'HTTP/1.1 307 Temporary Redirect';
     case HTTP_400_BAD_REQUEST = 'HTTP/1.1 400 Bad Request';
     case HTTP_401_UNAUTHORIZED = 'HTTP/1.1 401 Unauthorized';
@@ -155,6 +156,18 @@ class Response
             output: '',
             contentType: ContentType::HTML,
             httpStatus: HttpStatusCode::HTTP_307_TEMPORARY_REDIRECT,
+            headers: [
+                'Location: ' . $url
+            ],
+        );
+    }
+
+    public static function createPermanentRedirectResponse(string $url): Response
+    {
+        return new Response(
+            output: '',
+            contentType: ContentType::HTML,
+            httpStatus: HttpStatusCode::HTTP_301_PERMANENT_REDIRECT,
             headers: [
                 'Location: ' . $url
             ],
