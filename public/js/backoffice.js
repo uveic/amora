@@ -279,7 +279,7 @@ document.querySelectorAll('input#images').forEach(im => {
     imagesContainer.appendChild(newImgDiv);
 
     for (let i = 0; i < im.files.length; i++) {
-      let file = im.files[i]
+      let file = im.files[i];
 
       uploadImage(
         file,
@@ -359,10 +359,10 @@ const handleDropdownOptionClick = (elementOption, dropDownIdentifier) => {
 
   if (elementOption.dataset.value === '1') {
     elementLabel.classList.add('feedback-success');
-    elementLabel.classList.remove('background-light-color');
+    elementLabel.classList.remove('background-light-text-color');
   } else {
     elementLabel.classList.remove('feedback-success');
-    elementLabel.classList.add('background-light-color');
+    elementLabel.classList.add('background-light-text-color');
   }
 
   elementLabel.querySelector('span').innerHTML = elementOption.innerHTML;

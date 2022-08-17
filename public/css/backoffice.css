@@ -3,6 +3,8 @@
   --font-paragraph: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
 
   --content-medium-width-extended: 840px;
+
+  --color-link: #3273dc;
 }
 /* Feedback style starts here */
 .article-saving {
@@ -22,7 +24,7 @@
 /* Form style starts here */
 .page-header {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
@@ -53,7 +55,7 @@
   display: flex;
   gap: 1.25rem;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0;
 }
 
 .control-bar-wrapper {
@@ -140,8 +142,12 @@
   flex-direction: column;
 }
 
-.background-light-color {
+.background-light-text-color {
   background-color: var(--light-text-color);
+}
+
+.background-light-color {
+  background-color: var(--light-bg-color);
 }
 
 .article-edit-uri {
@@ -328,6 +334,8 @@ input.pexego-content-title {
   justify-content: space-between;
   flex-direction: row;
   flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1.5rem;
 }
 
 .content-flex-block {
@@ -336,7 +344,6 @@ input.pexego-content-title {
   margin: 0;
   padding: 1rem;
   min-width: 328px;
-  background-color: var(--light-bg-color);
 }
 
 .content-flex-block > h1 {
@@ -406,7 +413,6 @@ input.pexego-content-title {
   flex-grow: 1;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-right: 1em;
   width: 2.5em;
   display: flex;
   flex-flow: row wrap;
@@ -631,6 +637,9 @@ input.pexego-content-title {
   padding: 1.25rem;
   transition: 0.5s;
   border-left: 3px solid var(--light-bg-color-2);
+  display: flex;
+  flex-flow: column wrap;
+  gap: 2rem;
 }
 
 .side-options-open {
@@ -786,7 +795,6 @@ input.pexego-content-title {
   }
 
   .content-flex-block {
-    margin: 0 1rem;
     min-height: 300px;
     min-width: 370px;
   }
