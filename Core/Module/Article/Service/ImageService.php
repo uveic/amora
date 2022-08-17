@@ -2,25 +2,31 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use Amora\Core\Database\Model\TransactionResponse;
+use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Value\MediaStatus;
+use Amora\Core\Module\Article\Value\MediaType;
+use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\Logger;
 use Amora\Core\Model\File;
 use Amora\Core\Model\Util\QueryOptions;
-use Amora\Core\Module\Article\Datalayer\ImageDataLayer;
+use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
 use Amora\Core\Module\Article\Model\Image;
+use DateTimeImmutable;
 use Throwable;
 
 class ImageService
 {
     public function __construct(
         private Logger $logger,
-        private ImageDataLayer $imageDataLayer,
+        private MediaDataLayer $mediaDataLayer,
         private ImageResizeService $imageResizeService,
         private string $mediaBaseDir,
     ) {}
 
     public function getImageForId(int $id): ?Image
     {
-        return $this->imageDataLayer->getImageForId($id);
+        return $this->mediaDataLayer->getImageForId($id);
     }
 
     public function filterImagesBy(
@@ -29,7 +35,7 @@ class ImageService
         bool $excludeDeleted = true,
         ?QueryOptions $queryOptions = null,
     ): array {
-        return $this->imageDataLayer->filterImagesBy(
+        return $this->mediaDataLayer->filterImagesBy(
             imageIds: $imageIds,
             userIds: $userIds,
             excludeDeleted: $excludeDeleted,
@@ -39,12 +45,12 @@ class ImageService
 
     public function storeImage(Image $image): Image
     {
-        return $this->imageDataLayer->storeImage($image);
+        return $this->mediaDataLayer->storeImage($image);
     }
 
     public function deleteImage(Image $image): bool
     {
-        $res = $this->imageDataLayer->deleteImage($image->id);
+        $res = $this->mediaDataLayer->deleteImage($image->id);
         if (empty($res)) {
             $this->logger->logError('Error deleting image. Image ID: ' . $image->id);
             return false;
@@ -136,5 +142,62 @@ class ImageService
         }
 
         return $output;
+    }
+
+    public function workflowStoreFile(
+        File $rawFile,
+        MediaType $mediaType,
+        MediaStatus $mediaStatus,
+        ?User $user,
+    ): ?Media {
+        $res = $this->mediaDataLayer->getDb()->withTransaction(
+            function () use (
+                $mediaType,
+                $mediaStatus,
+                $rawFile,
+                $user,
+            ) {
+                try {
+                    $processedFile = match ($mediaType) {
+                        MediaType::Image => $this->processImagesAndGetFile($rawFile, $user->id),
+                        MediaType::PDF => $this->processFile($rawFile),
+                    };
+
+                    if (empty($processedFile)) {
+                        return new TransactionResponse(
+                            isSuccess: false,
+                            message: 'File not valid.',
+                        );
+                    }
+
+                    $now = new DateTimeImmutable();
+                    $output = $this->mediaDataLayer->storeFile(
+                        new Media(
+                            id: null,
+                            type: $mediaType,
+                            status: $mediaStatus,
+                            user: $user,
+                            path: $processedFile->fullPath,
+                            filenameOriginal: $rawFile->name,
+                            filenameLarge: null,
+                            filenameMedium: null,
+                            caption: null,
+                            createdAt: $now,
+                            updatedAt: $now,
+                        )
+                    );
+
+                    return new TransactionResponse(
+                        isSuccess: true,
+                        response: $output,
+                    );
+                } catch (Throwable $t) {
+                    $this->logger->logError('Error storing file: ' . $t->getMessage());
+                    return new TransactionResponse(false);
+                }
+            }
+        );
+
+        return $res->getResponse();
     }
 }

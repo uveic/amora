@@ -14,6 +14,15 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 {
     public function __construct()
     {
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreFileSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreFileFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreFileUnauthorisedResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerGetFileSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerGetFileFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerGetFileUnauthorisedResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyFileSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyFileFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyFileUnauthorisedResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreImageSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreImageFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreImageUnauthorisedResponse.php';
@@ -29,6 +38,36 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
     }
 
     abstract protected function authenticate(Request $request): bool;
+
+    /**
+     * Endpoint: /api/file
+     * Method: POST
+     *
+     * @param int $fileTypeId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function storeFile(int $fileTypeId, Request $request): Response;
+
+    /**
+     * Endpoint: /api/file/{id}
+     * Method: GET
+     *
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getFile(int $id, Request $request): Response;
+
+    /**
+     * Endpoint: /api/file/{id}
+     * Method: DELETE
+     *
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function destroyFile(int $id, Request $request): Response;
 
     /**
      * Endpoint: /api/image
@@ -90,6 +129,155 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function sendVerificationEmail(int $userId, Request $request): Response;
+
+    private function validateAndCallStoreFile(Request $request): Response
+    {
+        $formDataParams = $request->postParams;
+        $errors = [];
+
+        $fileTypeId = null;
+        if (!isset($formDataParams['fileTypeId'])) {
+            $errors[] = [
+                'field' => 'fileTypeId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($formDataParams['fileTypeId'])) {
+                $errors[] = [
+                    'field' => 'fileTypeId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $fileTypeId = intval($formDataParams['fileTypeId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->storeFile(
+                $fileTypeId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in AuthorisedApiControllerAbstract - Method: storeFile()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetFile(Request $request): Response
+    {
+        $pathParts = explode('/', $request->getPath());
+        $pathParams = $this->getPathParams(
+            ['api', 'file', '{id}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $id = null;
+        if (!isset($pathParams['id'])) {
+            $errors[] = [
+                'field' => 'id',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['id'])) {
+                $errors[] = [
+                    'field' => 'id',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $id = intval($pathParams['id']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getFile(
+                $id,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in AuthorisedApiControllerAbstract - Method: getFile()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallDestroyFile(Request $request): Response
+    {
+        $pathParts = explode('/', $request->getPath());
+        $pathParams = $this->getPathParams(
+            ['api', 'file', '{id}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $id = null;
+        if (!isset($pathParams['id'])) {
+            $errors[] = [
+                'field' => 'id',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['id'])) {
+                $errors[] = [
+                    'field' => 'id',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $id = intval($pathParams['id']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->destroyFile(
+                $id,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in AuthorisedApiControllerAbstract - Method: destroyFile()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
 
     private function validateAndCallStoreImage(Request $request): Response
     {
@@ -316,6 +504,36 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
         $path = $request->getPath();
         $pathParts = explode('/', $path);
         $method = $request->method;
+
+        if ($method === 'POST' &&
+            $this->pathParamsMatcher(
+                ['api', 'file'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallStoreFile($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['api', 'file', '{id}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallGetFile($request);
+        }
+
+        if ($method === 'DELETE' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['api', 'file', '{id}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallDestroyFile($request);
+        }
 
         if ($method === 'POST' &&
             $this->pathParamsMatcher(

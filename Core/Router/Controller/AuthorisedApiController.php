@@ -3,16 +3,21 @@
 namespace Amora\Core\Router;
 
 use Amora\Core\Module\Article\Model\Image;
+use Amora\Core\Module\Article\Value\MediaStatus;
+use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
-use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyImageFailureResponse,
+use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
+    AuthorisedApiControllerDestroyImageFailureResponse,
     AuthorisedApiControllerDestroyImageUnauthorisedResponse,
     AuthorisedApiControllerDestroyImageSuccessResponse,
+    AuthorisedApiControllerGetFileSuccessResponse,
     AuthorisedApiControllerSendVerificationEmailFailureResponse,
     AuthorisedApiControllerSendVerificationEmailSuccessResponse,
+    AuthorisedApiControllerStoreFileSuccessResponse,
     AuthorisedApiControllerStoreImageSuccessResponse,
     AuthorisedApiControllerUpdateUserAccountFailureResponse,
     AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse,
@@ -37,6 +42,94 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         }
 
         return true;
+    }
+
+    /**
+     * Endpoint: /api/file
+     * Method: POST
+     *
+     * @param int $fileTypeId
+     * @param Request $request
+     * @return Response
+     */
+    protected function storeFile(int $fileTypeId, Request $request): Response
+    {
+        if (!MediaType::tryFrom($fileTypeId)) {
+            return new AuthorisedApiControllerStoreFileSuccessResponse(
+                success: false,
+                file: [],
+                errorMessage: 'File type not valid: ' . $fileTypeId,
+            );
+        }
+
+        if (!$request->processedFiles) {
+            return new AuthorisedApiControllerStoreFileSuccessResponse(
+                success: false,
+                file: [],
+                errorMessage: 'No files selected',
+            );
+        }
+
+        $newFile = $this->formService->storeFormFile(
+            rawFile: $request->processedFiles[0],
+            fileType: MediaType::from($fileTypeId),
+            status: MediaStatus::Active,
+            userId: $request->session?->user->id,
+        );
+
+        if (empty($newFile) || empty($newFile->id)) {
+            return new AuthorisedApiControllerStoreFileSuccessResponse(
+                success: false,
+                file: [],
+                errorMessage: 'File not valid: max file size exceeded.'
+            );
+        }
+
+        return new AuthorisedApiControllerStoreFileSuccessResponse(
+            success: true,
+            file: [
+                'id' => $formFile->id,
+                'path' => $formFile->filePath,
+                'caption' => DocumentType::getCaption($documentType),
+                'name' => $formFile->fileName,
+            ],
+        );
+    }
+
+    /**
+     * Endpoint: /api/file/{id}
+     * Method: GET
+     *
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    protected function getFile(int $id, Request $request): Response
+    {
+        return new AuthorisedApiControllerGetFileSuccessResponse(
+            success: true,
+            file: [
+                'id' => 1,
+                'name' => 'filename.jpg',
+                'caption' => 'This is the caption',
+                'path' => 'http://localhost:8888/uploads/20220817194145kW3cGXuEz6y5n1JQ.jpg',
+            ],
+        );
+    }
+
+    /**
+     * Endpoint: /api/file/{id}
+     * Method: DELETE
+     *
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    protected function destroyFile(int $id, Request $request): Response
+    {
+        return new AuthorisedApiControllerDestroyFileSuccessResponse(
+            success: true,
+        );
     }
 
     /**
