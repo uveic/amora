@@ -33,7 +33,7 @@ class ArticleDataLayer
     public function __construct(
         private MySqlDb $db,
         private Logger $logger,
-        private ImageDataLayer $imageDataLayer,
+        private MediaDataLayer $mediaDataLayer,
         private TagDataLayer $tagDataLayer,
     ) {}
 
@@ -110,7 +110,7 @@ class ArticleDataLayer
 
         $joins = ' FROM ' . self::ARTICLE_TABLE . ' AS a';
         $joins .= ' JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = a.user_id';
-        $joins .= ' LEFT JOIN ' . ImageDataLayer::IMAGE_TABLE_NAME
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::IMAGE_TABLE_NAME
             . ' AS i ON i.id = a.main_image_id';
 
         $where = ' WHERE 1';

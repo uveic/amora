@@ -232,31 +232,33 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   });
 });
 
+const displayImagePopup = (e, imageContainerEl) => {
+  e.preventDefault();
+
+  const imageId = imageContainerEl.dataset.imageId;
+  const modal = document.querySelector('.image-modal');
+  const image = imageContainerEl.querySelector('img');
+  const popupImage = modal.querySelector('.image-main img');
+
+  if (popupImage) {
+    popupImage.src = image.src;
+    popupImage.alt = image.alt;
+    popupImage.title = image.title;
+  } else {
+    let modalImage = new Image();
+    modalImage.src = image.src;
+    modalImage.alt = image.alt;
+    modalImage.title = image.title;
+    modalImage.dataset.imageId = imageId;
+
+    modal.querySelector('.image-main').appendChild(modalImage);
+  }
+
+  modal.classList.remove('null');
+};
+
 document.querySelectorAll('.image-item').forEach(im => {
-  im.addEventListener('click', e => {
-    e.preventDefault();
-
-    const imageId = im.dataset.imageId;
-    const modal = document.querySelector('.image-modal');
-    const image = im.querySelector('img');
-    const popupImage = modal.querySelector('.image-main img');
-
-    if (popupImage) {
-      popupImage.src = image.src;
-      popupImage.alt = image.alt;
-      popupImage.title = image.title;
-    } else {
-      let modalImage = new Image();
-      modalImage.src = image.src;
-      modalImage.alt = image.alt;
-      modalImage.title = image.title;
-      modalImage.dataset.imageId = imageId;
-
-      modal.querySelector('.image-main').appendChild(modalImage);
-    }
-
-    modal.classList.remove('null');
-  });
+  im.addEventListener('click', e => displayImagePopup(e, im));
 });
 
 const deleteImage = async function (e, imageId) {
@@ -287,27 +289,24 @@ document.querySelectorAll('input#images').forEach(im => {
     e.preventDefault();
 
     const imagesContainer = document.querySelector('#images-list');
-    let newImgDiv = document.createElement('div');
-    newImgDiv.className = 'image-item';
+    let newImageContainer = document.createElement('a');
+    newImageContainer.href = '#';
+    newImageContainer.className = 'image-item';
 
-    imagesContainer.appendChild(newImgDiv);
+    imagesContainer.appendChild(newImageContainer);
 
     for (let i = 0; i < im.files.length; i++) {
       let file = im.files[i];
 
       uploadImage(
         file,
-        newImgDiv,
+        newImageContainer,
         '',
         feedbackDiv,
         (response) => {
           if (response && response.id) {
-            newImgDiv.dataset.imageId = response.id;
-            let imageDeleteA = document.createElement('a');
-            imageDeleteA.href = '#';
-            imageDeleteA.className = 'image-delete';
-            imageDeleteA.innerHTML = '&#10006;';
-            imageDeleteA.addEventListener('click', e => deleteImage(e, response.id).then());
+            newImageContainer.dataset.imageId = response.id;
+            newImageContainer.addEventListener('click', e => displayImagePopup(e, newImageContainer));
           }
         },
         () => {}

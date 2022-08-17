@@ -27,7 +27,7 @@ function uploadImage(
   userFeedbackDiv,
   then = () => {},
   catchError = () => {},
-  apiUploadEndpoint = '/api/image',
+  apiUploadEndpoint = '/api/file',
   formData = new FormData(),
 ) {
   if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
@@ -49,18 +49,18 @@ function uploadImage(
     imageContainer.appendChild(imgLoading);
 
     xhr.postImage(apiUploadEndpoint, formData, userFeedbackDiv)
-      .then(data => {
-        if (!data.success || !data.file) {
-          throw new Error(data.errorMessage ?? global.get('genericError'));
+      .then(response => {
+        if (!response.success || !response.file) {
+          throw new Error(response.errorMessage ?? global.get('genericError'));
         }
 
         image.classList.remove('opacity');
-        image.src = data.file.path;
-        image.dataset.imageId = data.file.id;
-        image.alt = data.file.caption ?? '';
+        image.src = response.file.path;
+        image.dataset.imageId = response.file.id;
+        image.alt = response.file.caption ?? '';
         imageContainer.removeChild(imgLoading);
 
-        then(data);
+        then(response);
       })
       .catch((error) => {
         logError(userFeedbackDiv, error);

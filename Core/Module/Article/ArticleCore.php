@@ -8,7 +8,7 @@ use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
 use Amora\Core\Module\Article\Datalayer\TagDataLayer;
 use Amora\Core\Module\Article\Service\ArticleService;
-use Amora\Core\Module\Article\Datalayer\ImageDataLayer;
+use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
 use Amora\Core\Module\Article\Service\ImageResizeService;
 use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Module\Article\Service\XmlService;
@@ -30,17 +30,17 @@ class ArticleCore extends Core
     {
         $db = self::getDb();
         $logger = self::getArticleLogger();
-        $imageDataLayer = self::getImageDataLayer();
+        $mediaDataLayer = self::getMediaDataLayer();
         $tagDataLayer = self::getTagDataLayer();
 
         return self::getInstance(
             className: 'ArticleDataLayer',
-            factory: function () use ($db, $logger, $imageDataLayer, $tagDataLayer) {
+            factory: function () use ($db, $logger, $mediaDataLayer, $tagDataLayer) {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Datalayer/UserDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/ArticleDataLayer.php';
-                return new ArticleDataLayer($db, $logger, $imageDataLayer, $tagDataLayer);
+                return new ArticleDataLayer($db, $logger, $mediaDataLayer, $tagDataLayer);
             },
             isSingleton: true,
         );
@@ -69,19 +69,19 @@ class ArticleCore extends Core
         );
     }
 
-    public static function getImageDataLayer(): ImageDataLayer
+    public static function getMediaDataLayer(): MediaDataLayer
     {
         $db = self::getDb();
         $logger = self::getArticleLogger();
 
         return self::getInstance(
-            className: 'ImageDataLayer',
+            className: 'MediaDataLayer',
             factory: function () use ($db, $logger) {
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Image.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
-                require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/ImageDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/MediaDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/ArticleDataLayer.php';
-                return new ImageDataLayer($db, $logger);
+                return new MediaDataLayer($db, $logger);
             },
             isSingleton: true,
         );
@@ -95,7 +95,7 @@ class ArticleCore extends Core
         }
 
         $logger = self::getArticleLogger();
-        $imageDataLayer = self::getImageDataLayer();
+        $mediaDataLayer = self::getMediaDataLayer();
         $imageResizeService = self::getImageResizeService();
         $mediaBaseDir = self::getConfig()->mediaBaseDir;
 
@@ -103,7 +103,7 @@ class ArticleCore extends Core
             className: 'ImageService',
             factory: function () use (
                 $logger,
-                $imageDataLayer,
+                $mediaDataLayer,
                 $imageResizeService,
                 $mediaBaseDir,
             ) {
@@ -112,7 +112,7 @@ class ArticleCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/ImageService.php';
                 return new ImageService(
                     $logger,
-                    $imageDataLayer,
+                    $mediaDataLayer,
                     $imageResizeService,
                     $mediaBaseDir,
                 );

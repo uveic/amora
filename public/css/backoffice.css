@@ -544,22 +544,17 @@ input.pexego-content-title {
   min-height: 250px;
 }
 
-#images-list>.image-item {
+#images-list > .image-item {
   width: 24%;
   min-width: 150px;
   max-width: 350px;
   height: auto;
-  min-height: 100px;
+  min-height: 50px;
   flex-grow: 1;
   position: relative;
   text-align: center;
   align-self: flex-start;
   border: 8px solid white;
-}
-
-#images-list>.image-item>img {
-  width: 100%;
-  height: auto;
 }
 
 #upload-images {

@@ -3,21 +3,27 @@
 namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Util\Logger;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\Article\Model\Image;
 use Amora\Core\Module\DataLayerTrait;
 
-class ImageDataLayer
+class MediaDataLayer
 {
     use DataLayerTrait;
 
-    const IMAGE_TABLE_NAME = 'image';
+    const MEDIA_TABLE_NAME = 'image';
 
     public function __construct(
         private MySqlDb $db,
         private Logger $logger,
     ) {}
+
+    public function getDb(): MySqlDb
+    {
+        return $this->db;
+    }
 
     public function filterImagesBy(
         array $imageIds = [],
@@ -49,7 +55,7 @@ class ImageDataLayer
             'i.updated_at AS image_updated_at',
         ];
 
-        $joins = ' FROM ' . self::IMAGE_TABLE_NAME . ' AS i';
+        $joins = ' FROM ' . self::MEDIA_TABLE_NAME . ' AS i';
         $where = ' WHERE 1';
 
         if ($excludeDeleted) {
@@ -84,24 +90,24 @@ class ImageDataLayer
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function storeImage(Image $image): Image
+    public function storeFile(Media $data): Media
     {
-        $resInsert = $this->db->insert(self::IMAGE_TABLE_NAME, $image->asArray());
+        $resInsert = $this->db->insert(self::MEDIA_TABLE_NAME, $data->asArray());
 
         if (empty($resInsert)) {
             $this->logger->logError('Error inserting image');
         }
 
-        $image->id = (int)$resInsert;
+        $data->id = (int)$resInsert;
 
-        return $image;
+        return $data;
     }
 
     public function deleteImage(int $imageId): bool
     {
         return $this->db->execute(
             '
-                UPDATE ' . self::IMAGE_TABLE_NAME .
+                UPDATE ' . self::MEDIA_TABLE_NAME .
             '   SET is_deleted = 1
                 WHERE id = :imageId
             ',
