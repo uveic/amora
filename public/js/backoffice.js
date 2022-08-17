@@ -232,21 +232,34 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   });
 });
 
-const addMouseListenerToImageInImagesSection = function (imageEl) {
-  let currentImgId = imageEl.dataset.imageId;
+document.querySelectorAll('.image-item').forEach(im => {
+  im.addEventListener('click', e => {
+    e.preventDefault();
 
-  imageEl.onmouseover = function () {
-    document.querySelector('#image-options-' + currentImgId).classList.remove('null');
-  }
+    const imageId = im.dataset.imageId;
+    const modal = document.querySelector('.image-modal');
+    const image = im.querySelector('img');
+    const popupImage = modal.querySelector('.image-main img');
 
-  imageEl.onmouseout = function () {
-    document.querySelector('#image-options-' + currentImgId).classList.add('null');
-  }
-}
+    if (popupImage) {
+      popupImage.src = image.src;
+      popupImage.alt = image.alt;
+      popupImage.title = image.title;
+    } else {
+      let modalImage = new Image();
+      modalImage.src = image.src;
+      modalImage.alt = image.alt;
+      modalImage.title = image.title;
+      modalImage.dataset.imageId = imageId;
 
-document.querySelectorAll('.image-item').forEach(im => addMouseListenerToImageInImagesSection(im));
+      modal.querySelector('.image-main').appendChild(modalImage);
+    }
 
-const deleteImage = async function (e, aEl) {
+    modal.classList.remove('null');
+  });
+});
+
+const deleteImage = async function (e, imageId) {
   e.preventDefault();
 
   const delRes = confirm(global.get('feedbackDeleteImageConfirmation'));
@@ -254,17 +267,18 @@ const deleteImage = async function (e, aEl) {
     return;
   }
 
-  const imageId = Number.parseInt(aEl.parentNode.parentNode.dataset.imageId);
-
-  xhr.delete('/api/image/' + imageId, feedbackDiv, global.get('feedbackImageDeleted'))
+  xhr.delete('/api/image/' + imageId)
     .then(() => {
-      const iDiv = document.querySelector(".image-item[data-image-id='" + imageId + "']");
-      iDiv.classList.add('null');
+      document.querySelector(".image-item[data-image-id='" + imageId + "']").classList.add('null');
+      document.querySelector('.image-modal').classList.add('null');
     });
 }
-document.querySelectorAll('.image-delete').forEach(function (aEl) {
-  aEl.addEventListener('click', e => {
-    deleteImage(e, aEl).then();
+
+document.querySelectorAll('.image-delete').forEach(imgEl => {
+  imgEl.addEventListener('click', e => {
+    console.log(imgEl);
+    const imageId = document.querySelector('.image-wrapper .image-main img').dataset.imageId;
+    deleteImage(e, imageId).then();
   });
 });
 
@@ -289,17 +303,11 @@ document.querySelectorAll('input#images').forEach(im => {
         (response) => {
           if (response && response.id) {
             newImgDiv.dataset.imageId = response.id;
-            let imageDeleteDiv = document.createElement('div');
-            imageDeleteDiv.id = 'image-options-' + response.id;
-            imageDeleteDiv.className = 'options null';
             let imageDeleteA = document.createElement('a');
             imageDeleteA.href = '#';
             imageDeleteA.className = 'image-delete';
             imageDeleteA.innerHTML = '&#10006;';
-            imageDeleteA.addEventListener('click', e => deleteImage(e, imageDeleteA).then());
-            imageDeleteDiv.appendChild(imageDeleteA);
-            newImgDiv.appendChild(imageDeleteDiv);
-            addMouseListenerToImageInImagesSection(newImgDiv);
+            imageDeleteA.addEventListener('click', e => deleteImage(e, response.id).then());
           }
         },
         () => {}

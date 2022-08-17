@@ -7,6 +7,8 @@ use Amora\Core\Module\Article\Model\Image;
 
 $this->layout('base', ['responseData' => $responseData]);
 
+$this->insert('partials/images/modal-image', ['responseData' => $responseData]);
+
 $count = 0;
 
 ?>
@@ -30,14 +32,10 @@ $count = 0;
     foreach ($responseData->images as $image) {
         $count++;
         $lazyLoading = $count > 10 ? ' loading="lazy"' : '';
-        $caption = $image->caption ?? 'This image does not exist.';
 ?>
-        <div class="image-item" data-image-id="<?=$image->id?>">
-          <img src="<?=$image->getFullUrlMedium()?>" title="<?=$caption?>" alt="<?=$caption?>" data-image-id="<?=$image->id?>"<?=$lazyLoading?>>
-          <div id="image-options-<?=$image->id?>" class="options null">
-            <a class="image-delete" href="#">&#10006;</a>
-          </div>
-        </div>
+        <a href="#" class="image-item" data-image-id="<?=$image->id?>">
+          <img src="<?=$image->getFullUrlMedium()?>" title="<?=$image->caption?>" alt="<?=$image->caption?>"<?=$lazyLoading?>>
+        </a>
 <?php } ?>
       </div>
     </div>
