@@ -535,12 +535,12 @@ input.pexego-content-title {
 #images-list {
   display: flex;
   flex-flow: row wrap;
+  gap: 1rem;
   overflow: hidden;
-  align-items: center;
+  align-items: flex-start;
   align-content: space-between;
-  justify-content: start;
+  justify-content: flex-start;
   padding-top: 1rem;
-  margin: -.37rem;
   min-height: 250px;
 }
 
@@ -550,7 +550,6 @@ input.pexego-content-title {
   max-width: 350px;
   height: auto;
   min-height: 100px;
-  margin: .37rem;
   flex-grow: 1;
   position: relative;
   text-align: center;
@@ -604,23 +603,47 @@ input.pexego-content-title {
   background-color: #f2f2f2;
 }
 
-#img-preview {
-  margin: 0.25rem -0.25rem;
-  background-color: #f4f4f4;
+.image-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1rem;
+  background-color: var(--main-text-color);
+  color: var(--main-bg-color);
+  min-height: 250px;
 }
 
-.image-delete {
-  color: #fff !important;
-  font-size: 1.5rem;
+.image-wrapper > .image-main {
+  width: 75%;
+  min-width: 300px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  background-color: transparent;
 }
 
-.options {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 6px 10px;
+.image-wrapper > .image-main img {
+  width: auto;
+  height: 100%;
 }
+
+.image-wrapper > .image-info {
+  width: 25%;
+  min-width: 200px;
+  flex-grow: 0;
+  flex-shrink: 1;
+  background-color: transparent;
+  padding: 1rem;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+}
+
+.image-wrapper > .image-info .next {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 2rem;
+  justify-content: space-between;
+}
+
 /* Image upload style ends here */
 
 /* Side nav style starts here */
