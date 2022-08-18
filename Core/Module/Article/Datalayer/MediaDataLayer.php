@@ -74,7 +74,7 @@ class MediaDataLayer
         ];
 
         $joins = ' FROM ' . self::MEDIA_TABLE_NAME . ' AS m';
-        $joins .= ' LEFT JOIN ' . UserDataLayer::USER_TABLE . ' AS u IN u.id = m.user_id';
+        $joins .= ' LEFT JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = m.user_id';
         $where = ' WHERE 1';
 
         if ($ids) {
@@ -107,12 +107,6 @@ class MediaDataLayer
         return $output;
     }
 
-    public function getMediaForId(int $id): ?Media
-    {
-        $res = $this->filterMediaBy(ids: [$id]);
-        return empty($res[0]) ? null : $res[0];
-    }
-
     public function storeFile(Media $data): Media
     {
         $resInsert = $this->db->insert(self::MEDIA_TABLE_NAME, $data->asArray());
@@ -136,7 +130,7 @@ class MediaDataLayer
             ',
             [
                 ':id' => $id,
-                ':statusId' => MediaStatus::Deleted,
+                ':statusId' => MediaStatus::Deleted->value,
             ],
         );
     }

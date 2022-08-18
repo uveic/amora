@@ -25,6 +25,8 @@ class Global {
       "globalAt": "at",
       "globalMinutes": "minutes",
       "globalClose": "Close",
+      "globalUploadedOn": "Uploaded on",
+      "globalBy": "by",
 
       "feedbackDeleteGeneric": "Are you sure you want to delete it?",
       "feedbackPasswordsDoNotMatch": "The passwords do not match. Please, fix it and try it again.",
@@ -79,6 +81,8 @@ class Global {
       "globalAt": "a las",
       "globalMinutes": "minutos",
       "globalClose": "Cerrar",
+      "globalUploadedOn": "Subida el",
+      "globalBy": "por",
 
       "feedbackDeleteGeneric": "¿Estás seguro/a de querer borrarlo?",
       "feedbackPasswordsDoNotMatch": "Las contraseñas no coinciden. Corrígelo y vuelve a intentarlo.",
@@ -133,6 +137,8 @@ class Global {
       "globalAt": "ás",
       "globalMinutes": "minutos",
       "globalClose": "Pechar",
+      "globalUploadedOn": "Subida o",
+      "globalBy": "por",
 
       "feedbackDeleteGeneric": "Estás seguro/a de querer borralo?",
       "feedbackPasswordsDoNotMatch": "Os contrasinais non coinciden. Corríxeo e volve a intentalo.",

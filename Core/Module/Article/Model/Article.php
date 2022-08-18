@@ -24,7 +24,7 @@ class Article
         public readonly ?string $title,
         public readonly string $contentHtml,
         public readonly ?int $mainImageId,
-        public readonly ?Image $mainImage,
+        public readonly ?Media $mainImage,
         public readonly string $uri,
         public readonly array $tags = [],
     ) {}
@@ -45,7 +45,7 @@ class Article
             title: $article['title'] ?? null,
             contentHtml: $article['content_html'],
             mainImageId: empty($article['main_image_id']) ? null : (int)$article['main_image_id'],
-            mainImage: empty($article['main_image_id']) ? null : Image::fromArray($article),
+            mainImage: empty($article['main_image_id']) ? null : Media::fromArray($article),
             uri: $article['uri'],
             tags: $article['tags'] ?? [],
         );

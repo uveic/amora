@@ -53,6 +53,7 @@ class ArticleDataLayer
         ?string $uri = null,
         ?string $previousUri = null,
         array $tagIds = [],
+        array $imageIds = [],
         bool $includeTags = false,
         bool $includePublishedAtInTheFuture = false,
         ?DateTimeImmutable $publishedBefore = null,
@@ -98,23 +99,23 @@ class ArticleDataLayer
             'u.timezone AS user_timezone',
             'u.change_email_to AS user_change_email_to',
 
-            'i.id AS image_id',
-            'i.user_id AS image_user_id',
-            'i.file_path_original',
-            'i.file_path_large',
-            'i.file_path_medium',
-            'i.full_url_original',
-            'i.full_url_large',
-            'i.full_url_medium',
-            'i.caption',
-            'i.created_at AS image_created_at',
-            'i.updated_at AS image_updated_at',
+            'm.id AS media_id',
+            'm.user_id AS media_user_id',
+            'm.type_id AS media_type_id',
+            'm.status_id AS media_status_id',
+            'm.path AS media_path',
+            'm.filename_original AS media_filename_original',
+            'm.filename_medium AS media_filename_medium',
+            'm.filename_large AS media_filename_large',
+            'm.caption AS media_caption',
+            'm.created_at AS media_created_at',
+            'm.updated_at AS media_updated_at',
         ];
 
         $joins = ' FROM ' . self::ARTICLE_TABLE . ' AS a';
         $joins .= ' JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = a.user_id';
-        $joins .= ' LEFT JOIN ' . MediaDataLayer::IMAGE_TABLE_NAME
-            . ' AS i ON i.id = a.main_image_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE_NAME
+            . ' AS m ON m.id = a.main_image_id';
 
         $where = ' WHERE 1';
 
@@ -150,6 +151,15 @@ class ArticleDataLayer
                 . ' AS at ON at.article_id = a.id';
 
             $where .= $this->generateWhereSqlCodeForIds($params, $tagIds, 'at.tag_id', 'tagId');
+        }
+
+        if ($imageIds) {
+            $joins .= ' LEFT JOIN ' . ArticleDataLayer::ARTICLE_SECTION_TABLE
+                . ' AS aSec ON aSec.article_id = a.id';
+            $joins .= ' LEFT JOIN ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE
+                . ' AS aSecI ON aSecI.article_section_id = aSec.id';
+
+            $where .= $this->generateWhereSqlCodeForIds($params, $imageIds, 'aSecI.media_id', 'imageId');
         }
 
         if (!$includePublishedAtInTheFuture) {
@@ -310,8 +320,8 @@ class ArticleDataLayer
                 aSec.article_section_type_id,
                 aSec.content_html,
                 aSec.order,
-                aSecI.image_id,
-                aSecI.caption AS image_caption,
+                aSecI.media_id,
+                aSecI.caption AS media_caption,
                 aSec.created_at,
                 aSec.updated_at
             FROM ' . self::ARTICLE_SECTION_TABLE . ' AS aSec
@@ -402,7 +412,7 @@ class ArticleDataLayer
             $this->db->insert(
                 ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE,
                 [
-                    'image_id' => $imageId,
+                    'media_id' => $imageId,
                     'article_section_id' => $articleSectionId,
                     'caption' => $imageCaption
                 ]
@@ -429,10 +439,10 @@ class ArticleDataLayer
             $this->db->execute(
                 'UPDATE ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
                 ' SET caption = :caption' .
-                ' WHERE image_id = :imageId
+                ' WHERE media_id = :mediaId
                     AND article_section_id = :articleSectionId',
                 [
-                    ':imageId' => $imageId,
+                    ':mediaId' => $imageId,
                     ':articleSectionId' => $articleSectionId,
                     ':caption' => $imageCaption
                 ]
@@ -440,7 +450,7 @@ class ArticleDataLayer
         } catch (Throwable $t) {
             $this->logger->logError(
                 'Error updating entry into ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
-                ' - ImageId: ' . $imageId .
+                ' - MediaId: ' . $imageId .
                 ' - ArticleSectionId: ' . $articleSectionId .
                 ' - Error message: ' . $t->getMessage()
             );
@@ -454,10 +464,10 @@ class ArticleDataLayer
     {
         return $this->db->execute(
             'DELETE FROM ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
-            ' WHERE image_id = :imageId
+            ' WHERE media_id = :mediaId
                 AND article_section_id = :articleSectionId',
             [
-                ':imageId' => $imageId,
+                ':mediaId' => $imageId,
                 ':articleSectionId' => $articleSectionId
             ]
         );

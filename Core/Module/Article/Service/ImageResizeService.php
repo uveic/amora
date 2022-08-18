@@ -10,7 +10,6 @@ use Amora\Core\Module\User\Model\User;
 use DateTimeImmutable;
 use GdImage;
 use Amora\Core\Util\Logger;
-use Amora\Core\Module\Article\Model\ImagePath;
 use Amora\Core\Util\StringUtil;
 
 class ImageResizeService
@@ -23,30 +22,17 @@ class ImageResizeService
     const IMAGE_SIZE_LARGE_MAX_HEIGHT = 1600;
     const IMAGE_SIZE_LARGE_MAX_WIDTH = 1600;
 
-    private Logger $logger;
-    private string $mediaBaseDir;
-    private string $mediaBaseUrl;
-
     public function __construct(
-        Logger $logger,
-        string $mediaBaseDir,
-        string $mediaBaseUrl
-    ) {
-        $this->logger = $logger;
-        $this->mediaBaseDir = rtrim($mediaBaseDir, ' /') . '/';
-        $this->mediaBaseUrl = rtrim($mediaBaseUrl, ' /') . '/';
-    }
+        private readonly Logger $logger,
+    ) {}
 
     public function resizeOriginalImage(
         RawFile $rawFile,
         ?User $user,
+        ?string $extraImagePath = null,
     ): Media {
-        $filePathOriginal = $rawFile->getPathWithName();
-        $fullUrlOriginal = $this->getImageUrlFromPath($filePathOriginal);
-
-        $imageOriginal = new ImagePath($filePathOriginal, $fullUrlOriginal);
-        $imageMedium = $this->resizeImageDefault($imageOriginal, self::IMAGE_SIZE_MEDIUM);
-        $imageLarge = $this->resizeImageDefault($imageOriginal, self::IMAGE_SIZE_LARGE);
+        $imageMedium = $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_MEDIUM);
+        $imageLarge = $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_LARGE);
 
         $now = new DateTimeImmutable();
 
@@ -55,10 +41,10 @@ class ImageResizeService
             type: MediaType::Image,
             status: MediaStatus::Active,
             user: $user,
-            path: $rawFile->path,
+            path: $extraImagePath,
             filenameOriginal: $rawFile->name,
-            filenameLarge: $imageLarge->fullUrl,
-            filenameMedium: $imageMedium->filePath,
+            filenameLarge: $imageLarge->name,
+            filenameMedium: $imageMedium->name,
             caption: null,
             createdAt: $now,
             updatedAt: $now,
@@ -66,16 +52,16 @@ class ImageResizeService
     }
 
     private function resizeImage(
-        ImagePath $image,
+        RawFile $image,
         int $newMaxWidth,
-        int $newMaxHeight
-    ): ?ImagePath {
-        list($originalWidth, $originalHeight) = getimagesize($image->filePath);
+        int $newMaxHeight,
+    ): ?RawFile {
+        list($originalWidth, $originalHeight) = getimagesize($image->getPathWithName());
 
         if (!$originalWidth || !$originalHeight) {
             $this->logger->logError(
                 'Error getting width and/or height of image' .
-                ' - Original full path: ' . $image->filePath
+                ' - Original full path: ' . $image->getPathWithName()
             );
 
             return null;
@@ -84,7 +70,7 @@ class ImageResizeService
         if ($newMaxWidth >= $originalWidth && $newMaxHeight >= $originalHeight) {
             $this->logger->logInfo(
                 'The new size is smaller than the original size' .
-                ' - Returning original full path: ' . $image->filePath
+                ' - Returning original full path: ' . $image->getPathWithName()
             );
 
             return $image;
@@ -100,14 +86,12 @@ class ImageResizeService
             $newHeight = $newMaxHeight;
         }
 
-        $imageTypeExtension = $this->getExtension($image->filePath);
-        $newFilename = $this->getNewImageName($imageTypeExtension);
-        $outputFullPath = rtrim($this->mediaBaseDir, ' /') . '/'  . $newFilename;
-        $outputFullUrl = rtrim($this->mediaBaseUrl, ' /') . '/' . $newFilename;
+        $newFilename = $this->getNewImageName($image->extension);
+        $outputFullPath = rtrim($image->path, ' /') . '/'  . $newFilename;
 
         $this->detectImageTypeAndResize(
-            $imageTypeExtension,
-            $image->filePath,
+            $image->extension,
+            $image->getPathWithName(),
             $outputFullPath,
             $newWidth,
             $newHeight,
@@ -117,21 +101,25 @@ class ImageResizeService
 
         if (!file_exists($outputFullPath)) {
             $this->logger->logError(
-                'Error resizing image - Keeping original image' .
-                ' - Image: ' . $image->filePath
+                'Error resizing image, there is another image with the same name: '
+                . $image->getPathWithName()
             );
-            $originalFilename = $this->getFilenameFromPath($image->filePath);
-            $originalFullUrl = rtrim($this->mediaBaseUrl, ' /') . '/' . $originalFilename;
-            return new ImagePath($image->filePath, $originalFullUrl);
+
+            return $image;
         }
 
-        return new ImagePath($outputFullPath, $outputFullUrl);
+        return new RawFile(
+            name: $newFilename,
+            path: $image->path,
+            extension: $image->extension,
+            mediaType: $image->mediaType,
+        );
     }
 
     private function resizeImageDefault(
-        ImagePath $image,
+        RawFile $image,
         int $newImageSizeConstant,
-    ): ?ImagePath {
+    ): ?RawFile {
         $newWidth = $this->getDefaultWidthSize($newImageSizeConstant);
         $newHeight = $this->getDefaultHeightSize($newImageSizeConstant);
 
@@ -141,22 +129,6 @@ class ImageResizeService
     private function getNewImageName(string $imageTypeExtension): string
     {
         return date('YmdHis') . StringUtil::getRandomString(16) . '.' . $imageTypeExtension;
-    }
-
-    private function getExtension(string $sourceFullPath): ?string
-    {
-        if (!str_contains($sourceFullPath, '.')) {
-            return null;
-        }
-
-        $parts = explode('.', $sourceFullPath);
-        return empty($parts) ? null : strtolower(trim($parts[count($parts) - 1]));
-    }
-
-    private function getFilenameFromPath(string $sourceFullPath): ?string
-    {
-        $parts = explode('/', $sourceFullPath);
-        return empty($parts) ? null : strtolower(trim($parts[count($parts) - 1]));
     }
 
     private function getDefaultWidthSize(int $imageDefaultSize): int
@@ -185,12 +157,6 @@ class ImageResizeService
         }
     }
 
-    private function getImageUrlFromPath(string $imagePath): string
-    {
-        $parts = explode('/', $imagePath);
-        return rtrim($this->mediaBaseUrl, ' /') . '/' . $parts[count($parts) - 1];
-    }
-
     private function detectImageTypeAndResize(
         string $imageTypeExtension,
         string $sourceFullPath,
@@ -199,11 +165,11 @@ class ImageResizeService
         int $newHeight,
         int $originalWidth,
         int $originalHeight
-    ): bool {
+    ): void {
         switch ($imageTypeExtension) {
             case 'jpg':
             case 'jpeg':
-                return $this->resizeJpgImage(
+                $this->resizeJpgImage(
                     $sourceFullPath,
                     $outputFullPath,
                     $newWidth,
@@ -211,8 +177,9 @@ class ImageResizeService
                     $originalWidth,
                     $originalHeight
                 );
+                break;
             case 'webp':
-                return $this->resizeWebpImage(
+                $this->resizeWebpImage(
                     $sourceFullPath,
                     $outputFullPath,
                     $newWidth,
@@ -220,23 +187,23 @@ class ImageResizeService
                     $originalWidth,
                     $originalHeight
                 );
+                break;
             case 'png':
-                return $this->resizePngImage(
+                $this->resizePngImage(
                     $sourceFullPath,
                     $outputFullPath,
                     $newWidth,
                     $newHeight,
                     $originalWidth,
                     $originalHeight
+                );
+                break;
+            default:
+                $this->logger->logWarning(
+                    'Image type resizing not supported: ' . $imageTypeExtension .
+                    ' - Image path: ' . $sourceFullPath
                 );
         }
-
-        $this->logger->logWarning(
-            'Image type resizing not supported: ' . $imageTypeExtension .
-            ' - Image path: ' . $sourceFullPath
-        );
-
-        return false;
     }
 
     private function resizeJpgImage(
@@ -246,7 +213,7 @@ class ImageResizeService
         int $newHeight,
         int $originalWidth,
         int $originalHeight
-    ): bool {
+    ): void {
         $outputImage = imagecreatetruecolor($newWidth, $newHeight);
         $sourceImage = imagecreatefromjpeg($sourceFullPath);
         imagecopyresampled(
@@ -264,7 +231,7 @@ class ImageResizeService
 
         $outputImage = $this->checkExifAndRotateIfNecessary($outputImage, $sourceFullPath);
 
-        return imagejpeg($outputImage, $outputFullPath, 85);
+        imagejpeg($outputImage, $outputFullPath, 85);
     }
 
     private function resizeWebpImage(
@@ -274,7 +241,7 @@ class ImageResizeService
         int $newHeight,
         int $originalWidth,
         int $originalHeight
-    ): bool {
+    ): void {
         $outputImage = imagecreatetruecolor($newWidth, $newHeight);
         $sourceImage = imagecreatefromwebp($sourceFullPath);
         imagecopyresampled(
@@ -290,7 +257,7 @@ class ImageResizeService
             $originalHeight
         );
 
-        return imagewebp($outputImage, $outputFullPath, 85);
+        imagewebp($outputImage, $outputFullPath, 85);
     }
 
     private function resizePngImage(
@@ -300,7 +267,7 @@ class ImageResizeService
         int $newHeight,
         int $originalWidth,
         int $originalHeight
-    ): bool {
+    ): void {
         $outputImage = imagecreatetruecolor($newWidth, $newHeight);
         $sourceImage = imagecreatefrompng($sourceFullPath);
         imagecopyresampled(
@@ -316,7 +283,7 @@ class ImageResizeService
             $originalHeight
         );
 
-        return imagepng($outputImage, $outputFullPath);
+        imagepng($outputImage, $outputFullPath);
     }
 
     private function checkExifAndRotateIfNecessary(GdImage $image, string $imagePath): GdImage|bool

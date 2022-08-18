@@ -14,8 +14,8 @@ class ArticleSection
         public readonly ArticleSectionType $articleSectionType,
         public readonly string $contentHtml,
         public readonly ?int $order,
-        public readonly ?int $imageId,
-        public readonly ?string $imageCaption,
+        public readonly ?int $mediaId,
+        public readonly ?string $mediaCaption,
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt,
     ) {}
@@ -35,15 +35,15 @@ class ArticleSection
             : DateUtil::convertStringToDateTimeImmutable($articleSection['article_section_updated_at']);
 
         return new self(
-            $id,
-            $articleSection['article_id'],
-            ArticleSectionType::from($articleSection['article_section_type_id']),
-            $articleSection['content_html'],
-            $articleSection['order'],
-            $articleSection['image_id'],
-            $articleSection['image_caption'],
-            $createdAt,
-            $updatedAt,
+            id: $id,
+            articleId: $articleSection['article_id'],
+            articleSectionType: ArticleSectionType::from($articleSection['article_section_type_id']),
+            contentHtml: $articleSection['content_html'],
+            order: $articleSection['order'],
+            mediaId: $articleSection['media_id'],
+            mediaCaption: $articleSection['media_caption'],
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
         );
     }
 
@@ -55,8 +55,8 @@ class ArticleSection
             'article_section_type_id' => $this->articleSectionType->value,
             'content_html' => $this->contentHtml,
             'order' => $this->order,
-            'image_id' => $this->imageId,
-            'image_caption' => $this->imageCaption,
+            'media_id' => $this->mediaId,
+            'media_caption' => $this->mediaCaption,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
         ];

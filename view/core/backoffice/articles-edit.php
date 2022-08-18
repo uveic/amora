@@ -20,8 +20,8 @@ if (!$articleSections) {
         articleSectionType: ArticleSectionType::TextParagraph,
         contentHtml: '',
         order: null,
-        imageId: null,
-        imageCaption: null,
+        mediaId: null,
+        mediaCaption: null,
         createdAt: $now,
         updatedAt: $now,
     );

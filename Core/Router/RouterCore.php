@@ -21,17 +21,9 @@ class RouterCore extends Core
      */
     public static function getPublicHtmlController(): PublicHtmlController
     {
-        $userService = UserCore::getUserService();
-        $articleService = ArticleCore::getArticleService();
-        $xmlService = ArticleCore::getXmlService();
-
         return self::getInstance(
             className: 'PublicHtmlController',
-            factory: function () use (
-                $userService,
-                $articleService,
-                $xmlService,
-            ) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlHomepageResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
@@ -40,9 +32,9 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicHtmlController.php';
                 return new PublicHtmlController(
-                    $userService,
-                    $articleService,
-                    $xmlService,
+                    userService:  UserCore::getUserService(),
+                    articleService:  ArticleCore::getArticleService(),
+                    xmlService:  ArticleCore::getXmlService(),
                 );
             },
             isSingleton: true,
@@ -55,13 +47,9 @@ class RouterCore extends Core
      */
     public static function getAuthorisedHtmlController(): AuthorisedHtmlController
     {
-        $sessionService = UserCore::getSessionService();
-
         return self::getInstance(
             className: 'AuthorisedHtmlController',
-            factory: function () use (
-                $sessionService,
-            ) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleType.php';
                 require_once self::getPathRoot() . '/Core/Util/CsvWriterUtil.php';
                 require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
@@ -69,7 +57,7 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedHtmlController.php';
                 return new AuthorisedHtmlController(
-                    $sessionService,
+                    sessionService: UserCore::getSessionService(),
                 );
             },
             isSingleton: true,
@@ -82,17 +70,9 @@ class RouterCore extends Core
      */
     public static function getBackofficeHtmlController(): BackofficeHtmlController
     {
-        $userService = UserCore::getUserService();
-        $articleService = ArticleCore::getArticleService();
-        $mediaService = ArticleCore::getMediaService();
-
         return self::getInstance(
             className: 'BackofficeHtmlController',
-            factory: function () use (
-                $userService,
-                $articleService,
-                $mediaService,
-            ) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseDataAuthorised.php';
@@ -100,9 +80,9 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeHtmlController.php';
                 return new BackofficeHtmlController(
-                    $userService,
-                    $articleService,
-                    $mediaService,
+                    userService:  UserCore::getUserService(),
+                    articleService:  ArticleCore::getArticleService(),
+                    mediaService:  ArticleCore::getMediaService(),
                 );
             },
             isSingleton: true,
@@ -115,28 +95,18 @@ class RouterCore extends Core
      */
     public static function getBackofficeApiController(): BackofficeApiController
     {
-        $logger = self::getRouterLogger();
-        $userService = UserCore::getUserService();
-        $articleService = ArticleCore::getArticleService();
-        $tagService = ArticleCore::getTagService();
-
         return self::getInstance(
             className: 'BackofficeApiController',
-            factory: function () use (
-                $logger,
-                $userService,
-                $articleService,
-                $tagService,
-            ) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeApiController.php';
                 return new BackofficeApiController(
-                    $logger,
-                    $userService,
-                    $articleService,
-                    $tagService,
+                    logger: self::getRouterLogger(),
+                    userService: UserCore::getUserService(),
+                    articleService: ArticleCore::getArticleService(),
+                    tagService: ArticleCore::getTagService(),
                 );
             },
             isSingleton: true,
@@ -149,25 +119,18 @@ class RouterCore extends Core
      */
     public static function getAuthorisedApiController(): AuthorisedApiController
     {
-        $mediaService = ArticleCore::getMediaService();
-        $userService = UserCore::getUserService();
-        $userMailService = UserCore::getUserMailService();
-
         return self::getInstance(
             className: 'AuthorisedApiController',
-            factory: function () use (
-                $mediaService,
-                $userService,
-                $userMailService,
-            ) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiController.php';
                 return new AuthorisedApiController(
-                    $mediaService,
-                    $userService,
-                    $userMailService,
+                    mediaService: ArticleCore::getMediaService(),
+                    userService:  UserCore::getUserService(),
+                    userMailService:  UserCore::getUserMailService(),
+                    articleService: ArticleCore::getArticleService(),
                 );
             },
             isSingleton: true,
@@ -180,31 +143,19 @@ class RouterCore extends Core
      */
     public static function getPublicApiController(): PublicApiController
     {
-        $logger = self::getRouterLogger();
-        $userService = UserCore::getUserService();
-        $sessionService = UserCore::getSessionService();
-        $mailService = UserCore::getUserMailService();
-        $articleService = ArticleCore::getArticleService();
-
         return self::getInstance(
             className: 'PublicApiController',
-            factory: function () use (
-                $logger,
-                $userService,
-                $sessionService,
-                $mailService,
-                $articleService,
-            ) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicApiController.php';
                 return new PublicApiController(
-                    $logger,
-                    $userService,
-                    $sessionService,
-                    $mailService,
-                    $articleService,
+                    logger: self::getRouterLogger(),
+                    userService: UserCore::getUserService(),
+                    sessionService: UserCore::getSessionService(),
+                    mailService: UserCore::getUserMailService(),
+                    articleService: ArticleCore::getArticleService(),
                 );
             },
             isSingleton: true,

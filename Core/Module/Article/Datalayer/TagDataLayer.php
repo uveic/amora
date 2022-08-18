@@ -14,7 +14,10 @@ class TagDataLayer
 
     const TAG_TABLE_NAME = 'tag';
 
-    public function __construct(private MySqlDb $db, private Logger $logger)
+    public function __construct(
+        private readonly MySqlDb $db,
+        private readonly Logger $logger,
+    )
     {}
 
     public function filterTagsBy(
@@ -63,12 +66,6 @@ class TagDataLayer
         }
 
         return $output;
-    }
-
-    public function getTagForId(int $id): ?Tag
-    {
-        $res = $this->filterTagsBy(tagIds: [$id]);
-        return empty($res[0]) ? null : $res[0];
     }
 
     public function getTagForName(string $name): ?Tag

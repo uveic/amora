@@ -2,24 +2,21 @@
 
 namespace Amora\Core\Router;
 
-use Amora\Core\Module\Article\Model\Image;
+use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
-use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileFailureResponse,
-    AuthorisedApiControllerDestroyFileSuccessResponse,
+use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
     AuthorisedApiControllerDestroyFileUnauthorisedResponse,
-    AuthorisedApiControllerDestroyImageFailureResponse,
-    AuthorisedApiControllerDestroyImageUnauthorisedResponse,
-    AuthorisedApiControllerDestroyImageSuccessResponse,
     AuthorisedApiControllerGetFileSuccessResponse,
     AuthorisedApiControllerSendVerificationEmailFailureResponse,
     AuthorisedApiControllerSendVerificationEmailSuccessResponse,
     AuthorisedApiControllerStoreFileSuccessResponse,
-    AuthorisedApiControllerStoreImageSuccessResponse,
     AuthorisedApiControllerUpdateUserAccountFailureResponse,
     AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse,
     AuthorisedApiControllerUpdateUserAccountSuccessResponse};
@@ -27,9 +24,10 @@ use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileFai
 final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 {
     public function __construct(
-        private MediaService $mediaService,
-        private UserService $userService,
-        private UserMailService $userMailService,
+        private readonly MediaService $mediaService,
+        private readonly UserService $userService,
+        private readonly UserMailService $userMailService,
+        private readonly ArticleService $articleService,
     ) {
         parent::__construct();
     }
@@ -63,11 +61,11 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         }
 
         $res = $this->mediaService->workflowStoreFile(
-            rawFile: $request->files[0],
+            rawFiles: $request->files,
             user: $request->session->user,
         );
 
-        if ($res->isSuccess) {
+        if (!$res->isSuccess) {
             return new AuthorisedApiControllerStoreFileSuccessResponse(
                 success: false,
                 file: [],
@@ -93,14 +91,32 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      */
     protected function getFile(int $id, Request $request): Response
     {
+        $file = $this->mediaService->getMediaForId($id);
+        if (empty($file)) {
+            return new AuthorisedApiControllerGetFileSuccessResponse(
+                success: false,
+                errorMessage: 'File not found',
+            );
+        }
+
+        $articles = $this->articleService->filterArticlesBy(
+            imageIds: [$file->id],
+        );
+
+        $appearsOn = [];
+        /** @var Article $article */
+        foreach ($articles as $article) {
+            $appearsOn[] = [
+                'name' => $article->title,
+                'url' => UrlBuilderUtil::buildPublicArticleUrl($article->uri, $request->siteLanguage),
+            ];
+        }
+
         return new AuthorisedApiControllerGetFileSuccessResponse(
             success: true,
-            file: [
-                'id' => 1,
-                'name' => 'filename.jpg',
-                'caption' => 'This is the caption',
-                'path' => 'http://localhost:8888/uploads/20220817194145kW3cGXuEz6y5n1JQ.jpg',
-            ],
+            file: $file->buildPublicDataArray(),
+            tags: [],
+            appearsOn: $appearsOn,
         );
     }
 
@@ -116,78 +132,19 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
     {
         $file = $this->mediaService->getMediaForId($id);
         if (empty($file)) {
-            return new AuthorisedApiControllerDestroyFileFailureResponse();
+            return new AuthorisedApiControllerDestroyFileSuccessResponse(
+                success: false,
+                errorMessage: 'File not found',
+            );
         }
 
         $session = $request->session;
-        if (!$session->isAdmin()
-            && $file->user?->id != $session->user->id
-        ) {
+        if (!$session->isAdmin() && $file->user?->id != $session->user->id) {
             return new AuthorisedApiControllerDestroyFileUnauthorisedResponse();
         }
 
         $res = $this->mediaService->deleteFile($file);
         return new AuthorisedApiControllerDestroyFileSuccessResponse($res);
-    }
-
-    /**
-     * Endpoint: /api/image
-     * Method: POST
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function storeImage(Request $request): Response
-    {
-        if (!$request->processedFiles) {
-            return new AuthorisedApiControllerStoreImageSuccessResponse(
-                success: false,
-                images: [],
-            );
-        }
-
-        $images = $this->mediaService->processAndStoreRawImages(
-            rawImages: $request->processedFiles,
-            userId: $request->session->user->id,
-        );
-
-        $output = [];
-        /** @var Image $image */
-        foreach ($images as $image) {
-            $output[] = $image->buildPublicDataArray();
-        }
-
-        return new AuthorisedApiControllerStoreImageSuccessResponse(
-            success: (bool)$output,
-            images: $output,
-        );
-    }
-
-    /**
-     * Endpoint: /api/image
-     * Method: DELETE
-     *
-     * @param int $imageId
-     * @param int|null $eventId
-     * @param Request $request
-     * @return Response
-     */
-    public function destroyImage(int $imageId, ?int $eventId, Request $request): Response
-    {
-        $image = $this->mediaService->getImageForId($imageId);
-        if (empty($image)) {
-            return new AuthorisedApiControllerDestroyImageFailureResponse();
-        }
-
-        $session = $request->session;
-        if (!$session->isAdmin()
-            && $image->userId != $session->user->id
-        ) {
-            return new AuthorisedApiControllerDestroyImageUnauthorisedResponse();
-        }
-
-        $res = $this->mediaService->deleteImage($image);
-        return new AuthorisedApiControllerDestroyImageSuccessResponse($res);
     }
 
     /**
