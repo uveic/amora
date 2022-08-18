@@ -252,7 +252,7 @@ class ArticleService
             }
         );
 
-        return $resTransaction->isSuccess();
+        return $resTransaction->isSuccess;
     }
 
     private function updateCreateOrDeleteArticleSections(int $articleId, array $sections): bool
@@ -420,7 +420,7 @@ class ArticleService
             }
         );
 
-        return $resTransaction->isSuccess() ? $resTransaction->getResponse() : null;
+        return $resTransaction->isSuccess ? $resTransaction->response : null;
     }
 
     private function createArticleSection(ArticleSection $section): bool

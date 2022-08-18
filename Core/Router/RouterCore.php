@@ -84,14 +84,14 @@ class RouterCore extends Core
     {
         $userService = UserCore::getUserService();
         $articleService = ArticleCore::getArticleService();
-        $imageService = ArticleCore::getImageService();
+        $mediaService = ArticleCore::getMediaService();
 
         return self::getInstance(
             className: 'BackofficeHtmlController',
             factory: function () use (
                 $userService,
                 $articleService,
-                $imageService,
+                $mediaService,
             ) {
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
@@ -102,7 +102,7 @@ class RouterCore extends Core
                 return new BackofficeHtmlController(
                     $userService,
                     $articleService,
-                    $imageService,
+                    $mediaService,
                 );
             },
             isSingleton: true,
@@ -149,14 +149,14 @@ class RouterCore extends Core
      */
     public static function getAuthorisedApiController(): AuthorisedApiController
     {
-        $imageService = ArticleCore::getImageService();
+        $mediaService = ArticleCore::getMediaService();
         $userService = UserCore::getUserService();
         $userMailService = UserCore::getUserMailService();
 
         return self::getInstance(
             className: 'AuthorisedApiController',
             factory: function () use (
-                $imageService,
+                $mediaService,
                 $userService,
                 $userMailService,
             ) {
@@ -165,7 +165,7 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiController.php';
                 return new AuthorisedApiController(
-                    $imageService,
+                    $mediaService,
                     $userService,
                     $userMailService,
                 );

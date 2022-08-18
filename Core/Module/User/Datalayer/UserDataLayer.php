@@ -19,7 +19,11 @@ class UserDataLayer
 
     const USER_TABLE = 'user';
     const USER_VERIFICATION_TABLE = 'user_verification';
+    const USER_VERIFICATION_TYPE_TABLE = 'user_verification_type';
     const USER_REGISTRATION_REQUEST_TABLE = 'user_registration_request';
+
+    const USER_ROLE_TABLE = 'user_role';
+    const USER_JOURNEY_STATUS_TABLE = 'user_journey_status';
 
     private MySqlDb $db;
     private Logger $logger;

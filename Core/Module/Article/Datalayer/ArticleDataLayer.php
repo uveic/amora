@@ -22,8 +22,11 @@ class ArticleDataLayer
 
     const ARTICLE_TABLE = 'article';
     const ARTICLE_HISTORY_TABLE = 'article_history';
+    const ARTICLE_TYPE_TABLE = 'article_type';
+    const ARTICLE_STATUS_TABLE = 'article_status';
 
     const ARTICLE_SECTION_TABLE = 'article_section';
+    const ARTICLE_SECTION_TYPE_TABLE = 'article_section_type';
     const ARTICLE_SECTION_IMAGE_TABLE = 'article_section_image';
 
     const ARTICLE_TAG_RELATION_TABLE = 'article_tag_relation';
@@ -31,10 +34,10 @@ class ArticleDataLayer
     const ARTICLE_PREVIOUS_URI_TABLE = 'article_previous_uri';
 
     public function __construct(
-        private MySqlDb $db,
-        private Logger $logger,
-        private MediaDataLayer $mediaDataLayer,
-        private TagDataLayer $tagDataLayer,
+        private readonly MySqlDb $db,
+        private readonly Logger $logger,
+        private readonly MediaDataLayer $mediaDataLayer,
+        private readonly TagDataLayer $tagDataLayer,
     ) {}
 
     public function getDb(): MySqlDb
@@ -279,7 +282,7 @@ class ArticleDataLayer
             }
         );
 
-        return $resTransaction->isSuccess();
+        return $resTransaction->isSuccess;
     }
 
     public function storeArticleUri(ArticleUri $articleUri): ArticleUri

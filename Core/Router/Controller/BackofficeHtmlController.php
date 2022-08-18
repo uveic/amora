@@ -11,9 +11,11 @@ use Amora\Core\Model\Response;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Service\ArticleService;
-use Amora\Core\Module\Article\Service\ImageService;
+use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Module\Article\Value\MediaStatus;
+use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\QueryOrderDirection;
@@ -23,7 +25,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     public function __construct(
         private UserService $userService,
         private ArticleService $articleService,
-        private ImageService $imageService,
+        private MediaService $mediaService,
     ) {
         parent::__construct();
     }
@@ -274,7 +276,9 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getImagesPage(Request $request): Response
     {
-        $images = $this->imageService->filterImagesBy(
+        $images = $this->mediaService->filterMediaBy(
+            typeIds: [MediaType::Image],
+            statusIds: [MediaStatus::Active],
             queryOptions: new QueryOptions(
                 pagination: new Response\Pagination(itemsPerPage: 50),
             ),

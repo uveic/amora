@@ -3,14 +3,15 @@
 namespace Amora\Core\Router;
 
 use Amora\Core\Module\Article\Model\Image;
-use Amora\Core\Module\Article\Value\MediaStatus;
-use Amora\Core\Module\Article\Value\MediaType;
+use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
-use Amora\Core\Module\Article\Service\ImageService;
+use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
-use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
+use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileFailureResponse,
+    AuthorisedApiControllerDestroyFileSuccessResponse,
+    AuthorisedApiControllerDestroyFileUnauthorisedResponse,
     AuthorisedApiControllerDestroyImageFailureResponse,
     AuthorisedApiControllerDestroyImageUnauthorisedResponse,
     AuthorisedApiControllerDestroyImageSuccessResponse,
@@ -26,7 +27,7 @@ use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuc
 final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 {
     public function __construct(
-        private ImageService $imageService,
+        private MediaService $mediaService,
         private UserService $userService,
         private UserMailService $userMailService,
     ) {
@@ -48,21 +49,12 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      * Endpoint: /api/file
      * Method: POST
      *
-     * @param int $fileTypeId
      * @param Request $request
      * @return Response
      */
-    protected function storeFile(int $fileTypeId, Request $request): Response
+    protected function storeFile(Request $request): Response
     {
-        if (!MediaType::tryFrom($fileTypeId)) {
-            return new AuthorisedApiControllerStoreFileSuccessResponse(
-                success: false,
-                file: [],
-                errorMessage: 'File type not valid: ' . $fileTypeId,
-            );
-        }
-
-        if (!$request->processedFiles) {
+        if (!$request->files) {
             return new AuthorisedApiControllerStoreFileSuccessResponse(
                 success: false,
                 file: [],
@@ -70,29 +62,24 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             );
         }
 
-        $newFile = $this->formService->storeFormFile(
-            rawFile: $request->processedFiles[0],
-            fileType: MediaType::from($fileTypeId),
-            status: MediaStatus::Active,
-            userId: $request->session?->user->id,
+        $res = $this->mediaService->workflowStoreFile(
+            rawFile: $request->files[0],
+            user: $request->session->user,
         );
 
-        if (empty($newFile) || empty($newFile->id)) {
+        if ($res->isSuccess) {
             return new AuthorisedApiControllerStoreFileSuccessResponse(
                 success: false,
                 file: [],
-                errorMessage: 'File not valid: max file size exceeded.'
+                errorMessage: $res->message,
             );
         }
 
+        /** @var Media $newFile */
+        $newFile = $res->response;
         return new AuthorisedApiControllerStoreFileSuccessResponse(
             success: true,
-            file: [
-                'id' => $formFile->id,
-                'path' => $formFile->filePath,
-                'caption' => DocumentType::getCaption($documentType),
-                'name' => $formFile->fileName,
-            ],
+            file: $newFile->buildPublicDataArray(),
         );
     }
 
@@ -127,9 +114,20 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      */
     protected function destroyFile(int $id, Request $request): Response
     {
-        return new AuthorisedApiControllerDestroyFileSuccessResponse(
-            success: true,
-        );
+        $file = $this->mediaService->getMediaForId($id);
+        if (empty($file)) {
+            return new AuthorisedApiControllerDestroyFileFailureResponse();
+        }
+
+        $session = $request->session;
+        if (!$session->isAdmin()
+            && $file->user?->id != $session->user->id
+        ) {
+            return new AuthorisedApiControllerDestroyFileUnauthorisedResponse();
+        }
+
+        $res = $this->mediaService->deleteFile($file);
+        return new AuthorisedApiControllerDestroyFileSuccessResponse($res);
     }
 
     /**
@@ -148,7 +146,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             );
         }
 
-        $images = $this->imageService->processAndStoreRawImages(
+        $images = $this->mediaService->processAndStoreRawImages(
             rawImages: $request->processedFiles,
             userId: $request->session->user->id,
         );
@@ -176,7 +174,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      */
     public function destroyImage(int $imageId, ?int $eventId, Request $request): Response
     {
-        $image = $this->imageService->getImageForId($imageId);
+        $image = $this->mediaService->getImageForId($imageId);
         if (empty($image)) {
             return new AuthorisedApiControllerDestroyImageFailureResponse();
         }
@@ -188,7 +186,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             return new AuthorisedApiControllerDestroyImageUnauthorisedResponse();
         }
 
-        $res = $this->imageService->deleteImage($image);
+        $res = $this->mediaService->deleteImage($image);
         return new AuthorisedApiControllerDestroyImageSuccessResponse($res);
     }
 

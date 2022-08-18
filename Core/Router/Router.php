@@ -203,7 +203,7 @@ class Router
         }
 
         $img = $article->mainImageId
-            ? ArticleCore::getImageService()->getImageForId($article->mainImageId)
+            ? ArticleCore::getMediaService()->getImageForId($article->mainImageId)
             : null;
         $siteImageUrl = $img
             ? rtrim(Core::getConfig()->baseUrl, ' /') . $img->getFullUrlMedium()

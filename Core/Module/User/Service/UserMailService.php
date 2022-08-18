@@ -93,7 +93,7 @@ class UserMailService
             }
         );
 
-        return $res->isSuccess();
+        return $res->isSuccess;
     }
 
     public function sendPasswordResetEmail(User $user): bool
@@ -128,7 +128,7 @@ class UserMailService
             }
         );
 
-        return $res->isSuccess();
+        return $res->isSuccess;
     }
 
     public function sendPasswordCreationEmail(User $user): bool

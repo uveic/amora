@@ -114,7 +114,7 @@ class TagDataLayer
             return new TransactionResponse(true);
         });
 
-        return $dbRes->isSuccess();
+        return $dbRes->isSuccess;
     }
 
     public function insertArticleTagRelation(int $tagId, int $articleId): bool

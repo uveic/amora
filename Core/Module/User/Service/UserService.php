@@ -71,7 +71,7 @@ class UserService
             }
         );
 
-        return $res->isSuccess() ? $res->getResponse() : null;
+        return $res->isSuccess ? $res->response : null;
     }
 
     public function deleteUser(User $user): bool
@@ -111,7 +111,7 @@ class UserService
             }
         );
 
-        return $res->isSuccess();
+        return $res->isSuccess;
     }
 
     public function verifyUser(string $email, string $unHashedPassword): ?User
@@ -281,8 +281,8 @@ class UserService
         );
 
         return new UserFeedback(
-            $res->isSuccess(),
-            $res->isSuccess()
+            $res->isSuccess,
+            $res->isSuccess
                 ? $localisationUtil->getValue('authenticationEmailVerified')
                 : $localisationUtil->getValue('globalGenericError')
         );
@@ -377,7 +377,7 @@ class UserService
             }
         );
 
-        return $res->isSuccess();
+        return $res->isSuccess;
     }
 
     public function workflowUpdateUser(
