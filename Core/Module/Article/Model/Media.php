@@ -35,7 +35,7 @@ class Media
             filenameOriginal: $data['media_filename_original'],
             filenameLarge: $data['media_filename_large'] ?? null,
             filenameMedium: $data['media_filename_medium'] ?? null,
-            caption: $data['caption'] ?? null,
+            caption: $data['media_caption'] ?? null,
             createdAt: DateUtil::convertStringToDateTimeImmutable($data['media_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($data['media_updated_at']),
         );
@@ -45,8 +45,8 @@ class Media
     {
         return [
             'id' => $this->id,
-            'media_type_id' => $this->type->value,
-            'media_status_id' => $this->status->value,
+            'type_id' => $this->type->value,
+            'status_id' => $this->status->value,
             'user_id' => $this->user?->id,
             'user' => $this->user ? $this->user->asArray() : [],
             'path' => $this->path,
@@ -63,24 +63,28 @@ class Media
     {
         return [
             'id' => $this->id,
-            'uri' => $this->getPathWithName(),
+            'uri' => $this->getPathWithNameMedium(),
             'caption' => $this->caption,
+            'name' => $this->filenameMedium,
         ];
     }
 
-    public function getPathWithName(): string
+    public function getPathWithNameOriginal(): string
     {
-        return rtrim($this->path, '/ ') . '/'
-            . ($this->filenameMedium ?? ($this->filenameLarge ?? $this->filenameOriginal));
+        return rtrim($this->path, '/ ') . '/' . $this->filenameOriginal;
     }
 
-    public function getExtension(): string
+    public function getPathWithNameMedium(): ?string
     {
-        if (!str_contains($this->filenameOriginal, '.')) {
-            return '';
-        }
+        return $this->filenameMedium
+            ? (rtrim($this->path, '/ ') . '/' . $this->filenameMedium)
+            : null;
+    }
 
-        $parts = explode('.', $this->filenameOriginal);
-        return strtolower(trim($parts[count($parts) - 1]));
+    public function getPathWithNameLarge(): ?string
+    {
+        return $this->filenameLarge
+            ? (rtrim($this->path, '/ ') . '/' . $this->filenameLarge)
+            : null;
     }
 }

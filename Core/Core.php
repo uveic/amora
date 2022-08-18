@@ -38,7 +38,6 @@ class Core
 
         self::$pathToRoot = $pathToRoot;
 
-        require_once self::$pathToRoot . '/Core/Model/File.php';
         require_once self::$pathToRoot . '/Core/Model/Request.php';
         require_once self::$pathToRoot . '/Core/Model/Response.php';
         require_once self::$pathToRoot . '/Core/Model/Menu/MenuItem.php';

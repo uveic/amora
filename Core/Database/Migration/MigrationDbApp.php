@@ -272,7 +272,7 @@ final class MigrationDbApp
             }
         );
 
-        return $res->isSuccess();
+        return $res->isSuccess;
     }
 
     private function isDbEmpty(): bool

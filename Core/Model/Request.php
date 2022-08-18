@@ -14,7 +14,6 @@ final class Request
     public readonly ?Session $session;
     public readonly Language $siteLanguage;
     public readonly ?string $clientLanguage;
-    public readonly array $processedFiles;
 
     public function __construct(
         public readonly ?string $sourceIp,
@@ -25,11 +24,10 @@ final class Request
         public readonly string $body,
         public readonly array $getParams,
         public readonly array $postParams,
-        array $files,
+        public readonly array $files,
         private array $cookies,
         private array $headers,
     ) {
-        $this->processedFiles = $this->processFiles($files);
         $this->session = $this->loadSession();
         $this->clientLanguage = $headers['HTTP_ACCEPT_LANGUAGE'] ?? null;
         $this->siteLanguage = $this->calculateSiteLanguageAndUpdatePath();
@@ -92,30 +90,6 @@ final class Request
     {
         $bodyParams = $this->getBodyPayload();
         return $bodyParams[$paramName] ?? null;
-    }
-
-    private function processFiles(array $files): array
-    {
-        $output = [];
-
-        if (empty($files['files']['name'][0])) {
-            return $output;
-        }
-
-        $key = 0;
-        foreach ($files['files']['name'] as $ignored) {
-            $output[] = new File(
-                $files['files']['name'][$key],
-                $files['files']['tmp_name'][$key],
-                $files['files']['size'][$key],
-                $files['files']['type'][$key],
-                $files['files']['error'][$key]
-            );
-
-            $key++;
-        }
-
-        return $output;
     }
 
     private function calculateSiteLanguageAndUpdatePath(): Language

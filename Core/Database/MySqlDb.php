@@ -289,10 +289,10 @@ final class MySqlDb
                 return null;
             }
 
-            if (!$res->isSuccess()) {
-                if ($res->getMessage()) {
+            if (!$res->isSuccess) {
+                if ($res->message) {
                     $this->logger->logError(
-                        'Rolling back transaction. Message: ' . $res->getMessage()
+                        'Rolling back transaction. Message: ' . $res->message
                     );
                 }
 

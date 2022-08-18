@@ -43,11 +43,10 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
      * Endpoint: /api/file
      * Method: POST
      *
-     * @param int $fileTypeId
      * @param Request $request
      * @return Response
      */
-    abstract protected function storeFile(int $fileTypeId, Request $request): Response;
+    abstract protected function storeFile(Request $request): Response;
 
     /**
      * Endpoint: /api/file/{id}
@@ -132,25 +131,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
     private function validateAndCallStoreFile(Request $request): Response
     {
-        $formDataParams = $request->postParams;
         $errors = [];
-
-        $fileTypeId = null;
-        if (!isset($formDataParams['fileTypeId'])) {
-            $errors[] = [
-                'field' => 'fileTypeId',
-                'message' => 'required'
-            ];
-        } else {
-            if (!is_numeric($formDataParams['fileTypeId'])) {
-                $errors[] = [
-                    'field' => 'fileTypeId',
-                    'message' => 'must be an integer'
-                ];
-            } else {
-                $fileTypeId = intval($formDataParams['fileTypeId']);
-            }
-        }
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -164,7 +145,6 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
         try {
             return $this->storeFile(
-                $fileTypeId,
                 $request
             );
         } catch (Throwable $t) {

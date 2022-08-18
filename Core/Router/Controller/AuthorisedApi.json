@@ -28,15 +28,7 @@
         "summary": "Store a new file",
         "description": "",
         "operationId": "storeFile",
-        "parameters": [
-          {
-            "name": "fileTypeId",
-            "in": "formData",
-            "description": "File type ID",
-            "required": true,
-            "type": "integer"
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Success",

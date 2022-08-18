@@ -2,10 +2,14 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use Amora\Core\Module\Article\Entity\RawFile;
+use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Value\MediaStatus;
+use Amora\Core\Module\Article\Value\MediaType;
+use Amora\Core\Module\User\Model\User;
 use DateTimeImmutable;
 use GdImage;
 use Amora\Core\Util\Logger;
-use Amora\Core\Module\Article\Model\Image;
 use Amora\Core\Module\Article\Model\ImagePath;
 use Amora\Core\Util\StringUtil;
 
@@ -33,12 +37,11 @@ class ImageResizeService
         $this->mediaBaseUrl = rtrim($mediaBaseUrl, ' /') . '/';
     }
 
-    public function getImageObjectFromUploadedImageFile(
-        string $imagePath,
-        ?int $userId,
-        ?string $caption = null,
-    ): Image {
-        $filePathOriginal = $imagePath;
+    public function resizeOriginalImage(
+        RawFile $rawFile,
+        ?User $user,
+    ): Media {
+        $filePathOriginal = $rawFile->getPathWithName();
         $fullUrlOriginal = $this->getImageUrlFromPath($filePathOriginal);
 
         $imageOriginal = new ImagePath($filePathOriginal, $fullUrlOriginal);
@@ -47,16 +50,16 @@ class ImageResizeService
 
         $now = new DateTimeImmutable();
 
-        return new Image(
+        return new Media(
             id: null,
-            userId: $userId,
-            fullUrlOriginal: $imageOriginal->fullUrl,
-            fullUrlMedium: $imageMedium->fullUrl,
-            fullUrlLarge: $imageLarge->fullUrl,
-            filePathOriginal: $imageOriginal->filePath,
-            filePathMedium: $imageMedium->filePath,
-            filePathLarge: $imageLarge->filePath,
-            caption: $caption,
+            type: MediaType::Image,
+            status: MediaStatus::Active,
+            user: $user,
+            path: $rawFile->path,
+            filenameOriginal: $rawFile->name,
+            filenameLarge: $imageLarge->fullUrl,
+            filenameMedium: $imageMedium->filePath,
+            caption: null,
             createdAt: $now,
             updatedAt: $now,
         );
@@ -97,7 +100,7 @@ class ImageResizeService
             $newHeight = $newMaxHeight;
         }
 
-        $imageTypeExtension = $this->getImageType($image->filePath);
+        $imageTypeExtension = $this->getExtension($image->filePath);
         $newFilename = $this->getNewImageName($imageTypeExtension);
         $outputFullPath = rtrim($this->mediaBaseDir, ' /') . '/'  . $newFilename;
         $outputFullUrl = rtrim($this->mediaBaseUrl, ' /') . '/' . $newFilename;
@@ -135,12 +138,12 @@ class ImageResizeService
         return $this->resizeImage($image, $newWidth, $newHeight);
     }
 
-    public function getNewImageName(string $imageTypeExtension): string
+    private function getNewImageName(string $imageTypeExtension): string
     {
         return date('YmdHis') . StringUtil::getRandomString(16) . '.' . $imageTypeExtension;
     }
 
-    private function getImageType(string $sourceFullPath): ?string
+    private function getExtension(string $sourceFullPath): ?string
     {
         if (!str_contains($sourceFullPath, '.')) {
             return null;
