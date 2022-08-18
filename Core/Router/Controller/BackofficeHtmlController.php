@@ -277,14 +277,14 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getImagesPage(Request $request): Response
     {
         $images = $this->mediaService->filterMediaBy(
-            typeIds: [MediaType::Image],
-            statusIds: [MediaStatus::Active],
+            typeIds: [MediaType::Image->value],
+            statusIds: [MediaStatus::Active->value],
             queryOptions: new QueryOptions(
                 pagination: new Response\Pagination(itemsPerPage: 50),
             ),
         );
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
             template: 'core/backoffice/images',
             responseData: new HtmlResponseDataAuthorised(

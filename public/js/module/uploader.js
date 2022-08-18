@@ -55,9 +55,9 @@ function uploadImage(
         }
 
         image.classList.remove('opacity');
-        image.src = response.file.path;
+        image.src = response.file.uri;
         image.dataset.imageId = response.file.id;
-        image.alt = response.file.caption ?? '';
+        image.alt = response.file.caption ?? response.file.name;
         imageContainer.removeChild(imgLoading);
 
         then(response);

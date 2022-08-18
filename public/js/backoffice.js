@@ -133,9 +133,12 @@ document.querySelectorAll('.article-save-button').forEach(el => {
 
         if (section.classList.contains(pexegoClasses.sectionImage)) {
           const imageCaption = originalSection.querySelector('.' + pexegoClasses.contentImageCaption);
-          currentSection.imageCaption = imageCaption && imageCaption.length && imageCaption.dataset.placeholder !== imageCaption.textContent.trim()
-            ? imageCaption.textContent.trim()
-            : null;
+          currentSection.imageCaption = imageCaption
+            && imageCaption.textContent.length
+            && imageCaption.dataset.placeholder !== imageCaption.textContent.trim()
+              ? imageCaption.textContent.trim()
+              : null;
+
           const image = originalSection.querySelector('.' + pexegoClasses.contentImage);
           currentSection.imageId = image ? Number.parseInt(image.dataset.imageId) : null;
           if (!mainImageId && currentSection.imageId) {
@@ -237,24 +240,41 @@ const displayImagePopup = (e, imageContainerEl) => {
 
   const imageId = imageContainerEl.dataset.imageId;
   const modal = document.querySelector('.image-modal');
-  const image = imageContainerEl.querySelector('img');
-  const popupImage = modal.querySelector('.image-main img');
-
-  if (popupImage) {
-    popupImage.src = image.src;
-    popupImage.alt = image.alt;
-    popupImage.title = image.title;
-  } else {
-    let modalImage = new Image();
-    modalImage.src = image.src;
-    modalImage.alt = image.alt;
-    modalImage.title = image.title;
-    modalImage.dataset.imageId = imageId;
-
-    modal.querySelector('.image-main').appendChild(modalImage);
-  }
+  const loadingContainer = modal.querySelector('.image-modal-loading');
+  const content = modal.querySelector('.image-wrapper');
+  const modalClose = modal.querySelector('.modal-close-button');
 
   modal.classList.remove('null');
+  loadingContainer.classList.remove('null');
+  content.classList.add('null');
+  modalClose.classList.add('null');
+
+  xhr.get('/api/file/' + imageId)
+    .then(response => {
+      let popupImage = modal.querySelector('.image-main img');
+
+      if (!popupImage) {
+        popupImage = new Image();
+        modal.querySelector('.image-main').appendChild(popupImage);
+      }
+
+      const title = response.file.caption ?? response.file.name;
+      popupImage.src = response.file.uri;
+      popupImage.alt = title;
+      popupImage.title = title;
+      popupImage.dataset.imageId = imageId;
+
+      modal.querySelector('.image-title').textContent = response.file.caption ?? 'Image';
+      modal.querySelector('.image-caption').textContent = response.file.name;
+      const createdAt = new Date(response.file.createdAt);
+      modal.querySelector('.image-meta').textContent = global.get('globalUploadedOn') + ' '
+        + global.formatDate(createdAt, true, true, true, true, true)
+        + ' ' + global.get('globalBy') + ' ' + response.file.userName;
+
+      loadingContainer.classList.add('null');
+      content.classList.remove('null');
+      modalClose.classList.remove('null');
+    });
 };
 
 document.querySelectorAll('.image-item').forEach(im => {
@@ -269,7 +289,7 @@ const deleteImage = async function (e, imageId) {
     return;
   }
 
-  xhr.delete('/api/image/' + imageId)
+  xhr.delete('/api/file/' + imageId, null, feedbackDiv)
     .then(() => {
       document.querySelector(".image-item[data-image-id='" + imageId + "']").classList.add('null');
       document.querySelector('.image-modal').classList.add('null');
@@ -278,7 +298,6 @@ const deleteImage = async function (e, imageId) {
 
 document.querySelectorAll('.image-delete').forEach(imgEl => {
   imgEl.addEventListener('click', e => {
-    console.log(imgEl);
     const imageId = document.querySelector('.image-wrapper .image-main img').dataset.imageId;
     deleteImage(e, imageId).then();
   });
@@ -288,15 +307,15 @@ document.querySelectorAll('input#images').forEach(im => {
   im.addEventListener('change', e => {
     e.preventDefault();
 
-    const imagesContainer = document.querySelector('#images-list');
-    let newImageContainer = document.createElement('a');
-    newImageContainer.href = '#';
-    newImageContainer.className = 'image-item';
-
-    imagesContainer.appendChild(newImageContainer);
+    const container = document.querySelector('#images-list');
 
     for (let i = 0; i < im.files.length; i++) {
       let file = im.files[i];
+
+      let newImageContainer = document.createElement('a');
+      newImageContainer.href = '#';
+      newImageContainer.className = 'image-item';
+      container.appendChild(newImageContainer);
 
       uploadImage(
         file,

@@ -203,11 +203,9 @@ class Router
         }
 
         $img = $article->mainImageId
-            ? ArticleCore::getMediaService()->getImageForId($article->mainImageId)
+            ? ArticleCore::getMediaService()->getMediaForId($article->mainImageId)
             : null;
-        $siteImageUrl = $img
-            ? rtrim(Core::getConfig()->baseUrl, ' /') . $img->getFullUrlMedium()
-            : null;
+        $siteImageUrl = $img?->getUriWithNameMedium();
         $isAdmin = $request->session && $request->session->isAdmin();
 
         return Response::createHtmlResponse(

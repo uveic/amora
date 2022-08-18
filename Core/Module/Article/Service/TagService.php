@@ -15,7 +15,8 @@ class TagService
 
     public function getTagForId(int $id): ?Tag
     {
-        return $this->tagDataLayer->getTagForId($id);
+        $res = $this->filterTagsBy(tagIds: [$id]);
+        return empty($res[0]) ? null : $res[0];
     }
 
     public function getTagForName(string $name): ?Tag
@@ -23,20 +24,16 @@ class TagService
         return $this->tagDataLayer->getTagForName($name);
     }
 
-    public function getAllTags(bool $asPlainArray = false): array
-    {
-        $tags = $this->tagDataLayer->filterTagsBy();
-
-        if ($asPlainArray) {
-            $output = [];
-            /** @var Tag $tag */
-            foreach ($tags as $tag) {
-                $output[] = $tag->asArray();
-            }
-            return $output;
-        }
-
-        return $tags;
+    public function filterTagsBy(
+        array $tagIds = [],
+        array $articleIds = [],
+        ?string $tagName = null,
+    ): array {
+        return $this->tagDataLayer->filterTagsBy(
+            tagIds: $tagIds,
+            articleIds: $articleIds,
+            tagName: $tagName,
+        );
     }
 
     public function storeTag(Tag $tag, ?int $articleId = null): ?Tag

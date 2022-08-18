@@ -55,6 +55,8 @@ class ArticleCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleType.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/ArticleUri.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/ArticleSection.php';
@@ -74,7 +76,7 @@ class ArticleCore extends Core
         return self::getInstance(
             className: 'MediaDataLayer',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Module/Article/Model/Image.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/MediaDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/ArticleDataLayer.php';
@@ -89,12 +91,12 @@ class ArticleCore extends Core
 
     public static function getMediaService(): MediaService
     {
-        if (empty(self::getConfig()->mediaBaseDir)) {
+        if (!isset(self::getConfig()->mediaBaseDir)) {
             self::getDefaultLogger()->logError("Missing 'mediaBaseDir' section from config");
             exit;
         }
 
-        if (empty(self::getConfig()->mediaBaseUrl)) {
+        if (!isset(self::getConfig()->mediaBaseUrl)) {
             self::getDefaultLogger()->logError("Missing 'mediaBaseUrl' section from config");
             exit;
         }
@@ -102,17 +104,16 @@ class ArticleCore extends Core
         return self::getInstance(
             className: 'MediaService',
             factory: function () {
+                require_once self::getPathRoot() . '/Core/Module/Article/Entity/RawFile.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
-                require_once self::getPathRoot() . '/Core/Module/Article/Model/Image.php';
-                require_once self::getPathRoot() . '/Core/Module/Article/Model/ImagePath.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/MediaService.php';
                 return new MediaService(
                     logger: self::getArticleLogger(),
                     mediaDataLayer: self::getMediaDataLayer(),
                     imageResizeService: self::getImageResizeService(),
                     mediaBaseDir: self::getConfig()->mediaBaseDir,
-                    mediaBaseUrl: self::getConfig()->mediaBaseUrl,
                 );
             },
             isSingleton: true,
@@ -121,26 +122,12 @@ class ArticleCore extends Core
 
     public static function getImageResizeService(): ImageResizeService
     {
-        if (empty(self::getConfig()->mediaBaseDir)) {
-            self::getDefaultLogger()->logError("Missing 'mediaBaseDir' section from config");
-            exit;
-        }
-
-        if (empty(self::getConfig()->mediaBaseUrl)) {
-            self::getDefaultLogger()->logError("Missing 'mediaBaseUrl' section from config");
-            exit;
-        }
-
         return self::getInstance(
             className: 'ImageResizeService',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Module/Article/Model/Image.php';
-                require_once self::getPathRoot() . '/Core/Module/Article/Model/ImagePath.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/ImageResizeService.php';
                 return new ImageResizeService(
                     logger: self::getArticleLogger(),
-                    mediaBaseDir:  self::getConfig()->mediaBaseDir,
-                    mediaBaseUrl: self::getConfig()->mediaBaseUrl,
                 );
             },
             isSingleton: true,

@@ -595,10 +595,16 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     protected function getTags(?string $name, Request $request): Response
     {
-        $tags = $this->tagService->getAllTags(true);
+        $tags = $this->tagService->filterTagsBy();
+        $output = [];
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $output[] = $tag->asArray();
+        }
+
         return new BackofficeApiControllerGetTagsSuccessResponse(
             success: true,
-            tags: $tags,
+            tags: $output,
         );
     }
 }

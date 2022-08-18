@@ -22,12 +22,16 @@ class MediaService
         private readonly MediaDataLayer $mediaDataLayer,
         private readonly ImageResizeService $imageResizeService,
         private readonly string $mediaBaseDir,
-        private readonly string $mediaBaseUrl,
     ) {}
 
     public function getMediaForId(int $id): ?Media
     {
-        return $this->mediaDataLayer->getMediaForId($id);
+        $res = $this->filterMediaBy(
+            ids: [$id],
+            statusIds: [MediaStatus::Active->value],
+        );
+
+        return empty($res[0]) ? null : $res[0];
     }
 
     public function filterMediaBy(
@@ -80,16 +84,16 @@ class MediaService
     }
 
     public function workflowStoreFile(
-        array $rawFile,
+        array $rawFiles,
         ?User $user,
     ): TransactionResponse {
         return $this->mediaDataLayer->getDb()->withTransaction(
             function () use (
-                $rawFile,
+                $rawFiles,
                 $user,
             ) {
                 try {
-                    $rawFile = $this->validateAndProcessRawFile($rawFile);
+                    $rawFile = $this->validateAndProcessRawFile($rawFiles);
                     if (empty($rawFile)) {
                         return new TransactionResponse(
                             isSuccess: false,
@@ -156,7 +160,7 @@ class MediaService
             type: MediaType::Image,
             status: MediaStatus::Active,
             user: $user,
-            path: $rawFile->path,
+            path: null,
             filenameOriginal: $rawFile->name,
             filenameLarge: null,
             filenameMedium: null,
@@ -171,25 +175,25 @@ class MediaService
         return date('YmdHis') . StringUtil::getRandomString(16) . '.' . $extension;
     }
 
-    private function validateAndProcessRawFile(array $rawFile): ?RawFile
+    private function validateAndProcessRawFile(array $rawFiles): ?RawFile
     {
-        if (empty($rawFile['files']['name'])) {
+        if (empty($rawFiles['files']['name'][0])) {
             $this->logger->logError('Raw file name is empty');
             return null;
         }
 
-        if (empty($rawFile['files']['tmp_name'])) {
+        if (empty($rawFiles['files']['tmp_name'][0])) {
             $this->logger->logError('Raw file tmp_name is empty');
             return null;
         }
 
-        $rawPathWithName = $rawFile['files']['tmp_name'] . $rawFile['files']['name'];
+        $rawPathWithName = $rawFiles['files']['tmp_name'][0];
         if (!file_exists($rawPathWithName)) {
             $this->logger->logError('File not not found: ' . $rawPathWithName);
             return null;
         }
 
-        $extension = $this->getFileExtension($rawFile['files']['name']);
+        $extension = $this->getFileExtension($rawFiles['files']['name'][0]);
         $newName = $this->generateFilename($extension);
         $newPath = rtrim($this->mediaBaseDir, ' /') . '/';
         $targetPath = $newPath . $newName;
@@ -211,9 +215,9 @@ class MediaService
             name: $newName,
             path: $newPath,
             extension: $extension,
-            mediaType: MediaType::getTypeFromRawFileType($rawFile['files']['type']),
-            sizeBytes: (int)$rawFile['files']['size'],
-            error: $rawFile['files']['error'],
+            mediaType: MediaType::getTypeFromRawFileType($rawFiles['files']['type'][0]),
+            sizeBytes: (int)$rawFiles['files']['size'][0],
+            error: $rawFiles['files']['error'][0],
         );
     }
 

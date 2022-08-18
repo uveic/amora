@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Model;
 
+use Amora\Core\Core;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Model\User;
@@ -63,28 +64,48 @@ class Media
     {
         return [
             'id' => $this->id,
-            'uri' => $this->getPathWithNameMedium(),
+            'uri' => $this->getUriWithNameMedium(),
             'caption' => $this->caption,
             'name' => $this->filenameMedium,
+            'createdAt' => $this->createdAt->format('c'),
+            'userId' => $this->user?->id,
+            'userName' => $this->user?->getNameOrEmail(),
         ];
     }
 
     public function getPathWithNameOriginal(): string
     {
-        return rtrim($this->path, '/ ') . '/' . $this->filenameOriginal;
+        $path = Core::getConfig()->mediaBaseDir . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        return $path . $this->filenameOriginal;
     }
 
     public function getPathWithNameMedium(): ?string
     {
-        return $this->filenameMedium
-            ? (rtrim($this->path, '/ ') . '/' . $this->filenameMedium)
-            : null;
+        $path = Core::getConfig()->mediaBaseDir . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        return $this->filenameMedium ? ($path . $this->filenameMedium) : null;
     }
 
     public function getPathWithNameLarge(): ?string
     {
-        return $this->filenameLarge
-            ? (rtrim($this->path, '/ ') . '/' . $this->filenameLarge)
-            : null;
+        $path = Core::getConfig()->mediaBaseDir . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        return $this->filenameLarge ? ($path . $this->filenameLarge) : null;
+    }
+
+    public function getUriWithNameOriginal(): string
+    {
+        $path = Core::getConfig()->mediaBaseUrl . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        return $path . $this->filenameOriginal;
+    }
+
+    public function getUriWithNameMedium(): ?string
+    {
+        $path = Core::getConfig()->mediaBaseUrl . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        return $this->filenameMedium ? ($path . $this->filenameMedium) : null;
+    }
+
+    public function getUriWithNameLarge(): ?string
+    {
+        $path = Core::getConfig()->mediaBaseUrl . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        return $this->filenameLarge ? ($path . $this->filenameLarge) : null;
     }
 }

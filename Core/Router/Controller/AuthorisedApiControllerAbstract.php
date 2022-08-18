@@ -23,12 +23,6 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyFileSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyFileFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyFileUnauthorisedResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreImageSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreImageFailureResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreImageUnauthorisedResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyImageSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyImageFailureResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyImageUnauthorisedResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerUpdateUserAccountSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerUpdateUserAccountFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse.php';
@@ -67,30 +61,6 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function destroyFile(int $id, Request $request): Response;
-
-    /**
-     * Endpoint: /api/image
-     * Method: POST
-     *
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function storeImage(Request $request): Response;
-
-    /**
-     * Endpoint: /api/image/{imageId}
-     * Method: DELETE
-     *
-     * @param int $imageId
-     * @param int|null $eventId
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function destroyImage(
-        int $imageId,
-        ?int $eventId,
-        Request $request
-    ): Response;
 
     /**
      * Endpoint: /api/user/{userId}
@@ -252,96 +222,6 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in AuthorisedApiControllerAbstract - Method: destroyFile()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
-
-    private function validateAndCallStoreImage(Request $request): Response
-    {
-        $errors = [];
-
-        if ($errors) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->storeImage(
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in AuthorisedApiControllerAbstract - Method: storeImage()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
-
-    private function validateAndCallDestroyImage(Request $request): Response
-    {
-        $pathParts = explode('/', $request->getPath());
-        $pathParams = $this->getPathParams(
-            ['api', 'image', '{imageId}'],
-            $pathParts
-        );
-        $bodyParams = $request->getBodyPayload();
-        $errors = [];
-
-        $imageId = null;
-        if (!isset($pathParams['imageId'])) {
-            $errors[] = [
-                'field' => 'imageId',
-                'message' => 'required'
-            ];
-        } else {
-            if (!is_numeric($pathParams['imageId'])) {
-                $errors[] = [
-                    'field' => 'imageId',
-                    'message' => 'must be an integer'
-                ];
-            } else {
-                $imageId = intval($pathParams['imageId']);
-            }
-        }
-
-        if (!isset($bodyParams)) {
-            $errors[] = [
-                'field' => 'payload',
-                'message' => 'required'
-            ];
-        }
-
-        $eventId = $bodyParams['eventId'] ?? null;
-
-        if ($errors) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->destroyImage(
-                $imageId,
-                $eventId,
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in AuthorisedApiControllerAbstract - Method: destroyImage()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -513,26 +393,6 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallDestroyFile($request);
-        }
-
-        if ($method === 'POST' &&
-            $this->pathParamsMatcher(
-                ['api', 'image'],
-                $pathParts,
-                ['fixed', 'fixed']
-            )
-        ) {
-            return $this->validateAndCallStoreImage($request);
-        }
-
-        if ($method === 'DELETE' &&
-            $pathParams = $this->pathParamsMatcher(
-                ['api', 'image', '{imageId}'],
-                $pathParts,
-                ['fixed', 'fixed', 'int']
-            )
-        ) {
-            return $this->validateAndCallDestroyImage($request);
         }
 
         if ($method === 'PUT' &&

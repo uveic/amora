@@ -25,9 +25,9 @@ use DateTimeImmutable;
 class ArticleService
 {
     public function __construct(
-        private Logger $logger,
-        private ArticleDataLayer $articleDataLayer,
-        private TagDataLayer $tagDataLayer,
+        private readonly Logger $logger,
+        private readonly ArticleDataLayer $articleDataLayer,
+        private readonly TagDataLayer $tagDataLayer,
     ) {}
 
     public function getArticleForId(
@@ -114,6 +114,7 @@ class ArticleService
         ?string $uri = null,
         ?string $previousUri = null,
         array $tagIds = [],
+        array $imageIds = [],
         bool $includeTags = false,
         bool $includePublishedAtInTheFuture = false,
         ?DateTimeImmutable $publishedBefore = null,
@@ -128,6 +129,7 @@ class ArticleService
             uri: $uri,
             previousUri: $previousUri,
             tagIds: $tagIds,
+            imageIds: $imageIds,
             includeTags: $includeTags,
             includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
             publishedBefore: $publishedBefore,
@@ -216,8 +218,8 @@ class ArticleService
                 }
 
                 $resSections = $this->updateCreateOrDeleteArticleSections(
-                    $article->id,
-                    $sections
+                    articleId: $article->id,
+                    sections: $sections,
                 );
 
                 if (empty($resSections)) {
@@ -274,8 +276,8 @@ class ArticleService
                 articleSectionType: ArticleSectionType::from($section['sectionTypeId']),
                 contentHtml: html_entity_decode($section['contentHtml']),
                 order: isset($section['order']) ? (int)$section['order'] : null,
-                imageId: isset($section['imageId']) ? (int)$section['imageId'] : null,
-                imageCaption: $section['imageCaption'] ?? null,
+                mediaId: isset($section['imageId']) ? (int)$section['imageId'] : null,
+                mediaCaption: $section['imageCaption'] ?? null,
                 createdAt: $newSectionId && isset($articleSectionsById[$newSectionId])
                     ? $articleSectionsById[$newSectionId]->updatedAt
                     : $now,
@@ -309,10 +311,10 @@ class ArticleService
         }
 
         foreach ($articleSectionsById as $articleSection) {
-            if ($articleSection->imageId) {
+            if ($articleSection->mediaId) {
                 $this->articleDataLayer->deleteArticleSectionImage(
                     $articleSection->id,
-                    $articleSection->imageId,
+                    $articleSection->mediaId,
                 );
             }
             $this->articleDataLayer->deleteArticleSection($articleSection->id);
@@ -431,11 +433,11 @@ class ArticleService
             return false;
         }
 
-        if ($section->imageId) {
+        if ($section->mediaId) {
             $resImage = $this->articleDataLayer->createArticleSectionImage(
-                $section->id,
-                $section->imageId,
-                $section->imageCaption,
+                articleSectionId: $section->id,
+                imageId: $section->mediaId,
+                imageCaption: $section->mediaCaption,
             );
 
             if (empty($resImage)) {
@@ -454,11 +456,11 @@ class ArticleService
             return false;
         }
 
-        if ($section->imageId) {
+        if ($section->mediaId) {
             $resImage = $this->articleDataLayer->updateArticleSectionImage(
-                $section->id,
-                $section->imageId,
-                $section->imageCaption,
+                articleSectionId: $section->id,
+                imageId: $section->mediaId,
+                imageCaption: $section->mediaCaption,
             );
 
             if (empty($resImage)) {

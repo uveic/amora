@@ -19,7 +19,10 @@ enum MediaType: int
 
     public static function getTypeFromRawFileType(?string $rawFileType): self
     {
-        // ToDo
-        return self::Unknown;
+        return match($rawFileType) {
+            'image/jpeg', 'image/gif', 'image/png', 'image/webp' => self::Image,
+            'application/pdf' => self::PDF,
+            default => self::Unknown,
+        };
     }
 }
