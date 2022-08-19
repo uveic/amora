@@ -15,21 +15,25 @@ use Amora\Core\Model\Response\HtmlResponseDataAbstract;
       </div>
       <div class="image-wrapper null">
         <div class="image-main">
-
+          <div class="image-main-nav">
+            <a href="#" class="image-previous-action hidden" data-direction="ASC"></a>
+            <a href="#" class="image-next-action" data-direction="DESC"></a>
+          </div>
         </div>
         <div class="image-info">
           <div>
             <h2 class="m-t-0 m-r-2 image-title"></h2>
             <p class="image-caption" style="word-wrap: anywhere;"></p>
             <p class="image-meta"></p>
+            <p class="image-uri"></p>
             <a href="#" class="image-delete">
               <img src="/img/svg/trash-red.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalRemove')?>">
               <?=$responseData->getLocalValue('globalRemove')?>
             </a>
           </div>
           <div class="image-next-wrapper m-t-2">
-            <a href="#" class="image-next-action" data-direction="ASC"><img src="/img/svg/caret-left-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalPrevious')?>"><?=strtolower($responseData->getLocalValue('globalPrevious'))?></a>
-            <a href="#" class="image-next-action" data-direction="DESC"><?=strtolower($responseData->getLocalValue('globalNext'))?><img src="/img/svg/caret-right-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalNext')?>"></a>
+            <a href="#" class="image-previous-action hidden" data-direction="ASC"><img src="/img/svg/caret-left-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalNext')?>"><?=strtolower($responseData->getLocalValue('globalNext'))?></a>
+            <a href="#" class="image-next-action" data-direction="DESC"><?=strtolower($responseData->getLocalValue('globalPrevious'))?><img src="/img/svg/caret-right-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalPrevious')?>"></a>
           </div>
         </div>
       </div>
