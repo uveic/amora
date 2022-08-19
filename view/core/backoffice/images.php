@@ -42,5 +42,11 @@ $count = 0;
         </a>
 <?php } ?>
       </div>
+<?php if ($count) { ?>
+      <a href="#" class="image-load-more">
+        <img src="/img/svg/plus.svg" class="img-svg m-r-05 img-svg-30" title="<?=$responseData->getLocalValue('globalMore')?>" alt="<?=$responseData->getLocalValue('globalMore')?>">
+        <span><?=$responseData->getLocalValue('globalMore')?></span>
+      </a>
+<?php } ?>
     </div>
   </main>

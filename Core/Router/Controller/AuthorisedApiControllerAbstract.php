@@ -72,6 +72,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
      * @param int $id
      * @param string|null $direction
      * @param int|null $qty
+     * @param int|null $typeId
      * @param Request $request
      * @return Response
      */
@@ -79,6 +80,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
         int $id,
         ?string $direction,
         ?int $qty,
+        ?int $typeId,
         Request $request
     ): Response;
 
@@ -284,6 +286,12 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
         } else {
             $qty = null;
         }
+
+        if (isset($queryParams['typeId']) && strlen($queryParams['typeId']) > 0) {
+            $typeId = intval($queryParams['typeId']);
+        } else {
+            $typeId = null;
+        }
         if ($errors) {
             return Response::createBadRequestResponse(
                 [
@@ -299,6 +307,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
                 $id,
                 $direction,
                 $qty,
+                $typeId,
                 $request
             );
         } catch (Throwable $t) {
