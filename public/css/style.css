@@ -924,7 +924,7 @@ svg,
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(0,0,0,.85);
+  background-color: rgba(0,0,0,.95);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -933,19 +933,18 @@ svg,
 
 .modal-inner {
   position: relative;
-  margin: 3% 4%;
+  margin: 0 auto;
   padding: 0;
-  max-height: 94%;
+  max-height: 96%;
   min-height: 200px;
-  max-width: 92%;
-  min-width: 60%;
+  max-width: 96%;
   background-color: var(--main-bg-color);
   overflow: auto;
 }
 
 .modal-close-button {
   position: absolute;
-  padding: 1rem;
+  padding: 0.75rem;
   font-size: 1.2rem;
   line-height: 1;
   top: 0;

@@ -22,7 +22,10 @@ $count = 0;
           </div>
           <div id="upload-images-control">
             <input class="null" type="file" id="images" name="images" multiple="" accept="image/*">
-            <label for="images" class="input-file-label"><span class="m-r-05"><svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="#212529" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><rect x="32" y="48" width="192" height="160" rx="8" stroke-width="16" stroke="#212529" stroke-linecap="round" stroke-linejoin="round" fill="none"></rect><path d="M32,167.99982l50.343-50.343a8,8,0,0,1,11.31371,0l44.68629,44.6863a8,8,0,0,0,11.31371,0l20.68629-20.6863a8,8,0,0,1,11.31371,0L223.99982,184" fill="none" stroke="#212529" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><circle cx="156" cy="100" r="12"></circle></svg></span><?=$responseData->getLocalValue('globalUploadImage')?></label>
+            <label for="images" class="input-file-label">
+              <img class="img-svg img-svg-25 m-r-05" width="20" height="20" src="/img/svg/image-black.svg" alt="<?=$responseData->getLocalValue('navAdminImages')?>'">
+              <span><?=$responseData->getLocalValue('globalUploadImage')?></span>
+            </label>
           </div>
         </div>
       </div>

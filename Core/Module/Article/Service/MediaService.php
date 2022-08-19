@@ -39,6 +39,7 @@ class MediaService
         array $userIds = [],
         array $typeIds = [],
         array $statusIds = [],
+        ?int $fromId = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->mediaDataLayer->filterMediaBy(
@@ -46,6 +47,7 @@ class MediaService
             userIds: $userIds,
             typeIds: $typeIds,
             statusIds: $statusIds,
+            fromId: $fromId,
             queryOptions: $queryOptions,
         );
     }

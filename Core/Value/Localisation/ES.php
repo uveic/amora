@@ -122,6 +122,7 @@ return [
     'globalUser' => 'Ususario/a',
     'globalUserAccount' => 'Cuenta de usuario/a',
     'globalUserAccountSettings' => 'Configuración de cuenta de usuario/a',
+    'globalPrevious' => 'Anterior',
     'globalNext' => 'Siguiente',
     'globalNoTitle' => 'Sin título',
     'globalComingSoon' => 'Próximamente...',
