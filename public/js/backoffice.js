@@ -261,8 +261,22 @@ const displayImage = (image) => {
   imageContainer.title = alt;
   imageContainer.dataset.imageId = image.id;
 
-  modal.querySelector('.image-title').textContent = image.caption ?? ('#' + image.id);
-  modal.querySelector('.image-caption').textContent = image.name;
+  // Hide/display image nav buttons
+  const firstImageEl = document.querySelector('#images-list .image-item');
+  const firstImageId = firstImageEl ? Number.parseInt(firstImageEl.dataset.imageId) : null;
+  const lastImageEl = document.querySelector('#images-list .image-item:last-child');
+  const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.imageId) : null;
+  firstImageId !== image.id
+    ? document.querySelectorAll('.image-previous-action').forEach(i => i.classList.remove('hidden'))
+    : document.querySelectorAll('.image-previous-action').forEach(i => i.classList.add('hidden'));
+
+  lastImageId !== image.id
+    ? document.querySelectorAll('.image-next-action').forEach(i => i.classList.remove('hidden'))
+    : document.querySelectorAll('.image-next-action').forEach(i => i.classList.add('hidden'));
+
+  modal.querySelector('.image-title').textContent = '#' + image.id;
+  modal.querySelector('.image-caption').textContent = image.caption;
+  modal.querySelector('.image-uri').textContent = image.uri;
   const createdAt = new Date(image.createdAt);
   modal.querySelector('.image-meta').textContent = global.get('globalUploadedOn') + ' '
     + global.formatDate(createdAt, true, true, true, true, true)
@@ -301,7 +315,7 @@ document.querySelectorAll('.image-item').forEach(im => {
   im.addEventListener('click', e => displayImagePopup(e, im.dataset.imageId));
 });
 
-document.querySelectorAll('.image-next-action').forEach(ina => {
+document.querySelectorAll('.image-next-action, .image-previous-action').forEach(ina => {
   ina.addEventListener('click', e => {
     const imageId = document.querySelector('.image-wrapper .image-main img').dataset.imageId;
     const direction = ina.dataset.direction;
@@ -357,7 +371,7 @@ document.querySelectorAll('input#images').forEach(im => {
             newImageContainer.addEventListener('click', e => displayImagePopup(e, response.file.id));
           }
         },
-        () => {}
+        () => container.removeChild(newImageContainer),
       );
     }
   });
@@ -693,4 +707,34 @@ document.querySelectorAll('#filter-article-button').forEach(a => {
 
     window.location.href = window.location.origin + window.location.pathname + queryString;
   });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+    document.querySelectorAll('.modal-wrapper').forEach(m => {
+      if (!m.classList.contains('null')) {
+        const button = m.querySelector('a.image-next-action');
+        if (button && !button.classList.contains('hidden')) {
+          e.preventDefault();
+          button.click();
+        }
+      }
+    });
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    document.querySelectorAll('.modal-wrapper').forEach(m => {
+      if (!m.classList.contains('null')) {
+        const button = m.querySelector('a.image-previous-action');
+        if (button && !button.classList.contains('hidden')) {
+          e.preventDefault();
+          button.click();
+        }
+      }
+    });
+  } else if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-wrapper').forEach(m => {
+      if (!m.classList.contains('null')) {
+        m.querySelector('a.modal-close-button').click();
+      }
+    });
+  }
 });
