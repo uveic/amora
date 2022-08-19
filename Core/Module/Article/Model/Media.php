@@ -64,9 +64,13 @@ class Media
     {
         return [
             'id' => $this->id,
-            'uri' => $this->getUriWithNameMedium(),
+            'uri' => $this->type === MediaType::Image
+                ? $this->getUriWithNameMedium()
+                : $this->getUriWithNameOriginal(),
             'caption' => $this->caption,
-            'name' => $this->filenameMedium,
+            'name' => $this->type === MediaType::Image
+                ? $this->filenameMedium
+                : $this->filenameOriginal,
             'createdAt' => $this->createdAt->format('c'),
             'userId' => $this->user?->id,
             'userName' => $this->user?->getNameOrEmail(),

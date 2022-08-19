@@ -3,7 +3,7 @@ import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
 import {global} from "./module/localisation.js";
 import {classes as pexegoClasses} from "./module/pexego.js";
-import {uploadImage} from "./module/uploader.js";
+import {uploadFile, uploadImage} from "./module/uploader.js";
 
 let globalTags = [];
 
@@ -379,6 +379,63 @@ document.querySelectorAll('input#images').forEach(im => {
   });
 });
 
+document.querySelectorAll('input#media').forEach(im => {
+  im.addEventListener('change', e => {
+    e.preventDefault();
+
+    const container = document.querySelector('#media-container');
+
+    for (let i = 0; i < im.files.length; i++) {
+      let file = im.files[i];
+
+      let newMediaContainer = document.createElement('a');
+      newMediaContainer.href = '#';
+      newMediaContainer.className = 'media-item';
+      newMediaContainer.target = '_blank';
+      container.insertBefore(newMediaContainer, container.firstChild);
+
+      // <a href="/uploads/certificadoDS-202208192111569tw6bcNOUMyV5Jfu.pdf" target="_blank"
+      //    className="media-item" data-media-id="120">
+      //   <span className="media-id">#120</span>
+      //   <img src="/img/svg/file-pdf.svg" className="img-svg img-svg-40 m-r-05" alt="PDF"> <span
+      //     className="media-name">certificadoDS.pdf</span>
+      //     <span className="media-info">Subido por Victor o venres, 19 de agosto de 2022 ás 21:11.</span>
+      // </a>
+
+      uploadFile(
+        file,
+        newMediaContainer,
+        '',
+        feedbackDiv,
+        (response) => {
+          if (response && response.file.id) {
+            newMediaContainer.dataset.mediaId = response.file.id;
+            newMediaContainer.href = response.file.uri;
+
+            const mediaId = document.createElement('span');
+            mediaId.textContent = '#' + response.file.id;
+            mediaId.className = 'media-id';
+            const mediaName = document.createElement('span');
+            mediaName.textContent = response.file.caption;
+            mediaName.className = 'media-name';
+            const mediaInfo = document.createElement('span');
+            mediaInfo.className = 'media-info';
+            mediaInfo.textContent = global.get('globalUploadedOn') + ' '
+              + global.formatDate(new Date(response.file.createdAt), true, true, true, true, true)
+              + ' ' + global.get('globalBy') + ' ' + response.file.userName + '.';
+
+            newMediaContainer.appendChild(mediaId);
+            newMediaContainer.innerHTML += '<img src="/img/svg/file-pdf.svg" class="img-svg img-svg-40 m-r-05" alt="PDF">';
+            newMediaContainer.appendChild(mediaName);
+            newMediaContainer.appendChild(mediaInfo);
+          }
+        },
+        () => container.removeChild(newMediaContainer),
+      );
+    }
+  });
+});
+
 document.querySelectorAll('form#form-user-creation').forEach(f => {
   f.addEventListener('submit', e => {
     e.preventDefault();
@@ -741,7 +798,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-document.querySelectorAll('.image-load-more').forEach(lm => {
+document.querySelectorAll('.media-load-more').forEach(lm => {
   lm.addEventListener('click', e => {
     e.preventDefault();
 
@@ -749,8 +806,8 @@ document.querySelectorAll('.image-load-more').forEach(lm => {
     const lastImageEl = document.querySelector('#images-list .image-item:last-child');
     const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.imageId) : null;
     const qty = 25;
-    const typeId = 2; // See MediaType.php
-    const dir = 'DESC'; // See QueryOrderDirection.php
+    const typeId = lm.dataset.typeId ? Number.parseInt(lm.dataset.typeId) : '';
+    const dir = lm.dataset.direccion ?? '';
 
     xhr.get('/api/file/' + lastImageId + '/next?direction=' + dir + '&typeId=' + typeId + '&qty=' + qty)
       .then(response => {

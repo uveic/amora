@@ -16,6 +16,7 @@ class UrlBuilderUtil
     const BACKOFFICE_NEW_USER = '/backoffice/users/new';
 
     const BACKOFFICE_IMAGES = '/backoffice/images';
+    const BACKOFFICE_MEDIA = '/backoffice/media';
 
     const BACKOFFICE_ARTICLES = '/backoffice/articles';
     const BACKOFFICE_ARTICLE = '/backoffice/articles/%d';
@@ -79,6 +80,11 @@ class UrlBuilderUtil
     public static function buildBackofficeImagesUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::BACKOFFICE_IMAGES;
+    }
+
+    public static function buildBackofficeMediaUrl(Language $language): string
+    {
+        return self::buildBaseUrl($language) . self::BACKOFFICE_MEDIA;
     }
 
     public static function buildBackofficeArticlesUrl(
