@@ -8,6 +8,7 @@ use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Value\MediaStatus;
+use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Service\MediaService;
@@ -159,13 +160,15 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      * @param int $id
      * @param string|null $direction
      * @param int|null $qty
-     * @param Request $request
+     * @param int|null $typeId
+     * @param \Amora\Core\Model\Request $request
      * @return Response
      */
     protected function getNextFile(
         int $id,
         ?string $direction,
         ?int $qty,
+        ?int $typeId,
         Request $request
     ): Response {
         $direction = isset($direction) ? strtoupper(trim($direction)) : QueryOrderDirection::DESC->value;
@@ -174,8 +177,12 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             : QueryOrderDirection::DESC;
 
         $qty = $qty ?? 10;
+        $typeIds = isset($typeId) && MediaType::tryFrom($typeId)
+            ? [MediaType::from($typeId)->value]
+            : [];
 
         $files = $this->mediaService->filterMediaBy(
+            typeIds: $typeIds,
             statusIds: [MediaStatus::Active->value],
             fromId: $id,
             queryOptions: new QueryOptions(

@@ -428,6 +428,13 @@
             "description": "Number of items",
             "required": false,
             "type": "integer"
+          },
+          {
+            "name": "typeId",
+            "in": "query",
+            "description": "Media type ID",
+            "required": false,
+            "type": "integer"
           }
         ],
         "responses": {

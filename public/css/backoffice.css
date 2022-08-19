@@ -677,6 +677,20 @@ input.pexego-content-title {
   height: 100%;
 }
 
+.image-load-more,
+.image-load-more:active,
+.image-load-more:hover,
+.image-load-more:visited {
+  display: block;
+  text-align: center;
+  color: var(--main-text-color);
+  width: 100%;
+  font-size: 1.2rem;
+  padding: 1rem;
+  background-color: var(--main-bg-color);
+  margin: 1rem 0;
+}
+
 /* Image upload style ends here */
 
 /* Side nav style starts here */
