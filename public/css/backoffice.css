@@ -547,7 +547,7 @@ input.pexego-content-title {
 #images-list > .image-item {
   width: 24%;
   min-width: 150px;
-  max-width: 350px;
+  max-width: 500px;
   height: auto;
   min-height: 50px;
   flex-grow: 1;
@@ -600,15 +600,14 @@ input.pexego-content-title {
 
 .image-wrapper {
   display: flex;
-  flex-flow: row nowrap;
-  gap: 1rem;
+  flex-flow: row wrap;
   background-color: var(--main-text-color);
   color: var(--main-bg-color);
   min-height: 250px;
 }
 
 .image-wrapper > .image-main {
-  width: 75%;
+  width: auto;
   min-width: 300px;
   flex-grow: 1;
   flex-shrink: 1;
@@ -622,9 +621,8 @@ input.pexego-content-title {
 }
 
 .image-wrapper > .image-info {
-  width: 25%;
-  min-width: 200px;
-  flex-grow: 0;
+  min-width: 250px;
+  flex-grow: 1;
   flex-shrink: 1;
   background-color: transparent;
   padding: 1rem;
@@ -633,11 +631,27 @@ input.pexego-content-title {
   justify-content: space-between;
 }
 
-.image-wrapper > .image-info .next {
+.image-wrapper .image-next-wrapper {
   display: flex;
   flex-flow: row wrap;
   gap: 2rem;
   justify-content: space-between;
+}
+
+.image-wrapper .image-next-action {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
+  align-items: center;
+  color: var(--main-bg-color);
+}
+
+.image-wrapper .image-delete {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-failure);
 }
 
 /* Image upload style ends here */

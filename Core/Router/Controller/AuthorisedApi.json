@@ -53,9 +53,9 @@
                       "type": "integer",
                       "description": "File ID"
                     },
-                    "path": {
+                    "url": {
                       "type": "string",
-                      "description": "File path"
+                      "description": "File URL"
                     },
                     "caption": {
                       "type": "string",
@@ -335,6 +335,147 @@
                     true,
                     false
                   ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorised",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "errorMessage": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "errorMessage"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/api/file/{id}/next": {
+      "get": {
+        "tags": [],
+        "summary": "Get next or previous batch of files",
+        "description": "Get next or previous batch of files",
+        "operationId": "getNextFile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "File ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Valid values: ASC | DESC",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "qty",
+            "in": "query",
+            "description": "Number of items",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File info",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success",
+                "files"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "File ID"
+                      },
+                      "url": {
+                        "type": "string",
+                        "description": "File URL"
+                      },
+                      "caption": {
+                        "type": "string",
+                        "description": "File caption"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "File name"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "url",
+                      "caption",
+                      "name"
+                    ]
+                  }
                 },
                 "errorMessage": {
                   "type": "string",

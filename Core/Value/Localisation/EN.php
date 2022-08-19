@@ -122,6 +122,7 @@ return [
     'globalUser' => 'User',
     'globalUserAccount' => 'User Account',
     'globalUserAccountSettings' => 'User Account Settings',
+    'globalPrevious' => 'Previous',
     'globalNext' => 'Next',
     'globalNoTitle' => 'No Title',
     'globalComingSoon' => 'Coming soon...',

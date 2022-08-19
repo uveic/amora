@@ -9,6 +9,7 @@ use Amora\Core\Module\User\Datalayer\UserDataLayer;
 use Amora\Core\Util\Logger;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\DataLayerTrait;
+use Amora\Core\Value\QueryOrderDirection;
 
 class MediaDataLayer
 {
@@ -33,6 +34,7 @@ class MediaDataLayer
         array $userIds = [],
         array $typeIds = [],
         array $statusIds = [],
+        ?int $fromId = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -91,6 +93,14 @@ class MediaDataLayer
 
         if ($statusIds) {
             $where .= $this->generateWhereSqlCodeForIds($params, $statusIds, 'm.status_id', 'statusId');
+        }
+
+        if (isset($fromId)) {
+            $direction = isset($queryOptions->orderBy[0])
+                ? ($queryOptions->orderBy[0]->direction === QueryOrderDirection::ASC ? '>' : '<')
+                : '>';
+            $where .= ' AND m.id ' . $direction . ' :fromId';
+            $params[':fromId'] = $fromId;
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);

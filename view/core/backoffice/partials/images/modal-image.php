@@ -19,14 +19,17 @@ use Amora\Core\Model\Response\HtmlResponseDataAbstract;
         </div>
         <div class="image-info">
           <div>
-            <h1 class="m-t-0 m-r-2 image-title">Title</h1>
-            <p class="image-caption">Caption</p>
+            <h2 class="m-t-0 m-r-2 image-title"></h2>
+            <p class="image-caption" style="word-wrap: anywhere;"></p>
             <p class="image-meta"></p>
-            <a href="#" class="image-delete">Delete</a>
+            <a href="#" class="image-delete">
+              <img src="/img/svg/trash-red.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalRemove')?>">
+              <?=$responseData->getLocalValue('globalRemove')?>
+            </a>
           </div>
-          <div class="next">
-            <a href="#">Previous</a>
-            <a href="#">Next</a>
+          <div class="image-next-wrapper m-t-2">
+            <a href="#" class="image-next-action" data-direction="ASC"><img src="/img/svg/caret-left-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalPrevious')?>"><?=strtolower($responseData->getLocalValue('globalPrevious'))?></a>
+            <a href="#" class="image-next-action" data-direction="DESC"><?=strtolower($responseData->getLocalValue('globalNext'))?><img src="/img/svg/caret-right-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalNext')?>"></a>
           </div>
         </div>
       </div>

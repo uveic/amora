@@ -235,10 +235,47 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   });
 });
 
-const displayImagePopup = (e, imageContainerEl) => {
+const displayImage = (image) => {
+  const modal = document.querySelector('.image-modal');
+  const loadingContainer = modal.querySelector('.image-modal-loading');
+  const content = modal.querySelector('.image-wrapper');
+  const modalClose = modal.querySelector('.modal-close-button');
+  let imageContainer = modal.querySelector('.image-main img');
+
+  if (!imageContainer) {
+    imageContainer = new Image();
+    modal.querySelector('.image-main').appendChild(imageContainer);
+  }
+
+  if (!image) {
+    loadingContainer.classList.add('null');
+    content.classList.remove('null');
+    modalClose.classList.remove('null');
+
+    return;
+  }
+
+  const alt = image.caption ?? image.name;
+  imageContainer.src = image.uri;
+  imageContainer.alt = alt;
+  imageContainer.title = alt;
+  imageContainer.dataset.imageId = image.id;
+
+  modal.querySelector('.image-title').textContent = image.caption ?? ('#' + image.id);
+  modal.querySelector('.image-caption').textContent = image.name;
+  const createdAt = new Date(image.createdAt);
+  modal.querySelector('.image-meta').textContent = global.get('globalUploadedOn') + ' '
+    + global.formatDate(createdAt, true, true, true, true, true)
+    + ' ' + global.get('globalBy') + ' ' + image.userName + '.';
+
+  loadingContainer.classList.add('null');
+  content.classList.remove('null');
+  modalClose.classList.remove('null');
+};
+
+const displayImagePopup = (e, imageId, next = false, direction = null) => {
   e.preventDefault();
 
-  const imageId = imageContainerEl.dataset.imageId;
   const modal = document.querySelector('.image-modal');
   const loadingContainer = modal.querySelector('.image-modal-loading');
   const content = modal.querySelector('.image-wrapper');
@@ -249,36 +286,28 @@ const displayImagePopup = (e, imageContainerEl) => {
   content.classList.add('null');
   modalClose.classList.add('null');
 
-  xhr.get('/api/file/' + imageId)
+  const apiUrl = next
+    ? '/api/file/' + imageId + '/next?direction=' + direction
+    : '/api/file/' + imageId
+  xhr.get(apiUrl)
     .then(response => {
-      let popupImage = modal.querySelector('.image-main img');
-
-      if (!popupImage) {
-        popupImage = new Image();
-        modal.querySelector('.image-main').appendChild(popupImage);
-      }
-
-      const title = response.file.caption ?? response.file.name;
-      popupImage.src = response.file.uri;
-      popupImage.alt = title;
-      popupImage.title = title;
-      popupImage.dataset.imageId = imageId;
-
-      modal.querySelector('.image-title').textContent = response.file.caption ?? 'Image';
-      modal.querySelector('.image-caption').textContent = response.file.name;
-      const createdAt = new Date(response.file.createdAt);
-      modal.querySelector('.image-meta').textContent = global.get('globalUploadedOn') + ' '
-        + global.formatDate(createdAt, true, true, true, true, true)
-        + ' ' + global.get('globalBy') + ' ' + response.file.userName;
-
-      loadingContainer.classList.add('null');
-      content.classList.remove('null');
-      modalClose.classList.remove('null');
+      next === true
+        ? displayImage(response.files[0] ?? null)
+        : displayImage(response.file ?? null);
     });
 };
 
 document.querySelectorAll('.image-item').forEach(im => {
-  im.addEventListener('click', e => displayImagePopup(e, im));
+  im.addEventListener('click', e => displayImagePopup(e, im.dataset.imageId));
+});
+
+document.querySelectorAll('.image-next-action').forEach(ina => {
+  ina.addEventListener('click', e => {
+    const imageId = document.querySelector('.image-wrapper .image-main img').dataset.imageId;
+    const direction = ina.dataset.direction;
+
+    displayImagePopup(e, imageId, true, direction);
+  });
 });
 
 const deleteImage = async function (e, imageId) {
@@ -315,7 +344,7 @@ document.querySelectorAll('input#images').forEach(im => {
       let newImageContainer = document.createElement('a');
       newImageContainer.href = '#';
       newImageContainer.className = 'image-item';
-      container.appendChild(newImageContainer);
+      container.insertBefore(newImageContainer, container.firstChild);
 
       uploadImage(
         file,
@@ -323,9 +352,9 @@ document.querySelectorAll('input#images').forEach(im => {
         '',
         feedbackDiv,
         (response) => {
-          if (response && response.id) {
-            newImageContainer.dataset.imageId = response.id;
-            newImageContainer.addEventListener('click', e => displayImagePopup(e, newImageContainer));
+          if (response && response.file.id) {
+            newImageContainer.dataset.imageId = response.file.id;
+            newImageContainer.addEventListener('click', e => displayImagePopup(e, response.file.id));
           }
         },
         () => {}

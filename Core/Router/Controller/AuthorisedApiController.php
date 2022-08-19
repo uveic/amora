@@ -2,18 +2,23 @@
 
 namespace Amora\Core\Router;
 
+use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\ArticleService;
+use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\QueryOrderDirection;
 use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
     AuthorisedApiControllerDestroyFileUnauthorisedResponse,
     AuthorisedApiControllerGetFileSuccessResponse,
+    AuthorisedApiControllerGetNextFileSuccessResponse,
     AuthorisedApiControllerSendVerificationEmailFailureResponse,
     AuthorisedApiControllerSendVerificationEmailSuccessResponse,
     AuthorisedApiControllerStoreFileSuccessResponse,
@@ -145,6 +150,50 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
         $res = $this->mediaService->deleteFile($file);
         return new AuthorisedApiControllerDestroyFileSuccessResponse($res);
+    }
+
+    /**
+     * Endpoint: /api/file/{id}/next
+     * Method: GET
+     *
+     * @param int $id
+     * @param string|null $direction
+     * @param int|null $qty
+     * @param Request $request
+     * @return Response
+     */
+    protected function getNextFile(
+        int $id,
+        ?string $direction,
+        ?int $qty,
+        Request $request
+    ): Response {
+        $direction = isset($direction) ? strtoupper(trim($direction)) : QueryOrderDirection::DESC->value;
+        $direction = QueryOrderDirection::tryFrom($direction)
+            ? QueryOrderDirection::from($direction)
+            : QueryOrderDirection::DESC;
+
+        $qty = $qty ?? 10;
+
+        $files = $this->mediaService->filterMediaBy(
+            statusIds: [MediaStatus::Active->value],
+            fromId: $id,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('id', $direction)],
+                pagination: new Response\Pagination(itemsPerPage: $qty),
+            ),
+        );
+
+        $output = [];
+        /** @var Media $file */
+        foreach ($files as $file) {
+            $output[] = $file->buildPublicDataArray();
+        }
+
+        return new AuthorisedApiControllerGetNextFileSuccessResponse(
+            success: true,
+            files: $output,
+        );
     }
 
     /**
