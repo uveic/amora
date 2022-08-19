@@ -290,7 +290,35 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             responseData: new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminImages'),
-                images: $images
+                files: $images
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/media
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getMediaPage(Request $request): Response
+    {
+        $files = $this->mediaService->filterMediaBy(
+            typeIds: [MediaType::PDF->value, MediaType::Unknown->value],
+            statusIds: [MediaStatus::Active->value],
+            queryOptions: new QueryOptions(
+                pagination: new Response\Pagination(itemsPerPage: 50),
+            ),
+        );
+
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/media',
+            responseData: new HtmlResponseDataAuthorised(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navAdminMedia'),
+                files: $files
             ),
         );
     }

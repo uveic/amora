@@ -17,6 +17,7 @@ return [
     'navAdminUsers' => 'Users',
     'navAdminContent' => 'Content',
     'navAdminImages' => 'Images',
+    'navAdminMedia' => 'Files',
     'navAdminArticles' => 'Pages',
     'navAdminBlogPosts' => 'Blog Posts',
     'navAdminPartialContent' => 'Partial Content',
@@ -132,6 +133,7 @@ return [
     'globalMore' => 'More...',
 
     'globalUploadImage' => 'Upload image(s)',
+    'globalUploadMedia' => 'Upload file(s)',
     'globalAddImage' => 'Add image(s)',
     'globalAddParagraph' => 'Add text',
     'globalAddTextTitle' => 'Add title',
@@ -160,6 +162,8 @@ return [
     'formFilterButton' => 'Filter',
     'formFilterClean' => 'Reset filter',
     'formFilterArticleTypeTitle' => 'Type',
+
+    'mediaUploadedBy' => 'Uploaded by %s on %s',
 
     'userRoleAdmin' => 'Admin',
     'userRoleUser' => 'User',

@@ -191,6 +191,23 @@
           }
         }
       }
+    },
+    "/backoffice/media": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the media page",
+        "description": "",
+        "operationId": "getMediaPage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

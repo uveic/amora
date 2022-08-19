@@ -7,6 +7,7 @@ use Amora\Core\Module\Article\Value\MediaType;
 class RawFile
 {
     public function __construct(
+        public readonly string $originalName,
         public readonly string $name,
         public readonly string $path,
         public readonly string $extension,

@@ -14,7 +14,7 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         ?array $articles = [],
         ?Pagination $pagination = null,
         public readonly ?array $listOfUsers = [],
-        public readonly ?array $images = [],
+        public readonly ?array $files = [],
         public readonly ?array $articleSections = [],
     ) {
         parent::__construct(

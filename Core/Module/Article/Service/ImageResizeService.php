@@ -5,7 +5,6 @@ namespace Amora\Core\Module\Article\Service;
 use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\MediaStatus;
-use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Model\User;
 use DateTimeImmutable;
 use GdImage;
@@ -38,14 +37,14 @@ class ImageResizeService
 
         return new Media(
             id: null,
-            type: MediaType::Image,
+            type: $rawFile->mediaType,
             status: MediaStatus::Active,
             user: $user,
             path: $extraImagePath,
             filenameOriginal: $rawFile->name,
             filenameLarge: $imageLarge->name,
             filenameMedium: $imageMedium->name,
-            caption: null,
+            caption: $rawFile->originalName,
             createdAt: $now,
             updatedAt: $now,
         );
@@ -109,6 +108,7 @@ class ImageResizeService
         }
 
         return new RawFile(
+            originalName: $newFilename,
             name: $newFilename,
             path: $image->path,
             extension: $image->extension,

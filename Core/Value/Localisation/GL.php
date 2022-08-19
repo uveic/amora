@@ -17,6 +17,7 @@ return [
     'navAdminUsers' => 'Usuarios',
     'navAdminContent' => 'Contido',
     'navAdminImages' => 'Imaxes',
+    'navAdminMedia' => 'Arquivos',
     'navAdminArticles' => 'Páxinas',
     'navAdminBlogPosts' => 'Entradas blog',
     'navAdminPartialContent' => 'Contido',
@@ -132,6 +133,7 @@ return [
     'globalMore' => 'Máis...',
 
     'globalUploadImage' => 'Subir imaxe(s)',
+    'globalUploadMedia' => 'Subir arquivo(s)',
     'globalAddImage' => 'Engadir imaxe(s)',
     'globalAddParagraph' => 'Engadir párrafo',
     'globalAddTextTitle' => 'Engadir título',
@@ -160,6 +162,8 @@ return [
     'formFilterButton' => 'Filtrar',
     'formFilterClean' => 'Restaurar filtro',
     'formFilterArticleTypeTitle' => 'Tipo',
+
+    'mediaUploadedBy' => 'Subido por %s o %s',
 
     'userRoleAdmin' => 'Administrador/a',
     'userRoleUser' => 'Usuario/a',

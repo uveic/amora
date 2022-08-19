@@ -159,14 +159,14 @@ class MediaService
         $now = new DateTimeImmutable();
         return new Media(
             id: null,
-            type: MediaType::Image,
+            type: $rawFile->mediaType,
             status: MediaStatus::Active,
             user: $user,
             path: null,
             filenameOriginal: $rawFile->name,
             filenameLarge: null,
             filenameMedium: null,
-            caption: $rawFile->name,
+            caption: $rawFile->originalName,
             createdAt: $now,
             updatedAt: $now,
         );
@@ -195,8 +195,14 @@ class MediaService
             return null;
         }
 
-        $extension = $this->getFileExtension($rawFiles['files']['name'][0]);
-        $newName = $this->generateFilename($extension);
+        $mediaType = MediaType::getTypeFromRawFileType($rawFiles['files']['type'][0]);
+
+        $rawName = $rawFiles['files']['name'][0];
+        $extension = $this->getFileExtension($rawName);
+        $rawNameWithoutExtension = trim(str_replace($extension, '', $rawName), '. ');
+        $newName = $mediaType === MediaType::Image
+            ? $this->generateFilename($extension)
+            : StringUtil::cleanString($rawNameWithoutExtension) . '-' . $this->generateFilename($extension);
         $newPath = rtrim($this->mediaBaseDir, ' /') . '/';
         $targetPath = $newPath . $newName;
 
@@ -214,10 +220,11 @@ class MediaService
         }
 
         return new RawFile(
+            originalName: $rawName,
             name: $newName,
             path: $newPath,
             extension: $extension,
-            mediaType: MediaType::getTypeFromRawFileType($rawFiles['files']['type'][0]),
+            mediaType: $mediaType,
             sizeBytes: (int)$rawFiles['files']['size'][0],
             error: $rawFiles['files']['error'][0],
         );
