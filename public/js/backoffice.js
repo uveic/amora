@@ -394,14 +394,6 @@ document.querySelectorAll('input#media').forEach(im => {
       newMediaContainer.target = '_blank';
       container.insertBefore(newMediaContainer, container.firstChild);
 
-      // <a href="/uploads/certificadoDS-202208192111569tw6bcNOUMyV5Jfu.pdf" target="_blank"
-      //    className="media-item" data-media-id="120">
-      //   <span className="media-id">#120</span>
-      //   <img src="/img/svg/file-pdf.svg" className="img-svg img-svg-40 m-r-05" alt="PDF"> <span
-      //     className="media-name">certificadoDS.pdf</span>
-      //     <span className="media-info">Subido por Victor o venres, 19 de agosto de 2022 ás 21:11.</span>
-      // </a>
-
       uploadFile(
         file,
         newMediaContainer,
