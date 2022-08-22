@@ -276,11 +276,14 @@ const displayImage = (image, appearsOn) => {
 
   modal.querySelector('.image-title').textContent = '#' + image.id;
   modal.querySelector('.image-caption').textContent = image.caption;
-  modal.querySelector('.image-uri').textContent = image.uri;
-  const createdAt = new Date(image.createdAt);
-  modal.querySelector('.image-meta').textContent = global.get('globalUploadedOn') + ' '
-    + global.formatDate(createdAt, true, true, true, true, true)
-    + ' ' + global.get('globalBy') + ' ' + image.userName + '.';
+  modal.querySelector('.image-meta').innerHTML =
+    '<span><img src="/img/svg/upload-simple-white.svg" class="img-svg m-r-05">'
+    + global.formatDate(new Date(image.createdAt), true, true, true, true, true)
+    + '</span><span>'
+    + '<img src="/img/svg/user-white.svg" class="img-svg m-r-05">' + image.userName
+    + '</span><span class="image-uri">'
+    + '<img src="/img/svg/link-white.svg" class="img-svg m-r-05">' + image.uri
+    + '</span>';
 
   const appearsOnContainer = modal.querySelector('.image-appears-on');
   appearsOnContainer.innerHTML = '';

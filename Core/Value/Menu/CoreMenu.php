@@ -38,12 +38,12 @@ final class CoreMenu
                     new MenuItem(
                         uri: UrlBuilderUtil::buildBackofficeArticlesUrl($language, ArticleType::Page),
                         text: $localisationUtil->getValue('navAdminArticles'),
-                        icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/note-pencil-white.svg" alt="' . $localisationUtil->getValue('navAdminArticles') . '">',
+                        icon: ArticleType::getIcon(item: ArticleType::Page, class: 'm-r-05', white: true, alt: $localisationUtil->getValue('navAdminArticles')),
                     ),
                     new MenuItem(
                         uri: UrlBuilderUtil::buildBackofficeArticlesUrl($language, ArticleType::Blog),
                         text: $localisationUtil->getValue('navAdminBlogPosts'),
-                        icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/article-medium-white.svg" alt="' . $localisationUtil->getValue('navAdminBlogPosts') . '">',
+                        icon: ArticleType::getIcon(item: ArticleType::Blog, class: 'm-r-05', white: true, alt: $localisationUtil->getValue('navAdminBlogPosts')),
                     ),
                     new MenuItem(
                         uri: UrlBuilderUtil::buildBackofficeUsersUrl($language),

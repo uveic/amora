@@ -31,4 +31,19 @@ enum ArticleType: int
             default => false,
         };
     }
+
+    public static function getIcon(
+        self $item,
+        string $class = '',
+        bool $white = false,
+        ?string $alt = null,
+    ): string {
+        $class = $class ? ' ' . $class : '';
+        $white = $white ? '-white' : '';
+        return match($item) {
+            self::Blog => '<img class="img-svg' . $class . '" width="20" height="20" src="/img/svg/article-medium' . $white . '.svg" alt="' . $alt . '">',
+            self::Page => '<img class="img-svg' . $class . '" width="20" height="20" src="/img/svg/note-pencil' . $white . '.svg" alt="' . $alt . '">',
+            default => '',
+        };
+    }
 }
