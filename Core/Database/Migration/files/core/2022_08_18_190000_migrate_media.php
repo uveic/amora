@@ -4,12 +4,21 @@
  */
 
 return "
+    INSERT INTO core_media_type (id, name)
+    VALUES (1, 'PDF'),
+        (2, 'Image'),
+        (3, 'Unknown');
+
+    INSERT INTO core_media_status (id, name)
+    VALUES (1, 'Active'),
+        (2, 'Deleted');
+
     INSERT INTO core_media (id, user_id, type_id, status_id, path, filename_original, filename_large, filename_medium, caption, created_at, updated_at)
     SELECT
         id,
         user_id,
         2 AS type_id,
-        CASE WHEN is_deleted = 1 THEN 2 ELSE 1 END AS status_id,
+        IF(is_deleted = 1, 2, 1) AS status_id,
         NULL as path,
         REPLACE(full_url_original, '/uploads/', '') AS filename_original,
         REPLACE(full_url_large, '/uploads/', '') AS filename_large,
