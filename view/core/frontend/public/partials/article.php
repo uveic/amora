@@ -1,10 +1,9 @@
 <?php
 
-use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlResponseData;
-use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
-use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 
 /** @var HtmlResponseData $responseData */
 $article = $responseData->getFirstArticle();
@@ -17,14 +16,24 @@ $postBottomContent = $article->type === ArticleType::Blog
     ? $responseData->postBottomContent?->contentHtml
     : null;
 
+$icon = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml(
+    article: $article,
+);
 ?>
   <article>
-<?php if ($article->type === ArticleType::Blog) {
-    $this->insert('partials/article/article-blog-info', ['responseData' => $responseData]);
-}
+<?php if ($article->title) {
+        echo '    <h1>' . $icon . $article->title . '</h1>' . PHP_EOL;
+    }
 
-    if ($article->title) {
-        echo '    <h1>' . $article->title . '</h1>' . PHP_EOL;
+    if ($article->type === ArticleType::Blog) {
+        $publishedOnDate = DateUtil::formatDate(
+            date: $article->publishOn ?? $article->updatedAt,
+            lang: $responseData->siteLanguage,
+            includeWeekDay: false,
+            includeTime: false,
+        );
+
+        echo '    <p class="article-blog-info">' . $publishedOnDate . '</p>' . PHP_EOL;
     }
 ?>
 <?=$this->insert('partials/article/article-edit', ['responseData' => $responseData]);?>
@@ -32,4 +41,5 @@ $postBottomContent = $article->type === ArticleType::Blog
 <?php if ($postBottomContent) { ?>
     <div class="article-blog-footer"><?=$postBottomContent?></div>
 <?php } ?>
+
   </article>

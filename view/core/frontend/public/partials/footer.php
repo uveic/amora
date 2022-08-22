@@ -8,8 +8,8 @@ use Amora\Core\Util\UrlBuilderUtil;
 $isAdmin = $responseData->request->session && $responseData->request->session->isAdmin();
 
 ?>
-<footer>
+  <footer>
 <?php if ($isAdmin) { ?>
-  <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
+    <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
 <?php } ?>
-</footer>
+  </footer>
