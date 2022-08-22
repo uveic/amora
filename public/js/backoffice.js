@@ -282,22 +282,24 @@ const displayImage = (image, appearsOn) => {
     + global.formatDate(createdAt, true, true, true, true, true)
     + ' ' + global.get('globalBy') + ' ' + image.userName + '.';
 
-  console.log(appearsOn);
-  if (appearsOn) {
-    const appearsOnContainer = modal.querySelector('.image-appears-on');
+  const appearsOnContainer = modal.querySelector('.image-appears-on');
+  if (appearsOn && appearsOn.length) {
     appearsOn.forEach(ao => {
+      const appearsTitle = document.createElement('h3');
+      appearsTitle.textContent = global.get('globalAppearsOn') + ':';
       const appearsLink = document.createElement('a');
       appearsLink.href = ao.uri;
       appearsLink.target = '_blank';
       appearsLink.textContent = ao.title;
       const appearsInfo = document.createElement('span');
-      appearsInfo.textContent = global.formatDate(new Date(ao.publishedOn), true, true, true, true, true)
-        + ' ' + global.get('globalBy') + ' ' + ao.userName;
-      const appearsItem = document.createElement('p');
-      appearsItem.appendChild(appearsLink);
-      appearsItem.appendChild(appearsInfo);
-      appearsOnContainer.appendChild(appearsItem);
+      appearsInfo.innerHTML = '<img src="/img/svg/calendar-white.svg" class="img-svg m-r-025">'
+        + global.formatDate(new Date(ao.publishedOn), false, false, true, false, false);
+      appearsLink.appendChild(appearsInfo);
+      appearsOnContainer.appendChild(appearsTitle);
+      appearsOnContainer.appendChild(appearsLink);
     });
+  } else {
+    appearsOnContainer.innerHTML = '';
   }
 
   loadingContainer.classList.add('null');

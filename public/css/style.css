@@ -950,6 +950,7 @@ svg,
   line-height: 1;
   top: 0;
   right: 0;
+  z-index: 999;
 }
 
 .modal-content {
