@@ -59,7 +59,7 @@ $isEnabled = $userToEdit ? $userToEdit->isEnabled : true;
           </ul>
           <label id="user-status-dd-label" for="user-status-dd-checkbox" class="dropdown-menu-label <?=$isEnabled ? 'feedback-success' : 'background-light-color' ?>">
             <span><?=($isEnabled ? $responseData->getLocalValue('globalActivated') : $responseData->getLocalValue('globalDeactivated'))?></span>
-            <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">
+            <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Change">
           </label>
         </div>
       </div>

@@ -434,12 +434,25 @@ input, textarea, select, button, .button {
   min-height: var(--input-height);
 }
 
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("/img/svg/caret-down-grey.svg");
+  background-repeat: no-repeat;
+  background-position-x: 98%;
+  background-position-y: 15px;
+  padding-right: 2rem;
+}
+
+
 .button {
   min-width: 80px;
   cursor: pointer;
   display: inline-block;
   white-space: normal;
   text-align: center;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .button-form {
