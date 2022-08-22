@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Model;
 
+use Amora\Core\Core;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
@@ -70,6 +71,22 @@ class Article
         ];
     }
 
+    public function buildPublicDataArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'languageIsoCode' => $this->language->value,
+            'userId' => $this->user->id,
+            'userName' => $this->user?->getNameOrEmail(),
+            'uri' => $this->getFullUri(),
+            'title' => $this->title,
+            'publishedOn' => $this->publishOn
+                ? $this->publishOn->format('c')
+                : $this->updatedAt->format('c'),
+            'tags' => $this->tags,
+        ];
+    }
+
     public function getContentExcerpt(): string
     {
         $content = StringUtil::stripHtmlTags($this->contentHtml);
@@ -108,5 +125,10 @@ class Article
         }
 
         return true;
+    }
+
+    public function getFullUri(): string
+    {
+        return rtrim(Core::getConfig()->baseUrl, '/ ') . '/' . $this->uri;
     }
 }

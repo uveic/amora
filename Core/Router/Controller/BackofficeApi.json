@@ -513,7 +513,7 @@
                   "type": "integer"
                 },
                 "publishOn": {
-                  "description": "Publish the article on this date. Format:",
+                  "description": "Publish the article on this date. Format: ISO. Example: 2022-01-01T00:25:00+00:00",
                   "type": "string"
                 },
                 "sections": {
@@ -723,7 +723,7 @@
                   "type": "integer"
                 },
                 "publishOn": {
-                  "description": "Publish the article on this date. Format:",
+                  "description": "Publish the article on this date. Format: ISO. Example: 2022-01-01T00:25:00+00:00",
                   "type": "string"
                 },
                 "sections": {

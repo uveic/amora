@@ -7,6 +7,7 @@ use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\ArticleService;
+use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Service\UserMailService;
@@ -14,7 +15,6 @@ use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Model\Request;
 use Amora\Core\Model\Response;
-use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
     AuthorisedApiControllerDestroyFileUnauthorisedResponse,
@@ -105,17 +105,19 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             );
         }
 
+        $statusIds = $request->session->isAdmin()
+            ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
+            : [ArticleStatus::Published->value];
+
         $articles = $this->articleService->filterArticlesBy(
+            statusIds: $statusIds,
             imageIds: [$file->id],
         );
 
         $appearsOn = [];
         /** @var Article $article */
         foreach ($articles as $article) {
-            $appearsOn[] = [
-                'name' => $article->title,
-                'url' => UrlBuilderUtil::buildPublicArticleUrl($article->uri, $request->siteLanguage),
-            ];
+            $appearsOn[] = $article->buildPublicDataArray();
         }
 
         return new AuthorisedApiControllerGetFileSuccessResponse(
@@ -197,9 +199,25 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             $output[] = $file->buildPublicDataArray();
         }
 
+        $statusIds = $request->session->isAdmin()
+            ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
+            : [ArticleStatus::Published->value];
+
+        $articles = $this->articleService->filterArticlesBy(
+            statusIds: $statusIds,
+            imageIds: [$file->id],
+        );
+
+        $appearsOn = [];
+        /** @var Article $article */
+        foreach ($articles as $article) {
+            $appearsOn[] = $article->buildPublicDataArray();
+        }
+
         return new AuthorisedApiControllerGetNextFileSuccessResponse(
             success: true,
             files: $output,
+            appearsOn: $appearsOn,
         );
     }
 
