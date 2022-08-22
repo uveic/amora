@@ -26,6 +26,7 @@ class Global {
       "globalMinutes": "minutes",
       "globalClose": "Close",
       "globalUploadedOn": "Uploaded on",
+      "globalAppearsOn": "Appears on",
       "globalBy": "by",
 
       "feedbackDeleteGeneric": "Are you sure you want to delete it?",
@@ -82,6 +83,7 @@ class Global {
       "globalMinutes": "minutos",
       "globalClose": "Cerrar",
       "globalUploadedOn": "Subida el",
+      "globalAppearsOn": "Aparece en",
       "globalBy": "por",
 
       "feedbackDeleteGeneric": "¿Estás seguro/a de querer borrarlo?",
@@ -138,6 +140,7 @@ class Global {
       "globalMinutes": "minutos",
       "globalClose": "Pechar",
       "globalUploadedOn": "Subida o",
+      "globalAppearsOn": "Aparece en",
       "globalBy": "por",
 
       "feedbackDeleteGeneric": "Estás seguro/a de querer borralo?",
