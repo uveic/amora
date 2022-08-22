@@ -27,17 +27,26 @@ final class MySqlDb
 
     public function fetchAll(string $sql, array $params = []): array
     {
-        $this->connect();
+        try {
+            $this->connect();
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        if (!empty($params)) {
-            $stmt->execute($params);
-        } else {
-            $stmt->execute();
+            $stmt = $this->connection->prepare($sql);
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if (!empty($params)) {
+                $stmt->execute($params);
+            } else {
+                $stmt->execute();
+            }
+
+            return $stmt->fetchAll();
+        } catch (Throwable $t) {
+            $this->logger->logError(
+                'Error fetching data. - Error message: ' . $t->getMessage()
+                . ' - Trace: ' . $t->getTraceAsString()
+            );
+
+            return [];
         }
-
-        return $stmt->fetchAll();
     }
 
     public function fetchOne(string $sql, array $params = [])
@@ -399,6 +408,9 @@ final class MySqlDb
             $this->logger->logInfo(
                 'Error establishing DB connection: ' . $t->getMessage()
             );
+
+            echo 'Error establishing DB connection...';
+            die;
         }
     }
 }

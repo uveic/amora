@@ -20,18 +20,18 @@ class ArticleDataLayer
 {
     use DataLayerTrait;
 
-    const ARTICLE_TABLE = 'article';
-    const ARTICLE_HISTORY_TABLE = 'article_history';
-    const ARTICLE_TYPE_TABLE = 'article_type';
-    const ARTICLE_STATUS_TABLE = 'article_status';
+    const ARTICLE_TABLE = 'core_article';
+    const ARTICLE_HISTORY_TABLE = 'core_article_history';
+    const ARTICLE_TYPE_TABLE = 'core_article_type';
+    const ARTICLE_STATUS_TABLE = 'core_article_status';
 
-    const ARTICLE_SECTION_TABLE = 'article_section';
-    const ARTICLE_SECTION_TYPE_TABLE = 'article_section_type';
-    const ARTICLE_SECTION_IMAGE_TABLE = 'article_section_image';
+    const ARTICLE_SECTION_TABLE = 'core_article_section';
+    const ARTICLE_SECTION_TYPE_TABLE = 'core_article_section_type';
+    const ARTICLE_SECTION_IMAGE_TABLE = 'core_article_section_image';
 
-    const ARTICLE_TAG_RELATION_TABLE = 'article_tag_relation';
+    const ARTICLE_TAG_RELATION_TABLE = 'core_article_tag_relation';
 
-    const ARTICLE_PREVIOUS_URI_TABLE = 'article_previous_uri';
+    const ARTICLE_PREVIOUS_URI_TABLE = 'core_article_previous_uri';
 
     public function __construct(
         private readonly MySqlDb $db,

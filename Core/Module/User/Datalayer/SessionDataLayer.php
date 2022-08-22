@@ -15,7 +15,7 @@ class SessionDataLayer
 {
     use DataLayerTrait;
 
-    const SESSION_TABLE_NAME = 'session';
+    const SESSION_TABLE_NAME = 'core_session';
 
     public function __construct(
         private MySqlDb $db,
