@@ -235,7 +235,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   });
 });
 
-const displayImage = (image) => {
+const displayImage = (image, appearsOn) => {
   const modal = document.querySelector('.image-modal');
   const loadingContainer = modal.querySelector('.image-modal-loading');
   const content = modal.querySelector('.image-wrapper');
@@ -282,6 +282,24 @@ const displayImage = (image) => {
     + global.formatDate(createdAt, true, true, true, true, true)
     + ' ' + global.get('globalBy') + ' ' + image.userName + '.';
 
+  console.log(appearsOn);
+  if (appearsOn) {
+    const appearsOnContainer = modal.querySelector('.image-appears-on');
+    appearsOn.forEach(ao => {
+      const appearsLink = document.createElement('a');
+      appearsLink.href = ao.uri;
+      appearsLink.target = '_blank';
+      appearsLink.textContent = ao.title;
+      const appearsInfo = document.createElement('span');
+      appearsInfo.textContent = global.formatDate(new Date(ao.publishedOn), true, true, true, true, true)
+        + ' ' + global.get('globalBy') + ' ' + ao.userName;
+      const appearsItem = document.createElement('p');
+      appearsItem.appendChild(appearsLink);
+      appearsItem.appendChild(appearsInfo);
+      appearsOnContainer.appendChild(appearsItem);
+    });
+  }
+
   loadingContainer.classList.add('null');
   content.classList.remove('null');
   modalClose.classList.remove('null');
@@ -308,8 +326,8 @@ const displayImagePopup = (e, imageId, next = false, direction = null) => {
   xhr.get(apiUrl)
     .then(response => {
       next === true
-        ? displayImage(response.files[0] ?? null)
-        : displayImage(response.file ?? null);
+        ? displayImage(response.files[0] ?? null, response.appearsOn ?? [])
+        : displayImage(response.file ?? null, response.appearsOn ?? []);
     });
 };
 
