@@ -283,6 +283,7 @@ const displayImage = (image, appearsOn) => {
     + ' ' + global.get('globalBy') + ' ' + image.userName + '.';
 
   const appearsOnContainer = modal.querySelector('.image-appears-on');
+  appearsOnContainer.innerHTML = '';
   if (appearsOn && appearsOn.length) {
     appearsOn.forEach(ao => {
       const appearsTitle = document.createElement('h3');
@@ -298,8 +299,6 @@ const displayImage = (image, appearsOn) => {
       appearsOnContainer.appendChild(appearsTitle);
       appearsOnContainer.appendChild(appearsLink);
     });
-  } else {
-    appearsOnContainer.innerHTML = '';
   }
 
   loadingContainer.classList.add('null');
