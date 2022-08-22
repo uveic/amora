@@ -14,7 +14,7 @@ use function Amora\Core\Value\asArray;
 return [
     new LookupTableSettings(
         database: Core::getCoreDb(),
-        tableName: 'language',
+        tableName: 'core_language',
         tableFieldsToValues: asArray(Language::getAll()),
     ),
     new LookupTableSettings(
