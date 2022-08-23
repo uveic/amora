@@ -227,7 +227,7 @@ class Core
                 require_once self::$pathToRoot . '/Core/Value/QueryOrderDirection.php';
                 require_once self::$pathToRoot . '/Core/Model/Util/QueryOrderBy.php';
                 require_once self::$pathToRoot . '/Core/Model/Util/QueryOptions.php';
-                require_once self::$pathToRoot . '/Core/Database/Model/TransactionResponse.php';
+                require_once self::$pathToRoot . '/Core/Model/Response/Feedback.php';
                 require_once self::$pathToRoot . '/Core/Database/MySqlDb.php';
                 return new MySqlDb(
                     logger: $logger,

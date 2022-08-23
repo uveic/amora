@@ -17,7 +17,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         public readonly ?Article $previousBlogPost = null,
         public readonly ?Article $nextBlogPost = null,
         public readonly ?Article $postBottomContent = null,
-        public readonly ?UserFeedback $userFeedback = null,
+        public readonly ?Feedback $feedback = null,
         public readonly ?string $verificationHash = null,
         public readonly ?int $passwordUserId = null,
     ) {

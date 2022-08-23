@@ -3,7 +3,6 @@
 namespace Amora\Core\Module\User\Service;
 
 use Amora\Core\Core;
-use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Util\LocalisationUtil;
@@ -11,7 +10,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Amora\Core\Util\Logger;
-use Amora\Core\Model\Response\UserFeedback;
+use Amora\Core\Model\Response\Feedback;
 use Amora\Core\Module\User\Datalayer\UserDataLayer;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserRegistrationRequest;
@@ -49,7 +48,7 @@ class UserService
             function () use ($user, $verificationType) {
                 $resUser = $this->userDataLayer->createNewUser($user);
                 if (empty($resUser)) {
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 $resEmail = match ($verificationType) {
@@ -64,10 +63,10 @@ class UserService
                 };
 
                 if (!$resEmail) {
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
-                return new TransactionResponse(true, $resUser);
+                return new Feedback(true, $resUser);
             }
         );
 
@@ -88,7 +87,7 @@ class UserService
                 $updatedUser = $this->userDataLayer->updateUser($user, $user->id);
 
                 if (empty($updatedUser)) {
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 if ($user->changeEmailAddressTo) {
@@ -107,7 +106,7 @@ class UserService
                     Core::updateTimezone($user->timezone->getName());
                 }
 
-                return new TransactionResponse(true);
+                return new Feedback(true);
             }
         );
 
@@ -149,15 +148,15 @@ class UserService
         ?string $currentPassword,
         ?string $newPassword,
         ?string $repeatPassword
-    ): UserFeedback {
+    ): Feedback {
         if (isset($timezone) && !in_array($timezone, DateTimeZone::listIdentifiers())) {
             $this->logger->logError('Timezone not valid');
-            return new UserFeedback(false);
+            return new Feedback(false);
         }
 
         if (isset($languageIsoCode) && Language::tryFrom(strtoupper($languageIsoCode)) === null) {
             $this->logger->logError('Language ID not valid: ' . $languageIsoCode);
-            return new UserFeedback(false);
+            return new Feedback(false);
         }
 
         $localisationUtil = Core::getLocalisationUtil($existingUser->language);
@@ -168,7 +167,7 @@ class UserService
                     'Submitted payload not valid: one of the password fields is empty.'
                 );
 
-                return new UserFeedback(false);
+                return new Feedback(false);
             }
 
             $validPass = StringUtil::verifyPassword(
@@ -177,21 +176,21 @@ class UserService
             );
 
             if (!$validPass) {
-                return new UserFeedback(
+                return new Feedback(
                     false,
                     $localisationUtil->getValue('authenticationPassNotValid')
                 );
             }
 
             if (strlen($newPassword) < self::USER_PASSWORD_MIN_LENGTH) {
-                return new UserFeedback(
+                return new Feedback(
                     false,
                     $localisationUtil->getValue('authenticationPasswordTooShort')
                 );
             }
 
             if ($newPassword !== $repeatPassword) {
-                return new UserFeedback(
+                return new Feedback(
                     false,
                     $localisationUtil->getValue('authenticationPasswordsDoNotMatch')
                 );
@@ -200,7 +199,7 @@ class UserService
 
         if ($email) {
             if (!StringUtil::isEmailAddressValid($email)) {
-                return new UserFeedback(
+                return new Feedback(
                     false,
                     $localisationUtil->getValue('authenticationEmailNotValid')
                 );
@@ -208,14 +207,14 @@ class UserService
 
             $userForEmail = $this->getUserForEmail($email);
             if ($userForEmail && $userForEmail->id !== $existingUser->id) {
-                return new UserFeedback(
+                return new Feedback(
                     false,
                     $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail')
                 );
             }
         }
 
-        return new UserFeedback(true);
+        return new Feedback(true);
     }
 
     public function filterUsersBy(
@@ -241,14 +240,14 @@ class UserService
     public function verifyEmailAddress(
         string $verificationIdentifier,
         LocalisationUtil $localisationUtil
-    ): UserFeedback {
+    ): Feedback {
         $verification = $this->userDataLayer->getUserVerification(
             $verificationIdentifier,
             VerificationType::EmailAddress,
         );
 
         if (empty($verification) || !$verification->isEnabled) {
-            return new UserFeedback(false, $localisationUtil->getValue('globalGenericError'));
+            return new Feedback(false, $localisationUtil->getValue('globalGenericError'));
         }
 
         $message = $verification->type === VerificationType::EmailAddress
@@ -257,30 +256,30 @@ class UserService
 
         $user = $this->getUserForId($verification->userId);
         if (empty($user)) {
-            return new UserFeedback(
+            return new Feedback(
                 false,
                 $localisationUtil->getValue('globalGenericError')
             );
         }
 
         if (!$verification->isEnabled) {
-            return new UserFeedback(false, $message);
+            return new Feedback(false, $message);
         }
 
         $now = new DateTime();
         $dateDiff = $now->diff($verification->createdAt);
         if ($dateDiff->days > self::VERIFICATION_LINK_VALID_FOR_DAYS) {
-            return new UserFeedback(false, $message);
+            return new Feedback(false, $message);
         }
 
         $res = $this->userDataLayer->getDb()->withTransaction(
             function () use ($user, $verification) {
                 $resVer = $this->userDataLayer->markUserAsVerified($user, $verification);
-                return new TransactionResponse($resVer);
+                return new Feedback($resVer);
             }
         );
 
-        return new UserFeedback(
+        return new Feedback(
             $res->isSuccess,
             $res->isSuccess
                 ? $localisationUtil->getValue('authenticationEmailVerified')
@@ -351,7 +350,7 @@ class UserService
                 );
 
                 if (!$updateRes) {
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 $verification = $this->userDataLayer->getUserVerification(
@@ -360,12 +359,12 @@ class UserService
                 );
 
                 if (empty($verification) || !$verification->isEnabled) {
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 $markRes = $this->userDataLayer->markUserAsVerified($user, $verification);
                 if (empty($markRes)) {
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 $journeyRes = $this->userDataLayer->updateUserJourney(
@@ -373,7 +372,7 @@ class UserService
                     userJourney: UserJourneyStatus::Registration,
                 );
 
-                return new TransactionResponse($journeyRes);
+                return new Feedback($journeyRes);
             }
         );
 
@@ -390,7 +389,7 @@ class UserService
         ?string $newPassword = null,
         ?string $repeatPassword = null,
         ?bool $isEnabled = null
-    ): UserFeedback {
+    ): Feedback {
         $validation = $this->validateUpdateUserEndpoint(
             existingUser: $existingUser,
             email: $email,
@@ -434,7 +433,7 @@ class UserService
         );
 
         if (empty($res)) {
-            return new UserFeedback(false, 'Error updating user');
+            return new Feedback(false, 'Error updating user');
         }
 
         return $validation;

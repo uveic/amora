@@ -4,7 +4,7 @@ namespace Amora\Core\Module\Article\Service;
 
 use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
-use Amora\Core\Database\Model\TransactionResponse;
+use Amora\Core\Model\Response\Feedback;
 use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Util\Logger;
 use Amora\Core\Model\Response\Pagination;
@@ -214,7 +214,7 @@ class ArticleService
                     $this->logger->logError(
                         'Error updating article. Article ID: ' . $article->id
                     );
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 $resSections = $this->updateCreateOrDeleteArticleSections(
@@ -226,7 +226,7 @@ class ArticleService
                     $this->logger->logError(
                         'Error updating article sections. Article ID: ' . $article->id
                     );
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 $resTags = $this->addOrRemoveTagsToArticle($article->id, $tags);
@@ -234,7 +234,7 @@ class ArticleService
                     $this->logger->logError(
                         'Error updating article tags. Article ID: ' . $article->id
                     );
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 $resHistory = $this->articleDataLayer->storeArticleHistory(
@@ -247,10 +247,10 @@ class ArticleService
                     $this->logger->logError(
                         'Error inserting article history. Article ID: ' . $article->id
                     );
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
-                return new TransactionResponse(true);
+                return new Feedback(true);
             }
         );
 
@@ -395,7 +395,7 @@ class ArticleService
                         'Error creating article. Article ID: ' . $article->id
                     );
 
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 $resSections = $this->updateCreateOrDeleteArticleSections(
@@ -408,17 +408,17 @@ class ArticleService
                     $this->logger->logError(
                         'Error updating article tags. Article ID: ' . $article->id
                     );
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 if (empty($resSections)) {
                     $this->logger->logError(
                         'Error updating article sections. Article ID: ' . $article->id
                     );
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
-                return new TransactionResponse(true, $article);
+                return new Feedback(true, $article);
             }
         );
 

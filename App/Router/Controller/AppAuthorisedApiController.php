@@ -6,6 +6,10 @@ use Amora\Core\Model\Request;
 
 final class AppAuthorisedApiController extends AppAuthorisedApiControllerAbstract
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     protected function authenticate(Request $request): bool
     {

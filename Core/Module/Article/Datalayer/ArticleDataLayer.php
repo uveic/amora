@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Module\Article\Datalayer;
 
-use Amora\Core\Database\Model\TransactionResponse;
+use Amora\Core\Model\Response\Feedback;
 use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\DateUtil;
@@ -273,7 +273,7 @@ class ArticleDataLayer
             function () use ($article, $userIp, $userAgent) {
                 $resHistory = $this->storeArticleHistory($article, $userIp, $userAgent);
                 if (empty($resHistory)) {
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
                 $resDe = $this->db->update(
@@ -285,10 +285,10 @@ class ArticleDataLayer
                 );
 
                 if (empty($resDe)) {
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
-                return new TransactionResponse(true);
+                return new Feedback(true);
             }
         );
 

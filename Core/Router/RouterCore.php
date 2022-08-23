@@ -26,7 +26,7 @@ class RouterCore extends Core
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlHomepageResponseData.php';
                 require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
-                require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
+                require_once self::getPathRoot() . '/Core/Model/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicHtmlControllerAbstract.php';
@@ -98,7 +98,7 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'BackofficeApiController',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
+                require_once self::getPathRoot() . '/Core/Model/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeApiController.php';
@@ -122,7 +122,7 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'AuthorisedApiController',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Model/Response/UserFeedback.php';
+                require_once self::getPathRoot() . '/Core/Model/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiController.php';
