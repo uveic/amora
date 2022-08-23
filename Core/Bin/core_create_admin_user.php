@@ -11,7 +11,6 @@ use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\UserCore;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
-use Amora\App\Value\Language;
 use Amora\Core\Module\User\Value\UserRole;
 
 // change working directory
@@ -94,10 +93,7 @@ $res = UserCore::getUserService()->storeUser(
 );
 
 if (empty($res)) {
-    $logger->logError(
-        'User not created. Error: ' .
-        (empty($res['errorMessage']) ? 'UNKNOWN' : $res['errorMessage'])
-    );
+    $logger->logError('Error creating user. Aborting...');
     exit;
 }
 
