@@ -5,7 +5,7 @@ namespace Amora\Core\Router;
 use Amora\Core\Core;
 use Amora\Core\Model\Response\HtmlHomepageResponseData;
 use Amora\Core\Model\Response\HtmlResponseData;
-use Amora\Core\Model\Response\UserFeedback;
+use Amora\Core\Model\Response\Feedback;
 use Amora\Core\Model\Util\QueryOptions;
 use Amora\Core\Model\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Service\ArticleService;
@@ -160,14 +160,14 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         Request $request
     ): Response {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        $userFeedback = $this->userService->verifyEmailAddress(
+        $feedback = $this->userService->verifyEmailAddress(
             $verificationIdentifier,
             $localisationUtil
         );
 
         return $this->buildHomepageResponse(
             request: $request,
-            userFeedback: $userFeedback,
+            feedback: $feedback,
         );
     }
 
@@ -189,7 +189,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         if (empty($res)) {
             return $this->buildHomepageResponse(
                 request: $request,
-                userFeedback: new UserFeedback(
+                feedback: new Feedback(
                     false,
                     $localisationUtil->getValue('authenticationPasswordResetLinkError')
                 )
@@ -226,7 +226,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         if (empty($res)) {
             return $this->buildHomepageResponse(
                 request: $request,
-                userFeedback: new UserFeedback(
+                feedback: new Feedback(
                     isSuccess: false,
                     message: $localisationUtil->getValue('authenticationPasswordCreationLinkError'),
                 ),
@@ -331,7 +331,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
     private function buildHomepageResponse(
         Request $request,
-        ?UserFeedback $userFeedback = null,
+        ?Feedback $feedback = null,
     ): Response {
         $isAdmin = $request->session && $request->session->isAdmin();
         $statusIds = $isAdmin
@@ -360,7 +360,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 homepageContent: $homepageArticle,
                 homeArticles: [],
                 blogArticles: $blogArticles,
-                userFeedback: $userFeedback,
+                feedback: $feedback,
             ),
         );
     }

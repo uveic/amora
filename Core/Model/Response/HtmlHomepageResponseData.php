@@ -13,7 +13,7 @@ class HtmlHomepageResponseData extends HtmlResponseDataAbstract
         public readonly ?Article $homepageContent = null,
         public readonly array $homeArticles = [],
         public readonly array $blogArticles = [],
-        public readonly ?UserFeedback $userFeedback = null,
+        public readonly ?Feedback $feedback = null,
     ) {
         parent::__construct(
             request: $request,

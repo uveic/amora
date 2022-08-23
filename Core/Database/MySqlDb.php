@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Database;
 
-use Amora\Core\Database\Model\TransactionResponse;
+use Amora\Core\Model\Response\Feedback;
 use PDO;
 use Throwable;
 use Amora\Core\Util\Logger;
@@ -271,7 +271,7 @@ final class MySqlDb
      * @param Callable $f
      * @return mixed|bool
      */
-    public function withTransaction(callable $f): ?TransactionResponse
+    public function withTransaction(callable $f): ?Feedback
     {
         if ($this->isInTransactionMode) {
             $this->logger->logWarning(
@@ -291,7 +291,7 @@ final class MySqlDb
         try {
             $res = $f();
 
-            if (!$res instanceof TransactionResponse) {
+            if (!$res instanceof Feedback) {
                 $this->logger->logError(
                     'Not valid response from callable function in MySqlDb transaction'
                 );

@@ -3,7 +3,7 @@
 namespace Amora\Core\Module\User\Service;
 
 use Amora\Core\Core;
-use Amora\Core\Database\Model\TransactionResponse;
+use Amora\Core\Model\Response\Feedback;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Service\MailerService;
 use Amora\Core\Module\Mailer\Value\MailerTemplate;
@@ -86,10 +86,10 @@ class UserMailService
                 );
 
                 if (!$resEmail) {
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
-                return new TransactionResponse(true);
+                return new Feedback(true);
             }
         );
 
@@ -121,10 +121,10 @@ class UserMailService
                 );
 
                 if (!$resEmail) {
-                    return new TransactionResponse(false);
+                    return new Feedback(false);
                 }
 
-                return new TransactionResponse(true);
+                return new Feedback(true);
             }
         );
 

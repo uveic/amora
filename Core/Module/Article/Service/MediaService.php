@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
-use Amora\Core\Database\Model\TransactionResponse;
+use Amora\Core\Model\Response\Feedback;
 use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\MediaStatus;
@@ -88,7 +88,7 @@ class MediaService
     public function workflowStoreFile(
         array $rawFiles,
         ?User $user,
-    ): TransactionResponse {
+    ): Feedback {
         return $this->mediaDataLayer->getDb()->withTransaction(
             function () use (
                 $rawFiles,
@@ -97,7 +97,7 @@ class MediaService
                 try {
                     $rawFile = $this->validateAndProcessRawFile($rawFiles);
                     if (empty($rawFile)) {
-                        return new TransactionResponse(
+                        return new Feedback(
                             isSuccess: false,
                             message: 'Raw file not valid',
                         );
@@ -109,7 +109,7 @@ class MediaService
                     };
 
                     if (empty($processedFile)) {
-                        return new TransactionResponse(
+                        return new Feedback(
                             isSuccess: false,
                             message: 'File not valid',
                         );
@@ -117,7 +117,7 @@ class MediaService
 
                     $output = $this->mediaDataLayer->storeFile($processedFile);
 
-                    return new TransactionResponse(
+                    return new Feedback(
                         isSuccess: true,
                         response: $output,
                     );
@@ -127,7 +127,7 @@ class MediaService
                         . ' - Trace: ' . $t->getTraceAsString()
                     );
 
-                    return new TransactionResponse(
+                    return new Feedback(
                         isSuccess: false,
                         message: 'Error storing file: ' . $t->getMessage(),
                     );

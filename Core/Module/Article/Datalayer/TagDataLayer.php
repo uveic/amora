@@ -2,8 +2,8 @@
 
 namespace Amora\Core\Module\Article\Datalayer;
 
-use Amora\Core\Database\Model\TransactionResponse;
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Model\Response\Feedback;
 use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Module\DataLayerTrait;
@@ -100,15 +100,15 @@ class TagDataLayer
             );
 
             if (empty($resAr)) {
-                return new TransactionResponse(false);
+                return new Feedback(false);
             }
 
             $resDel = $this->db->delete(self::TAG_TABLE_NAME, ['id' => $id]);
             if (empty($resDel)) {
-                return new TransactionResponse(false);
+                return new Feedback(false);
             }
 
-            return new TransactionResponse(true);
+            return new Feedback(true);
         });
 
         return $dbRes->isSuccess;
