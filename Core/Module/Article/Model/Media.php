@@ -64,9 +64,7 @@ class Media
     {
         return [
             'id' => $this->id,
-            'uri' => $this->type === MediaType::Image
-                ? $this->getUriWithNameMedium()
-                : $this->getUriWithNameOriginal(),
+            'uri' => $this->getUriWithNameMedium(),
             'caption' => $this->caption,
             'name' => $this->type === MediaType::Image
                 ? $this->filenameMedium
