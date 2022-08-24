@@ -398,6 +398,48 @@ ul.nav-dropdown-menu a:hover {
   margin-bottom: 3rem;
 }
 
+.form {
+  width: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-flow: row wrap;
+}
+
+.control {
+  clear: both;
+  position: relative;
+  text-align: left;
+  margin-bottom: 0;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.label,
+label {
+  color: var(--main-text-color);
+  display: block;
+  font-weight: 700;
+  width: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.label-regular-font {
+  font-weight: 400;
+}
+
+label:not(:last-child) {
+  margin-bottom: .5em;
+}
+
 .help {
   color: var(--light-text-color);
   font-size: .75rem;
@@ -444,6 +486,9 @@ select {
   padding-right: 2rem;
 }
 
+textarea {
+  min-height: 120px;
+}
 
 .button {
   min-width: 80px;

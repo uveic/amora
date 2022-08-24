@@ -103,12 +103,20 @@ class Media
 
     public function getUriWithNameMedium(): ?string
     {
+        if ($this->type !== MediaType::Image) {
+            return $this->getUriWithNameOriginal();
+        }
+
         $path = Core::getConfig()->mediaBaseUrl . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $this->filenameMedium ? ($path . $this->filenameMedium) : null;
     }
 
     public function getUriWithNameLarge(): ?string
     {
+        if ($this->type !== MediaType::Image) {
+            return $this->getUriWithNameOriginal();
+        }
+
         $path = Core::getConfig()->mediaBaseUrl . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $this->filenameLarge ? ($path . $this->filenameLarge) : null;
     }

@@ -10,8 +10,7 @@ class AuthorisedApiControllerGetFileSuccessResponse extends Response
         bool $success,
         $file = null,
         ?string $errorMessage = null,
-        ?array $tags = null,
-        ?array $appearsOn = null
+        ?array $tags = null
     ) {
         // Required parameters
         $responseData = [
@@ -29,10 +28,6 @@ class AuthorisedApiControllerGetFileSuccessResponse extends Response
         $responseData['tags'] = is_null($tags)
             ? null
             : $tags;
-
-        $responseData['appearsOn'] = is_null($appearsOn)
-            ? null
-            : $appearsOn;
 
         list($output, $contentType) = self::getResponseType($responseData);
         parent::__construct($output, $contentType, HttpStatusCode::HTTP_200_OK);

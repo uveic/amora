@@ -120,11 +120,13 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             $appearsOn[] = $article->buildPublicDataArray();
         }
 
+        $output = $file->buildPublicDataArray();
+        $output['appearsOn'] = $appearsOn;
+
         return new AuthorisedApiControllerGetFileSuccessResponse(
             success: true,
-            file: $file->buildPublicDataArray(),
+            file: $output,
             tags: [],
-            appearsOn: $appearsOn,
         );
     }
 
@@ -196,28 +198,29 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         $output = [];
         /** @var Media $file */
         foreach ($files as $file) {
-            $output[] = $file->buildPublicDataArray();
-        }
+            $fileOutput = $file->buildPublicDataArray();
+            $statusIds = $request->session->isAdmin()
+                ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
+                : [ArticleStatus::Published->value];
 
-        $statusIds = $request->session->isAdmin()
-            ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
-            : [ArticleStatus::Published->value];
+            $articles = $this->articleService->filterArticlesBy(
+                statusIds: $statusIds,
+                imageIds: [$file->id],
+            );
 
-        $articles = $this->articleService->filterArticlesBy(
-            statusIds: $statusIds,
-            imageIds: [$file->id],
-        );
+            $appearsOn = [];
+            /** @var Article $article */
+            foreach ($articles as $article) {
+                $appearsOn[] = $article->buildPublicDataArray();
+            }
 
-        $appearsOn = [];
-        /** @var Article $article */
-        foreach ($articles as $article) {
-            $appearsOn[] = $article->buildPublicDataArray();
+            $fileOutput['appearsOn'] = $appearsOn;
+            $output[] = $fileOutput;
         }
 
         return new AuthorisedApiControllerGetNextFileSuccessResponse(
             success: true,
             files: $output,
-            appearsOn: $appearsOn,
         );
     }
 

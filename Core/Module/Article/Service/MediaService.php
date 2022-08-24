@@ -24,6 +24,11 @@ class MediaService
         private readonly string $mediaBaseDir,
     ) {}
 
+    public function storeMedia(Media $item): Media
+    {
+        return $this->mediaDataLayer->storeFile($item);
+    }
+
     public function getMediaForId(int $id): ?Media
     {
         $res = $this->filterMediaBy(
@@ -103,19 +108,19 @@ class MediaService
                         );
                     }
 
-                    $processedFile = match ($rawFile->mediaType) {
+                    $processedMedia = match ($rawFile->mediaType) {
                         MediaType::Image => $this->processRawFileImage($rawFile, $user),
                         default => $this->processRawFile($rawFile, $user),
                     };
 
-                    if (empty($processedFile)) {
+                    if (empty($processedMedia)) {
                         return new Feedback(
                             isSuccess: false,
                             message: 'File not valid',
                         );
                     }
 
-                    $output = $this->mediaDataLayer->storeFile($processedFile);
+                    $output = $this->storeMedia($processedMedia);
 
                     return new Feedback(
                         isSuccess: true,
@@ -136,7 +141,7 @@ class MediaService
         );
     }
 
-    private function processRawFileImage(RawFile $rawFile, ?User $user): ?Media
+    public function processRawFileImage(RawFile $rawFile, ?User $user): ?Media
     {
         try {
             return $this->imageResizeService->resizeOriginalImage(
@@ -154,7 +159,7 @@ class MediaService
         }
     }
 
-    private function processRawFile(RawFile $rawFile, ?User $user): Media
+    public function processRawFile(RawFile $rawFile, ?User $user): Media
     {
         $now = new DateTimeImmutable();
         return new Media(
@@ -177,7 +182,7 @@ class MediaService
         return date('YmdHis') . StringUtil::getRandomString(16) . '.' . $extension;
     }
 
-    private function validateAndProcessRawFile(array $rawFiles): ?RawFile
+    public function validateAndProcessRawFile(array $rawFiles): ?RawFile
     {
         if (empty($rawFiles['files']['name'][0])) {
             $this->logger->logError('Raw file name is empty');

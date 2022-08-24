@@ -175,7 +175,7 @@
                       "type": "integer",
                       "description": "File ID"
                     },
-                    "path": {
+                    "uri": {
                       "type": "string",
                       "description": "File path"
                     },
@@ -186,6 +186,75 @@
                     "name": {
                       "type": "string",
                       "description": "File name"
+                    },
+                    "appearsOn": {
+                      "type": "array",
+                      "description": "List of articles/places where the image is used",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "Article ID"
+                          },
+                          "languageIsoCode": {
+                            "type": "string",
+                            "description": "Language ISO code. Example: EN, ES, GL"
+                          },
+                          "userId": {
+                            "type": "integer",
+                            "description": "Article author user ID"
+                          },
+                          "userName": {
+                            "type": "string",
+                            "description": "Article author user name"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "Article title"
+                          },
+                          "uri": {
+                            "type": "string",
+                            "description": "Article URI"
+                          },
+                          "publishedOn": {
+                            "type": "string",
+                            "description": "Date the article was published. Format: ISO. Example: 2022-01-01T00:25:00+00:00"
+                          },
+                          "tags": {
+                            "type": "array",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "Tag ID"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Tag name"
+                              },
+                              "uri": {
+                                "type": "string",
+                                "description": "Tag link"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "uri"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "languageIsoCode",
+                          "userId",
+                          "userName",
+                          "title",
+                          "uri",
+                          "publishedOn",
+                          "tags"
+                        ]
+                      }
                     }
                   },
                   "required": [
@@ -222,75 +291,6 @@
                       "id",
                       "name",
                       "url"
-                    ]
-                  }
-                },
-                "appearsOn": {
-                  "type": "array",
-                  "description": "List of articles/places where the image is used",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "description": "Article ID"
-                      },
-                      "languageIsoCode": {
-                        "type": "string",
-                        "description": "Language ISO code. Example: EN, ES, GL"
-                      },
-                      "userId": {
-                        "type": "integer",
-                        "description": "Article author user ID"
-                      },
-                      "userName": {
-                        "type": "string",
-                        "description": "Article author user name"
-                      },
-                      "title": {
-                        "type": "string",
-                        "description": "Article title"
-                      },
-                      "uri": {
-                        "type": "string",
-                        "description": "Article URI"
-                      },
-                      "publishedOn": {
-                        "type": "string",
-                        "description": "Date the article was published. Format: ISO. Example: 2022-01-01T00:25:00+00:00"
-                      },
-                      "tags": {
-                        "type": "array",
-                        "properties": {
-                          "id": {
-                            "type": "integer",
-                            "description": "Tag ID"
-                          },
-                          "name": {
-                            "type": "string",
-                            "description": "Tag name"
-                          },
-                          "uri": {
-                            "type": "string",
-                            "description": "Tag link"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "name",
-                          "uri"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "languageIsoCode",
-                      "userId",
-                      "userName",
-                      "title",
-                      "uri",
-                      "publishedOn",
-                      "tags"
                     ]
                   }
                 }
@@ -511,7 +511,7 @@
                         "type": "integer",
                         "description": "File ID"
                       },
-                      "url": {
+                      "uri": {
                         "type": "string",
                         "description": "File URL"
                       },
@@ -522,82 +522,82 @@
                       "name": {
                         "type": "string",
                         "description": "File name"
+                      },
+                      "appearsOn": {
+                        "type": "array",
+                        "description": "List of articles/places where the image is used",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "Article ID"
+                            },
+                            "languageIsoCode": {
+                              "type": "string",
+                              "description": "Language ISO code. Example: EN, ES, GL"
+                            },
+                            "userId": {
+                              "type": "integer",
+                              "description": "Article author user ID"
+                            },
+                            "userName": {
+                              "type": "string",
+                              "description": "Article author user name"
+                            },
+                            "title": {
+                              "type": "string",
+                              "description": "Article title"
+                            },
+                            "uri": {
+                              "type": "string",
+                              "description": "Article URI"
+                            },
+                            "publishedOn": {
+                              "type": "string",
+                              "description": "Date the article was published. Format: ISO. Example: 2022-01-01T00:25:00+00:00"
+                            },
+                            "tags": {
+                              "type": "array",
+                              "properties": {
+                                "id": {
+                                  "type": "integer",
+                                  "description": "Tag ID"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "description": "Tag name"
+                                },
+                                "uri": {
+                                  "type": "string",
+                                  "description": "Tag link"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "uri"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "languageIsoCode",
+                            "userId",
+                            "userName",
+                            "title",
+                            "uri",
+                            "publishedOn",
+                            "tags"
+                          ]
+                        }
                       }
                     },
                     "required": [
                       "id",
-                      "url",
+                      "uri",
                       "caption",
                       "name"
-                    ]
-                  }
-                },
-                "appearsOn": {
-                  "type": "array",
-                  "description": "List of articles/places where the image is used",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "description": "Article ID"
-                      },
-                      "languageIsoCode": {
-                        "type": "string",
-                        "description": "Language ISO code. Example: EN, ES, GL"
-                      },
-                      "userId": {
-                        "type": "integer",
-                        "description": "Article author user ID"
-                      },
-                      "userName": {
-                        "type": "string",
-                        "description": "Article author user name"
-                      },
-                      "title": {
-                        "type": "string",
-                        "description": "Article title"
-                      },
-                      "uri": {
-                        "type": "string",
-                        "description": "Article URI"
-                      },
-                      "publishedOn": {
-                        "type": "string",
-                        "description": "Date the article was published. Format: ISO. Example: 2022-01-01T00:25:00+00:00"
-                      },
-                      "tags": {
-                        "type": "array",
-                        "properties": {
-                          "id": {
-                            "type": "integer",
-                            "description": "Tag ID"
-                          },
-                          "name": {
-                            "type": "string",
-                            "description": "Tag name"
-                          },
-                          "uri": {
-                            "type": "string",
-                            "description": "Tag link"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "name",
-                          "uri"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "languageIsoCode",
-                      "userId",
-                      "userName",
-                      "title",
-                      "uri",
-                      "publishedOn",
-                      "tags"
                     ]
                   }
                 },

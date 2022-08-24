@@ -235,7 +235,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   });
 });
 
-const displayImage = (image, appearsOn) => {
+const displayImage = (image) => {
   const modal = document.querySelector('.image-modal');
   const loadingContainer = modal.querySelector('.image-modal-loading');
   const content = modal.querySelector('.image-wrapper');
@@ -287,8 +287,8 @@ const displayImage = (image, appearsOn) => {
 
   const appearsOnContainer = modal.querySelector('.image-appears-on');
   appearsOnContainer.innerHTML = '';
-  if (appearsOn && appearsOn.length) {
-    appearsOn.forEach(ao => {
+  if (image.appearsOn && image.appearsOn.length) {
+    image.appearsOn.forEach(ao => {
       const appearsTitle = document.createElement('h3');
       appearsTitle.textContent = global.get('globalAppearsOn') + ':';
       const appearsLink = document.createElement('a');
@@ -330,8 +330,8 @@ const displayImagePopup = (e, imageId, next = false, direction = null) => {
   xhr.get(apiUrl)
     .then(response => {
       next === true
-        ? displayImage(response.files[0] ?? null, response.appearsOn ?? [])
-        : displayImage(response.file ?? null, response.appearsOn ?? []);
+        ? displayImage(response.files[0] ?? null)
+        : displayImage(response.file ?? null);
     });
 };
 
