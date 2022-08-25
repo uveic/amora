@@ -8,7 +8,7 @@ use Amora\Core\Model\Response\HtmlResponseData;
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <?=
-$this->insert('partials/head', ['responseData' => $responseData])
+$this->insert('../../../app/frontend/public/partials/head', ['responseData' => $responseData])
 ?>
 <body>
 <main class="main-split-screen">
@@ -22,13 +22,13 @@ $this->insert('partials/head', ['responseData' => $responseData])
         <div class="div-request-form">
           <h1 id="register-title" class="logo m-b-3"><?=$this->e($responseData->siteName)?></h1>
           <h2 id="register-subtitle"><?=$responseData->getLocalValue('authenticationInviteRequest')?></h2>
-          <p class="light-text-color m-b-3"><?=$responseData->getLocalValue('authenticationInviteRequestSubtitle')?></p>
+          <p class="light-text-color m-b-2"><?=$responseData->getLocalValue('authenticationInviteRequestSubtitle')?></p>
           <div class="field">
             <p class="control">
               <input class="input" type="email" id="email" name="email" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderEmail'))?>" required>
             </p>
           </div>
-          <div class="field">
+          <div class="field m-t-1">
             <input class="button is-success" type="submit" value="<?=$this->e($responseData->getLocalValue('authenticationInviteRequestFormAction'))?>">
             </p>
           </div>

@@ -129,7 +129,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $user = $this->userService->getUserForId($userId, true);
         if (empty($user)) {
             return Response::createHtmlResponse(
-                template: 'core/frontend/public/404',
+                template: 'app/frontend/public/404',
                 responseData: new HtmlResponseDataAuthorised($request),
             );
         }
@@ -248,7 +248,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $article = $this->articleService->getArticleForId($articleId, true);
         if (empty($article)) {
             return Response::createHtmlResponse(
-                template: 'core/frontend/public/404',
+                template: 'app/frontend/public/404',
                 responseData: new HtmlResponseDataAuthorised($request),
             );
         }

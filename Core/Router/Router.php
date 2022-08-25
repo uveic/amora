@@ -190,14 +190,14 @@ class Router
 
         if (empty($article)) {
             return Response::createHtmlResponse(
-                template: 'core/frontend/public/404',
+                template: 'app/frontend/public/404',
                 responseData: new HtmlResponseData($request),
             );
         }
 
         if (!$this->displayArticle($article, $request->session?->isAdmin())) {
             return Response::createHtmlResponse(
-                template: 'core/frontend/public/404',
+                template: 'app/frontend/public/404',
                 responseData: new HtmlResponseData($request),
             );
         }
@@ -209,7 +209,7 @@ class Router
         $isAdmin = $request->session && $request->session->isAdmin();
 
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/home-article',
+            template: 'app/frontend/public/home-article',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $article->title,

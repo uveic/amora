@@ -11,7 +11,7 @@ $siteLogo = $responseData->getSiteLogoUrl()
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <?=
-$this->insert('partials/head', ['responseData' => $responseData])
+$this->insert('../../../app/frontend/public/partials/head', ['responseData' => $responseData])
 ?>
 <body>
 <main class="main-split-screen">

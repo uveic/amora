@@ -7,9 +7,11 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 $isAdmin = $responseData->request->session && $responseData->request->session->isAdmin();
 
+if (!$isAdmin) {
+    return;
+}
+
 ?>
   <footer>
-<?php if ($isAdmin) { ?>
     <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
-<?php } ?>
   </footer>

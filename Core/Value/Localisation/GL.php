@@ -60,7 +60,7 @@ return [
     'authenticationInviteRequestSubtitle' => 'A web está actualmente nunha beta privada, estamos traballando para asegurarnos de que todo funciona correctamente e con moitas ganas de que estea lista para que a poidas utilizar. Déixanos o teu correo e enviarémosche unha invitación tan pronto como sexa posible. Só utilizaremos o teu correo para enviarche a invitación.<br>Grazas pola túa paciencia!',
     'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>Enviarémosche unha invitación en canto teñamos todo listo. Grazas pola espera!</p><p>O teu correo: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Volver á páxina principal',
-    'authenticationInviteRequestFormAction' => 'Pedir invitación',
+    'authenticationInviteRequestFormAction' => 'Solicitar invitación',
     'authenticationVerifyEmailBanner' => 'Por favor, verifica a túa conta seguindo as instrucións que che enviamos nun correo a <b>%s</b>. Se non o recibiches revisa a caixa do lixo ou <a class="verified-link" data-user-id="%s" href="#">fai clic aquí</a> e enviarémosche outro. Podes <a href="/gl/account">modificar o teu enderezo</a> se fora necesario.',
     'authenticationPassNotValid' => 'O contrasinal actual non é válido.',
 

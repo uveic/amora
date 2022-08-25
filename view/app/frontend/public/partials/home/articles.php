@@ -15,9 +15,9 @@ if (!$responseData->homeArticles) {
 }
 
 ?>
-<section class="home-tag">
-  <h1><?=$responseData->getLocalValue('navAdminArticles')?></h1>
-  <div class="home-tag-items">
+  <section class="home-tag">
+    <h1><?=$responseData->getLocalValue('navAdminArticles')?></h1>
+    <div class="home-tag-items">
 <?php
 /** @var Article $article */
 foreach ($responseData->homeArticles as $article) {
@@ -32,16 +32,16 @@ foreach ($responseData->homeArticles as $article) {
         ? 'style="background: url(\'' . $article->mainImage->fullUrlMedium . '\') center center / cover no-repeat;"'
         : 'style="background: url(\'/img/roof.webp\') center center / cover no-repeat;"';
 ?>
-    <div class="home-tag-item">
-      <a href="<?=$href?>">
-        <div class="home-tag-img" <?=$imgStyle?>></div>
-      </a>
-      <div class="home-tag-link">
-        <?=$link?>
+      <div class="home-tag-item">
+        <a href="<?=$href?>">
+          <div class="home-tag-img" <?=$imgStyle?>></div>
+        </a>
+        <div class="home-tag-link">
+          <?=$link?>
+        </div>
       </div>
-    </div>
 <?php
 }
 ?>
-  </div>
-</section>
+    </div>
+  </section>

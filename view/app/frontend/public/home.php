@@ -15,13 +15,13 @@ if ($responseData->feedback) {
 ?>
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
-<?= $this->insert('../../../core/frontend/public/partials/head', ['responseData' => $responseData]) ?>
+<?=$this->insert('partials/head', ['responseData' => $responseData]) ?>
 <body>
 <?=$feedbackHtml?>
 <?=$this->insert('partials/home/main', ['responseData' => $responseData])?>
 <?=$this->insert('partials/home/articles', ['responseData' => $responseData])?>
 <?=$this->insert('partials/home/blog', ['responseData' => $responseData])?>
-<?=$this->insert('partials/home/footer', ['responseData' => $responseData])?>
-<script type="module" src="/js/main.js"></script>
+<?=$this->insert('partials/footer', ['responseData' => $responseData])?>
+  <script type="module" src="/js/main.js"></script>
 </body>
 </html>

@@ -61,7 +61,7 @@ return [
     'authenticationInviteRequestSubtitle' => 'The site is currently in private beta, we are making sure everything works as expected and looking forward to getting it ready for you. Enter your email address and we\'ll send you an invitation as soon as it\'s ready.<br>Thank you for your patience!',
     'authenticationInviteRequestActionSuccess' => '<h2>Invitation request received</h2><p>We will send your invitation as soon as everything is ready. Thank you for your patience!</p><p>Your email: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Go back to homepage',
-    'authenticationInviteRequestFormAction' => 'Request an invitation',
+    'authenticationInviteRequestFormAction' => 'Request invitation',
     'authenticationVerifyEmailBanner' => 'Please verify your account following the instructions sent to your email address at <b>%s</b>. If you have not received it, please check your spam folder or <a class="verified-link" data-user-id="%d" href="#">click here</a> and we will send you another one. If necessary you can <a href="/en/account">update your email address here</a>.',
 
     'formYourAccount' => 'Your Account',

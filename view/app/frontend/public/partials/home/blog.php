@@ -19,9 +19,9 @@ $itemsPerPage = $responseData->pagination->itemsPerPage;
 $offset = $responseData->pagination->offset + $itemsPerPage;
 
 ?>
-<section class="home-blog">
-  <h1>Blog <a href="<?=UrlBuilderUtil::buildPublicRssUrl()?>"><img class="img-svg img-svg-25 m-l-05" width="20" height="20" src="/img/svg/rss.svg" alt="RSS"></a></h1>
-  <div class="blog-items">
+  <section class="home-blog">
+    <h1>Blog <a href="<?=UrlBuilderUtil::buildPublicRssUrl()?>"><img class="img-svg img-svg-25 m-l-05" width="20" height="20" src="/img/svg/rss.svg" alt="RSS"></a></h1>
+    <div class="blog-items">
 <?php
 $previousYear = null;
 /** @var Article $article */
@@ -46,21 +46,21 @@ foreach ($articles as $article) {
     $year = $article->publishOn ? $article->publishOn->format('Y') : '???';
     if ($previousYear !== $year) {
 ?>
-    <h2 class="blog-item-year"><?=$year?></h2>
+      <h2 class="blog-item-year"><?=$year?></h2>
 <?php
   }
   $previousYear = $year;
 ?>
-    <div class="blog-item">
-      <span class="blog-item-title"><?=$isPublishedHtml?><a class="link-title" href="<?=$href?>"><?=$title?></a></span>
-      <span class="blog-info"><?=$publishedOn?></span>
-    </div>
+      <div class="blog-item">
+        <span class="blog-item-title"><?=$isPublishedHtml?><a class="link-title" href="<?=$href?>"><?=$title?></a></span>
+        <span class="blog-info"><?=$publishedOn?></span>
+      </div>
 <?php
 }
 ?>
-  </div>
-  <div class="loading-blog-posts loading null"><img src="/img/loading.gif" class="img-svg img-svg-50" alt="<?=$responseData->getLocalValue('globalLoading')?>"></div>
+    </div>
+    <div class="loading-blog-posts loading null"><img src="/img/loading.gif" class="img-svg img-svg-50" alt="<?=$responseData->getLocalValue('globalLoading')?>"></div>
 <?php if (count($articles) >= $itemsPerPage) { ?>
-  <a href="#" class="blog-posts-load-more" data-offset="<?=$offset?>" data-items-per-page="<?=$itemsPerPage?>"><?=$responseData->getLocalValue('globalMore')?></a>
+      <a href="#" class="blog-posts-load-more" data-offset="<?=$offset?>" data-items-per-page="<?=$itemsPerPage?>"><?=$responseData->getLocalValue('globalMore')?></a>
 <?php } ?>
-</section>
+  </section>

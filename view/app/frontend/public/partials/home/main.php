@@ -10,7 +10,8 @@ $editLink = $homepageContent && $responseData->request->session && $responseData
     ? '<p class="no-margin"><a href="' . UrlBuilderUtil::buildBackofficeArticleUrl($homepageContent->language, $homepageContent->id) . '">' . strtolower($responseData->getLocalValue('globalEdit')) . '</a></p>'
     : '';
 ?>
-<section class="home-main">
-  <?=$homepageContent ? $homepageContent->contentHtml : '';?>
-  <?=$editLink;?>
-</section>
+  <section class="home-main">
+    <?=$homepageContent ? $homepageContent->contentHtml : '';?>
+    <?=$editLink;?>
+
+  </section>
