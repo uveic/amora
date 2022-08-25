@@ -7,9 +7,9 @@ use Amora\Core\Model\Response\HtmlResponseData;
 ?>
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
-<?= $this->insert('partials/head', ['responseData' => $responseData]) ?>
+<?=$this->insert('partials/head', ['responseData' => $responseData]) ?>
 <body>
-<?= $this->insert('partials/header', ['responseData' => $responseData]) ?>
+<?=$this->insert('partials/header', ['responseData' => $responseData]) ?>
 <main>
   <article>
     <h1 class="article-title"><?=$responseData->getLocalValue('globalPageNotFoundTitle')?></h1>
