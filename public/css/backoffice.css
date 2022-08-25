@@ -530,6 +530,7 @@ input.pexego-content-title {
   background-color: var(--main-text-color);
   color: var(--main-bg-color);
   padding: 1rem 1rem 4rem;
+  min-height: 100vh;
 }
 
 #images-list {
@@ -554,8 +555,10 @@ input.pexego-content-title {
 #upload-media {
   min-height: 50px;
   display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
 }
 
 #upload-media-info {

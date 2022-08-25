@@ -2,7 +2,10 @@
 
 namespace Amora\App\Router;
 
+use Amora\Core\Core;
 use Amora\Core\Model\Request;
+use Amora\Core\Model\Response;
+use Amora\Core\Model\Response\HtmlResponseData;
 
 final class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstract
 {
@@ -19,5 +22,25 @@ final class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstr
         }
 
         return true;
+    }
+
+    /**
+     * Endpoint: /dashboard
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getAppDashboardHtml(Request $request): Response
+    {
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+
+        return Response::createHtmlResponse(
+            template: 'app/frontend/private/dashboard',
+            responseData: new HtmlResponseData(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navDashboard'),
+            ),
+        );
     }
 }

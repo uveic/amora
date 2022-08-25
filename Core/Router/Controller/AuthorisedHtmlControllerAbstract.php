@@ -20,15 +20,6 @@ abstract class AuthorisedHtmlControllerAbstract extends AbstractController
     abstract protected function authenticate(Request $request): bool;
 
     /**
-     * Endpoint: /dashboard
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function getAppDashboardHtml(Request $request): Response;
-
-    /**
      * Endpoint: /logout
      * Method: GET
      *
@@ -58,34 +49,6 @@ abstract class AuthorisedHtmlControllerAbstract extends AbstractController
         string $settingsPage,
         Request $request
     ): Response;
-
-    private function validateAndCallGetAppDashboardHtml(Request $request): Response
-    {
-        $errors = [];
-
-        if ($errors) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->getAppDashboardHtml(
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in AuthorisedHtmlControllerAbstract - Method: getAppDashboardHtml()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
 
     private function validateAndCallLogout(Request $request): Response
     {
@@ -197,16 +160,6 @@ abstract class AuthorisedHtmlControllerAbstract extends AbstractController
         $path = $request->getPath();
         $pathParts = explode('/', $path);
         $method = $request->method;
-
-        if ($method === 'GET' &&
-            $this->pathParamsMatcher(
-                ['dashboard'],
-                $pathParts,
-                ['fixed']
-            )
-        ) {
-            return $this->validateAndCallGetAppDashboardHtml($request);
-        }
 
         if ($method === 'GET' &&
             $this->pathParamsMatcher(

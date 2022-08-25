@@ -1,0 +1,40 @@
+<?php
+
+use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Util\UrlBuilderUtil;
+
+/** @var HtmlResponseDataAuthorised $responseData */
+
+?>
+<!DOCTYPE html>
+<html lang="<?=strtolower($responseData->siteLanguage->value)?>">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="<?=$responseData->getPageDescription()?>">
+  <title><?=$responseData->getPageTitle()?></title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link href="/css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<?=$this->insert('../../backoffice/partials/navbar', ['responseData' => $responseData])?>
+  <main>
+    <section>
+      <div id="feedback" class="feedback null"></div>
+      <div class="m-r-1 m-l-1">
+        <h1><?=$responseData->getLocalValue('navDashboard')?></h1>
+      </div
+      <div class="content-flex">
+
+      </div>
+    </section>
+  </main>
+  <footer>
+    <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
+  </footer>
+</body>
+</html>

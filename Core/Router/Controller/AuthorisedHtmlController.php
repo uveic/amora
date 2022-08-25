@@ -30,27 +30,6 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
     }
 
     /**
-     * Endpoint: /dashboard
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     * @throws Exception
-     */
-    protected function getAppDashboardHtml(Request $request): Response
-    {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-
-        return Response::createHtmlResponse(
-            template: 'core/frontend/private/dashboard',
-            responseData: new HtmlResponseData(
-                request: $request,
-                pageTitle: $localisationUtil->getValue('navDashboard'),
-            ),
-        );
-    }
-
-    /**
      * Endpoint: /logout
      * Method: GET
      *

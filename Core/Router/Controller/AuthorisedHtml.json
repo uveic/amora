@@ -23,23 +23,6 @@
     "text/plain"
   ],
   "paths": {
-    "/dashboard": {
-      "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the App dashboard page",
-        "description": "",
-        "operationId": "getAppDashboardHtml",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "HTML",
-            "schema": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
     "/logout": {
       "get": {
         "tags": [],
