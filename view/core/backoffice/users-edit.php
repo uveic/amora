@@ -1,7 +1,7 @@
 <?php
 
 use Amora\Core\Core;
-use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\User\Value\UserRole;
 
 /** @var HtmlResponseDataAuthorised $responseData */

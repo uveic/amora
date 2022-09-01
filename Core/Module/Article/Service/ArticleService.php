@@ -4,12 +4,12 @@ namespace Amora\Core\Module\Article\Service;
 
 use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
-use Amora\Core\Model\Response\Feedback;
+use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Util\Logger;
-use Amora\Core\Model\Response\Pagination;
-use Amora\Core\Model\Util\QueryOptions;
-use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Entity\Response\Pagination;
+use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
 use Amora\Core\Module\Article\Datalayer\TagDataLayer;
 use Amora\Core\Module\Article\Model\Article;

@@ -2,7 +2,7 @@
 
 namespace Amora\App\Router;
 
-use Amora\Core\Model\Request;
+use Amora\Core\Entity\Request;
 
 final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
 {

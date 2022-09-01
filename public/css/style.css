@@ -127,11 +127,11 @@ header {
   max-width: 250px;
 }
 
-a.white,
-a.white:hover,
-a.white:active,
-a.white:visited,
-a.white:focus {
+.logo a,
+.logo a:hover,
+.logo a:active,
+.logo a:visited,
+.logo a:focus {
   color: var(--main-bg-color);
 }
 
@@ -852,7 +852,7 @@ svg,
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 70px !important;
+  width: 30% !important;
   height: auto !important;
   opacity: 1;
   z-index: 900;

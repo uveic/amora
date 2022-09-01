@@ -24,9 +24,9 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'PublicHtmlController',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Model/Response/HtmlHomepageResponseData.php';
-                require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
-                require_once self::getPathRoot() . '/Core/Model/Response/Feedback.php';
+                require_once self::getPathRoot() . '/Core/Entity/Response/HtmlHomepageResponseData.php';
+                require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseData.php';
+                require_once self::getPathRoot() . '/Core/Entity/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicHtmlControllerAbstract.php';
@@ -50,7 +50,6 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'AuthorisedHtmlController',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleType.php';
                 require_once self::getPathRoot() . '/Core/Util/CsvWriterUtil.php';
                 require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
@@ -74,8 +73,8 @@ class RouterCore extends Core
             className: 'BackofficeHtmlController',
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
-                require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseData.php';
-                require_once self::getPathRoot() . '/Core/Model/Response/HtmlResponseDataAuthorised.php';
+                require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseData.php';
+                require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseDataAuthorised.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeHtmlController.php';
@@ -98,7 +97,7 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'BackofficeApiController',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Model/Response/Feedback.php';
+                require_once self::getPathRoot() . '/Core/Entity/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeApiController.php';
@@ -122,7 +121,7 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'AuthorisedApiController',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Model/Response/Feedback.php';
+                require_once self::getPathRoot() . '/Core/Entity/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiController.php';

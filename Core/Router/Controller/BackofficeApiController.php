@@ -2,8 +2,8 @@
 
 namespace Amora\Core\Router;
 
-use Amora\Core\Model\Util\QueryOptions;
-use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\VerificationType;
@@ -14,7 +14,7 @@ use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Util\Logger;
-use Amora\Core\Model\Response;
+use Amora\Core\Entity\Response;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Module\Article\Service\ArticleService;
@@ -23,7 +23,7 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Service\UserService;
-use Amora\Core\Model\Request;
+use Amora\Core\Entity\Request;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;

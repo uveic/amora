@@ -3,7 +3,7 @@
 namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Model\Response\Feedback;
+use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Module\DataLayerTrait;

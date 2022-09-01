@@ -550,6 +550,7 @@ input.pexego-content-title {
   min-height: 50px;
   flex-grow: 1;
   border: 4px solid var(--main-bg-color);
+  position: relative;
 }
 
 #upload-media {

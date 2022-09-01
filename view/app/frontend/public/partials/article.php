@@ -1,6 +1,6 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;

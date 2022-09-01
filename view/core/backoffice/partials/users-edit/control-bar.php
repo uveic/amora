@@ -1,6 +1,6 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 

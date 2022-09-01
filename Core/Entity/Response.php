@@ -1,13 +1,13 @@
 <?php
 
-namespace Amora\Core\Model;
+namespace Amora\Core\Entity;
 
 use Amora\App\Value\Language;
 use DOMDocument;
 use League\Plates\Engine;
 use SimpleXMLElement;
 use Amora\Core\Core;
-use Amora\Core\Model\Response\HtmlResponseDataAbstract;
+use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 use Amora\Core\Util\UrlBuilderUtil;
 
 enum HttpStatusCode: string

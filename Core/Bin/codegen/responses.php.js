@@ -9,8 +9,8 @@ function renderMain(className, operationId, httpStatus, responseSchema, classPre
     `<?php
 namespace Amora\\${classPrefix}\\Router\\Controller\\Response;
 
-use Amora\\Core\\Model\\Response;
-use Amora\\Core\\Model\\HttpStatusCode;
+use Amora\\Core\\Entity\\Response;
+use Amora\\Core\\Entity\\HttpStatusCode;
 `,
     renderResponseClass(className, operationId, httpStatus, responseSchema),
     ``

@@ -1,4 +1,4 @@
-import {cleanString, getUpdatedAtTime} from './module/util.js';
+import {getSectionTypeIdFromClassList, cleanString, getUpdatedAtTime} from './module/util.js';
 import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
 import {global} from "./module/localisation.js";
@@ -10,20 +10,6 @@ let globalTags = [];
 document.querySelectorAll('.article-save-button').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
-
-    const getSectionTypeIdFromClassList = (classList) => {
-      if (classList.contains(pexegoClasses.sectionParagraph)) {
-        return 1;
-      }
-
-      if (classList.contains(pexegoClasses.sectionImage)) {
-        return 2;
-      }
-
-      if (classList.contains(pexegoClasses.sectionVideo)) {
-        return 3;
-      }
-    };
 
     const afterApiCall = function(articleId, articlePublicUri, articleBackofficeUri) {
       history.pushState("", document.title, articleBackofficeUri);

@@ -7,7 +7,7 @@ use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\User\Datalayer\UserDataLayer;
 use Amora\Core\Util\Logger;
-use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Value\QueryOrderDirection;
 

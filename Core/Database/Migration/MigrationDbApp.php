@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Database\migration;
 
-use Amora\Core\Model\Response\Feedback;
+use Amora\Core\Entity\Response\Feedback;
 use Exception;
 use Amora\Core\Database\MySqlDb;
 

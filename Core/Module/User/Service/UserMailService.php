@@ -3,7 +3,7 @@
 namespace Amora\Core\Module\User\Service;
 
 use Amora\Core\Core;
-use Amora\Core\Model\Response\Feedback;
+use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Service\MailerService;
 use Amora\Core\Module\Mailer\Value\MailerTemplate;

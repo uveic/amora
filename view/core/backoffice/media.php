@@ -1,6 +1,6 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\DateUtil;

@@ -1,8 +1,8 @@
 <?php
 namespace Amora\Core\Router\Controller\Response;
 
-use Amora\Core\Model\Response;
-use Amora\Core\Model\HttpStatusCode;
+use Amora\Core\Entity\Response;
+use Amora\Core\Entity\HttpStatusCode;
 
 class BackofficeApiControllerStoreTagFailureResponse extends Response
 {

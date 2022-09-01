@@ -2,14 +2,14 @@
 
 namespace Amora\Core\Module\Article\Service;
 
-use Amora\Core\Model\Response\Feedback;
+use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\Logger;
-use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
 use Amora\Core\Util\StringUtil;
 use DateTimeImmutable;

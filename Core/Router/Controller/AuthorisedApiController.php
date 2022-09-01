@@ -2,8 +2,8 @@
 
 namespace Amora\Core\Router;
 
-use Amora\Core\Model\Util\QueryOptions;
-use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\ArticleService;
@@ -13,8 +13,8 @@ use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Service\MediaService;
-use Amora\Core\Model\Request;
-use Amora\Core\Model\Response;
+use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response;
 use Amora\Core\Value\QueryOrderDirection;
 use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
     AuthorisedApiControllerDestroyFileUnauthorisedResponse,
@@ -165,7 +165,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      * @param string|null $direction
      * @param int|null $qty
      * @param int|null $typeId
-     * @param \Amora\Core\Model\Request $request
+     * @param \Amora\Core\Entity\Request $request
      * @return Response
      */
     protected function getNextFile(

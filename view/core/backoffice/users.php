@@ -1,7 +1,7 @@
 <?php
 
 use Amora\Core\Module\User\Model\User;
-use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Util\UrlBuilderUtil;
 

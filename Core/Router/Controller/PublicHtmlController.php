@@ -3,18 +3,18 @@
 namespace Amora\Core\Router;
 
 use Amora\Core\Core;
-use Amora\Core\Model\Response\HtmlHomepageResponseData;
-use Amora\Core\Model\Response\HtmlResponseData;
-use Amora\Core\Model\Response\Feedback;
-use Amora\Core\Model\Util\QueryOptions;
-use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Entity\Response\HtmlHomepageResponseData;
+use Amora\Core\Entity\Response\HtmlResponseData;
+use Amora\Core\Entity\Response\Feedback;
+use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\XmlService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Service\UserService;
-use Amora\Core\Model\Request;
-use Amora\Core\Model\Response;
+use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;

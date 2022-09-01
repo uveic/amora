@@ -38,11 +38,11 @@ class Core
 
         self::$pathToRoot = $pathToRoot;
 
-        require_once self::$pathToRoot . '/Core/Model/Request.php';
-        require_once self::$pathToRoot . '/Core/Model/Response.php';
-        require_once self::$pathToRoot . '/Core/Model/Menu/MenuItem.php';
-        require_once self::$pathToRoot . '/Core/Model/Response/HtmlResponseDataAbstract.php';
-        require_once self::$pathToRoot . '/Core/Model/Response/Pagination.php';
+        require_once self::$pathToRoot . '/Core/Entity/Request.php';
+        require_once self::$pathToRoot . '/Core/Entity/Response.php';
+        require_once self::$pathToRoot . '/Core/Entity/Util/MenuItem.php';
+        require_once self::$pathToRoot . '/Core/Entity/Response/HtmlResponseDataAbstract.php';
+        require_once self::$pathToRoot . '/Core/Entity/Response/Pagination.php';
         require_once self::$pathToRoot . '/Core/Config/AbstractConfig.php';
         require_once self::$pathToRoot . '/App/Config/AppConfig.php';
 
@@ -52,6 +52,7 @@ class Core
         require_once self::$pathToRoot . '/Core/Util/StringUtil.php';
         require_once self::$pathToRoot . '/Core/Util/UrlBuilderUtil.php';
 
+        require_once self::$pathToRoot . '/Core/Module/Article/Value/ArticleType.php';
         require_once self::$pathToRoot . '/Core/Value/Menu/CoreMenu.php';
         require_once self::$pathToRoot . '/Core/Module/DataLayerTrait.php';
 
@@ -190,7 +191,7 @@ class Core
         return self::getInstance(
             className: 'Router',
             factory: function () use ($actionService) {
-                require_once self::$pathToRoot . '/Core/Model/Response/HtmlResponseData.php';
+                require_once self::$pathToRoot . '/Core/Entity/Response/HtmlResponseData.php';
                 require_once self::$pathToRoot . '/App/Router/AppRouterCore.php';
                 require_once self::$pathToRoot . '/App/Router/AppRouter.php';
                 require_once self::$pathToRoot . '/Core/Router/RouterCore.php';
@@ -225,9 +226,9 @@ class Core
                 $logger = self::getLogger();
 
                 require_once self::$pathToRoot . '/Core/Value/QueryOrderDirection.php';
-                require_once self::$pathToRoot . '/Core/Model/Util/QueryOrderBy.php';
-                require_once self::$pathToRoot . '/Core/Model/Util/QueryOptions.php';
-                require_once self::$pathToRoot . '/Core/Model/Response/Feedback.php';
+                require_once self::$pathToRoot . '/Core/Entity/Util/QueryOrderBy.php';
+                require_once self::$pathToRoot . '/Core/Entity/Util/QueryOptions.php';
+                require_once self::$pathToRoot . '/Core/Entity/Response/Feedback.php';
                 require_once self::$pathToRoot . '/Core/Database/MySqlDb.php';
                 return new MySqlDb(
                     logger: $logger,
@@ -300,7 +301,7 @@ class Core
         return self::getInstance(
             className: 'SyncLookupTablesApp',
             factory: function () use ($logger) {
-                require_once self::$pathToRoot . '/Core/Model/Util/LookupTableSettings.php';
+                require_once self::$pathToRoot . '/Core/Entity/Util/LookupTableSettings.php';
                 require_once self::$pathToRoot . '/Core/App/SyncLookupTablesApp.php';
                 return new SyncLookupTablesApp($logger);
             },

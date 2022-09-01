@@ -3,8 +3,8 @@
 namespace Amora\Core\Router;
 
 use Amora\Core\Core;
-use Amora\Core\Model\Request;
-use Amora\Core\Model\Response;
+use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response;
 use Amora\Core\Router\AbstractController;
 use Amora\Core\Router\RouterCore;
 use Amora\Core\Util\StringUtil;

@@ -4,8 +4,8 @@ namespace Amora\App\Router;
 
 use Amora\Core\Router\Router;
 use Exception;
-use Amora\Core\Model\Request;
-use Amora\Core\Model\Response;
+use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response;
 
 class AppRouter
 {

@@ -4,7 +4,7 @@ namespace Amora\Core\Module\User\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Util\Logger;
-use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserRegistrationRequest;

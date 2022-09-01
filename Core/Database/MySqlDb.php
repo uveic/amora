@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Database;
 
-use Amora\Core\Model\Response\Feedback;
+use Amora\Core\Entity\Response\Feedback;
 use PDO;
 use Throwable;
 use Amora\Core\Util\Logger;

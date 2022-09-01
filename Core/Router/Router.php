@@ -10,9 +10,9 @@ use Amora\Core\Module\Article\Value\ArticleType;
 use Exception;
 use Throwable;
 use Amora\Core\Core;
-use Amora\Core\Model\Request;
-use Amora\Core\Model\Response;
-use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response;
+use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 

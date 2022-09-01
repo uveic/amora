@@ -1,7 +1,7 @@
 <?php
 
 use Amora\Core\Module\Article\Model\Article;
-use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 

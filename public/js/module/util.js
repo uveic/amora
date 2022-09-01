@@ -1,14 +1,15 @@
 import {global} from './localisation.js';
+import {classes as pexegoClasses} from "./pexego.js";
 
-function getUpdatedAtTime () {
+const getUpdatedAtTime = () => {
   const now = new Date();
   const prefix = ' ' + global.get('globalAt') + ' ';
 
   return prefix + now.getHours().toString().padStart(2, '0') +
     ':' + now.getMinutes().toString().padStart(2, '0');
-}
+};
 
-function cleanString(text) {
+const cleanString = (text) => {
   return text
     .trim()
     .toLowerCase()
@@ -23,6 +24,24 @@ function cleanString(text) {
     .replace(/[^A-Za-z0-9\-]/g,'-')
     .replace(/-+/g, '-')
     .replace(/-$/g, '');
-}
+};
 
-export {getUpdatedAtTime, cleanString};
+const getSectionTypeIdFromClassList = (classList) => {
+  if (classList.contains(pexegoClasses.sectionParagraph)) {
+    return 1;
+  }
+
+  if (classList.contains(pexegoClasses.sectionImage)) {
+    return 2;
+  }
+
+  if (classList.contains(pexegoClasses.sectionVideo)) {
+    return 3;
+  }
+};
+
+export {
+  getSectionTypeIdFromClassList,
+  getUpdatedAtTime,
+  cleanString,
+};

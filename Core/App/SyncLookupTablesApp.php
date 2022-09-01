@@ -2,7 +2,7 @@
 
 namespace Amora\Core\App;
 
-use Amora\Core\Model\Util\LookupTableSettings;
+use Amora\Core\Entity\Util\LookupTableSettings;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Util\Logger;
 use Throwable;

@@ -1,6 +1,6 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlHomepageResponseData;
+use Amora\Core\Entity\Response\HtmlHomepageResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlHomepageResponseData $responseData */

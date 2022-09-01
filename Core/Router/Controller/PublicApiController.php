@@ -2,9 +2,9 @@
 
 namespace Amora\Core\Router;
 
-use Amora\Core\Model\Response\Pagination;
-use Amora\Core\Model\Util\QueryOptions;
-use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Entity\Response\Pagination;
+use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
@@ -28,8 +28,8 @@ use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\App\Value\Language;
-use Amora\Core\Model\Request;
-use Amora\Core\Model\Response;
+use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordResetFailureResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordResetSuccessResponse;

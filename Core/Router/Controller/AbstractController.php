@@ -2,8 +2,8 @@
 
 namespace Amora\Core\Router;
 
-use Amora\Core\Model\Request;
-use Amora\Core\Model\Response;
+use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response;
 
 abstract class AbstractController
 {

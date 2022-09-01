@@ -8,7 +8,7 @@ require_once Core::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php
 require_once Core::getPathRoot() . '/App/Value/Mailer/AppMailerTemplate.php';
 
 use Amora\App\Value\Mailer\AppMailerTemplate;
-use Amora\Core\Model\Util\LookupTableSettings;
+use Amora\Core\Entity\Util\LookupTableSettings;
 use function Amora\Core\Value\asArray;
 
 return [

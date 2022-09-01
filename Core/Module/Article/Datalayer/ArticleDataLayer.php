@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Module\Article\Datalayer;
 
-use Amora\Core\Model\Response\Feedback;
+use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\DateUtil;
@@ -10,7 +10,7 @@ use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Util\Logger;
-use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;
 use Amora\Core\Module\User\Datalayer\UserDataLayer;

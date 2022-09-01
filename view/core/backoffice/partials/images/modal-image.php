@@ -1,6 +1,6 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseDataAbstract;
+use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 
 /** @var HtmlResponseDataAbstract $responseData */
 

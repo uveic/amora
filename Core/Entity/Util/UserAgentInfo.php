@@ -1,6 +1,6 @@
 <?php
 
-namespace Amora\Core\Model\Util;
+namespace Amora\Core\Entity\Util;
 
 class UserAgentInfo
 {

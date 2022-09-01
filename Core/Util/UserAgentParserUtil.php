@@ -1,6 +1,6 @@
 <?php
 
-use Amora\Core\Model\Util\UserAgentInfo;
+use Amora\Core\Entity\Util\UserAgentInfo;
 
 final class UserAgentParserUtil
 {

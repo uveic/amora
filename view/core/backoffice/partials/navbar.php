@@ -1,9 +1,14 @@
 <?php
 
-use Amora\Core\Menu\MenuItem;
-use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Util\MenuItem;
+use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 
 /** @var HtmlResponseDataAuthorised $responseData */
+
+if (!isset($menuItems)) {
+    echo 'You forgot to pass the variable $menuItems to the template builder. Aborting...';
+    die;
+}
 
 $userRegisteredMoreThan24HoursAgo = $responseData->minutesSinceUserRegistration() > 24 * 60;
 if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
@@ -12,17 +17,18 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
   </div>
 <?php } ?>
 <header>
-  <h1 class="logo"><a class="white" href="<?=$responseData->getBaseUrlWithLanguage()?>"><?=$this->e($responseData->siteName)?></a></h1>
+  <h1 class="logo"><a href="<?=$responseData->getBaseUrlWithLanguage()?>"><?=$this->e($responseData->siteName)?></a></h1>
   <input type="checkbox" id="mobile-nav" class="mobile-nav">
   <nav>
     <ul>
 <?php
     $i = 0;
     /** @var MenuItem $menuItem */
-    foreach ($responseData->getMenu() as $menuItem) {
+    foreach ($menuItems as $menuItem) {
         if (empty($menuItem->children)) {
-          echo '      <li><a href="' . $menuItem->uri . '" class="nav-dropdown-item">' . $menuItem->text . '</a></li>';
-          continue;
+            $class = $menuItem->class ? ' ' . $menuItem->class : '';
+            echo '      <li><a href="' . $menuItem->uri . '" class="nav-dropdown-item' . $class . '">' . $menuItem->text . '</a></li>';
+            continue;
         }
 ?>
       <li>
@@ -33,7 +39,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
 <?php
     /** @var MenuItem $child */
     foreach ($menuItem->children as $child) {
-        echo '            <li><a href="' . $child->uri . '">' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
+        echo '            <li><a class="' . ($menuItem->class ?? '') . '" href="' . $child->uri . '">' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
     }
 ?>
           </ul>

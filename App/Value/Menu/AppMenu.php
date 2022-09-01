@@ -2,53 +2,50 @@
 
 namespace Amora\App\Value;
 
-use Amora\Core\Core;
-use Amora\Core\Menu\MenuItem;
-use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreMenu;
 
 final class AppMenu
 {
-    public static function getAdminAll(
+    public static function getAdmin(
         Language $language,
         ?string $username = null,
+        bool $includeUserDashboardLink = true,
     ): array {
         $appMenu = [];
 
         $output = array_merge(
-            CoreMenu::getAdminMenu($language, $username),
+            CoreMenu::getAdmin(
+                language: $language,
+                username: $username,
+                includeUserDashboardLink: $includeUserDashboardLink,
+            ),
             $appMenu,
         );
 
         usort($output, function($a, $b) {
-            return $a->order - $b->order;
+            return $a?->order - $b?->order;
         });
 
         return $output;
     }
 
-    public static function getCustomerAll(
+    public static function getCustomer(
         Language $language,
         string $username = null,
         bool $includeAdminLink = false,
+        bool $whiteIcon = false,
     ): array {
-        $localisationUtil = Core::getLocalisationUtil($language, false);
-
         $appMenu = [];
 
         $output = array_merge(
-            CoreMenu::getUserMenu($language, $username),
-            self::getPublicAll($language),
+            CoreMenu::getCustomer(
+                language: $language,
+                username: $username,
+                includeAdminLink: $includeAdminLink,
+                whiteIcon: $whiteIcon,
+            ),
             $appMenu,
         );
-
-        if ($includeAdminLink) {
-            $output[] = new MenuItem(
-                uri: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
-                text: $localisationUtil->getValue('navAdministrator'),
-                order: 1
-            );
-        }
 
         usort($output, function($a, $b) {
             return $a->order - $b->order;
@@ -57,13 +54,20 @@ final class AppMenu
         return $output;
     }
 
-    public static function getPublicAll(
+    public static function getPublic(
         Language $language,
     ): array {
-        $output = [];
+        $appMenu = [];
+
+        $output = array_merge(
+            CoreMenu::getPublic(
+                language: $language,
+            ),
+            $appMenu,
+        );
 
         usort($output, function($a, $b) {
-            return $a->order - $b->order;
+            return $a?->order - $b?->order;
         });
 
         return $output;

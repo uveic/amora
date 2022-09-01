@@ -3,9 +3,9 @@
 namespace Amora\Core\Router;
 
 use Amora\Core\Core;
-use Amora\Core\Model\Request;
-use Amora\Core\Model\Response;
-use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response;
+use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Util\UrlBuilderUtil;
 use Exception;

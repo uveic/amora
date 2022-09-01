@@ -1,9 +1,17 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
+use Amora\App\Value\AppMenu;
+use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
+
+$menuItems = AppMenu::getCustomer(
+    language: $responseData->siteLanguage,
+    username: $responseData->request->session->user->getNameOrEmail(),
+    includeAdminLink: true,
+    whiteIcon: true,
+);
 
 ?>
 <!DOCTYPE html>
@@ -21,7 +29,7 @@ use Amora\Core\Util\UrlBuilderUtil;
   <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<?=$this->insert('../../backoffice/partials/navbar', ['responseData' => $responseData])?>
+<?=$this->insert('../../../core/backoffice/partials/navbar', ['responseData' => $responseData, 'menuItems' => $menuItems])?>
   <main>
     <section>
       <div id="feedback" class="feedback null"></div>
@@ -34,7 +42,7 @@ use Amora\Core\Util\UrlBuilderUtil;
     </section>
   </main>
   <footer>
-    <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navAdminDashboard')?></a>
+    <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navAdministrator')?></a>
   </footer>
 </body>
 </html>

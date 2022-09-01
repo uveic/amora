@@ -1,10 +1,10 @@
 <?php
 
-namespace Amora\Core\Model\Response;
+namespace Amora\Core\Entity\Response;
 
 use Amora\App\Value\AppMenu;
 use Amora\Core\Core;
-use Amora\Core\Model\Request;
+use Amora\Core\Entity\Request;
 use Amora\Core\Util\LocalisationUtil;
 use Amora\App\Value\Language;
 
@@ -85,33 +85,6 @@ abstract class HtmlResponseDataAbstract
     public function getLocalValue(string $key): string
     {
         return $this->localisationUtil->getValue($key);
-    }
-
-    public function getMenu(bool $forceCustomerMenu = false): array
-    {
-        if ($this->request->session && $this->request->session->isAdmin() && !$forceCustomerMenu) {
-            return AppMenu::getAdminAll(
-                language: $this->siteLanguage,
-                username: $this->request->session->user->getNameOrEmail(),
-            );
-        }
-
-        if ($this->request->session) {
-            return AppMenu::getCustomerAll(
-                language: $this->siteLanguage,
-                username: $this->request->session->user->getNameOrEmail(),
-                includeAdminLink: $this->request->session->isAdmin(),
-            );
-        }
-
-        return [];
-    }
-
-    public function getPublicMenu(): array
-    {
-        return AppMenu::getPublicAll(
-            language: $this->siteLanguage,
-        );
     }
 
     public function isUserVerified(): bool

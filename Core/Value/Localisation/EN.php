@@ -4,6 +4,7 @@ use Amora\Core\Module\User\Service\UserService;
 
 return [
     'navDashboard' => 'Dashboard',
+    'navAdministrator' => 'Admin',
     'navAccount' => 'Account',
     'navSignOut' => 'Sign Out',
     'navSignIn' => 'Sign In',
@@ -12,8 +13,6 @@ return [
     'navCreatePassword' => 'Create Password',
     'navDownloadAccountData' => 'Download Account Data',
     'navDeleteAccount' => 'Delete Account',
-    'navAdministrator' => 'Admin',
-    'navAdminDashboard' => 'Dashboard',
     'navAdminUsers' => 'Users',
     'navAdminContent' => 'Content',
     'navAdminImages' => 'Images',
@@ -58,7 +57,7 @@ return [
     'authenticationPasswordCreationActionSuccess' => 'Password created successfully.',
 
     'authenticationInviteRequest' => 'Get your invitation',
-    'authenticationInviteRequestSubtitle' => 'The site is currently in private beta, we are making sure everything works as expected and looking forward to getting it ready for you. Enter your email address and we\'ll send you an invitation as soon as it\'s ready.<br>Thank you for your patience!',
+    'authenticationInviteRequestSubtitle' => 'The site is currently in private beta, we are making sure everything works as expected and looking forward to getting it ready for you. Enter your email address and we\'ll send you an invitation as soon as it\'s ready. We respect your privacy, your email address will only be used to send you an invitation. Thank you for your patience!',
     'authenticationInviteRequestActionSuccess' => '<h2>Invitation request received</h2><p>We will send your invitation as soon as everything is ready. Thank you for your patience!</p><p>Your email: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Go back to homepage',
     'authenticationInviteRequestFormAction' => 'Request invitation',

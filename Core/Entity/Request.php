@@ -1,6 +1,6 @@
 <?php
 
-namespace Amora\Core\Model;
+namespace Amora\Core\Entity;
 
 use Amora\Core\Core;
 use Amora\Core\Module\User\Model\Session;

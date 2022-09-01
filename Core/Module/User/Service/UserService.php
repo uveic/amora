@@ -3,14 +3,14 @@
 namespace Amora\Core\Module\User\Service;
 
 use Amora\Core\Core;
-use Amora\Core\Model\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Util\LocalisationUtil;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Amora\Core\Util\Logger;
-use Amora\Core\Model\Response\Feedback;
+use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\User\Datalayer\UserDataLayer;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserRegistrationRequest;

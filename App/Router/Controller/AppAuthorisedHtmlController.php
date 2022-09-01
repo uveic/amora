@@ -3,9 +3,9 @@
 namespace Amora\App\Router;
 
 use Amora\Core\Core;
-use Amora\Core\Model\Request;
-use Amora\Core\Model\Response;
-use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response;
+use Amora\Core\Entity\Response\HtmlResponseData;
 
 final class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstract
 {

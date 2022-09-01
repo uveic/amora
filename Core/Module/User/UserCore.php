@@ -92,7 +92,7 @@ class UserCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/Session.php';
-                require_once self::getPathRoot() . '/Core/Model/Util/UserAgentInfo.php';
+                require_once self::getPathRoot() . '/Core/Entity/Util/UserAgentInfo.php';
                 require_once self::getPathRoot() . '/Core/Util/UserAgentParserUtil.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Service/SessionService.php';

@@ -1,7 +1,7 @@
 <?php
 
 use Amora\Core\Core;
-use Amora\Core\Model\Request;
+use Amora\Core\Entity\Request;
 use Amora\Core\Util\NetworkUtil;
 
 require_once '../Core/Core.php';

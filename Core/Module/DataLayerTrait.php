@@ -2,8 +2,8 @@
 
 namespace Amora\Core\Module;
 
-use Amora\Core\Model\Util\QueryOptions;
-use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Util\StringUtil;
 
 trait DataLayerTrait {

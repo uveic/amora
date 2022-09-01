@@ -1,6 +1,6 @@
 <?php
 
-namespace Amora\Core\Menu;
+namespace Amora\Core\Entity\Util;
 
 class MenuItem
 {
@@ -10,5 +10,6 @@ class MenuItem
         public readonly ?string $icon = null,
         public readonly array $children = [],
         public readonly int $order = 0,
+        public readonly ?string $class = null,
     ) {}
 }

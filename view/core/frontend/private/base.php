@@ -1,8 +1,16 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\App\Value\AppMenu;
+use Amora\Core\Entity\Response\HtmlResponseData;
 
 /** @var HtmlResponseData $responseData */
+
+$menuItems = AppMenu::getCustomer(
+    language: $responseData->siteLanguage,
+    username: $responseData->request->session->user->getNameOrEmail(),
+    includeAdminLink: true,
+    whiteIcon: true,
+);
 
 ?>
 <!DOCTYPE html>
@@ -20,7 +28,7 @@ use Amora\Core\Model\Response\HtmlResponseData;
   <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<?=$this->insert('../../backoffice/partials/navbar', ['responseData' => $responseData])?>
+<?=$this->insert('../../backoffice/partials/navbar', ['responseData' => $responseData, 'menuItems' => $menuItems])?>
 <?=$this->section('content')?>
 <?=$this->insert('partials/footer')?>
 </body>

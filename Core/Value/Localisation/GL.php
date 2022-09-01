@@ -4,6 +4,7 @@ use Amora\Core\Module\User\Service\UserService;
 
 return [
     'navDashboard' => 'Inicio',
+    'navAdministrator' => 'Admin',
     'navAccount' => 'Os teus datos',
     'navSignOut' => 'Saír',
     'navSignIn' => 'Entra',
@@ -12,8 +13,6 @@ return [
     'navCreatePassword' => 'Crear contrasinal',
     'navDownloadAccountData' => 'Descargar os teus datos',
     'navDeleteAccount' => 'Eliminar conta',
-    'navAdministrator' => 'Admin',
-    'navAdminDashboard' => 'Inicio',
     'navAdminUsers' => 'Usuarios',
     'navAdminContent' => 'Contido',
     'navAdminImages' => 'Imaxes',
@@ -57,7 +56,7 @@ return [
     'authenticationPasswordCreationActionSuccess' => 'Contrasinal creado correctamente.',
 
     'authenticationInviteRequest' => 'Consegue unha invitación',
-    'authenticationInviteRequestSubtitle' => 'A web está actualmente nunha beta privada, estamos traballando para asegurarnos de que todo funciona correctamente e con moitas ganas de que estea lista para que a poidas utilizar. Déixanos o teu correo e enviarémosche unha invitación tan pronto como sexa posible. Só utilizaremos o teu correo para enviarche a invitación.<br>Grazas pola túa paciencia!',
+    'authenticationInviteRequestSubtitle' => 'A web está actualmente nunha beta privada, estamos traballando para asegurármonos de que todo funciona correctamente e con moita gana de que estea lista para que a poidas utilizar. Déixanos o teu correo e enviarémosche unha invitación tan pronto como sexa posible. Respectamos a túa privacidade, só utilizaremos o teu correo para enviarche a invitación. Grazas pola túa paciencia!',
     'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>Enviarémosche unha invitación en canto teñamos todo listo. Grazas pola espera!</p><p>O teu correo: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Volver á páxina principal',
     'authenticationInviteRequestFormAction' => 'Solicitar invitación',

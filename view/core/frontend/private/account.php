@@ -1,6 +1,6 @@
 <?php
 
-use Amora\Core\Model\Response\HtmlResponseData;
+use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
@@ -9,15 +9,11 @@ $this->layout('base', ['responseData' => $responseData]);
 
 $url = trim(str_replace('account', '', $responseData->sitePath), ' /');
 
-$settingsClass = '';
 $passwordClass = '';
 $userClass = '';
 $downloadClass = '';
 $deleteAccountClass = '';
 switch ($url) {
-    case 'settings':
-        $settingsClass = ' selected';
-        break;
     case 'password':
         $passwordClass = ' selected';
         break;
@@ -48,9 +44,6 @@ switch ($url) {
         <div class="content-narrow-width">
 <?php
     switch ($url) {
-        case 'settings':
-            $this->insert('partials/account/event', ['responseData' => $responseData]);
-            break;
         case 'password':
             $this->insert('partials/account/password', ['responseData' => $responseData]);
             break;

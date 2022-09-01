@@ -16,7 +16,7 @@ require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionTyp
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
 
-use Amora\Core\Model\Util\LookupTableSettings;
+use Amora\Core\Entity\Util\LookupTableSettings;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;

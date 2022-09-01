@@ -1,6 +1,6 @@
 <?php
 
-namespace Amora\Core\Model\Response;
+namespace Amora\Core\Entity\Response;
 
 class Feedback
 {

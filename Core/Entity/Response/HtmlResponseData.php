@@ -1,8 +1,8 @@
 <?php
 
-namespace Amora\Core\Model\Response;
+namespace Amora\Core\Entity\Response;
 
-use Amora\Core\Model\Request;
+use Amora\Core\Entity\Request;
 use Amora\Core\Module\Article\Model\Article;
 
 class HtmlResponseData extends HtmlResponseDataAbstract

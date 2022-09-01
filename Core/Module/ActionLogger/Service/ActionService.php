@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Util\Logger;
-use Amora\Core\Model\Request;
+use Amora\Core\Entity\Request;
 use Amora\Core\Module\Action\Datalayer\ActionDataLayer;
 use Amora\Core\Module\Action\Model\Action;
 

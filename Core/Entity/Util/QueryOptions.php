@@ -1,8 +1,8 @@
 <?php
 
-namespace Amora\Core\Model\Util;
+namespace Amora\Core\Entity\Util;
 
-use Amora\Core\Model\Response\Pagination;
+use Amora\Core\Entity\Response\Pagination;
 
 class QueryOptions
 {

@@ -36,6 +36,7 @@ class UrlBuilderUtil
 
     const PUBLIC_HTML_INVITE_REQUEST = '/invite-request';
     const PUBLIC_HTML_LOGIN = '/login';
+    const PUBLIC_HTML_REGISTER = '/register';
     const PUBLIC_HTML_LOGIN_FORGOT = '/login/forgot';
     const PUBLIC_CREATE_PASSWORD = '/user/create/%s';
     const PUBLIC_VERIFY_USER = '/user/verify/%s';
@@ -171,6 +172,11 @@ class UrlBuilderUtil
     public static function buildPublicLoginUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::PUBLIC_HTML_LOGIN;
+    }
+
+    public static function buildPublicRegisterUrl(Language $language): string
+    {
+        return self::buildBaseUrl($language) . self::PUBLIC_HTML_REGISTER;
     }
 
     public static function buildPublicLoginForgotUrl(Language $language): string

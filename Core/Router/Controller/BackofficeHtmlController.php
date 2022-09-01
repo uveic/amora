@@ -4,12 +4,12 @@ namespace Amora\Core\Router;
 
 use Amora\App\Value\Language;
 use Amora\Core\Core;
-use Amora\Core\Model\Response\HtmlResponseData;
-use Amora\Core\Model\Response\HtmlResponseDataAuthorised;
-use Amora\Core\Model\Request;
-use Amora\Core\Model\Response;
-use Amora\Core\Model\Util\QueryOptions;
-use Amora\Core\Model\Util\QueryOrderBy;
+use Amora\Core\Entity\Response\HtmlResponseData;
+use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response;
+use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
@@ -68,7 +68,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             template: 'core/backoffice/dashboard',
             responseData: new HtmlResponseData(
                 request: $request,
-                pageTitle: $localisationUtil->getValue('navAdminDashboard'),
+                pageTitle: $localisationUtil->getValue('navAdministrator'),
             ),
         );
     }
