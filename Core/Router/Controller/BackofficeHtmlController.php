@@ -261,7 +261,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
                     $localisationUtil->getValue('globalArticle'),
-                articles: [$article],
+                article: $article,
                 articleSections: $articleSections,
             ),
         );

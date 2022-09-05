@@ -215,7 +215,7 @@ class Router
                 pageTitle: $article->title,
                 pageDescription: $article->getContentExcerpt(),
                 mainImageSiteUri: $siteImageUrl,
-                articles: [$article],
+                article: $article,
                 previousBlogPost: $article->publishOn
                     ? $articleService->getPreviousBlogPost(
                         publishedBefore: $article->publishOn,

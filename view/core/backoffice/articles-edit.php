@@ -7,7 +7,7 @@ use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 
 /** @var HtmlResponseDataAuthorised $responseData */
-$article = $responseData->getFirstArticle();
+$article = $responseData->article;
 $articleSections = $responseData->articleSections;
 
 $articleType = ArticleEditHtmlGenerator::getArticleType($responseData);

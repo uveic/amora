@@ -6,9 +6,9 @@ use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 
 /** @var HtmlResponseData $responseData */
-$article = $responseData->getFirstArticle();
+$article = $responseData->article;
 
-if ($article === null) {
+if (!isset($article)) {
     return;
 }
 

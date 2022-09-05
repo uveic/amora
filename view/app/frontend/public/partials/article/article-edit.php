@@ -11,7 +11,7 @@ if (!$isAdmin) {
   return;
 }
 
-$article = $responseData->getFirstArticle();
+$article = $responseData->article;
 $editUrlHtml = '<a href="' . UrlBuilderUtil::buildBackofficeArticleUrl($responseData->siteLanguage, $article->id) . '">' . strtolower($responseData->getLocalValue('globalEdit')) . '</a>';
 
 $icon = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml(

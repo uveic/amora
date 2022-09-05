@@ -75,8 +75,8 @@ final class ArticleEditHtmlGenerator
 
     public static function getArticleType(HtmlResponseDataAuthorised $responseData): ArticleType
     {
-        if ($responseData->getFirstArticle()) {
-            return $responseData->getFirstArticle()->type;
+        if ($responseData->article) {
+            return $responseData->article->type;
         }
 
         $typeIdGetParam = $responseData->request->getGetParam('atId');
@@ -98,11 +98,10 @@ final class ArticleEditHtmlGenerator
         HtmlResponseDataAuthorised $responseData,
     ): string {
         $isPartialContent = ArticleType::isPartialContent(self::getArticleType($responseData));
-        $articleStatus = $responseData->getFirstArticle()
-            ? $responseData->getFirstArticle()->status
-            : ($isPartialContent ? ArticleStatus::Published : ArticleStatus::Draft);
+        $articleStatus = $responseData?->article->status
+            ?? ($isPartialContent ? ArticleStatus::Published : ArticleStatus::Draft);
         $articleStatusName = $responseData->getLocalValue('articleStatus' . $articleStatus->name);
-        $isPublished = $responseData->getFirstArticle()
+        $isPublished = $responseData->article
             ? $articleStatus === ArticleStatus::Published
             : $isPartialContent;
         $displayClass = $isPartialContent ? ' null' : '';
@@ -135,8 +134,7 @@ final class ArticleEditHtmlGenerator
     public static function generateArticleLanguageDropdownSelectHtml(
         HtmlResponseDataAuthorised $responseData,
     ): string {
-        $article = $responseData->getFirstArticle();
-        $articleLanguage = $article ? $article->language : $responseData->siteLanguage;
+        $articleLanguage = $responseData?->article->language ?? $responseData->siteLanguage;
         $displayClass = ArticleType::isPartialContent(self::getArticleType($responseData)) ? ' null' : '';
 
         $output = [];
@@ -175,7 +173,7 @@ final class ArticleEditHtmlGenerator
     public static function generateTitleHtml(
         HtmlResponseDataAuthorised $responseData,
     ): string {
-        $article = $responseData->getFirstArticle();
+        $article = $responseData->article;
         $articleType = $article ? $article->type : self::getArticleType($responseData);
         $langIcon = $article
             ? Language::getIconFlag($article->language)

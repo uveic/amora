@@ -2,14 +2,13 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Value\ArticleStatus;
-use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
-$article = $responseData->getFirstArticle();
+$article = $responseData->article;
 
 $articleStatus = $article ? $article->status : ArticleStatus::Draft;
 $articleStatusName = $responseData->getLocalValue('articleStatus' . $articleStatus->name);

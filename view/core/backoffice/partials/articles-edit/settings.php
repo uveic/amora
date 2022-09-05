@@ -1,11 +1,12 @@
 <?php
+
 use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
-$article = $responseData->getFirstArticle();
+$article = $responseData->article;
 
 $publishOnDate = '';
 $publishOnTime = '';
