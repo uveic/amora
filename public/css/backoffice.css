@@ -5,6 +5,7 @@
   --content-medium-width-extended: 840px;
 
   --color-link: #3273dc;
+  --color-text-grey: #808080;
 }
 /* Feedback style starts here */
 .article-saving {
@@ -151,28 +152,25 @@
 }
 
 .article-edit-uri {
-  font-size: 0.75rem;
-  padding: 0.25rem 0;
-  margin-top: -15px;
-  color: #808080;
+  font-size: 0.9rem;
+  color: var(--color-text-grey);
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   align-items: center;
 }
 
-input.is-light {
-  display: inline;
-  border: none;
-  width: auto;
-  margin: 0;
-  padding: 0;
-  height: auto;
-  color: #808080;
-  font-size: inherit;
-  line-height: inherit;
-  flex-grow: 1;
-  font-family: inherit;
-  background-color: var(--main-bg-color);
+.article-edit-previous-uri-container {
+  min-height: 30px;
+}
+
+.article-edit-previous-uri {
+  font-size: 0.9rem;
+  color: var(--color-text-grey);
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .article-title {
@@ -772,13 +770,13 @@ input.pexego-content-title {
   top: 0;
   right: 0;
   background-color: var(--main-bg-color);
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: auto;
   padding: 1.25rem;
   transition: 0.5s;
   border-left: 3px solid var(--light-bg-color-2);
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
+  gap: 1rem;
 }
 
 .side-options-open {

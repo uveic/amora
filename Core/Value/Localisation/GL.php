@@ -74,11 +74,12 @@ return [
     'formPlaceholderCreatePassword' => 'Crea un contrasinal',
     'formPlaceholderPasswordNew' => 'Novo contrasinal',
     'formPlaceholderPasswordConfirmation' => 'Repite o contrasinal',
-    'formTimezone' => 'Zona horaria',
     'formLoginAction' => 'Entrar',
     'formPasswordResetAction' => 'Cambiar contrasinal',
     'formPasswordCreateAction' => 'Crear contrasinal',
     'formArticleUri' => 'URI do artigo',
+    'formArticlePreviousUris' => 'URIs anteriores',
+    'formTimezone' => 'Zona horaria',
 
     'dashboardGoTo' => 'Ir a...',
     'dashboardHomepage' => 'Portada',

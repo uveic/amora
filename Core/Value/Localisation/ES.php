@@ -78,6 +78,7 @@ return [
     'formPasswordResetAction' => 'Cambiar contraseña',
     'formPasswordCreateAction' => 'Crear contraseña',
     'formArticleUri' => 'URI del artículo',
+    'formArticlePreviousUris' => 'URIs anteriores',
     'formTimezone' => 'Zona horaria',
 
     'dashboardGoTo' => 'Ir a...',

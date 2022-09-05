@@ -194,6 +194,48 @@ class ArticleDataLayer
         return $output;
     }
 
+    public function filterPreviousArticleUrisBy(
+        array $articleIds = [],
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
+        }
+
+        $orderByMapping = [
+            'created_at' => 'au.created_at',
+        ];
+
+        $params = [];
+        $baseSql = 'SELECT ';
+        $fields = [
+            'au.id AS article_previous_uri_id',
+            'au.article_id AS article_previous_uri_article_id',
+            'au.created_at AS article_previous_uri_created_at',
+            'au.uri AS article_previous_uri_uri',
+        ];
+
+        $joins = ' FROM ' . self::ARTICLE_PREVIOUS_URI_TABLE . ' AS au';
+        $where = ' WHERE 1';
+
+        if ($articleIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $articleIds, 'au.article_id', 'articleId');
+        }
+
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
+
+        $res = $this->db->fetchAll($sql, $params);
+
+        $output = [];
+        foreach ($res as $item) {
+            $output[] = ArticleUri::fromArray($item);
+        }
+
+        return $output;
+    }
+
     public function updateArticle(Article $article): bool
     {
         $resUpdate = $this->db->update(
