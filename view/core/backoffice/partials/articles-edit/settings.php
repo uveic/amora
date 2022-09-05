@@ -74,7 +74,7 @@ if ($article) {
     <div class="control" style="display: flex;align-content: space-between;">
       <input style="flex-grow:4;" class="input" id="publishOnDate" name="publishOnDate" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnDate?>" required>
       <div style="padding: 0 0.5rem;"></div>
-      <input style="flex-grow:1;width: 130px;" class="input" id="publishOnTime" name="publishOnTime" type="time" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnTime?>" required>
+      <input style="flex-grow:1;width:130px;min-width:100px;" class="input" id="publishOnTime" name="publishOnTime" type="time" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnTime?>" required>
     </div>
     <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
   </div>
