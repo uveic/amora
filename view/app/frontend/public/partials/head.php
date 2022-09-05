@@ -10,9 +10,14 @@ use Amora\Core\Util\UrlBuilderUtil;
 $canonical = '';
 
 if (isset($responseData->article)) {
-    $canonical = '  <link rel="canonical" href="'
-        . UrlBuilderUtil::buildPublicArticleUrl($responseData->article->uri, $responseData->siteLanguage)
-        . '">' . PHP_EOL;
+    $articleUrl = UrlBuilderUtil::buildPublicArticleUrl(
+        uri: $responseData->article->uri,
+        language: $responseData->siteLanguage,
+    );
+
+    $canonical = $responseData->siteUrl === $articleUrl
+        ? ''
+        : '  <link rel="canonical" href="' . $articleUrl . '">' . PHP_EOL;
 }
 
 ?>

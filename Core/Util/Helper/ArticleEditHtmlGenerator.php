@@ -98,7 +98,7 @@ final class ArticleEditHtmlGenerator
         HtmlResponseDataAuthorised $responseData,
     ): string {
         $isPartialContent = ArticleType::isPartialContent(self::getArticleType($responseData));
-        $articleStatus = $responseData?->article->status
+        $articleStatus = $responseData->article?->status
             ?? ($isPartialContent ? ArticleStatus::Published : ArticleStatus::Draft);
         $articleStatusName = $responseData->getLocalValue('articleStatus' . $articleStatus->name);
         $isPublished = $responseData->article
@@ -134,7 +134,7 @@ final class ArticleEditHtmlGenerator
     public static function generateArticleLanguageDropdownSelectHtml(
         HtmlResponseDataAuthorised $responseData,
     ): string {
-        $articleLanguage = $responseData?->article->language ?? $responseData->siteLanguage;
+        $articleLanguage = $responseData->article?->language ?? $responseData->siteLanguage;
         $displayClass = ArticleType::isPartialContent(self::getArticleType($responseData)) ? ' null' : '';
 
         $output = [];
@@ -187,7 +187,7 @@ final class ArticleEditHtmlGenerator
             ? $responseData->getLocalValue('globalEdit')
             : $responseData->getLocalValue('globalNew');
 
-        return '<span style="display: flex;gap: 0.5rem;align-items: center;">'
+        return '<span style="display:flex;flex-flow:row wrap;gap:0.5rem;align-items:center;">'
             . $articleId
             . '<span style="padding: 0.1rem 0.4rem;">' . $verb . '</span>'
             . '<span style="padding: 0.1rem 0.4rem;">' . $responseData->getLocalValue('articleType' . $articleType->name) . '</span>'

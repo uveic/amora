@@ -779,7 +779,6 @@ input.pexego-content-title {
   border-left: 3px solid var(--light-bg-color-2);
   display: flex;
   flex-flow: column wrap;
-  gap: 2rem;
 }
 
 .side-options-open {

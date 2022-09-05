@@ -2,7 +2,6 @@
 
 namespace Amora\Core\Entity\Response;
 
-use Amora\App\Value\AppMenu;
 use Amora\Core\Core;
 use Amora\Core\Entity\Request;
 use Amora\Core\Util\LocalisationUtil;

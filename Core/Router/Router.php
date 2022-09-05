@@ -7,6 +7,7 @@ use Amora\App\Router\AppRouterCore;
 use Amora\Core\Module\Action\Service\ActionService;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Util\UrlBuilderUtil;
 use Exception;
 use Throwable;
 use Amora\Core\Core;
@@ -192,6 +193,12 @@ class Router
             return Response::createHtmlResponse(
                 template: 'app/frontend/public/404',
                 responseData: new HtmlResponseData($request),
+            );
+        }
+
+        if ($articleUri !== $article->uri) {
+            return Response::createPermanentRedirectResponse(
+                UrlBuilderUtil::buildPublicArticleUrl($article->uri, $request->siteLanguage),
             );
         }
 
