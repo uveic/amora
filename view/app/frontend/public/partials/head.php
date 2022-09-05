@@ -1,9 +1,19 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
+use Amora\Core\Entity\Response\HtmlHomepageResponseData;
+use Amora\Core\Entity\Response\HtmlResponseData;
+use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlResponseDataAbstract $responseData */
+/** @var HtmlResponseData|HtmlHomepageResponseData|HtmlResponseDataAuthorised $responseData */
+
+$canonical = '';
+
+if (isset($responseData->article)) {
+    $canonical = '  <link rel="canonical" href="'
+        . UrlBuilderUtil::buildPublicArticleUrl($responseData->article->uri, $responseData->siteLanguage)
+        . '">' . PHP_EOL;
+}
 
 ?>
 <head>
@@ -31,6 +41,7 @@ use Amora\Core\Util\UrlBuilderUtil;
   <link rel="manifest" href="/manifest.json">
   <link rel="alternate" type="application/rss+xml" title="<?=$this->e($responseData->siteName)?>" href="<?=UrlBuilderUtil::buildPublicRssUrl()?>" />
   <link rel="alternate" href="<?=$responseData->siteUrl?>" hreflang="x-default">
+<?=$canonical?>
   <link href="/css/style.css" rel="stylesheet" type="text/css">
   <link href="/css/app/style.css" rel="stylesheet" type="text/css">
 </head>

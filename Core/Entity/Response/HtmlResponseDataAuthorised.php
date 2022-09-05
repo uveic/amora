@@ -3,6 +3,7 @@
 namespace Amora\Core\Entity\Response;
 
 use Amora\Core\Entity\Request;
+use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\User\Model\User;
 
 class HtmlResponseDataAuthorised extends HtmlResponseData
@@ -11,6 +12,7 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         Request $request,
         ?string $pageTitle = null,
         ?string $pageDescription = null,
+        ?Article $article = null,
         ?array $articles = [],
         ?Pagination $pagination = null,
         public readonly ?array $listOfUsers = [],
@@ -22,6 +24,7 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
             pageTitle: $pageTitle,
             pageDescription: $pageDescription,
             pagination: $pagination,
+            article: $article,
             articles: $articles,
         );
     }

@@ -22,7 +22,7 @@ $updatedAtContent = $responseData->getLocalValue('globalUpdated')
     . ' '
     . '<span class="article-updated-at"></span>';
 
-$article = $responseData->getFirstArticle();
+$article = $responseData->article;
 
 if ($article) {
     $updatedAtDate = DateUtil::formatDate(

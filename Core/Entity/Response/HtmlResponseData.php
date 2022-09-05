@@ -13,6 +13,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         ?string $pageDescription = null,
         ?string $mainImageSiteUri = null,
         ?Pagination $pagination = null,
+        public readonly ?Article $article = null,
         public readonly ?array $articles = [],
         public readonly ?Article $previousBlogPost = null,
         public readonly ?Article $nextBlogPost = null,
@@ -28,19 +29,5 @@ class HtmlResponseData extends HtmlResponseDataAbstract
             pageDescription: $pageDescription,
             siteImageUri: $mainImageSiteUri,
         );
-    }
-
-    public function getFirstArticle(): ?Article
-    {
-        return $this->articles[0] ?? null;
-    }
-
-    public function getUserName(): ?string
-    {
-        if (empty($this->session) || empty($this->session->user)) {
-            return null;
-        }
-
-        return $this->session->user->name;
     }
 }
