@@ -952,6 +952,108 @@
         }
       }
     },
+    "/back/article/{articleId}/previous-uri": {
+      "get": {
+        "tags": [],
+        "description": "Get previous URIs for article ID",
+        "operationId": "getPreviousUrisForArticle",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "description": "Article ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "uris": {
+                  "type": "object",
+                  "description": "Article URIs",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "URI ID"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "description": "URI"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "Created at - ISO format. Example: 2022-01-01T00:25:00+00:00"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "uri"
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "required": [
+                "success",
+                "uris"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
     "/back/tag": {
       "post": {
         "tags": [],

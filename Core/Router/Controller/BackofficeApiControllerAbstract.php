@@ -29,6 +29,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateArticleFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDestroyArticleSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDestroyArticleFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetPreviousUrisForArticleSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetPreviousUrisForArticleFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreTagSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreTagFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetTagsSuccessResponse.php';
@@ -195,6 +197,19 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function destroyArticle(int $articleId, Request $request): Response;
+
+    /**
+     * Endpoint: /back/article/{articleId}/previous-uri
+     * Method: GET
+     *
+     * @param int $articleId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getPreviousUrisForArticle(
+        int $articleId,
+        Request $request
+    ): Response;
 
     /**
      * Endpoint: /back/tag
@@ -752,6 +767,57 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
+    private function validateAndCallGetPreviousUrisForArticle(Request $request): Response
+    {
+        $pathParts = explode('/', $request->getPath());
+        $pathParams = $this->getPathParams(
+            ['back', 'article', '{articleId}', 'previous-uri'],
+            $pathParts
+        );
+        $errors = [];
+
+        $articleId = null;
+        if (!isset($pathParams['articleId'])) {
+            $errors[] = [
+                'field' => 'articleId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['articleId'])) {
+                $errors[] = [
+                    'field' => 'articleId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $articleId = intval($pathParams['articleId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getPreviousUrisForArticle(
+                $articleId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: getPreviousUrisForArticle()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
     private function validateAndCallStoreTag(Request $request): Response
     {
         $bodyParams = $request->getBodyPayload();
@@ -911,6 +977,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallDestroyArticle($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'article', '{articleId}', 'previous-uri'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetPreviousUrisForArticle($request);
         }
 
         if ($method === 'POST' &&

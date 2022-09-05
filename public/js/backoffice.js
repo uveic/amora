@@ -159,8 +159,8 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     }
 
     const getUri = () => {
-      const uriEl = document.querySelector('input[name="articleUri"]');
-      return uriEl && uriEl.value.trim().length ? uriEl.value.trim() : null;
+      const uriEl = document.querySelector('div.article-uri-value');
+      return uriEl && uriEl.textContent.trim().length ? uriEl.textContent.trim() : null;
     }
 
     const getStatusId = () => {
@@ -530,6 +530,10 @@ document.querySelectorAll('a.article-settings').forEach(el => {
 
     document.querySelectorAll('input[name="tags"]').forEach(i => i.value = '');
 
+    const uriContainer = document.querySelector('div.article-edit-previous-uri-container');
+    uriContainer.querySelector('img').classList.remove('null');
+    uriContainer.querySelectorAll('div').forEach(di => uriContainer.removeChild(di));
+
     const sideNav = document.getElementById('side-options');
     sideNav.classList.remove('null');
     sideNav.classList.add('side-options-open');
@@ -550,6 +554,21 @@ document.querySelectorAll('a.article-settings').forEach(el => {
           });
         });
     }
+
+    const articleId = document.querySelector('input[name="articleId"]').value;
+    xhr.get('/back/article/' + articleId + '/previous-uri')
+      .then(response => {
+        response.uris.forEach(u => {
+          const newUriEl = document.createElement('div');
+          newUriEl.dataset.uriId = u.id;
+          newUriEl.innerHTML = '<span>' + u.uri + '</span><span>'
+            + global.formatDate(new Date(u.createdAt), false) + '</span>';
+          newUriEl.className = 'article-edit-previous-uri';
+          uriContainer.appendChild(newUriEl);
+        });
+
+        uriContainer.querySelector('img').classList.add('null');
+      });
   });
 });
 

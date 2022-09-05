@@ -138,6 +138,16 @@ class ArticleService
         );
     }
 
+    public function filterPreviousArticleUrisBy(
+        array $articleIds = [],
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        return $this->articleDataLayer->filterPreviousArticleUrisBy(
+            articleIds: $articleIds,
+            queryOptions: $queryOptions,
+        );
+    }
+
     public function getSectionsForArticleId(int $articleId): array
     {
         return $this->articleDataLayer->getSectionsForArticleId($articleId);

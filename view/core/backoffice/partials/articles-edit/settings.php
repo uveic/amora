@@ -42,7 +42,7 @@ if ($article) {
     <h2><?=$responseData->getLocalValue('navAdminArticleOptions')?></h2>
     <a href="#" class="close-button"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
   </div>
-  <div class="m-t-1">
+  <div>
     <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
     <div id="tags-selected" class="search-results-selected<?=$tags ? '' : ' null'?>">
 <?php
@@ -61,15 +61,17 @@ if ($article) {
       </div>
     </div>
   </div>
-  <div class="m-t-2">
-    <label for="articleUri" class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</label>
-    <div class="control">
-      <div class="article-edit-uri"><?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage) . '/'?>
-        <input id="articleUri" name="articleUri" class="is-light" type="text" placeholder="url" value="<?=$this->e($article ? $article->uri : ''); ?>">
-      </div>
+  <div>
+    <div class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</div>
+    <div class="article-edit-uri"><?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage) . '/'?>
+      <div class="article-uri-value" style="min-width:80px;border-bottom:1px dotted;" contenteditable="true"><?=$this->e($article ? $article->uri : ''); ?></div>
+    </div>
+    <div class="label m-t-1"><?=$responseData->getLocalValue('formArticlePreviousUris')?>:</div>
+    <div class="article-edit-previous-uri-container">
+      <img src="/img/loading.gif" class="img-svg m-t-05" alt="<?=$responseData->getLocalValue('globalLoading')?>">
     </div>
   </div>
-  <div class="m-t-2">
+  <div>
     <label for="publishOn" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
     <div class="control" style="display: flex;align-content: space-between;">
       <input style="flex-grow:4;" class="input" id="publishOnDate" name="publishOnDate" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnDate?>" required>
@@ -78,8 +80,8 @@ if ($article) {
     </div>
     <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
   </div>
-  <div class="m-t-1">
-    <button class="article-save-button button is-success m-b-1" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
+  <div>
+    <button class="article-save-button button is-success" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
   </div>
   <div><?=$article ? $createdAtContent : ''?></div>
 </div>

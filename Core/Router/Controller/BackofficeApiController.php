@@ -7,6 +7,7 @@ use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\ArticleUri;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\VerificationType;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousUrisForArticleSuccessResponse;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\App\Value\Language;
 use Amora\Core\Value\QueryOrderDirection;
@@ -553,6 +554,39 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         return new BackofficeApiControllerDestroyArticleSuccessResponse($deleteRes);
+    }
+
+    /**
+     * Endpoint: /back/article/{articleId}/previous-uri
+     * Method: GET
+     *
+     * @param int $articleId
+     * @param Request $request
+     * @return Response
+     */
+    protected function getPreviousUrisForArticle(
+        int $articleId,
+        Request $request
+    ): Response {
+        $uris = $this->articleService->filterPreviousArticleUrisBy(
+            articleIds: [$articleId],
+            queryOptions: new QueryOptions(
+                orderBy: [
+                    new QueryOrderBy('created_at', QueryOrderDirection::DESC),
+                ],
+            ),
+        );
+
+        $output = [];
+        /** @var ArticleUri $uri */
+        foreach ($uris as $uri) {
+            $output[] = $uri->asPublicArray();
+        }
+
+        return new BackofficeApiControllerGetPreviousUrisForArticleSuccessResponse(
+            success: true,
+            uris: $output,
+        );
     }
 
     /**
