@@ -14,6 +14,9 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 {
     public function __construct()
     {
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerGetFilesSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerGetFilesFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerGetFilesUnauthorisedResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreFileSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreFileFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerStoreFileUnauthorisedResponse.php';
@@ -35,6 +38,23 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
     }
 
     abstract protected function authenticate(Request $request): bool;
+
+    /**
+     * Endpoint: /api/file
+     * Method: GET
+     *
+     * @param string|null $direction
+     * @param int|null $qty
+     * @param int|null $typeId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getFiles(
+        ?string $direction,
+        ?int $qty,
+        ?int $typeId,
+        Request $request
+    ): Response;
 
     /**
      * Endpoint: /api/file
@@ -120,6 +140,52 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function sendVerificationEmail(int $userId, Request $request): Response;
+
+    private function validateAndCallGetFiles(Request $request): Response
+    {
+        $queryParams = $request->getParams;
+        $errors = [];
+
+
+        $direction = $queryParams['direction'] ?? null;
+
+        if (isset($queryParams['qty']) && strlen($queryParams['qty']) > 0) {
+            $qty = intval($queryParams['qty']);
+        } else {
+            $qty = null;
+        }
+
+        if (isset($queryParams['typeId']) && strlen($queryParams['typeId']) > 0) {
+            $typeId = intval($queryParams['typeId']);
+        } else {
+            $typeId = null;
+        }
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getFiles(
+                $direction,
+                $qty,
+                $typeId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in AuthorisedApiControllerAbstract - Method: getFiles()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
 
     private function validateAndCallStoreFile(Request $request): Response
     {
@@ -455,6 +521,16 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
         $path = $request->getPath();
         $pathParts = explode('/', $path);
         $method = $request->method;
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['api', 'file'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetFiles($request);
+        }
 
         if ($method === 'POST' &&
             $this->pathParamsMatcher(

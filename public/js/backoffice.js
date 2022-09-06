@@ -857,3 +857,28 @@ document.querySelectorAll('.media-load-more').forEach(lm => {
       });
   });
 });
+
+document.querySelectorAll('.article-add-media').forEach(am => {
+  am.addEventListener('click', e => {
+    e.preventDefault();
+
+    const modal = document.querySelector('.add-image-modal');
+    modal.classList.remove('null');
+
+    xhr.get('/api/file')
+      .then(response => {
+        modal.querySelector('.add-image-modal-loading').classList.add('null');
+        const container = modal.querySelector('.add-image-container');
+
+        response.files.forEach(img => {
+          const imgEl = new Image();
+          imgEl.src = img.uri;
+          imgEl.title = img.caption;
+          imgEl.dataset.imageId = img.id;
+          container.appendChild(imgEl);
+        });
+
+        container.classList.remove('null');
+      });
+  });
+});
