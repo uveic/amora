@@ -23,19 +23,19 @@ $articleUrl = $article
     )
     : '#';
 
+$this->insert('partials/articles-edit/modal-add-image', ['responseData' => $responseData]);
 ?>
   <div class="control-bar-wrapper">
     <div class="pexego-tools-amora">
       <div class="pexego-actions-amora-wrapper">
         <button class="article-save-button button"><?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?></button>
         <div class="pexego-actions-amora">
-          <a class="pexego-add-section pexego-add-section-paragraph">
+          <a href="#" class="pexego-add-section pexego-add-section-paragraph">
             <img class="img-svg img-svg-30" src="/img/svg/article.svg" alt="<?=$responseData->getLocalValue('globalAddParagraph')?>">
           </a>
-          <input class="null" type="file" id="pexego-add-image-input" name="pexego-add-image-input" multiple="" accept="image/*">
-          <label class="pexego-add-section-image pexego-add-section" for="pexego-add-image-input" style="margin: 0;">
+          <a href="#" class="pexego-add-section article-add-media">
             <img class="img-svg img-svg-30" src="/img/svg/image-black.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
-          </label>
+          </a>
           <a class="pexego-add-section pexego-add-section-video">
             <img class="img-svg img-svg-30" src="/img/svg/youtube-logo.svg" alt="<?=$responseData->getLocalValue('globalAddVideo')?>" title="<?=$responseData->getLocalValue('globalAddVideo')?>">
           </a>
