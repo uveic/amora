@@ -321,10 +321,33 @@ const displayImagePopup = (e, imageId, next = false, direction = null) => {
     });
 };
 
-const insertImageInArticle = (e, imageId) => {
-  e.preventDefault();
+const insertImageInArticle = (imageEl) => {
+  let newImage = new Image();
+  newImage.className = pexegoClasses.contentImage;
+  newImage.src = imageEl.src;
+  newImage.dataset.imageId = imageEl.dataset.imageId;
+  newImage.alt = imageEl.alt;
+  newImage.title = imageEl.title;
 
-  alert('Image: ' + imageId);
+  let sectionId = Pexego.generateRandomString(5);
+  let pexegoSectionImage = document.createElement('section');
+  pexegoSectionImage.className =  pexegoClasses.section + ' ' + pexegoClasses.sectionImage;
+
+  let imageCaption = document.createElement('div');
+  imageCaption.dataset.placeholder = global.get('editorImageCaptionPlaceholder');
+  imageCaption.contentEditable = 'true';
+  imageCaption.innerHTML = '<p>' + imageCaption.dataset.placeholder + '</p>';
+  imageCaption.classList.add(pexegoClasses.contentImageCaption);
+  imageCaption.classList.add(pexegoClasses.sectionParagraphPlaceholder);
+  imageCaption.addEventListener('focus', Pexego.displayPlaceholderFocus);
+  imageCaption.addEventListener('blur', Pexego.displayPlaceholderBlur);
+
+  pexegoSectionImage.appendChild(newImage);
+  pexegoSectionImage.appendChild(imageCaption);
+
+  Pexego.generateSectionWrapperFor(pexegoSectionImage, sectionId);
+
+  document.querySelector('.add-image-modal').classList.add('null');
 };
 
 const displayImageFromApiCall = (container, images, eventListenerAction) => {
@@ -345,7 +368,7 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
     if (eventListenerAction === 'displayImagePopup') {
       imageEl.addEventListener('click', e => displayImagePopup(e, image.id));
     } else if (eventListenerAction === 'insertImageInArticle') {
-      imageEl.addEventListener('click', e => insertImageInArticle(e, image.id));
+      imageEl.addEventListener('click', () => insertImageInArticle(imageEl));
     }
     container.appendChild(imageEl);
   });
@@ -892,44 +915,32 @@ document.querySelectorAll('.article-add-media').forEach(am => {
   });
 });
 
-document.querySelectorAll('input[name="article-add-media-upload"]').forEach(pi => {
-  pi.addEventListener('change', e => {
+document.querySelectorAll('input[name="article-add-media-upload"]').forEach(im => {
+  im.addEventListener('change', e => {
     e.preventDefault();
 
-    for (let i = 0; i < pi.files.length; i++) {
-      let file = pi.files[i];
+    const container = document.querySelector('#images-list');
 
-      let id = Pexego.generateRandomString(5);
-      let pexegoSectionImage = document.createElement('section');
-      pexegoSectionImage.className =  pexegoClasses.section + ' ' + pexegoClasses.sectionImage;
+    for (let i = 0; i < im.files.length; i++) {
+      let file = im.files[i];
 
-      let imageCaption = document.createElement('div');
-      imageCaption.dataset.placeholder = global.get('editorImageCaptionPlaceholder');
-      imageCaption.contentEditable = 'true';
-      imageCaption.innerHTML = '<p>' + imageCaption.dataset.placeholder + '</p>';
-      imageCaption.classList.add(pexegoClasses.contentImageCaption);
-      imageCaption.classList.add(pexegoClasses.sectionParagraphPlaceholder);
-      imageCaption.addEventListener('focus', Pexego.displayPlaceholderFocus);
-      imageCaption.addEventListener('blur', Pexego.displayPlaceholderBlur);
-
-      Pexego.generateSectionWrapperFor(pexegoSectionImage, id);
+      let newImageContainer = document.createElement('a');
+      newImageContainer.href = '#';
+      newImageContainer.className = 'image-item';
+      container.insertBefore(newImageContainer, container.firstChild);
 
       uploadImage(
         file,
-        pexegoSectionImage,
-        pexegoClasses.contentImage,
-        document.querySelector('#feedback'),
-        () => {pexegoSectionImage.appendChild(imageCaption)},
-        () => {
-          const pexegoContentDiv = document.querySelector('.' + pexegoClasses.container);
-          const sectionWrapper = document.querySelector('#' + pexegoClasses.sectionWrapper + '-' + id);
-          if (pexegoContentDiv && sectionWrapper) {
-            pexegoContentDiv.removeChild(sectionWrapper);
+        container,
+        '',
+        feedbackDiv,
+        (response) => {
+          if (response && response.file.id) {
+            displayImageFromApiCall(newImageContainer, [response.file], 'insertImageInArticle');
           }
-        }
+        },
+        () => container.removeChild(newImageContainer),
       );
     }
-
-    Pexego.addNewParagraph();
   });
 });
