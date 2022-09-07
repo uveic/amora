@@ -72,41 +72,14 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             : QueryOrderDirection::DESC;
 
         $qty = $qty ?? 10;
-        $typeIds = isset($typeId) && MediaType::tryFrom($typeId)
-            ? [MediaType::from($typeId)->value]
-            : [];
+        $mediaType = isset($typeId) && MediaType::tryFrom($typeId) ? MediaType::from($typeId) : null;
 
-        $files = $this->mediaService->filterMediaBy(
-            typeIds: $typeIds,
-            statusIds: [MediaStatus::Active->value],
-            queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy('id', $direction)],
-                pagination: new Response\Pagination(itemsPerPage: $qty),
-            ),
+        $output = $this->mediaService->workflowGetFiles(
+            direction: $direction,
+            qty: $qty,
+            mediaType: $mediaType,
+            isAdmin: $request->session->isAdmin(),
         );
-
-        $output = [];
-        /** @var Media $file */
-        foreach ($files as $file) {
-            $fileOutput = $file->buildPublicDataArray();
-            $statusIds = $request->session->isAdmin()
-                ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
-                : [ArticleStatus::Published->value];
-
-            $articles = $this->articleService->filterArticlesBy(
-                statusIds: $statusIds,
-                imageIds: [$file->id],
-            );
-
-            $appearsOn = [];
-            /** @var Article $article */
-            foreach ($articles as $article) {
-                $appearsOn[] = $article->buildPublicDataArray();
-            }
-
-            $fileOutput['appearsOn'] = $appearsOn;
-            $output[] = $fileOutput;
-        }
 
         return new AuthorisedApiControllerGetFilesSuccessResponse(
             success: true,
@@ -246,42 +219,16 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             : QueryOrderDirection::DESC;
 
         $qty = $qty ?? 10;
-        $typeIds = isset($typeId) && MediaType::tryFrom($typeId)
-            ? [MediaType::from($typeId)->value]
-            : [];
+        $mediaType = isset($typeId) && MediaType::tryFrom($typeId) ? MediaType::from($typeId) : null;
 
-        $files = $this->mediaService->filterMediaBy(
-            typeIds: $typeIds,
-            statusIds: [MediaStatus::Active->value],
-            fromId: $id,
-            queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy('id', $direction)],
-                pagination: new Response\Pagination(itemsPerPage: $qty),
-            ),
+        $output = $this->mediaService->workflowGetFiles(
+            direction: $direction,
+            qty: $qty,
+            mediaType: $mediaType,
+            isAdmin: $request->session->isAdmin(),
+            includeAppearsOn: true,
+            formId: $id,
         );
-
-        $output = [];
-        /** @var Media $file */
-        foreach ($files as $file) {
-            $fileOutput = $file->buildPublicDataArray();
-            $statusIds = $request->session->isAdmin()
-                ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
-                : [ArticleStatus::Published->value];
-
-            $articles = $this->articleService->filterArticlesBy(
-                statusIds: $statusIds,
-                imageIds: [$file->id],
-            );
-
-            $appearsOn = [];
-            /** @var Article $article */
-            foreach ($articles as $article) {
-                $appearsOn[] = $article->buildPublicDataArray();
-            }
-
-            $fileOutput['appearsOn'] = $appearsOn;
-            $output[] = $fileOutput;
-        }
 
         return new AuthorisedApiControllerGetNextFileSuccessResponse(
             success: true,

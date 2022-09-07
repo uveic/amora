@@ -2,7 +2,7 @@ import {getSectionTypeIdFromClassList, cleanString, getUpdatedAtTime} from './mo
 import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised.js';
 import {global} from "./module/localisation.js";
-import {classes as pexegoClasses} from "./module/pexego.js";
+import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego.js";
 import {uploadFile, uploadImage} from "./module/uploader.js";
 
 let globalTags = [];
@@ -319,6 +319,36 @@ const displayImagePopup = (e, imageId, next = false, direction = null) => {
         ? displayImage(response.files[0] ?? null)
         : displayImage(response.file ?? null);
     });
+};
+
+const insertImageInArticle = (e, imageId) => {
+  e.preventDefault();
+
+  alert('Image: ' + imageId);
+};
+
+const displayImageFromApiCall = (container, images, eventListenerAction) => {
+  images.forEach(image => {
+    const existingImage = container.querySelector('img[data-image-id="' + image.id + '"]');
+    if (existingImage) {
+      return;
+    }
+
+    const imageEl = new Image();
+    imageEl.src = image.uri;
+    const alt = image.caption ?? image.name;
+    imageEl.alt = alt;
+    imageEl.title = alt;
+    imageEl.dataset.imageId = image.id;
+    imageEl.className = 'image-item';
+    imageEl.loading = 'lazy';
+    if (eventListenerAction === 'displayImagePopup') {
+      imageEl.addEventListener('click', e => displayImagePopup(e, image.id));
+    } else if (eventListenerAction === 'insertImageInArticle') {
+      imageEl.addEventListener('click', e => insertImageInArticle(e, image.id));
+    }
+    container.appendChild(imageEl);
+  });
 };
 
 document.querySelectorAll('.image-item').forEach(im => {
@@ -832,22 +862,7 @@ document.querySelectorAll('.media-load-more').forEach(lm => {
       .then(response => {
         const container = document.querySelector('#images-list');
 
-        response.files.forEach(image => {
-          const imageContainer = document.createElement('a');
-          imageContainer.href = '#';
-          imageContainer.className = 'image-item';
-          imageContainer.dataset.imageId = image.id;
-          imageContainer.addEventListener('click', e => displayImagePopup(e, image.id));
-          const imageEl = new Image();
-          imageEl.src = image.uri;
-          const alt = image.caption ?? image.name;
-          imageEl.alt = alt;
-          imageEl.title = alt;
-          imageEl.loading = 'lazy';
-
-          imageContainer.appendChild(imageEl);
-          container.appendChild(imageContainer);
-        });
+        displayImageFromApiCall(container, response.files, 'displayImagePopup');
 
         lm.disabled = false;
 
@@ -868,17 +883,53 @@ document.querySelectorAll('.article-add-media').forEach(am => {
     xhr.get('/api/file')
       .then(response => {
         modal.querySelector('.add-image-modal-loading').classList.add('null');
-        const container = modal.querySelector('.add-image-container');
+        const container = modal.querySelector('#images-list');
 
-        response.files.forEach(img => {
-          const imgEl = new Image();
-          imgEl.src = img.uri;
-          imgEl.title = img.caption;
-          imgEl.dataset.imageId = img.id;
-          container.appendChild(imgEl);
-        });
+        displayImageFromApiCall(container, response.files, 'insertImageInArticle');
 
         container.classList.remove('null');
       });
+  });
+});
+
+document.querySelectorAll('input[name="article-add-media-upload"]').forEach(pi => {
+  pi.addEventListener('change', e => {
+    e.preventDefault();
+
+    for (let i = 0; i < pi.files.length; i++) {
+      let file = pi.files[i];
+
+      let id = Pexego.generateRandomString(5);
+      let pexegoSectionImage = document.createElement('section');
+      pexegoSectionImage.className =  pexegoClasses.section + ' ' + pexegoClasses.sectionImage;
+
+      let imageCaption = document.createElement('div');
+      imageCaption.dataset.placeholder = global.get('editorImageCaptionPlaceholder');
+      imageCaption.contentEditable = 'true';
+      imageCaption.innerHTML = '<p>' + imageCaption.dataset.placeholder + '</p>';
+      imageCaption.classList.add(pexegoClasses.contentImageCaption);
+      imageCaption.classList.add(pexegoClasses.sectionParagraphPlaceholder);
+      imageCaption.addEventListener('focus', Pexego.displayPlaceholderFocus);
+      imageCaption.addEventListener('blur', Pexego.displayPlaceholderBlur);
+
+      Pexego.generateSectionWrapperFor(pexegoSectionImage, id);
+
+      uploadImage(
+        file,
+        pexegoSectionImage,
+        pexegoClasses.contentImage,
+        document.querySelector('#feedback'),
+        () => {pexegoSectionImage.appendChild(imageCaption)},
+        () => {
+          const pexegoContentDiv = document.querySelector('.' + pexegoClasses.container);
+          const sectionWrapper = document.querySelector('#' + pexegoClasses.sectionWrapper + '-' + id);
+          if (pexegoContentDiv && sectionWrapper) {
+            pexegoContentDiv.removeChild(sectionWrapper);
+          }
+        }
+      );
+    }
+
+    Pexego.addNewParagraph();
   });
 });

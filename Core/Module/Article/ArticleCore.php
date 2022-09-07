@@ -110,6 +110,7 @@ class ArticleCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/MediaService.php';
                 return new MediaService(
                     logger: self::getArticleLogger(),
+                    articleService: self::getArticleService(),
                     mediaDataLayer: self::getMediaDataLayer(),
                     imageResizeService: self::getImageResizeService(),
                     mediaBaseDir: self::getConfig()->mediaBaseDir,
