@@ -3,8 +3,12 @@
 namespace Amora\Core\Module\Article\Service;
 
 use Amora\Core\Entity\Response\Feedback;
+use Amora\Core\Entity\Response;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Entity\RawFile;
+use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Model\User;
@@ -12,6 +16,7 @@ use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
 
@@ -19,6 +24,7 @@ class MediaService
 {
     public function __construct(
         private readonly Logger $logger,
+        private readonly ArticleService $articleService,
         private readonly MediaDataLayer $mediaDataLayer,
         private readonly ImageResizeService $imageResizeService,
         private readonly string $mediaBaseDir,
@@ -88,6 +94,54 @@ class MediaService
         }
 
         return true;
+    }
+
+    public function workflowGetFiles(
+        QueryOrderDirection $direction,
+        int $qty,
+        ?MediaType $mediaType = null,
+        bool $isAdmin = false,
+        bool $includeAppearsOn = false,
+        ?int $formId = null,
+    ): array {
+        $files = $this->filterMediaBy(
+            typeIds: $mediaType ? [$mediaType->value] : [],
+            statusIds: [MediaStatus::Active->value],
+            fromId: $formId,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('id', $direction)],
+                pagination: new Response\Pagination(itemsPerPage: $qty),
+            ),
+        );
+
+        $output = [];
+        /** @var Media $file */
+        foreach ($files as $file) {
+            $fileOutput = $file->buildPublicDataArray();
+
+            if ($includeAppearsOn) {
+                $statusIds = $isAdmin
+                    ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
+                    : [ArticleStatus::Published->value];
+
+                $articles = $this->articleService->filterArticlesBy(
+                    statusIds: $statusIds,
+                    imageIds: [$file->id],
+                );
+
+                $appearsOn = [];
+                /** @var Article $article */
+                foreach ($articles as $article) {
+                    $appearsOn[] = $article->buildPublicDataArray();
+                }
+
+                $fileOutput['appearsOn'] = $appearsOn;
+            }
+
+            $output[] = $fileOutput;
+        }
+
+        return $output;
     }
 
     public function workflowStoreFile(
