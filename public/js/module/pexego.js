@@ -60,25 +60,25 @@ class Pexego {
     ulist: {
       icon: '<img src="/img/svg/list-dashes.svg" class="img-svg" title="' + global.get('editorUnorderedList') + '" alt="' + global.get('editorUnorderedList') + '">',
       title: global.get('editorUnorderedList'),
-      result: () => Pexego.exec('insertUnorderedList')
+      result: () => Pexego.exec('insertUnorderedList'),
     },
     code: {
       icon: '<img src="/img/svg/list-dashes.svg" class="img-svg" title="' + global.get('editorCode') + '" alt="' + global.get('editorCode') + '">',
       title: global.get('editorCode'),
-      result: () => Pexego.exec('formatBlock', '<pre>')
+      result: () => Pexego.exec('formatBlock', '<pre>'),
     },
     line: {
       icon: '&#8213;',
       title: global.get('editorInsertHorizontalLine'),
-      result: () => Pexego.exec('insertHorizontalRule')
+      result: () => Pexego.exec('insertHorizontalRule'),
     },
     link: {
       icon: '<img src="/img/svg/link.svg" class="img-svg" title="' + global.get('editorInsertLink') + '" alt="' + global.get('editorInsertLink') + '">',
       title: global.get('editorInsertLink'),
       result: () => {
-        const url = window.prompt('Enter the link URL')
-        if (url) Pexego.exec('createLink', url)
-      }
+        const url = window.prompt('Enter the link URL');
+        if (url) Pexego.exec('createLink', url);
+      },
     },
     image: {
       icon: '&#128247;',
@@ -95,7 +95,7 @@ class Pexego {
         Pexego.exec('removeFormat');
         document.getSelection().removeAllRanges();
         e.target.parentNode.parentNode.classList.add(Pexego.classes.displayNone);
-      }
+      },
     },
     close: {
       icon: '<img src="/img/svg/x.svg" class="img-svg" title="' + global.get('globalClose') + '" alt="' + global.get('globalClose') + '">',
@@ -149,7 +149,6 @@ class Pexego {
       : Object.keys(Pexego.defaultActions).map(action => Pexego.defaultActions[action]);
 
     const mainContainer = settings.mainContainer;
-    const defaultParagraphSeparator = settings.defaultParagraphSeparator ?? 'p';
 
     let content = mainContainer.querySelector('.' + Pexego.classes.contentParagraph);
     if (!content) {
@@ -167,7 +166,7 @@ class Pexego {
 
     content.addEventListener('input', ({target: {firstChild}}) => {
       if (firstChild && firstChild.nodeType === Node.TEXT_NODE) {
-        Pexego.exec('formatBlock', `<${defaultParagraphSeparator}>`);
+        Pexego.exec('formatBlock', `<${settings.paragraphSeparator}>`);
       } else if (content.textContent.trim().length === 0) {
         content.innerHTML = '<p></p>';
       }
@@ -204,7 +203,7 @@ class Pexego {
       actionBar.appendChild(button);
     });
 
-    Pexego.exec('defaultParagraphSeparator', defaultParagraphSeparator);
+    Pexego.exec('paragraphSeparator', settings.paragraphSeparator);
 
     return mainContainer;
   }
@@ -222,7 +221,7 @@ class Pexego {
     this.init({
       mainContainer: container,
       onChange: (html) => {containerHtml.textContent = html},
-      defaultParagraphSeparator: null,
+      paragraphSeparator: 'p',
       actions: [
         'bold',
         'italic',
