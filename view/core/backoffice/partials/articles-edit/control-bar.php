@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Module\Article\Value\ArticleStatus;
+use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -33,7 +34,7 @@ $this->insert('partials/articles-edit/modal-add-image', ['responseData' => $resp
           <a href="#" class="pexego-add-section pexego-add-section-paragraph">
             <img class="img-svg img-svg-30" src="/img/svg/article.svg" alt="<?=$responseData->getLocalValue('globalAddParagraph')?>">
           </a>
-          <a href="#" class="pexego-add-section article-add-media">
+          <a href="#" class="pexego-add-section article-add-media" data-type-id="<?=MediaType::Image->value?>">
             <img class="img-svg img-svg-30" src="/img/svg/image-black.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
           </a>
           <a class="pexego-add-section pexego-add-section-video">
