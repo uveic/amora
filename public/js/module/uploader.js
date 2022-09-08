@@ -20,7 +20,7 @@ const buildImageLoadingElement = () => {
   return imgLoading;
 };
 
-function uploadImage(
+const uploadImage = (
   file,
   imageContainer,
   imageClassName,
@@ -29,7 +29,7 @@ function uploadImage(
   catchError = () => {},
   apiUploadEndpoint = '/api/file',
   formData = new FormData(),
-) {
+) => {
   if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
     logError(userFeedbackDiv, new Error(file.name + ' is not an image'));
     return;
@@ -75,9 +75,9 @@ function uploadImage(
   });
 
   reader.readAsDataURL(file);
-}
+};
 
-function uploadFile(
+const uploadFile = (
   file,
   container,
   fileClassName,
@@ -86,7 +86,7 @@ function uploadFile(
   catchError = () => {},
   apiUploadEndpoint = '/api/file',
   formData = new FormData(),
-) {
+) => {
   formData.append('files[]', file);
 
   const reader = new FileReader();
@@ -110,12 +110,15 @@ function uploadFile(
         then(data);
       })
       .catch((error) => {
+        container.removeChild(fileNameSpan);
+        container.removeChild(imgLoading);
+
         logError(userFeedbackDiv, error);
         catchError();
       });
   });
 
   reader.readAsDataURL(file);
-}
+};
 
 export {uploadImage, uploadFile};

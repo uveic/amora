@@ -39,9 +39,7 @@ $count = 0;
         $lazyLoading = $count > 10 ? ' loading="lazy"' : '';
         $alt = $image->caption ?? $image->filenameOriginal;
 ?>
-        <a href="#" class="image-item" data-image-id="<?=$image->id?>">
-          <img src="<?=$image->getUriWithNameMedium()?>" title="<?=$alt?>" alt="<?=$alt?>"<?=$lazyLoading?>>
-        </a>
+        <img class="image-item" data-image-id="<?=$image->id?>" src="<?=$image->getUriWithNameMedium()?>" title="<?=$alt?>" alt="<?=$alt?>"<?=$lazyLoading?>>
 <?php } ?>
       </div>
 <?php if ($count) { ?>

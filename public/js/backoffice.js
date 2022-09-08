@@ -421,23 +421,18 @@ document.querySelectorAll('input#images').forEach(im => {
     for (let i = 0; i < im.files.length; i++) {
       let file = im.files[i];
 
-      let newImageContainer = document.createElement('a');
-      newImageContainer.href = '#';
-      newImageContainer.className = 'image-item';
-      container.insertBefore(newImageContainer, container.firstChild);
-
       uploadImage(
         file,
-        newImageContainer,
-        '',
+        container,
+        'image-item',
         feedbackDiv,
         (response) => {
           if (response && response.file.id) {
-            newImageContainer.dataset.imageId = response.file.id;
-            newImageContainer.addEventListener('click', e => displayImagePopup(e, response.file.id));
+            const newImage = container.querySelector('.image-item[data-image-id="' + response.file.id + '"]');
+            newImage.addEventListener('click', () => insertImageInArticle(newImage));
+            newImage.addEventListener('click', e => displayImagePopup(e, response.file.id));
           }
         },
-        () => container.removeChild(newImageContainer),
       );
     }
   });
@@ -906,7 +901,10 @@ document.querySelectorAll('.article-add-media').forEach(am => {
     const modal = document.querySelector('.add-image-modal');
     modal.classList.remove('null');
 
-    xhr.get('/api/file')
+    const qty = 25;
+    const typeId = am.dataset.typeId ? Number.parseInt(am.dataset.typeId) : '';
+
+    xhr.get('/api/file?typeId=' + typeId + '&qty=' + qty)
       .then(response => {
         modal.querySelector('.add-image-modal-loading').classList.add('null');
         const container = modal.querySelector('#images-list');
