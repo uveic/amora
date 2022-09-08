@@ -164,6 +164,7 @@ return [
     'formFilterArticleTypeTitle' => 'Type',
 
     'mediaUploadedBy' => 'Uploaded by %s on %s',
+    'mediaSelectImageForArticle' => 'Select image to add to article',
 
     'userRoleAdmin' => 'Admin',
     'userRoleUser' => 'User',

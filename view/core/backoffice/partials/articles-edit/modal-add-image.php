@@ -17,7 +17,7 @@ use Amora\Core\Value\QueryOrderDirection;
           <img src="/img/svg/x-white.svg" class="img-svg img-svg-30 no-margin" alt="<?=$responseData->getLocalValue('globalClose')?>">
         </a>
         <div class="add-image-header">
-          <h1 class="m-t-0 m-b-0">Select image to add to article</h1>
+          <h1 class="m-t-0 m-b-0"><?=$responseData->getLocalValue('mediaSelectImageForArticle')?></h1>
           <div>
             <input class="null" type="file" id="article-add-media-upload" name="article-add-media-upload" multiple="" accept="image/*">
             <label class="pexego-add-section-image pexego-add-section" for="article-add-media-upload" style="margin: 0;">
