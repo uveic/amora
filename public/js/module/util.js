@@ -1,5 +1,5 @@
 import {global} from './localisation.js';
-import {PexegoEditor as Pexego} from "./pexego.js";
+import {PexegoEditor as Pexego} from "./Pexego.js";
 
 const getUpdatedAtTime = () => {
   const now = new Date();
