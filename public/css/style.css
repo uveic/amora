@@ -736,7 +736,7 @@ a.link-title:focus {
   padding: 7px 14px;
   margin-left: 1rem;
   border-radius: var(--border-radius);
-  z-index: 999;
+  z-index: 9999;
 }
 
 .feedback-success {

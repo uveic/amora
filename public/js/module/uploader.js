@@ -45,8 +45,10 @@ function uploadImage(
 
     const imgLoading = buildImageLoadingElement();
 
-    imageContainer.appendChild(image);
     imageContainer.appendChild(imgLoading);
+    imageContainer.firstChild
+      ? imageContainer.insertBefore(image, imageContainer.firstChild)
+      : imageContainer.appendChild(image);
 
     xhr.postImage(apiUploadEndpoint, formData, userFeedbackDiv)
       .then(response => {
@@ -58,11 +60,15 @@ function uploadImage(
         image.src = response.file.uri;
         image.dataset.imageId = response.file.id;
         image.alt = response.file.caption ?? response.file.name;
+        image.title = response.file.caption ?? response.file.name;
         imageContainer.removeChild(imgLoading);
 
         then(response);
       })
       .catch((error) => {
+        imageContainer.removeChild(imgLoading);
+        imageContainer.removeChild(image);
+
         logError(userFeedbackDiv, error);
         catchError();
       });
