@@ -348,6 +348,9 @@ const insertImageInArticle = (imageEl) => {
   Pexego.generateSectionWrapperFor(pexegoSectionImage, sectionId);
 
   document.querySelector('.add-image-modal').classList.add('null');
+
+  imageCaption.scrollIntoView();
+  imageCaption.focus();
 };
 
 const displayImageFromApiCall = (container, images, eventListenerAction) => {
@@ -924,22 +927,17 @@ document.querySelectorAll('input[name="article-add-media-upload"]').forEach(im =
     for (let i = 0; i < im.files.length; i++) {
       let file = im.files[i];
 
-      let newImageContainer = document.createElement('a');
-      newImageContainer.href = '#';
-      newImageContainer.className = 'image-item';
-      container.insertBefore(newImageContainer, container.firstChild);
-
       uploadImage(
         file,
         container,
-        '',
+        'image-item',
         feedbackDiv,
         (response) => {
           if (response && response.file.id) {
-            displayImageFromApiCall(newImageContainer, [response.file], 'insertImageInArticle');
+            const newImage = container.querySelector('.image-item[data-image-id="' + response.file.id + '"]');
+            newImage.addEventListener('click', () => insertImageInArticle(newImage));
           }
         },
-        () => container.removeChild(newImageContainer),
       );
     }
   });
