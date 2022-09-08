@@ -1,5 +1,5 @@
 import {global} from './localisation.js';
-import {PexegoEditor as Pexego} from "./Pexego.js";
+import {pexegoClasses} from "./Pexego.js";
 
 const getUpdatedAtTime = () => {
   const now = new Date();
@@ -27,15 +27,15 @@ const cleanString = (text) => {
 };
 
 const getSectionTypeIdFromClassList = (classList) => {
-  if (classList.contains(Pexego.classes.sectionParagraph)) {
+  if (classList.contains(pexegoClasses.sectionParagraph)) {
     return 1;
   }
 
-  if (classList.contains(Pexego.classes.sectionImage)) {
+  if (classList.contains(pexegoClasses.sectionImage)) {
     return 2;
   }
 
-  if (classList.contains(Pexego.classes.sectionVideo)) {
+  if (classList.contains(pexegoClasses.sectionVideo)) {
     return 3;
   }
 };
