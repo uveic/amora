@@ -47,6 +47,6 @@ if (isset($responseData->article)) {
   <link rel="alternate" type="application/rss+xml" title="<?=$this->e($responseData->siteName)?>" href="<?=UrlBuilderUtil::buildPublicRssUrl()?>" />
   <link rel="alternate" href="<?=$responseData->siteUrl?>" hreflang="x-default">
 <?=$canonical?>
-  <link href="/css/style.css" rel="stylesheet" type="text/css">
+  <link href="/css/style-001.css" rel="stylesheet" type="text/css">
   <link href="/css/app/style.css" rel="stylesheet" type="text/css">
 </head>

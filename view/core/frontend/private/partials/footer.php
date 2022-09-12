@@ -1,2 +1,2 @@
-  <script type="module" src="/js/authorised.js"></script>
-  <script type="module" src="/js/backoffice.js"></script>
+  <script type="module" src="/js/authorised-001.js"></script>
+  <script type="module" src="/js/backoffice-001.js"></script>

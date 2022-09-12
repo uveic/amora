@@ -1,9 +1,9 @@
-import {getSectionTypeIdFromClassList, cleanString, getUpdatedAtTime} from './module/util.js';
+import {Util} from './module/Util-001.js';
 import {xhr} from './module/xhr.js';
-import {feedbackDiv} from './authorised.js';
-import {global} from "./module/localisation.js";
-import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego.js";
-import {uploadFile, uploadImage} from "./module/uploader.js";
+import {feedbackDiv} from './authorised-001.js';
+import {global} from "./module/localisation-001.js";
+import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego-001.js";
+import {uploadFile, uploadImage} from "./module/uploader-001.js";
 
 let globalTags = [];
 
@@ -17,7 +17,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
 
       document.querySelectorAll('.control-bar-creation').forEach(a => a.classList.remove('hidden'));
       document.querySelectorAll('span.article-updated-at').forEach(s => {
-        s.textContent = getUpdatedAtTime();
+        s.textContent = Util.getUpdatedAtTime();
       });
 
       document.querySelectorAll('#side-options').forEach(i => i.classList.add('null'));
@@ -112,7 +112,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
 
         let currentSection = {
           id: section.dataset.sectionId ? Number.parseInt(section.dataset.sectionId) : null,
-          sectionTypeId: getSectionTypeIdFromClassList(section.classList),
+          sectionTypeId: Util.getSectionTypeIdFromClassList(section.classList),
           contentHtml: sectionContentHtml,
           order: order++
         };
@@ -263,12 +263,12 @@ const displayImage = (image) => {
   modal.querySelector('.image-title').textContent = '#' + image.id;
   modal.querySelector('.image-caption').textContent = image.caption;
   modal.querySelector('.image-meta').innerHTML =
-    '<span><img src="/img/svg/upload-simple-white.svg" class="img-svg m-r-05">'
+    '<span><img src="/img/svg/upload-simple-white.svg" class="img-svg m-r-05" alt="Upload">'
     + global.formatDate(new Date(image.createdAt), true, true, true, true, true)
     + '</span><span>'
-    + '<img src="/img/svg/user-white.svg" class="img-svg m-r-05">' + image.userName
+    + '<img src="/img/svg/user-white.svg" class="img-svg m-r-05" alt="User">' + image.userName
     + '</span><span class="image-uri">'
-    + '<img src="/img/svg/link-white.svg" class="img-svg m-r-05">' + image.uri
+    + '<img src="/img/svg/link-white.svg" class="img-svg m-r-05" alt="Link">' + image.uri
     + '</span>';
 
   const appearsOnContainer = modal.querySelector('.image-appears-on');
@@ -282,7 +282,7 @@ const displayImage = (image) => {
       appearsLink.target = '_blank';
       appearsLink.textContent = ao.title;
       const appearsInfo = document.createElement('span');
-      appearsInfo.innerHTML = '<img src="/img/svg/calendar-white.svg" class="img-svg m-r-025">'
+      appearsInfo.innerHTML = '<img src="/img/svg/calendar-white.svg" class="img-svg m-r-025" alt="Calendar">'
         + global.formatDate(new Date(ao.publishedOn), false, false, true, false, false);
       appearsLink.appendChild(appearsInfo);
       appearsOnContainer.appendChild(appearsTitle);
@@ -713,7 +713,7 @@ document.querySelectorAll('input[name="tags"]').forEach(el => {
 
     let count = allResults.length;
     const inputText = e.target.value.trim();
-    const cleanInput = cleanString(inputText);
+    const cleanInput = Util.cleanString(inputText);
     allResults.forEach(r => {
       if (r.dataset.new) {
         r.parentNode.removeChild(r);
@@ -721,7 +721,7 @@ document.querySelectorAll('input[name="tags"]').forEach(el => {
         return;
       }
 
-      if (cleanString(r.textContent).includes(cleanInput)) {
+      if (Util.cleanString(r.textContent).includes(cleanInput)) {
         r.classList.remove('null');
       } else {
         count--;

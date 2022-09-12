@@ -1,5 +1,5 @@
 import {xhr} from './xhr.js';
-import {global} from './localisation.js';
+import {global} from './localisation-001.js';
 
 const logError = (userFeedbackDiv, error) => {
   if (userFeedbackDiv) {

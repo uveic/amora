@@ -1,5 +1,5 @@
 import {xhr} from './module/xhr.js';
-import {global} from './module/localisation.js';
+import {global} from './module/localisation-001.js';
 
 const formLogin = document.querySelector('form#form-login');
 const loginFailureFeedback = document.querySelector('#login-failure-message');
