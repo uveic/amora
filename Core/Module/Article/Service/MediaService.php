@@ -26,7 +26,7 @@ class MediaService
         private readonly Logger $logger,
         private readonly ArticleService $articleService,
         private readonly MediaDataLayer $mediaDataLayer,
-        private readonly ImageResizeService $imageResizeService,
+        private readonly ImageService $imageService,
         private readonly string $mediaBaseDir,
     ) {}
 
@@ -102,9 +102,13 @@ class MediaService
         ?MediaType $mediaType = null,
         bool $isAdmin = false,
         bool $includeAppearsOn = false,
+        ?int $mediaId = null,
         ?int $formId = null,
+        ?int $userId = null,
     ): array {
         $files = $this->filterMediaBy(
+            ids: $mediaId ? [$mediaId] : [],
+            userIds: $userId ? [$userId] : [],
             typeIds: $mediaType ? [$mediaType->value] : [],
             statusIds: [MediaStatus::Active->value],
             fromId: $formId,
@@ -136,6 +140,18 @@ class MediaService
                 }
 
                 $fileOutput['appearsOn'] = $appearsOn;
+
+                if ($file->type === MediaType::Image) {
+                    $extension = $this->getFileExtension($file->getPathWithNameMedium());
+                    $exif = $this->imageService->getExifData(
+                        filePathWithName: $file->getPathWithNameOriginal(),
+                        extension: $extension,
+                    );
+
+                    if ($exif) {
+                        $fileOutput['exif'] = $exif->asArray();
+                    }
+                }
             }
 
             $output[] = $fileOutput;
@@ -198,7 +214,7 @@ class MediaService
     public function processRawFileImage(RawFile $rawFile, ?User $user): ?Media
     {
         try {
-            return $this->imageResizeService->resizeOriginalImage(
+            return $this->imageService->resizeOriginalImage(
                 rawFile: $rawFile,
                 user: $user,
             );

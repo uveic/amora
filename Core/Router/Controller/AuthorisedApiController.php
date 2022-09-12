@@ -79,6 +79,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             qty: $qty,
             mediaType: $mediaType,
             isAdmin: $request->session->isAdmin(),
+            userId: $request->session->isAdmin() ? null : $request->session->user->id,
         );
 
         return new AuthorisedApiControllerGetFilesSuccessResponse(
@@ -135,35 +136,18 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      */
     protected function getFile(int $id, Request $request): Response
     {
-        $file = $this->mediaService->getMediaForId($id);
-        if (empty($file)) {
-            return new AuthorisedApiControllerGetFileSuccessResponse(
-                success: false,
-                errorMessage: 'File not found',
-            );
-        }
-
-        $statusIds = $request->session->isAdmin()
-            ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
-            : [ArticleStatus::Published->value];
-
-        $articles = $this->articleService->filterArticlesBy(
-            statusIds: $statusIds,
-            imageIds: [$file->id],
+        $output = $this->mediaService->workflowGetFiles(
+            direction: QueryOrderDirection::ASC,
+            qty: 1,
+            isAdmin: $request->session->isAdmin(),
+            includeAppearsOn: true,
+            mediaId: $id,
+            userId: $request->session->isAdmin() ? null : $request->session->user->id,
         );
-
-        $appearsOn = [];
-        /** @var Article $article */
-        foreach ($articles as $article) {
-            $appearsOn[] = $article->buildPublicDataArray();
-        }
-
-        $output = $file->buildPublicDataArray();
-        $output['appearsOn'] = $appearsOn;
 
         return new AuthorisedApiControllerGetFileSuccessResponse(
             success: true,
-            file: $output,
+            file: $output[0] ?? [],
             tags: [],
         );
     }
@@ -228,6 +212,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             isAdmin: $request->session->isAdmin(),
             includeAppearsOn: true,
             formId: $id,
+            userId: $request->session->isAdmin() ? null : $request->session->user->id,
         );
 
         return new AuthorisedApiControllerGetNextFileSuccessResponse(

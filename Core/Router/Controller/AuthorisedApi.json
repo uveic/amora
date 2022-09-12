@@ -156,6 +156,41 @@
                             "tags"
                           ]
                         }
+                      },
+                      "exif":  {
+                        "type": "object",
+                        "properties": {
+                          "width": {
+                            "type": "integer"
+                          },
+                          "height": {
+                            "type": "integer"
+                          },
+                          "sizeBytes": {
+                            "type": "integer"
+                          },
+                          "cameraModel": {
+                            "type": "string"
+                          },
+                          "date": {
+                            "type": "string"
+                          },
+                          "exposureTime": {
+                            "type": "string"
+                          },
+                          "ISO": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "width",
+                          "height",
+                          "sizeBytes",
+                          "cameraModel",
+                          "date",
+                          "exposureTime",
+                          "ISO"
+                        ]
                       }
                     },
                     "required": [

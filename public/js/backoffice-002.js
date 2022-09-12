@@ -260,6 +260,30 @@ const displayImage = (image) => {
     ? document.querySelectorAll('.image-next-action').forEach(i => i.classList.remove('hidden'))
     : document.querySelectorAll('.image-next-action').forEach(i => i.classList.add('hidden'));
 
+  let takenAt = '';
+  if (image.exif && image.exif.date) {
+    takenAt += '<img src="/img/svg/calendar-white.svg" class="img-svg m-r-05" alt="Taken on">'
+    + global.formatDate(new Date(image.exif.date), true, true, true, true, true);
+  }
+
+  let camera = '';
+  if (image.exif && image.exif.cameraModel) {
+    camera += '<img src="/img/svg/camera-white.svg" class="img-svg m-r-05" alt="EXIF">'
+      + image.exif.cameraModel;
+  }
+
+  let size = '';
+  if (image.exif && image.exif.sizeBytes) {
+    size += '<img src="/img/svg/hard-drives-white.svg" class="img-svg m-r-05" alt="Size">'
+      + (image.exif.sizeBytes / 1000000).toFixed(3) + ' MB';
+  }
+
+  let pixels = '';
+  if (image.exif && image.exif.width) {
+    pixels += '<img src="/img/svg/frame-corners-white.svg" class="img-svg m-r-05" alt="Size">'
+      + image.exif.width + ' x ' + image.exif.height + ' px';
+  }
+
   modal.querySelector('.image-title').textContent = '#' + image.id;
   modal.querySelector('.image-caption').textContent = image.caption;
   modal.querySelector('.image-meta').innerHTML =
@@ -269,7 +293,11 @@ const displayImage = (image) => {
     + '<img src="/img/svg/user-white.svg" class="img-svg m-r-05" alt="User">' + image.userName
     + '</span><span class="image-uri">'
     + '<img src="/img/svg/link-white.svg" class="img-svg m-r-05" alt="Link">' + image.uri
-    + '</span>';
+    + '</span>'
+    + (takenAt ? '<span>' + takenAt + '</span>' : '')
+    + (camera ? '<span>' + camera + '</span>' : '')
+    + (pixels ? '<span>' + pixels + '</span>' : '')
+    + (size ? '<span>' + size + '</span>' : '');
 
   const appearsOnContainer = modal.querySelector('.image-appears-on');
   appearsOnContainer.innerHTML = '';

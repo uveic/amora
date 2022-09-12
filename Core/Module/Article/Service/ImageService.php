@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use Amora\Core\Module\Article\Entity\ImageExif;
 use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\MediaStatus;
@@ -11,7 +12,7 @@ use GdImage;
 use Amora\Core\Util\Logger;
 use Amora\Core\Util\StringUtil;
 
-class ImageResizeService
+class ImageService
 {
     const IMAGE_SIZE_MEDIUM = 2;
     const IMAGE_SIZE_LARGE = 3;
@@ -47,6 +48,27 @@ class ImageResizeService
             caption: $rawFile->originalName,
             createdAt: $now,
             updatedAt: $now,
+        );
+    }
+
+    public function getExifData(string $filePathWithName, string $extension): ?ImageExif
+    {
+        if ($extension !== 'jpg' && $extension !== 'jpeg') {
+            return null;
+        }
+
+        $exif = exif_read_data($filePathWithName, 'FILE, IFD0, EXIF, ANY_TAG');
+        $date = $exif['DateTimeOriginal'] ?? $exif['DateTime'] ?? null;
+
+        return new ImageExif(
+            width: isset($exif['COMPUTED']['Width']) ? (int)$exif['COMPUTED']['Width'] : null,
+            height: isset($exif['COMPUTED']['Height']) ? (int)$exif['COMPUTED']['Height'] : null,
+            sizeBytes: isset($exif['FileSize']) ? (int)$exif['FileSize'] : null,
+            cameraModel: $exif['Model'] ?? null,
+            date: $date ? DateTimeImmutable::createFromFormat('Y:m:d H:i:s', $date) : null,
+            exposureTime: $exif['ExposureTime'] ?? null,
+            ISO: $exif['ISOSpeedRatings'] ?? null,
+            rawDataJson: json_encode($exif),
         );
     }
 
