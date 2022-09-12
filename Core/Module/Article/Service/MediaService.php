@@ -144,7 +144,7 @@ class MediaService
                 if ($file->type === MediaType::Image) {
                     $extension = $this->getFileExtension($file->getPathWithNameMedium());
                     $exif = $this->imageService->getExifData(
-                        filePathWithName: $file->getPathWithNameOriginal(),
+                        filePathWithName: $file->getPathWithNameMedium(),
                         extension: $extension,
                     );
 
