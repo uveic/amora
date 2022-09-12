@@ -202,6 +202,24 @@ final class DateUtil
         }
     }
 
+    public static function convertUnixTimestampToDateTimeImmutable(
+        int $unixSeconds,
+        ?DateTimeZone $timezone = null,
+    ): DateTimeImmutable {
+        try {
+            if (isset($timezone)) {
+                return new DateTimeImmutable(datetime: $unixSeconds, timezone: $timezone);
+            }
+
+            return DateTimeImmutable::createFromFormat(format: 'U', datetime: $unixSeconds);
+        } catch (Throwable) {
+            Core::getDefaultLogger()->logError(
+                'Error converting unix seconds to DateTimeImmutable: ' . $unixSeconds
+            );
+            return new DateTimeImmutable();
+        }
+    }
+
     public static function convertStringToDateTimeZone(string $timezone): DateTimeZone
     {
         try {

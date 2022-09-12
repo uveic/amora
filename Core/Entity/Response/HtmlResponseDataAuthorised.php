@@ -15,7 +15,8 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         ?Article $article = null,
         ?array $articles = [],
         ?Pagination $pagination = null,
-        public readonly ?array $listOfUsers = [],
+        public readonly ?User $user = null,
+        public readonly ?array $users = [],
         public readonly ?array $files = [],
         public readonly ?array $articleSections = [],
     ) {
@@ -29,23 +30,9 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         );
     }
 
-    public function getUser(): ?User
-    {
-        if (empty($this->session)) {
-            return null;
-        }
-
-        return $this->session->user;
-    }
-
-    public function getUserName(): string
-    {
-        return $this->getUser() ? $this->getUser()->getNameOrEmail() : '';
-    }
-
     public function getUserToEdit(): ?User
     {
-        $allUsers = $this->listOfUsers;
+        $allUsers = $this->users;
         return $allUsers[0] ?? null;
     }
 }

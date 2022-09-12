@@ -8,7 +8,7 @@ use Amora\Core\Module\User\Service\UserService;
 $user = $responseData->request->session->user;
 
 ?>
-      <h1><?=$responseData->getLocalValue('navChangePassword')?></h1>
+      <h1 class="m-t-0"><?=$responseData->getLocalValue('navChangePassword')?></h1>
       <div class="content-main">
         <form action="#" method="post" id="form-user-account-update">
           <input type="hidden" name="userId" id="userId" value="<?=$user->id?>">

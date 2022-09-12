@@ -7,5 +7,5 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 $user = $responseData->request->session->user;
 
 ?>
-      <h1><?=$responseData->getLocalValue('navDeleteAccount')?></h1>
+      <h1 class="m-t-0"><?=$responseData->getLocalValue('navDeleteAccount')?></h1>
       <p><?=$responseData->getLocalValue('globalComingSoon')?></p>

@@ -11,7 +11,7 @@ $user = $responseData->request->session->user;
 $timezones = DateTimeZone::listIdentifiers();
 
 ?>
-      <h1><?=$responseData->getLocalValue('formYourAccount')?></h1>
+      <h1 class="m-t-0"><?=$responseData->getLocalValue('formYourAccount')?></h1>
       <div class="content-main">
         <form action="#" method="post" id="form-user-account-update">
           <input type="hidden" name="userId" id="userId" value="<?=$user->id?>">

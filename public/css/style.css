@@ -177,7 +177,7 @@ blockquote,
 .content-narrow-width {
   width: 100%;
   max-width: 600px;
-  padding: 0 5% 2rem;
+  padding: 2rem 1rem 8rem;
   margin: 0 auto;
 }
 
@@ -243,6 +243,7 @@ label:not(:last-child) {
   justify-content: space-between;
   flex-flow: row-reverse;
   min-height: 1rem;
+  width: 100%;
 }
 
 .help .is-danger {

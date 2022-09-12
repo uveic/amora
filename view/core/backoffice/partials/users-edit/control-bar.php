@@ -2,37 +2,35 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 use Amora\Core\Util\DateUtil;
-use Amora\Core\Util\StringUtil;
 
 /** @var HtmlResponseDataAuthorised $responseData */
 
-$userToEdit = $responseData->getUserToEdit();
 $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
 
 $updatedAtContent = '';
 $createdAtContent = '';
-if ($userToEdit) {
+if ($responseData->user) {
     $updatedAtDate = DateUtil::formatDate(
-        date: $userToEdit->updatedAt,
+        date: $responseData->user->updatedAt,
         lang: $responseData->siteLanguage,
         includeTime: true,
     );
 
     $updatedAtEta = DateUtil::getElapsedTimeString(
         language: $responseData->siteLanguage,
-        from: $userToEdit->updatedAt,
+        from: $responseData->user->updatedAt,
         includePrefixAndOrSuffix: true
     );
 
     $createdAtDate = DateUtil::formatDate(
-        date: $userToEdit->createdAt,
+        date: $responseData->user->createdAt,
         lang: $responseData->siteLanguage,
         includeTime: true,
     );
 
     $createdAtEta = DateUtil::getElapsedTimeString(
         language: $responseData->siteLanguage,
-        from: $userToEdit->createdAt,
+        from: $responseData->user->createdAt,
         includePrefixAndOrSuffix: true,
     );
 
@@ -43,12 +41,12 @@ if ($userToEdit) {
         ' <span title="' . $this->e($createdAtDate) . '">' . $this->e($createdAtEta) . '</span>.';
 }
 
-$isEnabled = $userToEdit ? $userToEdit->isEnabled : true;
+$isEnabled = $responseData->user ? $responseData->user->isEnabled : true;
 
 ?>
       <div class="control-bar-wrapper">
         <div class="pexego-tools-amora">
-          <input type="submit" class="button button-form" value="<?=$userToEdit ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
+          <input type="submit" class="button button-form" value="<?=$responseData->user ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
         </div>
         <div class="control-bar-creation"><span><?=$updatedAtContent?></span><br><span><?=$createdAtContent?></span></div>
         <input type="checkbox" id="user-status-dd-checkbox" class="dropdown-menu">

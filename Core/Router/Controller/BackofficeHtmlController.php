@@ -89,7 +89,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             responseData: new HtmlResponseDataAuthorised(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminUsers'),
-                listOfUsers: $users,
+                users: $users,
             ),
         );
     }
@@ -140,7 +140,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
                     $localisationUtil->getValue('globalUser'),
-                listOfUsers: [$user],
+                user: $user,
             ),
         );
     }
