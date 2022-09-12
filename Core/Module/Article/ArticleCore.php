@@ -9,7 +9,7 @@ use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
 use Amora\Core\Module\Article\Datalayer\TagDataLayer;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
-use Amora\Core\Module\Article\Service\ImageResizeService;
+use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Service\XmlService;
 use Amora\Core\Module\Article\Service\TagService;
@@ -112,7 +112,7 @@ class ArticleCore extends Core
                     logger: self::getArticleLogger(),
                     articleService: self::getArticleService(),
                     mediaDataLayer: self::getMediaDataLayer(),
-                    imageResizeService: self::getImageResizeService(),
+                    imageService: self::getImageService(),
                     mediaBaseDir: self::getConfig()->mediaBaseDir,
                 );
             },
@@ -120,13 +120,14 @@ class ArticleCore extends Core
         );
     }
 
-    public static function getImageResizeService(): ImageResizeService
+    public static function getImageService(): ImageService
     {
         return self::getInstance(
-            className: 'ImageResizeService',
+            className: 'ImageService',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Module/Article/Service/ImageResizeService.php';
-                return new ImageResizeService(
+                require_once self::getPathRoot() . '/Core/Module/Article/Entity/ImageExif.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Service/ImageService.php';
+                return new ImageService(
                     logger: self::getArticleLogger(),
                 );
             },
