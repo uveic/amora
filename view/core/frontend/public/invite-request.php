@@ -33,7 +33,7 @@ $this->insert('../../../app/frontend/public/partials/head', ['responseData' => $
             </p>
           </div>
         </div>
-        <div id="login-failure-message" class="field is-failure m-t-1 null"></div>
+        <div id="login-failure-message" class="is-failure m-t-1 null"></div>
         <div id="request-form-feedback" class="field null">
           <p class="m-b-3"><?=$responseData->getLocalValue('authenticationInviteRequestActionSuccess')?></p>
           <a class="button is-success m-t-3" href="<?=$responseData->getBaseUrlWithLanguage()?>"><?=$this->e($responseData->getLocalValue('authenticationInviteRequestHomeLink'))?></a>

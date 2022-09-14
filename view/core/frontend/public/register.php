@@ -38,7 +38,7 @@ use Amora\Core\Util\UrlBuilderUtil;
           </p>
           <p class="help"><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
         </div>
-        <div id="login-failure-message" class="field is-failure m-t-1 null"></div>
+        <div id="login-failure-message" class="is-failure m-t-1 null"></div>
         <div id="register-terms" class="field">
           <p class="no-margin"><?=$responseData->getLocalValue('authenticationRegisterTOS')?></p>
         </div>

@@ -35,7 +35,7 @@ $this->insert('../../../app/frontend/public/partials/head', ['responseData' => $
             <input class="input" type="password" id="password" name="password" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderPassword'))?>" required>
           </p>
         </div>
-        <div id="login-failure-message" class="field is-failure m-t-1 null"></div>
+        <div id="login-failure-message" class="is-failure m-t-1 null"></div>
         <div class="field">
           <p class="control">
             <input class="button is-success" type="submit" value="<?=$this->e($responseData->getLocalValue('formLoginAction'))?>">

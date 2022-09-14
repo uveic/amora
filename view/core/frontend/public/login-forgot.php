@@ -34,7 +34,7 @@ use Amora\Core\Util\UrlBuilderUtil;
           </div>
         </div>
       </div>
-      <div id="login-failure-message" class="field is-failure m-t-1 null"></div>
+      <div id="login-failure-message" class="is-failure m-t-1 null"></div>
       <div id="register-back-login" class="field null">
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationForgotPasswordActionSuccess')?></p>
         <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$this->e($responseData->getLocalValue('authenticationActionHomeLink'))?></a>

@@ -9,7 +9,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 $menuItems = AppMenu::getCustomer(
     language: $responseData->siteLanguage,
     username: $responseData->request->session->user->getNameOrEmail(),
-    includeAdminLink: true,
+    includeAdminLink: $responseData->request->session?->isAdmin() ?? false,
     whiteIcon: true,
 );
 

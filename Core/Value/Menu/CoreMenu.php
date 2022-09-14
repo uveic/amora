@@ -93,7 +93,7 @@ final class CoreMenu
     public static function getCustomer(
         Language $language,
         string $username = null,
-        bool $includeAdminLink = true,
+        bool $includeAdminLink = false,
         bool $whiteIcon = false,
     ): array {
         $localisationUtil = Core::getLocalisationUtil($language);

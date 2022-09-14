@@ -6,6 +6,7 @@ use Amora\Core\Database\MySqlDb;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\User\Datalayer\UserDataLayer;
+use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\DataLayerTrait;
@@ -135,12 +136,14 @@ class MediaDataLayer
         return $this->db->execute(
             '
                 UPDATE ' . self::MEDIA_TABLE_NAME .
-            '   SET status_id = :statusId
+            '   SET status_id = :statusId,
+                    updated_at = :updatedAt
                 WHERE id = :id
             ',
             [
                 ':id' => $id,
                 ':statusId' => MediaStatus::Deleted->value,
+                ':updatedAt' => DateUtil::getCurrentDateForMySql(),
             ],
         );
     }
