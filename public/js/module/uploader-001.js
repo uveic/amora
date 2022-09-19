@@ -60,7 +60,6 @@ const uploadImage = (
         image.src = response.file.uri;
         image.dataset.imageId = response.file.id;
         image.alt = response.file.caption ?? response.file.name;
-        image.title = response.file.caption ?? response.file.name;
         imageContainer.removeChild(imgLoading);
 
         then(response);

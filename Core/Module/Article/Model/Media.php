@@ -77,25 +77,25 @@ class Media
 
     public function getPathWithNameOriginal(): string
     {
-        $path = Core::getConfig()->mediaBaseDir . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        $path = Core::getConfig()->mediaBaseDir . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $path . $this->filenameOriginal;
     }
 
     public function getPathWithNameMedium(): ?string
     {
-        $path = Core::getConfig()->mediaBaseDir . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        $path = Core::getConfig()->mediaBaseDir . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $this->filenameMedium ? ($path . $this->filenameMedium) : null;
     }
 
     public function getPathWithNameLarge(): ?string
     {
-        $path = Core::getConfig()->mediaBaseDir . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        $path = Core::getConfig()->mediaBaseDir . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $this->filenameLarge ? ($path . $this->filenameLarge) : null;
     }
 
     public function getUriWithNameOriginal(): string
     {
-        $path = Core::getConfig()->mediaBaseUrl . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        $path = Core::getConfig()->mediaBaseUrl . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $path . $this->filenameOriginal;
     }
 
@@ -105,7 +105,7 @@ class Media
             return $this->getUriWithNameOriginal();
         }
 
-        $path = Core::getConfig()->mediaBaseUrl . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        $path = Core::getConfig()->mediaBaseUrl . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $this->filenameMedium ? ($path . $this->filenameMedium) : null;
     }
 
@@ -115,7 +115,7 @@ class Media
             return $this->getUriWithNameOriginal();
         }
 
-        $path = Core::getConfig()->mediaBaseUrl . ($this->path ? trim($this->path, '/ ') . '/' : '/');
+        $path = Core::getConfig()->mediaBaseUrl . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $this->filenameLarge ? ($path . $this->filenameLarge) : null;
     }
 }

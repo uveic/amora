@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Database\migration;
 
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\Feedback;
 use Exception;
 use Amora\Core\Database\MySqlDb;
@@ -31,9 +32,18 @@ final class MigrationDbApp
 
         switch ($action) {
             case 'install':
-                if (!$this->isDbEmpty()) {
-                    $question = 'The database is not empty. ' .
-                        'Remove all tables/data and install a fresh database? (yes/no): ';
+                if (Core::isRunningInLiveEnv() && !$this->isDbEmpty()) {
+                    $question = PHP_EOL .
+                        '##################################################' . PHP_EOL .
+                        '#######                                    #######' . PHP_EOL .
+                        '#######           WARING!                  #######' . PHP_EOL .
+                        '#######                                    #######' . PHP_EOL .
+                        '#######    You are about to erase all      #######' . PHP_EOL .
+                        '#######    data and tables. This is        #######' . PHP_EOL .
+                        '#######    unrecoverable. Are you sure?    #######' . PHP_EOL .
+                        '#######                                    #######' . PHP_EOL .
+                        '##################################################' . PHP_EOL . PHP_EOL .
+                        'Type ERASE to remove all tables/data and install a fresh database: ';
                     if (!$this->areYouSure($question)) {
                         $this->printOutput("Installation canceled");
                         break;
@@ -54,11 +64,7 @@ final class MigrationDbApp
                 break;
 
             case 'new':
-                if (!empty($args[2])) {
-                    $this->createMigrationTemplate($args[2]);
-                } else {
-                    $this->createMigrationTemplate();
-                }
+                $this->createMigrationTemplate($args[2] ?? null);
                 break;
 
             default:
@@ -77,29 +83,15 @@ final class MigrationDbApp
         $this->printOutput();
     }
 
-    private function askUser($question, $validAnswers = []): string
-    {
-        echo $this->getLineOutputPrefix() . $question;
-        do {
-            $ans = strtolower(trim(fgets(STDIN)));
-            if (! in_array($ans, $validAnswers, true)) {
-                echo $this->getLineOutputPrefix()
-                    . "Response not valid. Please choose from [" . implode(", ", $validAnswers) . "]: ";
-                $ans = false;
-            }
-        } while ($ans === false);
-
-        return $ans;
-    }
-
-    private function areYouSure($question = ''): bool
+    private function areYouSure(string $question = ''): bool
     {
         if (empty($question)) {
             $question = "Are you sure? (yes/no): ";
         }
-        $res = $this->askUser($question, ['yes', 'y', 'no', 'n']);
+        echo $this->getLineOutputPrefix() . $question;
+        $ans = strtolower(trim(fgets(STDIN)));
 
-        return ($res == 'yes' || $res == 'y');
+        return ($ans == 'ERASE');
     }
 
     private function printOutput($str = PHP_EOL): void
@@ -111,15 +103,9 @@ final class MigrationDbApp
         echo $this->getLineOutputPrefix() . $str;
     }
 
-    private function createMigrationTemplate($filename = ''): void
+    private function createMigrationTemplate(?string $filename): void
     {
         if (empty($filename)) {
-            $question = 'WARNING! A filename is highly recommended.' .
-             'Continue with a generic name? (yes/no): ';
-            if (! $this->areYouSure($question)) {
-                $this->printOutput("Migration file creation aborted");
-                exit;
-            }
             $filename = 'migration_template';
         }
 

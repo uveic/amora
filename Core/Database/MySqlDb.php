@@ -269,9 +269,9 @@ final class MySqlDb
      * Execute a function received as a parameter in transaction mode
      *
      * @param Callable $f
-     * @return mixed|bool
+     * @return Feedback
      */
-    public function withTransaction(callable $f): ?Feedback
+    public function withTransaction(callable $f): Feedback
     {
         if ($this->isInTransactionMode) {
             $this->logger->logWarning(
@@ -283,7 +283,10 @@ final class MySqlDb
 
         if (!is_callable($f)) {
             $this->logger->logError('MySqlDb transaction: provided parameter is not Callable');
-            return null;
+            return new Feedback(
+                isSuccess: false,
+                message: 'MySqlDb transaction: provided parameter is not Callable',
+            );
         }
 
         $this->beginTransaction();
@@ -295,7 +298,10 @@ final class MySqlDb
                 $this->logger->logError(
                     'Not valid response from callable function in MySqlDb transaction'
                 );
-                return null;
+                return new Feedback(
+                    isSuccess: false,
+                    message: 'Not valid response from callable function in MySqlDb transaction',
+                );
             }
 
             if (!$res->isSuccess) {
@@ -317,7 +323,10 @@ final class MySqlDb
                 ' - Trace: ' . $t->getTraceAsString()
             );
             $this->rollBackTransaction();
-            return null;
+            return new Feedback(
+                isSuccess: false,
+                message: 'Error in MySqlDb transaction: ' . $t->getMessage(),
+            );
         }
     }
 
