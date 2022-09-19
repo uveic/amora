@@ -504,8 +504,8 @@
                   "description": "Article content",
                   "type": "string"
                 },
-                "uri": {
-                  "description": "Article URI",
+                "path": {
+                  "description": "Article path",
                   "type": "string"
                 },
                 "mainImageId": {
@@ -606,13 +606,13 @@
                   "type": "integer",
                   "description": "New article ID"
                 },
-                "articleBackofficeUri": {
+                "articleBackofficePath": {
                   "type": "string",
-                  "description": "Article backoffice URI"
+                  "description": "Article backoffice path"
                 },
-                "articlePublicUri": {
+                "articlePublicPath": {
                   "type": "string",
-                  "description": "Article public URI"
+                  "description": "Article public path"
                 },
                 "errorMessage": {
                   "type": "string",
@@ -714,8 +714,8 @@
                   "description": "Article content",
                   "type": "string"
                 },
-                "uri": {
-                  "description": "Article URI",
+                "path": {
+                  "description": "Article path",
                   "type": "string"
                 },
                 "mainImageId": {
@@ -816,13 +816,13 @@
                   "type": "integer",
                   "description": "New article ID"
                 },
-                "articleBackofficeUri": {
+                "articleBackofficePath": {
                   "type": "string",
-                  "description": "Article backoffice URI"
+                  "description": "Article backoffice path"
                 },
-                "articlePublicUri": {
+                "articlePublicPath": {
                   "type": "string",
-                  "description": "Article public URI"
+                  "description": "Article public path"
                 },
                 "errorMessage": {
                   "type": "string",
@@ -952,11 +952,11 @@
         }
       }
     },
-    "/back/article/{articleId}/previous-uri": {
+    "/back/article/{articleId}/previous-path": {
       "get": {
         "tags": [],
-        "description": "Get previous URIs for article ID",
-        "operationId": "getPreviousUrisForArticle",
+        "description": "Get previous paths for article ID",
+        "operationId": "getPreviousPathsForArticle",
         "parameters": [
           {
             "name": "articleId",
@@ -980,17 +980,17 @@
                     false
                   ]
                 },
-                "uris": {
+                "paths": {
                   "type": "object",
-                  "description": "Article URIs",
+                  "description": "Article paths",
                   "properties": {
                     "id": {
                       "type": "integer",
-                      "description": "URI ID"
+                      "description": "Article path ID"
                     },
-                    "uri": {
+                    "path": {
                       "type": "string",
-                      "description": "URI"
+                      "description": "Article path"
                     },
                     "createdAt": {
                       "type": "string",
@@ -999,7 +999,8 @@
                   },
                   "required": [
                     "id",
-                    "uri"
+                    "path",
+                    "createdAt"
                   ]
                 },
                 "errorMessage": {
@@ -1009,7 +1010,7 @@
               },
               "required": [
                 "success",
-                "uris"
+                "paths"
               ]
             }
           },

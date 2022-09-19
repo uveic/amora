@@ -222,15 +222,15 @@ class UrlBuilderUtil
             sprintf(self::PUBLIC_RESET_PASSWORD, $verificationIdentifier);
     }
 
-    public static function buildPublicArticleUrl(
-        string $uri,
+    public static function buildPublicArticlePath(
+        string $path,
         ?Language $language = null,
     ): string {
         return (empty($language) || count(Core::getAllLanguages()) === 1
                 ? self::buildBaseUrlWithoutLanguage()
                 : self::buildBaseUrl($language)
             )
-            . '/' . $uri;
+            . '/' . $path;
     }
 
     public static function buildPublicRssUrl(): string

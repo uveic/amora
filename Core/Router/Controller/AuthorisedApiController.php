@@ -2,13 +2,7 @@
 
 namespace Amora\Core\Router;
 
-use Amora\Core\Entity\Util\QueryOptions;
-use Amora\Core\Entity\Util\QueryOrderBy;
-use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Media;
-use Amora\Core\Module\Article\Service\ArticleService;
-use Amora\Core\Module\Article\Value\ArticleStatus;
-use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Service\UserMailService;
 use Amora\Core\Module\User\Service\UserService;
@@ -34,7 +28,6 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         private readonly MediaService $mediaService,
         private readonly UserService $userService,
         private readonly UserMailService $userMailService,
-        private readonly ArticleService $articleService,
     ) {
         parent::__construct();
     }

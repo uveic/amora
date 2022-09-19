@@ -47,11 +47,11 @@ use Amora\Core\Router\Controller\Response\PublicApiControllerUserLoginSuccessRes
 final class PublicApiController extends PublicApiControllerAbstract
 {
     public function __construct(
-        private Logger $logger,
-        private UserService $userService,
-        private SessionService $sessionService,
-        private UserMailService $mailService,
-        private ArticleService $articleService,
+        private readonly Logger $logger,
+        private readonly UserService $userService,
+        private readonly SessionService $sessionService,
+        private readonly UserMailService $mailService,
+        private readonly ArticleService $articleService,
     ) {
         parent::__construct();
     }
@@ -495,8 +495,8 @@ final class PublicApiController extends PublicApiControllerAbstract
         foreach ($articles as $article) {
             $output[] = [
                 'icon' => ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article),
-                'postUri' => UrlBuilderUtil::buildPublicArticleUrl(uri: $article->uri),
-                'postTitle' => $article->title,
+                'path' => UrlBuilderUtil::buildPublicArticlePath(path: $article->path),
+                'title' => $article->title,
                 'publishedOn' => $article->publishOn?->format('c'),
             ];
         }

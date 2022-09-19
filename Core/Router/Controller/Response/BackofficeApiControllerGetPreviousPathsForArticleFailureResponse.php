@@ -4,7 +4,7 @@ namespace Amora\Core\Router\Controller\Response;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\HttpStatusCode;
 
-class BackofficeApiControllerGetPreviousUrisForArticleFailureResponse extends Response
+class BackofficeApiControllerGetPreviousPathsForArticleFailureResponse extends Response
 {
     public function __construct(?array $errorInfo = null)
     {

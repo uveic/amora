@@ -26,7 +26,7 @@ class Article
         public readonly string $contentHtml,
         public readonly ?int $mainImageId,
         public readonly ?Media $mainImage,
-        public readonly string $uri,
+        public readonly string $path,
         public readonly array $tags = [],
     ) {}
 
@@ -47,7 +47,7 @@ class Article
             contentHtml: $article['content_html'],
             mainImageId: empty($article['main_image_id']) ? null : (int)$article['main_image_id'],
             mainImage: empty($article['main_image_id']) ? null : Media::fromArray($article),
-            uri: $article['uri'],
+            path: $article['article_path'],
             tags: $article['tags'] ?? [],
         );
     }
@@ -66,7 +66,7 @@ class Article
             'title' => $this->title,
             'content_html' => $this->contentHtml,
             'main_image_id' => $this->mainImageId,
-            'uri' => $this->uri,
+            'path' => $this->path,
             'tags' => $this->tags,
         ];
     }
@@ -78,7 +78,7 @@ class Article
             'languageIsoCode' => $this->language->value,
             'userId' => $this->user->id,
             'userName' => $this->user?->getNameOrEmail(),
-            'uri' => $this->getFullUri(),
+            'path' => $this->getFullPath(),
             'title' => $this->title,
             'publishedOn' => $this->publishOn
                 ? $this->publishOn->format('c')
@@ -127,8 +127,8 @@ class Article
         return true;
     }
 
-    public function getFullUri(): string
+    private function getFullPath(): string
     {
-        return rtrim(Core::getConfig()->baseUrl, '/ ') . '/' . $this->uri;
+        return rtrim(Core::getConfig()->baseUrl, '/ ') . '/' . $this->path;
     }
 }

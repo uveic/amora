@@ -77,8 +77,8 @@ return [
     'formLoginAction' => 'Entrar',
     'formPasswordResetAction' => 'Cambiar contrasinal',
     'formPasswordCreateAction' => 'Crear contrasinal',
-    'formArticleUri' => 'URI do artigo',
-    'formArticlePreviousUris' => 'URIs anteriores',
+    'formArticlePath' => 'Enderezo do artigo',
+    'formArticlePreviousPaths' => 'Enderezos anteriores',
     'formTimezone' => 'Zona horaria',
 
     'dashboardGoTo' => 'Ir a...',

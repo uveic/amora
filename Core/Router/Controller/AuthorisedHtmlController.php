@@ -8,12 +8,11 @@ use Amora\Core\Entity\Response;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Util\UrlBuilderUtil;
-use Exception;
 
 final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
 {
     public function __construct(
-        private SessionService $sessionService,
+        private readonly SessionService $sessionService,
     ) {
         parent::__construct();
     }

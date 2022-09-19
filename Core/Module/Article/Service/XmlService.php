@@ -115,8 +115,8 @@ class XmlService
 
         /** @var Article $article */
         foreach ($articles as $article) {
-            $link = UrlBuilderUtil::buildPublicArticleUrl(
-                uri: $article->uri,
+            $link = UrlBuilderUtil::buildPublicArticlePath(
+                path: $article->path,
                 language: $siteLanguage,
             );
             $title = $article->title ? htmlspecialchars($article->title) : '';
@@ -148,14 +148,14 @@ class XmlService
         /** @var Article $article */
         foreach ($articles as $article) {
             $output[] = '<url>';
-            $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticleUrl(uri: $article->uri) . '</loc>';
+            $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticlePath(path: $article->path) . '</loc>';
             $output[] = '<lastmod>' . $article->updatedAt->format('Y-m-d') . '</lastmod>';
             $output[] = '</url>';
         }
 
         foreach (AppRouter::getPublicReservedPaths() as $path) {
             $output[] = '<url>';
-            $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticleUrl(uri: $path) . '</loc>';
+            $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticlePath(path: $path) . '</loc>';
             $output[] = '</url>';
         }
 

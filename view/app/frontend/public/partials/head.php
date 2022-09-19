@@ -10,8 +10,8 @@ use Amora\Core\Util\UrlBuilderUtil;
 $canonical = '';
 
 if (isset($responseData->article)) {
-    $articleUrl = UrlBuilderUtil::buildPublicArticleUrl(
-        uri: $responseData->article->uri,
+    $articleUrl = UrlBuilderUtil::buildPublicArticlePath(
+        path: $responseData->article->path,
         language: $responseData->siteLanguage,
     );
 
@@ -29,7 +29,7 @@ if (isset($responseData->article)) {
   <meta property="og:site_name" content="<?=$this->e($responseData->siteName)?>">
   <meta property="og:title" content="<?=$this->e($responseData->pageTitleWithoutSiteName)?>">
   <meta property="og:description" content="<?=$this->e($responseData->getPageDescription())?>">
-  <meta property="og:image" content="<?=$responseData->getSiteImageUri()?>">
+  <meta property="og:image" content="<?=$responseData->getSiteImagePath()?>">
   <meta property="og:url" content="<?=$responseData->siteUrl?>">
   <meta property="og:type" content="website">
   <meta property="og:updated_time" content="<?=$responseData->lastUpdatedTimestamp?>">
@@ -38,7 +38,7 @@ if (isset($responseData->article)) {
   <meta property="twitter:url" content="<?=$responseData->siteUrl?>">
   <meta name="twitter:title" content="<?=$this->e($responseData->pageTitleWithoutSiteName)?>">
   <meta name="twitter:description" content="<?=$this->e($responseData->getPageDescription())?>">
-  <meta name="twitter:image" content="<?=$responseData->getSiteImageUri()?>">
+  <meta name="twitter:image" content="<?=$responseData->getSiteImagePath()?>">
   <title><?=$this->e($responseData->getPageTitle())?></title>
   <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">

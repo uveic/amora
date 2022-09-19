@@ -22,9 +22,9 @@ use DateTimeImmutable;
 final class PublicHtmlController extends PublicHtmlControllerAbstract
 {
     public function __construct(
-        private UserService $userService,
-        private ArticleService $articleService,
-        private XmlService $xmlService,
+        private readonly UserService $userService,
+        private readonly ArticleService $articleService,
+        private readonly XmlService $xmlService,
     ) {
         parent::__construct();
     }

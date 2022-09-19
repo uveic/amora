@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "API",
-    "description": "Public URIs for admin that return HTML",
+    "description": "",
     "version": "0.0.1"
   },
   "host": "localhost:8888",
