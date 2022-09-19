@@ -24,7 +24,7 @@ abstract class HtmlResponseDataAbstract
         public readonly ?Pagination $pagination = null,
         protected ?string $pageTitle = null,
         protected ?string $pageDescription = null,
-        protected ?string $siteImageUri = null,
+        protected ?string $siteImagePath = null,
     ) {
         $this->localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
@@ -38,7 +38,7 @@ abstract class HtmlResponseDataAbstract
         $this->siteUrl = trim($this->baseUrl, ' /') . '/' . ltrim($this->sitePath, ' /');
         $this->siteLanguage = $request->siteLanguage;
         $this->siteName = $this->localisationUtil->getValue('siteName');
-        $this->siteImageUri = $siteImageUri ?? ($siteImageUrl ?? '');
+        $this->siteImagePath = $siteImagePath ?? ($siteImageUrl ?? '');
         $this->lastUpdatedTimestamp = time();
 
         $this->pageTitle = isset($pageTitle) && $pageTitle
@@ -71,9 +71,9 @@ abstract class HtmlResponseDataAbstract
         return $this->siteName . ($siteTitle ? ' - ' . $siteTitle : '');
     }
 
-    public function getSiteImageUri(): string
+    public function getSiteImagePath(): string
     {
-        return $this->siteImageUri;
+        return $this->siteImagePath;
     }
 
     public function getSiteDomain(): string

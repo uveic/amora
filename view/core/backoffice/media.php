@@ -39,7 +39,7 @@ $count = 0;
             includeTime: true,
         );
 ?>
-      <a href="<?=$media->getUriWithNameOriginal()?>" target="_blank" class="media-item" data-media-id="<?=$media->id?>">
+      <a href="<?=$media->getDirWithNameOriginal()?>" target="_blank" class="media-item" data-media-id="<?=$media->id?>">
         <span class="media-id">#<?=$media->id?></span>
         <?=MediaType::getIcon($media->type, 'img-svg-40 m-r-05')?>
         <span class="media-name"><?=$media->caption ?? $media->filenameOriginal?></span>

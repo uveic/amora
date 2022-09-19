@@ -4,14 +4,14 @@ namespace Amora\Core\Router\Controller\Response;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\HttpStatusCode;
 
-class BackofficeApiControllerGetPreviousUrisForArticleSuccessResponse extends Response
+class BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse extends Response
 {
-    public function __construct(bool $success, $uris, ?string $errorMessage = null)
+    public function __construct(bool $success, $paths, ?string $errorMessage = null)
     {
         // Required parameters
         $responseData = [
             'success' => $success,
-            'uris' => $uris,
+            'paths' => $paths,
         ];
 
         $responseData['errorMessage'] = is_null($errorMessage)

@@ -206,8 +206,8 @@ final class ArticleEditHtmlGenerator
             ArticleStatus::Draft => 'status-draft',
         };
 
-        $articleUrl = UrlBuilderUtil::buildPublicArticleUrl(
-            uri: $article->uri,
+        $articleUrl = UrlBuilderUtil::buildPublicArticlePath(
+            path: $article->path,
             language: $responseData->siteLanguage,
         );
         $articleTitle = ArticleType::isPartialContent($article->type)

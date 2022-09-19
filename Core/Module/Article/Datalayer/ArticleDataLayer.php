@@ -3,7 +3,7 @@
 namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\Core\Entity\Response\Feedback;
-use Amora\Core\Module\Article\Model\ArticleUri;
+use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
@@ -31,7 +31,7 @@ class ArticleDataLayer
 
     const ARTICLE_TAG_RELATION_TABLE = 'core_article_tag_relation';
 
-    const ARTICLE_PREVIOUS_URI_TABLE = 'core_article_previous_uri';
+    const ARTICLE_PATH_TABLE = 'core_article_path';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -50,8 +50,8 @@ class ArticleDataLayer
         array $languageIsoCodes = [],
         array $statusIds = [],
         array $typeIds = [],
-        ?string $uri = null,
-        ?string $previousUri = null,
+        ?string $path = null,
+        ?string $previousPath = null,
         array $tagIds = [],
         array $imageIds = [],
         bool $includeTags = false,
@@ -83,7 +83,7 @@ class ArticleDataLayer
             'a.title',
             'a.content_html',
             'a.main_image_id',
-            'a.uri',
+            'a.path AS article_path',
 
             'u.language_iso_code AS user_language_iso_code',
             'u.role_id AS user_role_id',
@@ -113,7 +113,7 @@ class ArticleDataLayer
         ];
 
         $joins = ' FROM ' . self::ARTICLE_TABLE . ' AS a';
-        $joins .= ' JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = a.user_id';
+        $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = a.user_id';
         $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE_NAME
             . ' AS m ON m.id = a.main_image_id';
 
@@ -135,15 +135,15 @@ class ArticleDataLayer
             $where .= $this->generateWhereSqlCodeForIds($params, $typeIds, 'a.type_id', 'typeId');
         }
 
-        if (isset($uri)) {
-            $where .= ' AND a.uri = :articleUri';
-            $params[':articleUri'] = $uri;
+        if (isset($path)) {
+            $where .= ' AND a.path = :articlePath';
+            $params[':articlePath'] = $path;
         }
 
-        if (isset($previousUri)) {
-            $joins .= ' JOIN ' . self::ARTICLE_PREVIOUS_URI_TABLE . ' AS pu ON pu.article_id = a.id';
-            $where .= ' AND pu.uri = :previousUri';
-            $params[':previousUri'] = $previousUri;
+        if (isset($previousPath)) {
+            $joins .= ' INNER JOIN ' . self::ARTICLE_PATH_TABLE . ' AS ap ON ap.article_id = a.id';
+            $where .= ' AND ap.path = :previousPath';
+            $params[':previousPath'] = $previousPath;
         }
 
         if ($tagIds) {
@@ -194,7 +194,7 @@ class ArticleDataLayer
         return $output;
     }
 
-    public function filterPreviousArticleUrisBy(
+    public function filterArticlePathsBy(
         array $articleIds = [],
         ?QueryOptions $queryOptions = null,
     ): array {
@@ -203,23 +203,23 @@ class ArticleDataLayer
         }
 
         $orderByMapping = [
-            'created_at' => 'au.created_at',
+            'created_at' => 'ap.created_at',
         ];
 
         $params = [];
         $baseSql = 'SELECT ';
         $fields = [
-            'au.id AS article_previous_uri_id',
-            'au.article_id AS article_previous_uri_article_id',
-            'au.created_at AS article_previous_uri_created_at',
-            'au.uri AS article_previous_uri_uri',
+            'ap.id AS article_path_id',
+            'ap.article_id AS article_path_article_id',
+            'ap.created_at AS article_path_created_at',
+            'ap.path AS article_path_path',
         ];
 
-        $joins = ' FROM ' . self::ARTICLE_PREVIOUS_URI_TABLE . ' AS au';
+        $joins = ' FROM ' . self::ARTICLE_PATH_TABLE . ' AS ap';
         $where = ' WHERE 1';
 
         if ($articleIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $articleIds, 'au.article_id', 'articleId');
+            $where .= $this->generateWhereSqlCodeForIds($params, $articleIds, 'ap.article_id', 'articleId');
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
@@ -230,7 +230,7 @@ class ArticleDataLayer
 
         $output = [];
         foreach ($res as $item) {
-            $output[] = ArticleUri::fromArray($item);
+            $output[] = ArticlePath::fromArray($item);
         }
 
         return $output;
@@ -295,7 +295,7 @@ class ArticleDataLayer
             'title' => $article->title,
             'content_html' => $article->contentHtml,
             'main_image_id' => $article->mainImageId,
-            'uri' => $article->uri,
+            'path' => $article->path,
             'ip' => $userIp,
             'user_agent' => $userAgent
         ];
@@ -337,16 +337,16 @@ class ArticleDataLayer
         return $resTransaction->isSuccess;
     }
 
-    public function storeArticleUri(ArticleUri $articleUri): ArticleUri
+    public function storeArticlePath(ArticlePath $articlePath): ArticlePath
     {
         $resInsert = $this->db->insert(
-            tableName: self::ARTICLE_PREVIOUS_URI_TABLE,
-            data: $articleUri->asArray(),
+            tableName: self::ARTICLE_PATH_TABLE,
+            data: $articlePath->asArray(),
         );
 
-        $articleUri->id = $resInsert;
+        $articlePath->id = $resInsert;
 
-        return $articleUri;
+        return $articlePath;
     }
 
     private function getArticleSections(

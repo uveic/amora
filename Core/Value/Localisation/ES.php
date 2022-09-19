@@ -77,8 +77,8 @@ return [
     'formLoginAction' => 'Entrar',
     'formPasswordResetAction' => 'Cambiar contraseña',
     'formPasswordCreateAction' => 'Crear contraseña',
-    'formArticleUri' => 'URI del artículo',
-    'formArticlePreviousUris' => 'URIs anteriores',
+    'formArticlePath' => 'URL del artículo',
+    'formArticlePreviousPaths' => 'URLs anteriores',
     'formTimezone' => 'Zona horaria',
 
     'dashboardGoTo' => 'Ir a...',

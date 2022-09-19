@@ -76,7 +76,7 @@
                         "type": "integer",
                         "description": "File ID"
                       },
-                      "uri": {
+                      "url": {
                         "type": "string",
                         "description": "File URL"
                       },
@@ -114,9 +114,9 @@
                               "type": "string",
                               "description": "Article title"
                             },
-                            "uri": {
+                            "path": {
                               "type": "string",
-                              "description": "Article URI"
+                              "description": "Article path"
                             },
                             "publishedOn": {
                               "type": "string",
@@ -133,7 +133,7 @@
                                   "type": "string",
                                   "description": "Tag name"
                                 },
-                                "uri": {
+                                "url": {
                                   "type": "string",
                                   "description": "Tag link"
                                 }
@@ -141,7 +141,7 @@
                               "required": [
                                 "id",
                                 "name",
-                                "uri"
+                                "url"
                               ]
                             }
                           },
@@ -151,7 +151,7 @@
                             "userId",
                             "userName",
                             "title",
-                            "uri",
+                            "path",
                             "publishedOn",
                             "tags"
                           ]
@@ -195,7 +195,7 @@
                     },
                     "required": [
                       "id",
-                      "uri",
+                      "url",
                       "caption",
                       "name"
                     ]
@@ -417,7 +417,7 @@
                       "type": "integer",
                       "description": "File ID"
                     },
-                    "uri": {
+                    "url": {
                       "type": "string",
                       "description": "File path"
                     },
@@ -455,9 +455,9 @@
                             "type": "string",
                             "description": "Article title"
                           },
-                          "uri": {
+                          "path": {
                             "type": "string",
-                            "description": "Article URI"
+                            "description": "Article path"
                           },
                           "publishedOn": {
                             "type": "string",
@@ -474,7 +474,7 @@
                                 "type": "string",
                                 "description": "Tag name"
                               },
-                              "uri": {
+                              "url": {
                                 "type": "string",
                                 "description": "Tag link"
                               }
@@ -482,7 +482,7 @@
                             "required": [
                               "id",
                               "name",
-                              "uri"
+                              "url"
                             ]
                           }
                         },
@@ -492,7 +492,7 @@
                           "userId",
                           "userName",
                           "title",
-                          "uri",
+                          "path",
                           "publishedOn",
                           "tags"
                         ]
@@ -753,7 +753,7 @@
                         "type": "integer",
                         "description": "File ID"
                       },
-                      "uri": {
+                      "url": {
                         "type": "string",
                         "description": "File URL"
                       },
@@ -791,9 +791,9 @@
                               "type": "string",
                               "description": "Article title"
                             },
-                            "uri": {
+                            "path": {
                               "type": "string",
-                              "description": "Article URI"
+                              "description": "Article path"
                             },
                             "publishedOn": {
                               "type": "string",
@@ -810,7 +810,7 @@
                                   "type": "string",
                                   "description": "Tag name"
                                 },
-                                "uri": {
+                                "url": {
                                   "type": "string",
                                   "description": "Tag link"
                                 }
@@ -818,7 +818,7 @@
                               "required": [
                                 "id",
                                 "name",
-                                "uri"
+                                "url"
                               ]
                             }
                           },
@@ -828,7 +828,7 @@
                             "userId",
                             "userName",
                             "title",
-                            "uri",
+                            "path",
                             "publishedOn",
                             "tags"
                           ]
@@ -837,7 +837,7 @@
                     },
                     "required": [
                       "id",
-                      "uri",
+                      "url",
                       "caption",
                       "name"
                     ]

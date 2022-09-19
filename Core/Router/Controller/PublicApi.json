@@ -832,11 +832,11 @@
                       "type": "string",
                       "description": "Icon to display if the post is published or not"
                     },
-                    "postUri": {
+                    "path": {
                       "type": "string",
-                      "description": "Blog post URI"
+                      "description": "Blog post path"
                     },
-                    "postTitle": {
+                    "title": {
                       "type": "string",
                       "description": "Post title"
                     },
@@ -847,8 +847,8 @@
                   },
                   "required": [
                     "icon",
-                    "postUri",
-                    "postTitle",
+                    "path",
+                    "title",
                     "publishedOn"
                   ]
                 },

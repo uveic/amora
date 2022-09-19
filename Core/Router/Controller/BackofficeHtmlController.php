@@ -23,9 +23,9 @@ use Amora\Core\Value\QueryOrderDirection;
 final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 {
     public function __construct(
-        private UserService $userService,
-        private ArticleService $articleService,
-        private MediaService $mediaService,
+        private readonly UserService $userService,
+        private readonly ArticleService $articleService,
+        private readonly MediaService $mediaService,
     ) {
         parent::__construct();
     }

@@ -9,8 +9,8 @@ class BackofficeApiControllerUpdateArticleSuccessResponse extends Response
     public function __construct(
         bool $success,
         ?int $articleId = null,
-        ?string $articleBackofficeUri = null,
-        ?string $articlePublicUri = null,
+        ?string $articleBackofficePath = null,
+        ?string $articlePublicPath = null,
         ?string $errorMessage = null
     ) {
         // Required parameters
@@ -22,13 +22,13 @@ class BackofficeApiControllerUpdateArticleSuccessResponse extends Response
             ? null
             : $articleId;
 
-        $responseData['articleBackofficeUri'] = is_null($articleBackofficeUri)
+        $responseData['articleBackofficePath'] = is_null($articleBackofficePath)
             ? null
-            : $articleBackofficeUri;
+            : $articleBackofficePath;
 
-        $responseData['articlePublicUri'] = is_null($articlePublicUri)
+        $responseData['articlePublicPath'] = is_null($articlePublicPath)
             ? null
-            : $articlePublicUri;
+            : $articlePublicPath;
 
         $responseData['errorMessage'] = is_null($errorMessage)
             ? null

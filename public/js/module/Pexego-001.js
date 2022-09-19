@@ -1,5 +1,5 @@
 import {global} from "./localisation-001.js";
-import {uploadImage} from "./uploader-001.js";
+import {Uploader} from "./Uploader-002.js";
 
 class Pexego {
   static defaultActions = {
@@ -593,7 +593,7 @@ document.querySelectorAll('input[name="pexego-add-image-input"]').forEach(pi => 
 
       PexegoEditor.generateSectionWrapperFor(pexegoSectionImage, id);
 
-      uploadImage(
+      Uploader.uploadImage(
         file,
         pexegoSectionImage,
         Pexego.classes.contentImage,

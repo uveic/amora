@@ -40,7 +40,7 @@ foreach ($articles as $article) {
         )
         : '';
 
-    $href = UrlBuilderUtil::buildPublicArticleUrl($article->uri, $article->language);
+    $href = UrlBuilderUtil::buildPublicArticlePath($article->path, $article->language);
     $isPublishedHtml = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article);
 
     $year = $article->publishOn ? $article->publishOn->format('Y') : '???';

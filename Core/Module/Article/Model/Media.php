@@ -64,7 +64,7 @@ class Media
     {
         return [
             'id' => $this->id,
-            'uri' => $this->getUriWithNameMedium(),
+            'path' => $this->getPathWithNameMedium(),
             'caption' => $this->caption,
             'name' => $this->type === MediaType::Image
                 ? $this->filenameMedium
@@ -75,44 +75,44 @@ class Media
         ];
     }
 
-    public function getPathWithNameOriginal(): string
+    public function getDirWithNameOriginal(): string
     {
         $path = Core::getConfig()->mediaBaseDir . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $path . $this->filenameOriginal;
     }
 
-    public function getPathWithNameMedium(): ?string
+    public function getDirWithNameMedium(): ?string
     {
         $path = Core::getConfig()->mediaBaseDir . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $this->filenameMedium ? ($path . $this->filenameMedium) : null;
     }
 
-    public function getPathWithNameLarge(): ?string
+    public function getDirWithNameLarge(): ?string
     {
         $path = Core::getConfig()->mediaBaseDir . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $this->filenameLarge ? ($path . $this->filenameLarge) : null;
     }
 
-    public function getUriWithNameOriginal(): string
+    public function getPathWithNameOriginal(): string
     {
         $path = Core::getConfig()->mediaBaseUrl . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $path . $this->filenameOriginal;
     }
 
-    public function getUriWithNameMedium(): ?string
+    public function getPathWithNameMedium(): ?string
     {
         if ($this->type !== MediaType::Image) {
-            return $this->getUriWithNameOriginal();
+            return $this->getPathWithNameOriginal();
         }
 
         $path = Core::getConfig()->mediaBaseUrl . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
         return $this->filenameMedium ? ($path . $this->filenameMedium) : null;
     }
 
-    public function getUriWithNameLarge(): ?string
+    public function getPathWithNameLarge(): ?string
     {
         if ($this->type !== MediaType::Image) {
-            return $this->getUriWithNameOriginal();
+            return $this->getPathWithNameOriginal();
         }
 
         $path = Core::getConfig()->mediaBaseUrl . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');

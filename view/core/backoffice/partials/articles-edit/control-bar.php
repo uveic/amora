@@ -18,8 +18,8 @@ $isPublished = $article && $articleStatus === ArticleStatus::Published;
 $random = StringUtil::getRandomString(5);
 
 $articleUrl = $article
-    ? UrlBuilderUtil::buildPublicArticleUrl(
-        uri: $article->uri,
+    ? UrlBuilderUtil::buildPublicArticlePath(
+        path: $article->path,
         language: $responseData->siteLanguage,
     )
     : '#';

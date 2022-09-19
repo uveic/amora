@@ -71,23 +71,23 @@ class MediaService
             return false;
         }
 
-        if (file_exists($media->getPathWithNameOriginal())) {
-            if (!unlink($media->getPathWithNameOriginal())) {
+        if (file_exists($media->getDirWithNameOriginal())) {
+            if (!unlink($media->getDirWithNameOriginal())) {
                 return false;
             }
         }
 
         if ($media->filenameMedium) {
-            if (file_exists($media->getPathWithNameMedium())) {
-                if (!unlink($media->getPathWithNameMedium())) {
+            if (file_exists($media->getDirWithNameMedium())) {
+                if (!unlink($media->getDirWithNameMedium())) {
                     return false;
                 }
             }
         }
 
         if ($media->filenameLarge) {
-            if (file_exists($media->getPathWithNameLarge())) {
-                if (!unlink($media->getPathWithNameLarge())) {
+            if (file_exists($media->getDirWithNameLarge())) {
+                if (!unlink($media->getDirWithNameLarge())) {
                     return false;
                 }
             }
@@ -144,7 +144,7 @@ class MediaService
                 if ($file->type === MediaType::Image) {
                     $extension = $this->getFileExtension($file->getPathWithNameMedium());
                     $exif = $this->imageService->getExifData(
-                        filePathWithName: $file->getPathWithNameMedium(),
+                        filePathWithName: $file->getDirWithNameMedium(),
                         extension: $extension,
                     );
 

@@ -37,7 +37,6 @@ class RouterCore extends Core
                     xmlService:  ArticleCore::getXmlService(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -59,7 +58,6 @@ class RouterCore extends Core
                     sessionService: UserCore::getSessionService(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -84,7 +82,6 @@ class RouterCore extends Core
                     mediaService:  ArticleCore::getMediaService(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -108,7 +105,6 @@ class RouterCore extends Core
                     tagService: ArticleCore::getTagService(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -129,10 +125,8 @@ class RouterCore extends Core
                     mediaService: ArticleCore::getMediaService(),
                     userService:  UserCore::getUserService(),
                     userMailService:  UserCore::getUserMailService(),
-                    articleService: ArticleCore::getArticleService(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -157,7 +151,6 @@ class RouterCore extends Core
                     articleService: ArticleCore::getArticleService(),
                 );
             },
-            isSingleton: true,
         );
     }
 }

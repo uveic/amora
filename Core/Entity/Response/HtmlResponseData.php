@@ -11,7 +11,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         Request $request,
         ?string $pageTitle = null,
         ?string $pageDescription = null,
-        ?string $mainImageSiteUri = null,
+        ?string $mainImageSitePath = null,
         ?Pagination $pagination = null,
         public readonly ?Article $article = null,
         public readonly ?array $articles = [],
@@ -27,7 +27,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
             pagination: $pagination,
             pageTitle: $pageTitle,
             pageDescription: $pageDescription,
-            siteImageUri: $mainImageSiteUri,
+            siteImagePath: $mainImageSitePath,
         );
     }
 }

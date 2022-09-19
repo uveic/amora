@@ -21,8 +21,8 @@ if (!$responseData->homeArticles) {
 <?php
 /** @var Article $article */
 foreach ($responseData->homeArticles as $article) {
-    $href = UrlBuilderUtil::buildPublicArticleUrl(
-        uri: $article->uri,
+    $href = UrlBuilderUtil::buildPublicArticlePath(
+        path: $article->path,
         language: $responseData->siteLanguage,
     );
     $link = $article->title

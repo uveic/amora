@@ -32,9 +32,9 @@ document.querySelectorAll('.blog-posts-load-more').forEach(el => {
           }
 
           const postLink = document.createElement('a');
-          postLink.href = bp.postUri;
+          postLink.href = bp.path;
           postLink.className = 'link-title';
-          postLink.textContent = bp.postTitle;
+          postLink.textContent = bp.title;
 
           const spanBlogInfo = document.createElement('span');
           spanBlogInfo.className = 'blog-info';

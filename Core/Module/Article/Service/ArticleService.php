@@ -5,7 +5,7 @@ namespace Amora\Core\Module\Article\Service;
 use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\Feedback;
-use Amora\Core\Module\Article\Model\ArticleUri;
+use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
@@ -45,11 +45,11 @@ class ArticleService
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getArticleForUri(string $uri, bool $includePublishedAtInTheFuture = true): ?Article
+    public function getArticleForPath(string $path, bool $includePublishedAtInTheFuture = true): ?Article
     {
         $res = $this->filterArticlesBy(
             typeIds: [ArticleType::Blog->value, ArticleType::Page->value],
-            uri: $uri,
+            path: $path,
             includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
         );
 
@@ -59,7 +59,7 @@ class ArticleService
 
         $res = $this->filterArticlesBy(
             typeIds: [ArticleType::Blog->value, ArticleType::Page->value],
-            previousUri: $uri,
+            previousPath: $path,
             includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
         );
 
@@ -111,8 +111,8 @@ class ArticleService
         array $languageIsoCodes = [],
         array $statusIds = [],
         array $typeIds = [],
-        ?string $uri = null,
-        ?string $previousUri = null,
+        ?string $path = null,
+        ?string $previousPath = null,
         array $tagIds = [],
         array $imageIds = [],
         bool $includeTags = false,
@@ -126,8 +126,8 @@ class ArticleService
             languageIsoCodes: $languageIsoCodes,
             statusIds: $statusIds,
             typeIds: $typeIds,
-            uri: $uri,
-            previousUri: $previousUri,
+            path: $path,
+            previousPath: $previousPath,
             tagIds: $tagIds,
             imageIds: $imageIds,
             includeTags: $includeTags,
@@ -138,11 +138,11 @@ class ArticleService
         );
     }
 
-    public function filterPreviousArticleUrisBy(
+    public function filterArticlePathsBy(
         array $articleIds = [],
         ?QueryOptions $queryOptions = null,
     ): array {
-        return $this->articleDataLayer->filterPreviousArticleUrisBy(
+        return $this->articleDataLayer->filterArticlePathsBy(
             articleIds: $articleIds,
             queryOptions: $queryOptions,
         );
@@ -171,28 +171,28 @@ class ArticleService
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getAvailableUriForArticle(
-        ?string $uri = null,
+    public function getAvailablePathForArticle(
+        ?string $path = null,
         ?string $articleTitle = null,
         ?Article $existingArticle = null
     ): string {
         $articleId = $existingArticle?->id;
-        $uri = $uri ? strtolower(StringUtil::cleanString($uri)) : null;
+        $path = $path ? strtolower(StringUtil::cleanString($path)) : null;
 
-        if (!$uri && !$articleTitle) {
-            $uri = strtolower(StringUtil::getRandomString(32));
-        } else if (!$uri && $articleTitle) {
-            $uri = strtolower(StringUtil::cleanString($articleTitle));
+        if (!$path && !$articleTitle) {
+            $path = strtolower(StringUtil::getRandomString(32));
+        } else if (!$path && $articleTitle) {
+            $path = strtolower(StringUtil::cleanString($articleTitle));
         } else {
-            $uri = $uri === $existingArticle->uri && $articleTitle
+            $path = $path === $existingArticle->path && $articleTitle
                 ? strtolower(StringUtil::cleanString($articleTitle))
-                : $uri;
+                : $path;
         }
 
         $count = 0;
         do {
-            $validUri = $uri . ($count > 0 ? '-' . $count : '');
-            $res = $this->getArticleForUri($validUri);
+            $validPath = $path . ($count > 0 ? '-' . $count : '');
+            $res = $this->getArticleForPath($validPath);
             if ($articleId && $res && $res->id === $articleId) {
                 $res = null;
             }
@@ -201,12 +201,12 @@ class ArticleService
 
         $count = 0;
         do {
-            $validUri = $uri . ($count > 0 ? '-' . $count : '');
-            $res = in_array($validUri, AppRouter::getReservedPaths());
+            $validPath = $path . ($count > 0 ? '-' . $count : '');
+            $res = in_array($validPath, AppRouter::getReservedPaths());
             $count++;
         } while($res);
 
-        return $validUri;
+        return $validPath;
     }
 
     public function workflowUpdateArticle(
@@ -481,8 +481,8 @@ class ArticleService
         return true;
     }
 
-    public function storeArticleUri(ArticleUri $articleUri): ArticleUri
+    public function storeArticlePath(ArticlePath $articlePath): ArticlePath
     {
-        return $this->articleDataLayer->storeArticleUri($articleUri);
+        return $this->articleDataLayer->storeArticlePath($articlePath);
     }
 }

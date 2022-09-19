@@ -77,8 +77,8 @@ return [
     'formLoginAction' => 'Log in',
     'formPasswordResetAction' => 'Change password',
     'formPasswordCreateAction' => 'Create password',
-    'formArticleUri' => 'Article URI',
-    'formArticlePreviousUris' => 'Previous URIs',
+    'formArticlePath' => 'Article path',
+    'formArticlePreviousPaths' => 'Previous paths',
     'formTimezone' => 'Timezone',
 
     'dashboardGoTo' => 'Go to...',

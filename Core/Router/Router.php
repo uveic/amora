@@ -181,11 +181,11 @@ class Router
         return $this->getArticlePage($request->getPath(), $request);
     }
 
-    private function getArticlePage(string $articleUri, Request $request): Response
+    private function getArticlePage(string $articlePath, Request $request): Response
     {
         $articleService = ArticleCore::getArticleService();
-        $article = $articleService->getArticleForUri(
-            uri: $articleUri,
+        $article = $articleService->getArticleForPath(
+            path: $articlePath,
             includePublishedAtInTheFuture: false,
         );
 
@@ -196,9 +196,9 @@ class Router
             );
         }
 
-        if ($articleUri !== $article->uri) {
+        if ($articlePath !== $article->path) {
             return Response::createPermanentRedirectResponse(
-                UrlBuilderUtil::buildPublicArticleUrl($article->uri, $request->siteLanguage),
+                UrlBuilderUtil::buildPublicArticlePath($article->path, $request->siteLanguage),
             );
         }
 
@@ -212,7 +212,7 @@ class Router
         $img = $article->mainImageId
             ? ArticleCore::getMediaService()->getMediaForId($article->mainImageId)
             : null;
-        $siteImageUrl = $img?->getUriWithNameMedium();
+        $siteImageUrl = $img?->getPathWithNameMedium();
         $isAdmin = $request->session && $request->session->isAdmin();
 
         return Response::createHtmlResponse(
@@ -221,7 +221,7 @@ class Router
                 request: $request,
                 pageTitle: $article->title,
                 pageDescription: $article->getContentExcerpt(),
-                mainImageSiteUri: $siteImageUrl,
+                mainImageSitePath: $siteImageUrl,
                 article: $article,
                 previousBlogPost: $article->publishOn
                     ? $articleService->getPreviousBlogPost(

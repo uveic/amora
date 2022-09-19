@@ -3,7 +3,7 @@ import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised-001.js';
 import {global} from "./module/localisation-001.js";
 import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego-001.js";
-import {uploadFile, uploadImage} from "./module/uploader-001.js";
+import {Uploader} from "./module/Uploader-002.js";
 
 let globalTags = [];
 
@@ -11,8 +11,8 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
 
-    const afterApiCall = function(articleId, articlePublicUri, articleBackofficeUri) {
-      history.pushState("", document.title, articleBackofficeUri);
+    const afterApiCall = function(articleId, articlePublicPath, articleBackofficePath) {
+      history.pushState("", document.title, articleBackofficePath);
       document.querySelector('input[name="articleId"]').value = articleId;
 
       document.querySelectorAll('.control-bar-creation').forEach(a => a.classList.remove('hidden'));
@@ -25,11 +25,11 @@ document.querySelectorAll('.article-save-button').forEach(el => {
         b.value = global.get('globalUpdate');
       });
       document.querySelectorAll('.pexego-preview').forEach(b => {
-        b.href = articlePublicUri;
+        b.href = articlePublicPath;
         b.classList.remove('null');
       });
-      document.querySelectorAll('input[name="articleUri"]').forEach(i => {
-        i.value = articlePublicUri.trim().replace(/^\//,"");
+      document.querySelectorAll('input[name="articlePath"]').forEach(i => {
+        i.value = articlePublicPath.trim().replace(/^\//,"");
       });
     };
 
@@ -158,9 +158,9 @@ document.querySelectorAll('.article-save-button').forEach(el => {
         : null;
     }
 
-    const getUri = () => {
-      const uriEl = document.querySelector('div.article-uri-value');
-      return uriEl && uriEl.textContent.trim().length ? uriEl.textContent.trim() : null;
+    const getPath = () => {
+      const pathEl = document.querySelector('div.article-path-value');
+      return pathEl && pathEl.textContent.trim().length ? pathEl.textContent.trim() : null;
     }
 
     const getStatusId = () => {
@@ -193,7 +193,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       siteLanguageIsoCode: document.documentElement.lang ?? articleLanguageIsoCode,
       articleLanguageIsoCode: articleLanguageIsoCode,
       title: articleTitle,
-      uri: getUri(),
+      path: getPath(),
       contentHtml: content.contentHtml,
       typeId: getArticleTypeId(),
       statusId: getStatusId(),
@@ -207,13 +207,13 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     const url = '/back/article';
     if (articleIdEl && articleIdEl.value) {
       xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, global.get('globalUpdated'))
-        .then((res) => afterApiCall(res.articleId, res.articlePublicUri, res.articleBackofficeUri))
+        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
     } else {
       xhr.post(url, payload, feedbackDiv, global.get('globalSaved'))
-        .then((res) => afterApiCall(res.articleId, res.articlePublicUri, res.articleBackofficeUri))
+        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath))
         .finally(() => {
           document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
         });
@@ -242,7 +242,7 @@ const displayImage = (image) => {
   }
 
   const alt = image.caption ?? image.name;
-  imageContainer.src = image.uri;
+  imageContainer.src = image.path;
   imageContainer.alt = alt;
   imageContainer.title = alt;
   imageContainer.dataset.imageId = image.id;
@@ -291,8 +291,8 @@ const displayImage = (image) => {
     + global.formatDate(new Date(image.createdAt), true, true, true, true, true)
     + '</span><span>'
     + '<img src="/img/svg/user-white.svg" class="img-svg m-r-05" alt="User">' + image.userName
-    + '</span><span class="image-uri">'
-    + '<img src="/img/svg/link-white.svg" class="img-svg m-r-05" alt="Link">' + image.uri
+    + '</span><span class="image-path">'
+    + '<img src="/img/svg/link-white.svg" class="img-svg m-r-05" alt="Link">' + image.path
     + '</span>'
     + (takenAt ? '<span>' + takenAt + '</span>' : '')
     + (camera ? '<span>' + camera + '</span>' : '')
@@ -306,7 +306,7 @@ const displayImage = (image) => {
       const appearsTitle = document.createElement('h3');
       appearsTitle.textContent = global.get('globalAppearsOn') + ':';
       const appearsLink = document.createElement('a');
-      appearsLink.href = ao.uri;
+      appearsLink.href = ao.path;
       appearsLink.target = '_blank';
       appearsLink.textContent = ao.title;
       const appearsInfo = document.createElement('span');
@@ -389,7 +389,7 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
     }
 
     const imageEl = new Image();
-    imageEl.src = image.uri;
+    imageEl.src = image.path;
     const alt = image.caption ?? image.name;
     imageEl.alt = alt;
     imageEl.title = alt;
@@ -449,7 +449,7 @@ document.querySelectorAll('input#images').forEach(im => {
     for (let i = 0; i < im.files.length; i++) {
       let file = im.files[i];
 
-      uploadImage(
+      Uploader.uploadImage(
         file,
         container,
         'image-item',
@@ -481,7 +481,7 @@ document.querySelectorAll('input#media').forEach(im => {
       newMediaContainer.target = '_blank';
       container.insertBefore(newMediaContainer, container.firstChild);
 
-      uploadFile(
+      Uploader.uploadFile(
         file,
         newMediaContainer,
         '',
@@ -489,7 +489,7 @@ document.querySelectorAll('input#media').forEach(im => {
         (response) => {
           if (response && response.file.id) {
             newMediaContainer.dataset.mediaId = response.file.id;
-            newMediaContainer.href = response.file.uri;
+            newMediaContainer.href = response.file.path;
 
             const mediaId = document.createElement('span');
             mediaId.textContent = '#' + response.file.id;
@@ -609,9 +609,9 @@ document.querySelectorAll('a.article-settings').forEach(el => {
 
     document.querySelectorAll('input[name="tags"]').forEach(i => i.value = '');
 
-    const uriContainer = document.querySelector('div.article-edit-previous-uri-container');
-    uriContainer.querySelector('img').classList.remove('null');
-    uriContainer.querySelectorAll('div').forEach(di => uriContainer.removeChild(di));
+    const pathContainer = document.querySelector('div.article-edit-previous-path-container');
+    pathContainer.querySelector('img').classList.remove('null');
+    pathContainer.querySelectorAll('div').forEach(di => pathContainer.removeChild(di));
 
     const sideNav = document.getElementById('side-options');
     sideNav.classList.remove('null');
@@ -635,19 +635,23 @@ document.querySelectorAll('a.article-settings').forEach(el => {
     }
 
     const articleId = document.querySelector('input[name="articleId"]').value;
-    xhr.get('/back/article/' + articleId + '/previous-uri')
-      .then(response => {
-        response.uris.forEach(u => {
-          const newUriEl = document.createElement('div');
-          newUriEl.dataset.uriId = u.id;
-          newUriEl.innerHTML = '<span>' + u.uri + '</span><span>'
-            + global.formatDate(new Date(u.createdAt), false) + '</span>';
-          newUriEl.className = 'article-edit-previous-uri';
-          uriContainer.appendChild(newUriEl);
-        });
+    if (articleId) {
+      xhr.get('/back/article/' + articleId + '/previous-path')
+        .then(response => {
+          response.paths.forEach(p => {
+            const newPathEl = document.createElement('div');
+            newPathEl.dataset.pathId = p.id;
+            newPathEl.innerHTML = '<span>' + p.path + '</span><span>'
+              + global.formatDate(new Date(p.createdAt), false) + '</span>';
+            newPathEl.className = 'article-edit-previous-path';
+            pathContainer.appendChild(newPathEl);
+          });
 
-        uriContainer.querySelector('img').classList.add('null');
-      });
+          pathContainer.querySelector('img').classList.add('null');
+        });
+    } else {
+      pathContainer.querySelector('img').classList.add('null');
+    }
   });
 });
 
@@ -953,7 +957,7 @@ document.querySelectorAll('input[name="article-add-media-upload"]').forEach(im =
     for (let i = 0; i < im.files.length; i++) {
       let file = im.files[i];
 
-      uploadImage(
+      Uploader.uploadImage(
         file,
         container,
         'image-item',

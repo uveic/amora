@@ -151,7 +151,7 @@
   background-color: var(--light-bg-color);
 }
 
-.article-edit-uri {
+.article-edit-path {
   font-size: 0.9rem;
   color: var(--color-text-grey);
   display: flex;
@@ -159,11 +159,11 @@
   align-items: center;
 }
 
-.article-edit-previous-uri-container {
+.article-edit-previous-path-container {
   min-height: 30px;
 }
 
-.article-edit-previous-uri {
+.article-edit-previous-path {
   font-size: 0.9rem;
   color: var(--color-text-grey);
   display: flex;
@@ -682,7 +682,7 @@ input.pexego-content-title {
   gap: 1rem;
 }
 
-.image-wrapper .image-uri {
+.image-wrapper .image-path {
   word-wrap: anywhere;
   font-family: monospace;
   font-size: 0.8rem;

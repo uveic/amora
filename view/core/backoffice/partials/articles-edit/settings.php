@@ -62,12 +62,12 @@ if ($article) {
     </div>
   </div>
   <div>
-    <div class="label"><?=$responseData->getLocalValue('formArticleUri')?>:</div>
-    <div class="article-edit-uri"><?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage) . '/'?>
-      <div class="article-uri-value" style="min-width:80px;border-bottom:1px dotted;" contenteditable="true"><?=$this->e($article ? $article->uri : ''); ?></div>
+    <div class="label"><?=$responseData->getLocalValue('formArticlePath')?>:</div>
+    <div class="article-edit-path"><?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage) . '/'?>
+      <div class="article-path-value" style="min-width:80px;border-bottom:1px dotted;" contenteditable="true"><?=$this->e($article ? $article->path : ''); ?></div>
     </div>
-    <div class="label m-t-1"><?=$responseData->getLocalValue('formArticlePreviousUris')?>:</div>
-    <div class="article-edit-previous-uri-container">
+    <div class="label m-t-1"><?=$responseData->getLocalValue('formArticlePreviousPaths')?>:</div>
+    <div class="article-edit-previous-path-container">
       <img src="/img/loading.gif" class="img-svg m-t-05" alt="<?=$responseData->getLocalValue('globalLoading')?>">
     </div>
   </div>

@@ -4,10 +4,10 @@ namespace Amora\Core\Router;
 
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
-use Amora\Core\Module\Article\Model\ArticleUri;
+use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\VerificationType;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousUrisForArticleSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\App\Value\Language;
 use Amora\Core\Value\QueryOrderDirection;
@@ -38,7 +38,6 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreArticleSuc
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreTagFailureResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreTagSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreUserSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateArticleFailureResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateArticleSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserFailureResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserSuccessResponse;
@@ -46,10 +45,10 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserSucce
 final class BackofficeApiController extends BackofficeApiControllerAbstract
 {
     public function __construct(
-        private Logger $logger,
-        private UserService $userService,
-        private ArticleService $articleService,
-        private TagService $tagService,
+        private readonly Logger $logger,
+        private readonly UserService $userService,
+        private readonly ArticleService $articleService,
+        private readonly TagService $tagService,
     ) {
         parent::__construct();
     }
@@ -291,7 +290,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int $typeId
      * @param string|null $title
      * @param string $contentHtml
-     * @param string|null $uri
+     * @param string|null $path
      * @param int|null $mainImageId
      * @param string|null $publishOn
      * @param array $sections
@@ -306,7 +305,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         int $typeId,
         ?string $title,
         string $contentHtml,
-        ?string $uri,
+        ?string $path,
         ?int $mainImageId,
         ?string $publishOn,
         array $sections,
@@ -343,9 +342,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $now = new DateTimeImmutable();
         $articleLanguage = Language::from(strtoupper($articleLanguageIsoCode));
-        $uri = $this->articleService->getAvailableUriForArticle(articleTitle: $title);
+        $path = $this->articleService->getAvailablePathForArticle(articleTitle: $title);
         $status = ArticleStatus::from($statusId);
-        $publishOnObj = $publishOn
+        $publishOn = $publishOn
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
             : ($status === ArticleStatus::Published ? $now : null);
 
@@ -358,12 +357,12 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 type: $typeId ? ArticleType::from($typeId) : ArticleType::Page,
                 createdAt: $now,
                 updatedAt: $now,
-                publishOn: $publishOnObj,
+                publishOn: $publishOn,
                 title: $title,
                 contentHtml: html_entity_decode($contentHtml),
                 mainImageId: $mainImageId,
                 mainImage: null,
-                uri: $uri,
+                path: $path,
                 tags: [],
             ),
             sections: $sections ?? [],
@@ -382,11 +381,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $siteLanguage = Language::from(strtoupper($siteLanguageIsoCode));
         return new BackofficeApiControllerStoreArticleSuccessResponse(
             success: (bool)$newArticle,
-            articleId: $newArticle?->id,
-            articleBackofficeUri: $newArticle
-                ? UrlBuilderUtil::buildBackofficeArticleUrl($siteLanguage, $newArticle->id)
-                : UrlBuilderUtil::buildBackofficeNewArticleUrl($siteLanguage, $newArticle->type),
-            articlePublicUri: $newArticle ? '/' . $newArticle->uri : null,
+            articleId: $newArticle->id,
+            articleBackofficePath: UrlBuilderUtil::buildBackofficeArticleUrl($siteLanguage, $newArticle->id),
+            articlePublicPath: UrlBuilderUtil::buildPublicArticlePath($newArticle->path, $siteLanguage),
         );
     }
 
@@ -401,7 +398,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int $typeId
      * @param string|null $title
      * @param string $contentHtml
-     * @param string|null $uri
+     * @param string|null $path
      * @param int|null $mainImageId
      * @param string|null $publishOn
      * @param array $sections
@@ -417,7 +414,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         int $typeId,
         ?string $title,
         string $contentHtml,
-        ?string $uri,
+        ?string $path,
         ?int $mainImageId,
         ?string $publishOn,
         array $sections,
@@ -452,10 +449,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $articleLanguage = Language::from(strtoupper($articleLanguageIsoCode));
         $existingArticle = $this->articleService->getArticleForId(
             id: $articleId,
-            language: $articleLanguage,
         );
         if (empty($existingArticle)) {
             return new BackofficeApiControllerUpdateArticleSuccessResponse(
@@ -464,13 +459,13 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $uri = $this->articleService->getAvailableUriForArticle($uri, $title, $existingArticle);
-        if ($uri !== $existingArticle->uri) {
-            $this->articleService->storeArticleUri(
-                new ArticleUri(
+        $path = $this->articleService->getAvailablePathForArticle($path, $title, $existingArticle);
+        if ($path !== $existingArticle->path) {
+            $this->articleService->storeArticlePath(
+                new ArticlePath(
                     id: null,
                     articleId: $existingArticle->id,
-                    uri: $existingArticle->uri,
+                    path: $existingArticle->path,
                     createdAt: new DateTimeImmutable(),
                 )
             );
@@ -483,6 +478,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
             : ($existingArticle->publishOn ?? $now);
 
+        $articleLanguage = Language::from(strtoupper($articleLanguageIsoCode));
         $type = $typeId ? ArticleType::from($typeId) : $existingArticle->type;
         $status = $statusId ? ArticleStatus::from($statusId) : $existingArticle->status;
         $res = $this->articleService->workflowUpdateArticle(
@@ -499,7 +495,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 contentHtml: $contentHtml ?? $existingArticle->contentHtml,
                 mainImageId: $mainImageId ?? $existingArticle->mainImage?->id,
                 mainImage: null,
-                uri: $uri
+                path: $path
             ),
             sections: $sections,
             tags: $tags ?? [],
@@ -510,11 +506,11 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerUpdateArticleSuccessResponse(
             success: $res,
             articleId: $res ? $articleId : null,
-            articleBackofficeUri: UrlBuilderUtil::buildBackofficeArticleUrl(
+            articleBackofficePath: UrlBuilderUtil::buildBackofficeArticleUrl(
                 language: Language::from(strtoupper($siteLanguageIsoCode)),
                 articleId: $articleId,
             ),
-            articlePublicUri: $res ? '/' . $uri : null,
+            articlePublicPath: $res ? '/' . $path : null,
         );
     }
 
@@ -547,7 +543,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 contentHtml: $existingArticle->contentHtml,
                 mainImageId: $existingArticle->mainImage?->id,
                 mainImage: $existingArticle->mainImage,
-                uri: $existingArticle->uri,
+                path: $existingArticle->path,
             ),
             userIp: $request->sourceIp,
             userAgent: $request->userAgent,
@@ -557,18 +553,18 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     }
 
     /**
-     * Endpoint: /back/article/{articleId}/previous-uri
+     * Endpoint: /back/article/{articleId}/previous-path
      * Method: GET
      *
      * @param int $articleId
      * @param Request $request
      * @return Response
      */
-    protected function getPreviousUrisForArticle(
+    protected function getPreviousPathsForArticle(
         int $articleId,
         Request $request
     ): Response {
-        $uris = $this->articleService->filterPreviousArticleUrisBy(
+        $paths = $this->articleService->filterArticlePathsBy(
             articleIds: [$articleId],
             queryOptions: new QueryOptions(
                 orderBy: [
@@ -578,14 +574,14 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         $output = [];
-        /** @var ArticleUri $uri */
-        foreach ($uris as $uri) {
-            $output[] = $uri->asPublicArray();
+        /** @var ArticlePath $path */
+        foreach ($paths as $path) {
+            $output[] = $path->asPublicArray();
         }
 
-        return new BackofficeApiControllerGetPreviousUrisForArticleSuccessResponse(
+        return new BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse(
             success: true,
-            uris: $output,
+            paths: $output,
         );
     }
 

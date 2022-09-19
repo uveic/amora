@@ -19,7 +19,7 @@ final class CoreMenu
 
         $output = [
             new MenuItem(
-                uri: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
+                path: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
                 text: $localisationUtil->getValue('navAdministrator'),
                 order: 100,
             ),
@@ -28,31 +28,31 @@ final class CoreMenu
                 icon: '<img class="img-svg" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Menu">',
                 children: [
                     new MenuItem(
-                        uri: UrlBuilderUtil::buildBackofficeImagesUrl($language),
+                        path: UrlBuilderUtil::buildBackofficeImagesUrl($language),
                         text: $localisationUtil->getValue('navAdminImages'),
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/image.svg" alt="' . $localisationUtil->getValue('navAdminImages') . '">',
                         order: 1001,
                     ),
                     new MenuItem(
-                        uri: UrlBuilderUtil::buildBackofficeMediaUrl($language),
+                        path: UrlBuilderUtil::buildBackofficeMediaUrl($language),
                         text: $localisationUtil->getValue('navAdminMedia'),
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/files-white.svg" alt="' . $localisationUtil->getValue('navAdminMedia') . '">',
                         order: 1002,
                     ),
                     new MenuItem(
-                        uri: UrlBuilderUtil::buildBackofficeArticlesUrl($language, ArticleType::Page),
+                        path: UrlBuilderUtil::buildBackofficeArticlesUrl($language, ArticleType::Page),
                         text: $localisationUtil->getValue('navAdminArticles'),
                         icon: ArticleType::getIcon(item: ArticleType::Page, class: 'm-r-05', white: true, alt: $localisationUtil->getValue('navAdminArticles')),
                         order: 1003,
                     ),
                     new MenuItem(
-                        uri: UrlBuilderUtil::buildBackofficeArticlesUrl($language, ArticleType::Blog),
+                        path: UrlBuilderUtil::buildBackofficeArticlesUrl($language, ArticleType::Blog),
                         text: $localisationUtil->getValue('navAdminBlogPosts'),
                         icon: ArticleType::getIcon(item: ArticleType::Blog, class: 'm-r-05', white: true, alt: $localisationUtil->getValue('navAdminBlogPosts')),
                         order: 1004,
                     ),
                     new MenuItem(
-                        uri: UrlBuilderUtil::buildBackofficeUsersUrl($language),
+                        path: UrlBuilderUtil::buildBackofficeUsersUrl($language),
                         text: $localisationUtil->getValue('navAdminUsers'),
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/users-white.svg" alt="' . $localisationUtil->getValue('navAdminUsers') . '">',
                         order: 1005,
@@ -65,12 +65,12 @@ final class CoreMenu
                 icon: '<img class="img-svg m-l-05" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Menu">',
                 children: [
                     new MenuItem(
-                        uri: UrlBuilderUtil::buildAuthorisedAccountUrl($language),
+                        path: UrlBuilderUtil::buildAuthorisedAccountUrl($language),
                         text: $localisationUtil->getValue('navAccount'),
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/user-white.svg" alt="' . $localisationUtil->getValue('navAccount') . '">',
                     ),
                     new MenuItem(
-                        uri: UrlBuilderUtil::buildAuthorisedLogoutUrl($language),
+                        path: UrlBuilderUtil::buildAuthorisedLogoutUrl($language),
                         text: $localisationUtil->getValue('navSignOut'),
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/sign-out-white.svg" alt="' . $localisationUtil->getValue('navSignOut') . '">',
                     ),
@@ -81,7 +81,7 @@ final class CoreMenu
 
         if ($includeUserDashboardLink) {
             $output[] = new MenuItem(
-                uri: UrlBuilderUtil::buildAppDashboardUrl($language),
+                path: UrlBuilderUtil::buildAppDashboardUrl($language),
                 text: $localisationUtil->getValue('navDashboard'),
                 order: 0,
             );
@@ -101,14 +101,14 @@ final class CoreMenu
         $output = [];
         if ($includeAdminLink) {
             $output[] = new MenuItem(
-                uri: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
+                path: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
                 text: $localisationUtil->getValue('navAdministrator'),
                 order: 0,
             );
         }
 
         $output[] = new MenuItem(
-            uri: UrlBuilderUtil::buildAppDashboardUrl($language),
+            path: UrlBuilderUtil::buildAppDashboardUrl($language),
             text: $localisationUtil->getValue('navDashboard')
         );
         $output[] = new MenuItem(
@@ -116,12 +116,12 @@ final class CoreMenu
             icon: '<img class="img-svg m-l-05" width="20" height="20" src="/img/svg/caret-down' . ($whiteIcon ? '-white' : '') . '.svg" alt="' . $localisationUtil->getValue('navAccount') . '">',
             children: [
                 new MenuItem(
-                    uri: UrlBuilderUtil::buildAuthorisedAccountUrl($language),
+                    path: UrlBuilderUtil::buildAuthorisedAccountUrl($language),
                     text: $localisationUtil->getValue('navAccount'),
                     icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/user' . ($whiteIcon ? '-white' : '') . '.svg" alt="' . $localisationUtil->getValue('navAccount') . '">',
                 ),
                 new MenuItem(
-                    uri: UrlBuilderUtil::buildAuthorisedLogoutUrl($language),
+                    path: UrlBuilderUtil::buildAuthorisedLogoutUrl($language),
                     text: $localisationUtil->getValue('navSignOut'),
                     icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/sign-out' . ($whiteIcon ? '-white' : '') . '.svg" alt="' . $localisationUtil->getValue('navSignOut') . '">',
                 ),
@@ -139,11 +139,11 @@ final class CoreMenu
 
         return [
             new MenuItem(
-                uri: UrlBuilderUtil::buildPublicLoginUrl($language),
+                path: UrlBuilderUtil::buildPublicLoginUrl($language),
                 text: $localisationUtil->getValue('navSignIn'),
             ),
             new MenuItem(
-                uri: UrlBuilderUtil::buildPublicRegisterUrl($language),
+                path: UrlBuilderUtil::buildPublicRegisterUrl($language),
                 text: $localisationUtil->getValue('navSignUp'),
                 class: 'action-register',
             ),
