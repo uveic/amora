@@ -4,7 +4,7 @@ header {
   position: relative;
   z-index: 900;
   width: 100%;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .logo {
@@ -12,22 +12,26 @@ header {
   font-family: var(--font-h1-title);
   display: inline-block;
   margin: 0;
-  max-width: 250px;
-}
-
-a.white,
-a.white:hover,
-a.white:active,
-a.white:visited,
-a.white:focus {
+  max-width: 400px;
+  min-width: 175px;
+  height: auto;
+  padding: 0.5rem 4rem 0.5rem 0.75rem;
   color: var(--main-bg-color);
 }
 
-header > h1 {
-  margin-right: 5rem;
-  line-height: revert;
-  padding: 1rem 0;
+a.logo.black,
+a.logo.black:hover,
+a.logo.black:active,
+a.logo.black:visited,
+a.logo.black:focus {
+  color: var(--main-bg-color);
+  font-weight: bold;
   font-size: 1.5rem;
+  line-height: 1;
+}
+
+a.logo.white {
+  background: var(--main-bg-color);
 }
 
 .content-onboarding {

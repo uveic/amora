@@ -11,7 +11,6 @@ abstract class HtmlResponseDataAbstract
 {
     public readonly LocalisationUtil $localisationUtil;
     public readonly string $baseUrl;
-    public readonly string $baseUrlWithLanguage;
     public readonly string $siteUrl;
     public readonly string $sitePath;
     public readonly Language $siteLanguage;
@@ -47,8 +46,6 @@ abstract class HtmlResponseDataAbstract
         $this->pageTitleWithoutSiteName = $pageTitle ?? '';
         $this->pageDescription = $pageDescription
             ?? $this->localisationUtil->getValue('siteDescription');
-        $this->baseUrlWithLanguage = $this->baseUrl .
-            strtolower($this->siteLanguage->value) . '/';
     }
 
     public function getPageTitle(): string
@@ -101,14 +98,5 @@ abstract class HtmlResponseDataAbstract
         }
 
         return round((time() - $this->request->session->user->createdAt->getTimestamp()) / 60);
-    }
-
-    public function getBaseUrlWithLanguage(): string
-    {
-        if (count(Core::getAllLanguages()) === 1) {
-            return $this->baseUrl;
-        }
-
-        return $this->baseUrlWithLanguage;
     }
 }

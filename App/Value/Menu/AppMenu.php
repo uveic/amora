@@ -23,7 +23,7 @@ final class AppMenu
         );
 
         usort($output, function($a, $b) {
-            return $a?->order - $b?->order;
+            return $a->order - $b->order;
         });
 
         return $output;
@@ -67,7 +67,7 @@ final class AppMenu
         );
 
         usort($output, function($a, $b) {
-            return $a?->order - $b?->order;
+            return $a->order - $b->order;
         });
 
         return $output;

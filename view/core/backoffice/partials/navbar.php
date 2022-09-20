@@ -1,5 +1,6 @@
 <?php
 
+use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Entity\Util\MenuItem;
 use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
 
@@ -10,14 +11,20 @@ if (!isset($menuItems)) {
     die;
 }
 
+$siteLogo = $responseData->getSiteLogoUrl()
+    ? '<img src="' . $responseData->getSiteLogoUrl() . '" width="200" height="42" alt="' . $responseData->siteName . '">'
+    : $responseData->siteName;
+
+$logoClass = $responseData->getSiteLogoUrl() ? '' : ' black';
+
 $userRegisteredMoreThan24HoursAgo = $responseData->minutesSinceUserRegistration() > 24 * 60;
 if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
   <div id="feedback-banner" class="feedback-success">
       <?=sprintf($responseData->getLocalValue('authenticationVerifyEmailBanner'), $responseData->request->session->user->email, $responseData->request->session->user->id)?>
   </div>
 <?php } ?>
-<header>
-  <h1 class="logo"><a class="white" href="<?=$responseData->getBaseUrlWithLanguage()?>"><?=$this->e($responseData->siteName)?></a></h1>
+<header class="max-width">
+  <a class="logo<?=$logoClass?>" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>"><?=$siteLogo?></a>
   <input type="checkbox" id="mobile-nav" class="mobile-nav">
   <nav>
     <ul>
