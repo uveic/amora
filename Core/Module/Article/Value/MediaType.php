@@ -6,13 +6,16 @@ enum MediaType: int
 {
     case PDF = 1;
     case Image = 2;
-    case Unknown = 3;
+    case CSV = 3;
+
+    case Unknown = 1000;
 
     public static function getAll(): array
     {
         return [
             self::PDF,
             self::Image,
+            self::CSV,
             self::Unknown,
         ];
     }
