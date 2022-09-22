@@ -29,7 +29,7 @@ class ActionLoggerCore extends Core
             className: 'ActionDataLayer',
             factory: function () use ($db) {
                 require_once self::getPathRoot() . '/Core/Module/ActionLogger/Model/Action.php';
-                require_once self::getPathRoot() . '/Core/Module/ActionLogger/Datalayer/ActionDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/ActionLogger/DataLayer/ActionDataLayer.php';
                 return new ActionDataLayer($db);
             },
             isSingleton: true,

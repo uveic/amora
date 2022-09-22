@@ -34,7 +34,7 @@ class UserCore extends Core
             className: 'UserDataLayer',
             factory: function () use ($db, $logger) {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
-                require_once self::getPathRoot() . '/Core/Module/User/Datalayer/UserDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
                 return new UserDataLayer($db, $logger);
             },
             isSingleton: true,
@@ -73,9 +73,9 @@ class UserCore extends Core
             className: 'SessionDataLayer',
             factory: function () use ($db, $logger) {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/Session.php';
-                require_once self::getPathRoot() . '/Core/Module/User/Datalayer/UserDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
-                require_once self::getPathRoot() . '/Core/Module/User/Datalayer/SessionDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/User/DataLayer/SessionDataLayer.php';
                 return new SessionDataLayer($db, $logger);
             },
             isSingleton: true,

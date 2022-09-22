@@ -4,9 +4,9 @@ namespace Amora\Core\Value;
 
 use Amora\Core\Core;
 
-require_once Core::getPathRoot() . '/Core/Module/Article/Datalayer/ArticleDataLayer.php';
-require_once Core::getPathRoot() . '/Core/Module/Article/Datalayer/MediaDataLayer.php';
-require_once Core::getPathRoot() . '/Core/Module/User/Datalayer/UserDataLayer.php';
+require_once Core::getPathRoot() . '/Core/Module/Article/DataLayer/ArticleDataLayer.php';
+require_once Core::getPathRoot() . '/Core/Module/Article/DataLayer/MediaDataLayer.php';
+require_once Core::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';

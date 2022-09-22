@@ -33,8 +33,8 @@ class ArticleCore extends Core
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
-                require_once self::getPathRoot() . '/Core/Module/User/Datalayer/UserDataLayer.php';
-                require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/ArticleDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/DataLayer/ArticleDataLayer.php';
                 return new ArticleDataLayer(
                     db: self::getDb(),
                     logger: self::getArticleLogger(),
@@ -77,8 +77,8 @@ class ArticleCore extends Core
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
-                require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/MediaDataLayer.php';
-                require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/ArticleDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/DataLayer/MediaDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/DataLayer/ArticleDataLayer.php';
                 return new MediaDataLayer(
                     db: self::getDb(),
                     logger:  self::getArticleLogger(),
@@ -140,7 +140,7 @@ class ArticleCore extends Core
         return self::getInstance(
             className: 'TagDataLayer',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Module/Article/Datalayer/TagDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/DataLayer/TagDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Tag.php';
                 return new TagDataLayer(
                     db: self::getDb(),

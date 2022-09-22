@@ -36,7 +36,7 @@ class MailerCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerLogItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
-                require_once self::getPathRoot() . '/Core/Module/Mailer/Datalayer/MailerDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/Mailer/DataLayer/MailerDataLayer.php';
 
                 return new MailerDataLayer($db);
             },
