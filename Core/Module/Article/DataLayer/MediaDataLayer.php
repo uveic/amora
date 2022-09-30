@@ -5,7 +5,7 @@ namespace Amora\Core\Module\Article\Datalayer;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\MediaStatus;
-use Amora\Core\Module\User\Datalayer\UserDataLayer;
+use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;

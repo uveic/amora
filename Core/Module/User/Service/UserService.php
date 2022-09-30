@@ -11,7 +11,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Response\Feedback;
-use Amora\Core\Module\User\Datalayer\UserDataLayer;
+use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserRegistrationRequest;
 use Amora\Core\Module\User\Model\UserVerification;

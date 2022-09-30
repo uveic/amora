@@ -5,19 +5,10 @@ namespace Amora\Core\Entity\Util;
 class UserAgentInfo
 {
     public function __construct(
-        public readonly ?string $platform,
-        public readonly ?string $browser,
-        public readonly ?string $version
+        public readonly ?string $platform = null,
+        public readonly ?string $browser = null,
+        public readonly ?string $version = null,
     ) {}
-
-    public static function fromArray(array $data): self
-    {
-        return new self(
-            platform: $data['platform'] ?? null,
-            browser: $data['browser'] ?? null,
-            version: $data['version'] ?? null,
-        );
-    }
 
     public function getBrowserAndPlatform(): string
     {

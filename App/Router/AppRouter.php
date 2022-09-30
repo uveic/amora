@@ -36,6 +36,16 @@ class AppRouter
         return [];
     }
 
+    public static function getApiActions(): array
+    {
+        return array_merge(
+            Router::getApiActions(),
+            self::PUBLIC_API_CONTROLLER_ACTIONS,
+            self::AUTHORISED_API_CONTROLLER_ACTIONS,
+            self::BACKOFFICE_API_CONTROLLER_ACTIONS,
+        );
+    }
+
     /**
      * @param Request $request
      * @return Response|null

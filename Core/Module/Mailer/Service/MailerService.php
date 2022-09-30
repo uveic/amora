@@ -3,7 +3,7 @@
 namespace Amora\Core\Module\Mailer\Service;
 
 use Amora\Core\Module\Mailer\App\MailerApp;
-use Amora\Core\Module\Mailer\Datalayer\MailerDataLayer;
+use Amora\Core\Module\Mailer\DataLayer\MailerDataLayer;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 
 class MailerService

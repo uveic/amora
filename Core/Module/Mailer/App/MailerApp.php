@@ -10,7 +10,7 @@ use Amora\Core\Util\Logger;
 use Amora\Core\Module\Mailer\App\Api\ApiResponse;
 use Amora\Core\Module\Mailer\App\Api\ApiClientAbstract;
 use Amora\Core\Module\Mailer\App\Api\RequestBuilderAbstract;
-use Amora\Core\Module\Mailer\Datalayer\MailerDataLayer;
+use Amora\Core\Module\Mailer\DataLayer\MailerDataLayer;
 use Amora\Core\Module\Mailer\Model\Email;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Model\MailerLogItem;

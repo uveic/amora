@@ -14,7 +14,7 @@ use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;
-use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
+use Amora\Core\Module\Article\DataLayer\MediaDataLayer;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;

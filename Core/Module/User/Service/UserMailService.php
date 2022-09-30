@@ -7,7 +7,7 @@ use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Service\MailerService;
 use Amora\Core\Module\Mailer\Value\MailerTemplate;
-use Amora\Core\Module\User\Datalayer\UserDataLayer;
+use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserVerification;
 use Amora\Core\Module\User\Value\VerificationType;

@@ -10,7 +10,7 @@ use Amora\Core\Module\Mailer\App\Api\ApiClientAbstract;
 use Amora\Core\Module\Mailer\App\Api\RequestBuilderAbstract;
 use Amora\Core\Module\Mailer\App\Api\Sendgrid\ApiClient;
 use Amora\Core\Module\Mailer\App\Api\Sendgrid\RequestBuilder;
-use Amora\Core\Module\Mailer\Datalayer\MailerDataLayer;
+use Amora\Core\Module\Mailer\DataLayer\MailerDataLayer;
 use Amora\Core\Module\Mailer\Service\MailerService;
 
 class MailerCore extends Core

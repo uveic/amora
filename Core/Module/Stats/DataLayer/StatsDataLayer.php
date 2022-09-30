@@ -7,6 +7,7 @@ use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\DataLayerTrait;
+use Amora\Core\Module\Stats\Model\EventProcessed;
 use Amora\Core\Module\Stats\Model\EventRaw;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
@@ -16,15 +17,33 @@ class StatsDataLayer
 {
     use DataLayerTrait;
 
-    const EVENT_RAW_TABLE_NAME = 'event_raw';
+    const EVENT_RAW_TABLE = 'event_raw';
+    const EVENT_PROCESSED_TABLE = 'event_processed';
+    const EVENT_TYPE_TABLE = 'event_type';
 
     public function __construct(
         private readonly MySqlDb $db,
     ) {}
 
-    public function storeEvent(EventRaw $event): EventRaw
+    public function storeEventRaw(EventRaw $event): ?EventRaw
     {
-        $res = $this->db->insert(self::EVENT_RAW_TABLE_NAME, $event->asArray());
+        $res = $this->db->insert(self::EVENT_RAW_TABLE, $event->asArray());
+
+        if (empty($res)) {
+            return null;
+        }
+
+        $event->id = $res;
+        return $event;
+    }
+
+    public function storeEventProcessed(EventProcessed $event): ?EventProcessed
+    {
+        $res = $this->db->insert(self::EVENT_PROCESSED_TABLE, $event->asArray());
+
+        if (empty($res)) {
+            return null;
+        }
 
         $event->id = $res;
         return $event;
@@ -40,7 +59,7 @@ class StatsDataLayer
         }
 
         $orderByMapping = [
-            'id' => 'm.id',
+            'raw_id' => 'er.id',
         ];
 
         $params = [];
@@ -59,7 +78,7 @@ class StatsDataLayer
             'er.lock_id AS event_raw_lock_id',
         ];
 
-        $joins = ' FROM ' . self::EVENT_RAW_TABLE_NAME . ' AS er';
+        $joins = ' FROM ' . self::EVENT_RAW_TABLE . ' AS er';
         $where = ' WHERE 1';
 
         if ($ids) {
@@ -67,7 +86,7 @@ class StatsDataLayer
         }
 
         if ($lockId) {
-            $where .= $this->generateWhereSqlCodeForIds($params, [$lockId], 'er.user_id', 'userId');
+            $where .= $this->generateWhereSqlCodeForIds($params, [$lockId], 'er.lock_id', 'lockId');
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
@@ -95,11 +114,11 @@ class StatsDataLayer
         );
     }
 
-    public function getNumberOfLockedTransmissions(): int
+    public function getNumberOfLockedEntries(): int
     {
         $sql = '
             SELECT COUNT(*)
-            FROM ' . self::EVENT_RAW_TABLE_NAME . '
+            FROM ' . self::EVENT_RAW_TABLE . '
             WHERE lock_id IS NOT NULL
         ';
 
@@ -111,7 +130,7 @@ class StatsDataLayer
     public function lockQueueEntries(string $lockId, int $qty = 10000): bool
     {
         $sql = '
-            UPDATE ' . self::EVENT_RAW_TABLE_NAME . '
+            UPDATE ' . self::EVENT_RAW_TABLE . '
                 SET lock_id = :lock_id,
                     processed_at = :processed_at
             WHERE processed_at IS NULL
@@ -133,7 +152,7 @@ class StatsDataLayer
         $windowDate = date(DateUtil::MYSQL_DATETIME_FORMAT, time() - $windowTimeInSeconds);
 
         $sql = '
-            UPDATE ' . self::EVENT_RAW_TABLE_NAME . '
+            UPDATE ' . self::EVENT_RAW_TABLE . '
                 SET lock_id = NULL,
                     processed_at = NULL
             WHERE processed_at IS NOT NULL
@@ -151,7 +170,7 @@ class StatsDataLayer
 
         $sql = '
             SELECT id
-            FROM ' . self::EVENT_RAW_TABLE_NAME . '
+            FROM ' . self::EVENT_RAW_TABLE . '
             WHERE lock_id = :lockId
         ';
 
@@ -162,5 +181,15 @@ class StatsDataLayer
         } while (!empty($res) && $count++ < 5);
 
         return $lockId;
+    }
+
+    public function markEventAsProcessed(int $rawEventId): bool
+    {
+        $params = [
+            ':id' => $rawEventId,
+        ];
+        $sql = 'UPDATE ' . self::EVENT_RAW_TABLE . ' SET lock_id = NULL WHERE id = :id';
+
+        return $this->db->execute($sql, $params);
     }
 }

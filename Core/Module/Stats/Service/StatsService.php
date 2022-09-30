@@ -2,12 +2,13 @@
 
 namespace Amora\Core\Module\Stats\Service;
 
+use Amora\Core\Module\Stats\Model\EventProcessed;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Request;
-use Amora\Core\Module\Stats\Datalayer\StatsDataLayer;
+use Amora\Core\Module\Stats\DataLayer\StatsDataLayer;
 use Amora\Core\Module\Stats\Model\EventRaw;
 
 class StatsService
@@ -24,7 +25,7 @@ class StatsService
                 return;
             }
 
-            $this->statsDataLayer->storeEvent(
+            $this->statsDataLayer->storeEventRaw(
                 new EventRaw(
                     id: null,
                     userId: $request->session?->user->id,
@@ -42,16 +43,25 @@ class StatsService
         }
     }
 
+    public function storeEventProcessed(EventProcessed $event): ?EventProcessed
+    {
+        return $this->statsDataLayer->storeEventProcessed($event);
+    }
+
+    public function markEventAsProcessed(int $rawId): bool
+    {
+        return $this->statsDataLayer->markEventAsProcessed($rawId);
+    }
+
     public function getEntriesFromQueue(): array
     {
         $this->logger->logInfo('Releasing locks...');
         $this->statsDataLayer->releaseQueueLocksIfNeeded();
 
-        $this->logger->logInfo('Checking for locked transmissions...');
-        $lockedTransmissions = $this->statsDataLayer->getNumberOfLockedTransmissions();
-        if ($lockedTransmissions) {
-            $this->logger->logInfo(
-                'There are (' . $lockedTransmissions . ') transmission(s) locked. Aborting...'
+        $this->logger->logInfo('Checking for locked entries...');
+        $lockedEntries = $this->statsDataLayer->getNumberOfLockedEntries();
+        if ($lockedEntries) {
+            $this->logger->logInfo('There are (' . $lockedEntries . ') entries(s) locked. Aborting...'
             );
 
             return [];
