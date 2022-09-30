@@ -37,7 +37,7 @@ try {
     )->run($argv);
 
     Core::getMigrationDbApp(
-        Core::getActionDb(),
+        Core::getStatsDb(),
         Core::getPathRoot() . '/Core/Database/Migration/files/action'
     )->run($argv);
 

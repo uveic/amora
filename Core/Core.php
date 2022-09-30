@@ -8,7 +8,7 @@ use Amora\Core\Config\Database;
 use Amora\Core\Config\DatabaseBackup;
 use Amora\Core\Config\Env;
 use Amora\Core\Database\DbBackupApp;
-use Amora\Core\Module\Action\ActionLoggerCore;
+use Amora\Core\Module\Stats\StatsCore;
 use Amora\Core\Router\Router;
 use Amora\Core\Util\Logger;
 use Amora\App\Value\Language;
@@ -61,7 +61,7 @@ class Core
         require_once self::$pathToRoot . '/App/AppCore.php';
         require_once self::$pathToRoot . '/Core/Module/User/UserCore.php';
         require_once self::$pathToRoot . '/Core/Module/Article/ArticleCore.php';
-        require_once self::$pathToRoot . '/Core/Module/ActionLogger/ActionLoggerCore.php';
+        require_once self::$pathToRoot . '/Core/Module/Stats/StatsCore.php';
         require_once self::$pathToRoot . '/Core/Module/Mailer/MailerCore.php';
 
         // Application include paths
@@ -123,7 +123,7 @@ class Core
             self::$config->timezone = $newTimezone;
             date_default_timezone_set(self::getDefaultTimezone());
             self::getCoreDb()->updateTimezone();
-            self::getActionDb()->updateTimezone();
+            self::getStatsDb()->updateTimezone();
             self::getMailerDb()->updateTimezone();
         }
     }
@@ -186,17 +186,17 @@ class Core
 
     public static function getRouter(): Router
     {
-        $actionService = ActionLoggerCore::getActionService();
+        $statsService = StatsCore::getStatsService();
 
         return self::getInstance(
             className: 'Router',
-            factory: function () use ($actionService) {
+            factory: function () use ($statsService) {
                 require_once self::$pathToRoot . '/Core/Entity/Response/HtmlResponseData.php';
                 require_once self::$pathToRoot . '/App/Router/AppRouterCore.php';
                 require_once self::$pathToRoot . '/App/Router/AppRouter.php';
                 require_once self::$pathToRoot . '/Core/Router/RouterCore.php';
                 require_once self::$pathToRoot . '/Core/Router/Router.php';
-                return new Router($actionService);
+                return new Router($statsService);
             },
             isSingleton: true,
         );
@@ -207,7 +207,7 @@ class Core
         return self::getDb(self::getConfig()->coreDb);
     }
 
-    public static function getActionDb(): MySqlDb
+    public static function getStatsDb(): MySqlDb
     {
         return self::getDb(self::getConfig()->actionDb);
     }
