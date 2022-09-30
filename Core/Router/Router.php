@@ -67,6 +67,15 @@ class Router
         );
     }
 
+    public static function getApiActions(): array
+    {
+        return array_merge(
+            self::PUBLIC_API_CONTROLLER_ACTIONS,
+            self::AUTHORISED_API_CONTROLLER_ACTIONS,
+            self::BACKOFFICE_API_CONTROLLER_ACTIONS,
+        );
+    }
+
     public function handleRequest(Request $request): void
     {
         try {

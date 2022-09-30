@@ -118,7 +118,7 @@ class Core
         return self::$config->env === Env::Live;
     }
 
-    public static function updateTimezone(string $newTimezone) {
+    public static function updateTimezone(string $newTimezone): void {
         if (self::getDefaultTimezone() !== $newTimezone) {
             self::$config->timezone = $newTimezone;
             date_default_timezone_set(self::getDefaultTimezone());
@@ -142,7 +142,7 @@ class Core
         string $className,
         Closure $factory,
         bool $isSingleton = true
-    ) {
+    ): mixed {
         if (!self::$initiated) {
             echo 'You forgot to call Core::initiate()!' . PHP_EOL;
             exit;
@@ -165,17 +165,14 @@ class Core
 
     public static function getLogger(?string $identifier = null): Logger
     {
-        $isRunningInCli = self::isRunningInCli();
-
         return self::getInstance(
             className: 'AmoraLogger',
-            factory: function () use ($isRunningInCli, $identifier) {
+            factory: function () use ($identifier) {
                 return new Logger(
                     identifier: $identifier,
-                    isRunningInCli: $isRunningInCli,
+                    isRunningInCli: self::isRunningInCli(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -186,19 +183,18 @@ class Core
 
     public static function getRouter(): Router
     {
-        $statsService = StatsCore::getStatsService();
-
         return self::getInstance(
             className: 'Router',
-            factory: function () use ($statsService) {
+            factory: function () {
                 require_once self::$pathToRoot . '/Core/Entity/Response/HtmlResponseData.php';
                 require_once self::$pathToRoot . '/App/Router/AppRouterCore.php';
                 require_once self::$pathToRoot . '/App/Router/AppRouter.php';
                 require_once self::$pathToRoot . '/Core/Router/RouterCore.php';
                 require_once self::$pathToRoot . '/Core/Router/Router.php';
-                return new Router($statsService);
+                return new Router(
+                    statsService: StatsCore::getStatsService(),
+                );
             },
-            isSingleton: true,
         );
     }
 
@@ -222,23 +218,19 @@ class Core
         return self::getInstance(
             className: $database->name . 'Database',
             factory: function () use ($database) {
-
-                $logger = self::getLogger();
-
                 require_once self::$pathToRoot . '/Core/Value/QueryOrderDirection.php';
                 require_once self::$pathToRoot . '/Core/Entity/Util/QueryOrderBy.php';
                 require_once self::$pathToRoot . '/Core/Entity/Util/QueryOptions.php';
                 require_once self::$pathToRoot . '/Core/Entity/Response/Feedback.php';
                 require_once self::$pathToRoot . '/Core/Database/MySqlDb.php';
                 return new MySqlDb(
-                    logger: $logger,
+                    logger: self::getLogger(),
                     host: $database->host,
                     user: $database->user,
                     password: $database->password,
                     name: $database->name,
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -256,9 +248,11 @@ class Core
             className: 'MigrationDbApp',
             factory: function () use ($db, $pathToMigrationFiles) {
                 require_once self::$pathToRoot . '/Core/Database/Migration/MigrationDbApp.php';
-                return new MigrationDbApp($db, $pathToMigrationFiles);
+                return new MigrationDbApp(
+                    db: $db,
+                    pathToMigrationFiles: $pathToMigrationFiles,
+                );
             },
-            isSingleton: false,
         );
     }
 
@@ -296,16 +290,15 @@ class Core
      */
     public static function getSyncLookupTablesApp(): SyncLookupTablesApp
     {
-        $logger = self::getLogger();
-
         return self::getInstance(
             className: 'SyncLookupTablesApp',
-            factory: function () use ($logger) {
+            factory: function () {
                 require_once self::$pathToRoot . '/Core/Entity/Util/LookupTableSettings.php';
                 require_once self::$pathToRoot . '/Core/App/SyncLookupTablesApp.php';
-                return new SyncLookupTablesApp($logger);
+                return new SyncLookupTablesApp(
+                    logger: self::getLogger(),
+                );
             },
-            isSingleton: true,
         );
     }
 

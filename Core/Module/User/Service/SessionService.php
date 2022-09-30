@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use UserAgentParserUtil;
 use Amora\Core\Core;
-use Amora\Core\Module\User\Datalayer\SessionDataLayer;
+use Amora\Core\Module\User\DataLayer\SessionDataLayer;
 use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\StringUtil;

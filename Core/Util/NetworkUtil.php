@@ -2,9 +2,9 @@
 
 namespace Amora\Core\Util;
 
-use Exception;
 use GeoIp2\Database\Reader;
 use Amora\Core\Core;
+use Throwable;
 
 final class NetworkUtil
 {
@@ -71,26 +71,20 @@ final class NetworkUtil
     public static function getCountryCodeFromIP(?string $ip = null): ?string
     {
         if (empty($ip)) {
-            $ip = self::determineClientIp();
+            return null;
         }
 
         $countryCode = null;
-        if (!empty($ip)) {
-            try {
-                if (!isset(self::$geoliteCountryReader)) {
-                    self::$geoliteCountryReader = new Reader(
-                        Core::getPathRoot() . '/vendor/GeoLite2-Country.mmdb'
-                    );
-                }
-
-                $record = self::$geoliteCountryReader->country($ip);
-                $countryCode = $record->country->isoCode;
-            } catch (Exception $e) {
-                Core::getDefaultLogger()->logWarning(
-                    "Failed to look up IP Country: " . $e->getMessage()
+        try {
+            if (!isset(self::$geoliteCountryReader)) {
+                self::$geoliteCountryReader = new Reader(
+                    Core::getPathRoot() . '/vendor/GeoLite2-Country.mmdb'
                 );
             }
-        }
+
+            $record = self::$geoliteCountryReader->country($ip);
+            $countryCode = $record->country->isoCode;
+        } catch (Throwable) {}
 
         return $countryCode;
     }
@@ -100,31 +94,25 @@ final class NetworkUtil
      * the value is looked up using `determineClientIp()` above.
      *
      * @param string|null $ip Optional IP address to look up the city for
-     * @return string|null The two-letter ISO code for the relevant IP if one can be found, empty String otherwise
+     * @return string|null
      */
     public static function getCityFromIP(?string $ip = null): ?string
     {
         if (empty($ip)) {
-            $ip = self::determineClientIp();
+            return null;
         }
 
         $city = null;
-        if (!empty($ip)) {
-            try {
-                if (empty(self::$geoliteCityReader)) {
-                    self::$geoliteCityReader = new Reader(
-                        Core::getPathRoot() . '/vendor/GeoLite2-City.mmdb'
-                    );
-                }
-
-                $record = self::$geoliteCityReader->city($ip);
-                $city = $record->city->name;
-            } catch (Exception $e) {
-                Core::getDefaultLogger()->logWarning(
-                    "Failed to look up IP City: " . $e->getMessage()
+        try {
+            if (empty(self::$geoliteCityReader)) {
+                self::$geoliteCityReader = new Reader(
+                    Core::getPathRoot() . '/vendor/GeoLite2-City.mmdb'
                 );
             }
-        }
+
+            $record = self::$geoliteCityReader->city($ip);
+            $city = $record->city->name;
+        } catch (Throwable) {}
 
         return $city;
     }

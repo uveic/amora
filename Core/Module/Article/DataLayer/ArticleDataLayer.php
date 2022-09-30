@@ -13,7 +13,7 @@ use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;
-use Amora\Core\Module\User\Datalayer\UserDataLayer;
+use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 
 class ArticleDataLayer

@@ -23,10 +23,8 @@ final class UserAgentParserUtil
         $browser  = null;
         $version  = null;
 
-        $empty = new UserAgentInfo(null, null, null);
-
         if (!$userAgent) {
-            return $empty;
+            return new UserAgentInfo();
         }
 
         if (preg_match('/\((.*?)\)/m', $userAgent, $parent_matches)) {
@@ -81,7 +79,7 @@ REGEX
                 );
             }
 
-            return $empty;
+            return new UserAgentInfo();
         }
 
         if (preg_match('/rv:(?P<version>[0-9A-Z.]+)/i', $userAgent, $rv_result)) {
