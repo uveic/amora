@@ -208,6 +208,14 @@ class BotUrl
         'v2/_catalog' => true,
         'users/sign_in' => true,
         'blog/fw.php' => true,
+        'apple-touch-icon.png' => true,
+        'apple-touch-icon-precomposed.png' => true,
+        'apple-touch-icon-120x120-precomposed.png' => true,
+        'apple-touch-icon-120x120.png' => true,
+        'backoffice/form/manifest.json' => true,
+        'backoffice/manifest.json' => true,
+        '.well-known/apple-app-site-association' => true,
+        'wp-admin/widgets.php' => true,
     ];
 
     public static function isBot(string $url): bool
