@@ -24,14 +24,14 @@ class UploaderClass {
   uploadImage(
     file,
     imageContainer,
-    imageClassName,
-    userFeedbackDiv,
+    imageClassName = null,
+    userFeedbackDiv = null,
     then = () => {},
     catchError = () => {},
     apiUploadEndpoint = '/api/file',
     formData = new FormData(),
   ) {
-    if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
+    if (userFeedbackDiv && !/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
       UploaderClass.logError(userFeedbackDiv, new Error(file.name + ' is not an image'));
       return;
     }
@@ -41,7 +41,7 @@ class UploaderClass {
     const reader = new FileReader();
     reader.addEventListener('load', function () {
       let image = new Image();
-      image.className = 'opacity ' + imageClassName;
+      image.className = 'opacity' + (imageClassName ? ' ' + imageClassName : '');
       image.src = String(reader.result);
 
       const imgLoading = UploaderClass.buildImageLoadingElement();
