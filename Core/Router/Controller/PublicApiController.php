@@ -232,7 +232,7 @@ final class PublicApiController extends PublicApiControllerAbstract
      * @param string $email
      * @param string $password
      * @param string $name
-     * @param int $timezoneOffsetMinutes
+     * @param string $timezone
      * @param Request $request
      * @return Response
      */
@@ -241,7 +241,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         string $email,
         string $password,
         string $name,
-        int $timezoneOffsetMinutes,
+        string $timezone,
         Request $request
     ): Response {
         $languageIsoCode = strtoupper($languageIsoCode);
@@ -303,7 +303,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                     bio: null,
                     isEnabled: true,
                     verified: false,
-                    timezone: DateUtil::convertStringToDateTimeZone(DateUtil::getTimezoneFromUtcOffset($timezoneOffsetMinutes)),
+                    timezone: DateUtil::convertStringToDateTimeZone($timezone),
                 ),
                 verificationType: VerificationType::EmailAddress,
             );

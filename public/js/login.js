@@ -66,13 +66,12 @@ if (formRegister) {
       return;
     }
 
-    const d = new Date();
     const data = {
       'languageIsoCode': siteLanguage,
       'email': email.value,
       'password': password.value,
       'name': name.value,
-      'timezoneOffsetMinutes': d.getTimezoneOffset() * -1
+      'timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 
     xhr.post('/papi/register', JSON.stringify(data))

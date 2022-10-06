@@ -164,7 +164,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
      * @param string $email
      * @param string $password
      * @param string $name
-     * @param int $timezoneOffsetMinutes
+     * @param string $timezone
      * @param Request $request
      * @return Response
      */
@@ -173,7 +173,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
         string $email,
         string $password,
         string $name,
-        int $timezoneOffsetMinutes,
+        string $timezone,
         Request $request
     ): Response;
 
@@ -705,14 +705,14 @@ abstract class PublicApiControllerAbstract extends AbstractController
             $name = $bodyParams['name'] ?? null;
         }
 
-        $timezoneOffsetMinutes = null;
-        if (!isset($bodyParams['timezoneOffsetMinutes'])) {
+        $timezone = null;
+        if (!isset($bodyParams['timezone'])) {
             $errors[] = [
-                'field' => 'timezoneOffsetMinutes',
+                'field' => 'timezone',
                 'message' => 'required'
             ];
         } else {
-            $timezoneOffsetMinutes = $bodyParams['timezoneOffsetMinutes'] ?? null;
+            $timezone = $bodyParams['timezone'] ?? null;
         }
 
 
@@ -732,7 +732,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
                 $email,
                 $password,
                 $name,
-                $timezoneOffsetMinutes,
+                $timezone,
                 $request
             );
         } catch (Throwable $t) {

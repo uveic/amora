@@ -28,7 +28,7 @@ final class DateUtil
             return false;
         }
 
-        $dateObj = DateTimeImmutable::createFromFormat(DateTimeInterface::ISO8601, $isoDate);
+        $dateObj = DateTimeImmutable::createFromFormat(DateTimeInterface::ATOM, $isoDate);
         if ($dateObj === false) {
             // Check if it is from Javascript and it contains milliseconds. Remove milliseconds if found.
             $isoDate = preg_replace(
@@ -37,7 +37,7 @@ final class DateUtil
                 subject: $isoDate,
             );
 
-            $dateObj = DateTimeImmutable::createFromFormat(DateTimeInterface::ISO8601, $isoDate);
+            $dateObj = DateTimeImmutable::createFromFormat(DateTimeInterface::ATOM, $isoDate);
             if ($dateObj === false) {
                 return false;
             }
@@ -191,11 +191,12 @@ final class DateUtil
         ?DateTimeZone $timezone = null,
     ): DateTimeImmutable {
         try {
-            if (isset($timezone)) {
-                return new DateTimeImmutable(datetime: $date, timezone: $timezone);
+            $d = new DateTime(datetime: $date);
+            if ($timezone) {
+                $d->setTimezone($timezone);
             }
 
-            return new DateTimeImmutable(datetime: $date);
+            return DateTimeImmutable::createFromMutable($d);
         } catch (Throwable) {
             Core::getDefaultLogger()->logError('Error converting string to DateTimeImmutable: ' . $date);
             return new DateTimeImmutable();
@@ -204,14 +205,16 @@ final class DateUtil
 
     public static function convertUnixTimestampToDateTimeImmutable(
         int $unixSeconds,
-        ?DateTimeZone $timezone = null,
+        DateTimeZone $timezone,
     ): DateTimeImmutable {
         try {
-            if (isset($timezone)) {
-                return new DateTimeImmutable(datetime: $unixSeconds, timezone: $timezone);
-            }
+            $d = DateTime::createFromFormat(
+                format: 'U',
+                datetime: $unixSeconds,
+            );
+            $d->setTimezone($timezone);
 
-            return DateTimeImmutable::createFromFormat(format: 'U', datetime: $unixSeconds);
+            return DateTimeImmutable::createFromMutable($d);
         } catch (Throwable) {
             Core::getDefaultLogger()->logError(
                 'Error converting unix seconds to DateTimeImmutable: ' . $unixSeconds
@@ -322,11 +325,6 @@ final class DateUtil
         $month = $months[$month - 1] ?? '';
 
         return $shorName ? substr($month, 0, 3) : $month;
-    }
-
-    public static function getTimezoneFromUtcOffset(int $offsetMinutes): string
-    {
-        return timezone_name_from_abbr('', $offsetMinutes * 60, 0);
     }
 
     public static function getMySqlAggregateFormat(AggregateBy $range): string

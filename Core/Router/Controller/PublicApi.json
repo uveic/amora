@@ -618,9 +618,9 @@
                   "description": "Name",
                   "type": "string"
                 },
-                "timezoneOffsetMinutes": {
-                  "description": "Timezone offset in minutes. Example: -60",
-                  "type": "integer"
+                "timezone": {
+                  "description": "Timezone. Example: 'Europe/Madrid'",
+                  "type": "string"
                 }
               },
               "required": [
@@ -628,7 +628,7 @@
                 "password",
                 "email",
                 "name",
-                "timezoneOffsetMinutes"
+                "timezone"
               ]
             }
           }

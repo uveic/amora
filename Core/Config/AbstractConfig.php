@@ -56,11 +56,12 @@ final class Mailer {
 abstract class AbstractConfig {
     public function __construct(
         public readonly string $appName,
+        public readonly Env $env,
+
         public readonly bool $isLoggingEnabled,
         public readonly bool $isStatsLoggingEnabled,
         public readonly bool $isRegistrationEnabled,
         public readonly bool $isInvitationEnabled,
-        public readonly Env $env,
 
         public readonly string $siteAdminEmail,
         public readonly string $siteAdminName,
