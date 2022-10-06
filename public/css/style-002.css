@@ -545,14 +545,8 @@ a.link-title:focus {
 
 #feedback-banner {
   width: 100%;
-  text-align: center;
   color: var(--light-bg-color);
-  padding: 1.5rem;
-  font-size: 0.9rem;
-}
-
-#feedback-banner > p {
-  color: var(--color-failure);
+  padding: 1.5rem 2rem;
 }
 
 .highlight-effect {

@@ -48,6 +48,7 @@ return [
     'authenticationPasswordTooShort' => 'La contraseña es demasiado corta. Cámbiala e inténtalo de nuevo',
     'authenticationPasswordsDoNotMatch' => 'Las contraseñas no coinciden. Corrígelo e inténtalo de nuevo.',
     'authenticationRegistrationErrorExistingEmail' => 'Ya existe otra cuenta con el mismo correo electrónico. Por favor, identifícate <a href="%s">aquí</a>.',
+    'authenticationPassNotValid' => 'La contraseña actual no es correcta.',
 
     'authenticationPasswordResetSubtitle' => 'Cambia tu contraseña',
     'authenticationPasswordResetActionSuccess' => 'Se ha cambiado la contraseña correctamente.',
@@ -60,8 +61,8 @@ return [
     'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>Te enviaremos tu invitación en cuanto tengamos todo listo. ¡Gracias por la espera!</p><p>Tu correo: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Volver a la página principal',
     'authenticationInviteRequestFormAction' => 'Solicitar invitación',
-    'authenticationVerifyEmailBanner' => 'Por favor, verifica tu cuenta siguiendo las instruciones que te enviamos en un correo a <b>%s</b>. Si no lo has recibido revisa la carpeta de correo basura o <a class="verified-link" data-user-id="$d" href="#">haz clic aquí</a> y te enviaremos otro. Puedes <a href="/es/account">modificar tu dirección de correo</a> si fuese necesario.',
-    'authenticationPassNotValid' => 'La contraseña actual no es correcta.',
+    'authenticationVerifyEmailBannerTitle' => 'Confirma tu correo eletrónico',
+    'authenticationVerifyEmailBannerContent' => 'Por favor, verifica tu cuenta siguiendo las instruciones que te enviamos en un correo a <b>%s</b>. Si no lo has recibido revisa la carpeta de correo basura o <a class="verified-link" data-user-id="$d" href="#">haz clic aquí</a> y te enviaremos otro. Puedes <a href="/es/account">modificar tu dirección de correo</a> si fuese necesario.',
 
     'formYourAccount' => 'Tu cuenta',
     'formPlaceholderUserName' => 'Nombre',
@@ -69,7 +70,7 @@ return [
     'formEmail' => 'Tu correo electrónico',
     'formEmailNewUserHelp' => 'Se le enviará un correo electrónico para crear la contraseña una vez guardado.',
     'formPlaceholderEmail' => 'nombre@ejemplo.com',
-    'formEmailUpdateWarning' => 'Por favor, verifica tu nuevo correo electrónico (%s) para cambiarlo.',
+    'formEmailUpdateWarning' => 'Por favor, verifica tu nuevo correo electrónico (%s) siguiendo las instrucciones que te enviamos por correo.',
     'formPlaceholderPassword' => 'Tu contraseña',
     'formPlaceholderCreatePassword' => 'Crea una contraseña',
     'formPlaceholderPasswordNew' => 'Nueva contraseña',

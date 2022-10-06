@@ -20,7 +20,8 @@ $logoClass = $responseData->getSiteLogoUrl() ? '' : ' black';
 $userRegisteredMoreThan24HoursAgo = $responseData->minutesSinceUserRegistration() > 24 * 60;
 if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
   <div id="feedback-banner" class="feedback-success">
-      <?=sprintf($responseData->getLocalValue('authenticationVerifyEmailBanner'), $responseData->request->session->user->email, $responseData->request->session->user->id)?>
+    <h2 class="m-t-0"><?=$responseData->getLocalValue('authenticationVerifyEmailBannerTitle')?></h2>
+    <p><?=sprintf($responseData->getLocalValue('authenticationVerifyEmailBannerContent'), $responseData->request->session->user->email, $responseData->request->session->user->id)?></p>
   </div>
 <?php } ?>
 <header class="max-width">
