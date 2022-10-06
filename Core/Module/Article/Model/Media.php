@@ -77,26 +77,26 @@ class Media
 
     public function getDirWithNameOriginal(): string
     {
-        $path = Core::getConfig()->mediaBaseDir . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
-        return $path . $this->filenameOriginal;
+        return Core::getConfig()->mediaBaseDir . '/' . $this->getPartialPath() . $this->filenameOriginal;
     }
 
     public function getDirWithNameMedium(): ?string
     {
-        $path = Core::getConfig()->mediaBaseDir . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
-        return $this->filenameMedium ? ($path . $this->filenameMedium) : null;
+        return $this->filenameMedium
+            ? Core::getConfig()->mediaBaseDir . '/' . $this->getPartialPath() . $this->filenameMedium
+            : null;
     }
 
     public function getDirWithNameLarge(): ?string
     {
-        $path = Core::getConfig()->mediaBaseDir . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
-        return $this->filenameLarge ? ($path . $this->filenameLarge) : null;
+        return $this->filenameLarge
+            ? Core::getConfig()->mediaBaseDir . '/' . $this->getPartialPath() . $this->filenameLarge
+            : null;
     }
 
     public function getPathWithNameOriginal(): string
     {
-        $path = Core::getConfig()->mediaBaseUrl . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
-        return $path . $this->filenameOriginal;
+        return Core::getConfig()->mediaBaseUrl . '/' . $this->getPartialPath() . $this->filenameOriginal;
     }
 
     public function getPathWithNameMedium(): ?string
@@ -105,8 +105,9 @@ class Media
             return $this->getPathWithNameOriginal();
         }
 
-        $path = Core::getConfig()->mediaBaseUrl . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
-        return $this->filenameMedium ? ($path . $this->filenameMedium) : null;
+        return $this->filenameMedium
+            ? Core::getConfig()->mediaBaseUrl . '/' . $this->getPartialPath() . $this->filenameMedium
+            : null;
     }
 
     public function getPathWithNameLarge(): ?string
@@ -115,7 +116,13 @@ class Media
             return $this->getPathWithNameOriginal();
         }
 
-        $path = Core::getConfig()->mediaBaseUrl . '/' . ($this->path ? trim($this->path, '/ ') . '/' : '/');
-        return $this->filenameLarge ? ($path . $this->filenameLarge) : null;
+        return $this->filenameLarge
+            ? Core::getConfig()->mediaBaseUrl . '/' . $this->getPartialPath() . $this->filenameLarge
+            : null;
+    }
+
+    private function getPartialPath(): string
+    {
+        return $this->path ? trim($this->path, '/ ') . '/' : '';
     }
 }

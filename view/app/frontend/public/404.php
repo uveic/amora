@@ -7,9 +7,13 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 ?>
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
-<?=$this->insert('partials/head', ['responseData' => $responseData]) ?>
+<head>
+<?=$this->insert('partials/head', ['responseData' => $responseData])?>
+  <link href="/css/style-002.css" rel="stylesheet" type="text/css">
+  <link href="/css/app/style.css" rel="stylesheet" type="text/css">
+</head>
 <body>
-<?=$this->insert('partials/header', ['responseData' => $responseData]) ?>
+<?=$this->insert('partials/header', ['responseData' => $responseData])?>
 <main>
   <article>
     <h1 class="article-title"><?=$responseData->getLocalValue('globalPageNotFoundTitle')?></h1>

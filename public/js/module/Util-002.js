@@ -1,5 +1,5 @@
 import {global} from './localisation-001.js';
-import {pexegoClasses} from "./Pexego-001.js";
+import {pexegoClasses} from "./Pexego-002.js";
 
 class UtilClass {
   getUpdatedAtTime() {

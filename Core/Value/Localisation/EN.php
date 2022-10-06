@@ -61,7 +61,8 @@ return [
     'authenticationInviteRequestActionSuccess' => '<h2>Invitation request received</h2><p>We will send your invitation as soon as everything is ready. Thank you for your patience!</p><p>Your email: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Go back to homepage',
     'authenticationInviteRequestFormAction' => 'Request invitation',
-    'authenticationVerifyEmailBanner' => 'Please verify your account following the instructions sent to your email address at <b>%s</b>. If you have not received it, please check your spam folder or <a class="verified-link" data-user-id="%d" href="#">click here</a> and we will send you another one. If necessary you can <a href="/en/account">update your email address here</a>.',
+    'authenticationVerifyEmailBannerTitle' => 'Verify your email address',
+    'authenticationVerifyEmailBannerContent' => 'Please verify your account following the instructions sent to your email address at <b>%s</b>. If you have not received it, please check your spam folder or <a class="verified-link" data-user-id="%d" href="#">click here</a> and we will send you another one. If necessary you can <a href="/en/account">update your email address here</a>.',
 
     'formYourAccount' => 'Your Account',
     'formPlaceholderUserName' => 'Name',
@@ -69,7 +70,7 @@ return [
     'formEmail' => 'Your Email Address',
     'formEmailNewUserHelp' => 'An email to create a new password will be sent to the user once created.',
     'formPlaceholderEmail' => 'name@example.com',
-    'formEmailUpdateWarning' => 'Please, verify your new email address (%s) to get it changed.',
+    'formEmailUpdateWarning' => 'Please, verify your new email address (%s) following the indications sent by email.',
     'formPlaceholderPassword' => 'Your password',
     'formPlaceholderCreatePassword' => 'Create a password',
     'formPlaceholderPasswordNew' => 'New password',

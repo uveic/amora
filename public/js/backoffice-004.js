@@ -1,9 +1,9 @@
-import {Util} from './module/Util-001.js';
+import {Util} from './module/Util-002.js';
 import {xhr} from './module/xhr.js';
 import {feedbackDiv} from './authorised-001.js';
 import {global} from "./module/localisation-001.js";
-import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego-001.js";
-import {Uploader} from "./module/Uploader-002.js";
+import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego-002.js";
+import {Uploader} from "./module/Uploader-003.js";
 
 let globalTags = [];
 
@@ -456,8 +456,7 @@ document.querySelectorAll('input#images').forEach(im => {
         feedbackDiv,
         (response) => {
           if (response && response.file.id) {
-            const newImage = container.querySelector('.image-item[data-image-id="' + response.file.id + '"]');
-            newImage.addEventListener('click', () => insertImageInArticle(newImage));
+            const newImage = container.querySelector('.image-item[data-media-id="' + response.file.id + '"]');
             newImage.addEventListener('click', e => displayImagePopup(e, response.file.id));
           }
         },
@@ -964,7 +963,7 @@ document.querySelectorAll('input[name="article-add-media-upload"]').forEach(im =
         feedbackDiv,
         (response) => {
           if (response && response.file.id) {
-            const newImage = container.querySelector('.image-item[data-image-id="' + response.file.id + '"]');
+            const newImage = container.querySelector('.image-item[data-media-id="' + response.file.id + '"]');
             newImage.addEventListener('click', () => insertImageInArticle(newImage));
           }
         },

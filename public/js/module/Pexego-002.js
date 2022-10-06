@@ -1,5 +1,5 @@
 import {global} from "./localisation-001.js";
-import {Uploader} from "./Uploader-002.js";
+import {Uploader} from "./Uploader-003.js";
 
 class Pexego {
   static defaultActions = {

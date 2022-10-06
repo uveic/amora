@@ -6,6 +6,7 @@ use Amora\Core\Core;
 use Amora\Core\Entity\Request;
 use Amora\Core\Util\LocalisationUtil;
 use Amora\App\Value\Language;
+use Amora\Core\Util\UrlBuilderUtil;
 
 abstract class HtmlResponseDataAbstract
 {
@@ -15,6 +16,7 @@ abstract class HtmlResponseDataAbstract
     public readonly string $sitePath;
     public readonly Language $siteLanguage;
     public readonly string $siteName;
+    public ?string $siteImagePath;
     public readonly int $lastUpdatedTimestamp;
     public readonly string $pageTitleWithoutSiteName;
 
@@ -23,7 +25,8 @@ abstract class HtmlResponseDataAbstract
         public readonly ?Pagination $pagination = null,
         protected ?string $pageTitle = null,
         protected ?string $pageDescription = null,
-        protected ?string $siteImagePath = null,
+        ?string $siteImagePath = null,
+        ?int $lastUpdatedTimestamp = null,
     ) {
         $this->localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
@@ -37,8 +40,10 @@ abstract class HtmlResponseDataAbstract
         $this->siteUrl = trim($this->baseUrl, ' /') . '/' . ltrim($this->sitePath, ' /');
         $this->siteLanguage = $request->siteLanguage;
         $this->siteName = $this->localisationUtil->getValue('siteName');
-        $this->siteImagePath = $siteImagePath ?? ($siteImageUrl ?? '');
-        $this->lastUpdatedTimestamp = time();
+
+        $imagePath = parse_url($siteImagePath ?? ($siteImageUrl ?? ''), PHP_URL_PATH);
+        $this->siteImagePath = UrlBuilderUtil::buildBaseUrlWithoutLanguage() . $imagePath;
+        $this->lastUpdatedTimestamp = $lastUpdatedTimestamp ?? time();
 
         $this->pageTitle = isset($pageTitle) && $pageTitle
             ? $pageTitle . ' - ' . $this->siteName
@@ -66,11 +71,6 @@ abstract class HtmlResponseDataAbstract
     {
         $siteTitle = $this->localisationUtil->getValue('siteTitle');
         return $this->siteName . ($siteTitle ? ' - ' . $siteTitle : '');
-    }
-
-    public function getSiteImagePath(): string
-    {
-        return $this->siteImagePath;
     }
 
     public function getSiteDomain(): string

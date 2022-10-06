@@ -15,7 +15,11 @@ if ($responseData->feedback) {
 ?>
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
-<?=$this->insert('partials/head', ['responseData' => $responseData]) ?>
+<head>
+<?=$this->insert('partials/head', ['responseData' => $responseData])?>
+  <link href="/css/style-002.css" rel="stylesheet" type="text/css">
+  <link href="/css/app/style.css" rel="stylesheet" type="text/css">
+</head>
 <body>
 <?=$feedbackHtml?>
 <?=$this->insert('partials/home/main', ['responseData' => $responseData])?>

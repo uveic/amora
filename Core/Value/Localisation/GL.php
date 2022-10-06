@@ -48,6 +48,7 @@ return [
     'authenticationPasswordTooShort' => 'O contrasinal é demasiado curto. Cámbiao e inténtao outra vez.',
     'authenticationPasswordsDoNotMatch' => 'Os contrasinais non coinciden. Corríxeo e inténtao outra vez.',
     'authenticationRegistrationErrorExistingEmail' => 'Xa hai outra conta co mesmo email. Por favor, identifícate <a href="%s">aquí</a>.',
+    'authenticationPassNotValid' => 'O contrasinal actual non é válido.',
 
     'authenticationPasswordResetSubtitle' => 'Cambia o contrasinal',
     'authenticationPasswordResetActionSuccess' => 'Cambiouse o contrasinal correctamente.',
@@ -60,8 +61,8 @@ return [
     'authenticationInviteRequestActionSuccess' => '<h2>Petición recibida correctamente</h2><p>Enviarémosche unha invitación en canto teñamos todo listo. Grazas pola espera!</p><p>O teu correo: <b><span id="register-feedback-email"></span></b>.</p>',
     'authenticationInviteRequestHomeLink' => 'Volver á páxina principal',
     'authenticationInviteRequestFormAction' => 'Solicitar invitación',
-    'authenticationVerifyEmailBanner' => 'Por favor, verifica a túa conta seguindo as instrucións que che enviamos nun correo a <b>%s</b>. Se non o recibiches revisa a caixa do lixo ou <a class="verified-link" data-user-id="%s" href="#">fai clic aquí</a> e enviarémosche outro. Podes <a href="/gl/account">modificar o teu enderezo</a> se fora necesario.',
-    'authenticationPassNotValid' => 'O contrasinal actual non é válido.',
+    'authenticationVerifyEmailBannerTitle' => 'Confirma o teu correo',
+    'authenticationVerifyEmailBannerContent' => 'Por favor, verifica a túa conta seguindo as instrucións que che enviamos nun correo a <b>%s</b>. Se non o recibiches revisa a caixa do lixo ou <a class="verified-link" data-user-id="%s" href="#">fai clic aquí</a> e enviarémosche outro. Podes <a href="/gl/account">modificar o teu enderezo</a> se fora necesario.',
 
     'formYourAccount' => 'A túa conta',
     'formPlaceholderUserName' => 'Nome',
@@ -69,7 +70,7 @@ return [
     'formEmail' => 'O teu correo electrónico',
     'formEmailNewUserHelp' => 'Enviaráselle un correo electrónico para crear o contrasinal unha vez gardado.',
     'formPlaceholderEmail' => 'nome@exemplo.com',
-    'formEmailUpdateWarning' => 'Por favor, verifica o teu novo correo electrónico (%s) para cambialo.',
+    'formEmailUpdateWarning' => 'Por favor, verifica o teu novo correo electrónico (%s) seguindo as instrucións que che enviamos.',
     'formPlaceholderPassword' => 'O teu contrasinal',
     'formPlaceholderCreatePassword' => 'Crea un contrasinal',
     'formPlaceholderPasswordNew' => 'Novo contrasinal',

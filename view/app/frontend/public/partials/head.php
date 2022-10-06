@@ -21,7 +21,6 @@ if (isset($responseData->article)) {
 }
 
 ?>
-<head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -29,7 +28,7 @@ if (isset($responseData->article)) {
   <meta property="og:site_name" content="<?=$this->e($responseData->siteName)?>">
   <meta property="og:title" content="<?=$this->e($responseData->pageTitleWithoutSiteName)?>">
   <meta property="og:description" content="<?=$this->e($responseData->getPageDescription())?>">
-  <meta property="og:image" content="<?=$responseData->getSiteImagePath()?>">
+  <meta property="og:image" content="<?=$responseData->siteImagePath?>">
   <meta property="og:url" content="<?=$responseData->siteUrl?>">
   <meta property="og:type" content="website">
   <meta property="og:updated_time" content="<?=$responseData->lastUpdatedTimestamp?>">
@@ -38,7 +37,7 @@ if (isset($responseData->article)) {
   <meta property="twitter:url" content="<?=$responseData->siteUrl?>">
   <meta name="twitter:title" content="<?=$this->e($responseData->pageTitleWithoutSiteName)?>">
   <meta name="twitter:description" content="<?=$this->e($responseData->getPageDescription())?>">
-  <meta name="twitter:image" content="<?=$responseData->getSiteImagePath()?>">
+  <meta name="twitter:image" content="<?=$responseData->siteImagePath?>">
   <title><?=$this->e($responseData->getPageTitle())?></title>
   <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
@@ -47,6 +46,3 @@ if (isset($responseData->article)) {
   <link rel="alternate" type="application/rss+xml" title="<?=$this->e($responseData->siteName)?>" href="<?=UrlBuilderUtil::buildPublicRssUrl()?>" />
   <link rel="alternate" href="<?=$responseData->siteUrl?>" hreflang="x-default">
 <?=$canonical?>
-  <link href="/css/style-001.css" rel="stylesheet" type="text/css">
-  <link href="/css/app/style.css" rel="stylesheet" type="text/css">
-</head>
