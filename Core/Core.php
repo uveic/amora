@@ -253,6 +253,7 @@ class Core
                     pathToMigrationFiles: $pathToMigrationFiles,
                 );
             },
+            isSingleton: false,
         );
     }
 

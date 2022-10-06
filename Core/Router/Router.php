@@ -230,7 +230,7 @@ class Router
                 request: $request,
                 pageTitle: $article->title,
                 pageDescription: $article->getContentExcerpt(),
-                mainImageSitePath: $siteImageUrl,
+                siteImagePath: $siteImageUrl,
                 article: $article,
                 previousBlogPost: $article->publishOn
                     ? $articleService->getPreviousBlogPost(
