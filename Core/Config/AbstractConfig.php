@@ -59,7 +59,7 @@ abstract class AbstractConfig {
         public readonly Env $env,
 
         public readonly bool $isLoggingEnabled,
-        public readonly bool $isStatsLoggingEnabled,
+        public readonly bool $isAnalyticsEnabled,
         public readonly bool $isRegistrationEnabled,
         public readonly bool $isInvitationEnabled,
 

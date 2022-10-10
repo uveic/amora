@@ -27,7 +27,7 @@ class AnalyticsService
     public function logEvent(Request $request): void
     {
         try {
-            if (!Core::getConfig()->isStatsLoggingEnabled) {
+            if (!Core::getConfig()->isAnalyticsEnabled) {
                 return;
             }
 

@@ -6,7 +6,7 @@ use Amora\Core\Core;
 
 require_once Core::getPathRoot() . '/Core/Module/Article/DataLayer/ArticleDataLayer.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/DataLayer/MediaDataLayer.php';
-require_once Core::getPathRoot() . '/Core/Module/Stats/DataLayer/StatsDataLayer.php';
+require_once Core::getPathRoot() . '/Core/Module/Analytics/DataLayer/AnalyticsDataLayer.php';
 require_once Core::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
@@ -16,7 +16,7 @@ require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
-require_once Core::getPathRoot() . '/Core/Module/Stats/Value/EventType.php';
+require_once Core::getPathRoot() . '/Core/Module/Analytics/Value/EventType.php';
 
 use Amora\Core\Entity\Util\LookupTableSettings;
 use Amora\Core\Module\Article\ArticleCore;
