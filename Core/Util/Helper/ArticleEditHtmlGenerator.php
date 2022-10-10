@@ -28,9 +28,9 @@ final class ArticleEditHtmlGenerator
 
     public static function getControlButtonsHtml(
         HtmlResponseDataAdmin $responseData,
-        int                   $sectionId,
-        bool                  $isFirst,
-        bool                  $isLast,
+        int $sectionId,
+        bool $isFirst,
+        bool $isLast,
     ): string {
         $output = [];
         $output[] = '          <div class="pexego-section-controls null">';
@@ -44,7 +44,7 @@ final class ArticleEditHtmlGenerator
 
     public static function generateSection(
         HtmlResponseDataAdmin $responseData,
-        ArticleSection        $articleSection,
+        ArticleSection $articleSection,
     ): string {
         if ($articleSection->articleSectionType === ArticleSectionType::TextParagraph) {
             $class = self::getClassName($articleSection->articleSectionType);
@@ -197,7 +197,7 @@ final class ArticleEditHtmlGenerator
 
     public static function generateArticleRowHtml(
         HtmlResponseDataAdmin $responseData,
-        Article               $article,
+        Article $article,
     ): string {
         $statusClassname = match ($article->status) {
             ArticleStatus::Published => 'status-published',
