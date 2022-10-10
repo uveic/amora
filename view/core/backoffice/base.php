@@ -1,9 +1,9 @@
 <?php
 
 use Amora\App\Value\AppMenu;
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 
 $menuItems = AppMenu::getAdmin(
     language: $responseData->siteLanguage,

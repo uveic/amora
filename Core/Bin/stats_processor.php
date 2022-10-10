@@ -3,7 +3,7 @@
 
 namespace Amora\Core\Bin;
 
-use Amora\Core\Module\Stats\StatsCore;
+use Amora\Core\Module\Analytics\AnalyticsCore;
 use Throwable;
 use Amora\Core\Core;
 
@@ -29,7 +29,7 @@ if (!Core::isRunningInCli()) {
 }
 
 try {
-    StatsCore::getStatsProcessorApp()->run();
+    AnalyticsCore::getAnalyticsProcessorApp()->run();
 } catch (Throwable $t) {
     $logger->logError(
         'Error running migration: ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString()

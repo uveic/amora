@@ -1,33 +1,33 @@
 <?php
 
-namespace Amora\App\Module\Stats\App;
+namespace Amora\App\Module\Analytics\App;
 
 use Amora\App\Router\AppRouter;
 use Amora\Core\App\App;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\UserAgentInfo;
-use Amora\Core\Module\Stats\Model\EventProcessed;
-use Amora\Core\Module\Stats\Model\EventRaw;
-use Amora\Core\Module\Stats\Service\StatsService;
-use Amora\Core\Module\Stats\StatsCore;
-use Amora\Core\Module\Stats\Value\BotUrl;
-use Amora\Core\Module\Stats\Value\BotUserAgent;
-use Amora\Core\Module\Stats\Value\EventType;
+use Amora\Core\Module\Analytics\Model\EventProcessed;
+use Amora\Core\Module\Analytics\Model\EventRaw;
+use Amora\Core\Module\Analytics\Service\AnalyticsService;
+use Amora\Core\Module\Analytics\AnalyticsCore;
+use Amora\Core\Module\Analytics\Value\BotUrl;
+use Amora\Core\Module\Analytics\Value\BotUserAgent;
+use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Util\Logger;
 use Amora\Core\Util\NetworkUtil;
 use DateTimeImmutable;
 use UserAgentParserUtil;
 
-class StatsProcessorApp extends App
+class AnalyticsProcessorApp extends App
 {
     public function __construct(
         Logger $logger,
-        private readonly StatsService $statsService,
+        private readonly AnalyticsService $analyticsService,
         private readonly string $siteUrl,
     ) {
         parent::__construct(
             logger: $logger,
-            appName: 'Stats Processor',
+            appName: 'Analytics Processor',
             lockMaxTimeSinceLastSyncSeconds: 300, // 5 minutes
             isPersistent: false,
         );
@@ -37,11 +37,11 @@ class StatsProcessorApp extends App
         $this->execute(function () {
             $timeBefore = microtime(true);
 
-            $entries = $this->statsService->getEntriesFromQueue();
+            $entries = $this->analyticsService->getEntriesFromQueue();
 
             /** @var EventRaw $entry */
             foreach ($entries as $entry) {
-                $res = StatsCore::getDb()->withTransaction(
+                $res = AnalyticsCore::getDb()->withTransaction(
                     function() use ($entry) {
                         $res = $this->processRawEvent($entry);
 
@@ -81,7 +81,7 @@ class StatsProcessorApp extends App
         $eventType = $this->getEventType($eventRaw, $userAgentInfo);
         $referrer = $this->getReferrer($eventRaw);
 
-        $res = $this->statsService->storeEventProcessed(
+        $res = $this->analyticsService->storeEventProcessed(
             new EventProcessed(
                 id: null,
                 rawId: $eventRaw->id,
@@ -102,7 +102,7 @@ class StatsProcessorApp extends App
             return false;
         }
 
-        $this->statsService->markEventAsProcessed($eventRaw->id);
+        $this->analyticsService->markEventAsProcessed($eventRaw->id);
 
         $this->logger->logInfo('Event ID (' . $eventRaw->id . ') successfully processed...');
 

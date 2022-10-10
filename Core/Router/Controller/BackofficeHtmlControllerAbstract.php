@@ -111,6 +111,15 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
      */
     abstract protected function getMediaPage(Request $request): Response;
 
+    /**
+     * Endpoint: /backoffice/analytics
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getAnalyticsPage(Request $request): Response;
+
     private function validateAndCallGetPhpInfoPage(Request $request): Response
     {
         $errors = [];
@@ -436,6 +445,34 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallGetAnalyticsPage(Request $request): Response
+    {
+        $errors = [];
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getAnalyticsPage(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getAnalyticsPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): ?Response
     {
@@ -546,6 +583,16 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetMediaPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['backoffice', 'analytics'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetAnalyticsPage($request);
         }
 
         return null;

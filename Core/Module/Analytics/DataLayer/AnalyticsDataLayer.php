@@ -1,19 +1,23 @@
 <?php
 
-namespace Amora\Core\Module\Stats\Datalayer;
+namespace Amora\Core\Module\Analytics\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
+use Amora\Core\Module\Analytics\Entity\PageView;
+use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\DataLayerTrait;
-use Amora\Core\Module\Stats\Model\EventProcessed;
-use Amora\Core\Module\Stats\Model\EventRaw;
+use Amora\Core\Module\Analytics\Model\EventProcessed;
+use Amora\Core\Module\Analytics\Model\EventRaw;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Value\AggregateBy;
 use Amora\Core\Value\QueryOrderDirection;
+use DateTimeImmutable;
 
-class StatsDataLayer
+class AnalyticsDataLayer
 {
     use DataLayerTrait;
 
@@ -47,6 +51,53 @@ class StatsDataLayer
 
         $event->id = $res;
         return $event;
+    }
+
+    public function filterPageViewsBy(
+        DateTimeImmutable $from,
+        DateTimeImmutable $to,
+        AggregateBy $aggregateBy,
+        EventType $eventType = EventType::Visitor,
+    ): array {
+        $dateFormat = DateUtil::getMySqlAggregateFormat($aggregateBy);
+
+        $params = [];
+
+        $typeSql = '';
+        if ($eventType) {
+            $typeSql = ' AND ep.type_id = :eventTypeId';
+            $params[':eventTypeId'] = $eventType->value;
+        }
+
+        $sql = "
+            SELECT
+                DATE_FORMAT(er.created_at, $dateFormat) AS date_format,
+                COUNT(*) AS count
+            FROM " . self::EVENT_PROCESSED_TABLE . " AS ep
+                INNER JOIN " . self::EVENT_RAW_TABLE . " AS er ON er.id = ep.raw_id
+            WHERE 1
+                AND er.created_at >= :createdAtFrom
+                AND er.created_at < :createdAtTo
+                " . $typeSql . " 
+            GROUP BY
+                date_format
+            ORDER BY
+                date_format ASC;
+        ";
+        $params[':createdAtFrom'] = $from->format(DateUtil::MYSQL_DATETIME_FORMAT);
+        $params[':createdAtTo'] = $to->format(DateUtil::MYSQL_DATETIME_FORMAT);
+
+        $res = $this->db->fetchAll($sql, $params);
+
+        $reportDataOutput = [];
+        foreach ($res as $item) {
+            $reportDataOutput[] = new PageView(
+                count: (int)$item['count'],
+                date: DateUtil::convertPartialDateFormatToFullDate($item['date_format'], $aggregateBy),
+            );
+        }
+
+        return $reportDataOutput;
     }
 
     public function filterEventsBy(

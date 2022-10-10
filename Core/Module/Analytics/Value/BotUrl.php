@@ -1,6 +1,6 @@
 <?php
 
-namespace Amora\Core\Module\Stats\Value;
+namespace Amora\Core\Module\Analytics\Value;
 
 class BotUrl
 {

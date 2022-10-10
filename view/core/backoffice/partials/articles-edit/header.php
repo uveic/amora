@@ -1,12 +1,12 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 
 $pageEditTitle = ArticleEditHtmlGenerator::generateTitleHtml($responseData);
 $settings = ArticleEditHtmlGenerator::generateSettingsButtonHtml($responseData);

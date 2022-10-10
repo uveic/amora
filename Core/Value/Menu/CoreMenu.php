@@ -57,6 +57,12 @@ final class CoreMenu
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/users-white.svg" alt="' . $localisationUtil->getValue('navAdminUsers') . '">',
                         order: 1005,
                     ),
+                    new MenuItem(
+                        path: UrlBuilderUtil::buildBackofficeAnalyticsUrl($language),
+                        text: $localisationUtil->getValue('navAdminAnalytics'),
+                        icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/chart-line-white.svg" alt="' . $localisationUtil->getValue('navAdminAnalytics') . '">',
+                        order: 1006,
+                    ),
                 ],
                 order: 101,
             ),

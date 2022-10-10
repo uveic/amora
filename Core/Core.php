@@ -8,7 +8,7 @@ use Amora\Core\Config\Database;
 use Amora\Core\Config\DatabaseBackup;
 use Amora\Core\Config\Env;
 use Amora\Core\Database\DbBackupApp;
-use Amora\Core\Module\Stats\StatsCore;
+use Amora\Core\Module\Analytics\AnalyticsCore;
 use Amora\Core\Router\Router;
 use Amora\Core\Util\Logger;
 use Amora\App\Value\Language;
@@ -61,7 +61,7 @@ class Core
         require_once self::$pathToRoot . '/App/AppCore.php';
         require_once self::$pathToRoot . '/Core/Module/User/UserCore.php';
         require_once self::$pathToRoot . '/Core/Module/Article/ArticleCore.php';
-        require_once self::$pathToRoot . '/Core/Module/Stats/StatsCore.php';
+        require_once self::$pathToRoot . '/Core/Module/Analytics/AnalyticsCore.php';
         require_once self::$pathToRoot . '/Core/Module/Mailer/MailerCore.php';
 
         // Application include paths
@@ -123,7 +123,7 @@ class Core
             self::$config->timezone = $newTimezone;
             date_default_timezone_set(self::getDefaultTimezone());
             self::getCoreDb()->updateTimezone();
-            self::getStatsDb()->updateTimezone();
+            self::getAnalyticsDb()->updateTimezone();
             self::getMailerDb()->updateTimezone();
         }
     }
@@ -192,7 +192,7 @@ class Core
                 require_once self::$pathToRoot . '/Core/Router/RouterCore.php';
                 require_once self::$pathToRoot . '/Core/Router/Router.php';
                 return new Router(
-                    statsService: StatsCore::getStatsService(),
+                    statsService: AnalyticsCore::getAnalyticsService(),
                 );
             },
         );
@@ -203,9 +203,9 @@ class Core
         return self::getDb(self::getConfig()->coreDb);
     }
 
-    public static function getStatsDb(): MySqlDb
+    public static function getAnalyticsDb(): MySqlDb
     {
-        return self::getDb(self::getConfig()->actionDb);
+        return self::getDb(self::getConfig()->analyticsDb);
     }
 
     public static function getMailerDb(): MySqlDb

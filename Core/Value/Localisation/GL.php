@@ -14,6 +14,7 @@ return [
     'navDownloadAccountData' => 'Descargar os teus datos',
     'navDeleteAccount' => 'Eliminar conta',
     'navAdminUsers' => 'Usuarios',
+    'navAdminAnalytics' => 'Visitas',
     'navAdminContent' => 'Contido',
     'navAdminImages' => 'Imaxes',
     'navAdminMedia' => 'Arquivos',

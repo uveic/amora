@@ -1,6 +1,6 @@
 <?php
 
-namespace Amora\Core\Module\Stats\Model;
+namespace Amora\Core\Module\Analytics\Model;
 
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;

@@ -4,7 +4,7 @@ namespace Amora\Core\Router;
 
 use Amora\App\Router\AppRouter;
 use Amora\App\Router\AppRouterCore;
-use Amora\Core\Module\Stats\Service\StatsService;
+use Amora\Core\Module\Analytics\Service\AnalyticsService;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -52,7 +52,7 @@ class Router
     ];
 
     public function __construct(
-        private StatsService $statsService,
+        private AnalyticsService $statsService,
     ) {}
 
     public static function getReservedPaths(): array

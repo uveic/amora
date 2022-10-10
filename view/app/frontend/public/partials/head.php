@@ -2,10 +2,10 @@
 
 use Amora\Core\Entity\Response\HtmlHomepageResponseData;
 use Amora\Core\Entity\Response\HtmlResponseData;
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlResponseData|HtmlHomepageResponseData|HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseData|HtmlHomepageResponseData|HtmlResponseDataAdmin $responseData */
 
 $canonical = '';
 

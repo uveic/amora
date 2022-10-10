@@ -1,12 +1,12 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Value\QueryOrderDirection;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 
 $this->layout('base', ['responseData' => $responseData]);
 

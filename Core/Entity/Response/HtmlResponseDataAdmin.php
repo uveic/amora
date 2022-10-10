@@ -6,7 +6,7 @@ use Amora\Core\Entity\Request;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\User\Model\User;
 
-class HtmlResponseDataAuthorised extends HtmlResponseData
+class HtmlResponseDataAdmin extends HtmlResponseData
 {
     public function __construct(
         Request $request,
@@ -19,6 +19,7 @@ class HtmlResponseDataAuthorised extends HtmlResponseData
         public readonly ?array $users = [],
         public readonly ?array $files = [],
         public readonly ?array $articleSections = [],
+        public readonly ?array $pageViews = [],
     ) {
         parent::__construct(
             request: $request,

@@ -27,9 +27,9 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
-use Amora\Core\Module\Stats\DataLayer\StatsDataLayer;
-use Amora\Core\Module\Stats\StatsCore;
-use Amora\Core\Module\Stats\Value\EventType;
+use Amora\Core\Module\Analytics\DataLayer\AnalyticsDataLayer;
+use Amora\Core\Module\Analytics\AnalyticsCore;
+use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Module\User\UserCore;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
@@ -94,8 +94,8 @@ return [
         tableFieldsToValues: asArray(MediaType::getAll()),
     ),
     new LookupTableSettings(
-        database: StatsCore::getDb(),
-        tableName: StatsDataLayer::EVENT_TYPE_TABLE,
+        database: AnalyticsCore::getDb(),
+        tableName: AnalyticsDataLayer::EVENT_TYPE_TABLE,
         tableFieldsToValues: asArray(EventType::getAll()),
     ),
 ];

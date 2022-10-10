@@ -37,8 +37,8 @@ try {
     )->run($argv);
 
     Core::getMigrationDbApp(
-        Core::getStatsDb(),
-        Core::getPathRoot() . '/Core/Database/Migration/files/action'
+        Core::getAnalyticsDb(),
+        Core::getPathRoot() . '/Core/Database/Migration/files/analytics'
     )->run($argv);
 
     Core::getMigrationDbApp(
