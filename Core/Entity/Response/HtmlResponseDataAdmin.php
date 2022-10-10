@@ -19,7 +19,6 @@ class HtmlResponseDataAdmin extends HtmlResponseData
         public readonly ?array $users = [],
         public readonly ?array $files = [],
         public readonly ?array $articleSections = [],
-        public readonly ?array $pageViews = [],
     ) {
         parent::__construct(
             request: $request,

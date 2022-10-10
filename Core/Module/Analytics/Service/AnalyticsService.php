@@ -5,6 +5,7 @@ namespace Amora\Core\Module\Analytics\Service;
 use Amora\App\Module\Analytics\Entity\ReportPageView;
 use Amora\Core\Module\Analytics\Entity\PageView;
 use Amora\Core\Module\Analytics\Model\EventProcessed;
+use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Value\AggregateBy;
 use DateTime;
@@ -52,11 +53,13 @@ class AnalyticsService
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         AggregateBy $aggregateBy,
+        ?EventType $eventType = null,
     ): ReportPageView {
         $pageViews = $this->analyticsDataLayer->filterPageViewsBy(
             from: $from,
             to: $to,
             aggregateBy: $aggregateBy,
+            eventType: $eventType,
         );
 
         return $this->completePageViews(
@@ -66,6 +69,18 @@ class AnalyticsService
                 aggregateBy: $aggregateBy,
                 pageViews: $pageViews,
             ),
+        );
+    }
+
+    public function countTopPages(
+        DateTimeImmutable $from,
+        DateTimeImmutable $to,
+        ?EventType $eventType = null,
+    ): array {
+        return $this->analyticsDataLayer->countTopPages(
+            from: $from,
+            to: $to,
+            eventType: $eventType,
         );
     }
 

@@ -7,9 +7,11 @@ use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
+use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
+use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
@@ -342,15 +344,23 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             aggregateBy: AggregateBy::Day,
+            eventType: EventType::Visitor,
+        );
+
+        $topPages = $this->analyticsService->countTopPages(
+            from: $from,
+            to: $to,
+            eventType: EventType::Visitor,
         );
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
             template: 'core/backoffice/analytics',
-            responseData: new HtmlResponseDataAdmin(
+            responseData: new HtmlResponseDataAnalytics(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminAnalytics'),
-                pageViews: $report->pageViews,
+                reportPageViews: $report,
+                topPages: $topPages,
             ),
         );
     }

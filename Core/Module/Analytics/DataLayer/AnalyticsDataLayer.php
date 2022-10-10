@@ -7,6 +7,7 @@ use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Analytics\Entity\PageView;
+use Amora\Core\Module\Analytics\Entity\PageViewCount;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Module\Analytics\Model\EventProcessed;
@@ -57,7 +58,7 @@ class AnalyticsDataLayer
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         AggregateBy $aggregateBy,
-        EventType $eventType = EventType::Visitor,
+        ?EventType $eventType = null,
     ): array {
         $dateFormat = DateUtil::getMySqlAggregateFormat($aggregateBy);
 
@@ -77,8 +78,8 @@ class AnalyticsDataLayer
                 INNER JOIN " . self::EVENT_RAW_TABLE . " AS er ON er.id = ep.raw_id
             WHERE 1
                 AND er.created_at >= :createdAtFrom
-                AND er.created_at < :createdAtTo
-                " . $typeSql . " 
+                AND er.created_at <= :createdAtTo
+                " . $typeSql . "
             GROUP BY
                 date_format
             ORDER BY
@@ -94,6 +95,50 @@ class AnalyticsDataLayer
             $reportDataOutput[] = new PageView(
                 count: (int)$item['count'],
                 date: DateUtil::convertPartialDateFormatToFullDate($item['date_format'], $aggregateBy),
+            );
+        }
+
+        return $reportDataOutput;
+    }
+
+    public function countTopPages(
+        DateTimeImmutable $from,
+        DateTimeImmutable $to,
+        ?EventType $eventType = null,
+    ): array {
+        $params = [];
+
+        $typeSql = '';
+        if ($eventType) {
+            $typeSql = ' AND ep.type_id = :eventTypeId';
+            $params[':eventTypeId'] = $eventType->value;
+        }
+
+        $sql = "
+            SELECT
+                er.url,
+                COUNT(*) AS count
+            FROM " . self::EVENT_PROCESSED_TABLE . " AS ep
+                INNER JOIN " . self::EVENT_RAW_TABLE . " AS er ON er.id = ep.raw_id
+            WHERE 1
+                AND er.created_at >= :createdAtFrom
+                AND er.created_at <= :createdAtTo
+                " . $typeSql . "
+            GROUP BY
+                er.url
+            ORDER BY
+                count DESC;
+        ";
+        $params[':createdAtFrom'] = $from->format(DateUtil::MYSQL_DATETIME_FORMAT);
+        $params[':createdAtTo'] = $to->format(DateUtil::MYSQL_DATETIME_FORMAT);
+
+        $res = $this->db->fetchAll($sql, $params);
+
+        $reportDataOutput = [];
+        foreach ($res as $item) {
+            $reportDataOutput[] = new PageViewCount(
+                count: (int)$item['count'],
+                name: $item['url'],
             );
         }
 
