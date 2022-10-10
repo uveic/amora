@@ -1,10 +1,10 @@
 <?php
 
 use Amora\Core\Core;
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\User\Value\UserRole;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 
 $this->layout('base', ['responseData' => $responseData]);
 $timezones = DateTimeZone::listIdentifiers();

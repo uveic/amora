@@ -1,9 +1,9 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 
 $closeUrl = UrlBuilderUtil::buildBackofficeUsersUrl($responseData->siteLanguage);
 

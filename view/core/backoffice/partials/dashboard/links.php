@@ -1,10 +1,10 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAbstract $responseData */
 
 ?>
         <div class="content-flex-block width-45-percent">

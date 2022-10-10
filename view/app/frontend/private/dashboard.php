@@ -1,10 +1,10 @@
 <?php
 
 use Amora\App\Value\AppMenu;
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 
 $menuItems = AppMenu::getCustomer(
     language: $responseData->siteLanguage,

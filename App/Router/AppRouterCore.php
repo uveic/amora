@@ -4,7 +4,7 @@ namespace Amora\App\Router;
 
 use Amora\Core\Core;
 use Exception;
-use Amora\Core\Module\Stats\StatsCore;
+use Amora\Core\Module\Analytics\AnalyticsCore;
 use Amora\Core\Module\User\UserCore;
 
 class AppRouterCore extends Core

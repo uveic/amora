@@ -80,7 +80,7 @@ abstract class AbstractConfig {
         public readonly DatabaseBackup $databaseBackup,
 
         public readonly Database $coreDb,
-        public readonly Database $actionDb,
+        public readonly Database $analyticsDb,
         public readonly Database $mailerDb,
 
         public readonly Mailer $mailer,

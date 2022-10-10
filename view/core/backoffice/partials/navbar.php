@@ -2,9 +2,9 @@
 
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Entity\Util\MenuItem;
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 
 if (!isset($menuItems)) {
     echo 'You forgot to pass the variable $menuItems to the template builder. Aborting...';

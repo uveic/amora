@@ -1,8 +1,8 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAbstract $responseData */
 
 $this->layout('base', ['responseData' => $responseData])
 ?>

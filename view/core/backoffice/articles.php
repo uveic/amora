@@ -1,11 +1,11 @@
 <?php
 
 use Amora\Core\Module\Article\Model\Article;
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 
 $this->layout('base', ['responseData' => $responseData,]);
 

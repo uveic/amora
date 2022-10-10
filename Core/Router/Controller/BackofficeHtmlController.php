@@ -4,12 +4,12 @@ namespace Amora\Core\Router;
 
 use Amora\App\Value\Language;
 use Amora\Core\Core;
-use Amora\Core\Entity\Response\HtmlResponseData;
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
+use Amora\Core\Module\Analytics\Service\AnalyticsService;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
@@ -18,7 +18,9 @@ use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\AggregateBy;
 use Amora\Core\Value\QueryOrderDirection;
+use DateTimeImmutable;
 
 final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 {
@@ -26,6 +28,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         private readonly UserService $userService,
         private readonly ArticleService $articleService,
         private readonly MediaService $mediaService,
+        private readonly AnalyticsService $analyticsService,
     ) {
         parent::__construct();
     }
@@ -66,7 +69,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 
         return Response::createHtmlResponse(
             template: 'core/backoffice/dashboard',
-            responseData: new HtmlResponseData(
+            responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdministrator'),
             ),
@@ -86,7 +89,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $users = $this->userService->filterUsersBy();
         return Response::createHtmlResponse(
             template: 'core/backoffice/users',
-            responseData: new HtmlResponseDataAuthorised(
+            responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminUsers'),
                 users: $users,
@@ -107,7 +110,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 
         return Response::createHtmlResponse(
             template: 'core/backoffice/users-edit',
-            responseData: new HtmlResponseDataAuthorised(
+            responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
                     $localisationUtil->getValue('globalUser')
@@ -130,13 +133,13 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         if (empty($user)) {
             return Response::createHtmlResponse(
                 template: 'app/frontend/public/404',
-                responseData: new HtmlResponseDataAuthorised($request),
+                responseData: new HtmlResponseDataAdmin($request),
             );
         }
 
         return Response::createHtmlResponse(
             template: 'core/backoffice/users-edit',
-            responseData: new HtmlResponseDataAuthorised(
+            responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
                     $localisationUtil->getValue('globalUser'),
@@ -185,7 +188,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 
         return Response::createHtmlResponse(
             template: 'core/backoffice/articles',
-            responseData: new HtmlResponseDataAuthorised(
+            responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminArticles'),
                 articles: $articles,
@@ -227,7 +230,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
             template: 'core/backoffice/articles-edit',
-            responseData: new HtmlResponseDataAuthorised(
+            responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
                     $localisationUtil->getValue('globalArticle')
@@ -249,7 +252,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         if (empty($article)) {
             return Response::createHtmlResponse(
                 template: 'app/frontend/public/404',
-                responseData: new HtmlResponseDataAuthorised($request),
+                responseData: new HtmlResponseDataAdmin($request),
             );
         }
 
@@ -257,7 +260,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $articleSections = $this->articleService->getSectionsForArticleId($articleId);
         return Response::createHtmlResponse(
             template: 'core/backoffice/articles-edit',
-            responseData: new HtmlResponseDataAuthorised(
+            responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
                     $localisationUtil->getValue('globalArticle'),
@@ -287,7 +290,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
             template: 'core/backoffice/images',
-            responseData: new HtmlResponseDataAuthorised(
+            responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminImages'),
                 files: $images
@@ -315,10 +318,39 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
             template: 'core/backoffice/media',
-            responseData: new HtmlResponseDataAuthorised(
+            responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminMedia'),
                 files: $files
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/analytics
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getAnalyticsPage(Request $request): Response
+    {
+        $from = new DateTimeImmutable('-30 days');
+        $to = new DateTimeImmutable();
+
+        $report = $this->analyticsService->filterPageViewsBy(
+            from: $from,
+            to: $to,
+            aggregateBy: AggregateBy::Day,
+        );
+
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/analytics',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navAdminAnalytics'),
+                pageViews: $report->pageViews,
             ),
         );
     }

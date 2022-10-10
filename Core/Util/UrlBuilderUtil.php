@@ -17,6 +17,7 @@ class UrlBuilderUtil
 
     const BACKOFFICE_IMAGES = '/backoffice/images';
     const BACKOFFICE_MEDIA = '/backoffice/media';
+    const BACKOFFICE_ANALYTICS = '/backoffice/analytics';
 
     const BACKOFFICE_ARTICLES = '/backoffice/articles';
     const BACKOFFICE_ARTICLE = '/backoffice/articles/%d';
@@ -114,6 +115,11 @@ class UrlBuilderUtil
     public static function buildBackofficeUsersUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::BACKOFFICE_USERS;
+    }
+
+    public static function buildBackofficeAnalyticsUrl(Language $language): string
+    {
+        return self::buildBaseUrl($language) . self::BACKOFFICE_ANALYTICS;
     }
 
     public static function buildBackofficeUserUrl(Language $language, int $userId): string

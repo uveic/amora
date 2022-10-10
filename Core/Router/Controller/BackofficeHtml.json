@@ -208,6 +208,23 @@
           }
         }
       }
+    },
+    "/backoffice/analytics": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the analytics page",
+        "description": "",
+        "operationId": "getAnalyticsPage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

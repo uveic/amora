@@ -3,7 +3,7 @@
 namespace Amora\Core\Util\Helper;
 
 use Amora\Core\Core;
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;
 use Amora\Core\Module\Article\Value\ArticleSectionType;
@@ -27,10 +27,10 @@ final class ArticleEditHtmlGenerator
     }
 
     public static function getControlButtonsHtml(
-        HtmlResponseDataAuthorised $responseData,
-        int $sectionId,
-        bool $isFirst,
-        bool $isLast,
+        HtmlResponseDataAdmin $responseData,
+        int                   $sectionId,
+        bool                  $isFirst,
+        bool                  $isLast,
     ): string {
         $output = [];
         $output[] = '          <div class="pexego-section-controls null">';
@@ -43,8 +43,8 @@ final class ArticleEditHtmlGenerator
     }
 
     public static function generateSection(
-        HtmlResponseDataAuthorised $responseData,
-        ArticleSection $articleSection,
+        HtmlResponseDataAdmin $responseData,
+        ArticleSection        $articleSection,
     ): string {
         if ($articleSection->articleSectionType === ArticleSectionType::TextParagraph) {
             $class = self::getClassName($articleSection->articleSectionType);
@@ -73,7 +73,7 @@ final class ArticleEditHtmlGenerator
         return implode(PHP_EOL, $output) . PHP_EOL;
     }
 
-    public static function getArticleType(HtmlResponseDataAuthorised $responseData): ArticleType
+    public static function getArticleType(HtmlResponseDataAdmin $responseData): ArticleType
     {
         if ($responseData->article) {
             return $responseData->article->type;
@@ -95,7 +95,7 @@ final class ArticleEditHtmlGenerator
     }
 
     public static function generateArticleStatusDropdownSelectHtml(
-        HtmlResponseDataAuthorised $responseData,
+        HtmlResponseDataAdmin $responseData,
     ): string {
         $isPartialContent = ArticleType::isPartialContent(self::getArticleType($responseData));
         $articleStatus = $responseData->article?->status
@@ -132,7 +132,7 @@ final class ArticleEditHtmlGenerator
     }
 
     public static function generateArticleLanguageDropdownSelectHtml(
-        HtmlResponseDataAuthorised $responseData,
+        HtmlResponseDataAdmin $responseData,
     ): string {
         $articleLanguage = $responseData->article?->language ?? $responseData->siteLanguage;
         $displayClass = ArticleType::isPartialContent(self::getArticleType($responseData)) ? ' null' : '';
@@ -161,7 +161,7 @@ final class ArticleEditHtmlGenerator
     }
 
     public static function generateSettingsButtonHtml(
-        HtmlResponseDataAuthorised $responseData
+        HtmlResponseDataAdmin $responseData
     ): string {
         $articleType = self::getArticleType($responseData);
 
@@ -171,7 +171,7 @@ final class ArticleEditHtmlGenerator
     }
 
     public static function generateTitleHtml(
-        HtmlResponseDataAuthorised $responseData,
+        HtmlResponseDataAdmin $responseData,
     ): string {
         $article = $responseData->article;
         $articleType = $article ? $article->type : self::getArticleType($responseData);
@@ -196,8 +196,8 @@ final class ArticleEditHtmlGenerator
     }
 
     public static function generateArticleRowHtml(
-        HtmlResponseDataAuthorised $responseData,
-        Article $article,
+        HtmlResponseDataAdmin $responseData,
+        Article               $article,
     ): string {
         $statusClassname = match ($article->status) {
             ArticleStatus::Published => 'status-published',

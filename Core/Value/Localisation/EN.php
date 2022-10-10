@@ -14,6 +14,7 @@ return [
     'navDownloadAccountData' => 'Download Account Data',
     'navDeleteAccount' => 'Delete Account',
     'navAdminUsers' => 'Users',
+    'navAdminAnalytics' => 'Analytics',
     'navAdminContent' => 'Content',
     'navAdminImages' => 'Images',
     'navAdminMedia' => 'Files',

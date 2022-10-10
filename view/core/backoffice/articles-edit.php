@@ -1,12 +1,12 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlResponseDataAuthorised;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\ArticleSection;
 use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
 
-/** @var HtmlResponseDataAuthorised $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 $article = $responseData->article;
 $articleSections = $responseData->articleSections;
 

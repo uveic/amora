@@ -27,7 +27,7 @@ if (!Core::isRunningInCli()) {
 
 try {
     Core::getDbBackupApp(Core::getCoreDb(), Core::getConfig()->databaseBackup)->run();
-    Core::getDbBackupApp(Core::getStatsDb(), Core::getConfig()->databaseBackup)->run();
+    Core::getDbBackupApp(Core::getAnalyticsDb(), Core::getConfig()->databaseBackup)->run();
     Core::getDbBackupApp(Core::getMailerDb(), Core::getConfig()->databaseBackup)->run();
 } catch (Throwable $t) {
     $logger->logError(

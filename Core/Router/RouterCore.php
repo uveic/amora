@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Router;
 
+use Amora\Core\Module\Analytics\AnalyticsCore;
 use Exception;
 use Amora\Core\Core;
 use Amora\Core\Util\Logger;
@@ -72,7 +73,7 @@ class RouterCore extends Core
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseData.php';
-                require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseDataAuthorised.php';
+                require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseDataAdmin.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeHtmlController.php';
@@ -80,6 +81,7 @@ class RouterCore extends Core
                     userService:  UserCore::getUserService(),
                     articleService:  ArticleCore::getArticleService(),
                     mediaService:  ArticleCore::getMediaService(),
+                    analyticsService: AnalyticsCore::getAnalyticsService(),
                 );
             },
         );
