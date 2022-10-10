@@ -44,6 +44,7 @@ class AnalyticsCore extends Core
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Value/AggregateBy.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/ReportPageView.php';
+                require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/PageViewCount.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/PageView.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Value/EventType.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Model/EventRaw.php';

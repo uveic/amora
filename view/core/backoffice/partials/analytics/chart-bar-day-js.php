@@ -1,10 +1,10 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
+use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Module\Analytics\Entity\PageView;
 use Amora\Core\Util\DateUtil;
 
-/** @var HtmlResponseDataAdmin $responseData */
+/** @var HtmlResponseDataAnalytics $responseData */
 
 $xAxeTitle = '';
 $yAxeTitle = '';
@@ -15,7 +15,7 @@ $labels = [];
 $data = [];
 
 /** @var PageView $pageView */
-foreach ($responseData->pageViews as $pageView) {
+foreach ($responseData->reportPageViews->pageViews as $pageView) {
     $label = DateUtil::formatDate(
         date: $pageView->date,
         lang: $responseData->siteLanguage,
