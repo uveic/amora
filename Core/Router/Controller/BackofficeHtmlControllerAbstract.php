@@ -115,15 +115,15 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
      * Endpoint: /backoffice/analytics
      * Method: GET
      *
-     * @param string|null $from
-     * @param string|null $to
+     * @param string|null $period
+     * @param string|null $date
      * @param int|null $eventTypeId
      * @param Request $request
      * @return Response
      */
     abstract protected function getAnalyticsPage(
-        ?string $from,
-        ?string $to,
+        ?string $period,
+        ?string $date,
         ?int $eventTypeId,
         Request $request
     ): Response;
@@ -460,9 +460,9 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         $errors = [];
 
 
-        $from = $queryParams['from'] ?? null;
+        $period = $queryParams['period'] ?? null;
 
-        $to = $queryParams['to'] ?? null;
+        $date = $queryParams['date'] ?? null;
 
         if (isset($queryParams['eventTypeId']) && strlen($queryParams['eventTypeId']) > 0) {
             $eventTypeId = intval($queryParams['eventTypeId']);
@@ -481,8 +481,8 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
 
         try {
             return $this->getAnalyticsPage(
-                $from,
-                $to,
+                $period,
+                $date,
                 $eventTypeId,
                 $request
             );

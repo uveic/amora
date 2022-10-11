@@ -48,6 +48,7 @@ class AnalyticsCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/PageViewCount.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/PageView.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Value/CountDbColumn.php';
+                require_once self::getPathRoot() . '/Core/Module/Analytics/Value/Period.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Value/EventType.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Model/EventRaw.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Model/EventProcessed.php';

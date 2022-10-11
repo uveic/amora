@@ -3,6 +3,7 @@
 use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Module\Analytics\Entity\PageView;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Value\AggregateBy;
 
 /** @var HtmlResponseDataAnalytics $responseData */
 
@@ -14,15 +15,21 @@ $hoverBackgroundColour = '#01289e';
 $labels = [];
 $data = [];
 
+$report = $responseData->reportPageViews;
+
 /** @var PageView $pageView */
-foreach ($responseData->reportPageViews->pageViews as $pageView) {
-    $label = DateUtil::formatDate(
-        date: $pageView->date,
-        lang: $responseData->siteLanguage,
-        includeYear: false,
-        includeDayMonthSeparator: false,
-        shortMonthName: true,
-    );
+foreach ($report->pageViews as $pageView) {
+    $label = match($report->aggregateBy) {
+      AggregateBy::Hour => $pageView->date->format('H'),
+      default => DateUtil::formatDate(
+            date: $pageView->date,
+            lang: $responseData->siteLanguage,
+            includeYear: false,
+            includeDayMonthSeparator: false,
+            shortMonthName: true,
+        ),
+    };
+
     $labels[] = "'$label'";
     $data[] = $pageView->count;
 }

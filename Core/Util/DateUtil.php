@@ -352,7 +352,7 @@ final class DateUtil
     }
 
     public static function convertPartialDateFormatToFullDate(
-        string $partialDate,
+        string $partialDate, // Format: yyyy-mm-dd
         AggregateBy $aggregatedBy,
         bool $roundUp = true,
     ): DateTimeImmutable {
@@ -368,21 +368,23 @@ final class DateUtil
         }
 
         if ($aggregatedBy === AggregateBy::Month) {
-            $now = new DateTimeImmutable('now');
-            $month = substr($partialDate, -2);
-            $n = self::convertStringToDateTimeImmutable($now->format('Y-' . $month . '-d H:i:s'));
+            $year = substr($partialDate, 0, 4);
+            $month = substr($partialDate, 5, 2);
 
-            $fullDate = $partialDate .
-                ($roundUp
-                    ? '-' . $n->format('t') . ' 23:59:59'
-                    : '-01 00:00:00'
-                );
-            return self::convertStringToDateTimeImmutable($fullDate);
+            if (!$roundUp) {
+                return self::convertStringToDateTimeImmutable($year . '-' . $month . '-01 00:00:00');
+            }
+
+            $d = self::convertStringToDateTimeImmutable($year . '-' . $month . '-01 00:00:00');
+            return self::convertStringToDateTimeImmutable(
+                $year . '-' . $month . '-' . $d->format('t') . ' 23:59:59'
+            );
         }
 
         if ($aggregatedBy === AggregateBy::Year) {
+            $year = substr($partialDate, 0, 4);
             return self::convertStringToDateTimeImmutable(
-                $partialDate . ($roundUp ? '-12-31 23:59:59' : '-01-01 00:00:00')
+                $year . ($roundUp ? '-12-31 23:59:59' : '-01-01 00:00:00')
             );
         }
 

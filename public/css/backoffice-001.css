@@ -957,7 +957,7 @@ input.pexego-content-title {
 
 .analytics-block {
   width: 40%;
-  min-width: 400px;
+  min-width: 300px;
   flex-grow: 1;
   background-color: var(--light-bg-color);
   border: 1px solid var(--light-bg-color-3);

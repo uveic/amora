@@ -335,40 +335,31 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      * Endpoint: /backoffice/analytics
      * Method: GET
      *
-     * @param string|null $from
-     * @param string|null $to
+     * @param string|null $period
+     * @param string|null $date
      * @param int|null $eventTypeId
      * @param Request $request
      * @return Response
      */
     protected function getAnalyticsPage(
-        ?string $from,
-        ?string $to,
+        ?string $period,
+        ?string $date,
         ?int $eventTypeId,
         Request $request,
     ): Response {
-        $from = $from
-            ? DateUtil::convertPartialDateFormatToFullDate(
-                partialDate: $from,
-                aggregatedBy: AggregateBy::Day,
-                roundUp: false,
-            )
-            : new DateTimeImmutable('-30 days');
-        $to = $to
-            ? DateUtil::convertPartialDateFormatToFullDate(
-                partialDate: $to,
-                aggregatedBy: AggregateBy::Day,
-            )
-            : new DateTimeImmutable();
+        $period = $period && Period::tryFrom($period) ? Period::from($period) : Period::Last30Days;
+        $from = Period::getFrom($period, $date);
+        $to = Period::getTo($period, $from);
 
         $eventType = $eventTypeId && EventType::tryFrom($eventTypeId)
             ? EventType::from($eventTypeId)
             : EventType::Visitor;
 
+        $aggregateBy = Period::getAggregateBy($period);
         $report = $this->analyticsService->filterPageViewsBy(
             from: $from,
             to: $to,
-            aggregateBy: AggregateBy::Day,
+            aggregateBy: $aggregateBy,
             eventType: $eventType,
         );
 

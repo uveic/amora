@@ -217,14 +217,14 @@
         "operationId": "getAnalyticsPage",
         "parameters": [
           {
-            "name": "from",
+            "name": "period",
             "in": "query",
-            "description": "Date. Format: yyyy-mm-dd",
+            "description": "Period. Values: 30d, 7d, day, month, year",
             "required": false,
             "type": "string"
           },
           {
-            "name": "to",
+            "name": "date",
             "in": "query",
             "description": "Date. Format: yyyy-mm-dd",
             "required": false,
