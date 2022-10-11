@@ -8,6 +8,7 @@ use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Analytics\Entity\PageView;
 use Amora\Core\Module\Analytics\Entity\PageViewCount;
+use Amora\Core\Module\Analytics\Value\CountDbColumn;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Module\Analytics\Model\EventProcessed;
@@ -101,9 +102,11 @@ class AnalyticsDataLayer
         return $reportDataOutput;
     }
 
-    public function countTopPages(
+    public function countTop(
+        CountDbColumn $columnName,
         DateTimeImmutable $from,
         DateTimeImmutable $to,
+        int $limit,
         ?EventType $eventType = null,
     ): array {
         $params = [];
@@ -116,7 +119,7 @@ class AnalyticsDataLayer
 
         $sql = "
             SELECT
-                er.url,
+                " . $columnName->value . " AS name,
                 COUNT(*) AS count
             FROM " . self::EVENT_PROCESSED_TABLE . " AS ep
                 INNER JOIN " . self::EVENT_RAW_TABLE . " AS er ON er.id = ep.raw_id
@@ -125,9 +128,10 @@ class AnalyticsDataLayer
                 AND er.created_at <= :createdAtTo
                 " . $typeSql . "
             GROUP BY
-                er.url
+                " . $columnName->value . "
             ORDER BY
-                count DESC;
+                count DESC
+            LIMIT " . $limit . ";
         ";
         $params[':createdAtFrom'] = $from->format(DateUtil::MYSQL_DATETIME_FORMAT);
         $params[':createdAtTo'] = $to->format(DateUtil::MYSQL_DATETIME_FORMAT);
@@ -138,7 +142,7 @@ class AnalyticsDataLayer
         foreach ($res as $item) {
             $reportDataOutput[] = new PageViewCount(
                 count: (int)$item['count'],
-                name: $item['url'],
+                name: $item['name'] ?? '-',
             );
         }
 

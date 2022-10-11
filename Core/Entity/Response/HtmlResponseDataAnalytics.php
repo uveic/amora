@@ -13,7 +13,10 @@ class HtmlResponseDataAnalytics extends HtmlResponseDataAbstract
         ?string $pageDescription = null,
         ?Pagination $pagination = null,
         public readonly ?ReportPageView $reportPageViews = null,
-        public readonly array $topPages = [],
+        public readonly array $pages = [],
+        public readonly array $countries = [],
+        public readonly array $sources = [],
+        public readonly array $devices = [],
     ) {
         parent::__construct(
             request: $request,

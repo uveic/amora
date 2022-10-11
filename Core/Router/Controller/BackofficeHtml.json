@@ -215,7 +215,29 @@
         "summary": "Return the HTML to render the analytics page",
         "description": "",
         "operationId": "getAnalyticsPage",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Date. Format: yyyy-mm-dd",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Date. Format: yyyy-mm-dd",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "eventTypeId",
+            "in": "query",
+            "description": "Event type ID",
+            "required": false,
+            "type": "integer"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Page successfully generated",

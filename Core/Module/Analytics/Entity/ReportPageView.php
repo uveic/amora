@@ -12,5 +12,6 @@ class ReportPageView
         public readonly DateTimeImmutable $to,
         public readonly AggregateBy $aggregateBy,
         public readonly array $pageViews = [],
+        public readonly int $total = 0,
     ) {}
 }

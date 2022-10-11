@@ -5,6 +5,7 @@ namespace Amora\Core\Module\Analytics\Service;
 use Amora\App\Module\Analytics\Entity\ReportPageView;
 use Amora\Core\Module\Analytics\Entity\PageView;
 use Amora\Core\Module\Analytics\Model\EventProcessed;
+use Amora\Core\Module\Analytics\Value\CountDbColumn;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Value\AggregateBy;
@@ -72,14 +73,18 @@ class AnalyticsService
         );
     }
 
-    public function countTopPages(
+    public function countTop(
+        CountDbColumn $columnName,
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         ?EventType $eventType = null,
+        int $limit = 25,
     ): array {
-        return $this->analyticsDataLayer->countTopPages(
+        return $this->analyticsDataLayer->countTop(
+            columnName: $columnName,
             from: $from,
             to: $to,
+            limit: $limit,
             eventType: $eventType,
         );
     }
@@ -89,10 +94,12 @@ class AnalyticsService
     ): ReportPageView {
         $dateFormat = DateUtil::getPhpAggregateFormat($report->aggregateBy);
         $output = [];
+        $total = 0;
 
         /** @var PageView $pageView */
         foreach ($report->pageViews as $pageView) {
             $output[$pageView->date->format($dateFormat)] = $pageView;
+            $total += $pageView->count;
         }
 
         $interval = AggregateBy::getInterval($report->aggregateBy);
@@ -121,6 +128,7 @@ class AnalyticsService
             to: $report->to,
             aggregateBy: $report->aggregateBy,
             pageViews: $output,
+            total: $total,
         );
     }
 

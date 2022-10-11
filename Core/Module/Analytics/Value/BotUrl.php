@@ -216,6 +216,8 @@ class BotUrl
         'backoffice/manifest.json' => true,
         '.well-known/apple-app-site-association' => true,
         'wp-admin/widgets.php' => true,
+        'apple-touch-icon-152x152-precomposed.png' => true,
+        'apple-touch-icon-152x152.png' => true,
     ];
 
     public static function isBot(string $url): bool

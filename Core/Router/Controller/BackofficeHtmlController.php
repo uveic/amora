@@ -11,7 +11,9 @@ use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
+use Amora\Core\Module\Analytics\Value\CountDbColumn;
 use Amora\Core\Module\Analytics\Value\EventType;
+use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
@@ -19,6 +21,7 @@ use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Service\UserService;
+use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\AggregateBy;
 use Amora\Core\Value\QueryOrderDirection;
@@ -332,25 +335,69 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      * Endpoint: /backoffice/analytics
      * Method: GET
      *
+     * @param string|null $from
+     * @param string|null $to
+     * @param int|null $eventTypeId
      * @param Request $request
      * @return Response
      */
-    protected function getAnalyticsPage(Request $request): Response
-    {
-        $from = new DateTimeImmutable('-30 days');
-        $to = new DateTimeImmutable();
+    protected function getAnalyticsPage(
+        ?string $from,
+        ?string $to,
+        ?int $eventTypeId,
+        Request $request,
+    ): Response {
+        $from = $from
+            ? DateUtil::convertPartialDateFormatToFullDate(
+                partialDate: $from,
+                aggregatedBy: AggregateBy::Day,
+                roundUp: false,
+            )
+            : new DateTimeImmutable('-30 days');
+        $to = $to
+            ? DateUtil::convertPartialDateFormatToFullDate(
+                partialDate: $to,
+                aggregatedBy: AggregateBy::Day,
+            )
+            : new DateTimeImmutable();
+
+        $eventType = $eventTypeId && EventType::tryFrom($eventTypeId)
+            ? EventType::from($eventTypeId)
+            : EventType::Visitor;
 
         $report = $this->analyticsService->filterPageViewsBy(
             from: $from,
             to: $to,
             aggregateBy: AggregateBy::Day,
-            eventType: EventType::Visitor,
+            eventType: $eventType,
         );
 
-        $topPages = $this->analyticsService->countTopPages(
+        $pages = $this->analyticsService->countTop(
+            columnName: CountDbColumn::Page,
             from: $from,
             to: $to,
-            eventType: EventType::Visitor,
+            eventType: $eventType,
+        );
+
+        $countries = $this->analyticsService->countTop(
+            columnName: CountDbColumn::Country,
+            from: $from,
+            to: $to,
+            eventType: $eventType,
+        );
+
+        $sources = $this->analyticsService->countTop(
+            columnName: CountDbColumn::Referrer,
+            from: $from,
+            to: $to,
+            eventType: $eventType,
+        );
+
+        $devices = $this->analyticsService->countTop(
+            columnName: CountDbColumn::Device,
+            from: $from,
+            to: $to,
+            eventType: $eventType,
         );
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
@@ -360,7 +407,10 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminAnalytics'),
                 reportPageViews: $report,
-                topPages: $topPages,
+                pages: $pages,
+                countries: $countries,
+                sources: $sources,
+                devices: $devices,
             ),
         );
     }
