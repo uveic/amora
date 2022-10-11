@@ -94,20 +94,6 @@ foreach ($responseData->reportPageViews->pageViews as $pageView) {
       tooltip: {
         enabled: true,
         position: 'nearest',
-        callbacks: {
-          footer: (tooltipItems) => {
-            if (!tooltipItems.length) {
-              return;
-            }
-
-            const tp = tooltipItems[0];
-            if (!chartLineSharedResponseData[tp.dataIndex]) {
-              return;
-            }
-
-            return '<?=$responseData->getLocalValue('chartDeviceReading')?>: ' + chartLineSharedResponseData[tp.dataIndex];
-          },
-        },
       },
       legend: {
         display: false,
