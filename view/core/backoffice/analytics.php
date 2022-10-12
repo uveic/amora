@@ -1,9 +1,11 @@
 <?php
 
+use Amora\App\Module\Analytics\Entity\ReportPageView;
 use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Module\Analytics\Entity\PageViewCount;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Value\AggregateBy;
 use Amora\Core\Value\Country;
 
 /** @var HtmlResponseDataAnalytics $responseData */
@@ -15,15 +17,31 @@ $total = StringUtil::formatNumber(
     number: $responseData->reportPageViews->total,
 );
 
-$dateRange = DateUtil::formatDate(
-        date: $responseData->reportPageViews->from,
+/** @var ReportPageView $report */
+$report = $responseData->reportPageViews;
+
+$dateRange = $label = match($report->aggregateBy) {
+    AggregateBy::Hour => DateUtil::formatDate(
+        date: $report->from,
         lang: $responseData->siteLanguage,
-    )
-    . ' - '
-    . DateUtil::formatDate(
-        date: $responseData->reportPageViews->to,
+    ),
+    AggregateBy::Day => DateUtil::formatDate(
+        date: $report->from,
         lang: $responseData->siteLanguage,
-    );
+        includeDay: false,
+        includeWeekDay: false,
+    ),
+    AggregateBy::Month => $report->from->format('Y'),
+    default => DateUtil::formatDate(
+            date: $report->from,
+            lang: $responseData->siteLanguage,
+        )
+        . ' - '
+        . DateUtil::formatDate(
+            date: $report->to,
+            lang: $responseData->siteLanguage,
+        ),
+};
 
 ?>
   <div id="feedback" class="feedback null"></div>
