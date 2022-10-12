@@ -22,7 +22,7 @@ $report = $responseData->reportPageViews;
 /** @var PageView $pageView */
 foreach ($report->pageViews as $pageView) {
     $label = match($report->aggregateBy) {
-        AggregateBy::Hour => $pageView->date->format('H'),
+        AggregateBy::Hour => $pageView->date->format('H') . ':00',
         AggregateBy::Month => DateUtil::getMonthName(
             month: $pageView->date->format('n'),
             lang: $responseData->siteLanguage,
@@ -31,7 +31,6 @@ foreach ($report->pageViews as $pageView) {
             date: $pageView->date,
             lang: $responseData->siteLanguage,
             includeYear: false,
-            includeWeekDay: false,
             includeDayMonthSeparator: false,
             shortMonthName: true,
         ),

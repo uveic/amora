@@ -347,7 +347,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         ?int $eventTypeId,
         Request $request,
     ): Response {
-        $period = $period && Period::tryFrom($period) ? Period::from($period) : Period::Last30Days;
+        $period = $period && Period::tryFrom($period) ? Period::from($period) : Period::Month;
         if (!$date || !DateUtil::isValidDateISO8601($date . 'T00:00:00Z')) {
             $now = new DateTimeImmutable();
             $date = $now->format('Y-m-d');
