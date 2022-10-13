@@ -17,6 +17,8 @@ class HtmlResponseDataAnalytics extends HtmlResponseDataAbstract
         public readonly array $countries = [],
         public readonly array $sources = [],
         public readonly array $devices = [],
+        public readonly array $browsers = [],
+        public readonly array $languages = [],
     ) {
         parent::__construct(
             request: $request,

@@ -153,7 +153,11 @@ class AnalyticsProcessorApp extends App
 
             $dash = strpos($lang, '-');
             $lang = $dash !== false ? substr($lang, 0, $dash) : $lang;
-            return strtoupper($lang);
+
+            $dot = strpos($lang, '.');
+            $lang = $dot !== false ? substr($lang, 0, $dot) : $lang;
+
+            return strtoupper(substr($lang, 0, 3));
         }
 
         return null;

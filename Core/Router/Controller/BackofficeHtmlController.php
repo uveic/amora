@@ -347,7 +347,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         ?int $eventTypeId,
         Request $request,
     ): Response {
-        $period = $period && Period::tryFrom($period) ? Period::from($period) : Period::Month;
+        $period = $period && Period::tryFrom($period) ? Period::from($period) : Period::Day;
         if (!$date || !DateUtil::isValidDateISO8601($date . 'T00:00:00Z')) {
             $now = new DateTimeImmutable();
             $date = $now->format('Y-m-d');
@@ -360,11 +360,10 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             ? EventType::from($eventTypeId)
             : EventType::Visitor;
 
-        $aggregateBy = Period::getAggregateBy($period);
         $report = $this->analyticsService->filterPageViewsBy(
             from: $from,
             to: $to,
-            aggregateBy: $aggregateBy,
+            period: $period,
             eventType: $eventType,
         );
 
@@ -396,6 +395,20 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             eventType: $eventType,
         );
 
+        $browsers = $this->analyticsService->countTop(
+            columnName: CountDbColumn::Browser,
+            from: $from,
+            to: $to,
+            eventType: $eventType,
+        );
+
+        $languages = $this->analyticsService->countTop(
+            columnName: CountDbColumn::Language,
+            from: $from,
+            to: $to,
+            eventType: $eventType,
+        );
+
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
             template: 'core/backoffice/analytics',
@@ -407,6 +420,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 countries: $countries,
                 sources: $sources,
                 devices: $devices,
+                browsers: $browsers,
+                languages: $languages,
             ),
         );
     }

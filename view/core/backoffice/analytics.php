@@ -3,8 +3,10 @@
 use Amora\App\Module\Analytics\Entity\ReportPageView;
 use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Module\Analytics\Entity\PageViewCount;
+use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\AggregateBy;
 use Amora\Core\Value\Country;
 
@@ -19,29 +21,54 @@ $total = StringUtil::formatNumber(
 
 /** @var ReportPageView $report */
 $report = $responseData->reportPageViews;
+$now = new DateTimeImmutable();
 
-$dateRange = $label = match($report->aggregateBy) {
-    AggregateBy::Hour => DateUtil::formatDate(
+$dateRange = $label = match($report->period) {
+    Period::Day => DateUtil::formatDate(
         date: $report->from,
         lang: $responseData->siteLanguage,
+        includeYear: $now->format('Y') !== $report->from->format('Y'),
+        includeMonthYearSeparator: false,
+        includeDayMonthSeparator: false,
     ),
-    AggregateBy::Day => DateUtil::formatDate(
+    Period::Month => DateUtil::formatDate(
         date: $report->from,
         lang: $responseData->siteLanguage,
         includeDay: false,
         includeWeekDay: false,
+        includeMonthYearSeparator: false,
     ),
-    AggregateBy::Month => $report->from->format('Y'),
-    default => DateUtil::formatDate(
-            date: $report->from,
-            lang: $responseData->siteLanguage,
-        )
-        . ' - '
-        . DateUtil::formatDate(
-            date: $report->to,
-            lang: $responseData->siteLanguage,
-        ),
+    Period::Year => $report->from->format('Y'),
 };
+
+$isNextDisabled = match($report->period) {
+    Period::Day => $now->format('Y-m-d') === $report->from->format('Y-m-d'),
+    Period::Month => $now->format('Y-m') === $report->from->format('Y-m'),
+    Period::Year => $now->format('Y') === $report->from->format('Y'),
+};
+
+$todayUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
+    language: $responseData->siteLanguage,
+    period: Period::Day,
+);
+
+$monthUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
+    language: $responseData->siteLanguage,
+    period: Period::Month,
+);
+
+$monthString = DateUtil::formatDate(
+    date: $now,
+    lang: $responseData->siteLanguage,
+    includeDay: false,
+    includeWeekDay: false,
+    includeMonthYearSeparator: false,
+);
+
+$yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
+    language: $responseData->siteLanguage,
+    period: Period::Year,
+);
 
 ?>
   <div id="feedback" class="feedback null"></div>
@@ -49,25 +76,49 @@ $dateRange = $label = match($report->aggregateBy) {
   <main class="analytics-wrapper">
     <div style="width: 100%;">
       <div class="analytics-header">
-        <h1 class="total no-margin"><?=$total?></h1>
-        <h2 class="filter no-margin"><?=$dateRange?></h2>
+        <h2 class="no-margin"><?=$total?></h2>
+        <div class="analytics-controls-wrapper">
+          <div class="analytics-controls" data-period="<?=$report->period->value?>" data-date="<?=$report->from->format('Y-m-d')?>">
+            <a href="#" class="analytics-controls-previous">
+              <img src="/img/svg/caret-left.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalPrevious')?>">
+            </a>
+<?php if ($isNextDisabled) { ?>
+            <p class="analytics-controls-next no-margin">
+              <img src="/img/svg/caret-right.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalNext')?>">
+            </p>
+<?php } else { ?>
+            <a href="#" class="analytics-controls-next">
+              <img src="/img/svg/caret-right.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalNext')?>">
+            </a>
+<?php } ?>
+          </div>
+          <a href="#" class="analytics-controls-more">
+            <span><?=$dateRange?></span>
+            <img src="/img/svg/caret-down.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalNext')?>">
+          </a>
+          <div class="analytics-controls-more-options null">
+            <a href="<?=$todayUrl?>"><?=$responseData->getLocalValue('analyticsToday')?></a>
+            <a href="<?=$monthUrl?>"><?=$monthString?></a>
+            <a href="<?=$yearUrl?>"><?=$now->format('Y')?></a>
+          </div>
+        </div>
       </div>
 <?=$this->insert('partials/analytics/chart-bar-day', ['responseData' => $responseData]);?>
 <?=$this->insert('partials/analytics/chart-bar-day-js', ['responseData' => $responseData]);?>
     </div>
     <div class="analytics-block">
-      <h1>Sources</h1>
+      <h2><?=$responseData->getLocalValue('analyticsSource')?></h2>
 <?php
     /** @var PageViewCount $value */
     foreach ($responseData->sources as $value) { ?>
       <div class="item">
-        <span><?=$value->name?></span>
+        <span style="word-break: break-all;"><?=$value->name?></span>
         <span><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>
     <div class="analytics-block">
-      <h1>Pages</h1>
+      <h2><?=$responseData->getLocalValue('analyticsPage')?></h2>
 <?php
     /** @var PageViewCount $value */
     foreach ($responseData->pages as $value) {
@@ -83,10 +134,10 @@ $dateRange = $label = match($report->aggregateBy) {
 <?php } ?>
     </div>
     <div class="analytics-block">
-      <h1>Countries</h1>
+      <h2><?=$responseData->getLocalValue('analyticsBrowser')?></h2>
 <?php
     /** @var PageViewCount $value */
-    foreach ($responseData->countries as $value) {
+    foreach ($responseData->languages as $value) {
         $name = Country::getName($value->name);
 ?>
       <div class="item">
@@ -96,14 +147,37 @@ $dateRange = $label = match($report->aggregateBy) {
 <?php } ?>
     </div>
     <div class="analytics-block">
-      <h1>Devices</h1>
+      <h2><?=$responseData->getLocalValue('analyticsDevice')?></h2>
 <?php
     /** @var PageViewCount $value */
     foreach ($responseData->devices as $value) { ?>
       <div class="item">
-        <span><?=$value->name?></span>
+        <span style="word-break: break-all;"><?=$value->name?></span>
+        <span><?=$value->count?></span>
+      </div>
+<?php } ?>
+    </div>
+    <div class="analytics-block">
+      <h2><?=$responseData->getLocalValue('analyticsCountry')?></h2>
+<?php
+    /** @var PageViewCount $value */
+    foreach ($responseData->countries as $value) { ?>
+      <div class="item">
+        <span style="word-break: break-all;"><?=$value->name?></span>
+        <span><?=$value->count?></span>
+      </div>
+<?php } ?>
+    </div>
+    <div class="analytics-block">
+      <h2><?=$responseData->getLocalValue('analyticsLanguage')?></h2>
+<?php
+    /** @var PageViewCount $value */
+    foreach ($responseData->languages as $value) { ?>
+      <div class="item">
+        <span style="word-break: break-all;"><?=$value->name?></span>
         <span><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>
   </main>
+  <script type="module" src="/js/analytics-001.js"></script>

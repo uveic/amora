@@ -4,6 +4,7 @@ namespace Amora\Core\Util;
 
 use Amora\Core\Core;
 use Amora\App\Value\Language;
+use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Module\Article\Value\ArticleType;
 
 class UrlBuilderUtil
@@ -117,9 +118,17 @@ class UrlBuilderUtil
         return self::buildBaseUrl($language) . self::BACKOFFICE_USERS;
     }
 
-    public static function buildBackofficeAnalyticsUrl(Language $language): string
-    {
-        return self::buildBaseUrl($language) . self::BACKOFFICE_ANALYTICS;
+    public static function buildBackofficeAnalyticsUrl(
+        Language $language,
+        ?Period $period = null,
+        ?string $date = null,
+    ): string {
+        $periodStr = $period ? '?period=' . $period->value : '';
+        $dateStr = $date ? (($periodStr ? '&' : '?') . 'date=' . $date) : '';
+        return self::buildBaseUrl($language)
+            . self::BACKOFFICE_ANALYTICS
+            . $periodStr
+            . $dateStr;
     }
 
     public static function buildBackofficeUserUrl(Language $language, int $userId): string

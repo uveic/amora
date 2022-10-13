@@ -972,10 +972,6 @@ input.pexego-content-title {
   border-bottom: 1px dotted var(--light-bg-color-2);
 }
 
-.analytics-block .item span {
-  word-break: break-all;
-}
-
 .analytics-block h1 {
   margin: 0;
   padding: 0;
@@ -984,8 +980,64 @@ input.pexego-content-title {
 .analytics-header {
   display: flex;
   justify-content: space-between;
-  align-content: center;
-  gap: 1rem;
+  align-items: center;
+}
+
+.analytics-controls-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  position: relative;
+}
+
+.analytics-controls:active,
+.analytics-controls:focus,
+.analytics-controls:visited,
+.analytics-controls {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.analytics-controls a:active,
+.analytics-controls a:focus,
+.analytics-controls a:visited,
+.analytics-controls a {
+  padding: 0.25rem 0.5rem;
+}
+
+.analytics-controls-more:active,
+.analytics-controls-more:focus,
+.analytics-controls-more:visited,
+.analytics-controls-more {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
+  align-items: center;
+  color: var(--main-text-color);
+  padding: 0.25rem 0.5rem;
+}
+
+.analytics-controls-more-options {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: var(--main-bg-color);
+  border: 1px solid var(--light-bg-color-2);
+}
+
+.analytics-controls-more-options a {
+  color: var(--main-text-color);
+  border-bottom: 1px solid var(--light-bg-color-2);
+  padding: 0.5rem 1rem;
+}
+
+.analytics-controls-more-options a:hover,
+.analytics-controls a:hover,
+.analytics-controls-more:hover {
+  color: var(--main-text-color);
+  background-color: var(--light-bg-color-2);
 }
 /* Analytics style ends here */
 

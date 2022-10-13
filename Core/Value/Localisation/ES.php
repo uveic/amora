@@ -198,4 +198,12 @@ return [
         '<p>Usuario: %s</p>' .
         '<p><a href="%s">Crear contraseña</a></p>' .
         '<p>%s</p>',
+
+    'analyticsToday' => 'Hoy',
+    'analyticsSource' => 'Origen',
+    'analyticsPage' => 'Página',
+    'analyticsBrowser' => 'Navegador',
+    'analyticsDevice' => 'Dispositivo',
+    'analyticsCountry' => 'País',
+    'analyticsLanguage' => 'Idioma',
 ];

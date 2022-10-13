@@ -7,6 +7,7 @@ use Amora\Core\Module\Analytics\Entity\PageView;
 use Amora\Core\Module\Analytics\Model\EventProcessed;
 use Amora\Core\Module\Analytics\Value\CountDbColumn;
 use Amora\Core\Module\Analytics\Value\EventType;
+use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Value\AggregateBy;
 use DateTime;
@@ -53,9 +54,10 @@ class AnalyticsService
     public function filterPageViewsBy(
         DateTimeImmutable $from,
         DateTimeImmutable $to,
-        AggregateBy $aggregateBy,
+        Period $period,
         ?EventType $eventType = null,
     ): ReportPageView {
+        $aggregateBy = Period::getAggregateBy($period);
         $pageViews = $this->analyticsDataLayer->filterPageViewsBy(
             from: $from,
             to: $to,
@@ -68,6 +70,7 @@ class AnalyticsService
                 from: $from,
                 to: $to,
                 aggregateBy: $aggregateBy,
+                period: $period,
                 pageViews: $pageViews,
             ),
         );
@@ -127,6 +130,7 @@ class AnalyticsService
             from: $report->from,
             to: $report->to,
             aggregateBy: $report->aggregateBy,
+            period: $report->period,
             pageViews: $output,
             total: $total,
         );

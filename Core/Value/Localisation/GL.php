@@ -198,4 +198,12 @@ return [
         '<p>Usuario: %s</p>' .
         '<p><a href="%s">Crear contrasinal</a></p>' .
         '<p>%s</p>',
+
+    'analyticsToday' => 'Hoxe',
+    'analyticsSource' => 'Orixe',
+    'analyticsPage' => 'Páxina',
+    'analyticsBrowser' => 'Navegador',
+    'analyticsDevice' => 'Dispositivo',
+    'analyticsCountry' => 'País',
+    'analyticsLanguage' => 'Idioma',
 ];
