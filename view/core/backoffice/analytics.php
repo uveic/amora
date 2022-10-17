@@ -137,11 +137,10 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
       <h2><?=$responseData->getLocalValue('analyticsBrowser')?></h2>
 <?php
     /** @var PageViewCount $value */
-    foreach ($responseData->languages as $value) {
-        $name = Country::getName($value->name);
+    foreach ($responseData->browsers as $value) {
 ?>
       <div class="item">
-        <span><?=$name?></span>
+        <span><?=$value->name?></span>
         <span><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -161,9 +160,11 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
       <h2><?=$responseData->getLocalValue('analyticsCountry')?></h2>
 <?php
     /** @var PageViewCount $value */
-    foreach ($responseData->countries as $value) { ?>
+    foreach ($responseData->countries as $value) {
+        $name = Country::getName($value->name);
+?>
       <div class="item">
-        <span style="word-break: break-all;"><?=$value->name?></span>
+        <span style="word-break: break-all;"><?=$name?></span>
         <span><?=$value->count?></span>
       </div>
 <?php } ?>
