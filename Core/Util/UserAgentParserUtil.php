@@ -59,7 +59,7 @@ REGEX
 %(?P<browser>Camino|Kindle(\ Fire)?|Firefox|Iceweasel|IceCat|Safari|MSIE|Trident|AppleWebKit|
 TizenBrowser|(?:Headless)?Chrome|YaBrowser|Vivaldi|IEMobile|Opera|OPR|Silk|Midori|Edge|Edg|CriOS|UCBrowser|Puffin|OculusBrowser|SamsungBrowser|
 Baiduspider|Applebot|Googlebot|YandexBot|bingbot|Lynx|Version|Wget|curl|
-Valve\ Steam\ Tenfoot|
+Valve\ Steam\ Tenfoot|Thunderbird|
 NintendoBrowser|PLAYSTATION\ (\d|Vita)+)
 (?:\)?;?)
 (?:(?:[:/ ])(?P<version>[0-9A-Z.]+)|/(?:[A-Z]*))%ix
@@ -73,9 +73,11 @@ REGEX
                 $result)
            ) {
                 return new UserAgentInfo(
-                    $platform ?: null,
-                    $result[self::BROWSER],
-                    empty($result[self::BROWSER_VERSION]) ? null : $result[self::BROWSER_VERSION]
+                    platform: $platform ?: null,
+                    browser: $result[self::BROWSER],
+                    version: empty($result[self::BROWSER_VERSION])
+                        ? null
+                        : $result[self::BROWSER_VERSION],
                 );
             }
 
@@ -161,7 +163,7 @@ REGEX
         } elseif ($browser == 'AppleWebKit') {
             if ($platform == 'Android') {
                 $browser = 'Android Browser';
-            } elseif (strpos($platform, 'BB') === 0) {
+            } elseif (str_starts_with($platform, 'BB')) {
                 $browser  = 'BlackBerry Browser';
                 $platform = 'BlackBerry';
             } elseif ($platform == 'BlackBerry' || $platform == 'PlayBook') {
