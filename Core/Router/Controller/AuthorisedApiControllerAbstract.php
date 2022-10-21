@@ -217,7 +217,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
     private function validateAndCallGetFile(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['api', 'file', '{id}'],
             $pathParts
@@ -268,7 +268,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
     private function validateAndCallDestroyFile(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['api', 'file', '{id}'],
             $pathParts
@@ -319,7 +319,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
     private function validateAndCallGetNextFile(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['api', 'file', '{id}', 'next'],
             $pathParts
@@ -388,7 +388,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
     private function validateAndCallUpdateUserAccount(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['api', 'user', '{userId}'],
             $pathParts
@@ -462,7 +462,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
     private function validateAndCallSendVerificationEmail(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['api', 'user', '{userId}', 'verification-email'],
             $pathParts
@@ -518,8 +518,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
             return Response::createUnauthorizedJsonResponse();
         }
 
-        $path = $request->getPath();
-        $pathParts = explode('/', $path);
+        $pathParts = $request->pathWithoutLanguage;
         $method = $request->method;
 
         if ($method === 'GET' &&

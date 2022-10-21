@@ -25,22 +25,12 @@ class UserService
     const USER_PASSWORD_MIN_LENGTH = 10;
     const VERIFICATION_LINK_VALID_FOR_DAYS = 7;
 
-    private UserDataLayer $userDataLayer;
-    private Logger $logger;
-    private SessionService $sessionService;
-    private UserMailService $userMailService;
-
     public function __construct(
-        Logger $logger,
-        UserDataLayer $userDataLayer,
-        SessionService $sessionService,
-        UserMailService $userMailService
-    ) {
-        $this->userDataLayer = $userDataLayer;
-        $this->logger = $logger;
-        $this->sessionService = $sessionService;
-        $this->userMailService = $userMailService;
-    }
+        private readonly Logger $logger,
+        private readonly UserDataLayer $userDataLayer,
+        private readonly SessionService $sessionService,
+        private readonly UserMailService $userMailService,
+    ) {}
 
     public function storeUser(User $user, ?VerificationType $verificationType = null): ?User
     {
@@ -177,8 +167,8 @@ class UserService
 
             if (!$validPass) {
                 return new Feedback(
-                    false,
-                    $localisationUtil->getValue('authenticationPassNotValid')
+                    isSuccess: false,
+                    message: $localisationUtil->getValue('authenticationPassNotValid'),
                 );
             }
 
@@ -191,8 +181,8 @@ class UserService
 
             if ($newPassword !== $repeatPassword) {
                 return new Feedback(
-                    false,
-                    $localisationUtil->getValue('authenticationPasswordsDoNotMatch')
+                    isSuccess: false,
+                    message: $localisationUtil->getValue('authenticationPasswordsDoNotMatch'),
                 );
             }
         }
@@ -200,16 +190,16 @@ class UserService
         if ($email) {
             if (!StringUtil::isEmailAddressValid($email)) {
                 return new Feedback(
-                    false,
-                    $localisationUtil->getValue('authenticationEmailNotValid')
+                    isSuccess: false,
+                    message: $localisationUtil->getValue('authenticationEmailNotValid'),
                 );
             }
 
             $userForEmail = $this->getUserForEmail($email);
             if ($userForEmail && $userForEmail->id !== $existingUser->id) {
                 return new Feedback(
-                    false,
-                    $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail')
+                    isSuccess: false,
+                    message: $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
                 );
             }
         }
@@ -247,7 +237,10 @@ class UserService
         );
 
         if (empty($verification) || !$verification->isEnabled) {
-            return new Feedback(false, $localisationUtil->getValue('globalGenericError'));
+            return new Feedback(
+                isSuccess: false,
+                message: $localisationUtil->getValue('globalGenericError'),
+            );
         }
 
         $message = $verification->type === VerificationType::EmailAddress
@@ -257,33 +250,33 @@ class UserService
         $user = $this->getUserForId($verification->userId);
         if (empty($user)) {
             return new Feedback(
-                false,
-                $localisationUtil->getValue('globalGenericError')
+                isSuccess: false,
+                message: $localisationUtil->getValue('globalGenericError')
             );
-        }
-
-        if (!$verification->isEnabled) {
-            return new Feedback(false, $message);
         }
 
         $now = new DateTime();
         $dateDiff = $now->diff($verification->createdAt);
         if ($dateDiff->days > self::VERIFICATION_LINK_VALID_FOR_DAYS) {
-            return new Feedback(false, $message);
+            return new Feedback(
+                isSuccess: false,
+                message: $message,
+            );
         }
 
         $res = $this->userDataLayer->getDb()->withTransaction(
             function () use ($user, $verification) {
-                $resVer = $this->userDataLayer->markUserAsVerified($user, $verification);
-                return new Feedback($resVer);
+                return new Feedback(
+                    isSuccess: $this->userDataLayer->markUserAsVerified($user, $verification),
+                );
             }
         );
 
         return new Feedback(
-            $res->isSuccess,
-            $res->isSuccess
+            isSuccess: $res->isSuccess,
+            message: $res->isSuccess
                 ? $localisationUtil->getValue('authenticationEmailVerified')
-                : $localisationUtil->getValue('globalGenericError')
+                : $localisationUtil->getValue('globalGenericError'),
         );
     }
 

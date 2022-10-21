@@ -192,7 +192,7 @@ class Core
                 require_once self::$pathToRoot . '/Core/Router/RouterCore.php';
                 require_once self::$pathToRoot . '/Core/Router/Router.php';
                 return new Router(
-                    statsService: AnalyticsCore::getAnalyticsService(),
+                    analyticsService: AnalyticsCore::getAnalyticsService(),
                 );
             },
         );

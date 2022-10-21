@@ -26,8 +26,7 @@ abstract class AppAuthorisedApiControllerAbstract extends AbstractController
             return Response::createUnauthorizedJsonResponse();
         }
 
-        $path = $request->getPath();
-        $pathParts = explode('/', $path);
+        $pathParts = $request->pathWithoutLanguage;
         $method = $request->method;
 
         return null;

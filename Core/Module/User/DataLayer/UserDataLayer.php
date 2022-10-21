@@ -25,14 +25,10 @@ class UserDataLayer
     const USER_ROLE_TABLE = 'core_user_role';
     const USER_JOURNEY_STATUS_TABLE = 'core_user_journey_status';
 
-    private MySqlDb $db;
-    private Logger $logger;
-
-    public function __construct(MySqlDb $db, Logger $logger)
-    {
-        $this->db = $db;
-        $this->logger = $logger;
-    }
+    public function __construct(
+        private readonly MySqlDb $db,
+        private readonly Logger $logger,
+    ) {}
 
     private function getUsers(
         ?bool $includeDisabled = true,

@@ -18,8 +18,8 @@ use DateTimeImmutable;
 class UserMailService
 {
     public function __construct(
-        private UserDataLayer $userDataLayer,
-        private MailerService $mailerService,
+        private readonly UserDataLayer $userDataLayer,
+        private readonly MailerService $mailerService,
     ) {}
 
     private function sendEmailAndDisablePreviousVerifications(

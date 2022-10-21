@@ -108,7 +108,7 @@ abstract class AuthorisedHtmlControllerAbstract extends AbstractController
 
     private function validateAndCallGetUserAccountSettingsHtml(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['account', '{settingsPage}'],
             $pathParts
@@ -157,8 +157,7 @@ abstract class AuthorisedHtmlControllerAbstract extends AbstractController
             return Response::createUnauthorisedRedirectLoginResponse($request->siteLanguage);
         }
 
-        $path = $request->getPath();
-        $pathParts = explode('/', $path);
+        $pathParts = $request->pathWithoutLanguage;
         $method = $request->method;
 
         if ($method === 'GET' &&

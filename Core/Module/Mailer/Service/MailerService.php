@@ -9,7 +9,7 @@ use Amora\Core\Module\Mailer\Model\MailerItem;
 class MailerService
 {
     public function __construct(
-        private MailerDataLayer $mailerDataLayer,
+        private readonly MailerDataLayer $mailerDataLayer,
         private readonly MailerApp $mailerApp,
         private readonly bool $sendMailSynchronously,
     ) {}

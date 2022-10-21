@@ -14,12 +14,14 @@ final class Request
     public readonly ?Session $session;
     public readonly Language $siteLanguage;
     public readonly ?string $clientLanguage;
+    public readonly ?string $action;
+    public readonly array $pathWithoutLanguage;
 
     public function __construct(
         public readonly ?string $sourceIp,
         public readonly ?string $userAgent,
         public readonly string $method, // The HTTP request verb (GET, POST, PUT, etc.)
-        private string $path, // The request URI
+        public readonly string $path, // The request URI
         public readonly ?string $referrer,
         public readonly string $body,
         public readonly array $getParams,
@@ -30,19 +32,21 @@ final class Request
     ) {
         $this->session = $this->loadSession();
         $this->clientLanguage = $headers['HTTP_ACCEPT_LANGUAGE'] ?? null;
-        $this->siteLanguage = $this->calculateSiteLanguageAndUpdatePath();
-
-        if (empty($this->path)) {
-            $this->path = 'home';
-        }
+        $this->pathWithoutLanguage = $this->getArrayPathWithoutLanguage();
+        $this->siteLanguage = $this->calculateSiteLanguage();
     }
 
     ////////////////////////////////////////////////////////////////////////////
     // Getters / Setters
 
-    public function getPath(): string
+    public function getAction(): string
     {
-        return $this->path;
+        return $this->pathWithoutLanguage[0] ?? 'home';
+    }
+
+    public function getPathWithoutLanguage(): string
+    {
+        return implode('/', $this->pathWithoutLanguage);
     }
 
     public function getParsedHeaders(): array
@@ -92,23 +96,31 @@ final class Request
         return $bodyParams[$paramName] ?? null;
     }
 
-    private function calculateSiteLanguageAndUpdatePath(): Language
+    private function getArrayPathWithoutLanguage(): array
     {
         $arrayPath = explode('/', $this->path);
-        if (!empty($arrayPath[0]) && strlen($arrayPath[0]) == 2) {
-            if (Language::tryFrom(strtoupper($arrayPath[0]))) {
-                $siteLanguage = Language::from(strtoupper($arrayPath[0]));
+        if (!empty($arrayPath[0]) && strlen($arrayPath[0]) === 2) {
+            $uppercaseLanguage = strtoupper($arrayPath[0]);
+            if (Language::tryFrom($uppercaseLanguage)) {
                 unset($arrayPath[0]);
-                $this->path = implode('/', $arrayPath);
-                return $siteLanguage;
             }
         }
 
-        return $this->getSiteLanguageFromClientLanguage();
+        return empty($arrayPath)
+            ? ['home']
+            : array_values($arrayPath);
     }
 
-    private function getSiteLanguageFromClientLanguage(): Language
+    private function calculateSiteLanguage(): Language
     {
+        $arrayPath = explode('/', $this->path);
+        if (!empty($arrayPath[0]) && strlen($arrayPath[0]) === 2) {
+            $uppercaseLanguage = strtoupper($arrayPath[0]);
+            if (Language::tryFrom($uppercaseLanguage)) {
+                return Language::from(strtoupper($uppercaseLanguage));
+            }
+        }
+
         if (count(Core::getAllLanguages()) == 1) {
             return Core::getDefaultLanguage();
         }

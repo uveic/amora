@@ -21,8 +21,8 @@ class MediaDataLayer
     const MEDIA_STATUS_TABLE_NAME = 'core_media_status';
 
     public function __construct(
-        private MySqlDb $db,
-        private Logger $logger,
+        private readonly MySqlDb $db,
+        private readonly Logger $logger,
     ) {}
 
     public function getDb(): MySqlDb

@@ -90,7 +90,7 @@ function renderOperationValidator(jsonFileName, operation) {
   const pathPartsStr = pathParts(operation.path);
   const pathParams = hasPathParams
     ? `
-        $pathParts = explode(\'/\', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             [${pathPartsStr}],
             $pathParts
@@ -340,8 +340,7 @@ function renderAbstractRouter(jsonFileName, operations) {
             return ${response};
         }
 
-        $path = $request->getPath();
-        $pathParts = explode('/', $path);
+        $pathParts = $request->pathWithoutLanguage;
         $method = $request->method;`,
     operations.map(renderRouteMatcher),
     `

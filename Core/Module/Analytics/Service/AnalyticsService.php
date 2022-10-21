@@ -39,12 +39,12 @@ class AnalyticsService
                     userId: $request->session?->user->id,
                     sessionId: $request->session?->sessionId,
                     createdAt: new DateTimeImmutable(),
-                    url: substr($request->getPath(), 0, 2000),
+                    url: substr($request->path, 0, 2000),
                     referrer: $request->referrer ? substr($request->referrer, 0, 2000) : null,
                     ip: $request->sourceIp,
                     userAgent: $request->userAgent ? substr($request->userAgent, 0, 255) : null,
                     clientLanguage: $request->clientLanguage ? substr($request->clientLanguage, 0, 255) : null,
-                )
+                ),
             );
         } catch (Throwable $t) {
             $this->logger->logError('Error logging event: ' . $t->getMessage());
