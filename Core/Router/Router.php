@@ -52,7 +52,7 @@ class Router
     ];
 
     public function __construct(
-        private AnalyticsService $statsService,
+        private readonly AnalyticsService $statsService,
     ) {}
 
     public static function getReservedPaths(): array
@@ -144,42 +144,42 @@ class Router
             $res = AppRouterCore::getAppBackofficeHtmlController()->route($request)
                 ?? RouterCore::getBackofficeHtmlController()->route($request);
 
-            return $res ?: Response::createNotFoundResponse();
+            return $res ?: Response::createNotFoundResponse($request);
         }
 
         if (isset($backofficeApiControllerActions[$action])) {
             $res = AppRouterCore::getAppBackofficeApiController()->route($request)
                 ?? RouterCore::getBackofficeApiController()->route($request);
 
-            return $res ?: Response::createNotFoundResponse();
+            return $res ?: Response::createNotFoundResponse($request);
         }
 
         if (isset($authorisedHtmlControllerActions[$action])) {
             $res = AppRouterCore::getAppAuthorisedHtmlController()->route($request)
                 ?? RouterCore::getAuthorisedHtmlController()->route($request);
 
-            return $res ?: Response::createNotFoundResponse();
+            return $res ?: Response::createNotFoundResponse($request);
         }
 
         if (isset($authorisedApiControllerActions[$action])) {
             $res = AppRouterCore::getAppAuthorisedApiController()->route($request)
                 ?? RouterCore::getAuthorisedApiController()->route($request);
 
-            return $res ?: Response::createNotFoundResponse();
+            return $res ?: Response::createNotFoundResponse($request);
         }
 
         if (isset($publicApiControllerActions[$action])) {
             $res = AppRouterCore::getAppPublicApiController()->route($request)
                 ?? RouterCore::getPublicApiController()->route($request);
 
-            return $res ?: Response::createNotFoundResponse();
+            return $res ?: Response::createNotFoundResponse($request);
         }
 
         if (isset($publicHtmlControllerActions[$action])) {
             $res = AppRouterCore::getAppPublicHtmlController()->route($request)
                 ?? RouterCore::getPublicHtmlController()->route($request);
 
-            return $res ?: Response::createNotFoundResponse();
+            return $res ?: Response::createNotFoundResponse($request);
         }
 
         $res = AppRouter::route($request);
@@ -199,10 +199,7 @@ class Router
         );
 
         if (empty($article)) {
-            return Response::createHtmlResponse(
-                template: 'app/frontend/public/404',
-                responseData: new HtmlResponseData($request),
-            );
+            return Response::createNotFoundResponse($request);
         }
 
         if ($articlePath !== $article->path) {
@@ -212,10 +209,7 @@ class Router
         }
 
         if (!$this->displayArticle($article, $request->session?->isAdmin())) {
-            return Response::createHtmlResponse(
-                template: 'app/frontend/public/404',
-                responseData: new HtmlResponseData($request),
-            );
+            return Response::createNotFoundResponse($request);
         }
 
         $img = $article->mainImageId

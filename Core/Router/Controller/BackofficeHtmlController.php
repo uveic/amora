@@ -136,10 +136,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $user = $this->userService->getUserForId($userId, true);
         if (empty($user)) {
-            return Response::createHtmlResponse(
-                template: 'app/frontend/public/404',
-                responseData: new HtmlResponseDataAdmin($request),
-            );
+            return Response::createNotFoundResponse($request);
         }
 
         return Response::createHtmlResponse(
@@ -255,10 +252,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $article = $this->articleService->getArticleForId($articleId, true);
         if (empty($article)) {
-            return Response::createHtmlResponse(
-                template: 'app/frontend/public/404',
-                responseData: new HtmlResponseDataAdmin($request),
-            );
+            return Response::createNotFoundResponse($request);
         }
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);

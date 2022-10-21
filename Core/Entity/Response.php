@@ -3,6 +3,7 @@
 namespace Amora\Core\Entity;
 
 use Amora\App\Value\Language;
+use Amora\Core\Entity\Response\HtmlResponseData;
 use DOMDocument;
 use League\Plates\Engine;
 use SimpleXMLElement;
@@ -81,6 +82,7 @@ class Response
     public static function createHtmlResponse(
         string $template,
         HtmlResponseDataAbstract $responseData,
+        HttpStatusCode $httpStatusCode = HttpStatusCode::HTTP_200_OK,
     ): Response {
         $slashPos = strrpos($template, '/');
         if ($slashPos === false) {
@@ -100,7 +102,7 @@ class Response
         return new Response(
             output: $html,
             contentType: ContentType::HTML,
-            httpStatus: HttpStatusCode::HTTP_200_OK,
+            httpStatus: $httpStatusCode,
         );
     }
 
@@ -174,12 +176,12 @@ class Response
         );
     }
 
-    public static function createNotFoundResponse(): Response
+    public static function createNotFoundResponse(Request $request): Response
     {
-        return new Response(
-            output: 'Page not found :(',
-            contentType: ContentType::PLAIN,
-            httpStatus: HttpStatusCode::HTTP_404_NOT_FOUND,
+        return Response::createHtmlResponse(
+            template: 'app/frontend/public/404',
+            responseData: new HtmlResponseData($request),
+            httpStatusCode: HttpStatusCode::HTTP_404_NOT_FOUND,
         );
     }
 
