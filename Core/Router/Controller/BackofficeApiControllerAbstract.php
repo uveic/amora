@@ -338,7 +338,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
     private function validateAndCallUpdateUser(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['back', 'user', '{userId}'],
             $pathParts
@@ -418,7 +418,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
     private function validateAndCallDestroyUser(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['back', 'user', '{userId}'],
             $pathParts
@@ -582,7 +582,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
     private function validateAndCallUpdateArticle(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['back', 'article', '{articleId}'],
             $pathParts
@@ -718,7 +718,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
     private function validateAndCallDestroyArticle(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['back', 'article', '{articleId}'],
             $pathParts
@@ -769,7 +769,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
     private function validateAndCallGetPreviousPathsForArticle(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['back', 'article', '{articleId}', 'previous-path'],
             $pathParts
@@ -905,8 +905,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             return Response::createUnauthorizedJsonResponse();
         }
 
-        $path = $request->getPath();
-        $pathParts = explode('/', $path);
+        $pathParts = $request->pathWithoutLanguage;
         $method = $request->method;
 
         if ($method === 'POST' &&

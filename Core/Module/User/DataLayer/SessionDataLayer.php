@@ -18,8 +18,8 @@ class SessionDataLayer
     const SESSION_TABLE_NAME = 'core_session';
 
     public function __construct(
-        private MySqlDb $db,
-        private Logger $logger
+        private readonly MySqlDb $db,
+        private readonly Logger $logger
     ) {}
 
     public function getSessionForSessionId(string $sessionId): ?Session

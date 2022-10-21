@@ -34,9 +34,7 @@ abstract class HtmlResponseDataAbstract
         $siteImageUrl = Core::getConfig()->siteImageUrl;
 
         $this->baseUrl = empty($baseUrl) ? '' : $baseUrl;
-        $this->sitePath = !$request->getPath() || $request->getPath() === 'home'
-            ? '/'
-            : $request->getPath();
+        $this->sitePath = $this->request->path ?: '/';
         $this->siteUrl = trim($this->baseUrl, ' /') . '/' . ltrim($this->sitePath, ' /');
         $this->siteLanguage = $request->siteLanguage;
         $this->siteName = $this->localisationUtil->getValue('siteName');

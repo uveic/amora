@@ -235,7 +235,7 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
 
     private function validateAndCallGetUserVerifiedHtml(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['user', 'verify', '{verificationIdentifier}'],
             $pathParts
@@ -279,7 +279,7 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
 
     private function validateAndCallGetPasswordChangeHtml(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['user', 'reset', '{verificationIdentifier}'],
             $pathParts
@@ -323,7 +323,7 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
 
     private function validateAndCallGetCreateUserPasswordHtml(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['user', 'create', '{verificationIdentifier}'],
             $pathParts
@@ -456,8 +456,7 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
             return Response::createUnauthorisedRedirectLoginResponse($request->siteLanguage);
         }
 
-        $path = $request->getPath();
-        $pathParts = explode('/', $path);
+        $pathParts = $request->pathWithoutLanguage;
         $method = $request->method;
 
         if ($method === 'GET' &&

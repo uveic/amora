@@ -52,7 +52,7 @@ class Router
     ];
 
     public function __construct(
-        private readonly AnalyticsService $statsService,
+        private readonly AnalyticsService $analyticsService,
     ) {}
 
     public static function getReservedPaths(): array
@@ -103,12 +103,8 @@ class Router
      */
     private function route(Request $request): Response
     {
-        $this->statsService->logEvent($request);
-
-        $path = $request->getPath();
-
-        $arrayPath = explode('/', $path);
-        $action = empty($arrayPath[0]) ? '' : $arrayPath[0];
+        $this->analyticsService->logEvent($request);
+        $action = $request->getAction();
 
         $publicHtmlControllerActions = array_merge(
             self::PUBLIC_HTML_CONTROLLER_ACTIONS,
@@ -187,7 +183,7 @@ class Router
             return $res;
         }
 
-        return $this->getArticlePage($request->getPath(), $request);
+        return $this->getArticlePage($request->getPathWithoutLanguage(), $request);
     }
 
     private function getArticlePage(string $articlePath, Request $request): Response

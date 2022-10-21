@@ -9,8 +9,8 @@ use Amora\Core\Module\Article\Model\Tag;
 class TagService
 {
     public function __construct(
-        private Logger $logger,
-        private TagDataLayer $tagDataLayer
+        private readonly Logger $logger,
+        private readonly TagDataLayer $tagDataLayer
     ) {}
 
     public function getTagForId(int $id): ?Tag

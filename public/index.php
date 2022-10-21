@@ -17,7 +17,6 @@ require_once Core::getPathRoot() . '/vendor/autoload.php';
 
 $body = file_get_contents('php://input');
 $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), " /");
-$path = empty($path) ? 'home' : $path;
 
 $request = new Request(
     sourceIp: NetworkUtil::determineClientIp(),

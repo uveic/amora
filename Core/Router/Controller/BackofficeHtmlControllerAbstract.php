@@ -242,7 +242,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
 
     private function validateAndCallGetEditUserPage(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['backoffice', 'users', '{userId}'],
             $pathParts
@@ -349,7 +349,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
 
     private function validateAndCallGetEditArticlePage(Request $request): Response
     {
-        $pathParts = explode('/', $request->getPath());
+        $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
             ['backoffice', 'articles', '{articleId}'],
             $pathParts
@@ -503,8 +503,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             return Response::createUnauthorisedRedirectLoginResponse($request->siteLanguage);
         }
 
-        $path = $request->getPath();
-        $pathParts = explode('/', $path);
+        $pathParts = $request->pathWithoutLanguage;
         $method = $request->method;
 
         if ($method === 'GET' &&

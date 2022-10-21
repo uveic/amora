@@ -14,7 +14,7 @@ class MailerDataLayer
     const MAILER_LOG_TABLE_NAME = 'mailer_log';
 
     public function __construct(
-        private MySqlDb $db,
+        private readonly MySqlDb $db,
     ) {}
 
     private function getMailerQueue(

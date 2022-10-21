@@ -16,7 +16,7 @@ use DateTimeZone;
 class XmlService
 {
     public function __construct(
-        private Logger $logger,
+        private readonly Logger $logger,
     ) {}
 
     public function buildSitemap(array $articles): string

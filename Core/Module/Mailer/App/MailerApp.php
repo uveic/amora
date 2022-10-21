@@ -19,9 +19,9 @@ class MailerApp extends App
 {
     public function __construct(
         Logger $logger,
-        private MailerDataLayer $dataLayer,
-        private ApiClientAbstract $apiClient,
-        private RequestBuilderAbstract $requestBuilder,
+        private readonly MailerDataLayer $dataLayer,
+        private readonly ApiClientAbstract $apiClient,
+        private readonly RequestBuilderAbstract $requestBuilder,
         bool $isPersistent = true,
     ) {
         parent::__construct(
@@ -67,7 +67,6 @@ class MailerApp extends App
             emailReceivers: $emailReceivers,
             subject: $item->subject,
             content: $item->contentHtml,
-            contentType: 'text/html',
             overwriteFromName: $item->senderName,
         );
         $this->logger->logDebug($contentData);

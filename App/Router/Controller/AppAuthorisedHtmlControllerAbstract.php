@@ -63,8 +63,7 @@ abstract class AppAuthorisedHtmlControllerAbstract extends AbstractController
             return Response::createUnauthorisedRedirectLoginResponse($request->siteLanguage);
         }
 
-        $path = $request->getPath();
-        $pathParts = explode('/', $path);
+        $pathParts = $request->pathWithoutLanguage;
         $method = $request->method;
 
         if ($method === 'GET' &&
