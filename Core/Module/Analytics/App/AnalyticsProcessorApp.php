@@ -122,12 +122,12 @@ class AnalyticsProcessorApp extends App
             return EventType::User;
         }
 
-        if ($userAgentInfo->browser && BotUserAgent::isBot($userAgentInfo->browser)) {
-            return EventType::Crawler;
-        }
-
         if ($event->url && BotUrl::isBot($event->url)) {
             return EventType::Bot;
+        }
+
+        if ($userAgentInfo->browser && BotUserAgent::isBot($userAgentInfo->browser)) {
+            return EventType::Crawler;
         }
 
         if (empty($event->clientLanguage)) {
