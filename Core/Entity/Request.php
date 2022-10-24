@@ -14,7 +14,6 @@ final class Request
     public readonly ?Session $session;
     public readonly Language $siteLanguage;
     public readonly ?string $clientLanguage;
-    public readonly ?string $action;
     public readonly array $pathWithoutLanguage;
 
     public function __construct(
@@ -98,6 +97,10 @@ final class Request
 
     private function getArrayPathWithoutLanguage(): array
     {
+        if (empty($this->path)) {
+            return ['home'];
+        }
+
         $arrayPath = explode('/', $this->path);
         if (!empty($arrayPath[0]) && strlen($arrayPath[0]) === 2) {
             $uppercaseLanguage = strtoupper($arrayPath[0]);
