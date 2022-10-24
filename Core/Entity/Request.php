@@ -43,7 +43,7 @@ final class Request
         return $this->pathWithoutLanguage[0] ?? 'home';
     }
 
-    public function getPathWithoutLanguage(): string
+    public function getPathWithoutLanguageAsString(): string
     {
         return implode('/', $this->pathWithoutLanguage);
     }

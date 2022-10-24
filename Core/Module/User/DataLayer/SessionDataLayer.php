@@ -19,7 +19,7 @@ class SessionDataLayer
 
     public function __construct(
         private readonly MySqlDb $db,
-        private readonly Logger $logger
+        private readonly Logger $logger,
     ) {}
 
     public function getSessionForSessionId(string $sessionId): ?Session

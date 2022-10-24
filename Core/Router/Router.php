@@ -183,7 +183,7 @@ class Router
             return $res;
         }
 
-        return $this->getArticlePage($request->getPathWithoutLanguage(), $request);
+        return $this->getArticlePage($request->getPathWithoutLanguageAsString(), $request);
     }
 
     private function getArticlePage(string $articlePath, Request $request): Response
