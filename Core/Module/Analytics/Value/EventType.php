@@ -9,6 +9,7 @@ enum EventType: int
     case Bot = 3;
     case ProbablyBot = 4;
     case Api = 5;
+    case Crawler = 6;
 
     case Unknown = 100;
 
@@ -20,6 +21,7 @@ enum EventType: int
             self::Bot,
             self::ProbablyBot,
             self::Api,
+            self::Crawler,
             self::Unknown,
         ];
     }

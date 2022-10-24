@@ -3,6 +3,7 @@
 namespace Amora\App\Module\Analytics\App;
 
 use Amora\App\Router\AppRouter;
+use Amora\App\Value\Language;
 use Amora\Core\App\App;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\UserAgentInfo;
@@ -112,21 +113,20 @@ class AnalyticsProcessorApp extends App
     private function getEventType(EventRaw $event, UserAgentInfo $userAgentInfo): EventType
     {
         $apiActions = AppRouter::getApiActions();
-        $parts = explode('/', $event->url);
-        $action =$parts[0] ?? null;
+        $action = $this->getActionFromPath($event->url);
         if (isset($apiActions[$action])) {
             return EventType::Api;
         }
 
-        if (!empty($event->userId)) {
+        if ($event->userId) {
             return EventType::User;
         }
 
         if ($userAgentInfo->browser && BotUserAgent::isBot($userAgentInfo->browser)) {
-            return EventType::Bot;
+            return EventType::Crawler;
         }
 
-        if (BotUrl::isBot($event->url)) {
+        if ($event->url && BotUrl::isBot($event->url)) {
             return EventType::Bot;
         }
 
@@ -184,5 +184,22 @@ class AnalyticsProcessorApp extends App
         }
 
         return null;
+    }
+
+    private function getActionFromPath(?string $path): ?string
+    {
+        if (empty($path)) {
+            return null;
+        }
+
+        $arrayPath = explode('/', $path);
+        if (!empty($arrayPath[0]) && strlen($arrayPath[0]) === 2) {
+            $uppercaseLanguage = strtoupper($arrayPath[0]);
+            if (Language::tryFrom($uppercaseLanguage)) {
+                unset($arrayPath[0]);
+            }
+        }
+
+        return array_values($arrayPath)[0] ?? null;
     }
 }

@@ -112,7 +112,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     /** @var PageViewCount $value */
     foreach ($responseData->sources as $value) { ?>
       <div class="item">
-        <span style="word-break: break-all;"><?=$value->name?></span>
+        <span style="word-break: break-all;"><?=$value->name ?: '-'?></span>
         <span><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -140,7 +140,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     foreach ($responseData->browsers as $value) {
 ?>
       <div class="item">
-        <span><?=$value->name?></span>
+        <span><?=$value->name ?: '-'?></span>
         <span><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -151,7 +151,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     /** @var PageViewCount $value */
     foreach ($responseData->devices as $value) { ?>
       <div class="item">
-        <span style="word-break: break-all;"><?=$value->name?></span>
+        <span><?=$value->name ?: '-'?></span>
         <span><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -161,10 +161,10 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
 <?php
     /** @var PageViewCount $value */
     foreach ($responseData->countries as $value) {
-        $name = Country::getName($value->name);
+        $name = Country::getName($value->name) ?: '-';
 ?>
       <div class="item">
-        <span style="word-break: break-all;"><?=$name?></span>
+        <span><?=$name?></span>
         <span><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -175,7 +175,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     /** @var PageViewCount $value */
     foreach ($responseData->languages as $value) { ?>
       <div class="item">
-        <span style="word-break: break-all;"><?=$value->name?></span>
+        <span><?=$value->name ?: '-'?></span>
         <span><?=$value->count?></span>
       </div>
 <?php } ?>

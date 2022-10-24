@@ -142,7 +142,7 @@ class AnalyticsDataLayer
         foreach ($res as $item) {
             $reportDataOutput[] = new PageViewCount(
                 count: (int)$item['count'],
-                name: $item['name'] ?? '-',
+                name: $item['name'] ?? '',
             );
         }
 
