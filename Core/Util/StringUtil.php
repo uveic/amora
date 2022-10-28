@@ -3,9 +3,12 @@
 namespace Amora\Core\Util;
 
 use Amora\App\Value\Language;
+use voku\helper\AntiXSS;
 
 final class StringUtil
 {
+    private static ?AntiXSS $antiXss = null;
+
     public static function cleanString(
         string $text,
         string $charsToBeRemoved = '',
@@ -48,12 +51,26 @@ final class StringUtil
         return trim($text, ' ' . $replaceWith);
     }
 
-    public static function cleanPostCode(string $postCode): string
+    public static function sanitizeText(?string $text): ?string
     {
-        $postCode = strtoupper(trim($postCode));
-        $postCode = trim(preg_replace('/[^A-Z0-9\s]+/', ' ', $postCode));
-        $postCode = preg_replace('/\s+/', ' ', $postCode);
-        return $postCode;
+        if (empty($text)) {
+            return $text;
+        }
+
+        return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    }
+
+    public static function sanitizeHtml(?string $html): ?string
+    {
+        if (empty($html)) {
+            return $html;
+        }
+
+        if (!self::$antiXss) {
+            self::$antiXss = new AntiXSS();
+        }
+
+        return self::$antiXss->xss_clean($html);
     }
 
     /**
@@ -65,14 +82,10 @@ final class StringUtil
      * @param int|bool|string $value
      * @return bool
      */
-    public static function isTrue($value): bool
+    public static function isTrue(mixed $value): bool
     {
         if (empty($value)) {
             return false;
-        }
-
-        if (is_bool($value)) {
-            return $value;
         }
 
         if (is_numeric($value)) {
@@ -164,7 +177,7 @@ final class StringUtil
             return [];
         }
 
-        $values = $commaSeparatedValues ? explode(',', $commaSeparatedValues) : [];
+        $values = explode(',', $commaSeparatedValues);
         return array_filter($values, function ($value) {
             return is_numeric($value);
         });

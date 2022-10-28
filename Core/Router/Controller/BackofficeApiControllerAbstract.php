@@ -49,8 +49,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param int|null $roleId
      * @param string|null $timezone
      * @param bool|null $isEnabled
-     * @param string|null $newPassword
-     * @param string|null $repeatPassword
      * @param Request $request
      * @return Response
      */
@@ -62,8 +60,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?int $roleId,
         ?string $timezone,
         ?bool $isEnabled,
-        ?string $newPassword,
-        ?string $repeatPassword,
         Request $request
     ): Response;
 
@@ -268,8 +264,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         $roleId = $bodyParams['roleId'] ?? null;
         $timezone = $bodyParams['timezone'] ?? null;
         $isEnabled = $bodyParams['isEnabled'] ?? null;
-        $newPassword = $bodyParams['newPassword'] ?? null;
-        $repeatPassword = $bodyParams['repeatPassword'] ?? null;
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -290,8 +284,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $roleId,
                 $timezone,
                 $isEnabled,
-                $newPassword,
-                $repeatPassword,
                 $request
             );
         } catch (Throwable $t) {

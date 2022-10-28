@@ -63,14 +63,6 @@
                 "isEnabled": {
                   "description": "Is the user enabled?",
                   "type": "boolean"
-                },
-                "newPassword": {
-                  "description": "New password",
-                  "type": "string"
-                },
-                "repeatPassword": {
-                  "description": "Repeat password",
-                  "type": "string"
                 }
               },
               "required": [

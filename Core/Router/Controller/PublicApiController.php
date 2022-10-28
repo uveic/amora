@@ -259,6 +259,10 @@ final class PublicApiController extends PublicApiControllerAbstract
                 );
             }
 
+            $email = StringUtil::sanitizeText($email);
+            $name = StringUtil::sanitizeText($name);
+            $timezone = StringUtil::sanitizeText($timezone);
+
             $email = StringUtil::normaliseEmail($email);
             if (!StringUtil::isEmailAddressValid($email)) {
                 return new PublicApiControllerUserRegistrationSuccessResponse(
@@ -454,6 +458,9 @@ final class PublicApiController extends PublicApiControllerAbstract
         if (!Language::tryFrom(strtoupper($languageIsoCode))) {
             return new PublicApiControllerRequestRegistrationInviteFailureResponse();
         }
+
+        $email = StringUtil::sanitizeText($email);
+        $email = StringUtil::normaliseEmail($email);
 
         $res = $this->userService->storeRegistrationInviteRequest(
             email: $email,
