@@ -74,8 +74,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int|null $roleId
      * @param string|null $timezone
      * @param bool|null $isEnabled
-     * @param string|null $newPassword
-     * @param string|null $repeatPassword
      * @param Request $request
      * @return Response
      */
@@ -87,10 +85,13 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?int $roleId,
         ?string $timezone,
         ?bool $isEnabled,
-        ?string $newPassword,
-        ?string $repeatPassword,
         Request $request
     ): Response {
+        $name = StringUtil::sanitizeText($name);
+        $email = StringUtil::sanitizeText($email);
+        $bio = StringUtil::sanitizeText($bio);
+        $timezone = StringUtil::sanitizeText($timezone);
+
         $now = new DateTimeImmutable();
         $email = StringUtil::normaliseEmail($email);
         $language = $languageIsoCode && Language::tryFrom(strtoupper($languageIsoCode))
@@ -168,6 +169,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     protected function getUsers(?string $q, Request $request): Response
     {
+        $q = StringUtil::sanitizeText($q);
+
         $users = $this->userService->filterUsersBy(
             searchText: $q,
             queryOptions: new QueryOptions(
@@ -233,6 +236,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             existingUser: $existingUser,
             name: $name,
             email: $email,
+            bio: $bio,
             languageIsoCode: $languageIsoCode,
             timezone: $timezone,
             currentPassword: $currentPassword,
@@ -340,9 +344,14 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
+        $title = StringUtil::sanitizeText($title);
+        $contentHtml = html_entity_decode($contentHtml);
+        $contentHtml = StringUtil::sanitizeHtml($contentHtml);
+        $path = StringUtil::sanitizeText($path);
+
         $now = new DateTimeImmutable();
         $articleLanguage = Language::from(strtoupper($articleLanguageIsoCode));
-        $path = $this->articleService->getAvailablePathForArticle(articleTitle: $title);
+        $path = $path ?: $this->articleService->getAvailablePathForArticle(articleTitle: $title);
         $status = ArticleStatus::from($statusId);
         $publishOn = $publishOn
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
@@ -359,7 +368,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 updatedAt: $now,
                 publishOn: $publishOn,
                 title: $title,
-                contentHtml: html_entity_decode($contentHtml),
+                contentHtml: $contentHtml,
                 mainImageId: $mainImageId,
                 mainImage: null,
                 path: $path,
@@ -459,6 +468,11 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
+        $title = StringUtil::sanitizeText($title);
+        $contentHtml = html_entity_decode($contentHtml);
+        $contentHtml = StringUtil::sanitizeHtml($contentHtml);
+        $path = StringUtil::sanitizeText($path);
+
         $path = $this->articleService->getAvailablePathForArticle($path, $title, $existingArticle);
         if ($path !== $existingArticle->path) {
             $this->articleService->storeArticlePath(
@@ -471,9 +485,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $contentHtml = html_entity_decode($contentHtml);
         $now = new DateTimeImmutable();
-
         $publishOnMySql = $publishOn
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
             : ($existingArticle->publishOn ?? $now);
@@ -595,6 +607,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     protected function storeTag(string $name, Request $request): Response
     {
+        $name = StringUtil::sanitizeText($name);
+
         $existingTag = $this->tagService->getTagForName($name);
         if ($existingTag) {
             return new BackofficeApiControllerStoreTagSuccessResponse(
@@ -625,6 +639,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     protected function getTags(?string $name, Request $request): Response
     {
+        $name = StringUtil::sanitizeText($name);
+
         $tags = $this->tagService->filterTagsBy();
         $output = [];
         /** @var Tag $tag */

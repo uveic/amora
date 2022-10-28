@@ -376,13 +376,20 @@ class UserService
         User $existingUser,
         ?string $name = null,
         ?string $email = null,
+        ?string $bio = null,
         ?string $languageIsoCode = null,
         ?string $timezone = null,
         ?string $currentPassword = null,
         ?string $newPassword = null,
         ?string $repeatPassword = null,
-        ?bool $isEnabled = null
+        ?bool $isEnabled = null,
     ): Feedback {
+        $name = StringUtil::sanitizeText($name);
+        $email = StringUtil::sanitizeText($email);
+        $bio = StringUtil::sanitizeText($bio);
+        $languageIsoCode = StringUtil::sanitizeText($languageIsoCode);
+        $timezone = StringUtil::sanitizeText($timezone);
+
         $validation = $this->validateUpdateUserEndpoint(
             existingUser: $existingUser,
             email: $email,
@@ -414,7 +421,7 @@ class UserService
                 passwordHash: $newPassword
                     ? StringUtil::hashPassword($newPassword)
                     : $existingUser->passwordHash,
-                bio: $existingUser->bio,
+                bio: $bio ?? $existingUser->bio,
                 isEnabled: $isEnabled ?? $existingUser->isEnabled,
                 verified: $existingUser->verified,
                 timezone: $timezone

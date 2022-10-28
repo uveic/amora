@@ -20,6 +20,7 @@
     "ext-gd": "*",
     "ext-exif": "*",
     "ext-curl": "*",
-    "ext-libxml": "*"
+    "ext-libxml": "*",
+    "voku/anti-xss": "^4.1"
   }
 }

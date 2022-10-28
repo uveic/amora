@@ -280,14 +280,26 @@ class ArticleService
         $newSections = [];
         foreach ($sections as $section) {
             $newSectionId = isset($section['id']) ? (int)$section['id'] : null;
+            $sectionType = isset($section['sectionTypeId'])
+                && ArticleSectionType::tryFrom($section['sectionTypeId'])
+                    ? ArticleSectionType::from($section['sectionTypeId'])
+                    : ArticleSectionType::TextParagraph;
+            $contentHtml = isset($section['contentHtml'])
+                ? html_entity_decode($section['contentHtml'])
+                : '';
+            $contentHtml = StringUtil::sanitizeHtml($contentHtml);
+            $mediaCaption = isset($section['imageCaption'])
+                ? StringUtil::sanitizeHtml($section['imageCaption'])
+                : null;
+
             $newSections[] = new ArticleSection(
                 id: $newSectionId,
                 articleId: $articleId,
-                articleSectionType: ArticleSectionType::from($section['sectionTypeId']),
-                contentHtml: html_entity_decode($section['contentHtml']),
+                articleSectionType: $sectionType,
+                contentHtml: $contentHtml,
                 order: isset($section['order']) ? (int)$section['order'] : null,
                 mediaId: isset($section['imageId']) ? (int)$section['imageId'] : null,
-                mediaCaption: $section['imageCaption'] ?? null,
+                mediaCaption: $mediaCaption,
                 createdAt: $newSectionId && isset($articleSectionsById[$newSectionId])
                     ? $articleSectionsById[$newSectionId]->updatedAt
                     : $now,
