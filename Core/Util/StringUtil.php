@@ -51,7 +51,7 @@ final class StringUtil
         return trim($text, ' ' . $replaceWith);
     }
 
-    public static function sanitizeText(?string $text): ?string
+    public static function sanitiseText(?string $text): ?string
     {
         if (empty($text)) {
             return $text;
@@ -60,7 +60,7 @@ final class StringUtil
         return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
     }
 
-    public static function sanitizeHtml(?string $html): ?string
+    public static function sanitiseHtml(?string $html): ?string
     {
         if (empty($html)) {
             return $html;

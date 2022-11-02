@@ -535,7 +535,7 @@
                         "type": "integer",
                         "description": "Image ID"
                       },
-                      "imageCaption": {
+                      "imageCaptionHtml": {
                         "type": "string",
                         "description": "Image caption"
                       }
@@ -745,7 +745,7 @@
                         "type": "integer",
                         "description": "Image ID"
                       },
-                      "imageCaption": {
+                      "imageCaptionHtml": {
                         "type": "string",
                         "description": "Image caption"
                       }

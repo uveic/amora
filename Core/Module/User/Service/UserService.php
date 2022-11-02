@@ -384,11 +384,11 @@ class UserService
         ?string $repeatPassword = null,
         ?bool $isEnabled = null,
     ): Feedback {
-        $name = StringUtil::sanitizeText($name);
-        $email = StringUtil::sanitizeText($email);
-        $bio = StringUtil::sanitizeText($bio);
-        $languageIsoCode = StringUtil::sanitizeText($languageIsoCode);
-        $timezone = StringUtil::sanitizeText($timezone);
+        $name = StringUtil::sanitiseText($name);
+        $email = StringUtil::sanitiseText($email);
+        $bio = StringUtil::sanitiseText($bio);
+        $languageIsoCode = StringUtil::sanitiseText($languageIsoCode);
+        $timezone = StringUtil::sanitiseText($timezone);
 
         $validation = $this->validateUpdateUserEndpoint(
             existingUser: $existingUser,
