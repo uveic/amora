@@ -6,7 +6,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 
 ?>
   <div class="image-modal modal-wrapper null">
-    <div class="modal-inner" style="background-color: transparent;">
+    <div class="modal-inner modal-transparent">
       <a href="#" class="modal-close-button null">
         <img src="/img/svg/x-white.svg" class="img-svg img-svg-30 no-margin" alt="<?=$responseData->getLocalValue('globalClose')?>">
       </a>
@@ -23,7 +23,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
         <div class="image-info">
           <div>
             <h2 class="m-t-0 m-r-2 image-title"></h2>
-            <p class="image-caption" style="word-wrap: anywhere;"></p>
+            <p class="image-caption"></p>
             <p class="image-meta"></p>
             <p class="image-path"></p>
             <div class="image-appears-on"></div>

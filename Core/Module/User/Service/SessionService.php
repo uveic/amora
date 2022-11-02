@@ -24,7 +24,7 @@ class SessionService
 
     public function generateSessionId(): string
     {
-        return  date('YmdHis') . StringUtil::getRandomString(16);
+        return  date('YmdHis') . StringUtil::generateRandomString(16);
     }
 
     private function generateNewValidUntil(?DateTimeImmutable $from = null): DateTimeImmutable

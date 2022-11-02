@@ -249,7 +249,7 @@ class MediaService
 
     private function generateFilename(string $extension): string
     {
-        return date('YmdHis') . StringUtil::getRandomString(16) . '.' . $extension;
+        return date('YmdHis') . StringUtil::generateRandomString(16) . '.' . $extension;
     }
 
     public function validateAndProcessRawFile(array $rawFiles): ?RawFile

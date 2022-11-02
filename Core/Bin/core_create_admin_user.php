@@ -70,7 +70,7 @@ if (empty($email) || !StringUtil::isEmailAddressValid($email)) {
 }
 
 if (empty($pass)) {
-    $pass = StringUtil::getRandomString(10);
+    $pass = StringUtil::generateRandomString(10);
 }
 
 $now = new DateTimeImmutable();

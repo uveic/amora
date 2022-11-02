@@ -28,7 +28,6 @@ if ($article) {
         . DateUtil::formatDate(
             date: $article->createdAt,
             lang: $responseData->siteLanguage,
-            includeWeekDay: true,
             includeTime: true,
         ) . ')'
         . ' '
@@ -64,7 +63,7 @@ if ($article) {
   <div>
     <div class="label"><?=$responseData->getLocalValue('formArticlePath')?>:</div>
     <div class="article-edit-path"><?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage) . '/'?>
-      <div class="article-path-value" style="min-width:80px;border-bottom:1px dotted;" contenteditable="true"><?=$this->e($article ? $article->path : ''); ?></div>
+      <div class="article-path-value" contenteditable="true"><?=$this->e($article ? $article->path : ''); ?></div>
     </div>
     <div class="label m-t-1"><?=$responseData->getLocalValue('formArticlePreviousPaths')?>:</div>
     <div class="article-edit-previous-path-container">
@@ -73,10 +72,10 @@ if ($article) {
   </div>
   <div>
     <label for="publishOn" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
-    <div class="control" style="display: flex;align-content: space-between;">
-      <input style="flex-grow:4;" class="input" id="publishOnDate" name="publishOnDate" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnDate?>" required>
-      <div style="padding: 0 0.5rem;"></div>
-      <input style="flex-grow:1;width:130px;min-width:100px;" class="input" id="publishOnTime" name="publishOnTime" type="time" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnTime?>" required>
+    <div class="control article-publish-on">
+      <input class="input flex-grow-4" id="publishOnDate" name="publishOnDate" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnDate?>" required>
+      <div></div>
+      <input class="input publish-on-time" id="publishOnTime" name="publishOnTime" type="time" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnTime?>" required>
     </div>
     <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
   </div>

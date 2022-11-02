@@ -105,6 +105,30 @@
         }
       }
     },
+    "/papi/csp": {
+      "post": {
+        "tags": [],
+        "summary": "Log",
+        "description": "",
+        "operationId": "logCspErrors",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Acknowledgment",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "description": "",
+                  "enum": [true]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/papi/email": {
       "get": {
         "tags": [],

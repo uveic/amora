@@ -6,6 +6,7 @@ use Amora\Core\Core;
 use Amora\Core\Entity\Request;
 use Amora\Core\Util\LocalisationUtil;
 use Amora\App\Value\Language;
+use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 
 abstract class HtmlResponseDataAbstract
@@ -19,6 +20,7 @@ abstract class HtmlResponseDataAbstract
     public ?string $siteImagePath;
     public readonly int $lastUpdatedTimestamp;
     public readonly string $pageTitleWithoutSiteName;
+    public readonly string $nonce;
 
     public function __construct(
         public readonly Request $request,
@@ -49,6 +51,8 @@ abstract class HtmlResponseDataAbstract
         $this->pageTitleWithoutSiteName = $pageTitle ?? '';
         $this->pageDescription = $pageDescription
             ?? $this->localisationUtil->getValue('siteDescription');
+
+        $this->nonce = StringUtil::generateNonce();
     }
 
     public function getPageTitle(): string

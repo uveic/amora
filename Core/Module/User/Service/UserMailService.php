@@ -307,7 +307,7 @@ class UserMailService
     private function getUniqueVerificationIdentifier(): string
     {
         do {
-            $verificationIdentifier = StringUtil::getRandomString(64);
+            $verificationIdentifier = StringUtil::generateRandomString(64);
             $verification = $this->userDataLayer->getUserVerification($verificationIdentifier);
         } while(!empty($verification));
 
