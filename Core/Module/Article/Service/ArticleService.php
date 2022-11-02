@@ -287,9 +287,9 @@ class ArticleService
             $contentHtml = isset($section['contentHtml'])
                 ? html_entity_decode($section['contentHtml'])
                 : '';
-            $contentHtml = StringUtil::sanitizeHtml($contentHtml);
-            $mediaCaption = isset($section['imageCaption'])
-                ? StringUtil::sanitizeHtml($section['imageCaption'])
+            $contentHtml = StringUtil::sanitiseHtml($contentHtml);
+            $mediaCaption = isset($section['imageCaptionHtml'])
+                ? StringUtil::sanitiseHtml($section['imageCaptionHtml'])
                 : null;
 
             $newSections[] = new ArticleSection(
