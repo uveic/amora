@@ -4,7 +4,6 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
-use Amora\Core\Util\StringUtil;
 
 /** @var HtmlResponseData $responseData */
 $article = $responseData->article;
@@ -31,7 +30,6 @@ $icon = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml(
             date: $article->publishOn ?? $article->updatedAt,
             lang: $responseData->siteLanguage,
             includeWeekDay: false,
-            includeTime: false,
         );
 
         echo '    <p class="article-blog-info">' . $publishedOnDate . '</p>' . PHP_EOL;
