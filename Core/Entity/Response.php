@@ -42,13 +42,13 @@ class Response
         protected array $headers = [],
         ?string $nonce = null,
     ) {
-        $nonce = $nonce ? ' nonce-' . $nonce : '';
+        $nonce = $nonce ? " 'nonce-" . $nonce . "'" : '';
         $this->headers = array_merge(
             [
                 $httpStatus->value,
                 "Content-Type: $contentType->value",
                 "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate, no-store",
-                "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; report-uri /papi/csp;",
+                "Content-Security-Policy: default-src 'self'; script-src 'self'$nonce; report-uri /papi/csp;",
             ],
             $headers
         );
