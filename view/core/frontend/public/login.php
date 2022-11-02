@@ -12,7 +12,7 @@ $siteLogo = $responseData->getSiteLogoUrl()
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
 <?=$this->insert('../../../app/frontend/public/partials/head', ['responseData' => $responseData])?>
-  <link href="/css/style-002.css" rel="stylesheet" type="text/css">
+  <link href="/css/style-003.css" rel="stylesheet" type="text/css">
   <link href="/css/app/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
