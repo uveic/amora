@@ -404,19 +404,22 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         );
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        $responseData = new HtmlResponseDataAnalytics(
+            request: $request,
+            pageTitle: $localisationUtil->getValue('navAdminAnalytics'),
+            reportPageViews: $report,
+            pages: $pages,
+            countries: $countries,
+            sources: $sources,
+            devices: $devices,
+            browsers: $browsers,
+            languages: $languages,
+        );
+
         return Response::createHtmlResponse(
             template: 'core/backoffice/analytics',
-            responseData: new HtmlResponseDataAnalytics(
-                request: $request,
-                pageTitle: $localisationUtil->getValue('navAdminAnalytics'),
-                reportPageViews: $report,
-                pages: $pages,
-                countries: $countries,
-                sources: $sources,
-                devices: $devices,
-                browsers: $browsers,
-                languages: $languages,
-            ),
+            responseData: $responseData,
+            nonce: $responseData->nonce,
         );
     }
 }

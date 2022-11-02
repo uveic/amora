@@ -111,7 +111,7 @@ final class StringUtil
         return $output;
     }
 
-    public static function getRandomString(int $length = 24): string
+    public static function generateRandomString(int $length = 24): string
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -125,6 +125,11 @@ final class StringUtil
             1,
             $length
         );
+    }
+
+    public static function generateNonce(): string
+    {
+        return base64_encode(self::generateRandomString());
     }
 
     public static function isEmailAddressValid(string $emailAddress): bool

@@ -466,7 +466,7 @@ class UserService
     private function getUniqueUserRegistrationRequestCode(): string
     {
         do {
-            $code = StringUtil::getRandomString(64);
+            $code = StringUtil::generateRandomString(64);
             $res = $this->userDataLayer->getUserRegistrationRequest($code);
         } while(!empty($res));
 

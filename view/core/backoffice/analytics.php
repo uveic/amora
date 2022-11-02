@@ -74,7 +74,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
   <div id="feedback" class="feedback null"></div>
   <h1 class="m-l-1 m-r-1"><?=$responseData->getLocalValue('navAdminAnalytics')?></h1>
   <main class="analytics-wrapper">
-    <div style="width: 100%;">
+    <div class="width-100">
       <div class="analytics-header">
         <h2 class="no-margin"><?=$total?></h2>
         <div class="analytics-controls-wrapper">
@@ -104,7 +104,6 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
         </div>
       </div>
 <?=$this->insert('partials/analytics/chart-bar-day', ['responseData' => $responseData]);?>
-<?=$this->insert('partials/analytics/chart-bar-day-js', ['responseData' => $responseData]);?>
     </div>
     <div class="analytics-block">
       <h2><?=$responseData->getLocalValue('analyticsSource')?></h2>
@@ -112,7 +111,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     /** @var PageViewCount $value */
     foreach ($responseData->sources as $value) { ?>
       <div class="item">
-        <span style="word-break: break-all;"><?=$value->name ?: '-'?></span>
+        <span class="break"><?=$value->name ?: '-'?></span>
         <span><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -181,4 +180,5 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
 <?php } ?>
     </div>
   </main>
+<?=$this->insert('partials/analytics/chart-bar-day-js', ['responseData' => $responseData]);?>
   <script type="module" src="/js/analytics-001.js"></script>

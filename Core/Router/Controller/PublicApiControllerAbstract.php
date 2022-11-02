@@ -16,6 +16,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
     {
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerPingSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerLogErrorSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerLogCspErrorsSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerTriggerEmailSenderJobSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerGetSessionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserLoginSuccessResponse.php';
@@ -66,6 +67,15 @@ abstract class PublicApiControllerAbstract extends AbstractController
         ?string $pageUrl,
         Request $request
     ): Response;
+
+    /**
+     * Endpoint: /papi/csp
+     * Method: POST
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function logCspErrors(Request $request): Response;
 
     /**
      * Endpoint: /papi/email
@@ -277,6 +287,34 @@ abstract class PublicApiControllerAbstract extends AbstractController
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in PublicApiControllerAbstract - Method: logError()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallLogCspErrors(Request $request): Response
+    {
+        $errors = [];
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->logCspErrors(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicApiControllerAbstract - Method: logCspErrors()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -877,6 +915,16 @@ abstract class PublicApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallLogError($request);
+        }
+
+        if ($method === 'POST' &&
+            $this->pathParamsMatcher(
+                ['papi', 'csp'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallLogCspErrors($request);
         }
 
         if ($method === 'GET' &&

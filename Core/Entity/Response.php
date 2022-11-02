@@ -39,13 +39,16 @@ class Response
         public readonly string $output,
         ContentType $contentType,
         HttpStatusCode $httpStatus,
-        protected array $headers = []
+        protected array $headers = [],
+        ?string $nonce = null,
     ) {
+        $nonce = $nonce ? ' nonce-' . $nonce : '';
         $this->headers = array_merge(
             [
                 $httpStatus->value,
                 "Content-Type: $contentType->value",
                 "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate, no-store",
+                "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; report-uri /papi/csp;",
             ],
             $headers
         );
@@ -83,6 +86,7 @@ class Response
         string $template,
         HtmlResponseDataAbstract $responseData,
         HttpStatusCode $httpStatusCode = HttpStatusCode::HTTP_200_OK,
+        ?string $nonce = null,
     ): Response {
         $slashPos = strrpos($template, '/');
         if ($slashPos === false) {
@@ -103,6 +107,7 @@ class Response
             output: $html,
             contentType: ContentType::HTML,
             httpStatus: $httpStatusCode,
+            nonce: $nonce,
         );
     }
 

@@ -180,18 +180,18 @@ final class ArticleEditHtmlGenerator
             : Language::getIconFlag($responseData->siteLanguage);
 
         $articleId = $article
-            ? '<span style="color: var(--light-color);font-size: 0.9rem;font-weight: normal;">#' . $article->id . '</span>'
+            ? '<span class="article-id">#' . $article->id . '</span>'
             : '';
 
         $verb = $article
             ? $responseData->getLocalValue('globalEdit')
             : $responseData->getLocalValue('globalNew');
 
-        return '<span style="display:flex;flex-flow:row wrap;gap:0.5rem;align-items:center;">'
+        return '<span class="article-edit-header">'
             . $articleId
-            . '<span style="padding: 0.1rem 0.4rem;">' . $verb . '</span>'
-            . '<span style="padding: 0.1rem 0.4rem;">' . $responseData->getLocalValue('articleType' . $articleType->name) . '</span>'
-            . '<span style="padding: 0.1rem 0.4rem;">' . $langIcon . '</span>'
+            . '<span>' . $verb . '</span>'
+            . '<span>' . $responseData->getLocalValue('articleType' . $articleType->name) . '</span>'
+            . '<span>' . $langIcon . '</span>'
             . '</span>';
     }
 
@@ -219,7 +219,7 @@ final class ArticleEditHtmlGenerator
 
         $output = [];
         $output[] = '            <div class="m-r-05">';
-        $output[] = '              <span class="light-text-color" style="font-size: 0.9rem;">#' . $article->id . '</span>';
+        $output[] = '              <span class="light-text-color font-0-9">#' . $article->id . '</span>';
         $output[] = '              ' . Language::getIconFlag($article->language, 'm-l-05 m-r-05');
         $output[] = '              ' . $articleTitle;
 

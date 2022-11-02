@@ -50,7 +50,7 @@ if ($article) {
             <img src="/img/loading.gif" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalSaving')?>">
             <span><?=$responseData->getLocalValue('globalSaving')?></span>
           </div>
-          <div class="control-bar-creation<?=$article ? '' : ' hidden'?>"><span style="text-align:right;"><?=$updatedAtContent?></span></div>
+          <div class="control-bar-creation<?=$article ? '' : ' hidden'?>"><span><?=$updatedAtContent?></span></div>
           <div class="links">
             <?=$settings?>
             <a href="<?=$closeUrl?>"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>

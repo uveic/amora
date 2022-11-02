@@ -15,7 +15,7 @@ $articleStatus = $article ? $article->status : ArticleStatus::Draft;
 $articleStatusName = $responseData->getLocalValue('articleStatus' . $articleStatus->name);
 $isPublished = $article && $articleStatus === ArticleStatus::Published;
 
-$random = StringUtil::getRandomString(5);
+$random = StringUtil::generateRandomString(5);
 
 $articleUrl = $article
     ? UrlBuilderUtil::buildPublicArticlePath(

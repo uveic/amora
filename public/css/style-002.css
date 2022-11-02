@@ -594,9 +594,12 @@ a.link-title:focus {
 .flex-grow-2 {flex-grow: 2 !important;}
 .flex-grow-3 {flex-grow: 3 !important;}
 .flex-grow-4 {flex-grow: 4 !important;}
+.align-flex-start {align-items: flex-start;}
+.justify-flex-end {justify-content: flex-end;}
 .bg-color-dark {background-color: var(--main-text-color);}
 .no-border {border: none !important;}
 .width-100 {width: 100% !important;}
+.font-0-9 {font-size: 0.9rem;}
 
 .null {display: none !important;}
 .hidden {visibility: hidden;}
@@ -790,6 +793,10 @@ svg,
   min-width: 200px;
   background-color: var(--main-bg-color);
   overflow: auto;
+}
+
+.modal-transparent {
+  background-color: transparent;
 }
 
 .modal-close-button {

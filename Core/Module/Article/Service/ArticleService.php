@@ -180,7 +180,7 @@ class ArticleService
         $path = $path ? strtolower(StringUtil::cleanString($path)) : null;
 
         if (!$path && !$articleTitle) {
-            $path = strtolower(StringUtil::getRandomString(32));
+            $path = strtolower(StringUtil::generateRandomString(32));
         } else if (!$path && $articleTitle) {
             $path = strtolower(StringUtil::cleanString($articleTitle));
         } else {

@@ -128,7 +128,7 @@ class MailerDataLayer
         ';
 
         do {
-            $lockId = StringUtil::getRandomString(64);
+            $lockId = StringUtil::generateRandomString(64);
             $params[':lock_id'] = $lockId;
             $res = $this->db->fetchAll($sql, $params);
         } while (!empty($res) && $count++ < 5);

@@ -13,6 +13,7 @@ use Amora\Core\Module\mailer\MailerCore;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\PublicApiControllerGetBlogPostsSuccessResponse;
+use Amora\Core\Router\Controller\Response\PublicApiControllerLogCspErrorsSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerTriggerEmailSenderJobSuccessResponse;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
@@ -109,6 +110,24 @@ final class PublicApiController extends PublicApiControllerAbstract
         }
 
         return new PublicApiControllerLogErrorSuccessResponse();
+    }
+
+    /**
+     * Endpoint: /papi/csp
+     * Method: POST
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function logCspErrors(Request $request): Response
+    {
+        try {
+            $this->logger->logError('CSP Errors Logger: ' . $request->body);
+        } catch (Throwable) {
+            // Ignore and move on
+        }
+
+        return new PublicApiControllerLogCspErrorsSuccessResponse();
     }
 
     /**

@@ -150,7 +150,7 @@ class ImageService
 
     private function getNewImageName(string $imageTypeExtension): string
     {
-        return date('YmdHis') . StringUtil::getRandomString(16) . '.' . $imageTypeExtension;
+        return date('YmdHis') . StringUtil::generateRandomString(16) . '.' . $imageTypeExtension;
     }
 
     private function getDefaultWidthSize(int $imageDefaultSize): int

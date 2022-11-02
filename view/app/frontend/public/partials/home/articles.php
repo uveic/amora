@@ -28,13 +28,15 @@ foreach ($responseData->homeArticles as $article) {
     $link = $article->title
         ? '<a class="link-title" href="' . $href . '">' . $article->title . '</a>'
         : '';
-    $imgStyle = $article->mainImage
-        ? 'style="background: url(\'' . $article->mainImage->fullUrlMedium . '\') center center / cover no-repeat;"'
-        : 'style="background: url(\'/img/roof.webp\') center center / cover no-repeat;"';
+    $mainImage = $article->mainImage
+        ? '<img src="' . $article->mainImage->fullUrlMedium . '" alt="' . $article->mainImage->caption . '">'
+        : '';
 ?>
       <div class="home-tag-item">
         <a href="<?=$href?>">
-          <div class="home-tag-img" <?=$imgStyle?>></div>
+          <div class="home-tag-img">
+            <?=$mainImage?>
+          </div>
         </a>
         <div class="home-tag-link">
           <?=$link?>

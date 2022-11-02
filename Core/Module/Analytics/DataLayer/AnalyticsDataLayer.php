@@ -275,7 +275,7 @@ class AnalyticsDataLayer
         ';
 
         do {
-            $lockId = StringUtil::getRandomString(64);
+            $lockId = StringUtil::generateRandomString(64);
             $params[':lockId'] = $lockId;
             $res = $this->db->fetchAll($sql, $params);
         } while (!empty($res) && $count++ < 5);

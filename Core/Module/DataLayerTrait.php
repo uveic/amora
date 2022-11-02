@@ -13,7 +13,7 @@ trait DataLayerTrait {
         string $dbColumnName,
         string $keyName = null
     ): string {
-        $keyName = $keyName ?? StringUtil::getRandomString(6) . 'Id';
+        $keyName = $keyName ?? StringUtil::generateRandomString(6) . 'Id';
 
         $allKeys = [];
         foreach (array_values($ids) as $key => $addressId) {

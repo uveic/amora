@@ -22,7 +22,7 @@ $count = 0;
         </div>
         <div id="upload-media-control">
           <input class="null" type="file" id="media" name="media" multiple="" accept="*">
-          <label for="media" class="input-file-label" style="background-color: var(--main-text-color);color: var(--main-bg-color);">
+          <label for="media" class="input-file-label button-dark">
             <img class="img-svg img-svg-25 m-r-05" width="20" height="20" src="/img/svg/files-white.svg" alt="<?=$responseData->getLocalValue('navAdminMedia')?>'">
             <span><?=$responseData->getLocalValue('globalUploadMedia')?></span>
           </label>
