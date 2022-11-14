@@ -57,6 +57,7 @@ abstract class AbstractConfig {
     public function __construct(
         public readonly string $appName,
         public readonly Env $env,
+        public readonly string $salt,
 
         public readonly bool $isLoggingEnabled,
         public readonly bool $isAnalyticsEnabled,
