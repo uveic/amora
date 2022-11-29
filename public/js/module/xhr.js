@@ -1,7 +1,7 @@
 import {global} from "./localisation-001.js";
 
 async function logError(errorMessage = null, endpoint = null, method = null, payload = null) {
-  if (typeof payload !== 'string') {
+  if (payload && typeof payload !== 'string') {
     payload = 'Not a string';
   }
 

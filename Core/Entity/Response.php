@@ -43,14 +43,24 @@ class Response
         ?string $nonce = null,
     ) {
         $nonce = $nonce ? " 'nonce-" . $nonce . "'" : '';
+
+        $insecureRequests = '';
+        if (Core::isRunningInLiveEnv()) {
+            $headers[] = 'Strict-Transport-Security: max-age=31536000';
+            $insecureRequests = ' upgrade-insecure-requests';
+        }
+
         $this->headers = array_merge(
             [
                 $httpStatus->value,
                 "Content-Type: $contentType->value",
                 "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate, no-store",
-                "Content-Security-Policy: default-src 'self'; script-src 'self'$nonce; report-uri /papi/csp;",
+                "Content-Security-Policy: default-src 'self'; script-src 'self'$nonce; report-uri /papi/csp;" . $insecureRequests,
+                "X-Content-Type-Options: nosniff",
+                "Referrer-Policy: strict-origin-when-cross-origin",
+                "X-Frame-Options: SAMEORIGIN",
             ],
-            $headers
+            $headers,
         );
     }
 
@@ -86,7 +96,6 @@ class Response
         string $template,
         HtmlResponseDataAbstract $responseData,
         HttpStatusCode $httpStatusCode = HttpStatusCode::HTTP_200_OK,
-        ?string $nonce = null,
     ): Response {
         $slashPos = strrpos($template, '/');
         if ($slashPos === false) {
@@ -107,7 +116,7 @@ class Response
             output: $html,
             contentType: ContentType::HTML,
             httpStatus: $httpStatusCode,
-            nonce: $nonce,
+            nonce: $responseData->nonce,
         );
     }
 
