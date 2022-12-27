@@ -1,11 +1,13 @@
 class Global {
+  DEFAULT_LANGUAGE_ISO_CODE = 'en';
+
   constructor() {
     this.locale = document.documentElement.lang
       ? document.documentElement.lang.toLowerCase().trim()
-      : 'en';
+      : this.DEFAULT_LANGUAGE_ISO_CODE;
 
     if (['en', 'es', 'gl'].indexOf(this.locale) < 0) {
-      this.locale = 'en';
+      this.locale = this.DEFAULT_LANGUAGE_ISO_CODE;
     }
   };
 

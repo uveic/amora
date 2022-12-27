@@ -29,13 +29,13 @@ class EventProcessed
             'raw_id' => $this->rawId,
             'type_id' => $this->type->value,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
-            'referrer' => $this->referrer,
+            'referrer' => $this->referrer ? substr($this->referrer, 0, 100) : null,
             'language_iso_code' => $this->languageIsoCode,
             'country_iso_code' => $this->countryIsoCode,
-            'city' => $this->city,
-            'user_agent_platform' => $this->platform,
-            'user_agent_browser' => $this->browser,
-            'user_agent_version' => $this->browserVersion,
+            'city' => $this->city ? substr($this->city, 0, 50) : null,
+            'user_agent_platform' => $this->platform ? substr($this->platform, 0, 50) : null,
+            'user_agent_browser' => $this->browser ? substr($this->browser, 0, 50) : null,
+            'user_agent_version' => $this->browserVersion ? substr($this->browserVersion, 0, 15) : null,
         ];
     }
 }

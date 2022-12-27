@@ -971,3 +971,5 @@ document.querySelectorAll('input[name="article-add-media-upload"]').forEach(im =
     }
   });
 });
+
+export {handleDropdownOptionClick};
