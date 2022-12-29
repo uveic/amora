@@ -3,9 +3,9 @@
   --primary-bg-color: #fcfcfc;
   --light-color: #6c6c6c;
   --link-color: #0432ff;
-  --light-bg-color: #f0f0f0;
-  --light-bg-color-2: #e8e8e8;
-  --light-bg-color-3: #a6a6a6;
+  --color-bg-light: #f0f0f0;
+  --color-bg-light-2: #e8e8e8;
+  --color-bg-light-3: #a6a6a6;
 
   --font-title: Avenir,Tahoma,Calibri,Verdana,sans-serif;
   --font-paragraph: Avenir,Tahoma,Calibri,Verdana,sans-serif;
@@ -99,7 +99,7 @@ img {
 }
 
 .pexego-section-paragraph-placeholder {
-  color: var(--light-bg-color-3);
+  color: var(--color-bg-light-3);
 }
 
 .pexego-actionbar {
@@ -110,8 +110,8 @@ img {
   position: absolute;
   left: 1rem;
   margin-right: 1rem;
-  background-color: var(--light-bg-color);
-  border: 1px solid var(--light-bg-color-2);
+  background-color: var(--color-bg-light);
+  border: 1px solid var(--color-bg-light-2);
 }
 
 .pexego-actionbar-button{
@@ -131,7 +131,7 @@ img {
 
 .pexego-actionbar-button:hover,
 .pexego-actionbar-button-selected {
-  background-color: var(--light-bg-color-2);
+  background-color: var(--color-bg-light-2);
 }
 
 .pexego-section {
@@ -167,7 +167,7 @@ img {
 }
 
 .pexego-section-button:hover {
-  background-color: var(--light-bg-color-2);
+  background-color: var(--color-bg-light-2);
 }
 
 .pexego-section-video {

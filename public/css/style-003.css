@@ -1,29 +1,25 @@
 :root {
-  --main-bg-color: #fcfcfc;
-  --main-text-color: #212529;
-  --main-text-color-hover: #1c1c1c;
-  --main-secondary-color: #01769D;
+  --color-bg-main: #fcfcfc;
+  --color-text-main: #212529;
+  --color-text-main-hover: #1c1c1c;
 
   --color-failure: #ff0000;
   --color-warning: #c6da28;
   --color-success: #2ed06e;
+  --color-success-light: #69d02e;
+  --color-success-highlight: #97e294;
 
-  --light-bg-color: #f4f4f4;
-  --light-bg-color-2: #e8e8e8;
-  --light-bg-color-3: #a6a6a6;
-  --light-text-color: #5d7079;
+  --color-bg-light: #f4f4f4;
+  --color-bg-light-2: #e8e8e8;
+  --color-bg-light-3: #a6a6a6;
+  --color-text-light: #5d7079;
 
-  --link-success-color: #fff;
-  --standard-color: #0432ff;
+  --color-link-success: #fff;
+  --color-link-standard: #0432ff;
 
-  --feedback-success-color: #2ed06e;
-  --feedback-success-light-color: #69d02e;
-  --feedback-failure-color: #ff0000;
-  --highlight-success-color: #97e294;
-
-  --input-text-color: #363636;
-  --input-bg-color: #fff;
-  --input-border-color: #dbdbdb;
+  --color-input-text: #363636;
+  --color-input-bg: #fff;
+  --color-input-border: #dbdbdb;
   --border-radius: 0;
   --input-height: 2.5em;
 
@@ -52,14 +48,14 @@ html {
 body {
   line-height: 1.4em;
   margin: 0 auto;
-  color: var(--main-text-color);
+  color: var(--color-text-main);
   width: 100%;
   min-width: 250px;
-  background-color: var(--main-bg-color);
+  background-color: var(--color-bg-main);
 }
 
 a, a:hover, a:visited, a:active {
-  color: var(--standard-color);
+  color: var(--color-link-standard);
   text-decoration: none;
 }
 
@@ -105,7 +101,7 @@ footer {
 
 blockquote,
 .quote {
-  border-left: 0.5rem solid var(--light-bg-color-2);
+  border-left: 0.5rem solid var(--color-bg-light-2);
   margin-left: 1.5rem;
 }
 
@@ -115,7 +111,7 @@ blockquote,
 
 .dropdown-menu-label {
   font-weight: normal;
-  color: var(--main-bg-color);
+  color: var(--color-bg-main);
   padding: 0.5rem 1rem;
   border: none;
   cursor: pointer;
@@ -126,8 +122,8 @@ blockquote,
 }
 
 .dropdown-menu-option {
-  background-color: var(--main-bg-color);
-  color: var(--main-text-color);
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
   text-decoration: none;
   padding: 0.6rem 1em;
   display: block;
@@ -157,7 +153,7 @@ blockquote,
 }
 
 .dropdown-menu ~ div > ul a {
-  color: var(--main-bg-color);
+  color: var(--color-bg-main);
 }
 
 .dropdown-menu ~ div > ul a:hover {
@@ -218,7 +214,7 @@ blockquote,
 
 .label,
 label {
-  color: var(--main-text-color);
+  color: var(--color-text-main);
   display: block;
   font-weight: 700;
   width: 100%;
@@ -235,7 +231,7 @@ label:not(:last-child) {
 }
 
 .help {
-  color: var(--light-text-color);
+  color: var(--color-text-light);
   font-size: .75rem;
   margin-top: .25rem;
   text-align: left;
@@ -261,14 +257,14 @@ label:not(:last-child) {
 
 input, textarea, select, button, .button {
   width: 100%;
-  border: 1px solid var(--input-border-color);
+  border: 1px solid var(--color-input-border);
   padding: calc(1rem - 1px) 1rem;
   font-family: var(--font-paragraph);
   font-size: 1rem;
   margin: 0 auto;
   border-radius: var(--border-radius);
-  color: var(--input-text-color);
-  background-color: var(--input-bg-color);
+  color: var(--color-input-text);
+  background-color: var(--color-input-bg);
   min-height: var(--input-height);
 }
 
@@ -316,23 +312,23 @@ button.is-link.is-light,
 }
 
 .is-success, .is-success:active, .is-success:visited, .is-success:hover, .is-success:focus {
-  background-color: var(--feedback-success-color);
-  color: var(--link-success-color);
-  border: 1px solid var(--feedback-success-color);
+  background-color: var(--color-success);
+  color: var(--color-link-success);
+  border: 1px solid var(--color-success);
 }
 
 .is-standard, .is-standard:active, .is-standard:visited, .is-standard:hover, .is-standard:focus {
-  background-color: var(--standard-color);
-  color: var(--link-success-color);
-  border: 1px solid var(--standard-color);
+  background-color: var(--color-link-standard);
+  color: var(--color-link-success);
+  border: 1px solid var(--color-link-standard);
 }
 
 .is-failure {
-  color: var(--feedback-failure-color);
+  color: var(--color-failure);
 }
 
 .is-highlighted {
-  color: var(--standard-color);
+  color: var(--color-link-standard);
 }
 
 .is-danger {
@@ -378,7 +374,7 @@ label:not(:last-child) {
 
 #register-terms {
   text-align: left;
-  color: var(--light-text-color);
+  color: var(--color-text-light);
   padding: 0.5rem 0;
 }
 
@@ -413,7 +409,7 @@ article > h1 {
   font-family: var(--font-h1-title);
   font-weight: bold;
   line-height: 2rem;
-  color: var(--main-text-color);
+  color: var(--color-text-main);
 }
 
 article > h2 {
@@ -433,7 +429,7 @@ article > p {
   padding: 0;
   margin: 0.25rem 1rem 1rem;
   font-size: 0.85rem;
-  color: var(--light-text-color);
+  color: var(--color-text-light);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -457,8 +453,8 @@ article > p {
   padding: 0.25rem 1rem;
   margin: 2rem 0;
   font-size: 0.9rem;
-  color: var(--light-text-color);
-  border-top: 1px dotted var(--light-bg-color-3);
+  color: var(--color-text-light);
+  border-top: 1px dotted var(--color-bg-light-3);
 }
 
 .article-blog-footer p {
@@ -478,7 +474,7 @@ article > img {
   padding: 0.1rem 1rem 0.25rem 1rem;
   font-size: 0.8rem;
   line-height: 1.1rem;
-  color: var(--light-text-color);
+  color: var(--color-text-light);
   outline: 0;
 }
 
@@ -512,7 +508,7 @@ a.link-title:hover,
 a.link-title:active,
 a.link-title:visited,
 a.link-title:focus {
-  color: var(--main-text-color);
+  color: var(--color-text-main);
 }
 
 .article-section-image-caption,
@@ -528,7 +524,7 @@ a.link-title:focus {
   position: fixed;
   top: 1rem;
   right: 1rem;
-  color: var(--link-success-color);
+  color: var(--color-link-success);
   padding: 7px 14px;
   margin-left: 1rem;
   border-radius: var(--border-radius);
@@ -536,21 +532,21 @@ a.link-title:focus {
 }
 
 .feedback-success {
-  background-color: var(--feedback-success-color) !important;
+  background-color: var(--color-success) !important;
 }
 
 .feedback-error {
-  background-color: var(--feedback-failure-color) !important;
+  background-color: var(--color-failure) !important;
 }
 
 #feedback-banner {
   width: 100%;
-  color: var(--light-bg-color);
+  color: var(--color-bg-light);
   padding: 1.5rem 2rem;
 }
 
 .highlight-effect {
-  background-color: var(--highlight-success-color) !important;
+  background-color: var(--color-success-highlight) !important;
 }
 /* Feedback style ends here */
 
@@ -588,7 +584,7 @@ a.link-title:focus {
 .p-t-0 {padding-top: 0 !important;}
 .p-b-6 {padding-bottom: 6rem !important;}
 .p-b-10 {padding-bottom: 10rem !important;}
-.light-text-color {color: var(--light-text-color);}
+.light-text-color {color: var(--color-text-light);}
 .no-background {background-color: transparent !important;}
 .flex-no-grow {flex-grow: 0 !important;}
 .flex-grow-2 {flex-grow: 2 !important;}
@@ -596,7 +592,7 @@ a.link-title:focus {
 .flex-grow-4 {flex-grow: 4 !important;}
 .align-flex-start {align-items: flex-start;}
 .justify-flex-end {justify-content: flex-end;}
-.bg-color-dark {background-color: var(--main-text-color);}
+.bg-color-dark {background-color: var(--color-text-main);}
 .no-border {border: none !important;}
 .width-100 {width: 100% !important;}
 .font-0-9 {font-size: 0.9rem;}
@@ -664,7 +660,7 @@ svg,
 }
 
 .enabled-icon-failure {
-  background-color: var(--feedback-failure-color);
+  background-color: var(--color-failure);
 }
 /* Classes for generic use ends here */
 
@@ -726,7 +722,7 @@ svg,
   padding: 0;
   margin: 0;
   font-size: 0.9rem;
-  color: var(--light-text-color);
+  color: var(--color-text-light);
 }
 
 .home-tag {
@@ -791,7 +787,7 @@ svg,
   min-height: 200px;
   max-width: 96%;
   min-width: 200px;
-  background-color: var(--main-bg-color);
+  background-color: var(--color-bg-main);
   overflow: auto;
 }
 
@@ -860,7 +856,7 @@ svg,
 
   .content-account-left li a.selected {
     font-weight: bold;
-    background-color: var(--light-bg-color);
+    background-color: var(--color-bg-light);
   }
 
   .content-account-left li svg {

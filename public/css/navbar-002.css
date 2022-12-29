@@ -1,5 +1,5 @@
 header {
-  background: var(--main-text-color);
+  background: var(--color-text-main);
   font-family: var(--font-paragraph);
   position: relative;
   z-index: 900;
@@ -19,7 +19,7 @@ header {
   min-width: 175px;
   height: auto;
   padding: 0.5rem 0;
-  color: var(--main-bg-color);
+  color: var(--color-bg-main);
 }
 
 .logo img {
@@ -32,14 +32,14 @@ a.logo.black:hover,
 a.logo.black:active,
 a.logo.black:visited,
 a.logo.black:focus {
-  color: var(--main-bg-color);
+  color: var(--color-bg-main);
   font-weight: bold;
   font-size: 1.5rem;
   line-height: 1;
 }
 
 a.logo.white {
-  background: var(--main-bg-color);
+  background: var(--color-bg-main);
 }
 
 .content-onboarding {
@@ -60,8 +60,8 @@ nav {
   margin: 0;
   padding: 0;
   width: 100%;
-  color: var(--main-bg-color);
-  background: var(--main-text-color);
+  color: var(--color-bg-main);
+  background: var(--color-text-main);
   display: none;
   position: absolute;
   text-align: left;
@@ -80,7 +80,7 @@ nav ul {
 .nav-dropdown-item:hover,
 .nav-dropdown-item:active,
 .nav-dropdown-item:focus {
-  color: var(--main-bg-color);
+  color: var(--color-bg-main);
   text-decoration: none;
   padding: 1em;
   margin: 0;
@@ -93,7 +93,7 @@ nav ul {
 
 .nav-dropdown-item:hover {
   text-decoration: none;
-  background-color: var(--main-text-color-hover);
+  background-color: var(--color-text-main-hover);
 }
 
 .mobile-nav {
@@ -118,7 +118,7 @@ nav ul {
 .mobile-nav-label span::before,
 .mobile-nav-label span::after {
   display: block;
-  background-color: var(--main-bg-color);
+  background-color: var(--color-bg-main);
   height: 2px;
   width: 2em;
   border-radius: 2px;
@@ -149,8 +149,8 @@ nav ul {
 
 .nav-dropdown-menu {
   display: none;
-  background-color: var(--main-bg-color);
-  color: var(--main-text-color);
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
 }
 
 .nav-dropdown-toggle {
@@ -180,7 +180,7 @@ ul.nav-dropdown-menu {
   text-align: left;
   list-style: none;
   border-radius: var(--border-radius);
-  background-color: var(--main-text-color);
+  background-color: var(--color-text-main);
 }
 
 ul.nav-dropdown-menu li {
@@ -196,7 +196,7 @@ ul.nav-dropdown-menu a {
   padding: 1rem;
   width: 100%;
   min-width: 180px;
-  color: var(--main-bg-color);
+  color: var(--color-bg-main);
 }
 
 ul.nav-dropdown-menu a svg {
@@ -207,7 +207,7 @@ ul.nav-dropdown-menu a svg {
 }
 
 ul.nav-dropdown-menu a:hover {
-  background-color: var(--main-text-color-hover);
+  background-color: var(--color-text-main-hover);
 }
 
 .nav-dropdown-toggle:checked ~ ul.nav-dropdown-menu {
@@ -265,12 +265,12 @@ ul.nav-dropdown-menu a:hover {
   .nav-button:visited,
   .nav-button:active,
   .nav-button:focus {
-    border: 1px solid var(--main-bg-color);
+    border: 1px solid var(--color-bg-main);
   }
 
   .nav-button:hover {
-    border: 1px solid var(--main-bg-color);
-    background-color: var(--main-text-color-hover);
+    border: 1px solid var(--color-bg-main);
+    background-color: var(--color-text-main-hover);
     text-decoration: none;
   }
 
