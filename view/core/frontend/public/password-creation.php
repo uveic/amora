@@ -8,6 +8,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 $titleHtml = $responseData->getLocalValue('authenticationPasswordCreateSubtitle');
 $subtitleHtml = '';
 $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink');
+$siteLogoHtml = $responseData->buildSiteLogoHtml();
 
 ?>
 <!DOCTYPE html>
@@ -29,7 +30,7 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
       <input class="input" type="hidden" id="verificationHash" name="verificationHash" value="<?=$responseData->verificationHash?>">
       <input class="input" type="hidden" id="postUrl" name="postUrl" value="<?= UrlBuilderUtil::PUBLIC_API_PASSWORD_CREATION?>">
       <div>
-        <h1 id="register-title" class="m-b-6"><?=$this->e($responseData->siteName)?></h1>
+        <h1 id="register-title" class="m-b-6"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$titleHtml?></h2>
         <div id="password-reset-form">
           <p class="light-text-color m-b-3"><?=$subtitleHtml?></p>

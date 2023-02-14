@@ -4,9 +4,8 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
-$siteLogo = $responseData->getSiteLogoUrl()
-    ? '<img src="' . $responseData->getSiteLogoUrl() . '" alt="' . $responseData->siteName . '">'
-    : $this->e($responseData->siteName);
+$siteLogoHtml = $responseData->buildSiteLogoHtml();
+
 ?>
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
@@ -24,7 +23,7 @@ $siteLogo = $responseData->getSiteLogoUrl()
     </a>
     <form method="POST" id="form-login">
       <div>
-        <h1 id="register-title" class="logo m-t-2 m-b-3"><?=$siteLogo?></h1>
+        <h1 id="register-title" class="logo m-t-2 m-b-3"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationLoginSubtitle'))?></h2>
         <p class="light-text-color m-b-3"></p>
         <div class="field">

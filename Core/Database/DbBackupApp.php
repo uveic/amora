@@ -11,11 +11,11 @@ final class DbBackupApp extends App
 {
     public function __construct(
         Logger $logger,
-        private MySqlDb $db,
-        private string $backupFolderPath,
-        private string $mysqlCommand,
-        private string $mysqlDumpCommand,
-        private string $gzipCommand,
+        private readonly MySqlDb $db,
+        private readonly string $backupFolderPath,
+        private readonly string $mysqlCommand,
+        private readonly string $mysqlDumpCommand,
+        private readonly string $gzipCommand,
     ) {
         parent::__construct(
             logger: $logger,
@@ -23,8 +23,6 @@ final class DbBackupApp extends App
             lockMaxTimeSinceLastSyncSeconds: 3600,
             isPersistent: false
         );
-
-        $this->backupFolderPath = rtrim($this->backupFolderPath, ' /') . '/';
     }
 
     public function run()
@@ -60,11 +58,10 @@ final class DbBackupApp extends App
             "{$this->mysqlDumpCommand} -u {$this->db->user} \
             -p'{$this->db->password}' \
             --single-transaction \
-            --flush-logs \
+            --skip-lock-tables \
             --add-drop-table \
             --add-locks \
             --create-options \
-            --disable-keys \
             --extended-insert \
             --quick \
             --set-charset \
@@ -178,7 +175,6 @@ final class DbBackupApp extends App
         foreach ($files as $key => $file) {
             if (preg_match($regex, $file) === 0) {
                 unset($files[$key]);
-                continue;
             }
         }
 

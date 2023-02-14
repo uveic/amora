@@ -11,11 +11,7 @@ if (!isset($menuItems)) {
     die;
 }
 
-$siteLogo = $responseData->getSiteLogoUrl()
-    ? '<img src="' . $responseData->getSiteLogoUrl() . '" width="200" height="42" alt="' . $responseData->siteName . '">'
-    : $responseData->siteName;
-
-$logoClass = $responseData->getSiteLogoUrl() ? '' : ' black';
+$siteLogoHtml = $responseData->buildSiteLogoHtml();
 
 $userRegisteredMoreThan24HoursAgo = $responseData->minutesSinceUserRegistration() > 24 * 60;
 if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
@@ -25,7 +21,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
   </div>
 <?php } ?>
 <header class="max-width">
-  <a class="logo<?=$logoClass?>" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>"><?=$siteLogo?></a>
+  <a class="logo" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>"><?=$siteLogoHtml?></a>
   <input type="checkbox" id="mobile-nav" class="mobile-nav">
   <nav>
     <ul>

@@ -42,7 +42,7 @@ class UploaderClass {
     reader.addEventListener('load', function () {
       let image = new Image();
       image.className = 'opacity' + (imageClassName ? ' ' + imageClassName : '');
-      image.src = String(reader.result);
+      // image.src = String(reader.result);
 
       const imgLoading = UploaderClass.buildImageLoadingElement();
 
@@ -66,8 +66,10 @@ class UploaderClass {
           then(response);
         })
         .catch((error) => {
-          imageContainer.removeChild(imgLoading);
-          imageContainer.removeChild(image);
+          try {
+            imageContainer.removeChild(imgLoading);
+            imageContainer.removeChild(image);
+          } catch {}
 
           UploaderClass.logError(userFeedbackDiv, error);
           catchError();

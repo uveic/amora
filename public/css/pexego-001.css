@@ -1,8 +1,8 @@
 :root {
-  --primary-color: #212529;
-  --primary-bg-color: #fcfcfc;
-  --light-color: #6c6c6c;
-  --link-color: #0432ff;
+  --color-primary: #212529;
+  --color-bg: #fcfcfc;
+  --color-light: #6c6c6c;
+  --color-link: #0432ff;
   --color-bg-light: #f0f0f0;
   --color-bg-light-2: #e8e8e8;
   --color-bg-light-3: #a6a6a6;
@@ -24,13 +24,13 @@ html {
 body {
   line-height: 1.4em;
   margin: 0 auto;
-  color: var(--primary-color);
+  color: var(--color-primary);
   min-width: 250px;
-  background-color: var(--primary-bg-color);
+  background-color: var(--color-bg);
 }
 
 a, a:hover, a:visited, a:active {
-  color: var(--link-color);
+  color: var(--color-link);
   text-decoration: none;
 }
 
@@ -85,7 +85,7 @@ img {
   margin: 0;
   padding: 0 1rem;
   font-size: 0.9rem;
-  color: var(--light-color);
+  color: var(--color-light);
 }
 
 .pexego-content-image-caption p {
@@ -126,7 +126,7 @@ img {
   padding: 0.35rem 0.5rem;
   min-height: initial;
   min-width: 35px;
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 .pexego-actionbar-button:hover,
@@ -211,7 +211,7 @@ img {
   align-items: center;
   margin: 0;
   padding: 0.25rem 0;
-  background-color: var(--primary-bg-color);
+  background-color: var(--color-bg);
 }
 
 .pexego-actions {
@@ -236,7 +236,7 @@ img {
   right: 0;
   bottom: 0;
   z-index: 999;
-  background-color: var(--primary-bg-color);
+  background-color: var(--color-bg);
   padding: 0.1rem;
 }
 

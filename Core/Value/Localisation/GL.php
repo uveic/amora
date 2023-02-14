@@ -5,6 +5,7 @@ use Amora\Core\Module\User\Service\UserService;
 return [
     'navDashboard' => 'Inicio',
     'navAdministrator' => 'Admin',
+    'navAdminDashboard' => 'Inicio',
     'navAccount' => 'Os teus datos',
     'navSignOut' => 'Saír',
     'navSignIn' => 'Entra',

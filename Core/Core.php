@@ -275,7 +275,7 @@ class Core
                 return new DbBackupApp(
                     logger: self::getDefaultLogger(),
                     db: $db,
-                    backupFolderPath: $dbBackupConfig->folderPath,
+                    backupFolderPath: rtrim($dbBackupConfig->folderPath, ' /') . '/',
                     mysqlCommand: $dbBackupConfig->mysqlCommandPath,
                     mysqlDumpCommand: $dbBackupConfig->mysqlDumpCommandPath,
                     gzipCommand: $dbBackupConfig->gzipCommandPath,

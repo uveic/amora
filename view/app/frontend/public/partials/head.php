@@ -26,7 +26,7 @@ if (isset($responseData->article)) {
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="<?=$this->e($responseData->getPageDescription())?>">
   <meta property="og:site_name" content="<?=$this->e($responseData->siteName)?>">
-  <meta property="og:title" content="<?=$this->e($responseData->pageTitleWithoutSiteName)?>">
+  <meta property="og:title" content="<?=$this->e($responseData->getPageTitle())?>">
   <meta property="og:description" content="<?=$this->e($responseData->getPageDescription())?>">
   <meta property="og:image" content="<?=$responseData->siteImagePath?>">
   <meta property="og:url" content="<?=$responseData->siteUrl?>">
@@ -35,7 +35,7 @@ if (isset($responseData->article)) {
   <meta name="twitter:card" content="summary_large_image">
   <meta property="twitter:domain" content="<?=$responseData->getSiteDomain()?>">
   <meta property="twitter:url" content="<?=$responseData->siteUrl?>">
-  <meta name="twitter:title" content="<?=$this->e($responseData->pageTitleWithoutSiteName)?>">
+  <meta name="twitter:title" content="<?=$this->e($responseData->getPageTitle())?>">
   <meta name="twitter:description" content="<?=$this->e($responseData->getPageDescription())?>">
   <meta name="twitter:image" content="<?=$responseData->siteImagePath?>">
   <title><?=$this->e($responseData->getPageTitle())?></title>
@@ -43,6 +43,6 @@ if (isset($responseData->article)) {
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <link rel="manifest" href="/manifest.json">
-  <link rel="alternate" type="application/rss+xml" title="<?=$this->e($responseData->siteName)?>" href="<?=UrlBuilderUtil::buildPublicRssUrl()?>" />
+  <link rel="alternate" type="application/rss+xml" title="<?=$this->e($responseData->siteName)?>" href="<?=UrlBuilderUtil::buildPublicRssUrl()?>">
   <link rel="alternate" href="<?=$responseData->siteUrl?>" hreflang="x-default">
 <?=$canonical?>

@@ -5,6 +5,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 
+$siteLogoHtml = $responseData->buildSiteLogoHtml();
 $titleHtml = $responseData->getLocalValue('authenticationPasswordResetSubtitle');
 $subtitleHtml = sprintf(
     $responseData->getLocalValue('authenticationPasswordResetAlreadyLogin'),
@@ -31,7 +32,7 @@ $subtitleHtml = sprintf(
       <input class="input" type="hidden" id="verificationHash" name="verificationHash" value="<?=$responseData->verificationHash?>">
       <input class="input" type="hidden" id="postUrl" name="postUrl" value="<?= UrlBuilderUtil::PUBLIC_API_PASSWORD_RESET?>">
       <div>
-        <h1 id="register-title" class="m-b-6"><?=$this->e($responseData->siteName)?></h1>
+        <h1 id="register-title" class="m-b-6"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$titleHtml?></h2>
         <div id="password-reset-form">
           <p class="light-text-color m-b-3"><?=$subtitleHtml?></p>
