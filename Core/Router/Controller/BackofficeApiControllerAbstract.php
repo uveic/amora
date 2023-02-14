@@ -34,6 +34,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreTagSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreTagFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetTagsSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdatePageContentSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdatePageContentFailureResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -226,6 +228,27 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function getTags(?string $name, Request $request): Response;
+
+    /**
+     * Endpoint: /back/content/{contentId}
+     * Method: PUT
+     *
+     * @param int $contentId
+     * @param string|null $title
+     * @param string|null $subtitle
+     * @param string $contentHtml
+     * @param int|null $mainImageId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function updatePageContent(
+        int $contentId,
+        ?string $title,
+        ?string $subtitle,
+        string $contentHtml,
+        ?int $mainImageId,
+        Request $request
+    ): Response;
 
     private function validateAndCallStoreUser(Request $request): Response
     {
@@ -889,6 +912,83 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallUpdatePageContent(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['back', 'content', '{contentId}'],
+            $pathParts
+        );
+        $bodyParams = $request->getBodyPayload();
+        $errors = [];
+
+        $contentId = null;
+        if (!isset($pathParams['contentId'])) {
+            $errors[] = [
+                'field' => 'contentId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['contentId'])) {
+                $errors[] = [
+                    'field' => 'contentId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $contentId = intval($pathParams['contentId']);
+            }
+        }
+
+        if (!isset($bodyParams)) {
+            $errors[] = [
+                'field' => 'payload',
+                'message' => 'required'
+            ];
+        }
+
+        $title = $bodyParams['title'] ?? null;
+        $subtitle = $bodyParams['subtitle'] ?? null;
+        $contentHtml = null;
+        if (!isset($bodyParams['contentHtml'])) {
+            $errors[] = [
+                'field' => 'contentHtml',
+                'message' => 'required'
+            ];
+        } else {
+            $contentHtml = $bodyParams['contentHtml'] ?? null;
+        }
+
+        $mainImageId = $bodyParams['mainImageId'] ?? null;
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->updatePageContent(
+                $contentId,
+                $title,
+                $subtitle,
+                $contentHtml,
+                $mainImageId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updatePageContent()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): ?Response
     {
@@ -998,6 +1098,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetTags($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'content', '{contentId}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallUpdatePageContent($request);
         }
 
         return null;

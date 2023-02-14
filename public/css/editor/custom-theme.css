@@ -1,0 +1,122 @@
+.medium-toolbar-arrow-under:after {
+  border-color: var(--color-text) transparent transparent transparent;
+  top: 40px;
+}
+
+.medium-toolbar-arrow-over:before {
+  border-color: transparent transparent var(--color-text) transparent;
+}
+
+.medium-editor-toolbar {
+  background-color: var(--color-text);
+  border-radius: 0;
+  border: none;
+}
+
+.medium-editor-toolbar li button {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  border: none;
+  box-sizing: border-box;
+  height: 40px;
+  min-width: 40px;
+  padding: 5px 12px;
+  -webkit-transition: background-color .2s ease-in, color .2s ease-in;
+          transition: background-color .2s ease-in, color .2s ease-in;
+}
+
+.medium-editor-toolbar li button:hover {
+  background-color: var(--color-text);
+  color: var(--color-secondary);
+}
+
+.medium-editor-toolbar li .medium-editor-button-last,
+.medium-editor-toolbar li .medium-editor-button-first {
+  border-radius: 0;
+  padding: 0;
+}
+
+.medium-editor-toolbar li .medium-editor-button-active {
+  background-color: var(--color-text);
+  color: var(--color-secondary);
+}
+
+.medium-editor-toolbar-form {
+  background-color: var(--color-text);
+  border-radius: 0;
+  color: var(--color-bg);
+  overflow: hidden;
+}
+
+.medium-editor-toolbar-form .medium-editor-toolbar-input {
+  background: var(--color-text);
+  box-sizing: border-box;
+  color: var(--color-bg);
+  height: 40px;
+  padding-left: 16px;
+  width: 220px;
+}
+
+.medium-editor-toolbar-form a {
+    color: var(--color-text-editor);
+    -webkit-transform: translateY(2px);
+            transform: translateY(2px);
+}
+
+.medium-editor-toolbar-form .medium-editor-toolbar-close {
+    margin-right: 16px;
+}
+
+.medium-editor-toolbar-anchor-preview {
+  background: var(--color-text);
+  border-radius: 0;
+  padding: 5px 12px;
+}
+
+.medium-editor-anchor-preview a {
+  color: var(--color-text-editor);
+  text-decoration: none;
+}
+
+.medium-editor-toolbar-actions li, .medium-editor-toolbar-actions button {
+  border-radius: 0;
+}
+
+.medium-editor-toolbar-form label {
+  color: var(--color-bg);
+}
+
+.medium-editor-toolbar-form-row {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.medium-editor-toolbar-form input {
+  min-height: revert;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: revert;
+  font-weight: normal;
+  background-color: var(--color-text);
+  color: var(--color-bg);
+}
+
+.medium-editor-toolbar-form .medium-editor-toolbar-form-row {
+  margin-left: 16px;
+}
+
+.medium-editor-toolbar-form .medium-editor-toolbar-input {
+  width: auto;
+  min-width: 225px;
+}
+
+.medium-editor-toolbar-form label {
+  width: auto;
+}
+
+.medium-editor-placeholder-relative {
+  color: var(--color-light-4);
+}

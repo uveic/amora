@@ -28,6 +28,12 @@ final class CoreMenu
                 icon: '<img class="img-svg m-l-025" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Menu">',
                 children: [
                     new MenuItem(
+                        path: UrlBuilderUtil::buildBackofficeContentUrl($language),
+                        text: $localisationUtil->getValue('navAdminPageContentEdit'),
+                        icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/house-line-white.svg" alt="' . $localisationUtil->getValue('navAdminPageContentEdit') . '">',
+                        order: 1000,
+                    ),
+                    new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeImagesUrl($language),
                         text: $localisationUtil->getValue('navAdminImages'),
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/image.svg" alt="' . $localisationUtil->getValue('navAdminImages') . '">',

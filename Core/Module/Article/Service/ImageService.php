@@ -320,7 +320,7 @@ class ImageService
     private function checkExifAndRotateIfNecessary(GdImage $image, string $imagePath): GdImage|bool
     {
         try {
-            $exif = exif_read_data($imagePath, 0, true);
+            $exif = @exif_read_data($imagePath, 0, true);
         } catch (Throwable $t) {
             $this->logger->logError(
                 'Error reading EXIF data. Image path: ' . $imagePath

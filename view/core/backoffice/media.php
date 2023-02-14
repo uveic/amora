@@ -39,16 +39,16 @@ $count = 0;
             includeTime: true,
         );
 ?>
-      <a href="<?=$media->getPathWithNameOriginal()?>" target="_blank" class="media-item" data-media-id="<?=$media->id?>">
+      <a href="<?=$media->getPathWithNameMedium()?>" target="_blank" class="media-item" data-media-id="<?=$media->id?>">
         <span class="media-id">#<?=$media->id?></span>
         <?=MediaType::getIcon($media->type, 'img-svg-40 m-r-05')?>
         <span class="media-name"><?=$media->caption ?? $media->filenameOriginal?></span>
-        <span class="media-info"><?=sprintf($responseData->getLocalValue('mediaUploadedBy'), $media->user->name, $dateString)?>.</span>
+        <span class="media-info"><?=sprintf($responseData->getLocalValue('mediaUploadedBy'), $media->user ? $media->user->name : '???', $dateString)?>.</span>
       </a>
 <?php } ?>
     </div>
 <?php if (count($responseData->files) >= 50) { ?>
-    <a href="#" class="media-load-more" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>">
+    <a href="#" class="media-load-more" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayImagePopup">
       <img src="/img/svg/plus.svg" class="img-svg m-r-05 img-svg-30" title="<?=$responseData->getLocalValue('globalMore')?>" alt="<?=$responseData->getLocalValue('globalMore')?>">
       <span><?=$responseData->getLocalValue('globalMore')?></span>
     </a>

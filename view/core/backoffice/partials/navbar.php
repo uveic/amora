@@ -21,7 +21,9 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
   </div>
 <?php } ?>
 <header class="max-width">
-  <a class="logo" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>"><?=$siteLogoHtml?></a>
+  <a class="logo" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>">
+    <?=$siteLogoHtml?>
+  </a>
   <input type="checkbox" id="mobile-nav" class="mobile-nav">
   <nav>
     <ul>

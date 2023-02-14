@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\Feedback;
@@ -43,6 +44,12 @@ class ArticleService
         );
 
         return empty($res[0]) ? null : $res[0];
+    }
+
+    public function getPageContentForId(int $id): ?PageContent
+    {
+        $res = $this->filterPageContentBy(ids: [$id]);
+        return $res[0] ?? null;
     }
 
     public function getArticleForPath(string $path, bool $includePublishedAtInTheFuture = true): ?Article
@@ -144,6 +151,20 @@ class ArticleService
     ): array {
         return $this->articleDataLayer->filterArticlePathsBy(
             articleIds: $articleIds,
+            queryOptions: $queryOptions,
+        );
+    }
+
+    public function filterPageContentBy(
+        array $ids = [],
+        array $languageIsoCodes = [],
+        array $typeIds = [],
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        return $this->articleDataLayer->filterPageContentBy(
+            ids: $ids,
+            languageIsoCodes: $languageIsoCodes,
+            typeIds: $typeIds,
             queryOptions: $queryOptions,
         );
     }
@@ -496,5 +517,60 @@ class ArticleService
     public function storeArticlePath(ArticlePath $articlePath): ArticlePath
     {
         return $this->articleDataLayer->storeArticlePath($articlePath);
+    }
+
+    public function storePageContent(PageContent $pageContent): ?PageContent
+    {
+        $res = $this->articleDataLayer->getDb()->withTransaction(
+            function () use($pageContent) {
+                $resOne = $this->articleDataLayer->storePageContent($pageContent);
+
+                if (empty($resOne)) {
+                    return new Feedback(false);
+                }
+
+                $resTwo = $this->articleDataLayer->storePageContentHistory($pageContent);
+
+                return new Feedback(
+                    isSuccess: $resTwo,
+                    response: $resOne,
+                );
+            },
+        );
+
+        return $res->isSuccess
+            ? $res->response
+            : null;
+    }
+
+    public function updatePageContent(PageContent $pageContent): bool
+    {
+        $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
+            function () use ($pageContent) {
+                $resUpdate = $this->articleDataLayer->updatePageContent($pageContent);
+
+                if (empty($resUpdate)) {
+                    $this->logger->logError(
+                        'Error updating page content. Page content ID: ' . $pageContent->id
+                    );
+
+                    return new Feedback(false);
+                }
+
+                $resHistory = $this->articleDataLayer->storePageContentHistory($pageContent);
+
+                if (empty($resHistory)) {
+                    $this->logger->logError(
+                        'Error inserting article history. Page content ID: ' . $pageContent->id
+                    );
+
+                    return new Feedback(false);
+                }
+
+                return new Feedback(true);
+            }
+        );
+
+        return $resTransaction->isSuccess;
     }
 }

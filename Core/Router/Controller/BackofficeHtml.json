@@ -247,6 +247,48 @@
           }
         }
       }
+    },
+    "/backoffice/content": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the backoffice page to view a list of content pages",
+        "description": "",
+        "operationId": "getBackofficeContentList",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return HTML",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/backoffice/content/{id}": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the backoffice page to edit a content",
+        "description": "",
+        "operationId": "getBackofficeContentEdit",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Page content ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return HTML",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

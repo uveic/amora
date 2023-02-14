@@ -28,6 +28,7 @@ abstract class HtmlResponseDataAbstract
         protected ?string $pageDescription = null,
         ?string $siteImagePath = null,
         ?int $lastUpdatedTimestamp = null,
+        public readonly string $logoClass = '',
     ) {
         $this->localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 

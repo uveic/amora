@@ -8,7 +8,6 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 $menuItems = AppMenu::getCustomer(
     language: $responseData->siteLanguage,
     username: $responseData->request->session->user->getNameOrEmail(),
-    includeAdminLink: $responseData->request->session?->isAdmin() ?? false,
     whiteIcon: true,
 );
 
@@ -25,8 +24,8 @@ $menuItems = AppMenu::getCustomer(
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <link rel="manifest" href="/manifest.json">
-  <link href="/css/navbar-002.css" rel="stylesheet" type="text/css">
-  <link href="/css/style-003.css" rel="stylesheet" type="text/css">
+  <link href="/css/navbar-003.css" rel="stylesheet" type="text/css">
+  <link href="/css/style-007.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <?=$this->insert('../../backoffice/partials/navbar', ['responseData' => $responseData, 'menuItems' => $menuItems])?>

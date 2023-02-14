@@ -63,35 +63,35 @@ class MediaService
         );
     }
 
-    public function deleteFile(Media $media): bool
+    public function markMediaAsDeleted(Media $media): bool
     {
-        $res = $this->mediaDataLayer->deleteFile($media->id);
+        $res = $this->mediaDataLayer->markMediaAsDeleted($media->id);
         if (empty($res)) {
             $this->logger->logError('Error deleting image. Image ID: ' . $media->id);
             return false;
         }
 
-        if (file_exists($media->getDirWithNameOriginal())) {
-            if (!unlink($media->getDirWithNameOriginal())) {
-                return false;
-            }
-        }
-
-        if ($media->filenameMedium) {
-            if (file_exists($media->getDirWithNameMedium())) {
-                if (!unlink($media->getDirWithNameMedium())) {
-                    return false;
-                }
-            }
-        }
-
-        if ($media->filenameLarge) {
-            if (file_exists($media->getDirWithNameLarge())) {
-                if (!unlink($media->getDirWithNameLarge())) {
-                    return false;
-                }
-            }
-        }
+//        if (file_exists($media->getDirWithNameOriginal())) {
+//            if (!unlink($media->getDirWithNameOriginal())) {
+//                return false;
+//            }
+//        }
+//
+//        if ($media->filenameMedium) {
+//            if (file_exists($media->getDirWithNameMedium())) {
+//                if (!unlink($media->getDirWithNameMedium())) {
+//                    return false;
+//                }
+//            }
+//        }
+//
+//        if ($media->filenameLarge) {
+//            if (file_exists($media->getDirWithNameLarge())) {
+//                if (!unlink($media->getDirWithNameLarge())) {
+//                    return false;
+//                }
+//            }
+//        }
 
         return true;
     }

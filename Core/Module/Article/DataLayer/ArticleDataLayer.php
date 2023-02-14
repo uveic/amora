@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Datalayer;
 
+use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\DataLayerTrait;
@@ -32,6 +33,10 @@ class ArticleDataLayer
     const ARTICLE_TAG_RELATION_TABLE = 'core_article_tag_relation';
 
     const ARTICLE_PATH_TABLE = 'core_article_path';
+
+    const CONTENT_TABLE = 'core_content';
+    const CONTENT_HISTORY_TABLE = 'core_content_history';
+    const CONTENT_TYPE_TABLE = 'core_content_type';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -231,6 +236,95 @@ class ArticleDataLayer
         $output = [];
         foreach ($res as $item) {
             $output[] = ArticlePath::fromArray($item);
+        }
+
+        return $output;
+    }
+
+    public function filterPageContentBy(
+        array $ids = [],
+        array $languageIsoCodes = [],
+        array $typeIds = [],
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
+        }
+
+        $orderByMapping = [
+            'id' => 'c.id',
+            'updated_at' => 'c.updated_at',
+        ];
+
+        $params = [];
+        $baseSql = 'SELECT ';
+        $fields = [
+            'c.id AS page_content_id',
+            'c.language_iso_code AS page_content_language_iso_code',
+            'c.type_id AS page_content_type_id',
+            'c.created_at AS page_content_created_at',
+            'c.updated_at AS page_content_updated_at',
+            'c.title AS page_content_title',
+            'c.subtitle AS page_content_subtitle',
+            'c.html AS page_content_html',
+            'c.main_image_id',
+
+            'u.id AS user_id',
+            'u.language_iso_code AS user_language_iso_code',
+            'u.role_id AS user_role_id',
+            'u.journey_id AS user_journey_id',
+            'u.created_at AS user_created_at',
+            'u.updated_at AS user_updated_at',
+            'u.email AS user_email',
+            'u.name AS user_name',
+            'u.password_hash AS user_password_hash',
+            'u.bio AS user_bio',
+            'u.is_enabled AS user_is_enabled',
+            'u.verified AS user_verified',
+            'u.timezone AS user_timezone',
+            'u.change_email_to AS user_change_email_to',
+
+            'm.id AS media_id',
+            'm.user_id AS media_user_id',
+            'm.type_id AS media_type_id',
+            'm.status_id AS media_status_id',
+            'm.path AS media_path',
+            'm.filename_original AS media_filename_original',
+            'm.filename_medium AS media_filename_medium',
+            'm.filename_large AS media_filename_large',
+            'm.caption AS media_caption',
+            'm.created_at AS media_created_at',
+            'm.updated_at AS media_updated_at',
+        ];
+
+        $joins = ' FROM ' . self::CONTENT_TABLE . ' AS c';
+        $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = c.user_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE_NAME
+            . ' AS m ON m.id = c.main_image_id';
+
+        $where = ' WHERE 1';
+
+        if ($ids) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $ids, 'c.id', 'contentId');
+        }
+
+        if ($languageIsoCodes) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $languageIsoCodes, 'c.language_iso_code', 'languageIsoCode');
+        }
+
+        if ($typeIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $typeIds, 'c.type_id', 'typeId');
+        }
+
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
+
+        $res = $this->db->fetchAll($sql, $params);
+
+        $output = [];
+        foreach ($res as $item) {
+            $output[] = PageContent::fromArray($item);
         }
 
         return $output;
@@ -513,5 +607,52 @@ class ArticleDataLayer
                 ':articleSectionId' => $articleSectionId
             ]
         );
+    }
+
+    public function storePageContent(PageContent $pageContent): ?PageContent
+    {
+        $resInsert = $this->db->insert(self::CONTENT_TABLE, $pageContent->asArray());
+
+        if (empty($resInsert)) {
+            $this->logger->logError('Error inserting page content');
+            return null;
+        }
+
+        $pageContent->id = $resInsert;
+
+        return $pageContent;
+    }
+
+    public function updatePageContent(PageContent $pageContent): bool
+    {
+        $resUpdate = $this->db->update(
+            tableName: self::CONTENT_TABLE,
+            id: $pageContent->id,
+            data: $pageContent->asArray(),
+        );
+
+        if (empty($resUpdate)) {
+            $this->logger->logError('Error updating page content. Page content ID: ' . $pageContent->id);
+            return false;
+        }
+
+        return true;
+    }
+
+    public function storePageContentHistory(PageContent $pageContent): bool
+    {
+        $data = $pageContent->asArray();
+        $data['created_at'] = DateUtil::getCurrentDateForMySql();
+        $data['content_id'] = $pageContent->id;
+        unset($data['id']);
+
+        $resInsert = $this->db->insert(self::CONTENT_HISTORY_TABLE, $data);
+
+        if (empty($resInsert)) {
+            $this->logger->logError('Error inserting page content history');
+            return false;
+        }
+
+        return true;
     }
 }
