@@ -39,11 +39,11 @@ $count = 0;
         $lazyLoading = $count > 10 ? ' loading="lazy"' : '';
         $alt = $image->caption ?? $image->filenameOriginal;
 ?>
-        <img class="image-item" data-image-id="<?=$image->id?>" src="<?=$image->getPathWithNameMedium()?>" title="<?=$alt?>" alt="<?=$alt?>"<?=$lazyLoading?>>
+        <img class="image-item" data-media-id="<?=$image->id?>" src="<?=$image->getPathWithNameMedium()?>" title="<?=$alt?>" alt="<?=$alt?>"<?=$lazyLoading?>>
 <?php } ?>
       </div>
 <?php if ($count) { ?>
-      <a href="#" class="media-load-more" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>">
+      <a href="#" class="media-load-more" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayImagePopup">
         <img src="/img/svg/plus.svg" class="img-svg m-r-05 img-svg-30" title="<?=$responseData->getLocalValue('globalMore')?>" alt="<?=$responseData->getLocalValue('globalMore')?>">
         <span><?=$responseData->getLocalValue('globalMore')?></span>
       </a>

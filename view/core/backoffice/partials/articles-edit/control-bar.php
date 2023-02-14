@@ -34,7 +34,7 @@ $this->insert('partials/articles-edit/modal-add-image', ['responseData' => $resp
           <a href="#" class="pexego-add-section pexego-add-section-paragraph">
             <img class="img-svg img-svg-30" src="/img/svg/article.svg" alt="<?=$responseData->getLocalValue('globalAddParagraph')?>">
           </a>
-          <a href="#" class="pexego-add-section article-add-media" data-type-id="<?=MediaType::Image->value?>">
+          <a href="#" class="pexego-add-section select-media-action" data-type-id="<?=MediaType::Image->value?>" data-event-listener-action="insertImageInArticle">
             <img class="img-svg img-svg-30" src="/img/svg/image-black.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
           </a>
           <a class="pexego-add-section pexego-add-section-video">

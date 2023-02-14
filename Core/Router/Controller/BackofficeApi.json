@@ -1194,6 +1194,119 @@
           }
         }
       }
+    },
+    "/back/content/{contentId}": {
+      "put": {
+        "tags": [],
+        "description": "Update existing page content",
+        "operationId": "updatePageContent",
+        "parameters": [
+          {
+            "name": "contentId",
+            "in": "path",
+            "description": "Page content ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "title": {
+                  "description": "Content title",
+                  "type": "string"
+                },
+                "subtitle": {
+                  "description": "Content subtitle",
+                  "type": "string"
+                },
+                "contentHtml": {
+                  "description": "Content",
+                  "type": "string"
+                },
+                "mainImageId": {
+                  "description": "Main image ID",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "contentHtml"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "redirect": {
+                  "type": "string",
+                  "description": "Redirect URL (if any)"
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "required": [
+                "success",
+                "redirect"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

@@ -112,7 +112,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     foreach ($responseData->sources as $value) { ?>
       <div class="item">
         <span class="break"><?=$value->name ?: '-'?></span>
-        <span><?=$value->count?></span>
+        <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>
@@ -128,7 +128,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
 ?>
       <div class="item">
         <a href="/<?=$name?>">/<?=$name?></a>
-        <span><?=$value->count?></span>
+        <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>
@@ -140,7 +140,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
 ?>
       <div class="item">
         <span><?=$value->name ?: '-'?></span>
-        <span><?=$value->count?></span>
+        <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>
@@ -151,7 +151,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     foreach ($responseData->devices as $value) { ?>
       <div class="item">
         <span><?=$value->name ?: '-'?></span>
-        <span><?=$value->count?></span>
+        <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>
@@ -164,7 +164,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
 ?>
       <div class="item">
         <span><?=$name?></span>
-        <span><?=$value->count?></span>
+        <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>
@@ -175,7 +175,7 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     foreach ($responseData->languages as $value) { ?>
       <div class="item">
         <span><?=$value->name ?: '-'?></span>
-        <span><?=$value->count?></span>
+        <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>

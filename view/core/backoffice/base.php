@@ -24,10 +24,12 @@ $menuItems = AppMenu::getAdmin(
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <link rel="manifest" href="/manifest.json">
-  <link href="/css/pexego-001.css" rel="stylesheet" type="text/css">
-  <link href="/css/navbar-002.css" rel="stylesheet" type="text/css">
-  <link href="/css/style-003.css" rel="stylesheet" type="text/css">
-  <link href="/css/backoffice-002.css" rel="stylesheet" type="text/css">
+  <link href="/css/editor/medium-editor.min.css" rel="stylesheet" >
+  <link href="/css/editor/custom-theme.css" rel="stylesheet">
+  <link href="/css/pexego-002.css" rel="stylesheet" type="text/css">
+  <link href="/css/navbar-003.css" rel="stylesheet" type="text/css">
+  <link href="/css/style-007.css" rel="stylesheet" type="text/css">
+  <link href="/css/backoffice-005.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <?=$this->insert('partials/navbar', ['responseData' => $responseData, 'menuItems' => $menuItems])?>

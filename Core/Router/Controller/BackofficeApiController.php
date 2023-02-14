@@ -2,12 +2,15 @@
 
 namespace Amora\Core\Router;
 
+use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\ArticlePath;
+use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSuccessResponse;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\App\Value\Language;
 use Amora\Core\Value\QueryOrderDirection;
@@ -49,6 +52,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         private readonly UserService $userService,
         private readonly ArticleService $articleService,
         private readonly TagService $tagService,
+        private readonly MediaService $mediaService,
     ) {
         parent::__construct();
     }
@@ -639,7 +643,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     protected function getTags(?string $name, Request $request): Response
     {
-        $name = StringUtil::sanitiseText($name);
+//        $name = StringUtil::sanitiseText($name);
 
         $tags = $this->tagService->filterTagsBy();
         $output = [];
@@ -651,6 +655,73 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerGetTagsSuccessResponse(
             success: true,
             tags: $output,
+        );
+    }
+
+    /**
+     * Endpoint: /back/content/{contentId}
+     * Method: PUT
+     *
+     * @param int $contentId
+     * @param string|null $title
+     * @param string|null $subtitle
+     * @param string $contentHtml
+     * @param int|null $mainImageId
+     * @param Request $request
+     * @return Response
+     */
+    protected function updatePageContent(
+        int $contentId,
+        ?string $title,
+        ?string $subtitle,
+        string $contentHtml,
+        ?int $mainImageId,
+        Request $request
+    ): Response {
+        $existingPageContent = $this->articleService->getPageContentForId($contentId);
+        if (!$existingPageContent) {
+            return new BackofficeApiControllerUpdatePageContentSuccessResponse(
+                success: false,
+                redirect: null,
+                errorMessage: 'Page content ID not found',
+            );
+        }
+
+        $title = StringUtil::sanitiseText($title);
+        $subtitle = StringUtil::sanitiseText($subtitle);
+        $contentHtml = StringUtil::sanitiseHtml($contentHtml);
+
+        $existingImage = null;
+        if ($mainImageId) {
+            $existingImage = $this->mediaService->getMediaForId($mainImageId);
+            if (!$existingImage) {
+                return new BackofficeApiControllerUpdatePageContentSuccessResponse(
+                    success: false,
+                    redirect: null,
+                    errorMessage: 'Main image ID not found',
+                );
+            }
+        }
+
+        $pageContent = new PageContent(
+            id: $existingPageContent->id,
+            user: $request->session->user,
+            language: $existingPageContent->language,
+            type: $existingPageContent->type,
+            createdAt: $existingPageContent->createdAt,
+            updatedAt: new DateTimeImmutable(),
+            title: $title,
+            subtitle: $subtitle,
+            html: $contentHtml,
+            mainImage: $existingImage,
+        );
+
+        $resUpdate = $this->articleService->updatePageContent($pageContent);
+
+        return new BackofficeApiControllerUpdatePageContentSuccessResponse(
+            success: $resUpdate,
+            redirect: UrlBuilderUtil::buildBaseUrl($request->siteLanguage),
+            errorMessage: $resUpdate ? null : 'Error updating page content',
         );
     }
 }

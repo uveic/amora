@@ -168,7 +168,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             return new AuthorisedApiControllerDestroyFileUnauthorisedResponse();
         }
 
-        $res = $this->mediaService->deleteFile($file);
+        $res = $this->mediaService->markMediaAsDeleted($file);
         return new AuthorisedApiControllerDestroyFileSuccessResponse($res);
     }
 

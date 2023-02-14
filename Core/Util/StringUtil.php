@@ -3,6 +3,8 @@
 namespace Amora\Core\Util;
 
 use Amora\App\Value\Language;
+use Amora\Core\Core;
+use Throwable;
 use voku\helper\AntiXSS;
 
 final class StringUtil
@@ -132,6 +134,18 @@ final class StringUtil
         return base64_encode(self::generateRandomString());
     }
 
+    public static function generateFormValidator(string $value): string
+    {
+        $salt = Core::getConfig()->salt;
+        return md5($value . $salt);
+    }
+
+    public static function validateForm(string $formValidator, string $value): bool
+    {
+        $salt = Core::getConfig()->salt;
+        return $formValidator === md5($value . $salt);
+    }
+
     public static function isEmailAddressValid(string $emailAddress): bool
     {
         return !empty(filter_var($emailAddress, FILTER_VALIDATE_EMAIL));
@@ -186,5 +200,136 @@ final class StringUtil
         return array_filter($values, function ($value) {
             return is_numeric($value);
         });
+    }
+
+    public static function getTitleFromRemoteUrl(string $url): ?string
+    {
+        try {
+            $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0';
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+            curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+
+            $response = curl_exec($ch);
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            curl_close($ch);
+
+            if ($response === false) {
+                return null;
+            }
+
+            if ($responseCode < 200 || $responseCode > 299) {
+                return null;
+            }
+
+            $start = strpos($response, '<title>');
+            $end = strpos($response, '</title>');
+
+            if ($start === false || $end === false) {
+                return null;
+            }
+
+            $start += 7;
+            $title = trim(substr($response, $start, $end - $start));
+
+            if (str_contains(strtolower($response), 'iso-8859-1')) {
+                $utf8EncodedTitle = iconv("ISO-8859-1", "UTF-8", $title);
+                $title = $utf8EncodedTitle !== false ? $utf8EncodedTitle : $title;
+            }
+
+            if (strlen($title) <= 0) {
+                return null;
+            }
+
+            return htmlentities($title);
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Error retrieving title for URL: ' . $url
+                . ' - Error message: ' . $t->getMessage()
+            );
+            return null;
+        }
+    }
+
+    public static function encodeURIComponent(string $str): string {
+        $revert = [
+            '%21'=>'!',
+            '%2A'=>'*',
+            '%27'=>"'",
+            '%28'=>'(',
+            '%29'=>')',
+        ];
+
+        return strtr(rawurlencode($str), $revert);
+    }
+
+    // Converts newline to HTML paragraph: <p>
+    // Ignores it if it already has HTML paragraphs
+    public static function nl2p(?string $str): string
+    {
+        if (empty($str)) {
+            return '';
+        }
+
+        if (str_contains($str, '<p>')) {
+            return $str;
+        }
+
+        $paragraphs = '';
+
+        foreach (explode("\n", $str) as $line) {
+            $line = trim($line);
+
+            if (empty($line)) {
+                continue;
+            }
+
+            $paragraphs .= '<p>' . $line . '</p>';
+        }
+
+        return $paragraphs;
+    }
+
+    public static function makeLinksClickable(string $str): string
+    {
+        if (str_contains($str, 'href')) {
+            return $str;
+        }
+
+        $url = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([^\s\.]+[^\s]*)+[^,.\s])@';
+        return preg_replace($url, '<a href="http$2://$4" title="$0">$0</a>', $str);
+    }
+
+    public static function getFirstParagraphAsPlainText(?string $text): string
+    {
+        if (!$text) {
+            return '';
+        }
+
+        $maxLength = 400;
+        $position = strpos($text, '</p>');
+
+        if ($position) {
+            $firstParagraph = trim(strip_tags(substr($text, 0, $position)));
+
+            if (strlen($firstParagraph) > $maxLength) {
+                return trim(substr($firstParagraph, 0, $maxLength), ' .') . '...';
+            }
+
+            return $firstParagraph;
+        }
+
+        $text = trim(strip_tags($text));
+
+        if (strlen($text) > $maxLength) {
+            return trim(substr($text, 0, $maxLength), ' .') . '...';
+        }
+
+        return $text;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Router;
 
+use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
@@ -20,6 +21,7 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
+use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -416,6 +418,68 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 devices: $devices,
                 browsers: $browsers,
                 languages: $languages,
+            ),
+        );
+    }
+
+
+    /**
+     * Endpoint: /backoffice/content
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getBackofficeContentList(Request $request): Response
+    {
+        $res = $this->articleService->filterPageContentBy(
+            languageIsoCodes: [Language::Galego->value],
+            typeIds: [PageContentType::Homepage->value],
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('updated_at', QueryOrderDirection::DESC)],
+                pagination: new Response\Pagination(itemsPerPage: 1),
+            ),
+        );
+
+        $pageContent = $res[0]
+            ?? $this->articleService->storePageContent(
+                PageContent::getEmpty(
+                    user: $request->session->user,
+                    language: $request->siteLanguage,
+                    type: PageContentType::Homepage,
+                ),
+            );
+
+        return Response::createRedirectResponse(
+            UrlBuilderUtil::buildBackofficeContentEditUrl(
+                language: $request->siteLanguage,
+                contentId: $pageContent->id,
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/content/{id}
+     * Method: GET
+     *
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    protected function getBackofficeContentEdit(int $id, Request $request): Response
+    {
+        $pageContent = $this->articleService->getPageContentForId($id);
+
+        if (!$pageContent) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/page-content-edit',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: 'Editar portada',
+                pageContent: $pageContent,
             ),
         );
     }

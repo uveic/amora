@@ -131,7 +131,7 @@ class MediaDataLayer
         return $data;
     }
 
-    public function deleteFile(int $id): bool
+    public function markMediaAsDeleted(int $id): bool
     {
         return $this->db->execute(
             '

@@ -17,8 +17,8 @@ $subtitleHtml = sprintf(
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
 <?=$this->insert('../../../app/frontend/public/partials/head', ['responseData' => $responseData])?>
-  <link href="/css/style-003.css" rel="stylesheet" type="text/css">
-  <link href="/css/app/style.css" rel="stylesheet" type="text/css">
+  <link href="/css/style-007.css" rel="stylesheet" type="text/css">
+  <link href="/css/app/style-024.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <main class="main-split-screen">
@@ -62,6 +62,6 @@ $subtitleHtml = sprintf(
     </form>
   </div>
 </main>
-<script type="module" src="/js/login.js"></script>
+<script type="module" src="/js/login-001.js"></script>
 </body>
 </html>

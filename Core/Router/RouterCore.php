@@ -106,6 +106,7 @@ class RouterCore extends Core
                     userService: UserCore::getUserService(),
                     articleService: ArticleCore::getArticleService(),
                     tagService: ArticleCore::getTagService(),
+                    mediaService: ArticleCore::getMediaService(),
                 );
             },
         );

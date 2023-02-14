@@ -24,6 +24,9 @@ class UrlBuilderUtil
     const BACKOFFICE_ARTICLE = '/backoffice/articles/%d';
     const BACKOFFICE_NEW_ARTICLE = '/backoffice/articles/new';
 
+    const BACKOFFICE_CONTENT = '/backoffice/content';
+    const BACKOFFICE_CONTENT_EDIT = '/backoffice/content/%d';
+
     // Authorised URLs
     const AUTHORISED_ACCOUNT = '/account';
     const AUTHORISED_ACCOUNT_PASSWORD = '/account/password';
@@ -111,6 +114,16 @@ class UrlBuilderUtil
         return self::buildBaseUrl($language)
             . self::BACKOFFICE_NEW_ARTICLE
             . '?atId=' . $articleType->value;
+    }
+
+    public static function buildBackofficeContentUrl(Language $language): string
+    {
+        return self::buildBaseUrl($language) . self::BACKOFFICE_CONTENT;
+    }
+
+    public static function buildBackofficeContentEditUrl(Language $language, int $contentId): string
+    {
+        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_CONTENT_EDIT, $contentId);
     }
 
     public static function buildBackofficeUsersUrl(Language $language): string
