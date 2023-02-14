@@ -73,7 +73,7 @@ $defaultLanguage = $responseData->user?->language ?? $responseData->request->ses
 foreach (UserRole::getAll() as $role) {
         $selected = $responseData->user && $role == $responseData->user->role;
 ?>
-                <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>
+              <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>
 <?php
   }
 ?>
@@ -85,10 +85,11 @@ foreach (UserRole::getAll() as $role) {
           <label for="timezone" class="label"><?=$responseData->getLocalValue('globalTimezone')?></label>
           <div class="control">
             <select name="timezone" id="timezone">
-<?php foreach ($timezones as $timezone) {
-    $selected = $timezone === $defaultTimezone;
+<?php
+    foreach ($timezones as $timezone) {
+        $selected = $timezone === $defaultTimezone->getName();
 ?>
-                  <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$timezone?>" <?=$responseData->user && $responseData->user->timezone->getName() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
+              <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$timezone?>" <?=$responseData->user && $responseData->user->timezone->getName() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
 <?php } ?>
             </select>
           </div>

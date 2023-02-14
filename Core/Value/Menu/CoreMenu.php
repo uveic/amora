@@ -25,7 +25,7 @@ final class CoreMenu
             ),
             new MenuItem(
                 text: $localisationUtil->getValue('navAdminContent'),
-                icon: '<img class="img-svg" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Menu">',
+                icon: '<img class="img-svg m-l-025" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Menu">',
                 children: [
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeImagesUrl($language),
@@ -68,7 +68,7 @@ final class CoreMenu
             ),
             new MenuItem(
                 text: $username ?? $localisationUtil->getValue('navAccount'),
-                icon: '<img class="img-svg m-l-05" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Menu">',
+                icon: '<img class="img-svg m-l-025" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Menu">',
                 children: [
                     new MenuItem(
                         path: UrlBuilderUtil::buildAuthorisedAccountUrl($language),
@@ -119,7 +119,7 @@ final class CoreMenu
         );
         $output[] = new MenuItem(
             text: $username ?? $localisationUtil->getValue('navAccount'),
-            icon: '<img class="img-svg m-l-05" width="20" height="20" src="/img/svg/caret-down' . ($whiteIcon ? '-white' : '') . '.svg" alt="' . $localisationUtil->getValue('navAccount') . '">',
+            icon: '<img class="img-svg m-l-025" width="20" height="20" src="/img/svg/caret-down' . ($whiteIcon ? '-white' : '') . '.svg" alt="' . $localisationUtil->getValue('navAccount') . '">',
             children: [
                 new MenuItem(
                     path: UrlBuilderUtil::buildAuthorisedAccountUrl($language),

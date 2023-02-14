@@ -11,6 +11,7 @@ use DateTimeImmutable;
 use GdImage;
 use Amora\Core\Util\Logger;
 use Amora\Core\Util\StringUtil;
+use Throwable;
 
 class ImageService
 {
@@ -57,8 +58,16 @@ class ImageService
             return null;
         }
 
-        $exif = exif_read_data($filePathWithName, 'FILE, IFD0, EXIF, ANY_TAG');
-        $date = $exif['DateTimeOriginal'] ?? $exif['DateTime'] ?? null;
+        try {
+            $exif = @exif_read_data($filePathWithName, 'FILE, IFD0, EXIF, ANY_TAG');
+            $date = $exif['DateTimeOriginal'] ?? $exif['DateTime'] ?? null;
+        } catch (Throwable $t) {
+            $this->logger->logError(
+                'Error reading EXIF data. File: ' . $filePathWithName
+                . ' - Error: ' . $t->getMessage()
+            );
+            return null;
+        }
 
         return new ImageExif(
             width: isset($exif['COMPUTED']['Width']) ? (int)$exif['COMPUTED']['Width'] : null,
@@ -310,7 +319,19 @@ class ImageService
 
     private function checkExifAndRotateIfNecessary(GdImage $image, string $imagePath): GdImage|bool
     {
-        $exif = exif_read_data($imagePath, 0, true);
+        try {
+            $exif = exif_read_data($imagePath, 0, true);
+        } catch (Throwable $t) {
+            $this->logger->logError(
+                'Error reading EXIF data. Image path: ' . $imagePath
+                . ' - Error: ' . $t->getMessage()
+            );
+            return $image;
+        }
+
+        if (!$exif) {
+            return $image;
+        }
 
         $orientation = $exif['Orientation'] ?? ($exif['IFD0']['Orientation'] ?? null);
 

@@ -19,7 +19,6 @@ abstract class HtmlResponseDataAbstract
     public readonly string $siteName;
     public ?string $siteImagePath;
     public readonly int $lastUpdatedTimestamp;
-    public readonly string $pageTitleWithoutSiteName;
     public readonly string $nonce;
 
     public function __construct(
@@ -48,9 +47,8 @@ abstract class HtmlResponseDataAbstract
         $this->pageTitle = isset($pageTitle) && $pageTitle
             ? $pageTitle . ' - ' . $this->siteName
             : $this->getSiteNameAndTitle();
-        $this->pageTitleWithoutSiteName = $pageTitle ?? '';
         $this->pageDescription = $pageDescription
-            ?? $this->localisationUtil->getValue('siteDescription');
+            ?: $this->localisationUtil->getValue('siteDescription');
 
         $this->nonce = StringUtil::generateNonce();
     }
@@ -65,8 +63,21 @@ abstract class HtmlResponseDataAbstract
         return $this->pageDescription;
     }
 
-    public function getSiteLogoUrl(): ?string {
-        return Core::getConfig()->logoImageUrl;
+    public function buildSiteLogoHtml(?string $siteName = null): string {
+        $imageUrl = Core::getConfig()->logoImageUrl;
+        if (empty($siteName)) {
+            $siteName = $this->siteName;
+        }
+
+        $output = '';
+
+        if ($imageUrl) {
+            $output .= '<img src="' . $imageUrl . '" alt="' . $siteName . '">';
+        }
+
+        $output .= '<span>' . $siteName . '</span>';
+
+        return $output;
     }
 
     private function getSiteNameAndTitle(): string

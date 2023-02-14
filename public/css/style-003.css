@@ -360,6 +360,22 @@ label:not(:last-child) {
   min-height: 100%;
 }
 
+#register-title {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.5rem;
+}
+
+#register-title img {
+  width: auto;
+  height: auto;
+  max-width: 160px;
+  max-height: 70px;
+}
+
 #register-left {
   display: none;
 }
@@ -668,7 +684,7 @@ svg,
 .flex-parent {
   display: flex;
   flex-flow: row wrap;
-  gap: 1.5rem;
+  gap: 1rem;
   padding: 1rem;
 }
 

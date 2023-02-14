@@ -4,6 +4,7 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
+$siteLogoHtml = $responseData->buildSiteLogoHtml();
 
 ?>
 <!DOCTYPE html>
@@ -23,7 +24,7 @@ use Amora\Core\Util\UrlBuilderUtil;
     <form method="POST" id="form-invite-request">
       <div>
         <div class="div-request-form">
-          <h1 id="register-title" class="logo m-b-3"><?=$this->e($responseData->siteName)?></h1>
+          <h1 id="register-title" class="logo m-b-3"><?=$siteLogoHtml?></h1>
           <h2 id="register-subtitle"><?=$responseData->getLocalValue('authenticationInviteRequest')?></h2>
           <p class="light-text-color m-b-2"><?=$responseData->getLocalValue('authenticationInviteRequestSubtitle')?></p>
           <div class="field">

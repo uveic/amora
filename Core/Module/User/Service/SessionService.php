@@ -77,7 +77,7 @@ class SessionService
             'path' => '/',
             'secure' => $isLive,
             'httponly' => true,
-            'samesite' => 'Strict',
+            'samesite' => 'Lax',
         ];
 
         if ($isLive) {

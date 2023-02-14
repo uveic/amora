@@ -367,8 +367,8 @@ input.pexego-content-title {
   justify-content: space-between;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 1.5rem;
-  padding: 1.5rem;
+  gap: 1rem;
+  padding: 1rem;
 }
 
 .content-flex-block {

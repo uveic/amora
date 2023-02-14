@@ -25,7 +25,7 @@ $count = 0;
           <div id="upload-media-control">
             <input class="null" type="file" id="images" name="images" multiple="" accept="image/*">
             <label for="images" class="input-file-label">
-              <img class="img-svg img-svg-25 m-r-05" width="20" height="20" src="/img/svg/image-black.svg" alt="<?=$responseData->getLocalValue('navAdminImages')?>'">
+              <img class="img-svg img-svg-25 m-r-05" width="20" height="20" src="/img/svg/image-black.svg" alt="<?=$responseData->getLocalValue('navAdminImages')?>">
               <span><?=$responseData->getLocalValue('globalUploadImage')?></span>
             </label>
           </div>

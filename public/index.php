@@ -5,6 +5,7 @@ use Amora\Core\Entity\Request;
 use Amora\Core\Util\NetworkUtil;
 
 require_once '../Core/Core.php';
+
 try {
     Core::initiate(realpath(__DIR__ . '/..'));
 } catch (Throwable $t) {

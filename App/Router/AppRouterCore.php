@@ -4,8 +4,6 @@ namespace Amora\App\Router;
 
 use Amora\Core\Core;
 use Exception;
-use Amora\Core\Module\Analytics\AnalyticsCore;
-use Amora\Core\Module\User\UserCore;
 
 class AppRouterCore extends Core
 {
@@ -23,7 +21,6 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicHtmlController.php';
                 return new AppPublicHtmlController();
             },
-            isSingleton: true,
         );
     }
 
@@ -41,7 +38,6 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedHtmlController.php';
                 return new AppAuthorisedHtmlController();
             },
-            isSingleton: true,
         );
     }
 
@@ -59,7 +55,6 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeHtmlController.php';
                 return new AppBackofficeHtmlController();
             },
-            isSingleton: true,
         );
     }
 
@@ -77,7 +72,6 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeApiController.php';
                 return new AppBackofficeApiController();
             },
-            isSingleton: true,
         );
     }
 
@@ -95,7 +89,6 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedApiController.php';
                 return new AppAuthorisedApiController();
             },
-            isSingleton: true,
         );
     }
 
@@ -113,7 +106,6 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicApiController.php';
                 return new AppPublicApiController();
             },
-            isSingleton: true,
         );
     }
 }

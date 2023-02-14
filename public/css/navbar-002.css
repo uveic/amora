@@ -11,20 +11,28 @@ header {
 }
 
 .logo {
-  letter-spacing: 1px;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.75rem;
+  align-items: center;
+  letter-spacing: 0;
   font-family: var(--font-h1-title);
-  display: inline-block;
+  font-weight: bold;
+  font-size: 1.2rem;
+  line-height: 1;
   margin: 0;
   max-width: 400px;
   min-width: 175px;
   height: auto;
-  padding: 0.5rem 0;
+  padding: 0;
   color: var(--color-bg-main);
 }
 
 .logo img {
-  max-width: 140px;
   height: auto;
+  width: auto;
+  max-width: 140px;
+  max-height: 40px;
 }
 
 a.logo.black,
@@ -82,7 +90,7 @@ nav ul {
 .nav-dropdown-item:focus {
   color: var(--color-bg-main);
   text-decoration: none;
-  padding: 1em;
+  padding: 0.5em 0.75rem;
   margin: 0;
   display: block;
   position: relative;
@@ -282,8 +290,8 @@ ul.nav-dropdown-menu a:hover {
   }
 
   ul.user-nav-menu a {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
   }
 
   .mobile-nav-label {
@@ -293,10 +301,22 @@ ul.nav-dropdown-menu a:hover {
   ul.nav-dropdown-menu {
     position: absolute;
     right: 0;
-    top: 56px;
+    top: 46px;
+  }
+
+  ul.nav-dropdown-menu a {
+    padding: 0.75rem;
   }
 
   ul.nav-dropdown-menu > li > a {
-    padding-left: 1.5rem;
+    padding-left: 1rem;
+  }
+
+  .nav-dropdown-item,
+  .nav-dropdown-item:visited,
+  .nav-dropdown-item:hover,
+  .nav-dropdown-item:active,
+  .nav-dropdown-item:focus {
+    padding: 0.5em 0.75rem;
   }
 }
