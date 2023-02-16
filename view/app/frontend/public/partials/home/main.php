@@ -7,11 +7,13 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 $homepageContent = $responseData->homepageContent;
 $editLink = $homepageContent && $responseData->request->session && $responseData->request->session->isAdmin()
-    ? '<p class="no-margin"><a href="' . UrlBuilderUtil::buildBackofficeArticleUrl($homepageContent->language, $homepageContent->id) . '">' . strtolower($responseData->getLocalValue('globalEdit')) . '</a></p>'
+    ? '<p><a href="' . UrlBuilderUtil::buildBackofficeArticleUrl($homepageContent->language, $homepageContent->id) . '">' . strtolower($responseData->getLocalValue('globalEdit')) . '</a></p>'
     : '';
 ?>
-  <section class="home-main">
-    <?=$homepageContent ? $homepageContent->contentHtml : '';?>
-    <?=$editLink;?>
-
-  </section>
+  <article class="home-main">
+<?php if ($homepageContent->title) { ?>
+    <h1><?=$homepageContent->title?></h1>
+<?php } ?>
+    <?=$homepageContent->html?>
+    <?=$editLink?>
+  </article>

@@ -164,7 +164,7 @@
 }
 
 .article-id {
-  color: var(--light-color);
+  color: var(--color-light-0);
   font-size: 0.9rem;
   font-weight: normal;
 }
@@ -235,8 +235,8 @@
 .article-add-section {
   flex-grow: 0;
   display: inline-block;
-  background-color: var(--color-text-main);
-  color: var(--color-bg-main);
+  background-color: var(--color-text);
+  color: var(--color-bg);
   padding: 1rem;
   cursor: pointer;
   font-size: 1rem;
@@ -293,7 +293,7 @@
 }
 
 .article-status {
-  color: var(--color-bg-main);
+  color: var(--color-bg);
   padding: 0.15rem 0.4rem;
   margin: 0.5rem 0 0 0;
   border-radius: 5%;
@@ -308,14 +308,14 @@
 
 .pexego-content-title {
   border: none;
-  background-color: var(--color-bg-main);
+  background-color: var(--color-bg);
   font-family: var(--font-h1-title);
   margin: 0;
   padding: 0 1rem;
   font-size: 2rem;
   font-weight: bold;
   line-height: 2rem;
-  color: var(--color-text-main);
+  color: var(--color-text);
 }
 
 input.pexego-content-title {
@@ -392,7 +392,7 @@ input.pexego-content-title {
 .content-flex-block > h1 a:active,
 .content-flex-block > h1 a:visited,
 .content-flex-block > h1 a:focus {
-  color: var(--color-text-main);
+  color: var(--color-text);
 }
 
 .content-form {
@@ -497,22 +497,9 @@ input.pexego-content-title {
 
 .item-more-selected {
   justify-content: center;
-  background-color: var(--color-bg-main);
+  background-color: var(--color-bg);
   text-align: center;
   padding-bottom: 0.75rem;
-}
-
-.item-more-link {
-  background-image: url('/img/svg/caret-double-down.svg');
-  background-position: center;
-  background-size: cover;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-}
-
-.item-more-link-up {
-  background-image: url('/img/svg/caret-double-up.svg');
 }
 
 .item-content {
@@ -559,8 +546,8 @@ input.pexego-content-title {
 
 /* Media upload style starts here */
 .content-images {
-  background-color: var(--color-text-main);
-  color: var(--color-bg-main);
+  background-color: var(--color-text);
+  color: var(--color-bg);
   padding: 1rem 1rem 4rem;
   min-height: 100vh;
 }
@@ -568,8 +555,8 @@ input.pexego-content-title {
 .add-image-wrapper {
   height: 100%;
   overflow: auto;
-  color: var(--color-bg-main);
-  background-color: var(--color-text-main);
+  color: var(--color-bg);
+  background-color: var(--color-text);
   padding: 1rem;
 }
 
@@ -582,7 +569,7 @@ input.pexego-content-title {
   padding: 1rem 4rem 1rem 1rem;
   position: fixed;
   z-index: 998;
-  background-color: var(--color-text-main);
+  background-color: var(--color-text);
   top: 0;
   left: 0;
   right: 0;
@@ -604,7 +591,7 @@ input.pexego-content-title {
   height: auto;
   min-height: 50px;
   flex-grow: 1;
-  border: 4px solid var(--color-bg-main);
+  border: 4px solid var(--color-bg);
   position: relative;
   cursor: pointer;
   overflow: hidden;
@@ -634,14 +621,14 @@ input.pexego-content-title {
 }
 
 .button-dark {
-  background-color: var(--color-text-main);
-  color: var(--color-bg-main);
+  background-color: var(--color-text);
+  color: var(--color-bg);
 }
 
 .input-file-label {
-  background: var(--color-bg-main);
+  background: var(--color-bg);
   border: 1px solid var(--color-text);
-  color: var(--color-text-main);
+  color: var(--color-text);
   cursor: pointer;
   display: inline-block;
   font-size: 1rem;
@@ -658,8 +645,8 @@ input.pexego-content-title {
 .image-wrapper {
   display: flex;
   flex-flow: row wrap;
-  background-color: var(--color-text-main);
-  color: var(--color-bg-main);
+  background-color: var(--color-text);
+  color: var(--color-bg);
   min-height: 250px;
 }
 
@@ -707,7 +694,7 @@ input.pexego-content-title {
   flex-flow: row nowrap;
   gap: 0.5rem;
   align-items: center;
-  color: var(--color-bg-main);
+  color: var(--color-bg);
 }
 
 .image-wrapper .image-delete {
@@ -745,7 +732,7 @@ input.pexego-content-title {
   display: flex;
   flex-flow: row wrap;
   gap: 0.5rem;
-  color: var(--color-bg-main);
+  color: var(--color-bg);
   justify-content: space-between;
   align-items: center;
 }
@@ -778,11 +765,11 @@ input.pexego-content-title {
 .media-load-more:visited {
   display: block;
   text-align: center;
-  color: var(--color-text-main);
+  color: var(--color-text);
   width: 100%;
   font-size: 1.2rem;
   padding: 1rem;
-  background-color: var(--color-bg-main);
+  background-color: var(--color-bg);
   margin: 1rem 0;
 }
 
@@ -821,7 +808,7 @@ input.pexego-content-title {
 }
 
 #media-container .media-item:hover {
-  background-color: var(--color-bg-main);
+  background-color: var(--color-bg);
 }
 
 /* Media upload style ends here */
@@ -834,7 +821,7 @@ input.pexego-content-title {
   z-index: 999;
   top: 0;
   right: 0;
-  background-color: var(--color-bg-main);
+  background-color: var(--color-bg);
   overflow: auto;
   padding: 1.25rem;
   transition: 0.5s;
@@ -1066,7 +1053,7 @@ input.pexego-content-title {
   flex-flow: row nowrap;
   gap: 0.5rem;
   align-items: center;
-  color: var(--color-text-main);
+  color: var(--color-text);
   padding: 0.25rem 0.5rem;
 }
 
@@ -1076,12 +1063,12 @@ input.pexego-content-title {
   top: 40px;
   display: flex;
   flex-flow: column nowrap;
-  background-color: var(--color-bg-main);
+  background-color: var(--color-bg);
   border: 1px solid var(--color-light-2);
 }
 
 .analytics-controls-more-options a {
-  color: var(--color-text-main);
+  color: var(--color-text);
   border-bottom: 1px solid var(--color-light-2);
   padding: 0.5rem 1rem;
 }
@@ -1089,7 +1076,7 @@ input.pexego-content-title {
 .analytics-controls-more-options a:hover,
 .analytics-controls a:hover,
 .analytics-controls-more:hover {
-  color: var(--color-text-main);
+  color: var(--color-text);
   background-color: var(--color-light-2);
 }
 /* Analytics style ends here */
@@ -1112,8 +1099,30 @@ h2.page-content-subtitle {
 }
 
 .page-content-before {
-  color: var(--color-light);
+  color: var(--color-light-3);
   font-size: 0.8rem;
+}
+
+.editor-title {
+  margin-bottom: 0;
+}
+
+.editor-content {
+  min-height: 250px !important;
+  margin: 0 0 2rem;
+  font-family: var(--font-h1-title);
+}
+
+.editor-placeholder {
+  color: var(--color-light-4);
+}
+
+.editor-content p:first-child {
+  margin-top: 0;
+}
+
+.editor-content p:last-child {
+  margin-bottom: 0;
 }
 /* Page content editor ends here */
 
