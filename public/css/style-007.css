@@ -710,7 +710,7 @@ svg,
 .home-main {
   max-width: var(--content-max-width);
   margin: 6rem auto;
-  padding: 0 1rem;
+  padding: 0;
 }
 
 .home-blog {

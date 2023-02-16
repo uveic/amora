@@ -7,6 +7,7 @@ use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Article\Model\ArticlePath;
+use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
@@ -174,12 +175,11 @@ class ArticleService
         return $this->articleDataLayer->getSectionsForArticleId($articleId);
     }
 
-    public function getArticlePartialContent(ArticleType $articleType, Language $language): ?Article
+    public function getPageContent(PageContentType $type, Language $language): ?PageContent
     {
-        $res = $this->filterArticlesBy(
+        $res = $this->filterPageContentBy(
             languageIsoCodes: [$language->value],
-            statusIds: [ArticleStatus::Published->value],
-            typeIds: [$articleType->value],
+            typeIds: [$type->value],
         );
 
         if (count($res) > 1) {

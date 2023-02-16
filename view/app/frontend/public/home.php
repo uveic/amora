@@ -26,6 +26,6 @@ if ($responseData->feedback) {
 <?=$this->insert('partials/home/articles', ['responseData' => $responseData])?>
 <?=$this->insert('partials/home/blog', ['responseData' => $responseData])?>
 <?=$this->insert('partials/footer', ['responseData' => $responseData])?>
-  <script type="module" src="/js/main-001.js"></script>
+  <script type="module" src="/js/main-002.js"></script>
 </body>
 </html>

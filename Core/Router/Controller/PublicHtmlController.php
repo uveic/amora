@@ -12,6 +12,7 @@ use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\XmlService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
@@ -347,8 +348,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             ),
         );
 
-        $homepageArticle = $this->articleService->getArticlePartialContent(
-            articleType: ArticleType::PartialContentHomepage,
+        $homepageArticle = $this->articleService->getPageContent(
+            type: PageContentType::Homepage,
             language: $request->siteLanguage,
         );
 

@@ -7,6 +7,7 @@ use Amora\App\Router\AppRouterCore;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Util\UrlBuilderUtil;
 use Exception;
 use Throwable;
@@ -232,8 +233,8 @@ class Router
                         publishedAfter: $article->publishOn,
                         isAdmin: $isAdmin,
                     ) : null,
-                postBottomContent: $articleService->getArticlePartialContent(
-                    articleType: ArticleType::PartialContentBlogBottom,
+                postBottomContent: $articleService->getPageContent(
+                    type: PageContentType::BlogBottom,
                     language: $request->siteLanguage,
                 ),
             ),
