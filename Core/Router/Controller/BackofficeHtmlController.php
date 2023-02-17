@@ -215,22 +215,6 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             ? ArticleType::from($articleTypeParam)
             : null;
 
-        if (ArticleType::isPartialContent($articleType)) {
-            $articles = $this->articleService->filterArticlesBy(
-                languageIsoCodes: [$request->siteLanguage->value],
-                typeIds: [$articleType->value],
-            );
-
-            if ($articles) {
-                return Response::createRedirectResponse(
-                    UrlBuilderUtil::buildBackofficeArticleUrl(
-                        language: $request->siteLanguage,
-                        articleId: $articles[0]->id,
-                    )
-                );
-            }
-        }
-
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
             template: 'core/backoffice/articles-edit',

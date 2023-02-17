@@ -14,8 +14,6 @@ $articleType = !empty($articleTypeIdGetParam) && ArticleType::tryFrom($articleTy
 $pageTitle = match ($articleType) {
     ArticleType::Blog => $responseData->getLocalValue('navAdminBlogPosts'),
     ArticleType::Page => $responseData->getLocalValue('navAdminArticles'),
-    ArticleType::PartialContentBlogBottom => $responseData->getLocalValue('navAdminPartialContent'),
-    ArticleType::PartialContentHomepage => $responseData->getLocalValue('articleTypePartialContentHomepage'),
 };
 ?>
     <section class="page-header">

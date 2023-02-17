@@ -13,10 +13,8 @@ enum ArticleType: int
     public static function getAll(): array
     {
         return [
-            self::PartialContentHomepage,
             self::Blog,
             self::Page,
-            self::PartialContentBlogBottom,
         ];
     }
 
