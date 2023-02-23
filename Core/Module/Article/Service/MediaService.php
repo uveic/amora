@@ -334,7 +334,7 @@ class MediaService
     private function getOrGenerateMediaFolder(string $mediaBasePath): string
     {
         $now = new DateTimeImmutable();
-        $extraImagePath = md5($now->format('Y-m'));
+        $extraImagePath = md5($now->format('Y-W'));
         $fullPath = $mediaBasePath . '/' . $extraImagePath;
 
         if (is_dir($fullPath)) {

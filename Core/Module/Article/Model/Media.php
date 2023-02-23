@@ -7,6 +7,7 @@ use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 
 class Media
@@ -68,6 +69,7 @@ class Media
         return [
             'id' => $this->id,
             'path' => $this->getPathWithNameMedium(),
+            'fullPath' => UrlBuilderUtil::buildBaseUrlWithoutLanguage() . $this->getPathWithNameMedium(),
             'caption' => $this->captionHtml,
             'captionHtml' => $this->captionHtml,
             'name' => $this->type === MediaType::Image

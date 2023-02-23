@@ -53,6 +53,18 @@ class UtilClass {
     setTimeout(() => {feedbackDiv.classList.add('null')}, 15000);
   }
 
+  notifyUser(message) {
+    const feedbackDiv = document.querySelector('#feedback');
+
+    if (!feedbackDiv) return;
+
+    feedbackDiv.textContent = message;
+    feedbackDiv.classList.add('feedback-success');
+    feedbackDiv.classList.remove('feedback-error');
+    feedbackDiv.classList.remove('null');
+    setTimeout(() => {feedbackDiv.classList.add('null')}, 5000);
+  }
+
   createMediumEditor(containerClassName) {
     new MediumEditor(
       '.' + containerClassName,

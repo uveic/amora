@@ -16,6 +16,8 @@ class Global {
       "genericError": "Something went wrong, please try again.",
       "genericErrorGetInTouch": "An unexpected error has occurred. Please, refresh the page and try it again. Get in touch with support if the error persists. Error: ",
       "feedbackSaving": "Nothing to save...",
+      "feedbackCopyLinkSuccess": "Ligazón copiada!",
+      "feedbackCopyLinkError": "Non se puido copiar a ligazón",
 
       "globalSave": "Save",
       "globalModify": "Modify",
@@ -76,6 +78,8 @@ class Global {
       "genericError": "Ha ocurrido un error inesperado, por favor inténtalo de nuevo.",
       "genericErrorGetInTouch": "Ha ocurrido un error inesperado. Por favor, actualiza la página e intétalo de nuevo. Ponte en contacto con el soporte técnico si el error continúa. Error: ",
       "feedbackSaving": "Nada que guardar...",
+      "feedbackCopyLinkSuccess": "¡Enlace copiado!",
+      "feedbackCopyLinkError": "No se ha podido copiar el enlace",
 
       "globalSave": "Guardar",
       "globalModify": "Modificar",
@@ -136,6 +140,8 @@ class Global {
       "genericError": "Algo non foi ben, por favor inténtao de novo.",
       "genericErrorGetInTouch": "Erro inesperado. Por favor, actualiza a páxina e inténtao de novo. Ponte en contacto co soporte técnico se o erro persiste. Erro: ",
       "feedbackSaving": "Nada que gardar...",
+      "feedbackCopyLinkSuccess": "Ligazón copiada!",
+      "feedbackCopyLinkError": "Non se puido copiar a ligazón",
 
       "globalSave": "Gardar",
       "globalModify": "Modificar",
