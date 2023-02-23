@@ -657,6 +657,14 @@ input.pexego-content-title {
   min-height: 250px;
 }
 
+.image-wrapper .image-number {
+  margin-right: 2rem;
+  padding-bottom: 1rem;
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: var(--color-light-4);
+}
+
 .image-wrapper > .image-main {
   width: auto;
   min-width: 300px;
@@ -722,18 +730,20 @@ input.pexego-content-title {
 .image-wrapper .image-meta > div{
   display: flex;
   flex-flow: row nowrap;
+  align-items: center;
   gap: 0.5rem;
   line-height: 1;
 }
 
 .image-wrapper .image-meta .ellipsis {
+  padding-top: 0.25rem;
   display: inline-block;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-y: hidden;
+  overflow-x: scroll;
   white-space: nowrap;
   text-overflow: ellipsis;
-  scrollbar-width: thin;
-  -webkit-scrollbar: 0.25rem;
+  scrollbar-width: none;
+  -webkit-scrollbar: 0;
 }
 
 .image-wrapper .image-path {
