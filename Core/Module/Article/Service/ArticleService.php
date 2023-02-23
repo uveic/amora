@@ -5,7 +5,9 @@ namespace Amora\Core\Module\Article\Service;
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\Feedback;
+use Amora\Core\Module\Article\Entity\SitemapItem;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Util\Logger;
@@ -572,5 +574,29 @@ class ArticleService
         );
 
         return $resTransaction->isSuccess;
+    }
+
+    public function getSitemapItemsForArticles(): array
+    {
+        $articles = $this->filterArticlesBy(
+            languageIsoCodes: [Core::getDefaultLanguage()->value],
+            statusIds: [ArticleStatus::Published->value],
+            typeIds: [ArticleType::Page->value],
+            publishedBefore: new DateTimeImmutable(),
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
+            ),
+        );
+
+        $sitemapItems = [];
+        /** @var Article $article */
+        foreach ($articles as $article) {
+            $sitemapItems[] = new SitemapItem(
+                path: $article->path,
+                updatedAt: $article->updatedAt,
+            );
+        }
+
+        return $sitemapItems;
     }
 }

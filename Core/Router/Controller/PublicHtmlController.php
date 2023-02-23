@@ -313,18 +313,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getSitemap(Request $request): Response
     {
-        $articles = $this->articleService->filterArticlesBy(
-            languageIsoCodes: [Core::getDefaultLanguage()->value],
-            statusIds: [ArticleStatus::Published->value],
-            typeIds: [ArticleType::Page->value],
-            publishedBefore: new DateTimeImmutable(),
-            queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
-            ),
-        );
-
+        $sitemapItems = $this->articleService->getSitemapItemsForArticles();
         $xml = $this->xmlService->buildSitemap(
-            articles: $articles,
+            sitemapItems: $sitemapItems,
         );
 
         return Response::createSuccessXmlResponse($xml);

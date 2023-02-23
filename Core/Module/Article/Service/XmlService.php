@@ -5,6 +5,7 @@ namespace Amora\Core\Module\Article\Service;
 use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
+use Amora\Core\Module\Article\Entity\SitemapItem;
 use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Tag;
@@ -19,7 +20,7 @@ class XmlService
         private readonly Logger $logger,
     ) {}
 
-    public function buildSitemap(array $articles): string
+    public function buildSitemap(array $sitemapItems): string
     {
         $this->logger->logInfo('Building sitemap...');
 
@@ -29,7 +30,7 @@ class XmlService
                 '<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">',
             ],
             $this->buildSitemapContent(
-                articles: $articles,
+                sitemapItems: $sitemapItems,
             ),
             [
                 '</urlset>',
@@ -141,15 +142,15 @@ class XmlService
         return $output;
     }
 
-    private function buildSitemapContent(array $articles): array
+    private function buildSitemapContent(array $sitemapItems): array
     {
         $output = [];
 
-        /** @var Article $article */
-        foreach ($articles as $article) {
+        /** @var SitemapItem $sitemapItem */
+        foreach ($sitemapItems as $sitemapItem) {
             $output[] = '<url>';
-            $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticlePath(path: $article->path) . '</loc>';
-            $output[] = '<lastmod>' . $article->updatedAt->format('Y-m-d') . '</lastmod>';
+            $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticlePath(path: $sitemapItem->path) . '</loc>';
+            $output[] = '<lastmod>' . $sitemapItem->updatedAt->format('Y-m-d') . '</lastmod>';
             $output[] = '</url>';
         }
 
