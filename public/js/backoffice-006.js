@@ -1,8 +1,8 @@
-import {Util} from './module/Util-004.js';
+import {Util} from './module/Util-005.js';
 import {xhr} from './module/xhr-001.js';
 import {global} from "./module/localisation-002.js";
-import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego-004.js";
-import {Uploader} from "./module/Uploader-005.js";
+import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego-005.js";
+import {Uploader} from "./module/Uploader-006.js";
 
 let globalTags = [];
 
@@ -114,7 +114,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
 
         let currentSection = {
           id: section.dataset.sectionId ? Number.parseInt(section.dataset.sectionId) : null,
-          sectionTypeId: Util.getSectionTypeIdFromClassList(section.classList),
+          sectionTypeId: Pexego.getSectionTypeIdFromClassList(section.classList),
           contentHtml: sectionContentHtml,
           order: order++
         };

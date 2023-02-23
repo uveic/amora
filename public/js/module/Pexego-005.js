@@ -1,5 +1,5 @@
 import {global} from "./localisation-002.js";
-import {Uploader} from "./Uploader-005.js";
+import {Uploader} from "./Uploader-006.js";
 
 class Pexego {
   static defaultActions = {
@@ -525,6 +525,20 @@ class Pexego {
     if (focus) {
       divEditor.scrollIntoView();
       divEditor.focus();
+    }
+  }
+
+  getSectionTypeIdFromClassList(classList) {
+    if (classList.contains(pexegoClasses.sectionParagraph)) {
+      return 1;
+    }
+
+    if (classList.contains(pexegoClasses.sectionImage)) {
+      return 2;
+    }
+
+    if (classList.contains(pexegoClasses.sectionVideo)) {
+      return 3;
     }
   }
 }

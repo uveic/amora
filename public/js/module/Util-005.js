@@ -1,5 +1,4 @@
 import {global} from './localisation-002.js';
-import {pexegoClasses} from "./Pexego-004.js";
 
 class UtilClass {
   getUpdatedAtTime() {
@@ -25,20 +24,6 @@ class UtilClass {
       .replace(/[^A-Za-z0-9\-]/g,'-')
       .replace(/-+/g, '-')
       .replace(/-$/g, '');
-  }
-
-  getSectionTypeIdFromClassList(classList) {
-    if (classList.contains(pexegoClasses.sectionParagraph)) {
-      return 1;
-    }
-
-    if (classList.contains(pexegoClasses.sectionImage)) {
-      return 2;
-    }
-
-    if (classList.contains(pexegoClasses.sectionVideo)) {
-      return 3;
-    }
   }
 
   logError(error, errorMessage = null) {
