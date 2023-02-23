@@ -696,6 +696,7 @@ input.pexego-content-title {
 
 .image-wrapper .image-info .image-caption {
   word-wrap: anywhere;
+  padding-bottom: 2rem;
 }
 
 .image-wrapper .image-next-wrapper {
@@ -732,7 +733,8 @@ input.pexego-content-title {
   flex-flow: row nowrap;
   align-items: center;
   gap: 0.5rem;
-  line-height: 1;
+  line-height: 1.3;
+  font-size: 0.9rem;
 }
 
 .image-wrapper .image-meta .ellipsis {

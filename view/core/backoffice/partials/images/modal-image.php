@@ -34,6 +34,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
           </div>
           <div class="image-next-wrapper m-t-2">
             <a href="#" class="image-previous-action hidden" data-direction="ASC"><img src="/img/svg/caret-left-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalNext')?>"><?=strtolower($responseData->getLocalValue('globalNext'))?></a>
+            <a href="#" class="image-random-action" data-direction="RAND()"><img src="/img/svg/shuffle-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalNext')?>"></a>
             <a href="#" class="image-next-action" data-direction="DESC"><?=strtolower($responseData->getLocalValue('globalPrevious'))?><img src="/img/svg/caret-right-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalPrevious')?>"></a>
           </div>
         </div>

@@ -119,17 +119,28 @@ class MediaService
         ?int $formId = null,
         ?int $userId = null,
     ): array {
-        $files = $this->filterMediaBy(
-            ids: $mediaId ? [$mediaId] : [],
-            userIds: $userId ? [$userId] : [],
-            typeIds: $mediaType ? [$mediaType->value] : [],
-            statusIds: [MediaStatus::Active->value],
-            fromId: $formId,
-            queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy('id', $direction)],
-                pagination: new Response\Pagination(itemsPerPage: $qty),
-            ),
-        );
+        $files = QueryOrderDirection::RAND === $direction
+            ? $this->filterMediaBy(
+                ids: $mediaId ? [$mediaId] : [],
+                userIds: $userId ? [$userId] : [],
+                typeIds: $mediaType ? [$mediaType->value] : [],
+                statusIds: [MediaStatus::Active->value],
+                queryOptions: new QueryOptions(
+                    pagination: new Response\Pagination(itemsPerPage: $qty),
+                    orderRandomly: QueryOrderDirection::RAND === $direction,
+                ),
+            )
+            : $this->filterMediaBy(
+                ids: $mediaId ? [$mediaId] : [],
+                userIds: $userId ? [$userId] : [],
+                typeIds: $mediaType ? [$mediaType->value] : [],
+                statusIds: [MediaStatus::Active->value],
+                fromId: $formId,
+                queryOptions: new QueryOptions(
+                    orderBy: [new QueryOrderBy('id', $direction)],
+                    pagination: new Response\Pagination(itemsPerPage: $qty),
+                ),
+            );
 
         $output = [];
         /** @var Media $file */

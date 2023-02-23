@@ -477,9 +477,10 @@ document.querySelectorAll('.image-item').forEach(im => {
   im.addEventListener('click', e => displayImagePopup(e, im.dataset.mediaId));
 });
 
-document.querySelectorAll('.image-next-action, .image-previous-action').forEach(ina => {
+document.querySelectorAll('.image-next-action, .image-previous-action, .image-random-action').forEach(ina => {
   ina.addEventListener('click', e => {
-    const mediaId = document.querySelector('.image-wrapper .image-main img').dataset.mediaId;
+    const img = document.querySelector('.image-wrapper .image-main img');
+    const mediaId = img ? img.dataset.mediaId : 0;
     const direction = ina.dataset.direction;
 
     displayImagePopup(e, mediaId, true, direction);
@@ -938,6 +939,10 @@ document.querySelectorAll('#filter-article-button').forEach(a => {
 });
 
 document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+    return;
+  };
+
   if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
     document.querySelectorAll('.modal-wrapper').forEach(m => {
       if (!m.classList.contains('null')) {
@@ -962,6 +967,14 @@ document.addEventListener('keydown', e => {
     document.querySelectorAll('.modal-wrapper').forEach(m => {
       if (!m.classList.contains('null')) {
         m.querySelector('a.modal-close-button').click();
+      }
+    });
+  } else if (e.key.toLowerCase() === 'r') {
+    document.querySelectorAll('.modal-wrapper').forEach(m => {
+      const button = m.querySelector('a.image-random-action');
+      if (button) {
+        e.preventDefault();
+        button.click();
       }
     });
   }
