@@ -223,6 +223,20 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   });
 });
 
+const handleCopyLink = (ev, href) => {
+  ev.preventDefault();
+
+  if (!navigator.clipboard) {
+    Util.logError(new Error(global.get('feedbackCopyLinkError')));
+    return;
+  }
+
+  navigator.clipboard.writeText(href).then(() => {
+    Util.notifyUser(global.get('feedbackCopyLinkSuccess'));
+  })
+    .catch(error => Util.logError(error, global.get('feedbackCopyLinkError')));
+};
+
 const displayImage = (image) => {
   const modal = document.querySelector('.image-modal');
   const loadingContainer = modal.querySelector('.image-modal-loading');
@@ -289,17 +303,21 @@ const displayImage = (image) => {
   modal.querySelector('.image-title').textContent = '#' + image.id;
   modal.querySelector('.image-caption').textContent = image.caption;
   modal.querySelector('.image-meta').innerHTML =
-    '<span><img src="/img/svg/upload-simple-white.svg" class="img-svg m-r-05" alt="Upload">'
+    '<div><img src="/img/svg/upload-simple-white.svg" class="img-svg m-r-05" alt="Upload">'
     + global.formatDate(new Date(image.createdAt), true, true, true, true, true)
-    + '</span><span>'
-    + '<img src="/img/svg/user-white.svg" class="img-svg m-r-05" alt="User">' + image.userName
-    + '</span><span class="image-path">'
+    + '</div>'
+    + (image.userName ? '<div><img src="/img/svg/user-white.svg" class="img-svg m-r-05" alt="User">' + image.userName + '</div>': '')
+    + '<div class="image-path">'
     + '<img src="/img/svg/link-white.svg" class="img-svg m-r-05" alt="Link">' + image.path
-    + '</span>'
+    + '<a href="' + image.fullPath + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg m-l-05 copy-link" alt="Copy link"></a>'
+    + '</div>'
     + (takenAt ? '<span>' + takenAt + '</span>' : '')
     + (camera ? '<span>' + camera + '</span>' : '')
     + (pixels ? '<span>' + pixels + '</span>' : '')
     + (size ? '<span>' + size + '</span>' : '');
+
+  modal.querySelector('.image-meta .copy-link')
+    .addEventListener('click', e => handleCopyLink(e, image.fullPath));
 
   const appearsOnContainer = modal.querySelector('.image-appears-on');
   appearsOnContainer.innerHTML = '';
@@ -1089,6 +1107,10 @@ document.querySelectorAll('.modal-close-button').forEach(el => {
     e.preventDefault();
     el.parentElement.parentElement.classList.add('null');
   });
+});
+
+document.querySelectorAll('.copy-link').forEach(a => {
+  a.addEventListener('click', e => handleCopyLink(e, a.href));
 });
 
 export {handleDropdownOptionClick};

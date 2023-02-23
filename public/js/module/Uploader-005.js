@@ -45,11 +45,16 @@ class UploaderClass {
       // image.src = String(reader.result);
 
       const imgLoading = UploaderClass.buildImageLoadingElement();
+      const figureContainer = document.createElement('figure');
+      figureContainer.className = 'image-container';
 
-      imageContainer.appendChild(imgLoading);
+      figureContainer.appendChild(image);
+      figureContainer.appendChild(imgLoading);
+
+      imageContainer.appendChild(figureContainer);
       imageContainer.firstChild
-        ? imageContainer.insertBefore(image, imageContainer.firstChild)
-        : imageContainer.appendChild(image);
+        ? imageContainer.insertBefore(figureContainer, imageContainer.firstChild)
+        : imageContainer.appendChild(figureContainer);
 
       xhr.postImage(apiUploadEndpoint, formData, userFeedbackDiv)
         .then(response => {
@@ -61,7 +66,7 @@ class UploaderClass {
           image.src = response.file.path;
           image.dataset.mediaId = response.file.id;
           image.alt = response.file.caption ?? response.file.name;
-          imageContainer.removeChild(imgLoading);
+          figureContainer.removeChild(imgLoading);
 
           then(response);
         })
