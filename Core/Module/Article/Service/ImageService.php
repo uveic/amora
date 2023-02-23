@@ -15,9 +15,12 @@ use Throwable;
 
 class ImageService
 {
+    const IMAGE_SIZE_SMALL = 1;
     const IMAGE_SIZE_MEDIUM = 2;
     const IMAGE_SIZE_LARGE = 3;
 
+    const IMAGE_SIZE_SMALL_MAX_HEIGHT = 600;
+    const IMAGE_SIZE_SMALL_MAX_WIDTH = 600;
     const IMAGE_SIZE_MEDIUM_MAX_HEIGHT = 1200;
     const IMAGE_SIZE_MEDIUM_MAX_WIDTH = 1200;
     const IMAGE_SIZE_LARGE_MAX_HEIGHT = 1600;
@@ -30,10 +33,13 @@ class ImageService
     public function resizeOriginalImage(
         RawFile $rawFile,
         ?User $user,
-        ?string $extraImagePath = null,
+        ?bool $includeLarge = false,
     ): Media {
+        $imageSmall = $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_SMALL);
         $imageMedium = $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_MEDIUM);
-        $imageLarge = $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_LARGE);
+        $imageLarge = $includeLarge
+            ? $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_LARGE)
+            : null;
 
         $now = new DateTimeImmutable();
 
@@ -42,11 +48,12 @@ class ImageService
             type: $rawFile->mediaType,
             status: MediaStatus::Active,
             user: $user,
-            path: $extraImagePath,
+            path: $rawFile->extraPath,
             filenameOriginal: $rawFile->name,
-            filenameLarge: $imageLarge->name,
+            filenameLarge: $imageLarge?->name,
             filenameMedium: $imageMedium->name,
-            caption: $rawFile->originalName,
+            filenameSmall: $imageSmall->name,
+            captionHtml: $rawFile->originalName,
             createdAt: $now,
             updatedAt: $now,
         );
@@ -117,7 +124,7 @@ class ImageService
         }
 
         $newFilename = $this->getNewImageName($image->extension);
-        $outputFullPath = rtrim($image->path, ' /') . '/'  . $newFilename;
+        $outputFullPath = $image->getPath() . '/'  . $newFilename;
 
         $this->detectImageTypeAndResize(
             $image->extension,
@@ -141,7 +148,8 @@ class ImageService
         return new RawFile(
             originalName: $newFilename,
             name: $newFilename,
-            path: $image->path,
+            basePath: $image->basePath,
+            extraPath: $image->extraPath,
             extension: $image->extension,
             mediaType: $image->mediaType,
         );
@@ -165,6 +173,8 @@ class ImageService
     private function getDefaultWidthSize(int $imageDefaultSize): int
     {
         switch ($imageDefaultSize) {
+            case self::IMAGE_SIZE_SMALL:
+                return self::IMAGE_SIZE_SMALL_MAX_WIDTH;
             case self::IMAGE_SIZE_MEDIUM:
                 return self::IMAGE_SIZE_MEDIUM_MAX_WIDTH;
             case self::IMAGE_SIZE_LARGE:
@@ -178,6 +188,8 @@ class ImageService
     private function getDefaultHeightSize(int $imageDefaultSize): int
     {
         switch ($imageDefaultSize) {
+            case self::IMAGE_SIZE_SMALL:
+                return self::IMAGE_SIZE_SMALL_MAX_HEIGHT;
             case self::IMAGE_SIZE_MEDIUM:
                 return self::IMAGE_SIZE_MEDIUM_MAX_HEIGHT;
             case self::IMAGE_SIZE_LARGE:
@@ -262,7 +274,11 @@ class ImageService
 
         $outputImage = $this->checkExifAndRotateIfNecessary($outputImage, $sourceFullPath);
 
-        imagejpeg($outputImage, $outputFullPath, 85);
+        $res = imagejpeg($outputImage, $outputFullPath, 90);
+
+        if (!$res) {
+            $this->logger->logError('Error resizing image: ' . $outputFullPath);
+        }
     }
 
     private function resizeWebpImage(
@@ -288,7 +304,11 @@ class ImageService
             $originalHeight
         );
 
-        imagewebp($outputImage, $outputFullPath, 85);
+        $res = imagewebp($outputImage, $outputFullPath, 90);
+
+        if (!$res) {
+            $this->logger->logError('Error resizing image: ' . $outputFullPath);
+        }
     }
 
     private function resizePngImage(
@@ -314,7 +334,11 @@ class ImageService
             $originalHeight
         );
 
-        imagepng($outputImage, $outputFullPath);
+        $res = imagepng($outputImage, $outputFullPath);
+
+        if (!$res) {
+            $this->logger->logError('Error resizing image: ' . $outputFullPath);
+        }
     }
 
     private function checkExifAndRotateIfNecessary(GdImage $image, string $imagePath): GdImage|bool

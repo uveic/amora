@@ -20,7 +20,8 @@ class Media
         public readonly string $filenameOriginal,
         public readonly ?string $filenameLarge,
         public readonly ?string $filenameMedium,
-        public readonly ?string $caption,
+        public readonly ?string $filenameSmall,
+        public readonly ?string $captionHtml,
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt
     ) {}
@@ -36,7 +37,8 @@ class Media
             filenameOriginal: $data['media_filename_original'],
             filenameLarge: $data['media_filename_large'] ?? null,
             filenameMedium: $data['media_filename_medium'] ?? null,
-            caption: $data['media_caption'] ?? null,
+            filenameSmall: $data['media_filename_small'] ?? null,
+            captionHtml: $data['media_caption_html'] ?? null,
             createdAt: DateUtil::convertStringToDateTimeImmutable($data['media_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($data['media_updated_at']),
         );
@@ -52,9 +54,10 @@ class Media
             'user' => $this->user ? $this->user->asArray() : [],
             'path' => $this->path,
             'filename_original' => $this->filenameOriginal,
+            'filename_small' => $this->filenameSmall,
             'filename_medium' => $this->filenameMedium,
             'filename_large' => $this->filenameLarge,
-            'caption' => $this->caption,
+            'caption' => $this->captionHtml,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
         ];
@@ -65,7 +68,8 @@ class Media
         return [
             'id' => $this->id,
             'path' => $this->getPathWithNameMedium(),
-            'caption' => $this->caption,
+            'caption' => $this->captionHtml,
+            'captionHtml' => $this->captionHtml,
             'name' => $this->type === MediaType::Image
                 ? $this->filenameMedium
                 : $this->filenameOriginal,
@@ -77,52 +81,81 @@ class Media
 
     public function getDirWithNameOriginal(): string
     {
-        return Core::getConfig()->mediaBaseDir . '/' . $this->getPartialPath() . $this->filenameOriginal;
+        return $this->buildDirPath() . $this->filenameOriginal;
     }
 
-    public function getDirWithNameMedium(): ?string
+    public function getDirWithNameSmall(): string
+    {
+        return $this->filenameSmall
+            ? $this->buildDirPath() . $this->filenameSmall
+            : $this->getDirWithNameMedium();
+    }
+
+    public function getDirWithNameMedium(): string
     {
         return $this->filenameMedium
-            ? Core::getConfig()->mediaBaseDir . '/' . $this->getPartialPath() . $this->filenameMedium
-            : null;
+            ? $this->buildDirPath() . $this->filenameMedium
+            : $this->getDirWithNameOriginal();
     }
 
-    public function getDirWithNameLarge(): ?string
+    public function getDirWithNameLarge(): string
     {
         return $this->filenameLarge
-            ? Core::getConfig()->mediaBaseDir . '/' . $this->getPartialPath() . $this->filenameLarge
-            : null;
+            ? $this->buildDirPath() . $this->filenameLarge
+            : $this->getDirWithNameMedium();
     }
 
     public function getPathWithNameOriginal(): string
     {
-        return Core::getConfig()->mediaBaseUrl . '/' . $this->getPartialPath() . $this->filenameOriginal;
+        return $this->buildPath() . $this->filenameOriginal;
     }
 
-    public function getPathWithNameMedium(): ?string
+    public function getPathWithNameSmall(): string
+    {
+        if ($this->type !== MediaType::Image) {
+            return $this->getPathWithNameOriginal();
+        }
+
+        return $this->filenameSmall
+            ? $this->buildPath() . $this->filenameSmall
+            : $this->getPathWithNameMedium();
+    }
+
+    public function getPathWithNameMedium(): string
     {
         if ($this->type !== MediaType::Image) {
             return $this->getPathWithNameOriginal();
         }
 
         return $this->filenameMedium
-            ? Core::getConfig()->mediaBaseUrl . '/' . $this->getPartialPath() . $this->filenameMedium
-            : null;
+            ? $this->buildPath() . $this->filenameMedium
+            : $this->getPathWithNameOriginal();
     }
 
-    public function getPathWithNameLarge(): ?string
+    public function getPathWithNameLarge(): string
     {
         if ($this->type !== MediaType::Image) {
             return $this->getPathWithNameOriginal();
         }
 
         return $this->filenameLarge
-            ? Core::getConfig()->mediaBaseUrl . '/' . $this->getPartialPath() . $this->filenameLarge
-            : null;
+            ? $this->buildPath() . $this->filenameLarge
+            : $this->getPathWithNameMedium();
     }
 
-    private function getPartialPath(): string
+    private function buildDirPath(): string
     {
-        return $this->path ? trim($this->path, '/ ') . '/' : '';
+        $partialPath = $this->path
+            ? (trim($this->path, '/ ') . '/')
+            : '';
+        return Core::getConfig()->mediaBaseDir . '/' . $partialPath;
+    }
+
+    private function buildPath(): string
+    {
+        $partialPath = $this->path
+            ? (trim($this->path, '/ ') . '/')
+            : '';
+        return Core::getConfig()->mediaBaseUrl . '/' . $partialPath;
     }
 }

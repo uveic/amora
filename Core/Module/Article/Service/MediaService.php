@@ -71,27 +71,40 @@ class MediaService
             return false;
         }
 
-//        if (file_exists($media->getDirWithNameOriginal())) {
-//            if (!unlink($media->getDirWithNameOriginal())) {
-//                return false;
-//            }
-//        }
-//
-//        if ($media->filenameMedium) {
-//            if (file_exists($media->getDirWithNameMedium())) {
-//                if (!unlink($media->getDirWithNameMedium())) {
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        if ($media->filenameLarge) {
-//            if (file_exists($media->getDirWithNameLarge())) {
-//                if (!unlink($media->getDirWithNameLarge())) {
-//                    return false;
-//                }
-//            }
-//        }
+        return true;
+    }
+
+    public function destroyMedia(Media $media): bool
+    {
+        if (file_exists($media->getDirWithNameOriginal())) {
+            if (!unlink($media->getDirWithNameOriginal())) {
+                return false;
+            }
+        }
+
+        if ($media->filenameSmall) {
+            if (file_exists($media->getDirWithNameSmall())) {
+                if (!unlink($media->getDirWithNameSmall())) {
+                    return false;
+                }
+            }
+        }
+
+        if ($media->filenameMedium) {
+            if (file_exists($media->getDirWithNameMedium())) {
+                if (!unlink($media->getDirWithNameMedium())) {
+                    return false;
+                }
+            }
+        }
+
+        if ($media->filenameLarge) {
+            if (file_exists($media->getDirWithNameLarge())) {
+                if (!unlink($media->getDirWithNameLarge())) {
+                    return false;
+                }
+            }
+        }
 
         return true;
     }
@@ -241,7 +254,8 @@ class MediaService
             filenameOriginal: $rawFile->name,
             filenameLarge: null,
             filenameMedium: null,
-            caption: $rawFile->originalName,
+            filenameSmall: null,
+            captionHtml: $rawFile->originalName,
             createdAt: $now,
             updatedAt: $now,
         );
@@ -278,8 +292,9 @@ class MediaService
         $newName = $mediaType === MediaType::Image
             ? $this->generateFilename($extension)
             : StringUtil::cleanString($rawNameWithoutExtension) . '-' . $this->generateFilename($extension);
-        $newPath = rtrim($this->mediaBaseDir, ' /') . '/';
-        $targetPath = $newPath . $newName;
+        $basePath = rtrim($this->mediaBaseDir, ' /');
+        $extraPath = $this->getOrGenerateMediaFolder($basePath);
+        $targetPath = $basePath . '/' . $extraPath . '/' . $newName;
 
         $res = rename($rawPathWithName, $targetPath);
         if (!$res) {
@@ -297,7 +312,8 @@ class MediaService
         return new RawFile(
             originalName: $rawName,
             name: $newName,
-            path: $newPath,
+            basePath: $basePath,
+            extraPath: $extraPath,
             extension: $extension,
             mediaType: $mediaType,
             sizeBytes: (int)$rawFiles['files']['size'][0],
@@ -313,5 +329,30 @@ class MediaService
 
         $parts = explode('.', $filename);
         return strtolower(trim($parts[count($parts) - 1]));
+    }
+
+    private function getOrGenerateMediaFolder(string $mediaBasePath): string
+    {
+        $now = new DateTimeImmutable();
+        $extraImagePath = md5($now->format('Y-m'));
+        $fullPath = $mediaBasePath . '/' . $extraImagePath;
+
+        if (is_dir($fullPath)) {
+            return $extraImagePath;
+        }
+
+        $count = 0;
+        do {
+            if ($count) {
+                $extraImagePath .= $count;
+            }
+
+            $fullPath = $mediaBasePath . '/' . $extraImagePath;
+            mkdir($fullPath, '0777');
+
+            $count++;
+        } while(!is_dir($fullPath));
+
+        return $extraImagePath;
     }
 }
