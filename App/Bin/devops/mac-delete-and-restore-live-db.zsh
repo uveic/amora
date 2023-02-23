@@ -2,7 +2,7 @@
 
 REMOTE_DATABASE_NAME="remove_db_name"
 REMOTE_HOST="user@server.url.or.ip"
-REMOTE_FILEPATH="/path/to/backup/folder/in/remove/server/"
+REMOTE_FILEPATH="/path/to/backup/folder/in/remote/server/"
 
 LOCAL_DATABASE_NAME="local_db_name"
 LOCAL_DATABASE_PASS="local_db_pass"
