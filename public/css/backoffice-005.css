@@ -595,7 +595,6 @@ input.pexego-content-title {
   overflow: hidden;
   margin: 0;
   padding: 0;
-  background-color: green;
 }
 
 #images-list .image-item {
@@ -718,6 +717,23 @@ input.pexego-content-title {
   display: flex;
   flex-flow: column nowrap;
   gap: 1rem;
+}
+
+.image-wrapper .image-meta > div{
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
+  line-height: 1;
+}
+
+.image-wrapper .image-meta .ellipsis {
+  display: inline-block;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  scrollbar-width: thin;
+  -webkit-scrollbar: 0.25rem;
 }
 
 .image-wrapper .image-path {
@@ -1213,5 +1229,9 @@ h2.page-content-subtitle {
 
   .image-wrapper {
     flex-flow: row nowrap;
+  }
+
+  .image-wrapper > .image-info {
+    max-width: 450px;
   }
 }

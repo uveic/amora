@@ -24,8 +24,8 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
           <div>
             <h2 class="m-t-0 m-r-2 image-title"></h2>
             <p class="image-caption"></p>
-            <p class="image-meta"></p>
-            <p class="image-path"></p>
+            <div class="image-meta"></div>
+            <div class="image-path"></div>
             <div class="image-appears-on"></div>
             <a href="#" class="image-delete">
               <img src="/img/svg/trash-red.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalRemove')?>">

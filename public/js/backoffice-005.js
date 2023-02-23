@@ -250,6 +250,7 @@ const displayImage = (image) => {
   }
 
   if (!image) {
+    document.querySelectorAll('.image-next-action').forEach(i => i.classList.add('hidden'));
     loadingContainer.classList.add('null');
     content.classList.remove('null');
     modalClose.classList.remove('null');
@@ -266,55 +267,53 @@ const displayImage = (image) => {
   // Hide/display image nav buttons
   const firstImageEl = document.querySelector('#images-list .image-item');
   const firstImageId = firstImageEl ? Number.parseInt(firstImageEl.dataset.mediaId) : null;
-  const lastImageEl = document.querySelector('#images-list .image-item:last-child');
-  const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.mediaId) : null;
-  firstImageId !== image.id
-    ? document.querySelectorAll('.image-previous-action').forEach(i => i.classList.remove('hidden'))
-    : document.querySelectorAll('.image-previous-action').forEach(i => i.classList.add('hidden'));
 
-  lastImageId !== image.id
-    ? document.querySelectorAll('.image-next-action').forEach(i => i.classList.remove('hidden'))
-    : document.querySelectorAll('.image-next-action').forEach(i => i.classList.add('hidden'));
+  firstImageId === image.id
+    ? document.querySelectorAll('.image-previous-action').forEach(i => i.classList.add('hidden'))
+    : document.querySelectorAll('.image-previous-action').forEach(i => i.classList.remove('hidden'));
+
+  document.querySelectorAll('.image-next-action').forEach(i => i.classList.remove('hidden'));
 
   let takenAt = '';
   if (image.exif && image.exif.date) {
-    takenAt += '<img src="/img/svg/calendar-white.svg" class="img-svg m-r-05" alt="Taken on">'
+    takenAt += '<img src="/img/svg/calendar-white.svg" class="img-svg" alt="Taken on">'
     + global.formatDate(new Date(image.exif.date), true, true, true, true, true);
   }
 
   let camera = '';
   if (image.exif && image.exif.cameraModel) {
-    camera += '<img src="/img/svg/camera-white.svg" class="img-svg m-r-05" alt="EXIF">'
+    camera += '<img src="/img/svg/camera-white.svg" class="img-svg" alt="EXIF">'
       + image.exif.cameraModel;
   }
 
   let size = '';
   if (image.exif && image.exif.sizeBytes) {
-    size += '<img src="/img/svg/hard-drives-white.svg" class="img-svg m-r-05" alt="Size">'
-      + (image.exif.sizeBytes / 1000000).toFixed(3) + ' MB';
+    size += '<img src="/img/svg/hard-drives-white.svg" class="img-svg" alt="Size (Mb)">'
+      + (image.exif.sizeBytes / 1000000).toFixed(3) + ' Mb';
   }
 
   let pixels = '';
   if (image.exif && image.exif.width) {
-    pixels += '<img src="/img/svg/frame-corners-white.svg" class="img-svg m-r-05" alt="Size">'
-      + image.exif.width + ' x ' + image.exif.height + ' px';
+    pixels += '<img src="/img/svg/frame-corners-white.svg" class="img-svg" alt="Size (pixels)">'
+      + image.exif.width + ' x ' + image.exif.height;
   }
 
   modal.querySelector('.image-title').textContent = '#' + image.id;
   modal.querySelector('.image-caption').textContent = image.caption;
   modal.querySelector('.image-meta').innerHTML =
-    '<div><img src="/img/svg/upload-simple-white.svg" class="img-svg m-r-05" alt="Upload">'
+    '<div><img src="/img/svg/upload-simple-white.svg" class="img-svg" alt="Upload">'
     + global.formatDate(new Date(image.createdAt), true, true, true, true, true)
     + '</div>'
-    + (image.userName ? '<div><img src="/img/svg/user-white.svg" class="img-svg m-r-05" alt="User">' + image.userName + '</div>': '')
+    + (image.userName ? '<div><img src="/img/svg/user-white.svg" class="img-svg" alt="User">' + image.userName + '</div>': '')
     + '<div class="image-path">'
-    + '<img src="/img/svg/link-white.svg" class="img-svg m-r-05" alt="Link">' + image.path
+    + '<img src="/img/svg/link-white.svg" class="img-svg" alt="Link">'
+    + '<span class="ellipsis">' + image.path + '</span>'
     + '<a href="' + image.fullPath + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg m-l-05 copy-link" alt="Copy link"></a>'
     + '</div>'
     + (takenAt ? '<span>' + takenAt + '</span>' : '')
     + (camera ? '<span>' + camera + '</span>' : '')
-    + (pixels ? '<span>' + pixels + '</span>' : '')
-    + (size ? '<span>' + size + '</span>' : '');
+    + (pixels ? '<div>' + pixels + '</div>' : '')
+    + (size ? '<div>' + size + '</div>' : '');
 
   modal.querySelector('.image-meta .copy-link')
     .addEventListener('click', e => handleCopyLink(e, image.fullPath));
@@ -436,6 +435,9 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
       return;
     }
 
+    const figureContainer = document.createElement('figure');
+    figureContainer.className = 'image-container';
+
     const imageEl = new Image();
     imageEl.src = image.path;
     const alt = image.caption ?? image.name;
@@ -452,7 +454,8 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
       imageEl.addEventListener('click', (e) => selectMainImage(e, imageEl));
     }
 
-    container.appendChild(imageEl);
+    figureContainer.appendChild(imageEl);
+    container.appendChild(figureContainer);
   });
 };
 
@@ -955,7 +958,7 @@ document.querySelectorAll('.media-load-more').forEach(lm => {
     e.preventDefault();
 
     lm.disabled = true;
-    const lastImageEl = document.querySelector('#images-list .image-item:last-child');
+    const lastImageEl = document.querySelector('#images-list .image-container:last-child .image-item');
     const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.mediaId) : null;
     const qty = 25;
     const typeId = lm.dataset.typeId ? Number.parseInt(lm.dataset.typeId) : '';

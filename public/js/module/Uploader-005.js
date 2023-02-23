@@ -72,8 +72,7 @@ class UploaderClass {
         })
         .catch((error) => {
           try {
-            imageContainer.removeChild(imgLoading);
-            imageContainer.removeChild(image);
+            imageContainer.removeChild(figureContainer);
           } catch {}
 
           UploaderClass.logError(userFeedbackDiv, error);

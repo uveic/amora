@@ -296,7 +296,7 @@ class MediaService
         $extraPath = $this->getOrGenerateMediaFolder($basePath);
         $targetPath = $basePath . '/' . $extraPath . '/' . $newName;
 
-        $res = rename($rawPathWithName, $targetPath);
+        $res = @rename($rawPathWithName, $targetPath);
         if (!$res) {
             $this->logger->logError(
                 'Error renaming file from ' . $rawPathWithName . ' to ' . $targetPath
@@ -348,7 +348,10 @@ class MediaService
             }
 
             $fullPath = $mediaBasePath . '/' . $extraImagePath;
-            mkdir($fullPath, '0777');
+            if (false === @mkdir($fullPath)) {
+                $this->logger->logError('Failed to create folder: ' . $fullPath);
+                return 'no-folder';
+            }
 
             $count++;
         } while(!is_dir($fullPath));
