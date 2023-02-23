@@ -11,7 +11,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
         <img src="/img/svg/x-white.svg" class="img-svg img-svg-30 no-margin" alt="<?=$responseData->getLocalValue('globalClose')?>">
       </a>
       <div class="image-modal-loading justify-center">
-        <img src="/img/loading.gif" class="img-svg img-svg-50" alt="<?=$responseData->getLocalValue('globalLoading')?>">
+        <img src="/img/loading.gif" class="img-svg img-svg-70" alt="<?=$responseData->getLocalValue('globalLoading')?>">
       </div>
       <div class="image-wrapper null">
         <div class="image-main">
@@ -22,8 +22,8 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
         </div>
         <div class="image-info">
           <div>
-            <h2 class="m-t-0 m-r-2 image-title"></h2>
-            <p class="image-caption"></p>
+            <div class="image-number"></div>
+            <div class="image-caption"></div>
             <div class="image-meta"></div>
             <div class="image-path"></div>
             <div class="image-appears-on"></div>

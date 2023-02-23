@@ -286,6 +286,20 @@ const displayImage = (image) => {
       + image.exif.cameraModel;
   }
 
+  let aperture = '';
+  if (image.exif && (image.exif.exposureTime || image.exif.ISO)) {
+    let exposure = '';
+    exposure += image.exif.exposureTime ?? '';
+    if (image.exif.ISO) {
+      if (exposure.length) {
+        exposure += ' - ';
+      }
+      exposure += 'ISO: ' + image.exif.ISO;
+    }
+    aperture += '<img src="/img/svg/aperture-white.svg" class="img-svg" alt="Exposure time & ISO">'
+      + exposure;
+  }
+
   let size = '';
   if (image.exif && image.exif.sizeBytes) {
     size += '<img src="/img/svg/hard-drives-white.svg" class="img-svg" alt="Size (Mb)">'
@@ -298,7 +312,7 @@ const displayImage = (image) => {
       + image.exif.width + ' x ' + image.exif.height;
   }
 
-  modal.querySelector('.image-title').textContent = '#' + image.id;
+  modal.querySelector('.image-number').textContent = '#' + image.id;
   modal.querySelector('.image-caption').textContent = image.caption;
   modal.querySelector('.image-meta').innerHTML =
     '<div><img src="/img/svg/upload-simple-white.svg" class="img-svg" alt="Upload">'
@@ -308,10 +322,12 @@ const displayImage = (image) => {
     + '<div class="image-path">'
     + '<img src="/img/svg/link-white.svg" class="img-svg" alt="Link">'
     + '<span class="ellipsis">' + image.path + '</span>'
-    + '<a href="' + image.fullPath + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg m-l-05 copy-link" alt="Copy link"></a>'
+    + '<a href="' + image.fullPath + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>'
+    + '<a href="' + image.fullPath + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg" alt="Copy link"></a>'
     + '</div>'
-    + (takenAt ? '<span>' + takenAt + '</span>' : '')
-    + (camera ? '<span>' + camera + '</span>' : '')
+    + (takenAt ? '<div>' + takenAt + '</div>' : '')
+    + (camera ? '<div>' + camera + '</div>' : '')
+    + (aperture ? '<div>' + aperture + '</div>' : '')
     + (pixels ? '<div>' + pixels + '</div>' : '')
     + (size ? '<div>' + size + '</div>' : '');
 
@@ -347,12 +363,10 @@ const displayImagePopup = (e, mediaId, next = false, direction = null) => {
 
   const modal = document.querySelector('.image-modal');
   const loadingContainer = modal.querySelector('.image-modal-loading');
-  const content = modal.querySelector('.image-wrapper');
   const modalClose = modal.querySelector('.modal-close-button');
 
   modal.classList.remove('null');
   loadingContainer.classList.remove('null');
-  content.classList.add('null');
   modalClose.classList.add('null');
 
   const qty = 1;
