@@ -110,9 +110,10 @@ class ArticleDataLayer
             'm.status_id AS media_status_id',
             'm.path AS media_path',
             'm.filename_original AS media_filename_original',
+            'm.filename_small AS media_filename_small',
             'm.filename_medium AS media_filename_medium',
             'm.filename_large AS media_filename_large',
-            'm.caption AS media_caption',
+            'm.caption_html AS media_caption_html',
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
         ];
@@ -290,9 +291,10 @@ class ArticleDataLayer
             'm.status_id AS media_status_id',
             'm.path AS media_path',
             'm.filename_original AS media_filename_original',
+            'm.filename_small AS media_filename_small',
             'm.filename_medium AS media_filename_medium',
             'm.filename_large AS media_filename_large',
-            'm.caption AS media_caption',
+            'm.caption_html AS media_caption_html',
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
         ];
