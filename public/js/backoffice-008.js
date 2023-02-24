@@ -239,7 +239,7 @@ const handleCopyLink = (ev, href) => {
 
 const displayImage = (image) => {
   const modal = document.querySelector('.image-modal');
-  const loadingContainer = modal.querySelector('.image-modal-loading');
+  const loadingContainer = modal.querySelector('.image-loading');
   const content = modal.querySelector('.image-wrapper');
   const modalClose = modal.querySelector('.modal-close-button');
   let imageContainer = modal.querySelector('.image-main img');
@@ -362,7 +362,7 @@ const displayImagePopup = (e, mediaId, next = false, direction = null) => {
   e.preventDefault();
 
   const modal = document.querySelector('.image-modal');
-  const loadingContainer = modal.querySelector('.image-modal-loading');
+  const loadingContainer = modal.querySelector('.image-loading');
   const modalClose = modal.querySelector('.modal-close-button');
 
   modal.classList.remove('null');

@@ -691,6 +691,7 @@ input.pexego-content-title {
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
+  position: relative;
 }
 
 .image-wrapper .image-info .image-caption {
@@ -1219,6 +1220,41 @@ h2.page-content-subtitle {
   right: 0.5rem;
 }
 /* Main image ends here */
+
+.image-loading {
+  width: 100%;
+  height: 0.25rem;
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  position: absolute;
+  inset: 0 0 auto 0;
+}
+
+.image-loading::after {
+  content: '';
+  width: 5rem;
+  height: 0.25rem;
+  background: var(--color-bg);
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  animation: hitZak 0.4s linear infinite alternate;
+
+}
+
+@keyframes hitZak {
+  0% {
+    left: 0;
+    transform: translateX(-1%);
+  }
+  100% {
+    left: 100%;
+    transform: translateX(-99%);
+  }
+}
+
 
 @media screen and (min-width: 800px) {
   #upload-media {

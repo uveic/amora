@@ -10,9 +10,6 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
       <a href="#" class="modal-close-button null">
         <img src="/img/svg/x-white.svg" class="img-svg img-svg-30 no-margin" alt="<?=$responseData->getLocalValue('globalClose')?>">
       </a>
-      <div class="image-modal-loading justify-center">
-        <img src="/img/loading.gif" class="img-svg img-svg-70" alt="<?=$responseData->getLocalValue('globalLoading')?>">
-      </div>
       <div class="image-wrapper null">
         <div class="image-main">
           <div class="image-main-nav">
@@ -21,6 +18,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
           </div>
         </div>
         <div class="image-info">
+          <div class="image-loading null"></div>
           <div>
             <div class="image-number"></div>
             <div class="image-caption"></div>
