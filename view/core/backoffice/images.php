@@ -17,18 +17,14 @@ $count = 0;
   <div id="feedback" class="feedback null"></div>
   <main>
     <div class="content-images">
-      <div class="field m-t-0 m-b-0">
-        <div id="upload-media">
-          <div id="upload-media-info">
-            <h1><?=$responseData->getLocalValue('navAdminImages')?></h1>
-          </div>
-          <div id="upload-media-control">
-            <input class="null" type="file" id="images" name="images" multiple="" accept="image/*">
-            <label for="images" class="input-file-label">
-              <img class="img-svg img-svg-25 m-r-05" width="20" height="20" src="/img/svg/image-black.svg" alt="<?=$responseData->getLocalValue('navAdminImages')?>">
-              <span><?=$responseData->getLocalValue('globalUploadImage')?></span>
-            </label>
-          </div>
+      <div id="upload-media">
+        <h1><?=$responseData->getLocalValue('navAdminImages')?></h1>
+        <div class="upload-media-control">
+          <input class="null" type="file" id="images" name="images" multiple="" accept="image/*">
+          <label for="images" class="input-file-label">
+            <img class="img-svg img-svg-25 m-r-05" width="20" height="20" src="/img/svg/image-black.svg" alt="<?=$responseData->getLocalValue('navAdminImages')?>">
+            <span><?=$responseData->getLocalValue('globalUploadImage')?></span>
+          </label>
         </div>
       </div>
       <div id="images-list">

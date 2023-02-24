@@ -11,9 +11,9 @@ $editLink = $homepageContent && $responseData->request->session && $responseData
     : '';
 ?>
   <article class="home-main">
-<?php if ($homepageContent->title) { ?>
+<?php if ($homepageContent?->title) { ?>
     <h1><?=$homepageContent->title?></h1>
 <?php } ?>
-    <?=$homepageContent->html?>
+    <?=$homepageContent?->html?>
     <?=$editLink?>
   </article>
