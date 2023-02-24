@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Article\Model;
 
 use Amora\Core\Core;
+use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Model\User;
@@ -143,6 +144,18 @@ class Media
         return $this->filenameLarge
             ? $this->buildPath() . $this->filenameLarge
             : $this->getPathWithNameMedium();
+    }
+
+    public function asRawFile(string $extension): RawFile
+    {
+        return new RawFile(
+            originalName: $this->filenameOriginal,
+            name: $this->filenameOriginal,
+            basePath: rtrim(Core::getConfig()->mediaBaseDir, ' /'),
+            extraPath: $this->path,
+            extension: $extension,
+            mediaType: MediaType::Image,
+        );
     }
 
     private function buildDirPath(): string

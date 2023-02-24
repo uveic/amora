@@ -88,12 +88,51 @@ class ImageService
         );
     }
 
+    public function generateResizedImage(
+        Media $existingMedia,
+        int $newImageSizeConstant,
+        string $imageExtension,
+    ): Media {
+        if ($newImageSizeConstant !== self::IMAGE_SIZE_SMALL
+            && $newImageSizeConstant !== self::IMAGE_SIZE_MEDIUM
+            && $newImageSizeConstant !== self::IMAGE_SIZE_LARGE
+        ) {
+            $this->logger->logError('Image size constant not valid. Aborting...');
+            return $existingMedia;
+        }
+
+        $imageSmall = $this->resizeImageDefault(
+            image: $existingMedia->asRawFile($imageExtension),
+            newImageSizeConstant: $newImageSizeConstant,
+        );
+
+        if (!$imageSmall) {
+            $this->logger->logError('Error generating small image. Media ID: ' . $existingMedia->id);
+            return $existingMedia;
+        }
+
+        return new Media(
+            id: $existingMedia->id,
+            type: $existingMedia->type,
+            status: $existingMedia->status,
+            user: $existingMedia->user,
+            path: $existingMedia->path,
+            filenameOriginal: $existingMedia->filenameOriginal,
+            filenameLarge: $existingMedia->filenameLarge,
+            filenameMedium: $existingMedia->filenameMedium,
+            filenameSmall: $imageSmall->name,
+            captionHtml: $existingMedia->captionHtml,
+            createdAt: $existingMedia->createdAt,
+            updatedAt: new DateTimeImmutable(),
+        );
+    }
+
     private function resizeImage(
         RawFile $image,
         int $newMaxWidth,
         int $newMaxHeight,
     ): ?RawFile {
-        list($originalWidth, $originalHeight) = getimagesize($image->getPathWithName());
+        list($originalWidth, $originalHeight) = @getimagesize($image->getPathWithName());
 
         if (!$originalWidth || !$originalHeight) {
             $this->logger->logError(
