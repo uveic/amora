@@ -259,7 +259,7 @@ const displayImage = (image) => {
   }
 
   const alt = image.caption ?? image.name;
-  imageContainer.src = image.path;
+  imageContainer.src = image.pathMedium;
   imageContainer.alt = alt;
   imageContainer.title = alt;
   imageContainer.dataset.mediaId = image.id;
@@ -321,9 +321,9 @@ const displayImage = (image) => {
     + (image.userName ? '<div><img src="/img/svg/user-white.svg" class="img-svg" alt="User">' + image.userName + '</div>': '')
     + '<div class="image-path">'
     + '<img src="/img/svg/link-white.svg" class="img-svg" alt="Link">'
-    + '<span class="ellipsis">' + image.path + '</span>'
-    + '<a href="' + image.fullPath + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>'
-    + '<a href="' + image.fullPath + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg" alt="Copy link"></a>'
+    + '<span class="ellipsis">' + image.pathMedium + '</span>'
+    + '<a href="' + image.fullPathMedium + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>'
+    + '<a href="' + image.fullPathMedium + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg" alt="Copy link"></a>'
     + '</div>'
     + (takenAt ? '<div>' + takenAt + '</div>' : '')
     + (camera ? '<div>' + camera + '</div>' : '')
@@ -332,7 +332,7 @@ const displayImage = (image) => {
     + (size ? '<div>' + size + '</div>' : '');
 
   modal.querySelector('.image-meta .copy-link')
-    .addEventListener('click', e => handleCopyLink(e, image.fullPath));
+    .addEventListener('click', e => handleCopyLink(e, image.fullPathMedium));
 
   const appearsOnContainer = modal.querySelector('.image-appears-on');
   appearsOnContainer.innerHTML = '';
@@ -453,7 +453,7 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
     figureContainer.className = 'image-container';
 
     const imageEl = new Image();
-    imageEl.src = image.path;
+    imageEl.src = image.pathSmall;
     const alt = image.caption ?? image.name;
     imageEl.alt = alt;
     imageEl.title = alt;

@@ -67,10 +67,13 @@ class Media
 
     public function buildPublicDataArray(): array
     {
+        $baseUrl = UrlBuilderUtil::buildBaseUrlWithoutLanguage();
         return [
             'id' => $this->id,
-            'path' => $this->getPathWithNameSmall(),
-            'fullPath' => UrlBuilderUtil::buildBaseUrlWithoutLanguage() . $this->getPathWithNameSmall(),
+            'pathSmall' => $this->getPathWithNameSmall(),
+            'fullPathSmall' => $baseUrl . $this->getPathWithNameSmall(),
+            'pathMedium' => $this->getPathWithNameMedium(),
+            'fullPathMedium' => $baseUrl . $this->getPathWithNameMedium(),
             'caption' => $this->captionHtml,
             'captionHtml' => $this->captionHtml,
             'name' => $this->type === MediaType::Image
