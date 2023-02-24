@@ -11,6 +11,7 @@ require_once '../../Core.php';
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\ImageService;
+use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Util\DateUtil;
 use Throwable;
 use Amora\Core\Core;
@@ -45,8 +46,12 @@ try {
                 m.updated_at AS media_updated_at
             FROM core_media AS m
             WHERE m.filename_small IS NULL
+                AND m.status_id IN (:statusActiveId)
             ORDER BY m.id ASC;
-        '
+        ',
+        [
+            ':statusActiveId' => MediaStatus::Active->value,
+        ]
     );
 
     foreach ($images as $image) {
