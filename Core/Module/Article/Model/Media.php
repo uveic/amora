@@ -69,8 +69,8 @@ class Media
     {
         return [
             'id' => $this->id,
-            'path' => $this->getPathWithNameMedium(),
-            'fullPath' => UrlBuilderUtil::buildBaseUrlWithoutLanguage() . $this->getPathWithNameMedium(),
+            'path' => $this->getPathWithNameSmall(),
+            'fullPath' => UrlBuilderUtil::buildBaseUrlWithoutLanguage() . $this->getPathWithNameSmall(),
             'caption' => $this->captionHtml,
             'captionHtml' => $this->captionHtml,
             'name' => $this->type === MediaType::Image
