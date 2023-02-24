@@ -19,8 +19,8 @@ class ImageService
     const IMAGE_SIZE_MEDIUM = 2;
     const IMAGE_SIZE_LARGE = 3;
 
-    const IMAGE_SIZE_SMALL_MAX_HEIGHT = 600;
-    const IMAGE_SIZE_SMALL_MAX_WIDTH = 600;
+    const IMAGE_SIZE_SMALL_MAX_HEIGHT = 400;
+    const IMAGE_SIZE_SMALL_MAX_WIDTH = 400;
     const IMAGE_SIZE_MEDIUM_MAX_HEIGHT = 1200;
     const IMAGE_SIZE_MEDIUM_MAX_WIDTH = 1200;
     const IMAGE_SIZE_LARGE_MAX_HEIGHT = 1600;
@@ -109,6 +109,20 @@ class ImageService
         if (!$imageSmall) {
             $this->logger->logError('Error generating small image. Media ID: ' . $existingMedia->id);
             return $existingMedia;
+        }
+
+        if ($newImageSizeConstant === self::IMAGE_SIZE_SMALL && $existingMedia->filenameSmall) {
+            if (file_exists($existingMedia->getDirWithNameSmall())) {
+                unlink($existingMedia->getDirWithNameSmall());
+            }
+        } elseif ($newImageSizeConstant === self::IMAGE_SIZE_MEDIUM && $existingMedia->filenameMedium) {
+            if (file_exists($existingMedia->getDirWithNameMedium())) {
+                unlink($existingMedia->getDirWithNameMedium());
+            }
+        } elseif ($newImageSizeConstant === self::IMAGE_SIZE_LARGE && $existingMedia->filenameLarge) {
+            if (file_exists($existingMedia->getDirWithNameLarge())) {
+                unlink($existingMedia->getDirWithNameLarge());
+            }
         }
 
         return new Media(
