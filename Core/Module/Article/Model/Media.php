@@ -152,7 +152,7 @@ class Media
             originalName: $this->filenameOriginal,
             name: $this->filenameOriginal,
             basePath: rtrim(Core::getConfig()->mediaBaseDir, ' /'),
-            extraPath: $this->path,
+            extraPath: $this->path ?? '',
             extension: $extension,
             mediaType: MediaType::Image,
         );
