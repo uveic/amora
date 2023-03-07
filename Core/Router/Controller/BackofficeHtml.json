@@ -289,6 +289,38 @@
           }
         }
       }
+    },
+    "/backoffice/content-type/{typeId}/language/{languageIsoCode}": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the backoffice page to edit a content piece",
+        "description": "",
+        "operationId": "getBackofficeContentForTypeEdit",
+        "parameters": [
+          {
+            "name": "typeId",
+            "in": "path",
+            "description": "Page content type ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "languageIsoCode",
+            "in": "path",
+            "description": "Language ISO code",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return HTML",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

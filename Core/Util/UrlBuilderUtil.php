@@ -2,10 +2,12 @@
 
 namespace Amora\Core\Util;
 
+use Amora\App\Value\AppPageContentType;
 use Amora\Core\Core;
 use Amora\App\Value\Language;
 use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Module\Article\Value\PageContentType;
 
 class UrlBuilderUtil
 {
@@ -26,6 +28,7 @@ class UrlBuilderUtil
 
     const BACKOFFICE_CONTENT = '/backoffice/content';
     const BACKOFFICE_CONTENT_EDIT = '/backoffice/content/%d';
+    const BACKOFFICE_CONTENT_TYPE_EDIT = '/backoffice/content-type/%d/language/%s';
 
     // Authorised URLs
     const AUTHORISED_ACCOUNT = '/account';
@@ -124,6 +127,15 @@ class UrlBuilderUtil
     public static function buildBackofficeContentEditUrl(Language $language, int $contentId): string
     {
         return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_CONTENT_EDIT, $contentId);
+    }
+
+    public static function buildBackofficeContentTypeEditUrl(
+        Language $language,
+        PageContentType|AppPageContentType $contentType,
+        Language $contentTypeLanguage,
+    ): string {
+        return self::buildBaseUrl($language)
+            . sprintf(self::BACKOFFICE_CONTENT_TYPE_EDIT, $contentType->value, $contentTypeLanguage->value);
     }
 
     public static function buildBackofficeUsersUrl(Language $language): string

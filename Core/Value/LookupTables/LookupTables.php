@@ -16,7 +16,6 @@ require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
-require_once Core::getPathRoot() . '/Core/Module/Article/Value/PageContentType.php';
 require_once Core::getPathRoot() . '/Core/Module/Analytics/Value/EventType.php';
 
 use Amora\Core\Entity\Util\LookupTableSettings;
@@ -31,7 +30,6 @@ use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\Analytics\DataLayer\AnalyticsDataLayer;
 use Amora\Core\Module\Analytics\AnalyticsCore;
 use Amora\Core\Module\Analytics\Value\EventType;
-use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Module\User\UserCore;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
@@ -99,10 +97,5 @@ return [
         database: AnalyticsCore::getDb(),
         tableName: AnalyticsDataLayer::EVENT_TYPE_TABLE,
         tableFieldsToValues: asArray(EventType::getAll()),
-    ),
-    new LookupTableSettings(
-        database: ArticleCore::getDb(),
-        tableName: ArticleDataLayer::CONTENT_TYPE_TABLE,
-        tableFieldsToValues: asArray(PageContentType::getAll()),
     ),
 ];

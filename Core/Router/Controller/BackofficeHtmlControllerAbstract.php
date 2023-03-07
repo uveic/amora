@@ -147,6 +147,21 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
      */
     abstract protected function getBackofficeContentEdit(int $id, Request $request): Response;
 
+    /**
+     * Endpoint: /backoffice/content-type/{typeId}/language/{languageIsoCode}
+     * Method: GET
+     *
+     * @param int $typeId
+     * @param string $languageIsoCode
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getBackofficeContentForTypeEdit(
+        int $typeId,
+        string $languageIsoCode,
+        Request $request
+    ): Response;
+
     private function validateAndCallGetPhpInfoPage(Request $request): Response
     {
         $errors = [];
@@ -593,6 +608,68 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallGetBackofficeContentForTypeEdit(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['backoffice', 'content-type', '{typeId}', 'language', '{languageIsoCode}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $typeId = null;
+        if (!isset($pathParams['typeId'])) {
+            $errors[] = [
+                'field' => 'typeId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['typeId'])) {
+                $errors[] = [
+                    'field' => 'typeId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $typeId = intval($pathParams['typeId']);
+            }
+        }
+
+        $languageIsoCode = null;
+        if (!isset($pathParams['languageIsoCode'])) {
+            $errors[] = [
+                'field' => 'languageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $languageIsoCode = $pathParams['languageIsoCode'] ?? null;
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getBackofficeContentForTypeEdit(
+                $typeId,
+                $languageIsoCode,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getBackofficeContentForTypeEdit()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): ?Response
     {
@@ -732,6 +809,16 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetBackofficeContentEdit($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['backoffice', 'content-type', '{typeId}', 'language', '{languageIsoCode}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed', 'string']
+            )
+        ) {
+            return $this->validateAndCallGetBackofficeContentForTypeEdit($request);
         }
 
         return null;
