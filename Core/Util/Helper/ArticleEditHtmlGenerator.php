@@ -97,18 +97,13 @@ final class ArticleEditHtmlGenerator
     public static function generateArticleStatusDropdownSelectHtml(
         HtmlResponseDataAdmin $responseData,
     ): string {
-        $isPartialContent = ArticleType::isPartialContent(self::getArticleType($responseData));
-        $articleStatus = $responseData->article?->status
-            ?? ($isPartialContent ? ArticleStatus::Published : ArticleStatus::Draft);
+        $articleStatus = $responseData->article?->status ?? ArticleStatus::Draft;
         $articleStatusName = $responseData->getLocalValue('articleStatus' . $articleStatus->name);
-        $isPublished = $responseData->article
-            ? $articleStatus === ArticleStatus::Published
-            : $isPartialContent;
-        $displayClass = $isPartialContent ? ' null' : '';
+        $isPublished = $responseData->article && $articleStatus === ArticleStatus::Published;
 
         $output = [];
         $output[] = '      <input type="checkbox" id="article-status-dd-checkbox" class="dropdown-menu">';
-        $output[] = '      <div class="dropdown-container article-status-container' . $displayClass . '">';
+        $output[] = '      <div class="dropdown-container article-status-container">';
         $output[] = '        <ul>';
 
         /** @var \BackedEnum $status */
@@ -135,11 +130,10 @@ final class ArticleEditHtmlGenerator
         HtmlResponseDataAdmin $responseData,
     ): string {
         $articleLanguage = $responseData->article?->language ?? $responseData->siteLanguage;
-        $displayClass = ArticleType::isPartialContent(self::getArticleType($responseData)) ? ' null' : '';
 
         $output = [];
         $output[] = '      <input type="checkbox" id="article-lang-dd-checkbox" class="dropdown-menu">';
-        $output[] = '      <div class="dropdown-container article-lang-container' . $displayClass . '">';
+        $output[] = '      <div class="dropdown-container article-lang-container">';
         $output[] = '        <ul>';
 
         /** @var \BackedEnum $language */
@@ -161,13 +155,9 @@ final class ArticleEditHtmlGenerator
     }
 
     public static function generateSettingsButtonHtml(
-        HtmlResponseDataAdmin $responseData
+        HtmlResponseDataAdmin $responseData,
     ): string {
-        $articleType = self::getArticleType($responseData);
-
-        return ArticleType::isPartialContent($articleType)
-            ? ''
-            : '<a href="#" class="article-settings"><img src="/img/svg/gear.svg" class="img-svg img-svg-25" alt="' . $responseData->getLocalValue('globalSettings') . '"></a>';
+        return '<a href="#" class="article-settings"><img src="/img/svg/gear.svg" class="img-svg img-svg-25" alt="' . $responseData->getLocalValue('globalSettings') . '"></a>';
     }
 
     public static function generateTitleHtml(
@@ -210,12 +200,10 @@ final class ArticleEditHtmlGenerator
             path: $article->path,
             language: $responseData->siteLanguage,
         );
-        $articleTitle = ArticleType::isPartialContent($article->type)
-            ? $responseData->getLocalValue('globalNoTitle')
-            : match ($article->status) {
-                ArticleStatus::Published => '<a href="' . $articleUrl . '">' . $article->title . '</a>',
-                default => $article->title ?: $responseData->getLocalValue('globalNoTitle'),
-            };
+        $articleTitle = match ($article->status) {
+            ArticleStatus::Published => '<a href="' . $articleUrl . '">' . $article->title . '</a>',
+            default => $article->title ?: $responseData->getLocalValue('globalNoTitle'),
+        };
 
         $output = [];
         $output[] = '            <div class="m-r-05">';

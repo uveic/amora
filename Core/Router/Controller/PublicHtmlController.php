@@ -339,7 +339,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             ),
         );
 
-        $homepageArticle = $this->articleService->getPageContent(
+        $pageContent = $this->articleService->getPageContent(
             type: PageContentType::Homepage,
             language: $request->siteLanguage,
         );
@@ -349,7 +349,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             responseData: new HtmlHomepageResponseData(
                 request: $request,
                 pagination: $pagination,
-                homepageContent: $homepageArticle,
+                pageContent: $pageContent,
                 homeArticles: [],
                 blogArticles: $blogArticles,
                 feedback: $feedback,

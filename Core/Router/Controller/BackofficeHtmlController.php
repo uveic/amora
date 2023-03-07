@@ -3,6 +3,7 @@
 namespace Amora\Core\Router;
 
 use Amora\App\Module\Form\Entity\PageContent;
+use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
@@ -416,28 +417,13 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getBackofficeContentList(Request $request): Response
     {
-        $res = $this->articleService->filterPageContentBy(
-            languageIsoCodes: [Language::Galego->value],
-            typeIds: [PageContentType::Homepage->value],
-            queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy('updated_at', QueryOrderDirection::DESC)],
-                pagination: new Response\Pagination(itemsPerPage: 1),
-            ),
-        );
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
-        $pageContent = $res[0]
-            ?? $this->articleService->storePageContent(
-                PageContent::getEmpty(
-                    user: $request->session->user,
-                    language: $request->siteLanguage,
-                    type: PageContentType::Homepage,
-                ),
-            );
-
-        return Response::createRedirectResponse(
-            UrlBuilderUtil::buildBackofficeContentEditUrl(
-                language: $request->siteLanguage,
-                contentId: $pageContent->id,
+        return Response::createHtmlResponse(
+            template: 'app/backoffice/page-content-list',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('pageContentEditTitle'),
             ),
         );
     }
@@ -458,11 +444,64 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             return Response::createNotFoundResponse($request);
         }
 
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
             template: 'core/backoffice/page-content-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
-                pageTitle: 'Editar portada',
+                pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $pageContent->type->name),
+                pageContent: $pageContent,
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/content-type/{typeId}
+     * Method: GET
+     *
+     * @param int $typeId
+     * @param string $languageIsoCode
+     * @param Request $request
+     * @return Response
+     */
+    protected function getBackofficeContentForTypeEdit(
+        int $typeId,
+        string $languageIsoCode,
+        Request $request
+    ): Response {
+        if (!AppPageContentType::tryFrom($typeId) && !PageContentType::tryFrom($typeId)) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        if (!Language::tryFrom($languageIsoCode)) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        $type = AppPageContentType::tryFrom($typeId)
+            ? AppPageContentType::from($typeId)
+            : PageContentType::from($typeId);
+
+        $language = Language::from($languageIsoCode);
+        $pageContentRes = $this->articleService->filterPageContentBy(
+            languageIsoCodes: [$language->value],
+            typeIds: [$type->value],
+        );
+
+        $pageContent = $pageContentRes[0]
+            ?? $this->articleService->storePageContent(
+                PageContent::getEmpty(
+                    user: $request->session->user,
+                    language: $language,
+                    type: $type,
+                ),
+            );
+
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/page-content-edit',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $pageContent->type->name),
                 pageContent: $pageContent,
             ),
         );

@@ -13,7 +13,7 @@ if (!isset($article)) {
 }
 
 $postBottomContent = $article->type === ArticleType::Blog
-    ? $responseData->postBottomContent?->contentHtml
+    ? $responseData->postBottomContent?->html
     : null;
 
 $icon = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml(

@@ -5,15 +5,15 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlHomepageResponseData $responseData */
 
-$homepageContent = $responseData->homepageContent;
-$editLink = $homepageContent && $responseData->request->session && $responseData->request->session->isAdmin()
-    ? '<p><a href="' . UrlBuilderUtil::buildBackofficeArticleUrl($homepageContent->language, $homepageContent->id) . '">' . strtolower($responseData->getLocalValue('globalEdit')) . '</a></p>'
+$pageContent = $responseData->pageContent;
+$editLink = $pageContent && $responseData->request->session?->isAdmin()
+    ? '<p><a href="' . UrlBuilderUtil::buildBackofficeContentEditUrl($pageContent->language, $pageContent->id) . '">' . strtolower($responseData->getLocalValue('globalEdit')) . '</a></p>'
     : '';
 ?>
   <article class="home-main">
-<?php if ($homepageContent?->title) { ?>
-    <h1><?=$homepageContent->title?></h1>
+<?php if ($pageContent?->title) { ?>
+    <h1><?=$pageContent->title?></h1>
 <?php } ?>
-    <?=$homepageContent?->html?>
+    <?=$pageContent?->html?>
     <?=$editLink?>
   </article>

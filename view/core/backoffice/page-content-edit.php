@@ -1,12 +1,17 @@
 <?php
 
+use Amora\App\Value\Language;
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAdmin $responseData */
 $pageContent = $responseData->pageContent;
 
-$title = 'Editar portada';
+$title = $responseData->getLocalValue('pageContentEditTitle' . $pageContent->type->name);
+$languageIcon = count(Core::getAllLanguages()) === 1
+    ? ''
+    : Language::getIconFlag($pageContent->language, 'm-l-1');
 $submitButtonValue = $pageContent
     ? $responseData->getLocalValue('globalUpdate')
     : $responseData->getLocalValue('globalSend');
@@ -19,7 +24,7 @@ $this->insert('partials/articles-edit/modal-select-main-image', ['responseData' 
 <main>
   <div id="feedback" class="feedback null"></div>
   <section class="page-header">
-    <h3><?=$title?></h3>
+    <h3><?=$title . $languageIcon?></h3>
     <div class="links">
       <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="20" height="20" alt="Volver"></a>
     </div>

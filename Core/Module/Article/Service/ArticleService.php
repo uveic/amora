@@ -55,6 +55,12 @@ class ArticleService
         return $res[0] ?? null;
     }
 
+    public function getPageContentForTypeId(PageContentType $type): ?PageContent
+    {
+        $res = $this->filterPageContentBy(typeIds: [$type->value]);
+        return $res[0] ?? null;
+    }
+
     public function getArticleForPath(string $path, bool $includePublishedAtInTheFuture = true): ?Article
     {
         $res = $this->filterArticlesBy(

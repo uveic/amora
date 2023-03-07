@@ -10,7 +10,7 @@ class HtmlHomepageResponseData extends HtmlResponseDataAbstract
     public function __construct(
         Request $request,
         ?Pagination $pagination = null,
-        public readonly ?PageContent $homepageContent = null,
+        public readonly ?PageContent $pageContent = null,
         public readonly array $homeArticles = [],
         public readonly array $blogArticles = [],
         public readonly ?Feedback $feedback = null,

@@ -53,6 +53,7 @@ class ArticleCore extends Core
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/PageContentType.php';
+                require_once self::getPathRoot() . '/App/Value/AppPageContentType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/PageContent.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
