@@ -188,7 +188,7 @@ final class ArticleHtmlGenerator
     public static function generateArticleRowHtml(
         HtmlResponseDataAdmin $responseData,
         Article $article,
-        string $indentation = '            ',
+        string $indentation = '        ',
     ): string {
         $statusClassname = match ($article->status) {
             ArticleStatus::Published => 'status-published',
