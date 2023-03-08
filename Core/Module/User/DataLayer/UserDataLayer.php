@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\User\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\DataLayerTrait;
@@ -70,8 +71,8 @@ class UserDataLayer
         $where = ' WHERE 1';
 
         if (!$includeDisabled) {
-            $where .= ' AND u.is_enabled = :enabled';
-            $params[':enabled'] = 1;
+            $where .= ' AND u.status_id IN (:enabled)';
+            $params[':enabled'] = UserStatus::Enabled->value;
         }
 
         if (isset($userId)) {
@@ -349,8 +350,11 @@ class UserDataLayer
                 SELECT
                     COUNT(*) AS total
                 FROM ' . self::USER_TABLE . ' AS u
-                WHERE u.is_enabled IN (1);
+                WHERE u.status_id IN (:statusEnabled);
             ',
+            [
+                ':statusEnabled' => UserStatus::Enabled->value,
+            ]
         );
     }
 }
