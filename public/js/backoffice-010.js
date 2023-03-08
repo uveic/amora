@@ -237,9 +237,13 @@ const handleCopyLink = (ev, href) => {
     .catch(error => Util.logError(error, global.get('feedbackCopyLinkError')));
 };
 
+const imageLoaded = (imageEl) => {
+  imageEl.classList.remove('hidden');
+  document.querySelector('.image-modal .image-loading').classList.add('null');
+};
+
 const displayImage = (image) => {
   const modal = document.querySelector('.image-modal');
-  const loadingContainer = modal.querySelector('.image-loading');
   const content = modal.querySelector('.image-wrapper');
   const modalClose = modal.querySelector('.modal-close-button');
   let imageContainer = modal.querySelector('.image-main img');
@@ -251,15 +255,14 @@ const displayImage = (image) => {
     modal.querySelector('.image-main').appendChild(imageContainer);
   }
 
-  imageContainer.classList.remove('hidden');
-  imageInfoData.classList.remove('null');
-  imageInfoNext.classList.remove('null');
-
   if (!image) {
     document.querySelectorAll('.image-next-action').forEach(i => i.classList.add('hidden'));
-    loadingContainer.classList.add('null');
+    modal.querySelector('.image-loading').classList.add('null');
     content.classList.remove('null');
     modalClose.classList.remove('null');
+    imageContainer.classList.remove('hidden');
+    imageInfoData.classList.remove('null');
+    imageInfoNext.classList.remove('null');
 
     return;
   }
@@ -269,6 +272,7 @@ const displayImage = (image) => {
   imageContainer.alt = alt;
   imageContainer.title = alt;
   imageContainer.dataset.mediaId = image.id;
+  imageContainer.addEventListener('load', () => imageLoaded(imageContainer));
 
   // Hide/display image nav buttons
   const firstImageEl = document.querySelector('#images-list .image-item');
@@ -360,7 +364,9 @@ const displayImage = (image) => {
     });
   }
 
-  loadingContainer.classList.add('null');
+  imageInfoData.classList.remove('null');
+  imageInfoNext.classList.remove('null');
+
   content.classList.remove('null');
   modalClose.classList.remove('null');
 };
