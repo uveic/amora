@@ -605,4 +605,8 @@ class ArticleService
 
         return $sitemapItems;
     }
+
+    public function getTotalArticles(): array {
+        return $this->articleDataLayer->getTotalArticles();
+    }
 }

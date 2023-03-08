@@ -120,7 +120,7 @@ class ArticleDataLayer
 
         $joins = ' FROM ' . self::ARTICLE_TABLE . ' AS a';
         $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = a.user_id';
-        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE_NAME
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE
             . ' AS m ON m.id = a.main_image_id';
 
         $where = ' WHERE 1';
@@ -301,7 +301,7 @@ class ArticleDataLayer
 
         $joins = ' FROM ' . self::CONTENT_TABLE . ' AS c';
         $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = c.user_id';
-        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE_NAME
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE
             . ' AS m ON m.id = c.main_image_id';
 
         $where = ' WHERE 1';
@@ -656,5 +656,31 @@ class ArticleDataLayer
         }
 
         return true;
+    }
+
+    public function getTotalArticles(): array
+    {
+        $output = [];
+        $res = $this->db->fetchAll(
+            '
+                SELECT
+                    a.type_id,
+                    COUNT(*) AS total
+                FROM ' . self::ARTICLE_TABLE . ' AS a
+                WHERE a.status_id IN (:published, :draft, :private)
+                GROUP BY a.type_id;
+            ',
+            [
+                ':published' => ArticleStatus::Published->value,
+                ':draft' => ArticleStatus::Draft->value,
+                ':private' => ArticleStatus::Private->value,
+            ]
+        );
+
+        foreach ($res as $item) {
+            $output[(int)$item['type_id']] = (int)$item['total'];
+        }
+
+        return $output;
     }
 }

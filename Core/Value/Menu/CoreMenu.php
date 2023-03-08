@@ -36,7 +36,7 @@ final class CoreMenu
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeImagesUrl($language),
                         text: $localisationUtil->getValue('navAdminImages'),
-                        icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/image.svg" alt="' . $localisationUtil->getValue('navAdminImages') . '">',
+                        icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/image-white.svg" alt="' . $localisationUtil->getValue('navAdminImages') . '">',
                         order: 1001,
                     ),
                     new MenuItem(

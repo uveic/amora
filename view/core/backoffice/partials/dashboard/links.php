@@ -1,16 +1,48 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlResponseDataAbstract $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 
 ?>
         <div class="content-flex-block width-45-percent">
           <h2><?=$responseData->getLocalValue('dashboardGoTo')?></h2>
-          <p><img class="img-svg m-r-05" width="20" height="20" src="/img/svg/image-black.svg" alt="<?=$this->e($responseData->getLocalValue('navAdminImages'))?>"><a href="<?=UrlBuilderUtil::buildBackofficeImagesUrl($responseData->siteLanguage)?>"><?=$this->e($responseData->getLocalValue('navAdminImages'))?></a></p>
-          <p><img class="img-svg m-r-05" width="20" height="20" src="/img/svg/note-pencil.svg" alt="<?=$this->e($responseData->getLocalValue('navAdminArticles'))?>"><a href="<?=UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Page)?>"><?=$responseData->getLocalValue('navAdminArticles')?></a></p>
-          <p><img class="img-svg m-r-05" width="20" height="20" src="/img/svg/article-medium.svg" alt="<?=$this->e($responseData->getLocalValue('navAdminBlogPosts'))?>"><a href="<?=UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Blog)?>"><?=$responseData->getLocalValue('navAdminBlogPosts')?></a></p>
-          <p><img class="img-svg m-r-05" width="20" height="20" src="/img/svg/users.svg" alt="<?=$this->e($responseData->getLocalValue('navAdminUsers'))?>"><a href="<?=UrlBuilderUtil::buildBackofficeUsersUrl($responseData->siteLanguage)?>"><?=$this->e($responseData->getLocalValue('navAdminUsers'))?></a></p>
+          <div class="dashboard-cards-wrapper">
+            <a href="<?=UrlBuilderUtil::buildBackofficeImagesUrl($responseData->siteLanguage)?>">
+              <span class="value"><?=$responseData->dashboardCount->images?></span>
+              <span class="m-t-025">
+                <img class="img-svg img-svg-20 m-r-05" width="20" height="20" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('navAdminImages')?>">
+                <?=$this->e($responseData->getLocalValue('navAdminImages'))?>
+              </span>
+            </a>
+            <a href="<?=UrlBuilderUtil::buildBackofficeMediaUrl($responseData->siteLanguage)?>">
+              <span class="value"><?=$responseData->dashboardCount->files?></span>
+              <span class="m-t-025">
+                <img class="img-svg img-svg-20 m-r-05" width="20" height="20" src="/img/svg/files.svg" alt="<?=$responseData->getLocalValue('navAdminMedia')?>">
+                <?=$this->e($responseData->getLocalValue('navAdminMedia'))?>
+              </span>
+            </a>
+            <a href="<?=UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Page)?>">
+              <span class="value"><?=$responseData->dashboardCount->pages?></span>
+              <span class="m-t-025">
+                <img class="img-svg img-svg-20 m-r-05" width="20" height="20" src="/img/svg/note-pencil.svg" alt="<?=$responseData->getLocalValue('navAdminArticles')?>">
+                <?=$responseData->getLocalValue('navAdminArticles')?>
+              </span>
+            </a>
+            <a href="<?=UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Blog)?>">
+              <span class="value"><?=$responseData->dashboardCount->blogPosts?></span>
+              <span class="m-t-025">
+                <img class="img-svg img-svg-20 m-r-05" width="20" height="20" src="/img/svg/article-medium.svg" alt="<?=$responseData->getLocalValue('navAdminBlogPosts')?>">
+                <?=$responseData->getLocalValue('navAdminBlogPosts')?>
+              </span>
+            </a>
+            <a href="<?=UrlBuilderUtil::buildBackofficeUsersUrl($responseData->siteLanguage)?>">
+              <span class="value"><?=$responseData->dashboardCount->users?></span>
+              <span class="m-t-025">
+                <img class="img-svg img-svg-20 m-r-05" width="20" height="20" src="/img/svg/users.svg" alt="<?=$responseData->getLocalValue('navAdminUsers')?>">
+                <?=$this->e($responseData->getLocalValue('navAdminUsers'))?>
+              </span>
+            </a>
         </div>

@@ -4,6 +4,7 @@ namespace Amora\Core\Entity\Response;
 
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Util\DashboardCount;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\User\Model\User;
 
@@ -21,6 +22,7 @@ class HtmlResponseDataAdmin extends HtmlResponseData
         public readonly ?array $files = [],
         public readonly ?array $articleSections = [],
         public readonly ?PageContent $pageContent = null,
+        public readonly ?DashboardCount $dashboardCount = null,
     ) {
         parent::__construct(
             request: $request,
