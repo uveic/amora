@@ -10,6 +10,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
+use Amora\Core\Entity\Util\DashboardCount;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
@@ -75,11 +76,22 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
+        $articlesCount = $this->articleService->getTotalArticles();
+        $mediaCount = $this->mediaService->getTotalMedia();
+        $userCount = $this->userService->getTotalUsers();
+
         return Response::createHtmlResponse(
             template: 'core/backoffice/dashboard',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdministrator'),
+                dashboardCount: new DashboardCount(
+                    images: $mediaCount[MediaType::Image->value] ?? 0,
+                    files: $mediaCount[MediaType::PDF->value] ?? 0,
+                    pages: $articlesCount[ArticleType::Page->value] ?? 0,
+                    blogPosts: $articlesCount[ArticleType::Blog->value] ?? 0,
+                    users: $userCount,
+                ),
             ),
         );
     }

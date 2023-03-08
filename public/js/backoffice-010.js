@@ -1,8 +1,8 @@
 import {Util} from './module/Util-005.js';
 import {xhr} from './module/xhr-001.js';
 import {global} from "./module/localisation-002.js";
-import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego-005.js";
-import {Uploader} from "./module/Uploader-006.js";
+import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego-006.js";
+import {Uploader} from "./module/Uploader-007.js";
 
 let globalTags = [];
 
@@ -243,11 +243,17 @@ const displayImage = (image) => {
   const content = modal.querySelector('.image-wrapper');
   const modalClose = modal.querySelector('.modal-close-button');
   let imageContainer = modal.querySelector('.image-main img');
+  const imageInfoData = modal.querySelector('.image-info-data');
+  const imageInfoNext = modal.querySelector('.image-next-wrapper');
 
   if (!imageContainer) {
     imageContainer = new Image();
     modal.querySelector('.image-main').appendChild(imageContainer);
   }
+
+  imageContainer.classList.remove('hidden');
+  imageInfoData.classList.remove('null');
+  imageInfoNext.classList.remove('null');
 
   if (!image) {
     document.querySelectorAll('.image-next-action').forEach(i => i.classList.add('hidden'));
@@ -309,7 +315,8 @@ const displayImage = (image) => {
   let pixels = '';
   if (image.exif && image.exif.width) {
     pixels += '<img src="/img/svg/frame-corners-white.svg" class="img-svg" alt="Size (pixels)">'
-      + image.exif.width + ' x ' + image.exif.height;
+      + image.exif.width + ' x ' + image.exif.height
+      + '<a href="' + image.fullPathOriginal + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>';
   }
 
   modal.querySelector('.image-number').textContent = '#' + image.id;
@@ -364,10 +371,22 @@ const displayImagePopup = (e, mediaId, next = false, direction = null) => {
   const modal = document.querySelector('.image-modal');
   const loadingContainer = modal.querySelector('.image-loading');
   const modalClose = modal.querySelector('.modal-close-button');
+  const imageContainer = modal.querySelector('.image-main img');
+  const imageInfoData = modal.querySelector('.image-info-data');
+  const imageInfoNext = modal.querySelector('.image-next-wrapper');
 
   modal.classList.remove('null');
   loadingContainer.classList.remove('null');
   modalClose.classList.add('null');
+  if (imageContainer) {
+    imageContainer.classList.add('hidden');
+  }
+  if (imageInfoData) {
+    imageInfoData.classList.add('null');
+  }
+  if (imageInfoNext) {
+    imageInfoNext.classList.add('null');
+  }
 
   const qty = 1;
   const typeId = 2; // See MediaType.php
@@ -480,6 +499,7 @@ document.querySelectorAll('.image-item').forEach(im => {
 document.querySelectorAll('.image-next-action, .image-previous-action, .image-random-action').forEach(ina => {
   ina.addEventListener('click', e => {
     const img = document.querySelector('.image-wrapper .image-main img');
+    img.classList.add('hidden');
     const mediaId = img ? img.dataset.mediaId : 0;
     const direction = ina.dataset.direction;
 
@@ -941,7 +961,7 @@ document.querySelectorAll('#filter-article-button').forEach(a => {
 document.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
     return;
-  };
+  }
 
   if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
     document.querySelectorAll('.modal-wrapper').forEach(m => {

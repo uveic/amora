@@ -472,4 +472,9 @@ class UserService
 
         return $code;
     }
+
+    public function getTotalUsers(): int
+    {
+        return $this->userDataLayer->getTotalUsers();
+    }
 }

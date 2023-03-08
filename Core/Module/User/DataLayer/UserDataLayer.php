@@ -341,4 +341,16 @@ class UserDataLayer
 
         return $data;
     }
+
+    public function getTotalUsers(): int
+    {
+        return (int)$this->db->fetchColumn(
+            '
+                SELECT
+                    COUNT(*) AS total
+                FROM ' . self::USER_TABLE . ' AS u
+                WHERE u.is_enabled IN (1);
+            ',
+        );
+    }
 }

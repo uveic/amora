@@ -74,6 +74,10 @@ class Media
             'fullPathSmall' => $baseUrl . $this->getPathWithNameSmall(),
             'pathMedium' => $this->getPathWithNameMedium(),
             'fullPathMedium' => $baseUrl . $this->getPathWithNameMedium(),
+            'pathLarge' => $this->getPathWithNameLarge(),
+            'fullPathLarge' => $baseUrl . $this->getPathWithNameLarge(),
+            'pathOriginal' => $this->getPathWithNameOriginal(),
+            'fullPathOriginal' => $baseUrl . $this->getPathWithNameOriginal(),
             'caption' => $this->captionHtml,
             'captionHtml' => $this->captionHtml,
             'name' => $this->type === MediaType::Image

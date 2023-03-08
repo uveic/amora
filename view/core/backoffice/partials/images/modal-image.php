@@ -19,7 +19,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
         </div>
         <div class="image-info">
           <div class="image-loading null"></div>
-          <div>
+          <div class="image-info-data">
             <div class="image-number"></div>
             <div class="image-caption"></div>
             <div class="image-meta"></div>

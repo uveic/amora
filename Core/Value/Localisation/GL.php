@@ -174,8 +174,6 @@ return [
     'pageContentEditTitle' => 'Editar contido',
     'pageContentEditTitleHomepage' => 'Editar o contido da portada',
     'pageContentEditTitleBlogBottom' => 'Editar o contido que se mostra despois dun post do blog',
-    'pageContentHomepage' => 'Portada',
-    'pageContentBlogBottom' => 'Fondo entrada blog',
 
     'mediaUploadedBy' => 'Subido por %s o %s',
     'mediaSelectImageForArticle' => 'Selecciona unha imaxe para engadir ao artigo',

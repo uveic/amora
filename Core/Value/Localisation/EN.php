@@ -174,8 +174,6 @@ return [
     'pageContentEditTitle' => 'Edit content',
     'pageContentEditTitleHomepage' => 'Edit homepage content',
     'pageContentEditTitleBlogBottom' => 'Edit the content that follows a blog post',
-    'pageContentHomepage' => 'Homepage',
-    'pageContentBlogBottom' => 'Bottom Blog Post',
 
     'mediaUploadedBy' => 'Uploaded by %s on %s',
     'mediaSelectImageForArticle' => 'Select image to add to article',

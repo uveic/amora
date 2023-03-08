@@ -16,9 +16,9 @@ class MediaDataLayer
 {
     use DataLayerTrait;
 
-    const MEDIA_TABLE_NAME = 'core_media';
-    const MEDIA_TYPE_TABLE_NAME = 'core_media_type';
-    const MEDIA_STATUS_TABLE_NAME = 'core_media_status';
+    const MEDIA_TABLE = 'core_media';
+    const MEDIA_TYPE_TABLE = 'core_media_type';
+    const MEDIA_STATUS_TABLE = 'core_media_status';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -77,7 +77,7 @@ class MediaDataLayer
             'u.change_email_to AS user_change_email_to',
         ];
 
-        $joins = ' FROM ' . self::MEDIA_TABLE_NAME . ' AS m';
+        $joins = ' FROM ' . self::MEDIA_TABLE . ' AS m';
         $joins .= ' LEFT JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = m.user_id';
         $where = ' WHERE 1';
 
@@ -121,7 +121,7 @@ class MediaDataLayer
 
     public function storeFile(Media $data): Media
     {
-        $resInsert = $this->db->insert(self::MEDIA_TABLE_NAME, $data->asArray());
+        $resInsert = $this->db->insert(self::MEDIA_TABLE, $data->asArray());
 
         if (empty($resInsert)) {
             $this->logger->logError('Error inserting media');
@@ -136,7 +136,7 @@ class MediaDataLayer
     {
         return $this->db->execute(
             '
-                UPDATE ' . self::MEDIA_TABLE_NAME .
+                UPDATE ' . self::MEDIA_TABLE .
             '   SET status_id = :statusId,
                     updated_at = :updatedAt
                 WHERE id = :id
@@ -152,8 +152,32 @@ class MediaDataLayer
     public function destroyMedia(int $id): bool
     {
         return $this->db->delete(
-            tableName: self::MEDIA_TABLE_NAME,
+            tableName: self::MEDIA_TABLE,
             where: ['id' => $id],
         );
+    }
+
+    public function getTotalMedia(): array
+    {
+        $output = [];
+        $res = $this->db->fetchAll(
+            '
+                SELECT
+                    m.type_id,
+                    COUNT(*) AS total
+                FROM ' . self::MEDIA_TABLE . ' AS m
+                WHERE m.status_id IN (:active)
+                GROUP BY m.type_id;
+            ',
+            [
+                ':active' => MediaStatus::Active->value,
+            ]
+        );
+
+        foreach ($res as $item) {
+            $output[(int)$item['type_id']] = (int)$item['total'];
+        }
+
+        return $output;
     }
 }

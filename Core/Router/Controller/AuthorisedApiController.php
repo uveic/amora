@@ -180,7 +180,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      * @param string|null $direction
      * @param int|null $qty
      * @param int|null $typeId
-     * @param \Amora\Core\Entity\Request $request
+     * @param Request $request
      * @return Response
      */
     protected function getNextFile(
@@ -204,7 +204,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             mediaType: $mediaType,
             isAdmin: $request->session->isAdmin(),
             includeAppearsOn: true,
-            formId: $id,
+            fromId: $id,
             userId: $request->session->isAdmin() ? null : $request->session->user->id,
         );
 

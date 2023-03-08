@@ -85,12 +85,12 @@ return [
     ),
     new LookupTableSettings(
         database: ArticleCore::getDb(),
-        tableName: MediaDataLayer::MEDIA_STATUS_TABLE_NAME,
+        tableName: MediaDataLayer::MEDIA_STATUS_TABLE,
         tableFieldsToValues: asArray(MediaStatus::getAll()),
     ),
     new LookupTableSettings(
         database: ArticleCore::getDb(),
-        tableName: MediaDataLayer::MEDIA_TYPE_TABLE_NAME,
+        tableName: MediaDataLayer::MEDIA_TYPE_TABLE,
         tableFieldsToValues: asArray(MediaType::getAll()),
     ),
     new LookupTableSettings(

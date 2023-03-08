@@ -63,7 +63,7 @@ class UploaderClass {
           }
 
           image.classList.remove('opacity');
-          image.src = response.file.path;
+          image.src = response.file.pathSmall;
           image.dataset.mediaId = response.file.id;
           image.alt = response.file.caption ?? response.file.name;
           figureContainer.removeChild(imgLoading);

@@ -116,7 +116,7 @@ class MediaService
         bool $isAdmin = false,
         bool $includeAppearsOn = false,
         ?int $mediaId = null,
-        ?int $formId = null,
+        ?int $fromId = null,
         ?int $userId = null,
     ): array {
         $files = QueryOrderDirection::RAND === $direction
@@ -135,7 +135,7 @@ class MediaService
                 userIds: $userId ? [$userId] : [],
                 typeIds: $mediaType ? [$mediaType->value] : [],
                 statusIds: [MediaStatus::Active->value],
-                fromId: $formId,
+                fromId: $fromId,
                 queryOptions: new QueryOptions(
                     orderBy: [new QueryOrderBy('id', $direction)],
                     pagination: new Response\Pagination(itemsPerPage: $qty),
@@ -368,5 +368,10 @@ class MediaService
         } while(!is_dir($fullPath));
 
         return $extraImagePath;
+    }
+
+    public function getTotalMedia(): array
+    {
+        return $this->mediaDataLayer->getTotalMedia();
     }
 }
