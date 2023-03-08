@@ -3,7 +3,7 @@
 use Amora\Core\Entity\Response\HtmlHomepageResponseData;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Util\DateUtil;
-use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
+use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlHomepageResponseData $responseData */
@@ -41,7 +41,7 @@ foreach ($articles as $article) {
         : '';
 
     $href = UrlBuilderUtil::buildPublicArticlePath($article->path, $article->language);
-    $isPublishedHtml = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article);
+    $isPublishedHtml = ArticleHtmlGenerator::generateArticlePublishedIconHtml($article);
 
     $year = $article->publishOn ? $article->publishOn->format('Y') : '???';
     if ($previousYear !== $year) {

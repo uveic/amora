@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\User\Model;
 
 use Amora\Core\Module\User\Value\UserJourneyStatus;
+use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\App\Value\Language;
@@ -13,6 +14,7 @@ class User
 {
     public function __construct(
         public ?int $id,
+        public readonly UserStatus $status,
         public readonly Language $language,
         public readonly UserRole $role,
         public readonly UserJourneyStatus $journeyStatus,
@@ -22,8 +24,6 @@ class User
         public readonly ?string $name,
         public readonly ?string $passwordHash,
         public readonly ?string $bio,
-        public readonly bool $isEnabled,
-        public readonly bool $verified,
         public readonly DateTimeZone $timezone,
         public readonly ?string $changeEmailAddressTo = null,
     ) {}
@@ -32,6 +32,7 @@ class User
     {
         return new User(
             id: (int)$user['user_id'],
+            status: UserStatus::from($user['user_status_id']),
             language: Language::from($user['user_language_iso_code']),
             role: UserRole::from($user['user_role_id']),
             journeyStatus: UserJourneyStatus::from($user['user_journey_id']),
@@ -41,8 +42,6 @@ class User
             name: $user['user_name'] ?? ($user['name'] ?? null),
             passwordHash: $user['user_password_hash'] ?? null,
             bio: $user['user_bio'] ?? null,
-            isEnabled: !empty($user['user_is_enabled']),
-            verified: !empty($user['user_verified']),
             timezone: DateUtil::convertStringToDateTimeZone($user['user_timezone']),
             changeEmailAddressTo: $user['user_change_email_to'] ?? null,
         );
@@ -52,6 +51,7 @@ class User
     {
         return [
             'id' => $this->id,
+            'status_id' => $this->status->value,
             'language_iso_code' => $this->language->value,
             'role_id' => $this->role->value,
             'journey_id' => $this->journeyStatus->value,
@@ -61,8 +61,6 @@ class User
             'name' => $this->name,
             'password_hash' => $this->passwordHash,
             'bio' => $this->bio,
-            'is_enabled' => $this->isEnabled,
-            'verified' => $this->verified,
             'timezone' => $this->timezone->getName(),
             'change_email_to' => $this->changeEmailAddressTo,
         ];
@@ -88,5 +86,15 @@ class User
     public function validateValidationHash(string $hash): bool
     {
         return $this->getValidationHash() === $hash;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->journeyStatus === UserJourneyStatus::Registration;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->status === UserStatus::Enabled;
     }
 }

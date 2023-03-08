@@ -3,7 +3,7 @@
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
-use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
+use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 
 /** @var HtmlResponseData $responseData */
 $article = $responseData->article;
@@ -16,7 +16,7 @@ $postBottomContent = $article->type === ArticleType::Blog
     ? $responseData->postBottomContent?->html
     : null;
 
-$icon = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml(
+$icon = ArticleHtmlGenerator::generateArticlePublishedIconHtml(
     article: $article,
 );
 ?>

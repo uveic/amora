@@ -3,15 +3,15 @@
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
-use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
+use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
-$pageEditTitle = ArticleEditHtmlGenerator::generateTitleHtml($responseData);
-$settings = ArticleEditHtmlGenerator::generateSettingsButtonHtml($responseData);
+$pageEditTitle = ArticleHtmlGenerator::generateTitleHtml($responseData);
+$settings = ArticleHtmlGenerator::generateSettingsButtonHtml($responseData);
 
-$articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
+$articleType = ArticleHtmlGenerator::getArticleType($responseData);
 $closeUrl = match($articleType) {
     ArticleType::Page => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Page),
     ArticleType::Blog => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Blog),

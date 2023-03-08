@@ -86,7 +86,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string|null $languageIsoCode
      * @param int|null $roleId
      * @param string|null $timezone
-     * @param bool|null $isEnabled
+     * @param int|null $userStatusId
      * @param string|null $currentPassword
      * @param string|null $newPassword
      * @param string|null $repeatPassword
@@ -101,7 +101,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?string $languageIsoCode,
         ?int $roleId,
         ?string $timezone,
-        ?bool $isEnabled,
+        ?int $userStatusId,
         ?string $currentPassword,
         ?string $newPassword,
         ?string $repeatPassword,
@@ -391,7 +391,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
         $roleId = $bodyParams['roleId'] ?? null;
         $timezone = $bodyParams['timezone'] ?? null;
-        $isEnabled = $bodyParams['isEnabled'] ?? null;
+        $userStatusId = $bodyParams['userStatusId'] ?? null;
         $currentPassword = $bodyParams['currentPassword'] ?? null;
         $newPassword = $bodyParams['newPassword'] ?? null;
         $repeatPassword = $bodyParams['repeatPassword'] ?? null;
@@ -415,7 +415,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $languageIsoCode,
                 $roleId,
                 $timezone,
-                $isEnabled,
+                $userStatusId,
                 $currentPassword,
                 $newPassword,
                 $repeatPassword,

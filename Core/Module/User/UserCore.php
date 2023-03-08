@@ -33,11 +33,11 @@ class UserCore extends Core
         return self::getInstance(
             className: 'UserDataLayer',
             factory: function () use ($db, $logger) {
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
                 return new UserDataLayer($db, $logger);
             },
-            isSingleton: true,
         );
     }
 
@@ -53,6 +53,7 @@ class UserCore extends Core
             factory: function () use ($logger, $userDataLayer, $sessionService, $userMailService) {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserVerification.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserRegistrationRequest.php';
@@ -60,7 +61,6 @@ class UserCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/User/Service/UserService.php';
                 return new UserService($logger, $userDataLayer, $sessionService, $userMailService);
             },
-            isSingleton: true,
         );
     }
 
@@ -74,11 +74,11 @@ class UserCore extends Core
             factory: function () use ($db, $logger) {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/Session.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/SessionDataLayer.php';
                 return new SessionDataLayer($db, $logger);
             },
-            isSingleton: true,
         );
     }
 
@@ -98,7 +98,6 @@ class UserCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/User/Service/SessionService.php';
                 return new SessionService($dataLayer);
             },
-            isSingleton: true,
         );
     }
 
@@ -117,7 +116,6 @@ class UserCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/User/Service/UserMailService.php';
                 return new UserMailService($dataLayer, $mailerService);
             },
-            isSingleton: true,
         );
     }
 }

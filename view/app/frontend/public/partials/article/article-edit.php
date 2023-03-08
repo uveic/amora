@@ -1,7 +1,7 @@
 <?php
 
 use Amora\Core\Entity\Response\HtmlResponseData;
-use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
+use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
@@ -14,7 +14,7 @@ if (!$isAdmin) {
 $article = $responseData->article;
 $editUrlHtml = '<a href="' . UrlBuilderUtil::buildBackofficeArticleUrl($responseData->siteLanguage, $article->id) . '">' . strtolower($responseData->getLocalValue('globalEdit')) . '</a>';
 
-$icon = ArticleEditHtmlGenerator::generateArticlePublishedIconHtml(
+$icon = ArticleHtmlGenerator::generateArticlePublishedIconHtml(
     article: $article,
 );
 

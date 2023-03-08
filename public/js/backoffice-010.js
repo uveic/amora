@@ -620,19 +620,18 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
     const languageIsoCodeEl = document.querySelector('select#languageIsoCode');
     const roleIdEl = document.querySelector('select#roleId');
     const timezoneEl = document.querySelector('select#timezone');
-    const isEnabledEl = document.querySelector('.user-status-dd-option[data-checked="1"]');
-    const isEnabled = Number.parseInt(isEnabledEl.dataset.value) > 0;
+    const userStatusEl = document.querySelector('select#userStatusId');
 
     const userId = userIdEl && userIdEl.value ? Number.parseInt(userIdEl.value) : null;
 
     const payload = JSON.stringify({
       name: nameEl.value ?? null,
       email: emailEl.value ?? null,
-      bio: bioEl.value ?? null,
+      bio: bioEl.value.length ? bioEl.value : null,
       languageIsoCode: languageIsoCodeEl.value ?? null,
-      roleId: roleIdEl.value ?? null,
+      roleId: roleIdEl.value ? Number.parseInt(roleIdEl.value) : null,
       timezone: timezoneEl.value ?? null,
-      isEnabled: isEnabled,
+      userStatusId: Number.parseInt(userStatusEl.value),
     });
 
     if (userId) {

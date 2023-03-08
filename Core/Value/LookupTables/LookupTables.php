@@ -9,6 +9,7 @@ require_once Core::getPathRoot() . '/Core/Module/Article/DataLayer/MediaDataLaye
 require_once Core::getPathRoot() . '/Core/Module/Analytics/DataLayer/AnalyticsDataLayer.php';
 require_once Core::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
+require_once Core::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleType.php';
@@ -34,6 +35,7 @@ use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Module\User\UserCore;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Module\User\Value\UserRole;
+use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use BackedEnum;
 
@@ -77,6 +79,11 @@ return [
         database: UserCore::getDb(),
         tableName: UserDataLayer::USER_JOURNEY_STATUS_TABLE,
         tableFieldsToValues: asArray(UserJourneyStatus::getAll()),
+    ),
+    new LookupTableSettings(
+        database: UserCore::getDb(),
+        tableName: UserDataLayer::USER_STATUS_TABLE,
+        tableFieldsToValues: asArray(UserStatus::getAll()),
     ),
     new LookupTableSettings(
         database: UserCore::getDb(),

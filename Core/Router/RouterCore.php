@@ -29,7 +29,7 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Entity/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Entity/SitemapItem.php';
-                require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
+                require_once self::getPathRoot() . '/Core/Util/Helper/ArticleHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicHtmlController.php';
@@ -72,7 +72,8 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'BackofficeHtmlController',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
+                require_once self::getPathRoot() . '/Core/Util/Helper/ArticleHtmlGenerator.php';
+                require_once self::getPathRoot() . '/Core/Util/Helper/UserHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseDataAdmin.php';
                 require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseDataAnalytics.php';
@@ -145,7 +146,7 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'PublicApiController',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Util/Helper/ArticleEditHtmlGenerator.php';
+                require_once self::getPathRoot() . '/Core/Util/Helper/ArticleHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicApiController.php';

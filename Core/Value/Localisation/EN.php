@@ -180,6 +180,10 @@ return [
 
     'userRoleAdmin' => 'Admin',
     'userRoleUser' => 'User',
+    'userStatusEnabled' => 'Enabled',
+    'userStatusDisabled' => 'Disabled',
+    'userJourneyRegistration' => 'Registration Complete',
+    'userJourneyPendingPasswordCreation' => 'Pending Password Creation',
 
     'sectionRemove' => 'Remove section',
     'sectionMoveUp' => 'Move Up',

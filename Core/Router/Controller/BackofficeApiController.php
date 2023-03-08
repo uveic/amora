@@ -8,6 +8,7 @@ use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\User\Value\UserRole;
+use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSuccessResponse;
@@ -133,6 +134,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             $newUser = $this->userService->storeUser(
                 user: new User(
                     id: null,
+                    status: $isEnabled ? UserStatus::Enabled : UserStatus::Disabled,
                     language: $language,
                     role: $userRole,
                     journeyStatus: UserJourneyStatus::getInitialUserJourneyStatusFromRole($userRole),
@@ -142,8 +144,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                     name: $name,
                     passwordHash: null,
                     bio: $bio,
-                    isEnabled: $isEnabled,
-                    verified: false,
                     timezone: $timezone,
                 ),
                 verificationType: VerificationType::PasswordCreation,
@@ -210,7 +210,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string|null $languageIsoCode
      * @param int|null $roleId
      * @param string|null $timezone
-     * @param bool $isEnabled
+     * @param int|null $userStatusId
      * @param string|null $currentPassword
      * @param string|null $newPassword
      * @param string|null $repeatPassword
@@ -225,7 +225,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $languageIsoCode,
         ?int $roleId,
         ?string $timezone,
-        ?bool $isEnabled,
+        ?int $userStatusId,
         ?string $currentPassword,
         ?string $newPassword,
         ?string $repeatPassword,
@@ -234,6 +234,14 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $existingUser = $this->userService->getUserForId($userId, true);
         if (empty($existingUser)) {
             return new BackofficeApiControllerUpdateUserFailureResponse();
+        }
+
+        if ($userStatusId && !UserStatus::tryFrom($userStatusId)) {
+            return new BackofficeApiControllerUpdateUserSuccessResponse(
+                success: false,
+                redirect: null,
+                errorMessage: 'User status ID not valid',
+            );
         }
 
         $updateRes = $this->userService->workflowUpdateUser(
@@ -246,7 +254,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             currentPassword: $currentPassword,
             newPassword: $newPassword,
             repeatPassword: $repeatPassword,
-            isEnabled: StringUtil::isTrue($isEnabled),
+            userStatus: $userStatusId ? UserStatus::from($userStatusId) : null,
         );
 
         if (!$updateRes->isSuccess) {

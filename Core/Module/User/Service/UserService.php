@@ -5,6 +5,7 @@ namespace Amora\Core\Module\User\Service;
 use Amora\Core\Core;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
+use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\LocalisationUtil;
 use DateTime;
 use DateTimeImmutable;
@@ -123,7 +124,7 @@ class UserService
             return null;
         }
 
-        if (!$res->isEnabled) {
+        if (!$res->isEnabled()) {
             return null;
         }
 
@@ -382,7 +383,7 @@ class UserService
         ?string $currentPassword = null,
         ?string $newPassword = null,
         ?string $repeatPassword = null,
-        ?bool $isEnabled = null,
+        ?UserStatus $userStatus = null,
     ): Feedback {
         $name = StringUtil::sanitiseText($name);
         $email = StringUtil::sanitiseText($email);
@@ -409,6 +410,7 @@ class UserService
         $res = $this->updateUser(
             user: new User(
                 id: $existingUser->id,
+                status: $userStatus ?? $existingUser->status,
                 language: $languageIsoCode
                     ? Language::from(strtoupper($languageIsoCode))
                     : $existingUser->language,
@@ -422,8 +424,6 @@ class UserService
                     ? StringUtil::hashPassword($newPassword)
                     : $existingUser->passwordHash,
                 bio: $bio ?? $existingUser->bio,
-                isEnabled: $isEnabled ?? $existingUser->isEnabled,
-                verified: $existingUser->verified,
                 timezone: $timezone
                     ? DateUtil::convertStringToDateTimeZone($timezone)
                     : $existingUser->timezone,

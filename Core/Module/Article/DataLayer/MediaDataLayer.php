@@ -62,6 +62,7 @@ class MediaDataLayer
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
 
+            'u.status_id AS user_status_id',
             'u.language_iso_code AS user_language_iso_code',
             'u.role_id AS user_role_id',
             'u.journey_id AS user_journey_id',
@@ -71,8 +72,6 @@ class MediaDataLayer
             'u.name AS user_name',
             'u.password_hash AS user_password_hash',
             'u.bio AS user_bio',
-            'u.is_enabled AS user_is_enabled',
-            'u.verified AS user_verified',
             'u.timezone AS user_timezone',
             'u.change_email_to AS user_change_email_to',
         ];
