@@ -108,7 +108,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $users = $this->userService->filterUsersBy();
         return Response::createHtmlResponse(
-            template: 'core/backoffice/users',
+            template: 'core/backoffice/user-list',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminUsers'),
@@ -129,7 +129,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         return Response::createHtmlResponse(
-            template: 'core/backoffice/users-edit',
+            template: 'core/backoffice/user-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
@@ -155,7 +155,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         }
 
         return Response::createHtmlResponse(
-            template: 'core/backoffice/users-edit',
+            template: 'core/backoffice/user-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
@@ -204,7 +204,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         return Response::createHtmlResponse(
-            template: 'core/backoffice/articles',
+            template: 'core/backoffice/article-list',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminArticles'),
@@ -223,14 +223,9 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getNewArticlePage(Request $request): Response
     {
-        $articleTypeParam = $request->getGetParam('atId');
-        $articleType = $articleTypeParam && ArticleType::tryFrom($articleTypeParam)
-            ? ArticleType::from($articleTypeParam)
-            : null;
-
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
-            template: 'core/backoffice/articles-edit',
+            template: 'core/backoffice/article-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
@@ -257,7 +252,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $articleSections = $this->articleService->getSectionsForArticleId($articleId);
         return Response::createHtmlResponse(
-            template: 'core/backoffice/articles-edit',
+            template: 'core/backoffice/article-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .

@@ -3,13 +3,13 @@
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\ArticleSection;
 use Amora\Core\Module\Article\Value\ArticleSectionType;
-use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
+use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 
 /** @var HtmlResponseDataAdmin $responseData */
 $article = $responseData->article;
 $articleSections = $responseData->articleSections;
 
-$articleType = ArticleEditHtmlGenerator::getArticleType($responseData);
+$articleType = ArticleHtmlGenerator::getArticleType($responseData);
 
 if (!$articleSections) {
     $now = new DateTimeImmutable();
@@ -46,8 +46,8 @@ $this->layout('base', ['responseData' => $responseData]);
     foreach ($articleSections as $articleSection) {
 ?>
         <div id="pexego-section-wrapper-<?=$articleSection->id?>" class="pexego-section-wrapper" data-section-id="<?=$articleSection->id?>">
-<?=ArticleEditHtmlGenerator::generateSection($responseData, $articleSection)?>
-<?=ArticleEditHtmlGenerator::getControlButtonsHtml(
+<?=ArticleHtmlGenerator::generateSection($responseData, $articleSection)?>
+<?=ArticleHtmlGenerator::getControlButtonsHtml(
     responseData: $responseData,
     sectionId: $articleSection->id,
     isFirst: $count === 0,
@@ -63,7 +63,7 @@ $this->layout('base', ['responseData' => $responseData]);
 <?php
     foreach ($articleSections as $articleSection) {
         if ($articleSection->articleSectionType === ArticleSectionType::TextParagraph) {
-            $editorId = ArticleEditHtmlGenerator::getClassName($articleSection->articleSectionType) . '-' . $articleSection->id;
+            $editorId = ArticleHtmlGenerator::getClassName($articleSection->articleSectionType) . '-' . $articleSection->id;
 ?>
         <div id="<?=$editorId?>-html">
           <?=$articleSection->contentHtml . PHP_EOL?>

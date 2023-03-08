@@ -3,7 +3,7 @@
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\MediaType;
-use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
+use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 
@@ -53,7 +53,7 @@ $this->insert('partials/articles-edit/modal-add-image', ['responseData' => $resp
       </div>
     </div>
     <div class="article-tools">
-<?=ArticleEditHtmlGenerator::generateArticleLanguageDropdownSelectHtml($responseData)?>
-<?=ArticleEditHtmlGenerator::generateArticleStatusDropdownSelectHtml($responseData)?>
+<?=ArticleHtmlGenerator::generateArticleLanguageDropdownSelectHtml($responseData)?>
+<?=ArticleHtmlGenerator::generateArticleStatusDropdownSelectHtml($responseData)?>
     </div>
   </div>

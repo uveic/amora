@@ -11,12 +11,13 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\mailer\MailerCore;
 use Amora\Core\Module\User\Model\User;
+use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\PublicApiControllerGetBlogPostsSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerLogCspErrorsSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerTriggerEmailSenderJobSuccessResponse;
 use Amora\Core\Util\DateUtil;
-use Amora\Core\Util\Helper\ArticleEditHtmlGenerator;
+use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
@@ -235,7 +236,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     protected function forgotPassword(string $email, Request $request): Response
     {
         $existingUser =$this->userService->getUserForEmail($email);
-        if (empty($existingUser) || !$existingUser->isEnabled) {
+        if (!$existingUser?->isEnabled()) {
             return new PublicApiControllerForgotPasswordSuccessResponse(true);
         }
 
@@ -315,6 +316,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             $user = $this->userService->storeUser(
                 user: new User(
                     id: null,
+                    status: UserStatus::Enabled,
                     language: Language::from($languageIsoCode),
                     role: UserRole::User,
                     journeyStatus: UserJourneyStatus::Registration,
@@ -324,8 +326,6 @@ final class PublicApiController extends PublicApiControllerAbstract
                     name: $name,
                     passwordHash: StringUtil::hashPassword($password),
                     bio: null,
-                    isEnabled: true,
-                    verified: false,
                     timezone: DateUtil::convertStringToDateTimeZone($timezone),
                 ),
                 verificationType: VerificationType::EmailAddress,
@@ -520,7 +520,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         /** @var Article $article */
         foreach ($articles as $article) {
             $output[] = [
-                'icon' => ArticleEditHtmlGenerator::generateArticlePublishedIconHtml($article),
+                'icon' => ArticleHtmlGenerator::generateArticlePublishedIconHtml($article),
                 'path' => UrlBuilderUtil::buildPublicArticlePath(path: $article->path),
                 'title' => $article->title,
                 'publishedOn' => $article->publishOn?->format('c'),

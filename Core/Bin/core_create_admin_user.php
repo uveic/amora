@@ -3,6 +3,7 @@
 
 namespace Amora\Core\Bin;
 
+use Amora\Core\Module\User\Value\UserStatus;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
@@ -77,6 +78,7 @@ $now = new DateTimeImmutable();
 $res = UserCore::getUserService()->storeUser(
     new User(
         id: null,
+        status: UserStatus::Enabled,
         language: Core::getDefaultLanguage(),
         role: UserRole::Admin,
         journeyStatus: UserJourneyStatus::Registration,
@@ -86,8 +88,6 @@ $res = UserCore::getUserService()->storeUser(
         name: $name,
         passwordHash: StringUtil::hashPassword($pass),
         bio: null,
-        isEnabled: true,
-        verified: true,
         timezone: DateUtil::convertStringToDateTimeZone('Europe/Madrid'),
     )
 );

@@ -102,7 +102,7 @@ abstract class HtmlResponseDataAbstract
         if (empty($this->request->session)) {
             return false;
         }
-        return $this->request->session->user->verified;
+        return $this->request->session->user->isVerified();
     }
 
     public function minutesSinceUserRegistration(): int

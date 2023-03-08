@@ -3,6 +3,8 @@
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\User\Value\UserRole;
+use Amora\Core\Module\User\Value\UserStatus;
+use Amora\Core\Util\DateUtil;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -12,12 +14,33 @@ $emailHelpCopy = $responseData->user ? '' : $responseData->getLocalValue('formEm
 $defaultTimezone = $responseData->user?->timezone ?? $responseData->request->session->user->timezone;
 $defaultLanguage = $responseData->user?->language ?? $responseData->request->session->user->language;
 
+$updatedAtContent = '';
+$createdAtContent = '';
+if ($responseData->user) {
+    $updatedAtDate = DateUtil::formatDate(
+        date: $responseData->user->updatedAt,
+        lang: $responseData->siteLanguage,
+        includeTime: true,
+    );
+
+    $createdAtDate = DateUtil::formatDate(
+        date: $responseData->user->createdAt,
+        lang: $responseData->siteLanguage,
+        includeTime: true,
+    );
+
+    $updatedAtContent = '<p><strong>' . $responseData->getLocalValue('globalUpdated') . '</strong>: '
+        . $updatedAtDate . '.</p>';
+
+    $createdAtContent = '<p><strong>' . $responseData->getLocalValue('globalCreated') . '</strong>: '
+        . $createdAtDate . '.</p>';
+}
+
 ?>
   <section>
     <div id="feedback" class="feedback null"></div>
 <?=$this->insert('partials/users-edit/header', ['responseData' => $responseData])?>
     <form action="#" method="post" id="form-user-creation">
-<?=$this->insert('partials/users-edit/control-bar', ['responseData' => $responseData])?>
       <div class="content-narrow-width">
 <?php if ($responseData->user) { ?>
         <input id="userId" class="input" name="userId" type="hidden" value="<?=$responseData->user->id; ?>">
@@ -71,7 +94,7 @@ $defaultLanguage = $responseData->user?->language ?? $responseData->request->ses
 <?php
 /** @var \BackedEnum $role */
 foreach (UserRole::getAll() as $role) {
-        $selected = $responseData->user && $role == $responseData->user->role;
+        $selected = $role === $responseData->user?->role;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>
 <?php
@@ -95,7 +118,26 @@ foreach (UserRole::getAll() as $role) {
           </div>
           <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
         </div>
+        <div class="field">
+          <label for="userStatusId" class="label"><?=$responseData->getLocalValue('globalStatus')?></label>
+          <div class="control">
+            <select name="userStatusId" id="userStatusId">
+<?php
+    /** @var \BackedEnum $role */
+    foreach (UserStatus::getAll() as $status) {
+        $selected = $status === $responseData->user?->status;
+?>
+              <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$status->value?>"><?=$responseData->getLocalValue('userStatus' . $status->name)?></option>
+<?php } ?>
+            </select>
+          </div>
+          <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
+        </div>
+        <?=$createdAtContent?>
+        <?=$updatedAtContent?>
+        <div class="field">
+          <input type="submit" class="button m-t-2 is-success" value="<?=$responseData->user ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
+        </div>
       </div>
-<?=$this->insert('partials/users-edit/control-bar', ['responseData' => $responseData])?>
     </form>
   </section>

@@ -270,9 +270,9 @@
                   "description": "PHP timezone name",
                   "type": "string"
                 },
-                "isEnabled": {
-                  "description": "Is the user enabled?",
-                  "type": "boolean"
+                "userStatusId": {
+                  "description": "Uset status ID",
+                  "type": "integer"
                 },
                 "currentPassword": {
                   "description": "Current password",

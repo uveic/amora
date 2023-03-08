@@ -141,7 +141,6 @@ blockquote,
   flex-grow: 0 !important;
 }
 
-#user-status-dd-checkbox:checked ~ div.user-status-container > ul,
 #article-status-dd-checkbox:checked ~ div.article-status-container > ul,
 #article-lang-dd-checkbox:checked ~ div.article-lang-container > ul {
   display: block !important;

@@ -13,7 +13,7 @@ use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\App\Value\Language;
 
-final class ArticleEditHtmlGenerator
+final class ArticleHtmlGenerator
 {
     public static function getClassName(ArticleSectionType $sectionType): string
     {
@@ -188,6 +188,7 @@ final class ArticleEditHtmlGenerator
     public static function generateArticleRowHtml(
         HtmlResponseDataAdmin $responseData,
         Article $article,
+        string $indentation = '            ',
     ): string {
         $statusClassname = match ($article->status) {
             ArticleStatus::Published => 'status-published',
@@ -196,52 +197,56 @@ final class ArticleEditHtmlGenerator
             ArticleStatus::Draft => 'status-draft',
         };
 
-        $articleUrl = UrlBuilderUtil::buildPublicArticlePath(
+        $articleEditUrl = UrlBuilderUtil::buildBackofficeArticleUrl(
+            language: $responseData->siteLanguage,
+            articleId: $article->id,
+        );
+
+        $articlePublicUrl = UrlBuilderUtil::buildPublicArticlePath(
             path: $article->path,
             language: $responseData->siteLanguage,
         );
-        $articleTitle = match ($article->status) {
-            ArticleStatus::Published => '<a href="' . $articleUrl . '">' . $article->title . '</a>',
-            default => $article->title ?: $responseData->getLocalValue('globalNoTitle'),
-        };
+        $articleTitleHtml = $article->title
+            ? '<a href="' . $articleEditUrl . '">' . $article->title . '</a>'
+            : '<a href="' . $articleEditUrl . '">' . $responseData->getLocalValue('globalNoTitle') . '</a>';
 
-        $output = [];
-        $output[] = '            <div class="m-r-05">';
-        $output[] = '              <span class="light-text-color font-0-9">#' . $article->id . '</span>';
-        $output[] = '              ' . Language::getIconFlag($article->language, 'm-l-05 m-r-05');
-        $output[] = '              ' . $articleTitle;
+        $articlePublicLinkHtml = $article->status === ArticleStatus::Published
+            ? '<a href="' . $articlePublicUrl . '"><img src="/img/svg/arrow-square-out.svg" class="img-svg m-l-05" alt="Public link" width="20" height="20"></a>'
+            : '';
 
-        if ($article->publishOn) {
-            $publishOn = DateUtil::formatDate(
+        $articleDate = $article->publishOn
+            ? DateUtil::formatDate(
                 date: $article->publishOn,
                 lang: $responseData->siteLanguage,
                 includeTime: true,
-            );
-            $output[] = '              <p class="article-tags"><strong>'
-                . $responseData->getLocalValue('globalPublishOn') . '</strong>: ' . $publishOn
-                . '</p>';
-        } else {
-            $updatedAt = DateUtil::formatDate(
+            )
+            : DateUtil::formatDate(
                 date: $article->updatedAt,
                 lang: $responseData->siteLanguage,
                 includeTime: true,
             );
-            $output[] = '              <p class="article-tags"><strong>'
-                . $responseData->getLocalValue('globalUpdatedAt') . '</strong>: ' . $updatedAt
-                . '</p>';
-        }
 
+        $output = [];
+        $output[] = $indentation . '<div class="table-row">';
+        $output[] = $indentation . '  <div class="table-item table-item-flex-column">';
+        $output[] = $indentation . '    <div>';
+        $output[] = $indentation . '      <span class="light-text-color font-0-9">#' . $article->id . '</span>';
+        $output[] = $indentation . '      ' . Language::getIconFlag($article->language, 'm-l-05 m-r-05');
+        $output[] = $indentation . '      ' . $articleTitleHtml;
+        $output[] = $indentation . '      ' . $articlePublicLinkHtml;
+        $output[] = $indentation . '    </div>';
         if ($article->tags) {
-            $output[] = '              <p class="article-tags">'
-                . '<strong>' . $responseData->getLocalValue('globalTags') . '</strong>: ' . $article->getTagsAsString()
-                . '</p>';
+            $output[] = $indentation . '    <div class="article-tags">'
+                . '<img class="img-svg m-r-05" src="/img/svg/tag.svg" alt="Tags" width="20" height="20">' . $article->getTagsAsString()
+                . '</div>';
         }
+        $output[] = $indentation . '  </div>';
+        $output[] = $indentation . '  <div class="table-item flex-no-grow">';
+        $output[] = $indentation . '    <span class="article-status ' . $statusClassname . '">' . $responseData->getLocalValue('articleStatus' . $article->status->name) . '</span>';
+        $output[] = $indentation . '    <div><img class="img-svg m-r-05" src="/img/svg/calendar-check.svg" alt="Recibido" width="20" height="20">' .  $articleDate . '</div>';
 
-        $output[] = '            </div>';
-
-        $output[] = '            <span class="article-status ' . $statusClassname . '">' .
-            $responseData->getLocalValue('articleStatus' . $article->status->name) .
-            '</span>';
+        $output[] = $indentation . '  </div>';
+        $output[] = $indentation . '</div>';
 
         return implode(PHP_EOL, $output) . PHP_EOL;
     }
