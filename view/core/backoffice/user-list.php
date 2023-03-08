@@ -28,5 +28,6 @@ $this->layout('base', ['responseData' => $responseData,])
         echo UserHtmlGenerator::generateUserRowHtml($responseData, $user);
     }
 ?>
+      </div>
     </div>
   </main>

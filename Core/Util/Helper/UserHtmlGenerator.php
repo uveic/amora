@@ -15,7 +15,7 @@ final class UserHtmlGenerator
     public static function generateUserRowHtml(
         HtmlResponseDataAdmin $responseData,
         User $user,
-        string $indentation = '            ',
+        string $indentation = '        ',
     ): string {
         $statusClassname = match ($user->status) {
             UserStatus::Enabled => 'status-published',
