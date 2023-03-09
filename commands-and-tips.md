@@ -35,17 +35,15 @@ PHP-FPM config: `/etc/php/8.2/fpm/php-fpm.conf`
 
 Pool config: `/etc/php/8.2/fpm/pool.d/www.conf`
 
-More info on this in one of the articles linked at the bottom of the document under "Useful articles".
+Optimizing PHP-FPM for High Performance: https://geekflare.com/php-fpm-optimization/
 
 Relevant settings: `catch_workers_output = yes`
-
-Optimizing PHP-FPM for High Performance: https://geekflare.com/php-fpm-optimization/
 
 ## nginx
 
 Path to config file: `/etc/nginx/nginx.conf`
 
-Important settings in `nginx.conf`: `client_max_body_size 32M;`, `client_body_buffer_size 32M;`
+Relevant settings in `nginx.conf`: `client_max_body_size 32M;`, `client_body_buffer_size 32M;`
 
 How to enable a site that is configured in "sites-available": `ln -s /etc/nginx/sites-available/www.example.org.conf /etc/nginx/sites-enabled/`
 
@@ -68,6 +66,8 @@ Check Ubuntu version: `cat /etc/os-release`
 ## Let's Encrypt
 
 `sudo certbot`
+
+Test automatic renewal: `sudo certbot renew --dry-run`
 
 ## Other Useful Commands
 Sync files from my local computer to a server through SSH: `rsync -a -e "ssh" --exclude 'path/to/file.txt' --exclude 'path-to-folder/*' --exclude 'README.md' ~/path/to/local/folder/* user@server-ip-address:/path/to/remote/folder/`
