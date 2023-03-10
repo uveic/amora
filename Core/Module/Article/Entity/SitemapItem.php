@@ -7,7 +7,7 @@ use DateTimeImmutable;
 class SitemapItem
 {
     public function __construct(
-        public readonly string $path,
+        public readonly string $fullPath,
         public readonly ?DateTimeImmutable $updatedAt = null,
     ) {}
 }

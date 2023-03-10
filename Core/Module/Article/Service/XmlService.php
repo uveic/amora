@@ -149,7 +149,7 @@ class XmlService
         /** @var SitemapItem $sitemapItem */
         foreach ($sitemapItems as $sitemapItem) {
             $output[] = '<url>';
-            $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticlePath(path: $sitemapItem->path) . '</loc>';
+            $output[] = '<loc>' . $sitemapItem->fullPath . '</loc>';
             $output[] = '<lastmod>' . $sitemapItem->updatedAt->format('Y-m-d') . '</lastmod>';
             $output[] = '</url>';
         }

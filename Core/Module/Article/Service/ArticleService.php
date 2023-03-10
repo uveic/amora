@@ -23,6 +23,7 @@ use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 
@@ -598,7 +599,7 @@ class ArticleService
         /** @var Article $article */
         foreach ($articles as $article) {
             $sitemapItems[] = new SitemapItem(
-                path: $article->path,
+                fullPath: UrlBuilderUtil::buildPublicArticlePath($article->path),
                 updatedAt: $article->updatedAt,
             );
         }
