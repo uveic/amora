@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Module\Analytics\Service;
 
-use Amora\App\Module\Analytics\Entity\ReportPageView;
+use Amora\App\Module\Analytics\Entity\ReportViewCount;
 use Amora\Core\Module\Analytics\Entity\PageView;
 use Amora\Core\Module\Analytics\Model\EventProcessed;
 use Amora\Core\Module\Analytics\Value\CountDbColumn;
@@ -51,27 +51,30 @@ class AnalyticsService
         }
     }
 
-    public function filterPageViewsBy(
+    public function countPageViews(
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         Period $period,
         ?EventType $eventType = null,
-    ): ReportPageView {
+        ?CountDbColumn $columnName = null,
+    ): ReportViewCount {
         $aggregateBy = Period::getAggregateBy($period);
-        $pageViews = $this->analyticsDataLayer->filterPageViewsBy(
+        $pageViews = $this->analyticsDataLayer->countPageViews(
             from: $from,
             to: $to,
             aggregateBy: $aggregateBy,
             eventType: $eventType,
+            columnName: $columnName,
         );
 
-        return $this->completePageViews(
-            new ReportPageView(
+        return $this->completeReportViewCount(
+            new ReportViewCount(
                 from: $from,
                 to: $to,
                 aggregateBy: $aggregateBy,
                 period: $period,
                 pageViews: $pageViews,
+                eventType: $eventType,
             ),
         );
     }
@@ -92,9 +95,9 @@ class AnalyticsService
         );
     }
 
-    private function completePageViews(
-        ReportPageView $report,
-    ): ReportPageView {
+    private function completeReportViewCount(
+        ReportViewCount $report,
+    ): ReportViewCount {
         $dateFormat = DateUtil::getPhpAggregateFormat($report->aggregateBy);
         $output = [];
         $total = 0;
@@ -126,13 +129,14 @@ class AnalyticsService
 
         ksort($output);
 
-        return new ReportPageView(
+        return new ReportViewCount(
             from: $report->from,
             to: $report->to,
             aggregateBy: $report->aggregateBy,
             period: $report->period,
             pageViews: $output,
             total: $total,
+            eventType: $report->eventType,
         );
     }
 

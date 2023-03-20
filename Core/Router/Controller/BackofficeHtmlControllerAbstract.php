@@ -118,6 +118,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
      * @param string|null $period
      * @param string|null $date
      * @param int|null $eventTypeId
+     * @param int|null $itemsCount
      * @param Request $request
      * @return Response
      */
@@ -125,6 +126,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         ?string $period,
         ?string $date,
         ?int $eventTypeId,
+        ?int $itemsCount,
         Request $request
     ): Response;
 
@@ -503,6 +505,12 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         } else {
             $eventTypeId = null;
         }
+
+        if (isset($queryParams['itemsCount']) && strlen($queryParams['itemsCount']) > 0) {
+            $itemsCount = intval($queryParams['itemsCount']);
+        } else {
+            $itemsCount = null;
+        }
         if ($errors) {
             return Response::createBadRequestResponse(
                 [
@@ -518,6 +526,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
                 $period,
                 $date,
                 $eventTypeId,
+                $itemsCount,
                 $request
             );
         } catch (Throwable $t) {

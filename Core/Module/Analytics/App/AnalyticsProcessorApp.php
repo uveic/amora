@@ -81,11 +81,13 @@ class AnalyticsProcessorApp extends App
 
         $eventType = $this->getEventType($eventRaw, $userAgentInfo);
         $referrer = $this->getReferrer($eventRaw);
+        $userHash = $this->getUserHash($eventRaw);
 
         $res = $this->analyticsService->storeEventProcessed(
-            new EventProcessed(
+            event: new EventProcessed(
                 id: null,
                 rawId: $eventRaw->id,
+                userHash: $userHash,
                 type: $eventType,
                 createdAt: new DateTimeImmutable(),
                 referrer: $referrer,
@@ -95,7 +97,7 @@ class AnalyticsProcessorApp extends App
                 platform: $userAgentInfo->platform,
                 browser: $userAgentInfo->browser,
                 browserVersion: $userAgentInfo->version,
-            )
+            ),
         );
 
         if (!$res) {
@@ -201,5 +203,14 @@ class AnalyticsProcessorApp extends App
         }
 
         return array_values($arrayPath)[0] ?? null;
+    }
+
+    private function getUserHash(EventRaw $eventRaw): string
+    {
+        if ($eventRaw->sessionId) {
+            return md5($eventRaw->sessionId);
+        }
+
+        return md5($eventRaw->ip . $eventRaw->userAgent . $eventRaw->clientLanguage);
     }
 }

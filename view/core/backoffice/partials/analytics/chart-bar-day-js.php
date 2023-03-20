@@ -1,6 +1,6 @@
 <?php
 
-use Amora\App\Module\Analytics\Entity\ReportPageView;
+use Amora\App\Module\Analytics\Entity\ReportViewCount;
 use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Module\Analytics\Entity\PageView;
 use Amora\Core\Util\DateUtil;
@@ -9,19 +9,21 @@ use Amora\Core\Value\AggregateBy;
 /** @var HtmlResponseDataAnalytics $responseData */
 
 $xAxeTitle = '';
-$yAxeTitle = '';
-$backgroundColour = '#01769e';
-$hoverBackgroundColour = '#01289e';
+$yAxeTitlePageViews = $responseData->getLocalValue('analyticsPageViews');
+$yAxeTitleVisitors = $responseData->getLocalValue('analyticsVisitors');
+$backgroundColour01 = '#488f31';
+$backgroundColour02 = '#de425b';
 
 $labels = [];
-$data = [];
+$dataPageViews = [];
+$dataVisitors = [];
 
-/** @var ReportPageView $report */
-$report = $responseData->reportPageViews;
+/** @var ReportViewCount $report */
+$reportPageViews = $responseData->reportPageViews;
 
 /** @var PageView $pageView */
-foreach ($report->pageViews as $pageView) {
-    $label = match($report->aggregateBy) {
+foreach ($reportPageViews->pageViews as $pageView) {
+    $label = match($reportPageViews->aggregateBy) {
         AggregateBy::Hour => $pageView->date->format('H') . ':00',
         AggregateBy::Day => $pageView->date->format('j'),
         AggregateBy::Month => DateUtil::getMonthName(
@@ -38,7 +40,29 @@ foreach ($report->pageViews as $pageView) {
     };
 
     $labels[] = "'$label'";
-    $data[] = $pageView->count;
+    $dataPageViews[] = $pageView->count;
+}
+
+
+/** @var PageView $pageView */
+foreach ($responseData->reportVisitors->pageViews as $pageView) {
+    $label = match($responseData->reportVisitors->aggregateBy) {
+        AggregateBy::Hour => $pageView->date->format('H') . ':00',
+        AggregateBy::Day => $pageView->date->format('j'),
+        AggregateBy::Month => DateUtil::getMonthName(
+            month: $pageView->date->format('n'),
+            lang: $responseData->siteLanguage,
+        ),
+        default => DateUtil::formatDate(
+            date: $pageView->date,
+            lang: $responseData->siteLanguage,
+            includeYear: false,
+            includeDayMonthSeparator: false,
+            shortMonthName: true,
+        ),
+    };
+
+    $dataVisitors[] = $pageView->count;
 }
 
 ?>
@@ -48,19 +72,34 @@ foreach ($report->pageViews as $pageView) {
     let chartLineSharedResponseData = {};
     const chartLineSharedData = {
       labels: [<?=implode(',', $labels)?>],
-      datasets: [{
-        label: '<?=$yAxeTitle?>',
-        data: [<?=implode(',', $data)?>],
-        borderColor: '<?=$backgroundColour?>',
-        backgroundColor: '<?=$backgroundColour?>',
-        borderWidth: 3,
-        tension: 0.4,
-        cubicInterpolationMode: 'monotone',
-        fill: false,
-        pointStyle: 'circle',
-        pointRadius: 4,
-        pointHoverRadius: 8,
-      }]
+      datasets: [
+          {
+            label: '<?=$yAxeTitlePageViews?>',
+            data: [<?=implode(',', $dataPageViews)?>],
+            borderColor: '<?=$backgroundColour01?>',
+            backgroundColor: '<?=$backgroundColour01?>',
+            borderWidth: 3,
+            tension: 0.4,
+            cubicInterpolationMode: 'monotone',
+            fill: false,
+            pointStyle: 'circle',
+            pointRadius: 4,
+            pointHoverRadius: 8,
+          },
+          {
+              label: '<?=$yAxeTitleVisitors?>',
+              data: [<?=implode(',', $dataVisitors)?>],
+              borderColor: '<?=$backgroundColour02?>',
+              backgroundColor: '<?=$backgroundColour02?>',
+              borderWidth: 3,
+              tension: 0.4,
+              cubicInterpolationMode: 'monotone',
+              fill: false,
+              pointStyle: 'circle',
+              pointRadius: 4,
+              pointHoverRadius: 8,
+          },
+      ],
     };
     const chartLineSharedOptions = {
       responsive: true,
@@ -91,11 +130,11 @@ foreach ($report->pageViews as $pageView) {
           display: true,
           grid: {
             display: false,
-            borderColor: '<?=$backgroundColour?>',
+            borderColor: '<?=$backgroundColour01?>',
             borderWidth: 2,
           },
           title: {
-            display: true,
+            display: false,
             text: '<?=$xAxeTitle?>'
           },
           ticks: {

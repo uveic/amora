@@ -29,7 +29,7 @@ $menuItems = AppMenu::getAdmin(
   <link href="/css/pexego-002.css" rel="stylesheet" type="text/css">
   <link href="/css/navbar-003.css" rel="stylesheet" type="text/css">
   <link href="/css/style-007.css" rel="stylesheet" type="text/css">
-  <link href="/css/backoffice-008.css" rel="stylesheet" type="text/css">
+  <link href="/css/backoffice-009.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <?=$this->insert('partials/navbar', ['responseData' => $responseData, 'menuItems' => $menuItems])?>

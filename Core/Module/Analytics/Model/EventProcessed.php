@@ -11,6 +11,7 @@ class EventProcessed
     public function __construct(
         public ?int $id,
         public readonly int $rawId,
+        public readonly string $userHash,
         public readonly EventType $type,
         public readonly DateTimeImmutable $createdAt,
         public readonly ?string $referrer = null,
@@ -27,6 +28,7 @@ class EventProcessed
         return [
             'id' => $this->id,
             'raw_id' => $this->rawId,
+            'user_hash' => $this->userHash,
             'type_id' => $this->type->value,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'referrer' => $this->referrer ? substr($this->referrer, 0, 100) : null,

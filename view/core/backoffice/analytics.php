@@ -1,25 +1,30 @@
 <?php
 
-use Amora\App\Module\Analytics\Entity\ReportPageView;
+use Amora\App\Module\Analytics\Entity\ReportViewCount;
 use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Module\Analytics\Entity\PageViewCount;
+use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
-use Amora\Core\Value\AggregateBy;
 use Amora\Core\Value\Country;
 
 /** @var HtmlResponseDataAnalytics $responseData */
 
 $this->layout('base', ['responseData' => $responseData]);
 
-$total = StringUtil::formatNumber(
+$totalPageViews = StringUtil::formatNumber(
     language: $responseData->siteLanguage,
     number: $responseData->reportPageViews->total,
 );
 
-/** @var ReportPageView $report */
+$totalVisitors = StringUtil::formatNumber(
+    language: $responseData->siteLanguage,
+    number: count($responseData->visitors),
+);
+
+/** @var ReportViewCount $report */
 $report = $responseData->reportPageViews;
 $now = new DateTimeImmutable();
 
@@ -47,14 +52,21 @@ $isNextDisabled = match($report->period) {
     Period::Year => $now->format('Y') === $report->from->format('Y'),
 };
 
+$dateParam = $responseData->request->getGetParam('date');
+$itemsCountParam = $responseData->request->getGetParam('itemsCount');
+
 $todayUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     language: $responseData->siteLanguage,
     period: Period::Day,
+    eventType: $responseData->reportPageViews->eventType,
+    itemsCount: $itemsCountParam,
 );
 
 $monthUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     language: $responseData->siteLanguage,
     period: Period::Month,
+    eventType: $responseData->reportPageViews->eventType,
+    itemsCount: $itemsCountParam,
 );
 
 $monthString = DateUtil::formatDate(
@@ -68,15 +80,85 @@ $monthString = DateUtil::formatDate(
 $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     language: $responseData->siteLanguage,
     period: Period::Year,
+    eventType: $responseData->reportPageViews->eventType,
+    itemsCount: $itemsCountParam,
+);
+
+$eventType = $responseData->reportPageViews->eventType
+    ? $responseData->getLocalValue('analyticsEventType' . $responseData->reportPageViews->eventType->name)
+    : $responseData->getLocalValue('analyticsEventTypeAll');
+
+$eventTypeAllUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
+    language: $responseData->siteLanguage,
+    period: $responseData->reportPageViews->period,
+    date: $dateParam,
+    itemsCount: $itemsCountParam,
+);
+
+$eventTypeVisitorUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
+    language: $responseData->siteLanguage,
+    period: $responseData->reportPageViews->period,
+    date: $dateParam,
+    eventType: EventType::Visitor,
+    itemsCount: $itemsCountParam,
+);
+
+$eventTypeUserUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
+    language: $responseData->siteLanguage,
+    period: $responseData->reportPageViews->period,
+    date: $dateParam,
+    eventType: EventType::User,
+    itemsCount: $itemsCountParam,
+);
+
+$eventTypeBotUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
+    language: $responseData->siteLanguage,
+    period: $responseData->reportPageViews->period,
+    date: $dateParam,
+    eventType: EventType::Bot,
+    itemsCount: $itemsCountParam,
+);
+
+$eventTypeApiUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
+    language: $responseData->siteLanguage,
+    period: $responseData->reportPageViews->period,
+    date: $dateParam,
+    eventType: EventType::Api,
+    itemsCount: $itemsCountParam,
+);
+
+$eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
+    language: $responseData->siteLanguage,
+    period: $responseData->reportPageViews->period,
+    date: $dateParam,
+    eventType: EventType::Crawler,
+    itemsCount: $itemsCountParam,
 );
 
 ?>
   <div id="feedback" class="feedback null"></div>
-  <h1 class="m-l-1 m-r-1"><?=$responseData->getLocalValue('navAdminAnalytics')?></h1>
   <main class="analytics-wrapper">
     <div class="width-100">
       <div class="analytics-header">
-        <h2 class="no-margin"><?=$total?></h2>
+        <div class="analytics-header-left">
+          <h2 class="m-t-05 m-b-05">
+            <span class="chart-color-01"><?=$totalPageViews?> <span class="chart-title"><?=$responseData->getLocalValue('analyticsPageViews')?></span></span>
+            /
+            <span class="chart-color-02"><?=$totalVisitors?> <span class="chart-title"><?=$responseData->getLocalValue('analyticsVisitors')?></span></span>
+          </h2>
+          <a href="#" class="analytics-controls-event-type analytics-controls-option">
+            <span><?=$eventType?></span>
+            <img src="/img/svg/caret-down.svg" class="img-svg img-svg-25" alt="Select">
+          </a>
+          <div class="analytics-controls-event-type-options analytics-controls-options null">
+            <a href="<?=$eventTypeAllUrl?>"><?=$responseData->getLocalValue('analyticsEventTypeAll')?></a>
+            <a href="<?=$eventTypeVisitorUrl?>"><?=$responseData->getLocalValue('analyticsEventType' . EventType::Visitor->name)?></a>
+            <a href="<?=$eventTypeUserUrl?>"><?=$responseData->getLocalValue('analyticsEventType' . EventType::User->name)?></a>
+            <a href="<?=$eventTypeBotUrl?>"><?=$responseData->getLocalValue('analyticsEventType' . EventType::Bot->name)?></a>
+            <a href="<?=$eventTypeApiUrl?>"><?=$responseData->getLocalValue('analyticsEventType' . EventType::Api->name)?></a>
+            <a href="<?=$eventTypeCrawlerUrl?>"><?=$responseData->getLocalValue('analyticsEventType' . EventType::Crawler->name)?></a>
+          </div>
+        </div>
         <div class="analytics-controls-wrapper">
           <div class="analytics-controls" data-period="<?=$report->period->value?>" data-date="<?=$report->from->format('Y-m-d')?>">
             <a href="#" class="analytics-controls-previous">
@@ -92,11 +174,11 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
             </a>
 <?php } ?>
           </div>
-          <a href="#" class="analytics-controls-more">
+          <a href="#" class="analytics-controls-more analytics-controls-option">
             <span><?=$dateRange?></span>
-            <img src="/img/svg/caret-down.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalNext')?>">
+            <img src="/img/svg/caret-down.svg" class="img-svg img-svg-25" alt="Select">
           </a>
-          <div class="analytics-controls-more-options null">
+          <div class="analytics-controls-more-options analytics-controls-options null">
             <a href="<?=$todayUrl?>"><?=$responseData->getLocalValue('analyticsToday')?></a>
             <a href="<?=$monthUrl?>"><?=$monthString?></a>
             <a href="<?=$yearUrl?>"><?=$now->format('Y')?></a>
@@ -181,4 +263,4 @@ $yearUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     </div>
   </main>
 <?=$this->insert('partials/analytics/chart-bar-day-js', ['responseData' => $responseData]);?>
-  <script type="module" src="/js/analytics-001.js"></script>
+  <script type="module" src="/js/analytics-002.js"></script>

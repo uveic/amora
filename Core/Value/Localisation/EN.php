@@ -220,4 +220,13 @@ return [
     'analyticsDevice' => 'Device',
     'analyticsCountry' => 'Country',
     'analyticsLanguage' => 'Language',
+    'analyticsPageViews' => 'Page Views',
+    'analyticsVisitors' => 'Visitors',
+    'analyticsEventTypeAll' => 'All',
+    'analyticsEventTypeVisitor' => 'Visitors',
+    'analyticsEventTypeUser' => 'Registered Users',
+    'analyticsEventTypeBot' => 'Bots',
+    'analyticsEventTypeProbablyBot' => 'Probably a Bot',
+    'analyticsEventTypeApi' => 'API',
+    'analyticsEventTypeCrawler' => 'Crawler',
 ];

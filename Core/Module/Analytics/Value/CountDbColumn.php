@@ -10,4 +10,5 @@ enum CountDbColumn: string
     case Browser = 'ep.user_agent_browser';
     case Language = 'ep.language_iso_code';
     case Referrer = 'ep.referrer';
+    case Visitor = 'ep.user_hash';
 }
