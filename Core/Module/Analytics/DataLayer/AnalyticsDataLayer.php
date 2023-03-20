@@ -55,11 +55,12 @@ class AnalyticsDataLayer
         return $event;
     }
 
-    public function filterPageViewsBy(
+    public function countPageViews(
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         AggregateBy $aggregateBy,
         ?EventType $eventType = null,
+        ?CountDbColumn $columnName = null,
     ): array {
         $dateFormat = DateUtil::getMySqlAggregateFormat($aggregateBy);
 
@@ -71,10 +72,14 @@ class AnalyticsDataLayer
             $params[':eventTypeId'] = $eventType->value;
         }
 
+        $countSql = $columnName
+            ? 'DISTINCT ' . $columnName->value
+            : '*';
+
         $sql = "
             SELECT
                 DATE_FORMAT(er.created_at, $dateFormat) AS date_format,
-                COUNT(*) AS count
+                COUNT(" . $countSql . ") AS count
             FROM " . self::EVENT_PROCESSED_TABLE . " AS ep
                 INNER JOIN " . self::EVENT_RAW_TABLE . " AS er ON er.id = ep.raw_id
             WHERE 1

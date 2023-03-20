@@ -6,6 +6,9 @@
 
   --color-link: #3273dc;
   --color-text-grey: #808080;
+
+  --color-chart-01: #488f31;
+  --color-chart-02: #de425b;
 }
 /* Feedback style starts here */
 .article-saving {
@@ -970,6 +973,14 @@ input.pexego-content-title {
   align-items: center;
 }
 
+.analytics-header-left {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2rem;
+}
+
 .analytics-controls-wrapper {
   display: flex;
   flex-flow: row nowrap;
@@ -992,10 +1003,10 @@ input.pexego-content-title {
   padding: 0.25rem 0.5rem;
 }
 
-.analytics-controls-more:active,
-.analytics-controls-more:focus,
-.analytics-controls-more:visited,
-.analytics-controls-more {
+.analytics-controls-option:active,
+.analytics-controls-option:focus,
+.analytics-controls-option:visited,
+.analytics-controls-option {
   display: flex;
   flex-flow: row nowrap;
   gap: 0.5rem;
@@ -1004,7 +1015,7 @@ input.pexego-content-title {
   padding: 0.25rem 0.5rem;
 }
 
-.analytics-controls-more-options {
+.analytics-controls-options {
   position: absolute;
   right: 0;
   top: 40px;
@@ -1014,17 +1025,30 @@ input.pexego-content-title {
   border: 1px solid var(--color-light-2);
 }
 
-.analytics-controls-more-options a {
+.analytics-controls-options a {
   color: var(--color-text);
   border-bottom: 1px solid var(--color-light-2);
   padding: 0.5rem 1rem;
 }
 
-.analytics-controls-more-options a:hover,
+.analytics-controls-options a:hover,
 .analytics-controls a:hover,
-.analytics-controls-more:hover {
+.analytics-controls-option:hover {
   color: var(--color-text);
   background-color: var(--color-light-2);
+}
+
+.chart-title {
+  font-size: 1rem;
+  text-transform: lowercase;
+}
+
+.chart-color-01 {
+  color: var(--color-chart-01);
+}
+
+.chart-color-02 {
+  color: var(--color-chart-02);
 }
 /* Analytics style ends here */
 

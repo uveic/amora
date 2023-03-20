@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Router;
 
+use Amora\App\Module\Analytics\Entity\ReportViewCount;
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
@@ -26,8 +27,6 @@ use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Util\DateUtil;
-use Amora\Core\Util\UrlBuilderUtil;
-use Amora\Core\Value\AggregateBy;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 
@@ -326,6 +325,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      * @param string|null $period
      * @param string|null $date
      * @param int|null $eventTypeId
+     * @param int|null $itemsCount
      * @param Request $request
      * @return Response
      */
@@ -333,6 +333,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         ?string $period,
         ?string $date,
         ?int $eventTypeId,
+        ?int $itemsCount,
         Request $request,
     ): Response {
         $period = $period && Period::tryFrom($period) ? Period::from($period) : Period::Day;
@@ -343,16 +344,33 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 
         $from = Period::getFrom($period, $date);
         $to = Period::getTo($period, $from);
+        $limit = $itemsCount ?: 50;
 
         $eventType = $eventTypeId && EventType::tryFrom($eventTypeId)
             ? EventType::from($eventTypeId)
-            : EventType::Visitor;
+            : null;
 
-        $report = $this->analyticsService->filterPageViewsBy(
+        $reportPageViews = $this->analyticsService->countPageViews(
             from: $from,
             to: $to,
             period: $period,
             eventType: $eventType,
+        );
+
+        $reportVisitors = $this->analyticsService->countPageViews(
+            from: $from,
+            to: $to,
+            period: $period,
+            eventType: $eventType,
+            columnName: CountDbColumn::Visitor,
+        );
+
+        $visitorsTotal = $this->analyticsService->countTop(
+            columnName: CountDbColumn::Visitor,
+            from: $from,
+            to: $to,
+            eventType: $eventType,
+            limit: 1000000,
         );
 
         $pages = $this->analyticsService->countTop(
@@ -360,6 +378,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            limit: $limit,
         );
 
         $countries = $this->analyticsService->countTop(
@@ -367,6 +386,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            limit: $limit,
         );
 
         $sources = $this->analyticsService->countTop(
@@ -374,6 +394,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            limit: $limit,
         );
 
         $devices = $this->analyticsService->countTop(
@@ -381,6 +402,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            limit: $limit,
         );
 
         $browsers = $this->analyticsService->countTop(
@@ -388,6 +410,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            limit: $limit,
         );
 
         $languages = $this->analyticsService->countTop(
@@ -395,6 +418,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            limit: $limit,
         );
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
@@ -403,7 +427,9 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             responseData: new HtmlResponseDataAnalytics(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminAnalytics'),
-                reportPageViews: $report,
+                reportPageViews: $reportPageViews,
+                reportVisitors: $reportVisitors,
+                visitors: $visitorsTotal,
                 pages: $pages,
                 countries: $countries,
                 sources: $sources,

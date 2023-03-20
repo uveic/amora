@@ -5,6 +5,7 @@ namespace Amora\Core\Util;
 use Amora\App\Value\AppPageContentType;
 use Amora\Core\Core;
 use Amora\App\Value\Language;
+use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\PageContentType;
@@ -147,13 +148,30 @@ class UrlBuilderUtil
         Language $language,
         ?Period $period = null,
         ?string $date = null,
+        ?EventType $eventType = null,
+        ?int $itemsCount = null,
     ): string {
-        $periodStr = $period ? '?period=' . $period->value : '';
-        $dateStr = $date ? (($periodStr ? '&' : '?') . 'date=' . $date) : '';
-        return self::buildBaseUrl($language)
-            . self::BACKOFFICE_ANALYTICS
-            . $periodStr
-            . $dateStr;
+        $getParams = [];
+
+        $baseUrl = self::buildBaseUrl($language) . self::BACKOFFICE_ANALYTICS;
+
+        if ($period) {
+            $getParams[] = 'period=' . $period->value;
+        }
+
+        if ($date) {
+            $getParams[] = 'date=' . $date;
+        }
+
+        if ($eventType) {
+            $getParams[] = 'eventTypeId=' . $eventType->value;
+        }
+
+        if ($itemsCount) {
+            $getParams[] = 'itemsCount=' . $itemsCount;
+        }
+
+        return $baseUrl . ($getParams ? ('?' . implode('&', $getParams)) : '');
     }
 
     public static function buildBackofficeUserUrl(Language $language, int $userId): string

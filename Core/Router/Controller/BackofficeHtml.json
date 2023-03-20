@@ -236,6 +236,13 @@
             "description": "Event type ID",
             "required": false,
             "type": "integer"
+          },
+          {
+            "name": "itemsCount",
+            "in": "query",
+            "description": "Items count (LIMIT in SQL query)",
+            "required": false,
+            "type": "integer"
           }
         ],
         "responses": {
