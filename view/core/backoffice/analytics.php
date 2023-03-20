@@ -263,4 +263,4 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     </div>
   </main>
 <?=$this->insert('partials/analytics/chart-bar-day-js', ['responseData' => $responseData]);?>
-  <script type="module" src="/js/analytics-002.js"></script>
+  <script type="module" src="/js/analytics-003.js"></script>

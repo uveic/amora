@@ -1,3 +1,21 @@
+const buildRedirectUrl = (period, newDate) => {
+  const params = new URLSearchParams(window.location.search);
+
+  let redirectUrl = window.location.origin + window.location.pathname
+      + '?period=' + period
+      + '&date=' + newDate;
+
+  if (params.get('eventTypeId')) {
+    redirectUrl += '&eventTypeId=' + params.get('eventTypeId');
+  }
+
+  if (params.get('itemsCount')) {
+    redirectUrl += '&itemsCount=' + params.get('itemsCount');
+  }
+
+  return redirectUrl;
+}
+
 document.querySelectorAll('a.analytics-controls-previous').forEach(p => {
   p.addEventListener('click', (e) => {
     e.preventDefault();
@@ -19,13 +37,7 @@ document.querySelectorAll('a.analytics-controls-previous').forEach(p => {
       + '-' + (d.getMonth() + 1).toString().padStart(2, '0')
       + '-' + d.getDate().toString().padStart(2, '0');
 
-    const params = new URLSearchParams(window.location.search);
-
-    window.location = window.location.origin + window.location.pathname
-      + '?period=' + period
-      + '&date=' + newDate
-      + '&eventTypeId=' + params.get("eventTypeId")
-      + '&itemsCount=' + params.get("itemsCount");
+    window.location = buildRedirectUrl(period, newDate);
   });
 });
 
@@ -50,13 +62,7 @@ document.querySelectorAll('a.analytics-controls-next').forEach(n => {
       + '-' + (d.getMonth() + 1).toString().padStart(2, '0')
       + '-' + d.getDate().toString().padStart(2, '0');
 
-    const params = new URLSearchParams(window.location.search);
-
-    window.location = window.location.origin + window.location.pathname
-      + '?period=' + period
-      + '&date=' + newDate
-      + '&eventTypeId=' + params.get("eventTypeId")
-      + '&itemsCount=' + params.get("itemsCount");
+    window.location = buildRedirectUrl(period, newDate);
   });
 });
 

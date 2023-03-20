@@ -5,6 +5,7 @@ namespace Amora\Core\Value;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Util\MenuItem;
+use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\UrlBuilderUtil;
 
@@ -64,7 +65,7 @@ final class CoreMenu
                         order: 1005,
                     ),
                     new MenuItem(
-                        path: UrlBuilderUtil::buildBackofficeAnalyticsUrl($language),
+                        path: UrlBuilderUtil::buildBackofficeAnalyticsUrl($language, eventType: EventType::Visitor),
                         text: $localisationUtil->getValue('navAdminAnalytics'),
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/chart-line-white.svg" alt="' . $localisationUtil->getValue('navAdminAnalytics') . '">',
                         order: 1006,
