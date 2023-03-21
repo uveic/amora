@@ -253,7 +253,11 @@ final class Country
 
     public static function getName(string $countryIsoCode): string
     {
-        if (empty($countryIsoCode) || strlen($countryIsoCode) !== 2) {
+        if (empty($countryIsoCode)) {
+            return '';
+        }
+
+        if (strlen($countryIsoCode) !== 2) {
             try {
                 Core::getDefaultLogger()->logError('Country ISO code not valid: ' . $countryIsoCode);
             } catch (Throwable) {}
