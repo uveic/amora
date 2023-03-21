@@ -234,8 +234,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Method: PUT
      *
      * @param int $contentId
-     * @param string|null $title
-     * @param string|null $subtitle
+     * @param string|null $titleHtml
+     * @param string|null $subtitleHtml
      * @param string $contentHtml
      * @param int|null $mainImageId
      * @param Request $request
@@ -243,8 +243,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      */
     abstract protected function updatePageContent(
         int $contentId,
-        ?string $title,
-        ?string $subtitle,
+        ?string $titleHtml,
+        ?string $subtitleHtml,
         string $contentHtml,
         ?int $mainImageId,
         Request $request
@@ -947,8 +947,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
-        $title = $bodyParams['title'] ?? null;
-        $subtitle = $bodyParams['subtitle'] ?? null;
+        $titleHtml = $bodyParams['titleHtml'] ?? null;
+        $subtitleHtml = $bodyParams['subtitleHtml'] ?? null;
         $contentHtml = null;
         if (!isset($bodyParams['contentHtml'])) {
             $errors[] = [
@@ -974,8 +974,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         try {
             return $this->updatePageContent(
                 $contentId,
-                $title,
-                $subtitle,
+                $titleHtml,
+                $subtitleHtml,
                 $contentHtml,
                 $mainImageId,
                 $request

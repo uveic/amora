@@ -1134,17 +1134,17 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
     e.preventDefault();
 
     const contentId = Number.parseInt(f.querySelector('input[name="contentId"]').value);
-    const title = f.querySelector('.editor-title').textContent.trim();
-    const subtitle = f.querySelector('.editor-subtitle').textContent.trim();
+    const titleHtml = f.querySelector('.editor-title').innerHTML.trim();
+    const subtitleHtml = f.querySelector('.editor-subtitle').innerHTML.trim();
     const contentHtml = f.querySelector('.editor-content').innerHTML.trim();
     const mainImageEl = f.querySelector('.article-main-image');
 
     const payload = JSON.stringify({
-      title: title.length
-        ? (title === global.get('editorTitlePlaceholder') ? null : title)
+      titleHtml: titleHtml.length
+        ? (titleHtml === global.get('editorTitlePlaceholder') ? null : titleHtml)
         : null,
-      subtitle: subtitle.length
-        ? (subtitle === global.get('editorSubtitlePlaceholder') ? null : subtitle)
+      subtitleHtml: subtitleHtml.length
+        ? (subtitleHtml === global.get('editorSubtitlePlaceholder') ? null : subtitleHtml)
         : null,
       contentHtml: contentHtml,
       mainImageId: mainImageEl && mainImageEl.dataset.mediaId

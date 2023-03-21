@@ -264,9 +264,9 @@ class ArticleDataLayer
             'c.type_id AS page_content_type_id',
             'c.created_at AS page_content_created_at',
             'c.updated_at AS page_content_updated_at',
-            'c.title AS page_content_title',
-            'c.subtitle AS page_content_subtitle',
-            'c.html AS page_content_html',
+            'c.title_html AS page_content_title_html',
+            'c.subtitle_html AS page_content_subtitle_html',
+            'c.content_html AS page_content_html',
             'c.main_image_id',
 
             'u.id AS user_id',

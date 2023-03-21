@@ -35,14 +35,14 @@ $this->insert('partials/articles-edit/modal-select-main-image', ['responseData' 
     <input name="contentId" type="hidden" value="<?=$pageContent?->id?>">
 
     <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalTitle')?></div>
-    <h1 class="editor-title page-content-title <?=$pageContent?->title ? '' : ' editor-placeholder'?><?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->title ?: $responseData->getLocalValue('editorTitlePlaceholder')?></h1>
+    <h1 class="editor-title page-content-title <?=$pageContent?->titleHtml ? '' : ' editor-placeholder'?><?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->titleHtml ?: $responseData->getLocalValue('editorTitlePlaceholder')?></h1>
 
     <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalSubtitle')?></div>
-    <h2 class="editor-subtitle page-content-subtitle <?=$pageContent?->subtitle ? '' : ' editor-placeholder'?> <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->subtitle ?: $responseData->getLocalValue('editorSubtitlePlaceholder')?></h2>
+    <h2 class="editor-subtitle page-content-subtitle <?=$pageContent?->subtitleHtml ? '' : ' editor-placeholder'?> <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->subtitleHtml ?: $responseData->getLocalValue('editorSubtitlePlaceholder')?></h2>
 
     <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>"><?=$responseData->getLocalValue('navAdminContent')?></div>
     <div class="editor-content medium-editor-content m-t-05 <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>" contenteditable="true">
-      <?=$pageContent?->html . PHP_EOL?>
+      <?=$pageContent?->contentHtml . PHP_EOL?>
     </div>
 
     <div class="field<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::MainImage) ? '' : ' null'?>">

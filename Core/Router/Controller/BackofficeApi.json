@@ -1215,11 +1215,11 @@
             "required": true,
             "schema": {
               "properties": {
-                "title": {
+                "titleHtml": {
                   "description": "Content title",
                   "type": "string"
                 },
-                "subtitle": {
+                "subtitleHtml": {
                   "description": "Content subtitle",
                   "type": "string"
                 },
