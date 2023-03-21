@@ -1,8 +1,10 @@
 <?php
 
+use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
+use Amora\Core\Module\Article\Value\PageContentSection;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAdmin $responseData */
@@ -32,23 +34,23 @@ $this->insert('partials/articles-edit/modal-select-main-image', ['responseData' 
   <form id="form-page-content" action="#" class="page-content-wrapper">
     <input name="contentId" type="hidden" value="<?=$pageContent?->id?>">
 
-    <div class="page-content-before"><?=$responseData->getLocalValue('globalTitle')?></div>
-    <h1 class="editor-title page-content-title <?=$pageContent?->title ? '' : ' editor-placeholder'?>" contenteditable="true"><?=$pageContent?->title ?: $responseData->getLocalValue('editorTitlePlaceholder')?></h1>
+    <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalTitle')?></div>
+    <h1 class="editor-title page-content-title <?=$pageContent?->title ? '' : ' editor-placeholder'?><?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->title ?: $responseData->getLocalValue('editorTitlePlaceholder')?></h1>
 
-    <div class="page-content-before"><?=$responseData->getLocalValue('globalSubtitle')?></div>
-    <h2 class="editor-subtitle page-content-subtitle <?=$pageContent?->subtitle ? '' : ' editor-placeholder'?>" contenteditable="true"><?=$pageContent?->subtitle ?: $responseData->getLocalValue('editorSubtitlePlaceholder')?></h2>
+    <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalSubtitle')?></div>
+    <h2 class="editor-subtitle page-content-subtitle <?=$pageContent?->subtitle ? '' : ' editor-placeholder'?> <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->subtitle ?: $responseData->getLocalValue('editorSubtitlePlaceholder')?></h2>
 
-    <div class="page-content-before"><?=$responseData->getLocalValue('navAdminContent')?></div>
-    <div class="editor-content medium-editor-content m-t-05" contenteditable="true">
+    <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>"><?=$responseData->getLocalValue('navAdminContent')?></div>
+    <div class="editor-content medium-editor-content m-t-05 <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>" contenteditable="true">
       <?=$pageContent?->html . PHP_EOL?>
     </div>
 
-    <div class="field">
+    <div class="field<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::MainImage) ? '' : ' null'?>">
       <p class="label m-b-05"><?=$responseData->getLocalValue('editorMainImage')?>:</p>
       <div class="control article-main-image-wrapper">
         <div class="article-main-image-container article-main-image-container-full">
 <?php if ($pageContent?->mainImage) { ?>
-          <img class="article-main-image" data-media-id="<?=$pageContent->mainImage->id?>" src="<?=$pageContent->mainImage->getPathWithNameMedium()?>" alt="<?=$pageContent->mainImage->caption?>">
+          <img class="article-main-image" data-media-id="<?=$pageContent->mainImage->id?>" src="<?=$pageContent->mainImage->getPathWithNameMedium()?>" alt="<?=$pageContent->mainImage->captionHtml?>">
 <?php } ?>
           <a href="#" class="article-main-image-button article-main-image-button-absolute select-media-action" data-event-listener-action="selectMainImage">
             <img class="img-svg img-svg-30" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalSelectImage')?>" title="<?=$responseData->getLocalValue('globalSelectImage')?>">

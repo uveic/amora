@@ -2,6 +2,7 @@
 
 namespace Amora\App\Value;
 
+use Amora\Core\Module\Article\Value\PageContentSection;
 use Amora\Core\Module\Article\Value\PageContentType;
 
 enum AppPageContentType: int
@@ -12,5 +13,15 @@ enum AppPageContentType: int
             PageContentType::getAll(),
             [],
         );
+    }
+
+    public static function displayContent(self|PageContentType $type, PageContentSection $section): bool
+    {
+        return match ($type) {
+            PageContentType::Homepage, PageContentType::BlogBottom => match ($section) {
+                PageContentSection::Subtitle, PageContentSection::MainImage => false,
+                default => true,
+            }
+        };
     }
 }
