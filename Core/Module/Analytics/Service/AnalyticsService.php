@@ -177,4 +177,14 @@ class AnalyticsService
         $this->logger->logInfo('Getting entries to process...');
         return $this->analyticsDataLayer->getEntriesFromQueue($lockId);
     }
+
+    public function loadBotPaths(): array
+    {
+        return $this->analyticsDataLayer->loadBotPaths();
+    }
+
+    public function loadBotUserAgents(): array
+    {
+        return $this->analyticsDataLayer->loadBotUserAgents();
+    }
 }

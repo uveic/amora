@@ -7,7 +7,6 @@ enum EventType: int
     case Visitor = 1;
     case User = 2;
     case Bot = 3;
-    case ProbablyBot = 4;
     case Api = 5;
     case Crawler = 6;
 
@@ -19,7 +18,6 @@ enum EventType: int
             self::Visitor,
             self::User,
             self::Bot,
-            self::ProbablyBot,
             self::Api,
             self::Crawler,
             self::Unknown,

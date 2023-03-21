@@ -11,8 +11,6 @@ use Amora\Core\Module\Analytics\Model\EventProcessed;
 use Amora\Core\Module\Analytics\Model\EventRaw;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
 use Amora\Core\Module\Analytics\AnalyticsCore;
-use Amora\Core\Module\Analytics\Value\BotUrl;
-use Amora\Core\Module\Analytics\Value\BotUserAgent;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Util\Logger;
 use Amora\Core\Util\NetworkUtil;
@@ -21,6 +19,9 @@ use UserAgentParserUtil;
 
 class AnalyticsProcessorApp extends App
 {
+    private array $botPath = [];
+    private array $botUserAgent = [];
+
     public function __construct(
         Logger $logger,
         private readonly AnalyticsService $analyticsService,
@@ -38,6 +39,7 @@ class AnalyticsProcessorApp extends App
         $this->execute(function () {
             $timeBefore = microtime(true);
 
+            $this->loadBotsMapping();
             $entries = $this->analyticsService->getEntriesFromQueue();
 
             /** @var EventRaw $entry */
@@ -124,16 +126,16 @@ class AnalyticsProcessorApp extends App
             return EventType::User;
         }
 
-        if ($event->url && BotUrl::isBot($event->url)) {
+        if ($event->url && $this->isBot($event->url)) {
             return EventType::Bot;
         }
 
-        if ($userAgentInfo->browser && BotUserAgent::isBot($userAgentInfo->browser)) {
+        if ($userAgentInfo->browser && $this->isCrawler($userAgentInfo->browser)) {
             return EventType::Crawler;
         }
 
         if (empty($event->clientLanguage)) {
-            return EventType::ProbablyBot;
+            return EventType::Bot;
         }
 
         return EventType::Visitor;
@@ -212,5 +214,36 @@ class AnalyticsProcessorApp extends App
         }
 
         return md5($eventRaw->ip . $eventRaw->userAgent . $eventRaw->clientLanguage);
+    }
+
+    private function isBot(string $item): bool
+    {
+        if (empty($item)) {
+            return false;
+        }
+
+        return $this->botPath[$item] ?? false;
+    }
+
+    private function isCrawler(string $item): bool
+    {
+        if (empty($item)) {
+            return false;
+        }
+
+        return $this->botUserAgent[$item] ?? false;
+    }
+
+    private function loadBotsMapping(): void
+    {
+        if (empty($this->botPath)) {
+            $this->log('Loading bot paths...');
+            $this->botPath = $this->analyticsService->loadBotPaths();
+        }
+
+        if (empty($this->botUserAgent)) {
+            $this->log('Loading bot user agents...');
+            $this->botUserAgent = $this->analyticsService->loadBotUserAgents();
+        }
     }
 }

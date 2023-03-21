@@ -70,8 +70,6 @@ class AnalyticsCore extends Core
                 require_once self::getPathRoot() . '/App/Router/AppRouter.php';
                 require_once self::getPathRoot() . '/Core/Entity/Util/UserAgentInfo.php';
                 require_once self::getPathRoot() . '/Core/Util/UserAgentParserUtil.php';
-                require_once self::getPathRoot() . '/Core/Module/Analytics/Value/BotUrl.php';
-                require_once self::getPathRoot() . '/Core/Module/Analytics/Value/BotUserAgent.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Value/EventType.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Model/EventRaw.php';
                 require_once self::getPathRoot() . '/Core/App/LockManager.php';

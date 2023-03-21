@@ -27,6 +27,9 @@ class AnalyticsDataLayer
     const EVENT_PROCESSED_TABLE = 'event_processed';
     const EVENT_TYPE_TABLE = 'event_type';
 
+    const BOT_PATH_TABLE = 'bot_path';
+    const BOT_USER_AGENT = 'bot_user_agent';
+
     public function __construct(
         private readonly MySqlDb $db,
     ) {}
@@ -296,5 +299,43 @@ class AnalyticsDataLayer
         $sql = 'UPDATE ' . self::EVENT_RAW_TABLE . ' SET lock_id = NULL WHERE id = :id';
 
         return $this->db->execute($sql, $params);
+    }
+
+    public function loadBotPaths(): array
+    {
+        $bots = $this->db->fetchAll(
+            'SELECT `id`, `path` FROM ' . self::BOT_PATH_TABLE,
+        );
+
+        $output = [];
+
+        foreach ($bots as $bot) {
+            if (empty($bot['path'])) {
+                continue;
+            }
+
+            $output[$bot['path']] = true;
+        }
+
+        return $output;
+    }
+
+    public function loadBotUserAgents(): array
+    {
+        $bots = $this->db->fetchAll(
+            'SELECT `id`, `name` FROM ' . self::BOT_USER_AGENT,
+        );
+
+        $output = [];
+
+        foreach ($bots as $bot) {
+            if (empty($bot['name'])) {
+                continue;
+            }
+
+            $output[$bot['name']] = true;
+        }
+
+        return $output;
     }
 }
