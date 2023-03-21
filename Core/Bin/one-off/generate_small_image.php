@@ -12,6 +12,7 @@ use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Module\Article\Value\MediaStatus;
+use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\DateUtil;
 use Throwable;
 use Amora\Core\Core;
@@ -47,10 +48,12 @@ try {
             FROM core_media AS m
             WHERE m.filename_small IS NULL
                 AND m.status_id IN (:statusActiveId)
+                AND m.type_id IN (:typeImageId)
             ORDER BY m.id ASC;
         ',
         [
             ':statusActiveId' => MediaStatus::Active->value,
+            ':typeImageId' => MediaType::Image->value,
         ]
     );
 

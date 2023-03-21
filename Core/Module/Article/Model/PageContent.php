@@ -2,6 +2,7 @@
 
 namespace Amora\App\Module\Form\Entity;
 
+use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\PageContentType;
@@ -15,7 +16,7 @@ class PageContent
         public ?int $id,
         public readonly User $user,
         public readonly Language $language,
-        public readonly PageContentType $type,
+        public readonly AppPageContentType|PageContentType $type,
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt,
         public readonly ?string $titleHtml,
@@ -26,11 +27,15 @@ class PageContent
 
     public static function fromArray(array $data): self
     {
+        $type = PageContentType::tryFrom($data['page_content_type_id'])
+            ? PageContentType::from($data['page_content_type_id'])
+            : AppPageContentType::from($data['page_content_type_id']);
+
         return new self(
             id: (int)$data['page_content_id'],
             user: User::fromArray($data),
             language: Language::from($data['page_content_language_iso_code']),
-            type: PageContentType::from($data['page_content_type_id']),
+            type: $type,
             createdAt: DateUtil::convertStringToDateTimeImmutable($data['page_content_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($data['page_content_updated_at']),
             titleHtml: $data['page_content_title_html'] ?? null,
@@ -59,7 +64,7 @@ class PageContent
     public static function getEmpty(
         User $user,
         Language $language,
-        PageContentType $type,
+        AppPageContentType|PageContentType $type,
     ): self {
         return new self(
             id: null,

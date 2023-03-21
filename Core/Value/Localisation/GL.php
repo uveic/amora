@@ -157,8 +157,6 @@ return [
     'globalPageDeactivatedTitle' => 'Temporalmente desactivada',
     'globalPageDeactivatedContent' => 'A páxina que buscas está desactivada temporalmente. Se tes algunha consulta podes poñerte en contacto con nós en <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Desculpa as molestias.',
 
-    'articleEditHomepageTitle' => 'Editar o contido da portada',
-    'articleEditBottomBlogPostTitle' => 'Editar o contido ao final dunha entrada do blog',
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
     'articleStatusDeleted' => 'Eliminado',

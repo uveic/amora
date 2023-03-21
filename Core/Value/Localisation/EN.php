@@ -157,8 +157,6 @@ return [
     'globalPageDeactivatedTitle' => 'Temporarily deactivated',
     'globalPageDeactivatedContent' => 'The page you are looking for is temporarily deactivated. You can get in touch at <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Sorry for the inconvenience.',
 
-    'articleEditHomepageTitle' => 'Edit Homepage Content',
-    'articleEditBottomBlogPostTitle' => 'Edit Blog Post Bottom Content',
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',
     'articleStatusDeleted' => 'Deleted',

@@ -17,7 +17,12 @@ $languageIcon = count(Core::getAllLanguages()) === 1
 $submitButtonValue = $pageContent
     ? $responseData->getLocalValue('globalUpdate')
     : $responseData->getLocalValue('globalSend');
-$closeLink = UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage);
+$closeLink = $responseData->pageContent
+    ? AppPageContentType::buildRedirectUrl(
+        type: $responseData->pageContent->type,
+        language: $responseData->siteLanguage,
+    )
+    : UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage);
 
 $this->layout('base', ['responseData' => $responseData]);
 

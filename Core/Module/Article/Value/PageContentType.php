@@ -2,6 +2,9 @@
 
 namespace Amora\Core\Module\Article\Value;
 
+use Amora\App\Value\Language;
+use Amora\Core\Util\UrlBuilderUtil;
+
 enum PageContentSection {
     case Title;
     case Subtitle;
@@ -20,5 +23,14 @@ enum PageContentType: int
             self::Homepage,
             self::BlogBottom,
         ];
+    }
+
+    public static function buildRedirectUrl(self $type, Language $language): string
+    {
+        if ($type === self::BlogBottom) {
+            return UrlBuilderUtil::buildBackofficeDashboardUrl($language);
+        }
+
+        return UrlBuilderUtil::buildBaseUrl($language);
     }
 }
