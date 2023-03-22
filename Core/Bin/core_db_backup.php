@@ -31,6 +31,6 @@ try {
     Core::getDbBackupApp(Core::getMailerDb(), Core::getConfig()->databaseBackup)->run();
 } catch (Throwable $t) {
     $logger->logError(
-        'Error running migration: ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString()
+        'Error running database backup App: ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString()
     );
 }

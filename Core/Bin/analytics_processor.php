@@ -32,6 +32,6 @@ try {
     AnalyticsCore::getAnalyticsProcessorApp()->run();
 } catch (Throwable $t) {
     $logger->logError(
-        'Error running migration: ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString()
+        'Error running analytics processor App: ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString()
     );
 }

@@ -48,6 +48,6 @@ try {
 
 } catch (Throwable $t) {
     $logger->logError(
-        'Error running migration: ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString()
+        'Error running migration App: ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString()
     );
 }
