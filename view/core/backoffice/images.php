@@ -33,7 +33,7 @@ $count = 0;
     foreach ($responseData->files as $image) {
         $count++;
         $lazyLoading = $count > 10 ? ' loading="lazy"' : '';
-        $alt = $image->caption ?? $image->filenameOriginal;
+        $alt = $image->buildAltText() ?: $image->filenameOriginal;
 ?>
         <figure class="image-container">
           <img class="image-item" data-media-id="<?=$image->id?>" src="<?=$image->getPathWithNameSmall()?>" title="<?=$alt?>" alt="<?=$alt?>"<?=$lazyLoading?>>

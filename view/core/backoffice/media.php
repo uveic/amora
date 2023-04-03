@@ -42,7 +42,7 @@ $count = 0;
       <a href="<?=$media->getPathWithNameMedium()?>" target="_blank" class="media-item" data-media-id="<?=$media->id?>">
         <span class="media-id">#<?=$media->id?></span>
         <?=MediaType::getIcon($media->type, 'img-svg-40 m-r-05')?>
-        <span class="media-name"><?=$media->caption ?? $media->filenameOriginal?></span>
+        <span class="media-name"><?=$media->buildAltText() ?: $media->filenameOriginal?></span>
         <span class="media-info"><?=sprintf($responseData->getLocalValue('mediaUploadedBy'), $media->user ? $media->user->name : '???', $dateString)?>.</span>
       </a>
 <?php } ?>

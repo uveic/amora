@@ -55,7 +55,7 @@ $this->insert('partials/articles-edit/modal-select-main-image', ['responseData' 
       <div class="control article-main-image-wrapper">
         <div class="article-main-image-container article-main-image-container-full">
 <?php if ($pageContent?->mainImage) { ?>
-          <img class="article-main-image" data-media-id="<?=$pageContent->mainImage->id?>" src="<?=$pageContent->mainImage->getPathWithNameMedium()?>" alt="<?=$pageContent->mainImage->captionHtml?>">
+          <img class="article-main-image" data-media-id="<?=$pageContent->mainImage->id?>" src="<?=$pageContent->mainImage->getPathWithNameMedium()?>" alt="<?=$pageContent->mainImage->buildAltText()?>">
 <?php } ?>
           <a href="#" class="article-main-image-button article-main-image-button-absolute select-media-action" data-event-listener-action="selectMainImage">
             <img class="img-svg img-svg-30" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalSelectImage')?>" title="<?=$responseData->getLocalValue('globalSelectImage')?>">

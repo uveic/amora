@@ -250,6 +250,7 @@ final class DateUtil
         DateTimeImmutable|DateTime $date,
         Language $lang,
         bool $includeDay = true,
+        bool $includeMonth = true,
         bool $includeYear = true,
         bool $includeWeekDay = true,
         bool $includeTime = false,
@@ -269,6 +270,9 @@ final class DateUtil
                 $day = $includeDay ? $date->format('j')
                     . ($includeDayMonthSeparator ? ' de ' : ' ')
                     : '';
+                $month = $includeMonth
+                    ? self::getMonthName($date->format('n'), $lang, $shortMonthName)
+                    : '';
                 $time = $includeTime
                     ? ($includeDayTimeSeparator ? ' ás ' : ' ') . $date->format($timeFormat)
                     : '';
@@ -276,17 +280,16 @@ final class DateUtil
                     ? ($includeMonthYearSeparator ? ' de ' : ' ') . $date->format('Y')
                     : '';
 
-                return $weekDay
-                    . $day
-                    . self::getMonthName($date->format('n'), $lang, $shortMonthName)
-                    . $year
-                    . $time;
+                return $weekDay . $day . $month . $year . $time;
             case 'ES':
                 $days = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
                 $weekDay = $includeWeekDay ? $days[$date->format('N') - 1] . ', ' : '';
                 $day = $includeDay ? $date->format('j')
                     . ($includeDayMonthSeparator ? ' de ' : ' ')
+                    : '';
+                $month = $includeMonth
+                    ? self::getMonthName($date->format('n'), $lang, $shortMonthName)
                     : '';
                 $time = $includeTime
                     ? ($includeDayTimeSeparator ? ' a las ' : ' ') . $date->format($timeFormat)
@@ -295,15 +298,11 @@ final class DateUtil
                     ? ($includeMonthYearSeparator ? ' de ' : ' ') . $date->format('Y')
                     : '';
 
-                return $weekDay
-                    . $day
-                    . self::getMonthName($date->format('n'), $lang, $shortMonthName)
-                    . $year
-                    . $time;
+                return $weekDay . $day . $month . $year . $time;
             default:
                 $format = ($includeWeekDay ? 'l, ' : '')
                     . ($includeDay ? 'jS ' : '')
-                    . ($shortMonthName ? 'M' : 'F')
+                    . ($includeMonth ? ($shortMonthName ? 'M' : 'F') : '')
                     . ($includeYear ? ' Y' : '')
                     . ($includeTime ? ' \a\t ' . $timeFormat : '');
 

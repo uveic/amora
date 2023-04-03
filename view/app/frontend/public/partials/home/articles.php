@@ -29,7 +29,7 @@ foreach ($responseData->homeArticles as $article) {
         ? '<a class="link-title" href="' . $href . '">' . $article->title . '</a>'
         : '';
     $mainImage = $article->mainImage
-        ? '<img src="' . $article->mainImage->fullUrlMedium . '" alt="' . $article->mainImage->caption . '">'
+        ? '<img src="' . $article->mainImage->fullUrlMedium . '" alt="' . $article->mainImage->buildAltText() . '">'
         : '';
 ?>
       <div class="home-tag-item">

@@ -59,7 +59,7 @@ class Media
             'filename_small' => $this->filenameSmall,
             'filename_medium' => $this->filenameMedium,
             'filename_large' => $this->filenameLarge,
-            'caption' => $this->captionHtml,
+            'caption_html' => $this->captionHtml,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
         ];
@@ -78,7 +78,7 @@ class Media
             'fullPathLarge' => $baseUrl . $this->getPathWithNameLarge(),
             'pathOriginal' => $this->getPathWithNameOriginal(),
             'fullPathOriginal' => $baseUrl . $this->getPathWithNameOriginal(),
-            'caption' => $this->captionHtml,
+            'caption' => $this->buildAltText(),
             'captionHtml' => $this->captionHtml,
             'name' => $this->type === MediaType::Image
                 ? $this->filenameMedium
@@ -87,6 +87,11 @@ class Media
             'userId' => $this->user?->id,
             'userName' => $this->user?->getNameOrEmail(),
         ];
+    }
+
+    public function buildAltText(): string
+    {
+        return strip_tags($this->captionHtml);
     }
 
     public function getDirWithNameOriginal(): string
