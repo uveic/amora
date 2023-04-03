@@ -91,6 +91,10 @@ class Media
 
     public function buildAltText(): string
     {
+        if (empty($this->captionHtml)) {
+            return '';
+        }
+
         return strip_tags($this->captionHtml);
     }
 
