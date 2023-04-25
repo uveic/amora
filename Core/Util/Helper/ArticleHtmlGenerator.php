@@ -262,4 +262,35 @@ final class ArticleHtmlGenerator
             ? ''
             : '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/lock.svg" alt="Lock">';
     }
+
+    public static function generateSectionMedium(
+        HtmlResponseDataAdmin $responseData,
+        ArticleSection $articleSection,
+    ): string {
+        if ($articleSection->articleSectionType === ArticleSectionType::TextParagraph) {
+            $class = self::getClassName($articleSection->articleSectionType);
+            $id = $class . '-' . $articleSection->id;
+            $contentHtml = strlen($articleSection->contentHtml) > 0
+                ? $articleSection->contentHtml
+                : $responseData->getLocalValue('paragraphPlaceholder');
+            $placeholderClass = strlen($articleSection->contentHtml) > 0 ? '' : ' pexego-section-paragraph-placeholder';
+
+            $output = [];
+            $output[] = '          <section id="' . $id . '" data-editor-id="' . $articleSection->id . '" class="pexego-section pexego-section-paragraph">';
+            $output[] = '            <div class="medium-editor-content" spellcheck="true" autocapitalize="sentences" translate="no" role="textbox" aria-multiline="true" contenteditable="true">';
+            $output[] = '              <p>' . $contentHtml . '</p>';
+            $output[] = '            </div>';
+            $output[] = '          </section>';
+
+            return implode(PHP_EOL, $output) . PHP_EOL;
+        }
+
+        $class = 'pexego-section ' . self::getClassName($articleSection->articleSectionType);
+        $output = [];
+        $output[] = '          <section class="' . $class . '" data-section-id="' . $articleSection->id . '">';
+        $output[] = '            ' . $articleSection->contentHtml;
+        $output[] = '          </section>';
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
+    }
 }

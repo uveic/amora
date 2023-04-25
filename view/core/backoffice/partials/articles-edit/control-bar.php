@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\ArticleStatus;
+use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Util\StringUtil;
@@ -24,36 +25,31 @@ $articleUrl = $article
     )
     : '#';
 
+$articleType = ArticleHtmlGenerator::getArticleType($responseData);
+$closeUrl = match($articleType) {
+    ArticleType::Page => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Page),
+    ArticleType::Blog => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Blog),
+};
+
 $this->insert('partials/articles-edit/modal-add-image', ['responseData' => $responseData]);
 ?>
   <div class="control-bar-wrapper">
-    <div class="pexego-tools-amora">
-      <div class="pexego-actions-amora-wrapper">
-        <button class="article-save-button button"><?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?></button>
-        <div class="pexego-actions-amora">
-          <a href="#" class="pexego-add-section pexego-add-section-paragraph">
-            <img class="img-svg img-svg-30" src="/img/svg/article.svg" alt="<?=$responseData->getLocalValue('globalAddParagraph')?>">
-          </a>
-          <a href="#" class="pexego-add-section select-media-action" data-type-id="<?=MediaType::Image->value?>" data-event-listener-action="insertImageInArticle">
-            <img class="img-svg img-svg-30" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
-          </a>
-          <a class="pexego-add-section pexego-add-section-video">
-            <img class="img-svg img-svg-30" src="/img/svg/youtube-logo.svg" alt="<?=$responseData->getLocalValue('globalAddVideo')?>" title="<?=$responseData->getLocalValue('globalAddVideo')?>">
-          </a>
-          <a href="#" class="pexego-rearrange-sections-button">
-            <img class="img-svg img-svg-30" src="/img/svg/arrows-down-up.svg" title="<?=$responseData->getLocalValue('editorEnableControls')?>" alt="<?=$responseData->getLocalValue('editorEnableControls')?>">
-          </a>
-          <a href="<?=$articleUrl?>" class="pexego-preview<?=$article ? '' : ' null'?>" target="_blank">
-            <img class="img-svg img-svg-30" src="/img/svg/arrow-square-out.svg" alt="<?=$responseData->getLocalValue('globalPreview')?>" title="<?=$responseData->getLocalValue('globalPreview')?>">
-          </a>
-        </div>
-        <a href="#" class="pexego-rearrange-sections-close null">
-          <img class="img-svg img-svg-30" src="/img/svg/x.svg" title="<?=$responseData->getLocalValue('globalClose')?>" alt="<?=$responseData->getLocalValue('globalClose')?>">
-        </a>
-      </div>
-    </div>
-    <div class="article-tools">
+    <div class="control-bar-left">
 <?=ArticleHtmlGenerator::generateArticleLanguageDropdownSelectHtml($responseData)?>
 <?=ArticleHtmlGenerator::generateArticleStatusDropdownSelectHtml($responseData)?>
+      <a href="#" class="select-media-action" data-type-id="<?=MediaType::Image->value?>" data-event-listener-action="insertImageInArticle">
+        <img class="img-svg img-svg-30" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
+      </a>
+      <a class="article-add-section-video">
+        <img class="img-svg img-svg-30" src="/img/svg/youtube-logo.svg" alt="<?=$responseData->getLocalValue('globalAddVideo')?>" title="<?=$responseData->getLocalValue('globalAddVideo')?>">
+      </a>
+      <a href="<?=$articleUrl?>" class="pexego-preview<?=$article ? '' : ' null'?>" target="_blank">
+        <img class="img-svg img-svg-30" src="/img/svg/arrow-square-out.svg" alt="<?=$responseData->getLocalValue('globalPreview')?>" title="<?=$responseData->getLocalValue('globalPreview')?>">
+      </a>
+    </div>
+    <div class="control-bar-right">
+<?=ArticleHtmlGenerator::generateSettingsButtonHtml($responseData);?>
+      <a href="<?=$closeUrl?>"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
+      <button class="article-save-button button"><?=$article ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?></button>
     </div>
   </div>

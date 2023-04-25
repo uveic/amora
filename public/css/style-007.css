@@ -442,6 +442,14 @@ article > h2 {
   line-height: 1.4rem;
 }
 
+article > h3 {
+  margin: 0;
+  padding: 1rem;
+  font-size: 1rem;
+  font-family: var(--font-h1-title);
+  line-height: 1.2rem;
+}
+
 article > p {
   margin: 0;
   padding: 0.35rem 1rem;

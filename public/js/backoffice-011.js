@@ -408,30 +408,24 @@ const displayImagePopup = (e, mediaId, next = false, direction = null) => {
 };
 
 const insertImageInArticle = (imageEl) => {
-  let newImage = new Image();
-  newImage.className = pexegoClasses.contentImage;
+  const container = document.querySelector('.medium-editor-content');
+
+  const newImage = new Image();
   newImage.src = imageEl.src;
   newImage.dataset.mediaId = imageEl.dataset.mediaId;
   newImage.alt = imageEl.alt;
   newImage.title = imageEl.title;
 
-  let sectionId = Pexego.generateRandomString(5);
-  let pexegoSectionImage = document.createElement('section');
-  pexegoSectionImage.className =  pexegoClasses.section + ' ' + pexegoClasses.sectionImage;
+  const imageCaption = document.createElement('p');
+  imageCaption.className = 'article-image-caption';
+  imageCaption.innerHTML = '<br>';
 
-  let imageCaption = document.createElement('div');
-  imageCaption.dataset.placeholder = global.get('editorImageCaptionPlaceholder');
-  imageCaption.contentEditable = 'true';
-  imageCaption.innerHTML = '<p>' + imageCaption.dataset.placeholder + '</p>';
-  imageCaption.classList.add(pexegoClasses.contentImageCaption);
-  imageCaption.classList.add(pexegoClasses.sectionParagraphPlaceholder);
-  imageCaption.addEventListener('focus', Pexego.displayPlaceholderFocus);
-  imageCaption.addEventListener('blur', Pexego.displayPlaceholderBlur);
+  container.appendChild(newImage);
+  container.appendChild(imageCaption)
 
-  pexegoSectionImage.appendChild(newImage);
-  pexegoSectionImage.appendChild(imageCaption);
-
-  Pexego.generateSectionWrapperFor(pexegoSectionImage, sectionId);
+  const newParagraph = document.createElement('p');
+  newParagraph.innerHTML = '<br>';
+  container.appendChild(newParagraph);
 
   document.querySelector('.select-media-modal').classList.add('null');
 
@@ -1166,6 +1160,38 @@ document.querySelectorAll('.modal-close-button').forEach(el => {
 
 document.querySelectorAll('.copy-link').forEach(a => {
   a.addEventListener('click', e => handleCopyLink(e, a.href));
+});
+
+document.querySelectorAll('.article-add-section-video').forEach(bu => {
+  bu.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const videoUrl = window.prompt(global.get('editorVideoUrlTitle'));
+    if (videoUrl) {
+      const ytVideoId = Util.getYoutubeVideoIdFromUrl(videoUrl);
+      if (!ytVideoId) {
+        return;
+      }
+
+      let sectionWrapper = document.createElement('section');
+      sectionWrapper.className = 'section-video-youtube';
+      let iframeElement = document.createElement('iframe');
+      iframeElement.width = '560';
+      iframeElement.height = '315';
+      iframeElement.src = 'https://www.youtube-nocookie.com/embed/' + ytVideoId;
+      iframeElement.frameBorder = '0';
+      iframeElement.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframeElement.allowFullscreen = true;
+
+      sectionWrapper.appendChild(iframeElement);
+
+      const container = document.querySelector('.medium-editor-content');
+      container.appendChild(sectionWrapper);
+      const newParagraph = document.createElement('p');
+      newParagraph.innerHTML = '<br>';
+      container.appendChild(newParagraph);
+    }
+  });
 });
 
 export {handleDropdownOptionClick};
