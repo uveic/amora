@@ -513,19 +513,20 @@ article > ol {
   padding-right: 1rem;
 }
 
-div.article-section-video {
+.section-video-youtube {
   position: relative;
   overflow: hidden;
   width: 100%;
+  margin-top: 2rem;
 }
 
-div.article-section-video::after {
+.section-video-youtube::after {
   display: block;
   content: "";
   padding-top: 56.25%;
 }
 
-div.article-section-video iframe {
+.section-video-youtube iframe {
   position: absolute;
   top: 0;
   left: 0;

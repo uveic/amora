@@ -43,7 +43,7 @@ $this->insert('partials/articles-edit/modal-add-image', ['responseData' => $resp
       <a class="article-add-section-video">
         <img class="img-svg img-svg-30" src="/img/svg/youtube-logo.svg" alt="<?=$responseData->getLocalValue('globalAddVideo')?>" title="<?=$responseData->getLocalValue('globalAddVideo')?>">
       </a>
-      <a href="<?=$articleUrl?>" class="pexego-preview<?=$article ? '' : ' null'?>" target="_blank">
+      <a href="<?=$articleUrl?>" class="article-preview<?=$article ? '' : ' null'?>" target="_blank">
         <img class="img-svg img-svg-30" src="/img/svg/arrow-square-out.svg" alt="<?=$responseData->getLocalValue('globalPreview')?>" title="<?=$responseData->getLocalValue('globalPreview')?>">
       </a>
     </div>

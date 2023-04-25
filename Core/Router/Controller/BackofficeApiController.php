@@ -357,8 +357,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $title = StringUtil::sanitiseText($title);
-        $contentHtml = html_entity_decode($contentHtml);
-        $contentHtml = StringUtil::sanitiseHtml($contentHtml);
+        $contentHtml = StringUtil::sanitiseHtml(html_entity_decode($contentHtml));
         $path = StringUtil::sanitiseText($path);
 
         $now = new DateTimeImmutable();

@@ -1,7 +1,6 @@
 import {Util} from './module/Util-005.js';
 import {xhr} from './module/xhr-001.js';
 import {global} from "./module/localisation-002.js";
-import {PexegoEditor as Pexego, pexegoClasses} from "./module/Pexego-006.js";
 import {Uploader} from "./module/Uploader-007.js";
 
 let globalTags = [];
@@ -16,21 +15,16 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       history.pushState("", document.title, articleBackofficePath);
       document.querySelector('input[name="articleId"]').value = articleId;
 
-      document.querySelectorAll('.control-bar-creation').forEach(a => a.classList.remove('hidden'));
-      document.querySelectorAll('span.article-updated-at').forEach(s => {
-        s.textContent = Util.getUpdatedAtTime();
-      });
-
       document.querySelectorAll('#side-options').forEach(i => i.classList.add('null'));
       document.querySelectorAll('.article-save-button').forEach(b => {
         b.value = global.get('globalUpdate');
       });
-      document.querySelectorAll('.pexego-preview').forEach(b => {
+      document.querySelectorAll('.article-preview').forEach(b => {
         b.href = articlePublicPath;
         b.classList.remove('null');
       });
-      document.querySelectorAll('input[name="articlePath"]').forEach(i => {
-        i.value = articlePublicPath.trim().replace(/^\//,"");
+      document.querySelectorAll('.article-path-value').forEach(i => {
+        i.textContent = articlePublicPath.trim().replace(/^\//,"");
       });
     };
 
@@ -57,90 +51,39 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     };
 
     const getContentHtmlAndSections = () => {
-      let articleContentHtml = '';
-      let sections = [];
-      let order = 1;
-      let mainImageId = null;
+      const contentContainer = document.querySelector('.medium-editor-content');
 
-      document.querySelectorAll('.pexego-section').forEach(originalSection => {
-        let section = originalSection.cloneNode(true);
-        let editorId = section.dataset.sectionId ?? section.dataset.editorId;
-
-        let sectionElement = section.classList.contains(pexegoClasses.sectionParagraph)
-          ? document.querySelector('#' + pexegoClasses.sectionParagraph + '-' + editorId + '-html')
-          : section;
-
-        let sectionContentHtml = sectionElement.innerHTML.trim();
-
-        for (let i = 0; i < sectionElement.children.length; i++) {
-          let c = sectionElement.children[i];
-
-          if (c.classList.contains(pexegoClasses.contentImageCaption)) {
-            c.classList.add('article-section-image-caption');
-            if (c.textContent.trim() === c.dataset.placeholder) {
-              c.textContent = '';
-            }
-          }
-
-          if (c.classList.contains(pexegoClasses.contentParagraph)
-            && c.textContent.trim() === c.dataset.placeholder
-          ) {
-            c.textContent = '';
-          }
-
-          c.classList.remove(
-            pexegoClasses.contentParagraph,
-            pexegoClasses.contentImage,
-            pexegoClasses.contentImageCaption
-          );
-          if (!c.classList.length) {
-            c.removeAttribute('class');
-          }
-          c.removeAttribute('id');
-          c.removeAttribute('contenteditable');
-          delete c.dataset.placeholder;
-          delete c.dataset.imageId;
-          delete c.dataset.mediaId;
-
-          if (c.nodeName !== 'IMG' && !c.textContent.trim().length) {
-            sectionElement.removeChild(c);
-          }
+      contentContainer.childNodes.forEach(node => {
+        let currentNode = node;
+        if (currentNode.nodeName === 'DIV') {
+          const newParagraph = document.createElement('p');
+          newParagraph.innerHTML = node.innerHTML;
+          contentContainer.insertBefore(newParagraph, node);
+          contentContainer.removeChild(node);
+          currentNode = newParagraph;
         }
 
-        let elementContent = sectionElement.innerHTML.trim();
-        if (elementContent.length) {
-          articleContentHtml += elementContent;
+        if (currentNode.nodeName === 'P' && currentNode.textContent.trim() === '') {
+          contentContainer.removeChild(node);
         }
 
-        let currentSection = {
-          id: section.dataset.sectionId ? Number.parseInt(section.dataset.sectionId) : null,
-          sectionTypeId: Pexego.getSectionTypeIdFromClassList(section.classList),
-          contentHtml: sectionContentHtml,
-          order: order++
-        };
-
-        if (section.classList.contains(pexegoClasses.sectionImage)) {
-          const imageCaption = originalSection.querySelector('.' + pexegoClasses.contentImageCaption);
-          currentSection.imageCaption = imageCaption
-            && imageCaption.textContent.length
-            && imageCaption.dataset.placeholder !== imageCaption.textContent.trim()
-              ? imageCaption.textContent.trim()
-              : null;
-
-          const image = originalSection.querySelector('.' + pexegoClasses.contentImage);
-          currentSection.mediaId = image ? Number.parseInt(image.dataset.mediaId) : null;
-          if (!mainImageId && currentSection.mediaId) {
-            mainImageId = currentSection.mediaId;
-          }
+        if (currentNode.nodeName === '#text') {
+          const newParagraph = document.createElement('p');
+          newParagraph.textContent = currentNode.textContent;
+          contentContainer.insertBefore(newParagraph, node);
+          contentContainer.removeChild(node);
         }
-
-        sections.push(currentSection);
       });
 
+      const firstImageElement = contentContainer.querySelector('.article-image');
+      const firstImageId = firstImageElement && firstImageElement.dataset.mediaId
+          ? Number.parseInt(firstImageElement.dataset.mediaId)
+          : null;
+
       return {
-        sections: sections,
-        contentHtml: articleContentHtml.trim().length ? articleContentHtml.trim() : null,
-        mainImageId: mainImageId,
+        sections: [],
+        contentHtml: contentContainer.innerHTML.trim().length ? contentContainer.innerHTML.trim() : null,
+        mainImageId: firstImageId,
       };
     };
 
@@ -185,11 +128,8 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       feedbackDiv.classList.add('feedback-success');
       feedbackDiv.classList.remove('null');
       setTimeout(() => {feedbackDiv.classList.add('null')}, 5000);
-      document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
       return;
     }
-
-    document.querySelectorAll('.article-saving').forEach(ar => ar.classList.remove('null'));
 
     const payload = JSON.stringify({
       siteLanguageIsoCode: document.documentElement.lang ?? articleLanguageIsoCode,
@@ -209,16 +149,10 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     const url = '/back/article';
     if (articleIdEl && articleIdEl.value) {
       xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, global.get('globalUpdated'))
-        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath))
-        .finally(() => {
-          document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
-        });
+        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath));
     } else {
       xhr.post(url, payload, feedbackDiv, global.get('globalSaved'))
-        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath))
-        .finally(() => {
-          document.querySelectorAll('.article-saving').forEach(ar => ar.classList.add('null'));
-        });
+        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath));
     }
   });
 });
@@ -411,6 +345,7 @@ const insertImageInArticle = (imageEl) => {
   const container = document.querySelector('.medium-editor-content');
 
   const newImage = new Image();
+  newImage.className = 'article-image';
   newImage.src = imageEl.src;
   newImage.dataset.mediaId = imageEl.dataset.mediaId;
   newImage.alt = imageEl.alt;
@@ -875,26 +810,6 @@ document.querySelectorAll('.tag-result-selected-delete').forEach(i => {
   i.addEventListener('click', (e) => handleRemoveArticleTag(e));
 });
 
-document.querySelectorAll('.pexego-rearrange-sections-button').forEach(a => {
-  a.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    document.querySelectorAll('.pexego-actions-amora').forEach(i => i.classList.add('null'));
-    document.querySelectorAll('.pexego-rearrange-sections-close').forEach(i => i.classList.remove('null'));
-    document.querySelectorAll('.pexego-section-controls').forEach(d => d.classList.remove('null'));
-  });
-});
-
-document.querySelectorAll('.pexego-rearrange-sections-close').forEach(a => {
-  a.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    document.querySelectorAll('.pexego-actions-amora').forEach(i => i.classList.remove('null'));
-    document.querySelectorAll('.pexego-rearrange-sections-close').forEach(i => i.classList.add('null'));
-    document.querySelectorAll('.pexego-section-controls').forEach(d => d.classList.add('null'));
-  });
-});
-
 document.querySelectorAll('#filter-close').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
@@ -1173,8 +1088,8 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
         return;
       }
 
-      let sectionWrapper = document.createElement('section');
-      sectionWrapper.className = 'section-video-youtube';
+      let videoWrapper = document.createElement('div');
+      videoWrapper.className = 'section-video-youtube';
       let iframeElement = document.createElement('iframe');
       iframeElement.width = '560';
       iframeElement.height = '315';
@@ -1183,10 +1098,10 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
       iframeElement.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       iframeElement.allowFullscreen = true;
 
-      sectionWrapper.appendChild(iframeElement);
+      videoWrapper.appendChild(iframeElement);
 
       const container = document.querySelector('.medium-editor-content');
-      container.appendChild(sectionWrapper);
+      container.appendChild(videoWrapper);
       const newParagraph = document.createElement('p');
       newParagraph.innerHTML = '<br>';
       container.appendChild(newParagraph);
