@@ -21,9 +21,8 @@ BACKUP_FILENAME="backup_${REMOTE_DATABASE_NAME}_${FILENAME_DATE}"
 COMPRESSED_FILENAME="${BACKUP_FILENAME}.sql.gz"
 
 echo "Getting latest database backup (${COMPRESSED_FILENAME})..."
-scp ${REMOTE_HOST}:${REMOTE_FILEPATH}"${COMPRESSED_FILENAME}" "${COMPRESSED_FILENAME}"
 
-if [[ $? -ne 0 ]]
+if scp ${REMOTE_HOST}:${REMOTE_FILEPATH}"${COMPRESSED_FILENAME}" "${COMPRESSED_FILENAME}"
 then
   echo "An error has occurred. Aborting..."
   exit
@@ -31,9 +30,8 @@ fi
 
 echo "Decompressing database backup..."
 gzip -dkf "${COMPRESSED_FILENAME}"
-rm "${COMPRESSED_FILENAME}"
 
-if [[ $? -ne 0 ]]
+if rm "${COMPRESSED_FILENAME}"
 then
   rm "${BACKUP_FILENAME}.sql"
   echo "An error has occurred. Aborting..."
@@ -41,9 +39,8 @@ then
 fi
 
 echo "Deleting database tables and content..."
-php "$MYDIR"/../../../Core/Bin/core_migrate_db.php install
 
-if [[ $? -ne 0 ]]
+if php "$MYDIR"/../../../Core/Bin/core_migrate_db.php install
 then
   echo "An error has occurred. Aborting..."
   exit
@@ -53,9 +50,7 @@ export PATH=${PATH}:/usr/local/mysql/bin/
 echo "mysql -u ${LOCAL_DATABASE_USER} -p'${LOCAL_DATABASE_PASS}' ${LOCAL_DATABASE_NAME} < $MYDIR/${BACKUP_FILENAME}.sql"
 echo "Restoring database..."
 
-mysql -u ${LOCAL_DATABASE_USER} -p"${LOCAL_DATABASE_PASS}" ${LOCAL_DATABASE_NAME} < "$MYDIR/${BACKUP_FILENAME}.sql"
-
-if [[ $? -ne 0 ]]
+if mysql -u ${LOCAL_DATABASE_USER} -p"${LOCAL_DATABASE_PASS}" ${LOCAL_DATABASE_NAME} < "$MYDIR/${BACKUP_FILENAME}.sql"
 then
   rm "${BACKUP_FILENAME}.sql"
   echo "An error has occurred. Aborting..."
