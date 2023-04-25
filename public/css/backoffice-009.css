@@ -10,21 +10,6 @@
   --color-chart-01: #488f31;
   --color-chart-02: #de425b;
 }
-/* Feedback style starts here */
-.article-saving {
-  display: flex;
-  flex-grow: 1;
-  justify-content: center;
-  align-items: center;
-}
-
-.article-saving span {
-  margin-left: 0.5rem;
-  justify-content: center;
-}
-
-/* Feedback style ends here */
-
 /* Form style starts here */
 .page-header {
   display: flex;
@@ -112,15 +97,6 @@
   margin: 0;
   padding: 0;
   gap: 0.5rem;
-}
-
-.control-bar-creation {
-  font-size: 0.9rem;
-  display: flex;
-  justify-content: center;
-  align-items: end;
-  flex-direction: column;
-  text-align: right;
 }
 
 .background-light-text-color {
@@ -303,9 +279,11 @@
   color: var(--color-text);
 }
 
-.article-container img {
+.article-container > img,
+.article-image {
   width: 100%;
   height: auto;
+  margin-top: 2rem;
 }
 
 .article-image-caption {

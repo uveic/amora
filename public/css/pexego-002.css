@@ -230,16 +230,6 @@ img {
   cursor: pointer;
 }
 
-.pexego-rearrange-close,
-.pexego-preview-close {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  z-index: 999;
-  background-color: var(--color-bg);
-  padding: 0.1rem;
-}
-
 svg,
 .img-svg {
   display: inline-block;
