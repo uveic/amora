@@ -189,10 +189,11 @@ final class ArticleHtmlGenerator
         HtmlResponseDataAdmin $responseData,
         Article $article,
         string $indentation = '        ',
-    ): string {
+    ): string
+    {
         $statusClassname = match ($article->status) {
             ArticleStatus::Published => 'status-published',
-            ArticleStatus::Private => 'status-private',
+            ArticleStatus::Private, ArticleStatus::Unlisted => 'status-private',
             ArticleStatus::Deleted => 'status-deleted',
             ArticleStatus::Draft => 'status-draft',
         };
@@ -210,7 +211,7 @@ final class ArticleHtmlGenerator
             ? '<a href="' . $articleEditUrl . '">' . $article->title . '</a>'
             : '<a href="' . $articleEditUrl . '">' . $responseData->getLocalValue('globalNoTitle') . '</a>';
 
-        $articlePublicLinkHtml = $article->status === ArticleStatus::Published
+        $articlePublicLinkHtml = ArticleStatus::isPublic($article->status)
             ? '<a href="' . $articlePublicUrl . '"><img src="/img/svg/arrow-square-out.svg" class="img-svg m-l-05" alt="Public link" width="20" height="20"></a>'
             : '';
 
@@ -253,8 +254,12 @@ final class ArticleHtmlGenerator
 
     public static function generateArticlePublishedIconHtml(Article $article): string
     {
+        if ($article->status === ArticleStatus::Unlisted) {
+            return '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/eye-closed.svg" alt="Unlisted">';
+        }
+
         return $article->isPublished()
             ? ''
-            : '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/lock.svg" alt="">';
+            : '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/lock.svg" alt="Lock">';
     }
 }

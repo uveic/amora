@@ -149,7 +149,7 @@ class MediaService
 
             if ($includeAppearsOn) {
                 $statusIds = $isAdmin
-                    ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
+                    ? [ArticleStatus::Published->value, ArticleStatus::Unlisted->value, ArticleStatus::Private->value]
                     : [ArticleStatus::Published->value];
 
                 $articles = $this->articleService->filterArticlesBy(

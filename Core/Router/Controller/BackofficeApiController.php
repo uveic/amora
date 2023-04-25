@@ -363,11 +363,14 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $now = new DateTimeImmutable();
         $articleLanguage = Language::from(strtoupper($articleLanguageIsoCode));
-        $path = $path ?: $this->articleService->getAvailablePathForArticle(articleTitle: $title);
         $status = ArticleStatus::from($statusId);
+        $path = $path ?: $this->articleService->getAvailablePathForArticle(
+            articleTitle: $title,
+            articleStatus: $status,
+        );
         $publishOn = $publishOn
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
-            : ($status === ArticleStatus::Published ? $now : null);
+            : (ArticleStatus::isPublic($status) ? $now : null);
 
         $newArticle = $this->articleService->createNewArticle(
             article: new Article(

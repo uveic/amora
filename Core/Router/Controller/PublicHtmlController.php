@@ -327,7 +327,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     ): Response {
         $isAdmin = $request->session && $request->session->isAdmin();
         $statusIds = $isAdmin
-            ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
+            ? [ArticleStatus::Published->value, ArticleStatus::Unlisted->value, ArticleStatus::Private->value]
             : [ArticleStatus::Published->value];
         $pagination = new Response\Pagination(itemsPerPage: 15);
         $blogArticles = $this->articleService->filterArticlesBy(

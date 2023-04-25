@@ -665,13 +665,14 @@ class ArticleDataLayer
                     a.type_id,
                     COUNT(*) AS total
                 FROM ' . self::ARTICLE_TABLE . ' AS a
-                WHERE a.status_id IN (:published, :draft, :private)
+                WHERE a.status_id IN (:published, :draft, :private, :unlisted)
                 GROUP BY a.type_id;
             ',
             [
                 ':published' => ArticleStatus::Published->value,
                 ':draft' => ArticleStatus::Draft->value,
                 ':private' => ArticleStatus::Private->value,
+                ':unlisted' => ArticleStatus::Unlisted->value,
             ]
         );
 

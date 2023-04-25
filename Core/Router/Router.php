@@ -241,12 +241,13 @@ class Router
         );
     }
 
-    private function displayArticle(Article $article, ?bool $isAdmin): bool {
+    private function displayArticle(Article $article, ?bool $isAdmin): bool
+    {
         if ($isAdmin) {
             return true;
         }
 
-        if ($article->status === ArticleStatus::Published) {
+        if ($article->status === ArticleStatus::Published || $article->status === ArticleStatus::Unlisted) {
             return true;
         }
 

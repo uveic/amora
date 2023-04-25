@@ -504,7 +504,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         Request $request
     ): Response {
         $statusIds = $request->session && $request->session->isAdmin()
-            ? [ArticleStatus::Published->value, ArticleStatus::Private->value]
+            ? [ArticleStatus::Published->value, ArticleStatus::Unlisted->value, ArticleStatus::Private->value]
             : [ArticleStatus::Published->value];
         $pagination = new Pagination(itemsPerPage: $itemsPerPage, offset: $offset);
         $articles = $this->articleService->filterArticlesBy(

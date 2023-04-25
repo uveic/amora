@@ -161,6 +161,7 @@ return [
     'articleStatusPublished' => 'Published',
     'articleStatusDeleted' => 'Deleted',
     'articleStatusPrivate' => 'Private',
+    'articleStatusUnlisted' => 'Unlisted',
     'articleTypeBlog' => 'Blog',
     'articleTypePage' => 'Page',
     'paragraphPlaceholder' => 'Type here...',

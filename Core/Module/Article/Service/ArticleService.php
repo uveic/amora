@@ -107,7 +107,7 @@ class ArticleService
     public function getNextBlogPost(DateTimeImmutable $publishedAfter, bool $isAdmin = false): ?Article
     {
         $statusIds = $isAdmin
-            ? [ArticleStatus::Private->value, ArticleStatus::Published->value]
+            ? [ArticleStatus::Private->value, ArticleStatus::Unlisted->value, ArticleStatus::Published->value]
             : [ArticleStatus::Published->value];
 
         $res = $this->filterArticlesBy(
@@ -204,13 +204,14 @@ class ArticleService
     public function getAvailablePathForArticle(
         ?string $path = null,
         ?string $articleTitle = null,
-        ?Article $existingArticle = null
+        ?Article $existingArticle = null,
+        ?ArticleStatus $articleStatus = null,
     ): string {
         $articleId = $existingArticle?->id;
         $path = $path ? strtolower(StringUtil::cleanString($path)) : null;
 
-        if (!$path && !$articleTitle) {
-            $path = strtolower(StringUtil::generateRandomString(32));
+        if (!$path && !$articleTitle || !$path && $articleStatus === ArticleStatus::Unlisted) {
+            $path = strtolower(StringUtil::generateRandomString(64));
         } else if (!$path && $articleTitle) {
             $path = strtolower(StringUtil::cleanString($articleTitle));
         } else {
