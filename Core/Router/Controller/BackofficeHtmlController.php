@@ -224,7 +224,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
-            template: 'core/backoffice/article-edit',
+            template: 'core/backoffice/article-edit-medium',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
@@ -251,7 +251,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $articleSections = $this->articleService->getSectionsForArticleId($articleId);
         return Response::createHtmlResponse(
-            template: 'core/backoffice/article-edit',
+            template: 'core/backoffice/article-edit-medium',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
