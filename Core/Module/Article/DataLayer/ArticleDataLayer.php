@@ -5,6 +5,7 @@ namespace Amora\Core\Module\Article\Datalayer;
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Article\Model\ArticlePath;
+use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
@@ -29,6 +30,8 @@ class ArticleDataLayer
     const ARTICLE_SECTION_TABLE = 'core_article_section';
     const ARTICLE_SECTION_TYPE_TABLE = 'core_article_section_type';
     const ARTICLE_SECTION_IMAGE_TABLE = 'core_article_section_image';
+
+    const ARTICLE_MEDIA_TABLE = 'core_article_media';
 
     const ARTICLE_TAG_RELATION_TABLE = 'core_article_tag_relation';
 
@@ -325,6 +328,63 @@ class ArticleDataLayer
         $output = [];
         foreach ($res as $item) {
             $output[] = PageContent::fromArray($item);
+        }
+
+        return $output;
+    }
+
+    public function filterArticleMediaBy(
+        array $mediaIds = [],
+        array $articleIds = [],
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
+        }
+
+        $orderByMapping = [
+            'id' => 'm.id',
+        ];
+
+        $params = [];
+        $baseSql = 'SELECT ';
+        $fields = [
+            'm.id AS media_id',
+            'm.user_id AS media_user_id',
+            'm.type_id AS media_type_id',
+            'm.status_id AS media_status_id',
+            'm.path AS media_path',
+            'm.filename_original AS media_filename_original',
+            'm.filename_small AS media_filename_small',
+            'm.filename_medium AS media_filename_medium',
+            'm.filename_large AS media_filename_large',
+            'm.caption_html AS media_caption_html',
+            'm.created_at AS media_created_at',
+            'm.updated_at AS media_updated_at',
+        ];
+
+        $joins = ' FROM ' . self::ARTICLE_MEDIA_TABLE . ' AS am';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = am.media_id';
+
+        $where = ' WHERE 1';
+
+        if ($articleIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $articleIds, 'am.article_id', 'articleId');
+        }
+
+        if ($mediaIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, 'am.media_id', 'mediaId');
+        }
+
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
+
+        $res = $this->db->fetchAll($sql, $params);
+
+        $output = [];
+        foreach ($res as $item) {
+            $output[] = Media::fromArray($item);
         }
 
         return $output;
@@ -681,5 +741,27 @@ class ArticleDataLayer
         }
 
         return $output;
+    }
+
+    public function storeArticleMediaRelation(int $articleId, int $mediaId): void
+    {
+        $this->db->insert(
+            self::ARTICLE_MEDIA_TABLE,
+            [
+                'article_id' => $articleId,
+                'media_id' => $mediaId,
+            ],
+        );
+    }
+
+    public function destroyArticleMediaRelation(int $articleId, int $mediaId): void
+    {
+        $this->db->delete(
+            self::ARTICLE_MEDIA_TABLE,
+            [
+                'article_id' => $articleId,
+                'media_id' => $mediaId,
+            ],
+        );
     }
 }

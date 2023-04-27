@@ -9,6 +9,7 @@ use Amora\Core\Core;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Article\Entity\SitemapItem;
 use Amora\Core\Module\Article\Model\ArticlePath;
+use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Response\Pagination;
@@ -54,6 +55,13 @@ class ArticleService
     {
         $res = $this->filterPageContentBy(ids: [$id]);
         return $res[0] ?? null;
+    }
+
+    public function getMediaForArticleId(int $articleId): array
+    {
+        return $this->articleDataLayer->filterArticleMediaBy(
+            articleIds: [$articleId],
+        );
     }
 
     public function getPageContentForTypeId(PageContentType $type): ?PageContent
@@ -242,21 +250,25 @@ class ArticleService
 
     public function workflowUpdateArticle(
         Article $article,
+        array $mediaIds,
         array $sections,
         array $tags,
         ?string $userIp,
         ?string $userAgent,
     ): bool {
         $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
-            function () use ($article, $sections, $tags, $userIp, $userAgent) {
+            function () use ($article, $mediaIds, $sections, $tags, $userIp, $userAgent) {
                 $resUpdate = $this->articleDataLayer->updateArticle($article);
 
                 if (empty($resUpdate)) {
-                    $this->logger->logError(
-                        'Error updating article. Article ID: ' . $article->id
-                    );
+                    $this->logger->logError('Error updating article. Article ID: ' . $article->id);
                     return new Feedback(false);
                 }
+
+                $this->updateCreateOrDeleteArticleMediaRelation(
+                    articleId: $article->id,
+                    mediaIds: $mediaIds,
+                );
 
                 $resSections = $this->updateCreateOrDeleteArticleSections(
                     articleId: $article->id,
@@ -264,17 +276,13 @@ class ArticleService
                 );
 
                 if (empty($resSections)) {
-                    $this->logger->logError(
-                        'Error updating article sections. Article ID: ' . $article->id
-                    );
+                    $this->logger->logError('Error updating article sections. Article ID: ' . $article->id);
                     return new Feedback(false);
                 }
 
                 $resTags = $this->addOrRemoveTagsToArticle($article->id, $tags);
                 if (empty($resTags)) {
-                    $this->logger->logError(
-                        'Error updating article tags. Article ID: ' . $article->id
-                    );
+                    $this->logger->logError('Error updating article tags. Article ID: ' . $article->id);
                     return new Feedback(false);
                 }
 
@@ -285,9 +293,7 @@ class ArticleService
                 );
 
                 if (empty($resHistory)) {
-                    $this->logger->logError(
-                        'Error inserting article history. Article ID: ' . $article->id
-                    );
+                    $this->logger->logError('Error inserting article history. Article ID: ' . $article->id);
                     return new Feedback(false);
                 }
 
@@ -298,6 +304,33 @@ class ArticleService
         return $resTransaction->isSuccess;
     }
 
+    private function updateCreateOrDeleteArticleMediaRelation(int $articleId, array $mediaIds): void
+    {
+        $existingMedia = $this->getMediaForArticleId($articleId);
+        $existingMediaById = [];
+        $newMediaById = [];
+
+        foreach ($mediaIds as $mediaId) {
+            $newMediaById[$mediaId] = true;
+        }
+
+        /** @var Media $media */
+        foreach ($existingMedia as $media) {
+            $existingMediaById[$media->id] = true;
+        }
+
+        foreach ($newMediaById as $mediaId => $ignore) {
+            if (empty($existingMediaById[$mediaId])) {
+                $this->articleDataLayer->storeArticleMediaRelation($articleId, $mediaId);
+            }
+        }
+
+        foreach ($existingMediaById as $mediaId => $ignore) {
+            if (empty($newMediaById[$mediaId])) {
+                $this->articleDataLayer->destroyArticleMediaRelation($articleId, $mediaId);
+            }
+        }
+    }
     private function updateCreateOrDeleteArticleSections(int $articleId, array $sections): bool
     {
         $existingSections = $this->articleDataLayer->getSectionsForArticleId($articleId);
