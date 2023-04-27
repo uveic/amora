@@ -40,9 +40,6 @@ $this->insert('partials/articles-edit/modal-add-image', ['responseData' => $resp
       <a href="#" class="select-media-action" data-type-id="<?=MediaType::Image->value?>" data-event-listener-action="insertImageInArticle">
         <img class="img-svg img-svg-30" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
       </a>
-      <a class="article-add-section-video">
-        <img class="img-svg img-svg-30" src="/img/svg/youtube-logo.svg" alt="<?=$responseData->getLocalValue('globalAddVideo')?>" title="<?=$responseData->getLocalValue('globalAddVideo')?>">
-      </a>
       <a href="<?=$articleUrl?>" class="article-preview<?=$article ? '' : ' null'?>" target="_blank">
         <img class="img-svg img-svg-30" src="/img/svg/arrow-square-out.svg" alt="<?=$responseData->getLocalValue('globalPreview')?>" title="<?=$responseData->getLocalValue('globalPreview')?>">
       </a>

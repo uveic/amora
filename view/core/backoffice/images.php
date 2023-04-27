@@ -36,7 +36,7 @@ $count = 0;
         $alt = $image->buildAltText() ?: $image->filenameOriginal;
 ?>
         <figure class="image-container">
-          <img class="image-item" data-media-id="<?=$image->id?>" src="<?=$image->getPathWithNameSmall()?>" title="<?=$alt?>" alt="<?=$alt?>"<?=$lazyLoading?>>
+          <img class="image-item" data-media-id="<?=$image->id?>" data-path-medium="<?=$image->getPathWithNameMedium()?>" src="<?=$image->getPathWithNameSmall()?>" title="<?=$alt?>" alt="<?=$alt?>"<?=$lazyLoading?>>
         </figure>
 <?php } ?>
       </div>
