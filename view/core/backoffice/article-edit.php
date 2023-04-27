@@ -22,7 +22,6 @@ $this->layout('base', ['responseData' => $responseData]);
       <input id="articleTitle" name="articleTitle" type="text" value="<?=$article ? $article->title: ''?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" class="content-title">
       <div class="editor-content medium-editor-content m-t-1" contenteditable="true">
         <?=$article?->contentHtml . PHP_EOL?>
-        <p><br></p>
       </div>
     </article>
     </div>

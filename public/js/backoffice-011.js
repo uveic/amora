@@ -52,6 +52,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
 
     const getContentHtmlAndSections = () => {
       const contentContainer = document.querySelector('.medium-editor-content');
+      const imageIds = [];
 
       contentContainer.childNodes.forEach(node => {
         let currentNode = node;
@@ -61,6 +62,10 @@ document.querySelectorAll('.article-save-button').forEach(el => {
           contentContainer.insertBefore(newParagraph, node);
           contentContainer.removeChild(node);
           currentNode = newParagraph;
+        }
+
+        if (currentNode.nodeName === 'IMG' && currentNode.dataset.mediaId) {
+          imageIds.push(Number.parseInt(currentNode.dataset.mediaId));
         }
 
         if (currentNode.nodeName === '#text') {
@@ -83,6 +88,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
         sections: [],
         contentHtml: contentContainer.innerHTML.trim().length ? contentContainer.innerHTML.trim() : null,
         mainImageId: firstImageId,
+        imageIds: imageIds,
       };
     };
 
@@ -139,6 +145,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       typeId: getArticleTypeId(),
       statusId: getStatusId(),
       mainImageId: content.mainImageId,
+      imageIds: content.imageIds,
       sections: content.sections,
       tags: getTags(),
       publishOn: getPublishOnDateIsoString(),
@@ -1036,6 +1043,15 @@ document.querySelectorAll('.editor-subtitle').forEach(t => {
 
 if (document.querySelector('.medium-editor-content')) {
   Util.createMediumEditor('medium-editor-content');
+
+  const container = document.querySelector('.medium-editor-content');
+  if (container.lastElementChild.nodeName !== 'P'
+      || (container.lastElementChild.nodeName === 'P' && container.lastElementChild.className !== '')
+  ) {
+    const newParagraph = document.createElement('p');
+    newParagraph.innerHTML = '<br>';
+    container.appendChild(newParagraph);
+  }
 }
 
 document.querySelectorAll('form#form-page-content').forEach(f => {
