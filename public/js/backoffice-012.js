@@ -88,7 +88,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
         sections: [],
         contentHtml: contentContainer.innerHTML.trim().length ? contentContainer.innerHTML.trim() : null,
         mainImageId: firstImageId,
-        imageIds: imageIds,
+        mediaIds: imageIds,
       };
     };
 
@@ -145,7 +145,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       typeId: getArticleTypeId(),
       statusId: getStatusId(),
       mainImageId: content.mainImageId,
-      imageIds: content.imageIds,
+      mediaIds: content.mediaIds,
       sections: content.sections,
       tags: getTags(),
       publishOn: getPublishOnDateIsoString(),

@@ -718,6 +718,14 @@
                   "description": "Publish the article on this date. Format: ISO. Example: 2022-01-01T00:25:00+00:00",
                   "type": "string"
                 },
+                "mediaIds": {
+                  "description": "Array of media IDs used in the article",
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "description": "Media ID"
+                  }
+                },
                 "sections": {
                   "description": "Array with article's sections",
                   "type": "array",
@@ -785,6 +793,7 @@
                 "statusId",
                 "typeId",
                 "contentHtml",
+                "mediaIds",
                 "sections"
               ]
             }

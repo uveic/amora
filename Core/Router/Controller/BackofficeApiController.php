@@ -424,6 +424,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string|null $path
      * @param int|null $mainImageId
      * @param string|null $publishOn
+     * @param array $mediaIds
      * @param array $sections
      * @param array|null $tags
      * @param Request $request
@@ -440,6 +441,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $path,
         ?int $mainImageId,
         ?string $publishOn,
+        array $mediaIds,
         array $sections,
         ?array $tags,
         Request $request
@@ -523,6 +525,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 mainImage: null,
                 path: $path
             ),
+            mediaIds: $mediaIds,
             sections: $sections,
             tags: $tags ?? [],
             userIp: $request->sourceIp,
