@@ -11,7 +11,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
 
-    const afterApiCall = function(articleId, articlePublicPath, articleBackofficePath) {
+    const afterApiCall = (articleId, articlePublicPath, articleBackofficePath) => {
       history.pushState("", document.title, articleBackofficePath);
       document.querySelector('input[name="articleId"]').value = articleId;
 
@@ -63,14 +63,13 @@ document.querySelectorAll('.article-save-button').forEach(el => {
           currentNode = newParagraph;
         }
 
-        if (currentNode.nodeName === 'P' && currentNode.textContent.trim() === '') {
-          contentContainer.removeChild(node);
-        }
-
         if (currentNode.nodeName === '#text') {
-          const newParagraph = document.createElement('p');
-          newParagraph.textContent = currentNode.textContent;
-          contentContainer.insertBefore(newParagraph, node);
+          if (currentNode.textContent.trim().length) {
+            const newParagraph = document.createElement('p');
+            newParagraph.textContent = currentNode.textContent;
+            contentContainer.insertBefore(newParagraph, node);
+          }
+
           contentContainer.removeChild(node);
         }
       });
@@ -346,7 +345,7 @@ const insertImageInArticle = (imageEl) => {
 
   const newImage = new Image();
   newImage.className = 'article-image';
-  newImage.src = imageEl.src;
+  newImage.src = imageEl.dataset.pathMedium;
   newImage.dataset.mediaId = imageEl.dataset.mediaId;
   newImage.alt = imageEl.alt;
   newImage.title = imageEl.title;
@@ -412,6 +411,7 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
     imageEl.alt = alt;
     imageEl.title = alt;
     imageEl.dataset.mediaId = image.id;
+    imageEl.dataset.pathMedium = image.pathMedium;
     imageEl.className = 'image-item';
     imageEl.loading = 'lazy';
     if (eventListenerAction === 'displayImagePopup') {

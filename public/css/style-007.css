@@ -416,15 +416,24 @@ article {
   margin: 2rem auto;
 }
 
-.article-image img {
+.article-container > img,
+.article-image {
   width: auto;
+  height: auto;
   min-width: 50%;
   max-width: 100%;
-  height: auto;
-  margin: 0 auto;
+  margin: 2rem auto 0;
 }
 
-article > h1 {
+.article-image-caption {
+  outline: 0;
+  margin: 0 0 2rem 0;
+  padding: 0 1rem;
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+}
+
+article h1 {
   margin: 0;
   padding: 0 1rem;
   font-size: 1.5rem;
@@ -434,7 +443,7 @@ article > h1 {
   color: var(--color-text);
 }
 
-article > h2 {
+article h2 {
   margin: 0;
   padding: 1rem;
   font-size: 1.2rem;
@@ -442,7 +451,7 @@ article > h2 {
   line-height: 1.4rem;
 }
 
-article > h3 {
+article h3 {
   margin: 0;
   padding: 1rem;
   font-size: 1rem;
@@ -450,7 +459,7 @@ article > h3 {
   line-height: 1.2rem;
 }
 
-article > p {
+article p {
   margin: 0;
   padding: 0.35rem 1rem;
 }
