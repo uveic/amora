@@ -29,9 +29,9 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     };
 
     const getTitleContent = () => {
-      const titleEl = document.querySelector('input[name="articleTitle"]');
-      if (titleEl && titleEl.value.trim().length) {
-        return titleEl.value.trim();
+      const titleEl = document.querySelector('.articleTitle');
+      if (titleEl && titleEl.textContent.trim().length) {
+        return titleEl.textContent.trim();
       }
 
       return null;
@@ -127,7 +127,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     const articleLanguageIsoCode = getLanguageIsoCode();
     const content = getContentHtmlAndSections();
 
-    if (!articleTitle && !content.contentHtml) {
+    if (!content.contentHtml) {
       feedbackDiv.textContent = global.get('feedbackSaving');
       feedbackDiv.classList.remove('feedback-error');
       feedbackDiv.classList.add('feedback-success');

@@ -19,8 +19,7 @@ $this->layout('base', ['responseData' => $responseData]);
     <input name="articleId" type="hidden" value="<?=$article ? $article->id : ''?>">
     <input name="articleTypeId" type="hidden" value="<?=$articleType->value?>">
     <article class="article-container">
-      <label for="articleTitle" class="label null"><?=$responseData->getLocalValue('globalTitle')?>:</label>
-      <input id="articleTitle" name="articleTitle" type="text" value="<?=$article ? $article->title: ''?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" class="content-title">
+      <h1 class="articleTitle content-title" contenteditable="true"><?=$article?->title?></h1>
       <div class="editor-content medium-editor-content m-t-1" contenteditable="true">
         <?=$article?->contentHtml . PHP_EOL?>
       </div>
