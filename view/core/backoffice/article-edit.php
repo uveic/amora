@@ -14,6 +14,7 @@ $this->layout('base', ['responseData' => $responseData]);
 <?=$this->insert('partials/articles-edit/settings', ['responseData' => $responseData])?>
 <section>
   <div id="feedback" class="feedback null"></div>
+<?=$this->insert('partials/articles-edit/control-bar', ['responseData' => $responseData])?>
   <div class="article-wrapper">
     <input name="articleId" type="hidden" value="<?=$article ? $article->id : ''?>">
     <input name="articleTypeId" type="hidden" value="<?=$articleType->value?>">
@@ -25,5 +26,4 @@ $this->layout('base', ['responseData' => $responseData]);
       </div>
     </article>
     </div>
-<?=$this->insert('partials/articles-edit/control-bar', ['responseData' => $responseData])?>
 </section>

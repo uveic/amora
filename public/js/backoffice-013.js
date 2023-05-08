@@ -638,9 +638,10 @@ document.querySelectorAll('a.article-settings').forEach(el => {
 
     document.querySelectorAll('input[name="tags"]').forEach(i => i.value = '');
 
-    const pathContainer = document.querySelector('div.article-edit-previous-path-container');
-    pathContainer.querySelector('img').classList.remove('null');
-    pathContainer.querySelectorAll('div').forEach(di => pathContainer.removeChild(di));
+    const pathContainer = document.querySelector('.article-edit-previous-path-container');
+    const pathContent = pathContainer.querySelector('.article-edit-previous-path-content');
+    pathContent.querySelector('img').classList.remove('null');
+    pathContent.querySelectorAll('div').forEach(di => pathContent.removeChild(di));
 
     const sideNav = document.getElementById('side-options');
     sideNav.classList.remove('null');

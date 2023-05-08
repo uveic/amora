@@ -44,6 +44,7 @@ final class ArticleHtmlGenerator
         $output = [];
         $output[] = '      <input type="checkbox" id="article-status-dd-checkbox" class="dropdown-menu">';
         $output[] = '      <div class="dropdown-container article-status-container">';
+        $output[] = '        <label for="article-status-dd-checkbox" class="label">' . $responseData->getLocalValue('globalStatus') . ':</label>';
         $output[] = '        <ul>';
 
         /** @var \BackedEnum $status */
@@ -74,6 +75,7 @@ final class ArticleHtmlGenerator
         $output = [];
         $output[] = '      <input type="checkbox" id="article-lang-dd-checkbox" class="dropdown-menu">';
         $output[] = '      <div class="dropdown-container article-lang-container">';
+        $output[] = '        <label for="article-status-dd-checkbox" class="label">' . $responseData->getLocalValue('globalLanguage') . ':</label>';
         $output[] = '        <ul>';
 
         /** @var \BackedEnum $language */

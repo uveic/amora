@@ -3,6 +3,7 @@
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAdmin $responseData */
@@ -41,6 +42,8 @@ if ($article) {
     <h2><?=$responseData->getLocalValue('navAdminArticleOptions')?></h2>
     <a href="#" class="close-button"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
   </div>
+<?=ArticleHtmlGenerator::generateArticleLanguageDropdownSelectHtml($responseData)?>
+<?=ArticleHtmlGenerator::generateArticleStatusDropdownSelectHtml($responseData)?>
   <div>
     <label for="tags" class="label"><?=$responseData->getLocalValue('globalTags')?>:</label>
     <div id="tags-selected" class="search-results-selected<?=$tags ? '' : ' null'?>">
@@ -65,22 +68,25 @@ if ($article) {
     <div class="article-edit-path"><?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage) . '/'?>
       <div class="article-path-value" contenteditable="true"><?=$this->e($article ? $article->path : ''); ?></div>
     </div>
-    <div class="label m-t-1"><?=$responseData->getLocalValue('formArticlePreviousPaths')?>:</div>
-    <div class="article-edit-previous-path-container">
-      <img src="/img/loading.gif" class="img-svg m-t-05" alt="<?=$responseData->getLocalValue('globalLoading')?>">
+    <div class="article-edit-previous-path-container null">
+      <div class="label m-t-1"><?=$responseData->getLocalValue('formArticlePreviousPaths')?>:</div>
+      <div class="article-edit-previous-path-content">
+        <img src="/img/loading.gif" class="img-svg m-t-05" alt="<?=$responseData->getLocalValue('globalLoading')?>">
+      </div>
     </div>
   </div>
   <div>
     <label for="publishOn" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
     <div class="control article-publish-on">
+      <label for="publishOnDate" class="label null">Date:</label>
       <input class="input flex-grow-4" id="publishOnDate" name="publishOnDate" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnDate?>" required>
-      <div></div>
+      <label for="publishOnTime" class="label null">Time:</label>
       <input class="input publish-on-time" id="publishOnTime" name="publishOnTime" type="time" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnTime?>" required>
     </div>
     <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
   </div>
   <div>
     <button class="article-save-button button is-success" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
+    <div class="m-t-05"><?=$article ? $createdAtContent : ''?></div>
   </div>
-  <div><?=$article ? $createdAtContent : ''?></div>
 </div>

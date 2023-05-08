@@ -97,7 +97,7 @@ return [
     'globalNo' => 'Non',
     'globalBy' => 'por',
     'globalSettings' => 'Configuración',
-    'globalClose' => 'Cerrar',
+    'globalClose' => 'Pechar',
     'globalRemove' => 'Eliminar',
     'globalFormat' => 'Formato',
     'globalRequired' => 'Obrigatorio',

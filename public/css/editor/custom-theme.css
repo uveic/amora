@@ -58,7 +58,7 @@
 }
 
 .medium-editor-toolbar-form a {
-    color: var(--color-text-editor);
+    color: var(--color-bg);
     -webkit-transform: translateY(2px);
             transform: translateY(2px);
 }
