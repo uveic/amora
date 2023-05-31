@@ -52,7 +52,6 @@ class RouterCore extends Core
             className: 'AuthorisedHtmlController',
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Util/CsvWriterUtil.php';
-                require_once self::getPathRoot() . '/Core/Util/UrlBuilderUtil.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedHtmlController.php';

@@ -29,7 +29,7 @@
 
   --content-max-width: 800px;
 
-  --font-h1-title: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
+  --font-title: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
   --font-paragraph: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
 }
 
@@ -64,18 +64,13 @@ a, a:hover, a:visited, a:active {
 }
 
 h1, h2, h3 {
-  font-family: var(--font-h1-title);
+  font-family: var(--font-title);
 }
 
 h1 {
   font-size: 2rem;
   line-height: 3rem;
   margin: 0.67em 0;
-}
-
-h1.small {
-  font-size: 1.5rem;
-  line-height: 2rem;
 }
 
 h2 {
@@ -88,14 +83,6 @@ h3 {
   font-size: 1.17rem;
   line-height: 1.8rem;
   margin: 1em 0;
-}
-
-p > svg {
-  width: 20px;
-  height: auto;
-  vertical-align: middle;
-  display: inline-block;
-  margin-right: 0.4rem;
 }
 
 footer {
@@ -141,12 +128,7 @@ blockquote,
   flex-grow: 0 !important;
 }
 
-#article-status-dd-checkbox:checked ~ div.article-status-container > ul,
-#article-lang-dd-checkbox:checked ~ div.article-lang-container > ul {
-  display: block !important;
-}
-
-.dropdown-menu ~ div > ul {
+.dropdown-menu ~ .dropdown-container > ul {
   display: none;
   list-style: none;
   position: absolute;
@@ -156,11 +138,15 @@ blockquote,
   z-index: 998;
 }
 
-.dropdown-menu ~ div > ul a {
+.dropdown-menu:checked ~ .dropdown-container > ul {
+  display: block !important;
+}
+
+.dropdown-menu ~ .dropdown-container > ul a {
   color: var(--color-bg);
 }
 
-.dropdown-menu ~ div > ul a:hover {
+.dropdown-menu ~ .dropdown-container > ul a:hover {
   opacity: 0.97;
 }
 /* Dropdown style ends here */
@@ -184,20 +170,12 @@ blockquote,
 .content-narrow-width .label {
   font-size: 1.5rem;
   font-weight: 400;
-  font-family: var(--font-h1-title);
+  font-family: var(--font-title);
   margin-bottom: .5em;
 }
 
 .content-narrow-width .field:not(:last-child) {
   margin-bottom: 3rem;
-}
-
-.form {
-  width: 100%;
-  display: flex;
-  flex-flow: column wrap;
-  gap: 1.5rem;
-  margin: 1.5rem 0;
 }
 
 .field {
@@ -211,6 +189,7 @@ blockquote,
   clear: both;
   position: relative;
   text-align: left;
+  font-size: 1rem;
   margin-bottom: 0;
   flex-grow: 1;
   width: 100%;
@@ -218,16 +197,13 @@ blockquote,
 
 .label,
 label {
-  color: var(--color-text);
+  color: var(--color-input-text);
   display: block;
+  font-size: 1rem;
   font-weight: 700;
   width: 100%;
   flex-grow: 1;
   flex-shrink: 1;
-}
-
-.label-regular-font {
-  font-weight: 400;
 }
 
 label:not(:last-child) {
@@ -249,14 +225,6 @@ label:not(:last-child) {
 
 .help .is-danger {
   float: right;
-}
-
-.control {
-  clear: both;
-  font-size: 1rem;
-  position: relative;
-  text-align: left;
-  margin-bottom: 0;
 }
 
 input, textarea, select, button, .button {
@@ -296,12 +264,6 @@ textarea {
   appearance: none;
 }
 
-.button-form {
-  width: auto;
-  padding: 0.5rem;
-  margin: 0.5rem 0;
-}
-
 button.is-link,
 .button.is-link {
   background-color: #3273dc;
@@ -309,22 +271,10 @@ button.is-link,
   color: #fff;
 }
 
-button.is-link.is-light,
-.button.is-link.is-light {
-  background-color: #eef3fc;
-  color: #2160c4;
-}
-
 .is-success, .is-success:active, .is-success:visited, .is-success:hover, .is-success:focus {
   background-color: var(--color-success);
   color: var(--color-link-success);
   border: 1px solid var(--color-success);
-}
-
-.is-standard, .is-standard:active, .is-standard:visited, .is-standard:hover, .is-standard:focus {
-  background-color: var(--color-link-standard);
-  color: var(--color-link-success);
-  border: 1px solid var(--color-link-standard);
 }
 
 .is-failure {
@@ -337,18 +287,6 @@ button.is-link.is-light,
 
 .is-danger {
   color: var(--color-failure) !important;
-}
-
-.label,
-label {
-  color: #363636;
-  display: block;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.label-regular-font {
-  font-weight: 400;
 }
 
 label:not(:last-child) {
@@ -437,7 +375,7 @@ article h1 {
   margin: 0;
   padding: 0 1rem;
   font-size: 1.5rem;
-  font-family: var(--font-h1-title);
+  font-family: var(--font-title);
   font-weight: bold;
   line-height: 2rem;
   color: var(--color-text);
@@ -447,7 +385,7 @@ article h2 {
   margin: 0;
   padding: 1rem;
   font-size: 1.2rem;
-  font-family: var(--font-h1-title);
+  font-family: var(--font-title);
   line-height: 1.4rem;
 }
 
@@ -455,7 +393,7 @@ article h3 {
   margin: 0;
   padding: 1rem;
   font-size: 1rem;
-  font-family: var(--font-h1-title);
+  font-family: var(--font-title);
   line-height: 1.2rem;
 }
 
@@ -508,15 +446,6 @@ article > img {
   height: auto;
 }
 
-.article-section-image-caption {
-  margin-top: 0;
-  padding: 0.1rem 1rem 0.25rem 1rem;
-  font-size: 0.8rem;
-  line-height: 1.1rem;
-  color: var(--color-text-light);
-  outline: 0;
-}
-
 article > ol {
   padding-left: 4rem;
   padding-right: 1rem;
@@ -550,13 +479,6 @@ a.link-title:visited,
 a.link-title:focus {
   color: var(--color-text);
 }
-
-.article-section-image-caption,
-.article-section-image,
-.article-section-paragraph {
-  overflow: hidden;
-}
-
 /* Article styles ends here */
 
 /* Feedback style starts here */
@@ -693,36 +615,7 @@ svg,
 .opacity {
   opacity: 0.5;
 }
-
-.enabled-icon {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 5px;
-}
-
-.enabled-icon-failure {
-  background-color: var(--color-failure);
-}
 /* Classes for generic use ends here */
-
-/* Generic flex style starts here */
-.flex-parent {
-  display: flex;
-  flex-flow: row wrap;
-  gap: 1rem;
-  padding: 1rem;
-}
-
-.flex-child {
-  flex-shrink: 1;
-  flex-grow: 1;
-  margin: 0;
-  padding: 0;
-  min-width: 328px;
-}
-/* Generic flex style ends here */
-
 /* Homepage style starts here */
 .home-main {
   max-width: var(--content-max-width);
@@ -869,8 +762,6 @@ svg,
   padding: 1.5rem;
   gap: 1rem;
 }
-
-@media screen and (min-width: 600px) {}
 
 @media screen and (min-width: 800px) {
   .content-onboarding {

@@ -1046,13 +1046,15 @@ if (document.querySelector('.medium-editor-content')) {
   Util.createMediumEditor('medium-editor-content');
 
   const container = document.querySelector('.medium-editor-content');
-  if (container.lastElementChild.nodeName !== 'P'
-      || (container.lastElementChild.nodeName === 'P' && container.lastElementChild.className !== '')
-  ) {
-    const newParagraph = document.createElement('p');
-    newParagraph.innerHTML = '<br>';
-    container.appendChild(newParagraph);
-  }
+  if (container.textContent.trim().length && container.lastElementChild &&
+      (container.lastElementChild.nodeName !== 'P'
+        || (container.lastElementChild.nodeName === 'P' && container.lastElementChild.className !== '')
+      )
+    ) {
+      const newParagraph = document.createElement('p');
+      newParagraph.innerHTML = '<br>';
+      container.appendChild(newParagraph);
+    }
 }
 
 document.querySelectorAll('form#form-page-content').forEach(f => {
