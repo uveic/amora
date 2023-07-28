@@ -328,6 +328,23 @@
           }
         }
       }
+    },
+    "/backoffice/emails": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the HTML page",
+        "description": "",
+        "operationId": "getEmailsAdminPage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

@@ -21,6 +21,7 @@ class HtmlResponseDataAdmin extends HtmlResponseData
         public readonly ?array $users = [],
         public readonly ?array $files = [],
         public readonly ?array $articleSections = [],
+        public readonly ?array $emails = [],
         public readonly ?PageContent $pageContent = null,
         public readonly ?DashboardCount $dashboardCount = null,
     ) {

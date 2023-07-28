@@ -141,7 +141,7 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     <div class="width-100">
       <div class="analytics-header">
         <div class="analytics-header-left">
-          <h2 class="m-t-05 m-b-05">
+          <h2 class="m-t-0 m-b-0">
             <span class="chart-color-01"><?=$totalPageViews?> <span class="chart-title"><?=$responseData->getLocalValue('analyticsPageViews')?></span></span>
             /
             <span class="chart-color-02"><?=$totalVisitors?> <span class="chart-title"><?=$responseData->getLocalValue('analyticsVisitors')?></span></span>

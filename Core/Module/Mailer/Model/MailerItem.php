@@ -27,27 +27,26 @@ class MailerItem
 
     public static function fromArray(array $item): MailerItem
     {
-        /** @noinspection PhpCaseWithValueNotFoundInEnumInspection */
-        $template = AppMailerTemplate::tryfrom($item['template_id'])
-            ? AppMailerTemplate::from($item['template_id'])
-            : MailerTemplate::from($item['template_id']);
+        $template = AppMailerTemplate::tryfrom($item['mailer_item_template_id'])
+            ? AppMailerTemplate::from($item['mailer_item_template_id'])
+            : MailerTemplate::from($item['mailer_item_template_id']);
 
         return new MailerItem(
-            id: (int)$item['mail_id'],
+            id: (int)$item['mailer_item_id'],
             template: $template,
-            replyToEmailAddress: $item['reply_to_email'] ?? null,
-            senderName: $item['sender_name'] ?? null,
-            receiverEmailAddress: $item['receiver_email'],
-            receiverName: $item['receiver_name'] ?? null,
-            subject: $item['subject'] ?? null,
-            contentHtml: $item['content_html'] ?? null,
-            fieldsJson: $item['fields_json'] ?? null,
-            createdAt: DateUtil::convertStringToDateTimeImmutable($item['created_at']),
-            processedAt: isset($item['processed_at'])
-                ? DateUtil::convertStringToDateTimeImmutable($item['processed_at'])
+            replyToEmailAddress: $item['mailer_item_reply_to_email'] ?? null,
+            senderName: $item['mailer_item_sender_name'] ?? null,
+            receiverEmailAddress: $item['mailer_item_receiver_email'],
+            receiverName: $item['mailer_item_receiver_name'] ?? null,
+            subject: $item['mailer_item_subject'] ?? null,
+            contentHtml: $item['mailer_item_content_html'] ?? null,
+            fieldsJson: $item['mailer_item_fields_json'] ?? null,
+            createdAt: DateUtil::convertStringToDateTimeImmutable($item['mailer_item_created_at']),
+            processedAt: isset($item['mailer_item_processed_at'])
+                ? DateUtil::convertStringToDateTimeImmutable($item['mailer_item_processed_at'])
                 : null,
-            hasError: isset($item['has_error']) ? !empty($item['has_error']) : null,
-            lockId: $item['lock_id'] ?? null,
+            hasError: isset($item['mailer_item_has_error']) ? !empty($item['mailer_item_has_error']) : null,
+            lockId: $item['mailer_item_lock_id'] ?? null,
         );
     }
 

@@ -2,7 +2,6 @@
 
 namespace Amora\Core\Router;
 
-use Amora\App\Module\Analytics\Entity\ReportViewCount;
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
@@ -25,6 +24,7 @@ use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\Article\Value\PageContentType;
+use Amora\Core\Module\Mailer\Service\MailerService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Value\QueryOrderDirection;
@@ -37,6 +37,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         private readonly ArticleService $articleService,
         private readonly MediaService $mediaService,
         private readonly AnalyticsService $analyticsService,
+        private readonly MailerService $mailerService,
     ) {
         parent::__construct();
     }
@@ -536,6 +537,35 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 request: $request,
                 pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $pageContent->type->name),
                 pageContent: $pageContent,
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/emails
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getEmailsAdminPage(Request $request): Response
+    {
+        $limit = $request->getGetParam('limit') ?? 50;
+
+        $emails = $this->mailerService->filterMailerItemBy(
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('id', QueryOrderDirection::DESC)],
+                pagination: new Response\Pagination(itemsPerPage: $limit),
+            ),
+        );
+
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/email-list',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navAdminEmails'),
+                emails: $emails,
             ),
         );
     }

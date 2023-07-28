@@ -261,7 +261,7 @@ class MediaService
             type: $rawFile->mediaType,
             status: MediaStatus::Active,
             user: $user,
-            path: null,
+            path: $rawFile->extraPath,
             filenameOriginal: $rawFile->name,
             filenameLarge: null,
             filenameMedium: null,

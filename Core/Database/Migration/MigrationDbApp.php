@@ -91,7 +91,7 @@ final class MigrationDbApp
         echo $this->getLineOutputPrefix() . $question;
         $ans = strtolower(trim(fgets(STDIN)));
 
-        return ($ans == 'ERASE');
+        return ($ans === 'erase');
     }
 
     private function printOutput($str = PHP_EOL): void

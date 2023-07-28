@@ -16,6 +16,7 @@ return [
     'navDeleteAccount' => 'Eliminar conta',
     'navAdminUsers' => 'Usuarios',
     'navAdminAnalytics' => 'Visitas',
+    'navAdminEmails' => 'Correos',
     'navAdminContent' => 'Contido',
     'navAdminImages' => 'Imaxes',
     'navAdminMedia' => 'Arquivos',
@@ -220,7 +221,7 @@ return [
     'analyticsCountry' => 'País',
     'analyticsLanguage' => 'Idioma',
     'analyticsPageViews' => 'Visitas',
-    'analyticsVisitors' => 'Usuarios',
+    'analyticsVisitors' => 'Visitantes',
     'analyticsEventTypeAll' => 'Todos',
     'analyticsEventTypeVisitor' => 'Visitantes',
     'analyticsEventTypeUser' => 'Usuarios/as rexistrados/as',
@@ -228,4 +229,11 @@ return [
     'analyticsEventTypeProbablyBot' => 'Probablemente un bot',
     'analyticsEventTypeApi' => 'API',
     'analyticsEventTypeCrawler' => 'Crawler',
+
+    'mailerListTitle' => 'Rexistro de correos enviados',
+    'mailerListNoError' => 'Enviado',
+    'mailerListError' => 'Erro: non enviado',
+    'mailerTemplateAccountVerification' => 'Verificar correo electrónico',
+    'mailerTemplatePasswordCreation' => 'Crear contrasinal',
+    'mailerTemplatePasswordReset' => 'Restablecer contrasinal',
 ];

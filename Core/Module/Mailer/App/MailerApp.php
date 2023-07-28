@@ -2,18 +2,18 @@
 
 namespace Amora\Core\Module\Mailer\App;
 
-use Amora\Core\Core;
-use DateTimeImmutable;
-use Throwable;
 use Amora\Core\App\App;
-use Amora\Core\Util\Logger;
-use Amora\Core\Module\Mailer\App\Api\ApiResponse;
+use Amora\Core\Core;
 use Amora\Core\Module\Mailer\App\Api\ApiClientAbstract;
+use Amora\Core\Module\Mailer\App\Api\ApiResponse;
 use Amora\Core\Module\Mailer\App\Api\RequestBuilderAbstract;
 use Amora\Core\Module\Mailer\DataLayer\MailerDataLayer;
-use Amora\Core\Module\Mailer\Model\Email;
+use Amora\Core\Module\Mailer\Entity\Email;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Model\MailerLogItem;
+use Amora\Core\Util\Logger;
+use DateTimeImmutable;
+use Throwable;
 
 class MailerApp extends App
 {

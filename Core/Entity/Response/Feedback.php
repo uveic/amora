@@ -2,12 +2,12 @@
 
 namespace Amora\Core\Entity\Response;
 
-class Feedback
+readonly class Feedback
 {
     public function __construct(
-        public readonly bool $isSuccess,
-        public readonly mixed $response = null,
-        public readonly ?string $message = null,
-        public readonly ?int $code = null
+        public bool $isSuccess,
+        public mixed $response = null,
+        public ?string $message = null,
+        public ?int $code = null
     ) {}
 }

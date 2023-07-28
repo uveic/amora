@@ -3,6 +3,8 @@
 namespace Amora\Core\Module\Mailer\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Model\MailerLogItem;
 use Amora\Core\Util\DateUtil;
@@ -10,12 +12,77 @@ use Amora\Core\Util\StringUtil;
 
 class MailerDataLayer
 {
+    use DataLayerTrait;
+
     const MAILER_QUEUE_TABLE_NAME = 'mailer_queue';
     const MAILER_LOG_TABLE_NAME = 'mailer_log';
 
     public function __construct(
         private readonly MySqlDb $db,
     ) {}
+
+    public function filterMailerItemBy(
+        array $ids = [],
+        array $templateIds = [],
+        ?bool $hasError = null,
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
+        }
+
+        $orderByMapping = [
+            'id' => 'q.id',
+            'processed_at' => 'q.processed_at',
+        ];
+
+        $params = [];
+        $baseSql = 'SELECT ';
+        $fields = [
+            'q.id AS mailer_item_id',
+            'q.template_id AS mailer_item_template_id',
+            'q.reply_to_email AS mailer_item_reply_to_email',
+            'q.sender_name AS mailer_item_sender_name',
+            'q.receiver_email AS mailer_item_receiver_email',
+            'q.receiver_name AS mailer_item_receiver_name',
+            'q.subject AS mailer_item_subject',
+            'q.content_html AS mailer_item_content_html',
+            'q.fields_json AS mailer_item_fields_json',
+            'q.created_at AS mailer_item_created_at',
+            'q.processed_at AS mailer_item_processed_at',
+            'q.has_error AS mailer_item_has_error',
+            'q.lock_id AS mailer_item_lock_id',
+        ];
+
+        $joins = ' FROM ' . self::MAILER_QUEUE_TABLE_NAME . ' AS q';
+        $where = ' WHERE 1';
+
+        if ($ids) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $ids, 'q.id', 'mailerItemId');
+        }
+
+        if ($templateIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $templateIds, 'q.template_id', 'templateId');
+        }
+
+        if (isset($hasError)) {
+            $where .= ' AND q.has_error = :hasError';
+            $params[':hasError'] = $hasError ? '1' : '0';
+        }
+
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
+
+        $res = $this->db->fetchAll($sql, $params);
+
+        $output = [];
+        foreach ($res as $item) {
+            $output[] = MailerItem::fromArray($item);
+        }
+
+        return $output;
+    }
 
     private function getMailerQueue(
         ?string $lockId = null,
@@ -29,19 +96,19 @@ class MailerDataLayer
         $params = [];
         $sql = '
             SELECT
-                q.id AS mail_id,
-                q.template_id,
-                q.reply_to_email,
-                q.sender_name,
-                q.receiver_email,
-                q.receiver_name,
-                q.subject,
-                q.content_html,
-                q.fields_json,
-                q.created_at,
-                q.processed_at,
-                q.has_error,
-                q.lock_id
+                q.id AS mailer_item_id,
+                q.template_id AS mailer_item_template_id,
+                q.reply_to_email AS mailer_item_reply_to_email,
+                q.sender_name AS mailer_item_sender_name,
+                q.receiver_email AS mailer_item_receiver_email,
+                q.receiver_name AS mailer_item_receiver_name,
+                q.subject AS mailer_item_subject,
+                q.content_html AS mailer_item_content_html,
+                q.fields_json AS mailer_item_fields_json,
+                q.created_at AS mailer_item_created_at,
+                q.processed_at AS mailer_item_processed_at,
+                q.has_error AS mailer_item_has_error,
+                q.lock_id AS mailer_item_lock_id
             FROM ' . self::MAILER_QUEUE_TABLE_NAME . ' AS q
             WHERE 1
         ';

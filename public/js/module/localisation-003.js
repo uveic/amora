@@ -159,8 +159,8 @@ class Global {
       "globalBy": "por",
 
       "feedbackDeleteGeneric": "Estás seguro/a de querer borralo?",
-      "feedbackPasswordsDoNotMatch": "Os contrasinais non coinciden. Corríxeo e volve a intentalo.",
-      "feedbackPasswordTooShort": "Contrasinal demasiado curto. Corríxeo e volve a intentalo.",
+      "feedbackPasswordsDoNotMatch": "Os contrasinais non coinciden. Corríxeo e volve intentalo.",
+      "feedbackPasswordTooShort": "Contrasinal demasiado curto. Corríxeo e volve intentalo.",
       "feedbackDeleteSectionConfirmation": "Estás seguro de querer eliminar esta sección?",
       "feedbackDeleteImageConfirmation": "Estás seguro de querer eliminar esta imaxe?",
       "feedbackImageDeleted": "Imaxe borrada",

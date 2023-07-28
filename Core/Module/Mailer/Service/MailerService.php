@@ -2,16 +2,17 @@
 
 namespace Amora\Core\Module\Mailer\Service;
 
+use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\Mailer\App\MailerApp;
 use Amora\Core\Module\Mailer\DataLayer\MailerDataLayer;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 
-class MailerService
+readonly class MailerService
 {
     public function __construct(
-        private readonly MailerDataLayer $mailerDataLayer,
-        private readonly MailerApp $mailerApp,
-        private readonly bool $sendMailSynchronously,
+        private MailerDataLayer $mailerDataLayer,
+        private MailerApp $mailerApp,
+        private bool $sendMailSynchronously,
     ) {}
 
     public function storeMail(MailerItem $mailerItem): MailerItem
@@ -23,5 +24,19 @@ class MailerService
         }
 
         return $storedItem;
+    }
+
+    public function filterMailerItemBy(
+        array $ids = [],
+        array $templateIds = [],
+        ?bool $hasError = null,
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        return $this->mailerDataLayer->filterMailerItemBy(
+            ids: $ids,
+            templateIds: $templateIds,
+            hasError: $hasError,
+            queryOptions: $queryOptions,
+        );
     }
 }

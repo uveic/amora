@@ -70,6 +70,12 @@ final class CoreMenu
                         icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/chart-line-white.svg" alt="' . $localisationUtil->getValue('navAdminAnalytics') . '">',
                         order: 1006,
                     ),
+                    new MenuItem(
+                        path: UrlBuilderUtil::buildBackofficeMailsUrl($language),
+                        text: $localisationUtil->getValue('navAdminEmails'),
+                        icon: '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/envelope-simple-white.svg" alt="' . $localisationUtil->getValue('navAdminEmails') . '">',
+                        order: 1007,
+                    ),
                 ],
                 order: 200,
             ),

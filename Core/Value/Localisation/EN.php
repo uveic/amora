@@ -16,6 +16,7 @@ return [
     'navDeleteAccount' => 'Delete Account',
     'navAdminUsers' => 'Users',
     'navAdminAnalytics' => 'Analytics',
+    'navAdminEmails' => 'Emails',
     'navAdminContent' => 'Content',
     'navAdminImages' => 'Images',
     'navAdminMedia' => 'Files',
@@ -228,4 +229,11 @@ return [
     'analyticsEventTypeProbablyBot' => 'Probably a Bot',
     'analyticsEventTypeApi' => 'API',
     'analyticsEventTypeCrawler' => 'Crawler',
+
+    'mailerListTitle' => 'Sent Emails Log',
+    'mailerListNoError' => 'Sent',
+    'mailerListError' => 'Error',
+    'mailerTemplateAccountVerification' => 'Account Verification',
+    'mailerTemplatePasswordCreation' => 'Password Creation',
+    'mailerTemplatePasswordReset' => 'Password Reset',
 ];

@@ -1,5 +1,5 @@
-import {xhr} from './xhr-001.js';
-import {global} from './localisation-002.js';
+import {xhr} from './xhr-002.js';
+import {global} from './localisation-003.js';
 
 class UploaderClass {
   static logError(userFeedbackDiv, error) {

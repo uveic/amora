@@ -4,6 +4,32 @@
 
   --content-medium-width-extended: 840px;
 
+  --color-bg: #fcfcfc;
+  --color-text: #212529;
+  --color-text-hover: #1c1c1c;
+  --color-text-editor: #212529;
+
+  --color-failure: #ff0000;
+  --color-warning: #c6da28;
+  --color-success: #2ed06e;
+  --color-success-light: #69d02e;
+  --color-success-highlight: #97e294;
+
+  --color-light-0: #f4f4f4;
+  --color-light-2: #e8e8e8;
+  --color-light-3: #a6a6a6;
+  --color-light-4: #808080;
+  --color-text-light: #5d7079;
+
+  --color-link-success: #fff;
+  --color-link-standard: #0432ff;
+
+  --color-input-text: #363636;
+  --color-input-bg: #fff;
+  --color-input-border: #dbdbdb;
+  --border-radius: 0;
+  --input-height: 2.5em;
+
   --color-link: #3273dc;
   --color-text-grey: #808080;
 
@@ -407,6 +433,10 @@ input.content-title {
 .table-item-flex-column {
   flex-flow: column wrap;
   align-items: flex-start;
+}
+
+.flex-end {
+  justify-content: flex-end;
 }
 /* Table style ends here */
 
@@ -923,16 +953,19 @@ input.content-title {
 
 .analytics-header {
   display: flex;
+  flex-flow: row wrap;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 2rem;
 }
 
 .analytics-header-left {
   position: relative;
   display: flex;
+  flex-flow: row wrap;
   justify-content: flex-start;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .analytics-controls-wrapper {
@@ -967,6 +1000,7 @@ input.content-title {
   align-items: center;
   color: var(--color-text);
   padding: 0.25rem 0.5rem;
+  white-space: nowrap;
 }
 
 .analytics-controls-options {
@@ -1166,7 +1200,26 @@ h2.page-content-subtitle {
   left: 0;
   box-sizing: border-box;
   animation: hitZak 0.4s linear infinite alternate;
+}
 
+.mail-receiver-container {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mail-receiver-content {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.mail-receiver-name {
+  font-weight: 550;
+}
+
+.mail-receiver-email {
+  font-size: 0.9rem;
 }
 
 @keyframes hitZak {
@@ -1187,7 +1240,6 @@ h2.page-content-subtitle {
   }
 
   .content-flex-block {
-    min-height: 300px;
     min-width: 370px;
   }
 

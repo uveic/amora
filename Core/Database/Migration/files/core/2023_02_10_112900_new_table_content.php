@@ -11,6 +11,8 @@ return "
         UNIQUE KEY `name` (`name`)
     ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+    ALTER TABLE `core_language` MODIFY COLUMN `id` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL;
+
     CREATE TABLE `core_content` (
         `id` int unsigned NOT NULL AUTO_INCREMENT,
         `language_iso_code` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,

@@ -31,6 +31,8 @@ class UrlBuilderUtil
     const BACKOFFICE_CONTENT_EDIT = '/backoffice/content/%d';
     const BACKOFFICE_CONTENT_TYPE_EDIT = '/backoffice/content-type/%d/language/%s';
 
+    const BACKOFFICE_EMAILS = '/backoffice/emails';
+
     // Authorised URLs
     const AUTHORISED_ACCOUNT = '/account';
     const AUTHORISED_ACCOUNT_PASSWORD = '/account/password';
@@ -172,6 +174,11 @@ class UrlBuilderUtil
         }
 
         return $baseUrl . ($getParams ? ('?' . implode('&', $getParams)) : '');
+    }
+
+    public static function buildBackofficeMailsUrl(Language $language): string
+    {
+        return self::buildBaseUrl($language) . self::BACKOFFICE_EMAILS;
     }
 
     public static function buildBackofficeUserUrl(Language $language, int $userId): string

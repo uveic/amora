@@ -26,8 +26,8 @@ $menuItems = AppMenu::getCustomer(
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <link rel="manifest" href="/manifest.json">
-  <link href="/css/navbar-003.css" rel="stylesheet" type="text/css">
-  <link href="/css/style-008.css" rel="stylesheet" type="text/css">
+  <link href="/css/navbar-004.css" rel="stylesheet" type="text/css">
+  <link href="/css/style-205.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <?=$this->insert('../../../core/backoffice/partials/navbar', ['responseData' => $responseData, 'menuItems' => $menuItems])?>

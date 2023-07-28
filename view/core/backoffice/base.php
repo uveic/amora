@@ -26,9 +26,9 @@ $menuItems = AppMenu::getAdmin(
   <link rel="manifest" href="/manifest.json">
   <link href="/css/editor/medium-editor.min.css" rel="stylesheet" >
   <link href="/css/editor/custom-theme.css" rel="stylesheet">
-  <link href="/css/navbar-003.css" rel="stylesheet" type="text/css">
-  <link href="/css/style-008.css" rel="stylesheet" type="text/css">
-  <link href="/css/backoffice-011.css" rel="stylesheet" type="text/css">
+  <link href="/css/navbar-004.css" rel="stylesheet" type="text/css">
+  <link href="/css/style-205.css" rel="stylesheet" type="text/css">
+  <link href="/css/backoffice-202.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <?=$this->insert('partials/navbar', ['responseData' => $responseData, 'menuItems' => $menuItems])?>

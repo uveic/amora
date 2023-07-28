@@ -1,7 +1,7 @@
-import {Util} from './module/Util-006.js';
-import {xhr} from './module/xhr-001.js';
-import {global} from "./module/localisation-002.js";
-import {Uploader} from "./module/Uploader-007.js";
+import {Util} from './module/Util-007.js';
+import {xhr} from './module/xhr-002.js';
+import {global} from "./module/localisation-003.js";
+import {Uploader} from "./module/Uploader-008.js";
 
 let globalTags = [];
 

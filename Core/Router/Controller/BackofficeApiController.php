@@ -3,6 +3,8 @@
 namespace Amora\Core\Router;
 
 use Amora\App\Module\Form\Entity\PageContent;
+use Amora\App\Util\AppUrlBuilderUtil;
+use Amora\App\Value\AppPageContentType;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\ArticlePath;
@@ -741,7 +743,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerUpdatePageContentSuccessResponse(
             success: $resUpdate,
-            redirect: UrlBuilderUtil::buildBaseUrl($request->siteLanguage),
+            redirect: AppPageContentType::buildRedirectUrl(
+                type: $pageContent->type,
+                language: $request->siteLanguage,
+            ),
             errorMessage: $resUpdate ? null : 'Error updating page content',
         );
     }

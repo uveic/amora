@@ -7,7 +7,8 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 $this->layout('base', ['responseData' => $responseData]);
 
-$url = trim(str_replace('account', '', $responseData->sitePath), ' /');
+$accountPos = strpos($responseData->sitePath, 'account');
+$url = trim(str_replace('account', '', substr($responseData->sitePath, $accountPos)), ' /');
 
 $passwordClass = '';
 $userClass = '';

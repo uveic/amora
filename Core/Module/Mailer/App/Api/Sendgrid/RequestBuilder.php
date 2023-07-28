@@ -2,9 +2,9 @@
 
 namespace Amora\Core\Module\Mailer\App\Api\Sendgrid;
 
-use Amora\Core\Util\Logger;
 use Amora\Core\Module\Mailer\App\Api\RequestBuilderAbstract;
-use Amora\Core\Module\Mailer\Model\Email;
+use Amora\Core\Module\Mailer\Entity\Email;
+use Amora\Core\Util\Logger;
 
 class RequestBuilder extends RequestBuilderAbstract
 {

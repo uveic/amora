@@ -91,7 +91,7 @@ class MailerCore extends Core
         return self::getInstance(
             className: 'MailerApp',
             factory: function () use($isPersistent) {
-                require_once self::getPathRoot() . '/Core/Module/Mailer/Model/Email.php';
+                require_once self::getPathRoot() . '/Core/Module/Mailer/Entity/Email.php';
                 require_once self::getPathRoot() . '/Core/App/LockManager.php';
                 require_once self::getPathRoot() . '/Core/App/App.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/MailerApp.php';

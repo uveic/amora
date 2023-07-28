@@ -1,5 +1,5 @@
-import {xhr} from './module/xhr-001.js';
-import {global} from './module/localisation-002.js';
+import {xhr} from './module/xhr-002.js';
+import {global} from './module/localisation-003.js';
 
 document.querySelectorAll('.blog-posts-load-more').forEach(el => {
   el.addEventListener('click', e => {
