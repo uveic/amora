@@ -1222,6 +1222,10 @@ h2.page-content-subtitle {
   font-size: 0.9rem;
 }
 
+.one-line {
+  white-space: nowrap;
+}
+
 @keyframes hitZak {
   0% {
     left: 0;
