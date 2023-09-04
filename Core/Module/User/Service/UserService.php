@@ -299,6 +299,12 @@ class UserService
             return null;
         }
 
+        $now = new DateTimeImmutable();
+        $secondsSinceCreation = abs($now->getTimestamp() - $verification->createdAt->getTimestamp());
+        if ($secondsSinceCreation > VerificationType::RESET_LINK_VALID_FOR_SECONDS) {
+            return null;
+        }
+
         return $verification;
     }
 

@@ -18,7 +18,6 @@ use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\QueryOrderDirection;
-use DateTimeImmutable;
 
 final class PublicHtmlController extends PublicHtmlControllerAbstract
 {
@@ -191,8 +190,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             return $this->buildHomepageResponse(
                 request: $request,
                 feedback: new Feedback(
-                    false,
-                    $localisationUtil->getValue('authenticationPasswordResetLinkError')
+                    isSuccess: false,
+                    message: $localisationUtil->getValue('authenticationPasswordResetLinkError'),
                 )
             );
         }
