@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Router;
 
+use Amora\App\Router\AppRouterCore;
 use Amora\Core\Module\Analytics\AnalyticsCore;
 use Amora\Core\Module\mailer\MailerCore;
 use Exception;
@@ -35,6 +36,7 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicHtmlController.php';
                 return new PublicHtmlController(
+                    appPublicHtmlController: AppRouterCore::getAppPublicHtmlController(),
                     userService:  UserCore::getUserService(),
                     articleService:  ArticleCore::getArticleService(),
                     xmlService:  ArticleCore::getXmlService(),

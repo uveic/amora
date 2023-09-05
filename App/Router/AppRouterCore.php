@@ -3,14 +3,10 @@
 namespace Amora\App\Router;
 
 use Amora\Core\Core;
-use Exception;
+use Amora\Core\Module\Article\ArticleCore;
 
 class AppRouterCore extends Core
 {
-    /**
-     * @return AppPublicHtmlController
-     * @throws Exception
-     */
     public static function getAppPublicHtmlController(): AppPublicHtmlController
     {
         return self::getInstance(
@@ -19,15 +15,13 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicHtmlController.php';
-                return new AppPublicHtmlController();
+                return new AppPublicHtmlController(
+                    articleService: ArticleCore::getArticleService(),
+                );
             },
         );
     }
 
-    /**
-     * @return AppAuthorisedHtmlController
-     * @throws Exception
-     */
     public static function getAppAuthorisedHtmlController(): AppAuthorisedHtmlController
     {
         return self::getInstance(
@@ -41,10 +35,6 @@ class AppRouterCore extends Core
         );
     }
 
-    /**
-     * @return AppBackofficeHtmlController
-     * @throws Exception
-     */
     public static function getAppBackofficeHtmlController(): AppBackofficeHtmlController
     {
         return self::getInstance(
@@ -58,10 +48,6 @@ class AppRouterCore extends Core
         );
     }
 
-    /**
-     * @return AppBackofficeApiController
-     * @throws Exception
-     */
     public static function getAppBackofficeApiController(): AppBackofficeApiController
     {
         return self::getInstance(
@@ -75,10 +61,6 @@ class AppRouterCore extends Core
         );
     }
 
-    /**
-     * @return AppAuthorisedApiController
-     * @throws Exception
-     */
     public static function getAppAuthorisedApiController(): AppAuthorisedApiController
     {
         return self::getInstance(
@@ -92,10 +74,6 @@ class AppRouterCore extends Core
         );
     }
 
-    /**
-     * @return AppPublicApiController
-     * @throws Exception
-     */
     public static function getAppPublicApiController(): AppPublicApiController
     {
         return self::getInstance(
