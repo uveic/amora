@@ -213,7 +213,7 @@ return [
         '<p><a href="%s">Crear contraseña</a></p>' .
         '<p>%s</p>',
 
-    'analyticsToday' => 'Hoy',
+    'analyticsToday' => 'hoy',
     'analyticsSource' => 'Origen',
     'analyticsPage' => 'Página',
     'analyticsBrowser' => 'Navegador',

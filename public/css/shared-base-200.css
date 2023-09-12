@@ -82,7 +82,7 @@ body {
 }
 
 a, a:hover, a:visited, a:active {
-  color: var(--color-link);
+  color: var(--color-link-standard);
   text-decoration: none;
 }
 

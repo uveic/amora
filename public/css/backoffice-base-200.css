@@ -107,7 +107,7 @@ ul.nav-dropdown-menu a:hover,
   align-items: center;
   gap: 0.3rem;
   font-size: 1rem;
-  color: var(--color-light-0);
+  color: var(--color-text-light);
 }
 
 .activity-container .date {
@@ -157,7 +157,7 @@ ul.nav-dropdown-menu a:hover,
   justify-content: center;
   align-items: center;
   border: 1px solid var(--color-link);
-  padding: 0.5rem;
+  padding: 1rem;
   background-color: var(--color-light-0);
   min-width: 100px;
   max-width: 235px;
@@ -170,7 +170,7 @@ ul.nav-dropdown-menu a:hover,
 }
 
 .dashboard-cards-wrapper span.value {
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: bold;
   line-height: 1;
 }
@@ -180,6 +180,10 @@ ul.nav-dropdown-menu a:hover,
   font-weight: bold;
   line-height: 1;
   padding: 1rem;
+}
+
+.dashboard-cards-wrapper span.description {
+  margin-top: 0.5rem;
 }
 
 .dashboard-card-title,
@@ -232,6 +236,10 @@ ul.nav-dropdown-menu a:hover,
   align-items: flex-start;
   justify-content: flex-end;
 }
+
+.dashboard-title-small {
+  font-size: 1rem;
+}
 /* Dashboard end */
 
 /* Status starts here */
@@ -240,7 +248,7 @@ ul.nav-dropdown-menu a:hover,
   justify-content: center;
   align-items: center;
   flex-flow: row nowrap;
-  border-radius: revert;
+  border-radius: 4px;
   padding: 0.2rem 0.4rem;
   font-size: 0.8rem;
   color: var(--color-bg);
@@ -395,6 +403,25 @@ ul.nav-dropdown-menu a:hover,
   align-self: flex-end;
   min-width: 250px;
   flex-grow: 1;
+}
+
+.filter-by {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-light-3);
+  margin: 1rem 0;
+  background-color: var(--color-light-1);
+}
+
+.filter-by > .items {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+  align-items: center;
 }
 /* Page header ends here */
 
@@ -803,6 +830,8 @@ ul.nav-dropdown-menu a:hover,
 
 .analytics-header {
   display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
   justify-content: space-between;
   align-items: center;
 }
@@ -810,9 +839,10 @@ ul.nav-dropdown-menu a:hover,
 .analytics-header-left {
   position: relative;
   display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
   justify-content: flex-start;
   align-items: center;
-  gap: 2rem;
 }
 
 .analytics-controls-wrapper {

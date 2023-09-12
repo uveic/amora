@@ -213,7 +213,7 @@ return [
         '<p><a href="%s">Crear contrasinal</a></p>' .
         '<p>%s</p>',
 
-    'analyticsToday' => 'Hoxe',
+    'analyticsToday' => 'hoxe',
     'analyticsSource' => 'Orixe',
     'analyticsPage' => 'Páxina',
     'analyticsBrowser' => 'Navegador',
