@@ -14,7 +14,7 @@ $this->layout('base', ['responseData' => $responseData,])
     <section class="page-header">
       <h3><?=$responseData->getLocalValue('navAdminUsers')?></h3>
       <div class="links">
-        <a href="<?=UrlBuilderUtil::buildBackofficeNewUserUrl($responseData->siteLanguage)?>" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeNewUserUrl($responseData->siteLanguage)?>" class="button is-link header-button-new"><?=$responseData->getLocalValue('globalNew')?></a>
       </div>
     </section>
     <div class="m-t-1 m-r-1 m-b-1 m-l-1">

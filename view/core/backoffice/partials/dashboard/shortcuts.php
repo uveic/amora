@@ -18,7 +18,7 @@ foreach (Core::getAllLanguages() as $language) {
     $partialContentLinks[] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, PageContentType::BlogBottom, $language) . '">' . Language::getIconFlag($language, 'img-svg-25') . '</a>';
 }
 ?>
-        <div class="content-flex-block m-t-2">
+        <div class="m-t-2">
           <h2><?=$responseData->getLocalValue('dashboardShortcuts')?></h2>
           <div class="dashboard-cards-wrapper">
             <div>

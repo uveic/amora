@@ -7,7 +7,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 /** @var HtmlResponseDataAdmin $responseData */
 
 ?>
-        <div class="content-flex-block width-45-percent">
+        <div>
           <h2><?=$responseData->getLocalValue('dashboardGoTo')?></h2>
           <div class="dashboard-cards-wrapper">
             <a href="<?=UrlBuilderUtil::buildBackofficeImagesUrl($responseData->siteLanguage)?>">

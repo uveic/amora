@@ -30,8 +30,8 @@ $this->layout('base', ['responseData' => $responseData]);
     </div>
   </section>
 
-  <div class="content-flex p-t-0">
-    <div class="content-flex-block width-100">
+  <div class="m-t-1 m-r-1 m-b-1 m-l-1">
+    <div>
       <div class="dashboard-cards-wrapper m-t-2">
 <?php if (count($homepageLinks) > 1) { ?>
         <div>

@@ -11,7 +11,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml();
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
 <?=$this->insert('../../../app/frontend/public/partials/head', ['responseData' => $responseData])?>
-  <link href="/css/style-205.css" rel="stylesheet" type="text/css">
+  <link href="/css/shared-base-200.css" rel="stylesheet" type="text/css">
   <link href="/css/app/style-102.css" rel="stylesheet" type="text/css">
 </head>
 <body>

@@ -20,6 +20,6 @@ $pageTitle = match ($articleType) {
       <h3><?=$pageTitle?></h3>
       <div class="links">
         <a href="#" id="filter-open"><img src="/img/svg/funnel.svg" class="img-svg img-svg-25" alt="Funnel"></a>
-        <a href="<?=UrlBuilderUtil::buildBackofficeNewArticleUrl($responseData->siteLanguage, $articleType)?>" class="button is-link admin-menu-button"><?=$responseData->getLocalValue('globalNew')?></a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeNewArticleUrl($responseData->siteLanguage, $articleType)?>" class="button is-link header-button-new"><?=$responseData->getLocalValue('globalNew')?></a>
       </div>
     </section>

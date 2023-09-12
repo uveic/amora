@@ -238,6 +238,7 @@ class ArticleService
             $count++;
         } while(!empty($res));
 
+        $path = $validPath;
         $count = 0;
         do {
             $validPath = $path . ($count > 0 ? '-' . $count : '');

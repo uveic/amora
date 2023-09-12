@@ -192,9 +192,8 @@ final class DateUtil
     ): DateTimeImmutable {
         try {
             $d = new DateTime(datetime: $date);
-            if ($timezone) {
-                $d->setTimezone($timezone);
-            }
+            $timezone = $timezone ?? DateUtil::convertStringToDateTimeZone(Core::getDefaultTimezone());
+            $d->setTimezone($timezone);
 
             return DateTimeImmutable::createFromMutable($d);
         } catch (Throwable) {

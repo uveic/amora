@@ -16,7 +16,7 @@ header {
   gap: 0.75rem;
   align-items: center;
   letter-spacing: 0;
-  font-family: var(--font-h1-title);
+  font-family: var(--font-title);
   font-weight: bold;
   font-size: 1.2rem;
   line-height: 1;
@@ -45,7 +45,7 @@ a.logo:focus {
   font-size: 1.2rem;
   line-height: 1;
   padding: 0.3rem 0;
-  min-height: 50px;
+  min-height: 30px;
   display: flex;
 }
 
@@ -96,7 +96,9 @@ nav ul {
   text-decoration: none;
   padding: 1em;
   margin: 0;
-  display: block;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
   position: relative;
   border: 1px solid transparent;
   border-radius: var(--border-radius);
@@ -202,6 +204,9 @@ ul.nav-dropdown-menu li {
 
 ul.nav-dropdown-menu > li > a {
   padding-left: 3rem;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
 }
 
 ul.nav-dropdown-menu a {
