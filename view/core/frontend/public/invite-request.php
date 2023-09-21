@@ -4,7 +4,7 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
-$siteLogoHtml = $responseData->buildSiteLogoHtml();
+$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
 
 ?>
 <!DOCTYPE html>
@@ -29,12 +29,12 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml();
           <p class="light-text-color m-b-2"><?=$responseData->getLocalValue('authenticationInviteRequestSubtitle')?></p>
           <div class="field">
             <p class="control">
+              <label for="email" class="null">Email</label>
               <input class="input" type="email" id="email" name="email" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderEmail'))?>" required>
             </p>
           </div>
           <div class="field m-t-1">
             <input class="button is-success" type="submit" value="<?=$this->e($responseData->getLocalValue('authenticationInviteRequestFormAction'))?>">
-            </p>
           </div>
         </div>
         <div id="login-failure-message" class="is-failure m-t-1 null"></div>

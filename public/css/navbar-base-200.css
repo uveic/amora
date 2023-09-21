@@ -4,10 +4,6 @@ header {
   position: relative;
   z-index: 900;
   width: 100%;
-  padding: 0.5rem 1rem;
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
 }
 
 .logo {
@@ -35,11 +31,11 @@ header {
   max-height: 40px;
 }
 
-a.logo,
-a.logo:hover,
-a.logo:active,
-a.logo:visited,
-a.logo:focus {
+.logo,
+.logo:hover,
+.logo:active,
+.logo:visited,
+.logo:focus {
   color: var(--color-bg);
   font-weight: bold;
   font-size: 1.2rem;
@@ -49,9 +45,15 @@ a.logo:focus {
   display: flex;
 }
 
-a.logo.white {
+.logo.white {
   background: var(--color-bg);
   color: var(--color-text);
+}
+
+.logo-wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  margin-right: 4rem;
 }
 
 .content-onboarding {
@@ -99,6 +101,7 @@ nav ul {
   display: flex;
   flex-flow: row nowrap;
   gap: 0.5rem;
+  align-items: center;
   position: relative;
   border: 1px solid transparent;
   border-radius: var(--border-radius);
@@ -232,12 +235,22 @@ ul.nav-dropdown-menu a:hover {
   display: block;
 }
 
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+}
+
 @media screen and (min-width: 800px) {
   .nav-toggle-label {
     display: none;
   }
 
-  header {
+  .header-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -245,6 +258,10 @@ ul.nav-dropdown-menu a:hover {
 
   .logo {
     flex-grow: 0;
+  }
+
+  .logo-wrapper {
+    margin: 0;
   }
 
   nav {

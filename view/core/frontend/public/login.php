@@ -4,7 +4,7 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
-$siteLogoHtml = $responseData->buildSiteLogoHtml();
+$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
 
 ?>
 <!DOCTYPE html>
@@ -28,12 +28,14 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml();
         <p class="light-text-color m-b-3"></p>
         <div class="field">
           <p class="control">
-            <input class="input" type="email" id="user" name="user" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderEmail'))?>" required>
+            <label for="user" class="null">User</label>
+            <input class="input" id="user" name="user" type="email" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderEmail'))?>" required>
           </p>
         </div>
         <div class="field">
           <p class="control">
-            <input class="input" type="password" id="password" name="password" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderPassword'))?>" required>
+            <label for="password" class="null">Password</label>
+            <input class="input" id="password" name="password" type="password" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderPassword'))?>" required>
           </p>
         </div>
         <div id="login-failure-message" class="is-failure m-t-1 null"></div>

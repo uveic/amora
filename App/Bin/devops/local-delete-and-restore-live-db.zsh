@@ -20,40 +20,42 @@ fi
 BACKUP_FILENAME="backup_${REMOTE_DATABASE_NAME}_${FILENAME_DATE}"
 COMPRESSED_FILENAME="${BACKUP_FILENAME}.sql.gz"
 
-echo "Getting latest database backup (${COMPRESSED_FILENAME})..."
-
-if scp ${REMOTE_HOST}:${REMOTE_FILEPATH}"${COMPRESSED_FILENAME}" "${COMPRESSED_FILENAME}"
+echo "Getting latest database backup: ${REMOTE_FILEPATH}${COMPRESSED_FILENAME}"
+if ! scp ${REMOTE_HOST}:${REMOTE_FILEPATH}"${COMPRESSED_FILENAME}" "${COMPRESSED_FILENAME}"
 then
-  echo "An error has occurred. Aborting..."
+  echo "Error retrieving latest database backup. Aborting..."
   exit
 fi
 
 echo "Decompressing database backup..."
-gzip -dkf "${COMPRESSED_FILENAME}"
-
-if rm "${COMPRESSED_FILENAME}"
+if ! gzip -dkf "${COMPRESSED_FILENAME}"
 then
   rm "${BACKUP_FILENAME}.sql"
-  echo "An error has occurred. Aborting..."
+  echo "Error decompressing database backup. Aborting..."
+  exit
+fi
+
+if ! rm "${COMPRESSED_FILENAME}"
+then
+  rm "${BACKUP_FILENAME}.sql"
+  echo "Error removing the downloaded database backup file after decompressing. Aborting..."
   exit
 fi
 
 echo "Deleting database tables and content..."
-
-if php "$MYDIR"/../../../Core/Bin/core_migrate_db.php install
+if ! php "$MYDIR"/../../../Core/Bin/core_migrate_db.php install
 then
-  echo "An error has occurred. Aborting..."
+  echo "Error deleting database tables and content. Aborting..."
   exit
 fi
 
 export PATH=${PATH}:/usr/local/mysql/bin/
-echo "mysql -u ${LOCAL_DATABASE_USER} -p'${LOCAL_DATABASE_PASS}' ${LOCAL_DATABASE_NAME} < $MYDIR/${BACKUP_FILENAME}.sql"
-echo "Restoring database..."
+echo "Restoring database: mysql -u ${LOCAL_DATABASE_USER} -p'${LOCAL_DATABASE_PASS}' ${LOCAL_DATABASE_NAME} < $MYDIR/${BACKUP_FILENAME}.sql"
 
-if mysql -u ${LOCAL_DATABASE_USER} -p"${LOCAL_DATABASE_PASS}" ${LOCAL_DATABASE_NAME} < "$MYDIR/${BACKUP_FILENAME}.sql"
+if ! mysql -u ${LOCAL_DATABASE_USER} -p"${LOCAL_DATABASE_PASS}" ${LOCAL_DATABASE_NAME} < "$MYDIR/${BACKUP_FILENAME}.sql"
 then
   rm "${BACKUP_FILENAME}.sql"
-  echo "An error has occurred. Aborting..."
+  echo "Error restoring database. Aborting..."
   exit
 fi
 

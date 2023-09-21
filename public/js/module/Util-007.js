@@ -26,12 +26,12 @@ class UtilClass {
       .replace(/-$/g, '');
   }
 
-  logError(error, errorMessage = null) {
+  logError(errorObj = null, errorMessage = null) {
     const feedbackDiv = document.querySelector('#feedback');
 
     if (!feedbackDiv) return;
 
-    feedbackDiv.textContent = errorMessage ?? (error.message ?? global.get('genericError'));
+    feedbackDiv.textContent = errorMessage ?? (errorObj ? errorObj.message : global.get('genericError'));
     feedbackDiv.classList.remove('feedback-success');
     feedbackDiv.classList.add('feedback-error');
     feedbackDiv.classList.remove('null');
@@ -79,6 +79,59 @@ class UtilClass {
         },
       }
     );
+  }
+
+  getAndCleanHtmlFromElement(element, addParagraph = false) {
+    const cleanHtml = (html) => {
+      if (!html) {
+        return '';
+      }
+
+      html = html.trim().replace(/^\s+|\s+$/gm, '');
+
+      while (html.length && html.slice(-4) === '<br>') {
+        html = html.slice(0, -4).trim();
+      }
+
+      return html;
+    };
+
+    element.childNodes.forEach(currentNode => {
+      if (currentNode.nodeName === '#text' && !currentNode.textContent.trim().length) {
+        return;
+      }
+
+      if (currentNode.nodeName === 'DIV') {
+        const newParagraph = document.createElement('p');
+        newParagraph.innerHTML = currentNode.innerHTML;
+        element.insertBefore(newParagraph, currentNode);
+        element.removeChild(currentNode);
+        currentNode = newParagraph;
+      }
+
+      if (addParagraph) {
+        if (currentNode.nodeName === '#text') {
+          if (currentNode.textContent.trim().length) {
+            const newParagraph = document.createElement('p');
+            newParagraph.textContent = currentNode.textContent;
+            element.insertBefore(newParagraph, currentNode);
+          }
+
+          element.removeChild(currentNode);
+        }
+      }
+
+      const html = currentNode.innerHTML ?? currentNode.textContent;
+      const currentHtml = cleanHtml(html);
+
+      if (currentNode.nodeName === 'BR') {
+        currentNode.parentNode.removeChild(currentNode);
+      } else if (!currentHtml.length) {
+        element.removeChild(currentNode);
+      }
+    });
+
+    return element.innerHTML.trim();
   }
 }
 

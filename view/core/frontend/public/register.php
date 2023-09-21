@@ -5,7 +5,7 @@ use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
-$siteLogoHtml = $responseData->buildSiteLogoHtml();
+$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
 
 ?>
 <!DOCTYPE html>
@@ -29,17 +29,20 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml();
         <p class="light-text-color m-b-3"><?=$responseData->getLocalValue('authenticationRegisterAlreadyLogin')?> <a href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navSignIn')?></a>.</p>
         <div class="field">
           <div class="control">
-            <input class="input" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" value="" required>
+            <label for="name" class="null">Name</label>
+            <input class="input" id="name" name="name" type="text" placeholder="<?=$responseData->getLocalValue('formPlaceholderUserName')?>" value="" required>
           </div>
         </div>
         <div class="field">
           <p class="control has-icons-left has-icons-right">
-            <input class="input" type="email" id="email" name="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>">
+            <label for="email" class="null">Name</label>
+            <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>">
           </p>
         </div>
         <div class="field">
           <p class="control has-icons-left">
-            <input class="input" type="password" id="password" name="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderCreatePassword')?>" minlength="<?=$this->e(UserService::USER_PASSWORD_MIN_LENGTH)?>">
+            <label for="password" class="null">Name</label>
+            <input class="input" id="password" name="password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderCreatePassword')?>" minlength="<?=$this->e(UserService::USER_PASSWORD_MIN_LENGTH)?>">
           </p>
           <p class="help"><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
         </div>

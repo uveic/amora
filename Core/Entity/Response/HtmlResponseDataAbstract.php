@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Entity\Response;
 
+use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Core;
 use Amora\Core\Entity\Request;
 use Amora\Core\Util\LocalisationUtil;
@@ -43,7 +44,7 @@ abstract class HtmlResponseDataAbstract
         $this->siteName = $this->localisationUtil->getValue('siteName');
 
         $imagePath = parse_url($siteImagePath ?? ($siteImageUrl ?? ''), PHP_URL_PATH);
-        $this->siteImagePath = UrlBuilderUtil::buildBaseUrlWithoutLanguage() . $imagePath;
+        $this->siteImagePath = $imagePath ? UrlBuilderUtil::buildBaseUrlWithoutLanguage() . $imagePath : '';
         $this->lastUpdatedTimestamp = $lastUpdatedTimestamp ?? time();
 
         $this->pageTitle = isset($pageTitle) && $pageTitle
@@ -65,21 +66,34 @@ abstract class HtmlResponseDataAbstract
         return $this->pageDescription;
     }
 
-    public function buildSiteLogoHtml(?string $siteName = null): string {
+    public function buildSiteLogoHtml(
+        Language $siteLanguage,
+        ?string $siteName = null,
+        PageContent $homeContent = null,
+        bool $includeSubtitle = false,
+        string $indentation = '',
+    ): string {
         $imageUrl = Core::getConfig()->logoImageUrl;
         if (empty($siteName)) {
             $siteName = $this->siteName;
         }
 
-        $output = '';
+        $output = [];
 
         if ($imageUrl) {
-            $output .= '<img src="' . $imageUrl . '" alt="' . $siteName . '">';
+            $output[] = $indentation . '<img src="' . $imageUrl . '" alt="' . $siteName . '">';
         }
 
-        $output .= '<span>' . $siteName . '</span>';
+        $output[] = $indentation . '<div class="logo-wrapper">';
+        $output[] = $indentation . '  <a class="logo" href="' . UrlBuilderUtil::buildBaseUrl($siteLanguage) . '">';
+        $output[] = $indentation . '    ' . ($homeContent?->titleHtml ?: '<span>' . $siteName . '</span>');
+        $output[] = $indentation . '  </a>';
+        if ($includeSubtitle && $homeContent?->subtitleHtml) {
+            $output[] = $indentation . '    <span class="logo-subtitle">' . $homeContent?->subtitleHtml . '</span>' ?: '';
+        }
+        $output[] = $indentation . '</div>';
 
-        return $output;
+        return implode(PHP_EOL, $output) . PHP_EOL;
     }
 
     private function getSiteNameAndTitle(): string

@@ -5,11 +5,10 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 
-$siteLogoHtml = $responseData->buildSiteLogoHtml();
+$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
 $titleHtml = $responseData->getLocalValue('authenticationPasswordCreateSubtitle');
 $subtitleHtml = '';
 $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink');
-$siteLogoHtml = $responseData->buildSiteLogoHtml();
 
 ?>
 <!DOCTYPE html>
@@ -37,13 +36,15 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml();
           <p class="light-text-color m-b-3"><?=$subtitleHtml?></p>
           <div class="field">
             <p class="control has-icons-left">
-              <input class="input" type="password" id="password" name="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>" required>
+              <label for="password" class="null">Password</label>
+              <input class="input" id="password" name="password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>" required>
             </p>
             <p class="help"><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
           </div>
           <div class="field">
             <p class="control has-icons-left">
-              <input class="input" type="password" id="passwordConfirmation" name="passwordConfirmation" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>" required>
+              <label for="passwordConfirmation" class="null">Password confirmation</label>
+              <input class="input" id="passwordConfirmation" name="passwordConfirmation" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>" required>
             </p>
           </div>
           <div id="login-failure-message" class="is-failure m-t-1 null"></div>

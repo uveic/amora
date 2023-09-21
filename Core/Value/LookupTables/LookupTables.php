@@ -44,9 +44,10 @@ function asArray(array $values): array
     $output = [];
     /** @var BackedEnum $value */
     foreach ($values as $value) {
+        $name = method_exists($value, 'getName') ? $value->getName($value) : $value->name;
         $output[] = [
             'id' => $value->value,
-            'name' => $value->name,
+            'name' => $name,
         ];
     }
 

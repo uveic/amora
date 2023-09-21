@@ -5,7 +5,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 
-$siteLogoHtml = $responseData->buildSiteLogoHtml();
+$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
 $titleHtml = $responseData->getLocalValue('authenticationPasswordResetSubtitle');
 $subtitleHtml = sprintf(
     $responseData->getLocalValue('authenticationPasswordResetAlreadyLogin'),
@@ -38,12 +38,14 @@ $subtitleHtml = sprintf(
           <p class="light-text-color m-b-3"><?=$subtitleHtml?></p>
           <div class="field">
             <p class="control has-icons-left">
+              <label for="password" class="null">Password</label>
               <input class="input" type="password" id="password" name="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>" required>
             </p>
             <p class="help"><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
           </div>
           <div class="field">
             <p class="control has-icons-left">
+              <label for="passwordConfirmation" class="null">Password confirmation</label>
               <input class="input" type="password" id="passwordConfirmation" name="passwordConfirmation" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>" required>
             </p>
           </div>

@@ -4,7 +4,7 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
-$siteLogoHtml = $responseData->buildSiteLogoHtml();
+$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
 
 ?>
 <!DOCTYPE html>
@@ -29,7 +29,8 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml();
           <p class="light-text-color m-b-3"><?=$this->e($responseData->getLocalValue('authenticationForgotPasswordSubtitle'))?></p>
           <div class="field">
             <p class="control">
-              <input class="input" type="email" id="email" name="email" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderEmail'))?>" required>
+              <label for="email" class="null">Email</label>
+              <input class="input" id="email" name="email" type="email" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderEmail'))?>" required>
             </p>
           </div>
           <div class="field">
