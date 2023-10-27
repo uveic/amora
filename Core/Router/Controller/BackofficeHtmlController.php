@@ -25,6 +25,7 @@ use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\Mailer\Service\MailerService;
+use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Value\QueryOrderDirection;
@@ -33,6 +34,7 @@ use DateTimeImmutable;
 final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 {
     public function __construct(
+        private readonly SessionService $sessionService,
         private readonly UserService $userService,
         private readonly ArticleService $articleService,
         private readonly MediaService $mediaService,
@@ -49,7 +51,10 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             return false;
         }
 
-        return true;
+        return $this->sessionService->refreshSession(
+            sid: $request->session->sessionId,
+            sessionId: $request->session->id,
+        );
     }
 
     /**

@@ -11,11 +11,11 @@ abstract class App
     private string $logPrefix;
 
     public function __construct(
-        protected Logger $logger,
-        private string $appName,
-        private int $appFrequencySeconds = 5,
+        protected readonly Logger $logger,
+        public readonly string $appName,
+        private readonly int $appFrequencySeconds = 5,
         int $lockMaxTimeSinceLastSyncSeconds = 30,
-        private bool $isPersistent = true,
+        private readonly bool $isPersistent = true,
     ) {
         if (empty($appName)) {
             $this->logger->logError('Empty App name value when trying to run an App. Aborting...');
@@ -59,11 +59,6 @@ abstract class App
         $this->logger->logInfo(
             $this->logPrefix . 'Done. Total time: ' . $this->logger->getTotalTime() . 's'
         );
-    }
-
-    public function getAppName(): string
-    {
-        return $this->appName;
     }
 
     public function getLogPrefix(): string

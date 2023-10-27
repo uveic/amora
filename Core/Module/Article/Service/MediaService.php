@@ -20,14 +20,14 @@ use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
 
-class MediaService
+readonly class MediaService
 {
     public function __construct(
-        private readonly Logger $logger,
-        private readonly ArticleService $articleService,
-        private readonly MediaDataLayer $mediaDataLayer,
-        private readonly ImageService $imageService,
-        private readonly string $mediaBaseDir,
+        private Logger $logger,
+        private ArticleService $articleService,
+        private MediaDataLayer $mediaDataLayer,
+        private ImageService $imageService,
+        private string $mediaBaseDir,
     ) {}
 
     public function storeMedia(Media $item): Media
@@ -342,24 +342,24 @@ class MediaService
         return strtolower(trim($parts[count($parts) - 1]));
     }
 
-    private function getOrGenerateMediaFolder(string $mediaBasePath): string
+    public function getOrGenerateMediaFolder(string $mediaBasePath): string
     {
         $now = new DateTimeImmutable();
-        $extraImagePath = md5($now->format('Y-W'));
-        $fullPath = $mediaBasePath . '/' . $extraImagePath;
+        $mediaExtraPath = md5($now->format('Y-W'));
+        $fullPath = $mediaBasePath . '/' . $mediaExtraPath;
 
         if (is_dir($fullPath)) {
-            return $extraImagePath;
+            return $mediaExtraPath;
         }
 
         $count = 0;
         do {
             if ($count) {
-                $extraImagePath .= $count;
+                $mediaExtraPath .= $count;
             }
 
-            $fullPath = $mediaBasePath . '/' . $extraImagePath;
-            if (false === @mkdir($fullPath)) {
+            $fullPath = $mediaBasePath . '/' . $mediaExtraPath;
+            if (false === @mkdir(directory: $fullPath, recursive: true)) {
                 $this->logger->logError('Failed to create folder: ' . $fullPath);
                 return 'no-folder';
             }
@@ -367,7 +367,7 @@ class MediaService
             $count++;
         } while(!is_dir($fullPath));
 
-        return $extraImagePath;
+        return $mediaExtraPath;
     }
 
     public function getTotalMedia(): array

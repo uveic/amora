@@ -3,22 +3,9 @@
   --font-paragraph: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
 }
 
-/* Nav starts here */
-nav,
-header {
-  background-color: var(--color-primary);
+.header-container {
+  max-width: revert;
 }
-
-ul.nav-dropdown-menu,
-.nav-dropdown-item {
-  background-color: var(--color-primary);
-}
-
-ul.nav-dropdown-menu a:hover,
-.nav-dropdown-item:hover {
-  background-color: var(--color-primary-hover);
-}
-/* Nav ends here */
 
 /* Table starts here */
 .table {
@@ -142,6 +129,10 @@ ul.nav-dropdown-menu a:hover,
 /* Activity ends here */
 
 /* Dashboard start */
+.backoffice-wrapper {
+  margin: 1rem;
+}
+
 .dashboard-cards-wrapper {
   display: flex;
   flex-flow: row wrap;
@@ -279,16 +270,33 @@ ul.nav-dropdown-menu a:hover,
   font-family: var(--font-title);
 }
 
-.editor-placeholder {
-  color: var(--color-light-4);
-}
-
 .editor-content p:first-child {
   margin-top: 0;
 }
 
 .editor-content p:last-child {
   margin-bottom: 0;
+}
+
+.page-content-wrapper {
+  max-width: var(--content-max-width);
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+h1.page-content-title {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+h2.page-content-subtitle {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.page-content-before {
+  color: var(--color-light-3);
+  font-size: 0.8rem;
 }
 /* Editor starts here */
 
@@ -524,10 +532,10 @@ ul.nav-dropdown-menu a:hover,
 }
 
 #images-list .image-container {
-  height: 122px;
-  width: 100px;
+  height: 200px;
+  width: 200px;
   min-width: 100px;
-  max-width: 150px;
+  max-width: 400px;
   flex-grow: 1;
   position: relative;
   cursor: pointer;
@@ -915,50 +923,6 @@ ul.nav-dropdown-menu a:hover,
   color: var(--color-chart-02);
 }
 /* Analytics style ends here */
-/* Page content editor starts here */
-.page-content-wrapper {
-  max-width: var(--content-max-width);
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-h1.page-content-title {
-  margin-top: 0;
-  margin-bottom: 2rem;
-}
-
-h2.page-content-subtitle {
-  margin-top: 0;
-  margin-bottom: 2rem;
-}
-
-.page-content-before {
-  color: var(--color-light-3);
-  font-size: 0.8rem;
-}
-
-.editor-title {
-  margin-bottom: 0;
-}
-
-.editor-content {
-  min-height: 250px !important;
-  margin: 0 0 2rem;
-  font-family: var(--font-title);
-}
-
-.editor-placeholder {
-  color: var(--color-light-4);
-}
-
-.editor-content p:first-child {
-  margin-top: 0;
-}
-
-.editor-content p:last-child {
-  margin-bottom: 0;
-}
-/* Page content editor ends here */
 
 .width-100 { width: 100%;}
 .width-40 { width: 40%; }
@@ -971,6 +935,11 @@ h2.page-content-subtitle {
     width: auto;
     min-width: 50%;
     max-width: var(--content-max-width);
+  }
+
+  .content-images {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 

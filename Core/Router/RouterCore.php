@@ -85,6 +85,7 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeHtmlController.php';
                 return new BackofficeHtmlController(
+                    sessionService: UserCore::getSessionService(),
                     userService:  UserCore::getUserService(),
                     articleService:  ArticleCore::getArticleService(),
                     mediaService:  ArticleCore::getMediaService(),

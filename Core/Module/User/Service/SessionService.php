@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\User\Service;
 
+use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
 use DateTimeZone;
 use UserAgentParserUtil;
@@ -27,13 +28,11 @@ class SessionService
         return  date('YmdHis') . StringUtil::generateRandomString(16);
     }
 
-    private function generateNewValidUntil(?DateTimeImmutable $from = null): DateTimeImmutable
+    private function generateNewValidUntil(): DateTimeImmutable
     {
         return DateTimeImmutable::createFromFormat(
-            'U',
-            $from
-                ? $from->getTimestamp() + self::SESSION_ID_COOKIE_VALID_FOR_SECONDS
-                : time() + self::SESSION_ID_COOKIE_VALID_FOR_SECONDS
+            format: 'U',
+            datetime: time() + self::SESSION_ID_COOKIE_VALID_FOR_SECONDS,
         );
     }
 
@@ -44,7 +43,7 @@ class SessionService
         ?string $userAgent = null,
     ): ?Session {
         $now = new DateTimeImmutable();
-        $newValidUntil = $this->generateNewValidUntil($now);
+        $newValidUntil = $this->generateNewValidUntil();
 
         $session = new Session(
             id: null,
@@ -53,27 +52,32 @@ class SessionService
             timezone: $timezone,
             createdAt: $now,
             lastVisitedAt: $now,
-            validUntil: $this->generateNewValidUntil($now),
+            validUntil: $newValidUntil,
             forcedExpirationAt: null,
             ip: $ip,
             browserAndPlatform: UserAgentParserUtil::parse($userAgent)->getBrowserAndPlatform(),
         );
 
-        $this->updateBrowserCookie($session->sessionId, $newValidUntil->getTimestamp());
+        $this->updateBrowserCookie($session->sessionId, $newValidUntil);
         return $this->dataLayer->createNewSession($session);
     }
 
-    public function logout(Session $session)
+    public function logout(Session $session): bool
     {
-        $this->updateBrowserCookie($session->sessionId, time() - 60 * 60 * 24);
+        $this->updateBrowserCookie(
+            sid: $session->sessionId,
+            newExpiryDate: DateUtil::convertUnixTimestampToDateTimeImmutable(time() - 60 * 60 * 2),
+        );
         return $this->dataLayer->expireSession($session->id);
     }
 
-    private function updateBrowserCookie(string $sid, int $newExpiryTimestamp)
+    public function updateBrowserCookie(string $sid, ?DateTimeImmutable $newExpiryDate = null): void
     {
+        $newExpiryDate = $newExpiryDate ?? $this->generateNewValidUntil();
+
         $isLive = Core::isRunningInLiveEnv();
         $options = [
-            'expires' => $newExpiryTimestamp,
+            'expires' => $newExpiryDate->getTimestamp(),
             'path' => '/',
             'secure' => $isLive,
             'httponly' => true,
@@ -86,6 +90,13 @@ class SessionService
 
         setcookie(self::SESSION_ID_COOKIE_NAME, $sid, $options);
         $_COOKIE[self::SESSION_ID_COOKIE_NAME] = $sid;
+    }
+
+    public function refreshSession(string $sid, int $sessionId): bool
+    {
+        $newExpiryDate = $this->generateNewValidUntil();
+        $this->updateBrowserCookie($sid, $newExpiryDate);
+        return $this->dataLayer->refreshSession($sessionId, $newExpiryDate);
     }
 
     public function loadSession(?string $sessionId, bool $forceReload = false): ?Session

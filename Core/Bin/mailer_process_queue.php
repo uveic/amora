@@ -16,7 +16,7 @@ try {
     Core::initiate(realpath(__DIR__ . '/../..'));
 
     $app = MailerCore::getMailerApp();
-    $appName = $app->getAppName();
+    $appName = $app->appName;
     $app->run();
 } catch (Throwable $t) {
     echo 'Error running App '

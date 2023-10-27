@@ -10,6 +10,7 @@ use DateTimeImmutable;
 use Amora\Core\Core;
 use DateTimeInterface;
 use DateTimeZone;
+use Exception;
 use Throwable;
 
 final class DateUtil
@@ -76,7 +77,7 @@ final class DateUtil
      * @param bool $includePrefixAndOrSuffix
      * @param bool $includeSeconds
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getElapsedTimeString(
         Language $language,
@@ -87,7 +88,7 @@ final class DateUtil
         bool $includeSeconds = false,
     ): string {
         if (!isset($to)) {
-            $to = new DateTimeImmutable('now', $from->getTimezone());
+            $to = new DateTimeImmutable(timezone: $from->getTimezone());
         }
         $diff = (array)$to->diff($from);
 
@@ -204,14 +205,14 @@ final class DateUtil
 
     public static function convertUnixTimestampToDateTimeImmutable(
         int $unixSeconds,
-        DateTimeZone $timezone,
+        ?DateTimeZone $timezone = null,
     ): DateTimeImmutable {
         try {
             $d = DateTime::createFromFormat(
                 format: 'U',
                 datetime: $unixSeconds,
             );
-            $d->setTimezone($timezone);
+            $d->setTimezone($timezone ?? new DateTimeZone(Core::getDefaultTimezone()));
 
             return DateTimeImmutable::createFromMutable($d);
         } catch (Throwable) {

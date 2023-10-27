@@ -9,6 +9,7 @@ use Amora\Core\Util\Logger;
 use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\DateUtil;
+use DateTimeImmutable;
 use DateTimeZone;
 
 class SessionDataLayer
@@ -71,14 +72,14 @@ class SessionDataLayer
         return Session::fromArray($res, $user);
     }
 
-    public function refreshSession(int $sessionId, string $newExpiryDate): bool
+    public function refreshSession(int $sessionId, DateTimeImmutable $newExpiryDate): bool
     {
         $res = $this->db->update(
             self::SESSION_TABLE_NAME,
             $sessionId,
             [
                 'last_visited_at' => DateUtil::getCurrentDateForMySql(),
-                'valid_until' => $newExpiryDate
+                'valid_until' => $newExpiryDate->format(DateUtil::MYSQL_DATETIME_FORMAT),
             ]
         );
 

@@ -16,7 +16,7 @@
   --color-primary-200: #ADE8F4;
   --color-primary-100: #CAF0F8;
 
-  --color-primary-hover: #2c85d9;
+  --color-primary-hover: #48CAE4;
 
   --color-secondary: #d82400;
   --color-terciary: #f45103;
@@ -44,6 +44,7 @@
 
   --content-max-width: 1200px;
   --content-max-width-narrow: 800px;
+  --content-max-width-form: 600px;
   --max-width-form: 900px;
 
   --font-title: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
@@ -140,21 +141,6 @@ blockquote *:last-child {
   margin-bottom: 0;
 }
 
-nav,
-header {
-  background-color: var(--color-primary);
-}
-
-ul.nav-dropdown-menu,
-.nav-dropdown-item {
-  background-color: var(--color-primary);
-}
-
-ul.nav-dropdown-menu a:hover,
-.nav-dropdown-item:hover {
-  background-color: var(--color-primary-hover);
-}
-
 /* Account starts here */
 .account-content {
   display: flex;
@@ -165,22 +151,19 @@ ul.nav-dropdown-menu a:hover,
 }
 
 .account-content-left {
-  max-width: 600px;
-  padding: 2rem 5%;
+  display: none;
+  max-width: var(--content-max-width-form);
+  padding: 2rem 0;
   margin: 0 auto;
 }
 
-.account-content-left {
-  display: none;
-}
-
 .account-content-right {
-  flex-grow: 1;
+  flex-grow: 3;
 }
 
 .content-narrow-width {
   width: 100%;
-  max-width: 600px;
+  max-width: var(--content-max-width-form);
   padding: 0 5% 2rem;
   margin: 0 auto;
 }
@@ -381,7 +364,7 @@ ul.nav-dropdown-menu a:hover,
 #register-right {
   flex-grow: 1;
   margin: 10vh auto;
-  max-width: 600px;
+  max-width: var(--content-max-width-form);
   padding: 0 5%;
   text-align: center;
 }
@@ -406,8 +389,14 @@ ul.nav-dropdown-menu a:hover,
 
 /* Article styles starts here */
 article {
-  max-width: var(--content-max-width);
+  max-width: var(--content-max-width-narrow);
   margin: 2rem auto;
+}
+
+.article-header {
+  max-width: var(--content-max-width-narrow);
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 article img {
@@ -842,12 +831,12 @@ svg,
 /* Classes for generic use ends here */
 /* Homepage style starts here */
 .home-main {
-  max-width: var(--content-max-width);
+  max-width: var(--content-max-width-narrow);
   margin: 6rem auto;
 }
 
 .home-blog {
-  max-width: var(--content-max-width);
+  max-width: var(--content-max-width-narrow);
   margin: 2rem auto;
   padding: 0 1rem;
 }
@@ -929,9 +918,8 @@ svg,
   }
 
   .account-content-left {
-    flex-grow: 0;
+    flex-grow: 1;
     display: block;
-    width: 240px;
   }
 
   .account-content-left ul {
@@ -963,6 +951,7 @@ svg,
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: var(--color-text);
   }
 
   #register-left {

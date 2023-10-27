@@ -72,6 +72,8 @@ abstract class HtmlResponseDataAbstract
         PageContent $homeContent = null,
         bool $includeSubtitle = false,
         string $indentation = '',
+        ?int $logoWidth = null,
+        ?int $logoHeight = null,
     ): string {
         $imageUrl = Core::getConfig()->logoImageUrl;
         if (empty($siteName)) {
@@ -80,16 +82,20 @@ abstract class HtmlResponseDataAbstract
 
         $output = [];
 
+        $output[] = $indentation . '<div class="logo-wrapper">';
+
+        $output[] = $indentation . '  <a class="logo" href="' . UrlBuilderUtil::buildBaseUrl($siteLanguage) . '">';
+
         if ($imageUrl) {
-            $output[] = $indentation . '<img src="' . $imageUrl . '" alt="' . $siteName . '">';
+            $widthAndHeight = $logoWidth ? (' width="' . $logoWidth . '"') : '';
+            $widthAndHeight .= $logoHeight ? (' height="' . $logoHeight . '"') : '';
+            $output[] = $indentation . '    <img src="' . $imageUrl . '" alt="' . $siteName . '"' . $widthAndHeight . '>';
         }
 
-        $output[] = $indentation . '<div class="logo-wrapper">';
-        $output[] = $indentation . '  <a class="logo" href="' . UrlBuilderUtil::buildBaseUrl($siteLanguage) . '">';
         $output[] = $indentation . '    ' . ($homeContent?->titleHtml ?: '<span>' . $siteName . '</span>');
         $output[] = $indentation . '  </a>';
         if ($includeSubtitle && $homeContent?->subtitleHtml) {
-            $output[] = $indentation . '    <span class="logo-subtitle">' . $homeContent?->subtitleHtml . '</span>' ?: '';
+            $output[] = $indentation . '  <span class="logo-subtitle">' . $homeContent?->subtitleHtml . '</span>' ?: '';
         }
         $output[] = $indentation . '</div>';
 

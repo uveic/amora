@@ -9,7 +9,7 @@ $this->layout('base', ['responseData' => $responseData])
   <main>
     <section>
       <div id="feedback" class="feedback null"></div>
-      <div class="m-t-1 m-r-1 m-b-1 m-l-1">
+      <div class="backoffice-wrapper">
 <?=$this->insert('partials/dashboard/links', ['responseData' => $responseData])?>
 <?=$this->insert('partials/dashboard/shortcuts', ['responseData' => $responseData])?>
       </div>

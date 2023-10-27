@@ -71,7 +71,7 @@ REGEX
             if (preg_match('%^(?!Mozilla)(?P<browser>[A-Z0-9\-]+)(/(?P<version>[0-9A-Z.]+))?%ix',
                 $userAgent,
                 $result)
-           ) {
+            ) {
                 return new UserAgentInfo(
                     platform: $platform ?: null,
                     browser: $result[self::BROWSER],
@@ -186,5 +186,14 @@ REGEX
             $browser ?? null,
             $version ?? null
         );
+    }
+
+    public static function getBrowserAgent(): string
+    {
+        $agents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
+        ];
+
+        return $agents[rand(0, count($agents) - 1)];
     }
 }

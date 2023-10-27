@@ -68,6 +68,6 @@ class Session
 
     public function isAdmin(): bool
     {
-        return $this->user->role === UserRole::Admin;
+        return $this->isAuthenticated() && $this->user->role === UserRole::Admin;
     }
 }

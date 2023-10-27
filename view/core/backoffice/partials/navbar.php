@@ -28,8 +28,8 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
   <div class="header-container">
     <?=$siteLogoHtml?>
     <input type="checkbox" id="mobile-nav" class="mobile-nav">
-    <nav>
-      <ul>
+    <nav class="header-navbar">
+      <ul class="header-navbar-ul">
 <?php
     $i = 0;
     /** @var MenuItem $menuItem */

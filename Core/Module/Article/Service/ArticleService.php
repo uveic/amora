@@ -4,6 +4,7 @@ namespace Amora\Core\Module\Article\Service;
 
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Router\AppRouter;
+use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\Feedback;
@@ -28,12 +29,12 @@ use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 
-class ArticleService
+readonly class ArticleService
 {
     public function __construct(
-        private readonly Logger $logger,
-        private readonly ArticleDataLayer $articleDataLayer,
-        private readonly TagDataLayer $tagDataLayer,
+        private Logger $logger,
+        private ArticleDataLayer $articleDataLayer,
+        private TagDataLayer $tagDataLayer,
     ) {}
 
     public function getArticleForId(
@@ -123,7 +124,7 @@ class ArticleService
             typeIds: [ArticleType::Blog->value],
             publishedAfter: $publishedAfter,
             queryOptions: new QueryOptions(
-            orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::ASC)],
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::ASC)],
                 pagination: new Pagination(itemsPerPage: 1),
             ),
         );
@@ -192,7 +193,7 @@ class ArticleService
         return $this->articleDataLayer->getSectionsForArticleId($articleId);
     }
 
-    public function getPageContent(PageContentType $type, Language $language): ?PageContent
+    public function getPageContent(PageContentType|AppPageContentType $type, Language $language): ?PageContent
     {
         $res = $this->filterPageContentBy(
             languageIsoCodes: [$language->value],

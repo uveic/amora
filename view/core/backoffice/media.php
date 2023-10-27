@@ -14,7 +14,7 @@ $count = 0;
 
 ?>
   <div id="feedback" class="feedback null"></div>
-  <main class="m-t-1 m-r-1 m-b-1 m-l-1">
+  <main class="backoffice-wrapper">
     <div class="field m-t-0 m-b-0">
       <div id="upload-media">
         <div id="upload-media-info">

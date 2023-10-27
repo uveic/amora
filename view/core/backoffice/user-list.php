@@ -17,7 +17,7 @@ $this->layout('base', ['responseData' => $responseData,])
         <a href="<?=UrlBuilderUtil::buildBackofficeNewUserUrl($responseData->siteLanguage)?>" class="button is-link header-button-new"><?=$responseData->getLocalValue('globalNew')?></a>
       </div>
     </section>
-    <div class="m-t-1 m-r-1 m-b-1 m-l-1">
+    <div class="backoffice-wrapper">
       <div class="table">
         <div class="table-row header">
            <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalName')?></div>
