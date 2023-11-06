@@ -18,8 +18,14 @@ require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionTyp
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/Analytics/Value/EventType.php';
+require_once Core::getPathRoot() . '/Core/Module/Album/Value/AlbumStatus.php';
+require_once Core::getPathRoot() . '/Core/Module/Album/Value/Template.php';
 
 use Amora\Core\Entity\Util\LookupTableSettings;
+use Amora\Core\Module\Album\AlbumCore;
+use Amora\Core\Module\Album\Datalayer\AlbumDataLayer;
+use Amora\Core\Module\Album\Value\AlbumStatus;
+use Amora\Core\Module\Album\Value\Template;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\DataLayer\ArticleDataLayer;
 use Amora\Core\Module\Article\DataLayer\MediaDataLayer;
@@ -105,5 +111,15 @@ return [
         database: AnalyticsCore::getDb(),
         tableName: AnalyticsDataLayer::EVENT_TYPE_TABLE,
         tableFieldsToValues: asArray(EventType::getAll()),
+    ),
+    new LookupTableSettings(
+        database: AlbumCore::getDb(),
+        tableName: AlbumDataLayer::ALBUM_STATUS_TABLE,
+        tableFieldsToValues: asArray(AlbumStatus::getAll()),
+    ),
+    new LookupTableSettings(
+        database: AlbumCore::getDb(),
+        tableName: AlbumDataLayer::ALBUM_TEMPLATE_TABLE,
+        tableFieldsToValues: asArray(Template::getAll()),
     ),
 ];
