@@ -11,9 +11,10 @@ trait DataLayerTrait {
         array &$params,
         array $ids,
         string $dbColumnName,
-        string $keyName = null
+        string $keyName = null,
+        bool $notIn = false,
     ): string {
-        $keyName = $keyName ?? StringUtil::generateRandomString(6) . 'Id';
+        $keyName = $keyName ?? (StringUtil::generateRandomString(6) . 'Id');
 
         $allKeys = [];
         foreach (array_values($ids) as $key => $addressId) {
@@ -22,7 +23,7 @@ trait DataLayerTrait {
             $params[$currentKey] = $addressId;
         }
 
-        return ' AND ' . $dbColumnName . ' IN (' . implode(', ', $allKeys) . ')';
+        return ' AND ' . $dbColumnName . ($notIn ? ' NOT' : '') . ' IN (' . implode(', ', $allKeys) . ')';
     }
 
     public function generateOrderByAndLimitCode(
