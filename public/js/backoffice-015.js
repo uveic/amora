@@ -922,7 +922,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-document.querySelectorAll('.media-load-more').forEach(lm => {
+document.querySelectorAll('.media-load-more-js').forEach(lm => {
   lm.addEventListener('click', e => {
     e.preventDefault();
 
