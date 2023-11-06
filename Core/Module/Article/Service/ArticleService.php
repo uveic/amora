@@ -332,6 +332,7 @@ readonly class ArticleService
             }
         }
     }
+
     private function updateCreateOrDeleteArticleSections(int $articleId, array $sections): bool
     {
         $existingSections = $this->articleDataLayer->getSectionsForArticleId($articleId);
