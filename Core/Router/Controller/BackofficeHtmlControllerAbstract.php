@@ -94,6 +94,15 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
     abstract protected function getEditArticlePage(int $articleId, Request $request): Response;
 
     /**
+     * Endpoint: /backoffice/albums
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getAlbumsPage(Request $request): Response;
+
+    /**
      * Endpoint: /backoffice/images
      * Method: GET
      *
@@ -436,6 +445,34 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in BackofficeHtmlControllerAbstract - Method: getEditArticlePage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetAlbumsPage(Request $request): Response
+    {
+        $errors = [];
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getAlbumsPage(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getAlbumsPage()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -805,6 +842,16 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetEditArticlePage($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['backoffice', 'albums'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetAlbumsPage($request);
         }
 
         if ($method === 'GET' &&

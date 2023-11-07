@@ -13,6 +13,8 @@ use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Entity\Util\DashboardCount;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
+use Amora\Core\Module\Album\Service\AlbumService;
+use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
 use Amora\Core\Module\Analytics\Value\CountDbColumn;
 use Amora\Core\Module\Analytics\Value\EventType;
@@ -38,6 +40,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         private readonly UserService $userService,
         private readonly ArticleService $articleService,
         private readonly MediaService $mediaService,
+        private readonly AlbumService $albumService,
         private readonly AnalyticsService $analyticsService,
         private readonly MailerService $mailerService,
     ) {
@@ -84,6 +87,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $articlesCount = $this->articleService->getTotalArticles();
         $mediaCount = $this->mediaService->getTotalMedia();
         $userCount = $this->userService->getTotalUsers();
+        $albumCount = $this->albumService->getTotalAlbums();
 
         return Response::createHtmlResponse(
             template: 'core/backoffice/dashboard',
@@ -96,6 +100,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                     pages: $articlesCount[ArticleType::Page->value] ?? 0,
                     blogPosts: $articlesCount[ArticleType::Blog->value] ?? 0,
                     users: $userCount,
+                    albums: $albumCount,
                 ),
             ),
         );
@@ -215,6 +220,44 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 pageTitle: $localisationUtil->getValue('navAdminArticles'),
                 articles: $articles,
                 pagination: $pagination,
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/albums
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getAlbumsPage(Request $request): Response
+    {
+        $statusIdParam = $request->getGetParam('status');
+        $albumStatus = $statusIdParam && AlbumStatus::tryFrom($statusIdParam)
+            ? AlbumStatus::from($statusIdParam)
+            : null;
+
+        $languageIsoCodeParam = $request->getGetParam('lang');
+        $albumLanguage = $languageIsoCodeParam && Language::tryFrom($languageIsoCodeParam)
+            ? Language::from($languageIsoCodeParam)
+            : null;
+
+        $albums = $this->albumService->filterAlbumBy(
+            languageIsoCodes: $albumLanguage ? [$albumLanguage->value] : [],
+            statusIds: $albumStatus ? [$albumStatus->value] : [],
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy(field: 'id', direction: QueryOrderDirection::DESC)],
+            )
+        );
+
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/album-list',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navAdminAlbums'),
+                albums: $albums,
             ),
         );
     }

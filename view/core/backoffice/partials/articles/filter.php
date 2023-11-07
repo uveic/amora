@@ -23,17 +23,17 @@ $articleStatus = !empty($articleStatusGetParam) && ArticleStatus::tryFrom($artic
     ? ArticleStatus::from($articleStatusGetParam)
     : null;
 
-$filterClass = $articleStatus || $articleLanguage ? '' : 'null';
+$filterClass = $articleStatus || $articleLanguage ? '' : ' null';
 ?>
-    <section id="filter-container" class="<?=$filterClass?>">
-      <div id="filter-header">
+    <section class="filter-container<?=$filterClass?>">
+      <div class="filter-header">
         <h3><?=$responseData->getLocalValue('formFilterTitle')?></h3>
-        <div id="filter-links">
-          <a href="#" id="filter-article-refresh"><img src="/img/svg/arrow-counter-clockwise.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('formFilterClean')?>"></a>
-          <a href="#" id="filter-close"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
+        <div class="filter-links">
+          <a href="#" class="filter-article-refresh"><img src="/img/svg/arrow-counter-clockwise.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('formFilterClean')?>"></a>
+          <a href="#" class="filter-close"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
         </div>
       </div>
-      <div id="filter-form-wrapper">
+      <div class="filter-form-wrapper">
         <div class="field">
           <label for="articleType" class="label"><?=$responseData->getLocalValue('formFilterArticleTypeTitle')?></label>
           <div class="control">
@@ -77,6 +77,6 @@ $filterClass = $articleStatus || $articleLanguage ? '' : 'null';
             </select>
           </div>
         </div>
-        <a href="#" id="filter-article-button" class="button is-link filter-button"><?=$responseData->getLocalValue('formFilterButton')?></a>
+        <a href="#" class="filter-article-button" class="button is-link filter-button"><?=$responseData->getLocalValue('formFilterButton')?></a>
       </div>
     </section>
