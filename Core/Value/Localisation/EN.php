@@ -23,7 +23,6 @@ return [
     'navAdminMedia' => 'Files',
     'navAdminArticles' => 'Pages',
     'navAdminBlogPosts' => 'Blog Posts',
-    'navAdminPartialContent' => 'Partial Content',
     'navAdminArticleOptions' => 'Settings',
     'navAdminPageContentEdit' => 'Copy',
 
@@ -146,6 +145,7 @@ return [
     'globalUploadImage' => 'Upload image(s)',
     'globalUploadMedia' => 'Upload file(s)',
     'globalAddImage' => 'Add image(s)',
+    'globalRemoveImage' => 'Remove image',
     'globalSelectImage' => 'Select image',
     'globalAddParagraph' => 'Add text',
     'globalAddTextTitle' => 'Add title',
@@ -237,4 +237,8 @@ return [
     'mailerTemplateAccountVerification' => 'Account Verification',
     'mailerTemplatePasswordCreation' => 'Password Creation',
     'mailerTemplatePasswordReset' => 'Password Reset',
+
+    'albumFormContent' => 'Content',
+    'albumFormNew' => 'New album',
+    'albumFormMainImageTitle' => 'Main image',
 ];

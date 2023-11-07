@@ -8,6 +8,7 @@ require_once Core::getPathRoot() . '/Core/Module/Article/DataLayer/ArticleDataLa
 require_once Core::getPathRoot() . '/Core/Module/Article/DataLayer/MediaDataLayer.php';
 require_once Core::getPathRoot() . '/Core/Module/Analytics/DataLayer/AnalyticsDataLayer.php';
 require_once Core::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
+require_once Core::getPathRoot() . '/Core/Module/Album/DataLayer/AlbumDataLayer.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserRole.php';

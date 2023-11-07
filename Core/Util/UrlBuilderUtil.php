@@ -27,8 +27,8 @@ class UrlBuilderUtil
     const BACKOFFICE_ARTICLE = '/backoffice/articles/%d';
     const BACKOFFICE_NEW_ARTICLE = '/backoffice/articles/new';
 
-    const BACKOFFICE_ALBUMS = '/backoffice/albums';
-    const BACKOFFICE_ALBUM = '/backoffice/albums/%d';
+    const BACKOFFICE_ALBUM_LIST = '/backoffice/albums';
+    const BACKOFFICE_ALBUM_VIEW = '/backoffice/albums/%d';
     const BACKOFFICE_ALBUM_NEW = '/backoffice/albums/new';
 
     const BACKOFFICE_CONTENT = '/backoffice/content';
@@ -94,22 +94,17 @@ class UrlBuilderUtil
         return self::buildBaseUrl($language) . self::BACKOFFICE_DASHBOARD_URL_PATH;
     }
 
-    public static function buildBackofficeAlbumsUrl(Language $language): string
-    {
-        return self::buildBaseUrl($language) . self::BACKOFFICE_ALBUMS;
-    }
-
-    public static function buildBackofficeImagesUrl(Language $language): string
+    public static function buildBackofficeImageListUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::BACKOFFICE_IMAGES;
     }
 
-    public static function buildBackofficeMediaUrl(Language $language): string
+    public static function buildBackofficeMediaListUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::BACKOFFICE_MEDIA;
     }
 
-    public static function buildBackofficeArticlesUrl(
+    public static function buildBackofficeArticleListUrl(
         Language $language,
         ?ArticleType $type = null,
     ): string {
@@ -123,7 +118,7 @@ class UrlBuilderUtil
         return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_ARTICLE, $articleId);
     }
 
-    public static function buildBackofficeNewArticleUrl(
+    public static function buildBackofficeArticleNewUrl(
         Language $language,
         ArticleType $articleType,
     ): string {
@@ -132,7 +127,7 @@ class UrlBuilderUtil
             . '?atId=' . $articleType->value;
     }
 
-    public static function buildBackofficeContentUrl(Language $language): string
+    public static function buildBackofficeContentListUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::BACKOFFICE_CONTENT;
     }
@@ -151,7 +146,7 @@ class UrlBuilderUtil
             . sprintf(self::BACKOFFICE_CONTENT_TYPE_EDIT, $contentType->value, $contentTypeLanguage->value);
     }
 
-    public static function buildBackofficeUsersUrl(Language $language): string
+    public static function buildBackofficeUserListUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::BACKOFFICE_USERS;
     }
@@ -196,17 +191,22 @@ class UrlBuilderUtil
         return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_USER, $userId);
     }
 
-    public static function buildBackofficeNewUserUrl(Language $language): string
+    public static function buildBackofficeUserNewUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::BACKOFFICE_NEW_USER;
     }
 
-    public static function buildBackofficeAlbumUrl(Language $language, int $albumId): string
+    public static function buildBackofficeAlbumListUrl(Language $language): string
     {
-        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_ALBUM, $albumId);
+        return self::buildBaseUrl($language) . self::BACKOFFICE_ALBUM_LIST;
     }
 
-    public static function buildBackofficeNewAAlbumUrl(Language $language): string
+    public static function buildBackofficeAlbumViewUrl(Language $language, int $albumId): string
+    {
+        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_ALBUM_VIEW, $albumId);
+    }
+
+    public static function buildBackofficeAlbumNewUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::BACKOFFICE_ALBUM_NEW;
     }

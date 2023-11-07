@@ -192,6 +192,23 @@
         }
       }
     },
+    "/backoffice/albums/new": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the page",
+        "description": "",
+        "operationId": "getNewAlbumPage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "/backoffice/images": {
       "get": {
         "tags": [],

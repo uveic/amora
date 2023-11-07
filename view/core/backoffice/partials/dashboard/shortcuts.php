@@ -29,7 +29,7 @@ foreach (Core::getAllLanguages() as $language) {
               <span><?=$responseData->getLocalValue('pageContentEditTitleBlogBottom')?>:</span>
               <span><?=implode('', $partialContentLinks)?></span>
             </div>
-            <a href="<?=UrlBuilderUtil::buildBackofficeNewArticleUrl($responseData->siteLanguage, ArticleType::Blog)?>">
+            <a href="<?=UrlBuilderUtil::buildBackofficeArticleNewUrl($responseData->siteLanguage, ArticleType::Blog)?>">
               <img class="img-svg img-svg-40" width="40" height="40" src="/img/svg/article-medium.svg" alt="<?=$responseData->getLocalValue('navAdminBlogPosts')?>">
               <?=$responseData->getLocalValue('dashboardNewBlogPost')?>
             </a>

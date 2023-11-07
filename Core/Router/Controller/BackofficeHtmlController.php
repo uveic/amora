@@ -263,6 +263,25 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     }
 
     /**
+     * Endpoint: /backoffice/albums/new
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getNewAlbumPage(Request $request): Response
+    {
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/album-edit',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('navAdminAlbums'),
+            ),
+        );
+    }
+
+    /**
      * Endpoint: /backoffice/articles/new
      * Method: GET
      *
