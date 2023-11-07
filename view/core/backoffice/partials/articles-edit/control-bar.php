@@ -10,8 +10,8 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 $articleType = ArticleHtmlGenerator::getArticleType($responseData);
 $closeUrl = match($articleType) {
-    ArticleType::Page => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Page),
-    ArticleType::Blog => UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Blog),
+    ArticleType::Page => UrlBuilderUtil::buildBackofficeArticleListUrl($responseData->siteLanguage, ArticleType::Page),
+    ArticleType::Blog => UrlBuilderUtil::buildBackofficeArticleListUrl($responseData->siteLanguage, ArticleType::Blog),
 };
 
 $this->insert('partials/articles-edit/modal-add-image', ['responseData' => $responseData]);

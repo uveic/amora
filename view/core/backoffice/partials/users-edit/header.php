@@ -5,7 +5,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
-$closeUrl = UrlBuilderUtil::buildBackofficeUsersUrl($responseData->siteLanguage);
+$closeUrl = UrlBuilderUtil::buildBackofficeUserListUrl($responseData->siteLanguage);
 
 ?>
     <section class="page-header">

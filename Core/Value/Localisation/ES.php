@@ -23,7 +23,6 @@ return [
     'navAdminMedia' => 'Archivos',
     'navAdminArticles' => 'Páginas',
     'navAdminBlogPosts' => 'Entradas blog',
-    'navAdminPartialContent' => 'Contenido',
     'navAdminArticleOptions' => 'Configuración',
     'navAdminPageContentEdit' => 'Textos',
 
@@ -146,6 +145,7 @@ return [
     'globalUploadImage' => 'Subir imagen(es)',
     'globalUploadMedia' => 'Subir archivo(s)',
     'globalAddImage' => 'Añadir imagen(es)',
+    'globalRemoveImage' => 'Eliminar imagen',
     'globalSelectImage' => 'Seleccionar imagen',
     'globalAddParagraph' => 'Añadir párrafo',
     'globalAddTextTitle' => 'Añadir título',
@@ -237,4 +237,8 @@ return [
     'mailerTemplateAccountVerification' => 'Verificar correo electrónico',
     'mailerTemplatePasswordCreation' => 'Crear contraseña',
     'mailerTemplatePasswordReset' => 'Restablecer contraseña',
+
+    'albumFormContent' => 'Contenido',
+    'albumFormNew' => 'Nuevo álbum',
+    'albumFormMainImageTitle' => 'Imagen principal',
 ];

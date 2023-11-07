@@ -161,7 +161,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerStoreUserSuccessResponse(
             success: true,
             id: $newUser?->id,
-            redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguage),
+            redirect: UrlBuilderUtil::buildBackofficeUserListUrl($request->siteLanguage),
         );
     }
 
@@ -269,7 +269,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerUpdateUserSuccessResponse(
             success: true,
-            redirect: UrlBuilderUtil::buildBackofficeUsersUrl($request->siteLanguage),
+            redirect: UrlBuilderUtil::buildBackofficeUserListUrl($request->siteLanguage),
         );
     }
 
