@@ -4,7 +4,9 @@ namespace Amora\Core\Module\Album\Datalayer;
 
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumPath;
+use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
+use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Util\Logger;
@@ -179,5 +181,34 @@ class AlbumDataLayer
         }
 
         return $output;
+    }
+
+    public function storeAlbum(Album $item): Album
+    {
+        $res = $this->db->insert(
+            tableName: self::ALBUM_TABLE,
+            data: $item->asArray(),
+        );
+
+        $item->id = $res;
+
+        return $item;
+    }
+
+    public function getTotalAlbums(): int
+    {
+        return (int)$this->db->fetchColumn(
+            '
+                SELECT COUNT(*) AS total
+                FROM ' . self::ALBUM_TABLE . ' AS a
+                WHERE a.status_id IN (:published, :draft, :private, :unlisted);
+            ',
+            [
+                ':published' => AlbumStatus::Published->value,
+                ':draft' => AlbumStatus::Draft->value,
+                ':private' => AlbumStatus::Private->value,
+                ':unlisted' => AlbumStatus::Unlisted->value,
+            ]
+        );
     }
 }

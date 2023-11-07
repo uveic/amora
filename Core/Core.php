@@ -63,6 +63,7 @@ class Core
         require_once self::$pathToRoot . '/Core/Module/Article/ArticleCore.php';
         require_once self::$pathToRoot . '/Core/Module/Analytics/AnalyticsCore.php';
         require_once self::$pathToRoot . '/Core/Module/Mailer/MailerCore.php';
+        require_once self::$pathToRoot . '/Core/Module/Album/AlbumCore.php';
 
         // Application include paths
         set_include_path(get_include_path() . PATH_SEPARATOR . self::$pathToRoot);

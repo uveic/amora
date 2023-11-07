@@ -2,13 +2,14 @@
 
 namespace Amora\Core\Entity\Util;
 
-class DashboardCount
+readonly class DashboardCount
 {
     public function __construct(
-        public readonly int $images,
-        public readonly int $files,
-        public readonly int $pages,
-        public readonly int $blogPosts,
-        public readonly int $users,
+        public int $images,
+        public int $files,
+        public int $pages,
+        public int $blogPosts,
+        public int $users,
+        public int $albums,
     ) {}
 }

@@ -27,16 +27,15 @@ class AlbumCore extends Core
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/Album.php';
+                require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumPath.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/DataLayer/MediaDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/DataLayer/AlbumDataLayer.php';
                 return new AlbumDataLayer(
                     db: self::getDb(),
                     logger: self::getAlbumLogger(),
-                    mediaDataLayer:  self::getMediaDataLayer(),
-                    tagDataLayer:  self::getTagDataLayer(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -45,25 +44,15 @@ class AlbumCore extends Core
         return self::getInstance(
             className: 'AlbumService',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Util/Helper/AlbumHtmlGenerator.php';
-                require_once self::getPathRoot() . '/Core/Module/Album/Value/PageContentType.php';
-                require_once self::getPathRoot() . '/App/Value/AppPageContentType.php';
-                require_once self::getPathRoot() . '/Core/Module/Album/Model/PageContent.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Value/AlbumStatus.php';
-                require_once self::getPathRoot() . '/Core/Module/Album/Value/AlbumSectionType.php';
-                require_once self::getPathRoot() . '/Core/Module/Album/Value/MediaType.php';
-                require_once self::getPathRoot() . '/Core/Module/Album/Value/MediaStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/Album/Value/Template.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/Album.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumPath.php';
-                require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumSection.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Service/AlbumService.php';
                 return new AlbumService(
-                    logger:  self::getAlbumLogger(),
-                    articleDataLayer:  self::getAlbumDataLayer(),
-                    tagDataLayer:  self::getTagDataLayer(),
+                    albumDataLayer:  self::getAlbumDataLayer(),
                 );
             },
-            isSingleton: true,
         );
     }
 }

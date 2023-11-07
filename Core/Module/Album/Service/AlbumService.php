@@ -42,4 +42,13 @@ readonly class AlbumService
             queryOptions: $queryOptions,
         );
     }
+
+    public function storeAlbum(Album $item): Album
+    {
+        return $this->albumDataLayer->storeAlbum($item);
+    }
+
+    public function getTotalAlbums(): int {
+        return $this->albumDataLayer->getTotalAlbums();
+    }
 }

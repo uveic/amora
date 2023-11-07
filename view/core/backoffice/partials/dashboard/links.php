@@ -24,6 +24,13 @@ use Amora\Core\Util\UrlBuilderUtil;
                 <?=$this->e($responseData->getLocalValue('navAdminMedia'))?>
               </span>
             </a>
+            <a href="<?=UrlBuilderUtil::buildBackofficeAlbumsUrl($responseData->siteLanguage)?>">
+              <span class="value"><?=$responseData->dashboardCount->albums?></span>
+              <span>
+                <img class="img-svg img-svg-20 m-r-05" width="20" height="20" src="/img/svg/files.svg" alt="<?=$responseData->getLocalValue('navAdminAlbums')?>">
+                <?=$this->e($responseData->getLocalValue('navAdminAlbums'))?>
+              </span>
+            </a>
             <a href="<?=UrlBuilderUtil::buildBackofficeArticlesUrl($responseData->siteLanguage, ArticleType::Page)?>">
               <span class="value"><?=$responseData->dashboardCount->pages?></span>
               <span>

@@ -818,28 +818,28 @@ document.querySelectorAll('.tag-result-selected-delete').forEach(i => {
   i.addEventListener('click', (e) => handleRemoveArticleTag(e));
 });
 
-document.querySelectorAll('#filter-close').forEach(a => {
+document.querySelectorAll('.filter-close').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
-    document.querySelector('#filter-container').classList.add('null');
+    document.querySelector('.filter-container').classList.add('null');
   });
 });
 
-document.querySelectorAll('#filter-open').forEach(a => {
+document.querySelectorAll('.filter-open').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
-    document.querySelector('#filter-container').classList.remove('null');
+    document.querySelector('.filter-container').classList.remove('null');
   });
 });
 
-document.querySelectorAll('#filter-refresh').forEach(a => {
+document.querySelectorAll('.filter-refresh').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
     window.location.href = window.location.origin + window.location.pathname;
   });
 });
 
-document.querySelectorAll('#filter-article-refresh').forEach(a => {
+document.querySelectorAll('.filter-article-refresh').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
     const articleTypeId = document.querySelector('select[name="articleType"]').value;
@@ -847,7 +847,7 @@ document.querySelectorAll('#filter-article-refresh').forEach(a => {
   });
 });
 
-document.querySelectorAll('#filter-article-button').forEach(a => {
+document.querySelectorAll('.filter-article-button').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
 
@@ -870,7 +870,7 @@ document.querySelectorAll('#filter-article-button').forEach(a => {
     }
 
     if (!query.entries()) {
-      document.querySelector('#filter-container').classList.remove('null');
+      document.querySelector('.filter-container').classList.remove('null');
       return;
     }
 
@@ -1125,6 +1125,34 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
       newParagraph.innerHTML = '<br>';
       container.appendChild(newParagraph);
     }
+  });
+});
+
+document.querySelectorAll('.filter-album-button').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const status = document.querySelector('select[name="albumStatus"]').value;
+    const lang = document.querySelector('select[name="albumLanguageIsoCode"]').value;
+
+    let query = new URLSearchParams();
+
+    if (status.length) {
+      query.append('status', status);
+    }
+
+    if (lang.length) {
+      query.append('lang', lang);
+    }
+
+    if (!query.entries()) {
+      document.querySelector('.filter-container').classList.remove('null');
+      return;
+    }
+
+    const queryString = query.entries() ? '?' + query.toString() : '';
+
+    window.location.href = window.location.origin + window.location.pathname + queryString;
   });
 });
 
