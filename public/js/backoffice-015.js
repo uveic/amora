@@ -1268,4 +1268,37 @@ document.querySelectorAll('.album-status-dd-option').forEach(op => {
   });
 });
 
+document.querySelectorAll('.album-add-section-js').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+
+    const modal = document.querySelector('.album-add-section-modal-js');
+    modal.querySelector('.modal-loading').classList.add('null');
+    modal.querySelector('.modal-inner').classList.remove('null');
+    modal.classList.remove('null');
+  });
+});
+
+document.querySelectorAll('#album-add-section-form-js').forEach(f => {
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const albumId = Number.parseInt(f.querySelector('input[name="albumId"]').value);
+
+    const payload = {
+      mainMediaId: 1,
+      titleHtml: f.querySelector('input[name="albumSectionTitle"]').value.trim(),
+      contentHtml: f.querySelector('.medium-editor-content').innerHTML.trim(),
+    };
+
+    xhr.post('/back/album/' + albumId + '/section', JSON.stringify(payload))
+      .then(response => {
+        const modal = document.querySelector('.album-add-section-modal-js');
+        const sectionContainer = document.querySelector('.album-sections-wrapper');
+        sectionContainer.innerHTML += response.html;
+        modal.classList.add('null');
+      });
+  });
+});
+
 export {handleDropdownOptionClick};

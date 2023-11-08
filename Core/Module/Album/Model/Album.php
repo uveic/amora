@@ -30,7 +30,7 @@ class Album
     public static function fromArray(array $data): self
     {
         return new self(
-            id: (int)$data['album_id'],
+            id: isset($data['album_id']) ? (int)$data['album_id'] : null,
             language: Language::from($data['album_language_iso_code']),
             user: User::fromArray($data),
             status: AlbumStatus::from($data['album_status_id']),

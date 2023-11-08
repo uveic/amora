@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Album\Datalayer;
 
 use Amora\Core\Module\Album\Model\Album;
+use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Module\Album\Model\AlbumSlug;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
@@ -210,6 +211,18 @@ class AlbumDataLayer
             id: $item->id,
             data: $item->asArray(),
         );
+    }
+
+    public function storeAlbumSection(AlbumSection $item): AlbumSection
+    {
+        $res = $this->db->insert(
+            tableName: self::ALBUM_SECTION_TABLE,
+            data: $item->asArray(),
+        );
+
+        $item->id = $res;
+
+        return $item;
     }
 
     public function storeAlbumSlug(AlbumSlug $item): AlbumSlug

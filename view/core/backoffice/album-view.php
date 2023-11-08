@@ -33,9 +33,10 @@ $publicLinkHtml = $album->status->isPublic()
     ? '<a href="' . $albumPublicLink . '">' . $albumPublicLink . '</a>'
     : $albumPublicLink;
 
+$this->insert('partials/albums/modal-add-section', ['responseData' => $responseData]);
+
 ?>
   <main>
-    <input type="hidden" name="albumId" value="<?=$album->id?>">
     <div id="feedback" class="feedback null"></div>
     <section class="form-content-container">
       <section class="form-content-wrapper">
@@ -67,15 +68,18 @@ $publicLinkHtml = $album->status->isPublic()
             <span class="value one-line"><?=$album->language->getIconFlag('m-r-05') . $album->language->getName()?></span>
           </div>
         </section>
-        <section class="flex-child">
-          <a class="form-edit" href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a>
-          <h2 class="content-title"><?=$album->titleHtml?></h2>
-          <div class="m-t-2"><?=StringUtil::nl2p($album->contentHtml)?></div>
-        </section>
+        <section class="album-sections-wrapper"></section>
+        <a href="#" class="album-add-section-js button is-standard">
+          <img src="/img/svg/image-white.svg" class="img-svg img-svg-30" width="20" height="20" alt="Nova sección">
+          <span class="one-line">Nova sección</span>
+        </a>
       </section>
       <section class="flex-child activity-wrapper">
-        <div class="card-info-item main-image-wrapper">
-          <span class="title">Imaxe destacada:</span>
+        <a class="form-edit" href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a>
+        <div class="album-title"><?=$album->titleHtml?></div>
+        <div class="album-content"><?=StringUtil::nl2p($album->contentHtml)?></div>
+        <div class="card-info-item album-image">
+          <span class="title"><?=$responseData->getLocalValue('editorMainImage')?>:</span>
           <div class="main-image-container main-image-container-full">
             <img src="<?=$album->mainMedia->getPathWithNameMedium()?>" alt="<?=$album->mainMedia->buildAltText()?>">
           </div>

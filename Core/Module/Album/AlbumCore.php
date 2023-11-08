@@ -26,6 +26,7 @@ class AlbumCore extends Core
             className: 'AlbumDataLayer',
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
+                require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumSection.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/Album.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumSlug.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
@@ -46,6 +47,7 @@ class AlbumCore extends Core
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/Album/Value/AlbumStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Value/Template.php';
+                require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumSection.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/Album.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumSlug.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Service/AlbumService.php';
