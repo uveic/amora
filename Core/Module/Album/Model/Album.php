@@ -20,11 +20,11 @@ class Album
         public readonly AlbumStatus $status,
         public readonly Media $mainMedia,
         public readonly Template $template,
+        public readonly AlbumSlug $slug,
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt,
         public readonly ?string $titleHtml,
         public readonly ?string $contentHtml,
-        public readonly string $path,
     ) {}
 
     public static function fromArray(array $data): self
@@ -35,12 +35,12 @@ class Album
             user: User::fromArray($data),
             status: AlbumStatus::from($data['album_status_id']),
             mainMedia: Media::fromArray($data),
-            template: Template::from($data['album_type_id']),
+            template: Template::from($data['album_template_id']),
+            slug: AlbumSlug::fromArray($data),
             createdAt: DateUtil::convertStringToDateTimeImmutable($data['album_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($data['album_updated_at']),
-            titleHtml: $data['album_title'] ?? null,
+            titleHtml: $data['album_title_html'] ?? null,
             contentHtml: $data['album_content_html'],
-            path: $data['album_path'],
         );
     }
 
@@ -53,11 +53,11 @@ class Album
             'status_id' => $this->status->value,
             'main_media_id' => $this->mainMedia->id,
             'template_id' => $this->template->value,
+            'slug_id' => $this->slug->id,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'title_html' => $this->titleHtml,
             'content_html' => $this->contentHtml,
-            'path' => $this->path,
         ];
     }
 

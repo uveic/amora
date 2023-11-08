@@ -26,7 +26,7 @@ $closeLink = $responseData->pageContent
 
 $this->layout('base', ['responseData' => $responseData]);
 
-$this->insert('partials/articles-edit/modal-select-main-image', ['responseData' => $responseData]);
+$this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
 ?>
 <main>
   <div id="feedback" class="feedback null"></div>
@@ -57,7 +57,7 @@ $this->insert('partials/articles-edit/modal-select-main-image', ['responseData' 
 <?php if ($pageContent?->mainImage) { ?>
           <img class="article-main-image" data-media-id="<?=$pageContent->mainImage->id?>" src="<?=$pageContent->mainImage->getPathWithNameMedium()?>" alt="<?=$pageContent->mainImage->buildAltText()?>">
 <?php } ?>
-          <a href="#" class="article-main-image-button article-main-image-button-absolute select-media-action" data-event-listener-action="selectMainImage">
+          <a href="#" class="article-main-image-button article-main-image-button-absolute select-media-action" data-event-listener-action="articleSelectMainImage">
             <img class="img-svg img-svg-30" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalSelectImage')?>" title="<?=$responseData->getLocalValue('globalSelectImage')?>">
             <span><?= $pageContent?->mainImage ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('globalSelectImage') ?></span>
           </a>

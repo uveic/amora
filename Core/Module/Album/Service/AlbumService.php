@@ -3,9 +3,18 @@
 namespace Amora\Core\Module\Album\Service;
 
 use Amora\App\Value\Language;
+use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\Album\Datalayer\AlbumDataLayer;
 use Amora\Core\Module\Album\Model\Album;
+use Amora\Core\Module\Album\Model\AlbumSlug;
+use Amora\Core\Module\Album\Value\AlbumStatus;
+use Amora\Core\Module\Album\Value\Template;
+use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\User\Model\User;
+use Amora\Core\Util\Logger;
+use Amora\Core\Util\StringUtil;
+use DateTimeImmutable;
 
 readonly class AlbumService
 {
@@ -30,7 +39,7 @@ readonly class AlbumService
         array $languageIsoCodes = [],
         array $statusIds = [],
         array $templateIds = [],
-        ?string $path = null,
+        ?string $slug = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->albumDataLayer->filterAlbumBy(
@@ -38,14 +47,176 @@ readonly class AlbumService
             languageIsoCodes: $languageIsoCodes,
             statusIds: $statusIds,
             templateIds: $templateIds,
-            path: $path,
+            slug: $slug,
             queryOptions: $queryOptions,
         );
     }
 
-    public function storeAlbum(Album $item): Album
+    public function getSlugForAlbum(string $slug): ?AlbumSlug
     {
-        return $this->albumDataLayer->storeAlbum($item);
+        $res = $this->albumDataLayer->filterAlbumSlugBy(
+            slug: $slug,
+        );
+
+        return $res[0] ?? null;
+    }
+
+    public function workflowStoreAlbum(
+        Language $language,
+        Template $template,
+        User $user,
+        Media $mainMedia,
+        string $titleHtml,
+        ?string $contentHtml,
+    ): Album {
+        $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
+            function () use (
+                $language,
+                $template,
+                $user,
+                $mainMedia,
+                $titleHtml,
+                $contentHtml,
+            ) {
+                $now = new DateTimeImmutable();
+                $resStore = $this->albumDataLayer->storeAlbum(
+                    new Album(
+                        id: null,
+                        language: $language,
+                        user: $user,
+                        status: AlbumStatus::Draft,
+                        mainMedia: $mainMedia,
+                        template: $template,
+                        slug: $this->getOrStoreAvailableSlugForAlbum(
+                            title: $titleHtml,
+                        ),
+                        createdAt: $now,
+                        updatedAt: $now,
+                        titleHtml: $titleHtml,
+                        contentHtml: $contentHtml,
+                    ),
+                );
+
+                $resSlug = $this->albumDataLayer->updateAlbumSlugRelation(
+                    slugId: $resStore->slug->id,
+                    albumId: $resStore->id,
+                );
+
+                if (!$resSlug) {
+                    return new Feedback(
+                        isSuccess: true,
+                        message: 'Error updating album/slug relation',
+                    );
+                }
+
+                return new Feedback(
+                    isSuccess: true,
+                    response: $resStore,
+                );
+            }
+        );
+
+        return $resTransaction->response;
+    }
+
+    public function workflowUpdateAlbum(
+        Album $existingAlbum,
+        Language $language,
+        Template $template,
+        Media $mainMedia,
+        string $titleHtml,
+        ?string $contentHtml,
+    ): Album {
+        $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
+            function () use (
+                $existingAlbum,
+                $language,
+                $template,
+                $mainMedia,
+                $titleHtml,
+                $contentHtml,
+            ) {
+                $now = new DateTimeImmutable();
+                $newAlbum = new Album(
+                    id: $existingAlbum->id,
+                    language: $language,
+                    user: $existingAlbum->user,
+                    status: $existingAlbum->status,
+                    mainMedia: $mainMedia,
+                    template: $template,
+                    slug: $this->getOrStoreAvailableSlugForAlbum(
+                        title: $titleHtml,
+                        existingSlug: $existingAlbum->slug,
+                    ),
+                    createdAt: $existingAlbum->createdAt,
+                    updatedAt: $now,
+                    titleHtml: $titleHtml,
+                    contentHtml: $contentHtml,
+                );
+
+                $resStore = $this->albumDataLayer->updateAlbum($newAlbum);
+                if (!$resStore) {
+                    return new Feedback(
+                        isSuccess: true,
+                        message: 'Error updating album. ID: ' . $newAlbum->id,
+                    );
+                }
+
+                $resSlug = $this->albumDataLayer->updateAlbumSlugRelation(
+                    slugId: $newAlbum->slug->id,
+                    albumId: $newAlbum->id,
+                );
+
+                if (!$resSlug) {
+                    return new Feedback(
+                        isSuccess: true,
+                        message: 'Error updating album/slug relation',
+                    );
+                }
+
+                return new Feedback(
+                    isSuccess: true,
+                    response: $newAlbum,
+                );
+            }
+        );
+
+        return $resTransaction->response;
+    }
+
+    public function getOrStoreAvailableSlugForAlbum(
+        ?string $title = null,
+        ?AlbumSlug $existingSlug = null,
+        ?int $eventId = null,
+    ): AlbumSlug {
+        $slug = StringUtil::generateSlug($title);
+
+        $count = 0;
+        do {
+            $validSlug = $slug . ($count > 0 ? '-' . $count : '');
+            $res = $this->getSlugForAlbum($validSlug);
+            if ($existingSlug && $res && $res->id === $existingSlug->id) {
+                return $existingSlug;
+            }
+            $count++;
+        } while(!empty($res));
+
+        return $this->albumDataLayer->storeAlbumSlug(
+            new AlbumSlug(
+                id: null,
+                albumId: $eventId,
+                slug: $validSlug,
+                createdAt: new DateTimeImmutable(),
+            ),
+        );
+    }
+
+    public function workflowUpdateAlbumStatus(int $albumId, AlbumStatus $newStatus): bool
+    {
+        return $this->albumDataLayer->updateAlbumFields(
+            albumId: $albumId,
+            newStatus: $newStatus,
+        );
     }
 
     public function getTotalAlbums(): int {

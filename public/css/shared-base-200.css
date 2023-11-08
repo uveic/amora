@@ -548,8 +548,9 @@ a.link-title:focus {
 
 .form-content-wrapper {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column nowrap;
   width: 100%;
+  gap: 1rem;
 }
 
 .flex-child {

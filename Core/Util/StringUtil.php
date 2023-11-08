@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Util;
 
+use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Throwable;
@@ -331,5 +332,21 @@ final class StringUtil
         }
 
         return $text;
+    }
+
+    public static function generateSlug(?string $text = null): string
+    {
+        $slug = $text
+            ? strtolower(StringUtil::cleanString($text))
+            : strtolower(StringUtil::generateRandomString(64));
+
+        $count = 0;
+        do {
+            $validSlug = $slug . ($count > 0 ? '-' . $count : '');
+            $res = in_array($validSlug, AppRouter::getReservedPaths());
+            $count++;
+        } while($res);
+
+        return $validSlug;
     }
 }

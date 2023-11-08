@@ -19,7 +19,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         public readonly ?array $articles = [],
         public readonly ?Article $previousBlogPost = null,
         public readonly ?Article $nextBlogPost = null,
-        public readonly ?array $albums = [],
+        public readonly array $albums = [],
         public readonly ?Album $album = null,
         public readonly ?PageContent $postBottomContent = null,
         public readonly ?Feedback $feedback = null,

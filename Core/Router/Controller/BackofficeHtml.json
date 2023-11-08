@@ -192,6 +192,56 @@
         }
       }
     },
+    "/backoffice/albums/{albumId}": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the page",
+        "description": "",
+        "operationId": "getViewAlbumPage",
+        "parameters": [
+          {
+            "name": "albumId",
+            "in": "path",
+            "description": "Album ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/backoffice/albums/{albumId}/edit": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the page",
+        "description": "",
+        "operationId": "getEditAlbumPage",
+        "parameters": [
+          {
+            "name": "albumId",
+            "in": "path",
+            "description": "Album ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "/backoffice/albums/new": {
       "get": {
         "tags": [],

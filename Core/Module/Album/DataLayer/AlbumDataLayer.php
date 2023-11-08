@@ -3,12 +3,13 @@
 namespace Amora\Core\Module\Album\Datalayer;
 
 use Amora\Core\Module\Album\Model\Album;
-use Amora\Core\Module\Album\Model\AlbumPath;
+use Amora\Core\Module\Album\Model\AlbumSlug;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\User\DataLayer\UserDataLayer;
@@ -20,7 +21,7 @@ class AlbumDataLayer
     const ALBUM_TABLE = 'core_album';
     const ALBUM_SECTION_TABLE = 'core_album_section';
     const ALBUM_MEDIA_TABLE = 'core_album_media';
-    const ALBUM_PATH_TABLE = 'core_album_path';
+    const ALBUM_SLUG_TABLE = 'core_album_slug';
 
     const ALBUM_STATUS_TABLE = 'core_album_status';
     const ALBUM_TEMPLATE_TABLE = 'core_album_template';
@@ -40,7 +41,7 @@ class AlbumDataLayer
         array $languageIsoCodes = [],
         array $statusIds = [],
         array $templateIds = [],
-        ?string $path = null,
+        ?string $slug = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -65,8 +66,8 @@ class AlbumDataLayer
             'a.updated_at AS album_updated_at',
             'a.title_html AS album_title_html',
             'a.content_html AS album_content_html',
-            'a.path AS album_path',
 
+            'u.id AS user_id',
             'u.status_id AS user_status_id',
             'u.language_iso_code AS user_language_iso_code',
             'u.role_id AS user_role_id',
@@ -92,11 +93,17 @@ class AlbumDataLayer
             'm.caption_html AS media_caption_html',
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
+
+            'als.id AS album_slug_id',
+            'als.album_id AS album_slug_album_id',
+            'als.created_at AS album_slug_created_at',
+            'als.slug AS album_slug_slug',
         ];
 
         $joins = ' FROM ' . self::ALBUM_TABLE . ' AS a';
         $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = a.user_id';
-        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = a.main_media_id';
+        $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = a.main_media_id';
+        $joins .= ' INNER JOIN ' . self::ALBUM_SLUG_TABLE . ' AS als ON als.id = a.slug_id';
 
         $where = ' WHERE 1';
 
@@ -116,9 +123,9 @@ class AlbumDataLayer
             $where .= $this->generateWhereSqlCodeForIds($params, $templateIds, 'a.template_id', 'templateId');
         }
 
-        if (isset($path)) {
-            $where .= ' AND a.path = :albumPath';
-            $params[':albumPath'] = $path;
+        if (isset($slug)) {
+            $where .= ' AND als.slug = :albumSlug';
+            $params[':albumSlug'] = $slug;
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
@@ -135,9 +142,9 @@ class AlbumDataLayer
         return $output;
     }
 
-    public function filterAlbumPathBy(
+    public function filterAlbumSlugBy(
         array $albumIds = [],
-        ?string $path = null,
+        ?string $slug = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -145,28 +152,29 @@ class AlbumDataLayer
         }
 
         $orderByMapping = [
-            'created_at' => 'ap.created_at',
+            'id' => 'als.id',
+            'created_at' => 'als.created_at',
         ];
 
         $params = [];
         $baseSql = 'SELECT ';
         $fields = [
-            'ap.id AS album_path_id',
-            'ap.album_id AS album_path_album_id',
-            'ap.created_at AS album_path_created_at',
-            'ap.path AS album_path_path',
+            'als.id AS album_slug_id',
+            'als.album_id AS album_slug_album_id',
+            'als.created_at AS album_slug_created_at',
+            'als.slug AS album_slug_slug',
         ];
 
-        $joins = ' FROM ' . self::ALBUM_PATH_TABLE . ' AS ap';
+        $joins = ' FROM ' . self::ALBUM_SLUG_TABLE . ' AS `als`';
         $where = ' WHERE 1';
 
         if ($albumIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $albumIds, 'ap.album_id', 'albumId');
+            $where .= $this->generateWhereSqlCodeForIds($params, $albumIds, 'als.album_id', 'albumId');
         }
 
-        if ($path) {
-            $where .= ' AND ap.path = :albumPath';
-            $params[':albumPath'] = $path;
+        if ($slug) {
+            $where .= ' AND als.slug = :albumSlug';
+            $params[':albumSlug'] = $slug;
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
@@ -177,7 +185,7 @@ class AlbumDataLayer
 
         $output = [];
         foreach ($res as $item) {
-            $output[] = AlbumPath::fromArray($item);
+            $output[] = AlbumSlug::fromArray($item);
         }
 
         return $output;
@@ -193,6 +201,67 @@ class AlbumDataLayer
         $item->id = $res;
 
         return $item;
+    }
+
+    public function updateAlbum(Album $item): bool
+    {
+        return $this->db->update(
+            tableName: self::ALBUM_TABLE,
+            id: $item->id,
+            data: $item->asArray(),
+        );
+    }
+
+    public function storeAlbumSlug(AlbumSlug $item): AlbumSlug
+    {
+        $res = $this->db->insert(
+            tableName: self::ALBUM_SLUG_TABLE,
+            data: $item->asArray(),
+        );
+
+        $item->id = $res;
+
+        return $item;
+    }
+
+    public function updateAlbumSlugRelation(int $slugId, int $albumId): bool
+    {
+        return $this->db->update(
+            tableName: self::ALBUM_SLUG_TABLE,
+            id: $slugId,
+            data: [
+                'album_id' => $albumId,
+            ],
+        );
+    }
+
+    public function updateAlbumFields(
+        int $albumId,
+        ?AlbumStatus $newStatus = null,
+    ): bool {
+        $params = [];
+        $fields = [];
+
+        if ($newStatus) {
+            $fields[] = 'status_id = :newStatusId';
+            $params[':newStatusId'] = $newStatus->value;
+        }
+
+        if (!$params) {
+            return true;
+        }
+
+        $params[':albumId'] = $albumId;
+        $params[':updatedAt'] = DateUtil::getCurrentDateForMySql();
+        $fields[] = 'updated_at = :updatedAt';
+
+        $sql = '
+            UPDATE ' . self::ALBUM_TABLE . '
+            SET ' . implode(',', $fields) . '
+            WHERE id = :albumId
+        ';
+
+        return $this->db->execute($sql, $params);
     }
 
     public function getTotalAlbums(): int

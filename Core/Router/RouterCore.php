@@ -76,6 +76,7 @@ class RouterCore extends Core
             className: 'BackofficeHtmlController',
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleHtmlGenerator.php';
+                require_once self::getPathRoot() . '/Core/Util/Helper/AlbumHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/UserHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/MailerHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseData.php';
@@ -117,6 +118,7 @@ class RouterCore extends Core
                     articleService: ArticleCore::getArticleService(),
                     tagService: ArticleCore::getTagService(),
                     mediaService: ArticleCore::getMediaService(),
+                    albumService: AlbumCore::getAlbumService(),
                 );
             },
         );

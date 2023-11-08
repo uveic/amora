@@ -311,8 +311,12 @@ const displayImage = (image) => {
   modalClose.classList.remove('null');
 };
 
-const displayImagePopup = (e, mediaId, next = false, direction = null) => {
+const displayImagePopup = (e) => {
   e.preventDefault();
+
+  const mediaId = e.currentTarget.mediaId;
+  const next = e.currentTarget.next ?? false;
+  const direction = e.currentTarget.direction ?? null;
 
   const modal = document.querySelector('.image-modal');
   const loadingContainer = modal.querySelector('.image-loading');
@@ -347,15 +351,17 @@ const displayImagePopup = (e, mediaId, next = false, direction = null) => {
     });
 };
 
-const insertImageInArticle = (imageEl) => {
+const insertImageInArticle = (e) => {
   const container = document.querySelector('.medium-editor-content');
+  const mediaId = e.currentTarget.mediaId;
+  const existingImage = document.querySelector('img[data-media-id="' + mediaId + '"]');
 
   const newImage = new Image();
   newImage.className = 'article-image';
-  newImage.src = imageEl.dataset.pathMedium;
-  newImage.dataset.mediaId = imageEl.dataset.mediaId;
-  newImage.alt = imageEl.alt;
-  newImage.title = imageEl.title;
+  newImage.src = existingImage.dataset.pathMedium;
+  newImage.dataset.mediaId = existingImage.dataset.mediaId;
+  newImage.alt = existingImage.alt;
+  newImage.title = existingImage.title;
 
   const imageCaption = document.createElement('p');
   imageCaption.className = 'article-image-caption';
@@ -374,9 +380,11 @@ const insertImageInArticle = (imageEl) => {
   imageCaption.focus();
 };
 
-const selectMainImage = (e, sourceImgEl) => {
+const articleSelectMainImage = (e) => {
   const imageContainer = document.querySelector('.article-main-image-container');
   const targetImg = imageContainer.querySelector('img.article-main-image');
+  const mediaId = e.currentTarget.mediaId;
+  const sourceImgEl = document.querySelector('img[data-media-id="' + mediaId + '"]');
 
   if (targetImg) {
     targetImg.src = sourceImgEl.src;
@@ -394,17 +402,49 @@ const selectMainImage = (e, sourceImgEl) => {
   document.querySelector('.article-main-image-wrapper').scrollIntoView();
 };
 
+const albumSelectMainMedia = (e) => {
+  const mediaId = e.currentTarget.mediaId;
+
+  const imageContainer = document.querySelector('.main-image-container');
+  const targetImg = imageContainer.querySelector('.main-image');
+  const sourceImg = document.querySelector('img[data-media-id="' + mediaId + '"]');
+
+  if (targetImg) {
+    targetImg.src = sourceImg.dataset.pathMedium;
+    targetImg.alt = sourceImg.alt;
+    targetImg.title = sourceImg.title;
+    targetImg.dataset.mediaId = sourceImg.dataset.mediaId;
+    targetImg.className = 'main-image';
+  } else {
+    const newImage = new Image();
+    newImage.src = sourceImg.dataset.pathMedium;
+    newImage.alt = sourceImg.alt;
+    newImage.title = sourceImg.title;
+    newImage.dataset.mediaId = sourceImg.dataset.mediaId;
+    newImage.className = 'main-image';
+    imageContainer.appendChild(newImage);
+  }
+
+  e.currentTarget.textContent = global.get('globalModify');
+  document.querySelector('.select-media-modal').classList.add('null');
+  imageContainer.scrollIntoView();
+};
+
 const displayImageFromApiCall = (container, images, eventListenerAction) => {
   images.forEach(image => {
     const existingImage = container.querySelector('img[data-media-id="' + image.id + '"]');
     if (existingImage) {
       if (eventListenerAction === 'displayImagePopup') {
-        existingImage.addEventListener('click', e => displayImagePopup(e, image.id));
+        existingImage.addEventListener('click', displayImagePopup);
       } else if (eventListenerAction === 'insertImageInArticle') {
-        existingImage.addEventListener('click', () => insertImageInArticle(existingImage));
-      } else if (eventListenerAction === 'selectMainImage') {
-        existingImage.addEventListener('click', (e) => selectMainImage(e, existingImage));
+        existingImage.addEventListener('click', insertImageInArticle);
+      } else if (eventListenerAction === 'articleSelectMainImage') {
+        existingImage.addEventListener('click', articleSelectMainImage);
+      } else if (eventListenerAction === 'albumSelectMainMedia') {
+        existingImage.addEventListener('click', albumSelectMainMedia);
       }
+
+      existingImage.mediaId = image.id;
 
       return;
     }
@@ -421,12 +461,15 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
     imageEl.dataset.pathMedium = image.pathMedium;
     imageEl.className = 'image-item';
     imageEl.loading = 'lazy';
+    imageEl.mediaId = image.id;
     if (eventListenerAction === 'displayImagePopup') {
-      imageEl.addEventListener('click', e => displayImagePopup(e, image.id));
+      imageEl.addEventListener('click', displayImagePopup);
     } else if (eventListenerAction === 'insertImageInArticle') {
-      imageEl.addEventListener('click', () => insertImageInArticle(imageEl));
-    } else if (eventListenerAction === 'selectMainImage') {
-      imageEl.addEventListener('click', (e) => selectMainImage(e, imageEl));
+      imageEl.addEventListener('click', insertImageInArticle);
+    } else if (eventListenerAction === 'articleSelectMainImage') {
+      imageEl.addEventListener('click', articleSelectMainImage);
+    } else if (eventListenerAction === 'albumSelectMainMedia') {
+      imageEl.addEventListener('click', albumSelectMainMedia);
     }
 
     figureContainer.appendChild(imageEl);
@@ -435,17 +478,19 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
 };
 
 document.querySelectorAll('.image-item').forEach(im => {
-  im.addEventListener('click', e => displayImagePopup(e, im.dataset.mediaId));
+  im.mediaId = im.dataset.mediaId;
+  im.addEventListener('click', displayImagePopup);
 });
 
 document.querySelectorAll('.image-next-action, .image-previous-action, .image-random-action').forEach(ina => {
   ina.addEventListener('click', e => {
     const img = document.querySelector('.image-wrapper .image-main img');
     img.classList.add('hidden');
-    const mediaId = img ? img.dataset.mediaId : 0;
-    const direction = ina.dataset.direction;
-
-    displayImagePopup(e, mediaId, true, direction);
+    img.mediaId = img.dataset.mediaId;
+    img.direction = ina.dataset.direction
+    img.next = true;
+    img.addEventListener('click', displayImagePopup);
+    img.click();
   });
 });
 
@@ -488,7 +533,8 @@ document.querySelectorAll('input#images').forEach(im => {
         (response) => {
           if (response && response.file.id) {
             const newImage = container.querySelector('.image-item[data-media-id="' + response.file.id + '"]');
-            newImage.addEventListener('click', e => displayImagePopup(e, response.file.id));
+            newImage.addEventListener('click', displayImagePopup);
+            newImage.mediaId = response.file.id;
           }
         },
       );
@@ -957,6 +1003,8 @@ document.querySelectorAll('.select-media-action').forEach(am => {
     const loading = modal.querySelector('.select-media-modal-loading');
     const imagesContainer = modal.querySelector('#images-list');
     const eventListenerAction = am.dataset.eventListenerAction;
+    modal.querySelector('input[name="select-media-action-upload"]').dataset.eventListenerAction = eventListenerAction;
+    modal.querySelector('.media-load-more-js').dataset.eventListenerAction = eventListenerAction;
     modal.classList.remove('null');
     loading.classList.remove('null');
 
@@ -1153,6 +1201,68 @@ document.querySelectorAll('.filter-album-button').forEach(a => {
     const queryString = query.entries() ? '?' + query.toString() : '';
 
     window.location.href = window.location.origin + window.location.pathname + queryString;
+  });
+});
+
+document.querySelectorAll('#form-album-edit').forEach(f => {
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const albumIdEl = f.querySelector('input[name="albumId"]');
+    const albumId = albumIdEl && albumIdEl.value ? Number.parseInt(albumIdEl.value) : null;
+    const mainMediaEl = f.querySelector('.main-image-container .main-image');
+    const mainMediaId = mainMediaEl && mainMediaEl.dataset.mediaId
+      ? Number.parseInt(mainMediaEl.dataset.mediaId)
+      : null;
+
+    if (!mainMediaId) {
+      Util.logError(new Error('Media image is missing'));
+      return;
+    }
+
+    const payload = JSON.stringify({
+      languageIsoCode: document.documentElement.lang
+        ? document.documentElement.lang.toUpperCase().trim()
+        : 'EN',
+      templateId: Number.parseInt(f.querySelector('select[name="albumTemplateId"]').value),
+      mainMediaId: mainMediaId,
+      titleHtml: f.querySelector('input[name="albumTitle"]').value.trim(),
+      contentHtml: f.querySelector('.medium-editor-content').innerHTML.trim(),
+    });
+
+    if (albumId) {
+      xhr.put('/back/album/' + albumId, payload, feedbackDiv)
+        .then((response) => {
+          if (response.redirect) {
+            window.location = response.redirect;
+          }
+        });
+    } else {
+      xhr.post('/back/album', payload, feedbackDiv)
+        .then((response) => {
+          if (response.redirect) {
+            window.location = response.redirect;
+          }
+        });
+    }
+  });
+});
+
+document.querySelectorAll('.album-status-dd-option').forEach(op => {
+  op.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const albumId = Number.parseInt(document.querySelector('input[name="albumId"]').value);
+    const statusId = Number.parseInt(op.dataset.value);
+
+    xhr.put('/back/album/' + albumId + '/status/' + statusId, '')
+      .then(() => {
+        handleDropdownOptionClick(op, 'album-status');
+      })
+      .catch((error) => {
+        document.querySelector('#event-status-dd-checkbox').checked = false;
+        Util.logError(error);
+      });
   });
 });
 

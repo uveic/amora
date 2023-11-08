@@ -263,6 +263,56 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     }
 
     /**
+     * Endpoint: /backoffice/albums/{albumId}
+     * Method: GET
+     *
+     * @param int $albumId
+     * @param Request $request
+     * @return Response
+     */
+    protected function getViewAlbumPage(int $albumId, Request $request): Response
+    {
+        $album = $this->albumService->getAlbumForId($albumId);
+        if (!$album) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/album-view',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $album->titleHtml,
+                album: $album,
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/albums/{albumId}/edit
+     * Method: GET
+     *
+     * @param int $albumId
+     * @param Request $request
+     * @return Response
+     */
+    protected function getEditAlbumPage(int $albumId, Request $request): Response
+    {
+        $album = $this->albumService->getAlbumForId($albumId);
+        if (!$album) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/album-edit',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $album->titleHtml,
+                album: $album,
+            ),
+        );
+    }
+
+    /**
      * Endpoint: /backoffice/albums/new
      * Method: GET
      *

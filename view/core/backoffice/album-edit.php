@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
+use Amora\Core\Module\Album\Value\Template;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 
@@ -11,16 +12,16 @@ $this->layout('base', ['responseData' => $responseData]);
 $album = $responseData->album;
 
 $pageTitle = $album
-    ? ($responseData->getLocalValue('globalEdit') . ': ' . $album->title)
+    ? ($responseData->getLocalValue('globalEdit') . ': ' . $album->titleHtml)
     : $responseData->getLocalValue('albumFormNew');
 $closeLink = $album
     ? UrlBuilderUtil::buildBackofficeAlbumViewUrl($responseData->siteLanguage, $album->id)
     : UrlBuilderUtil::buildBackofficeAlbumListUrl($responseData->siteLanguage);
 
-$albumTitle = $album ? $album->title : '';
+$albumTitle = $album ? $album->titleHtml : '';
 $albumContent = $album ? $album->contentHtml : '';
 
-// $this->insert('partials/album-date/modal-select-main-image', ['responseData' => $responseData]);
+$this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
 
 ?>
   <main>
@@ -47,11 +48,26 @@ $albumContent = $album ? $album->contentHtml : '';
                 </p>
               </div>
             </div>
-            <div class="field">
+            <div class="field m-b-2">
               <p class="label no-margin"><?=$responseData->getLocalValue('albumFormContent')?>:</p>
               <div class="control">
-                <div class="editor-content medium-editor-content m-b-3"><?=StringUtil::nl2p($albumContent)?></div>
+                <div class="editor-content medium-editor-content album-content-html"><?=StringUtil::nl2p($albumContent)?></div>
               </div>
+            </div>
+            <div class="field">
+              <label for="albumTemplateId" class="label">Deseño:</label>
+              <div class="control">
+                <select id="albumTemplateId" name="albumTemplateId">
+<?php
+    /** @var BackedEnum $city */
+    foreach (Template::getAll() as $template) {
+        $selected = $template->value === $album?->template->value;
+?>
+                  <option<?=($selected ? ' selected="selected"' : '')?> value="<?=$template->value?>"><?=$template->name?></option>
+<?php } ?>
+                </select>
+              </div>
+              <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
             </div>
           </div>
           <div>
@@ -60,19 +76,24 @@ $albumContent = $album ? $album->contentHtml : '';
               <div class="control main-image-wrapper">
                 <div class="main-image-container main-image-container-full">
 <?php if ($album?->mainMedia) { ?>
-                  <img class="event-main-image" data-media-id="<?=$album?->mainMedia->id?>" src="<?=$album?->mainMedia->getPathWithNameMedium()?>" alt="<?=$album?->mainMedia->buildAltText()?>">
+                  <img class="main-image" data-media-id="<?=$album?->mainMedia->id?>" src="<?=$album?->mainMedia->getPathWithNameMedium()?>" alt="<?=$album?->mainMedia->buildAltText()?>">
 <?php } ?>
                   <div class="main-image-button-container">
-                    <a href="#" class="main-image-button main-image-button-red album-main-image-delete-action<?=$album?->mainMedia ? '' : ' null'?>">
-                      <img class="img-svg" src="/img/svg/trash-white.svg" alt="<?=$responseData->getLocalValue('globalRemoveImage')?>" title="<?=$responseData->getLocalValue('globalRemoveImage')?>">
-                    </a>
-                    <a href="#" class="main-image-button event-main-image-action" data-event-listener-action="eventSelectMainImage">
+                    <a href="#" class="main-image-button select-media-action" data-event-listener-action="albumSelectMainMedia">
                       <img class="img-svg" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
                       <span><?= $album?->mainMedia ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('editorMainImageActionTitle') ?></span>
                     </a>
                   </div>
                 </div>
               </div>
+              <p class="help">
+                <span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span>
+                <span></span>
+              </p>
+            </div>
+          </div>
+          <div class="control">
+            <input type="submit" class="button is-success" value="<?=$responseData->getLocalValue('globalSend')?>">
           </div>
         </form>
       </div>

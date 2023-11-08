@@ -3,16 +3,22 @@
 namespace Amora\Core\Router;
 
 use Amora\App\Module\Form\Entity\PageContent;
-use Amora\App\Util\AppUrlBuilderUtil;
 use Amora\App\Value\AppPageContentType;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
+use Amora\Core\Module\Album\Model\Album;
+use Amora\Core\Module\Album\Service\AlbumService;
+use Amora\Core\Module\Album\Value\AlbumStatus;
+use Amora\Core\Module\Album\Value\Template;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumStatusSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSuccessResponse;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\App\Value\Language;
@@ -56,6 +62,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         private readonly ArticleService $articleService,
         private readonly TagService $tagService,
         private readonly MediaService $mediaService,
+        private readonly AlbumService $albumService,
     ) {
         parent::__construct();
     }
@@ -748,6 +755,182 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 language: $request->siteLanguage,
             ),
             errorMessage: $resUpdate ? null : 'Error updating page content',
+        );
+    }
+
+    /**
+     * Endpoint: /back/album
+     * Method: POST
+     *
+     * @param string|null $languageIsoCode
+     * @param int $mainMediaId
+     * @param int $templateId
+     * @param string $titleHtml
+     * @param string|null $contentHtml
+     * @param Request $request
+     * @return Response
+     */
+    protected function storeAlbum(
+        ?string $languageIsoCode,
+        int $mainMediaId,
+        int $templateId,
+        string $titleHtml,
+        ?string $contentHtml,
+        Request $request
+    ): Response {
+        $mainMedia = $this->mediaService->getMediaForId($mainMediaId);
+        if (!$mainMedia) {
+            return new BackofficeApiControllerStoreAlbumSuccessResponse(
+                success: false,
+                errorMessage: 'Main media ID not found',
+            );
+        }
+
+        if (!Template::tryFrom($templateId)) {
+            return new BackofficeApiControllerStoreAlbumSuccessResponse(
+                success: false,
+                errorMessage: 'Template ID not valid',
+            );
+        }
+
+        $contentHtml = StringUtil::sanitiseHtml($contentHtml);
+        $titleHtml = StringUtil::sanitiseHtml($titleHtml);
+
+        $language = $languageIsoCode && Language::tryFrom(strtoupper($languageIsoCode))
+            ? Language::from(strtoupper($languageIsoCode))
+            : $request->siteLanguage;
+
+        $newAlbum = $this->albumService->workflowStoreAlbum(
+            language: $language,
+            template: Template::from($templateId),
+            user: $request->session->user,
+            mainMedia: $mainMedia,
+            titleHtml: $titleHtml,
+            contentHtml: $contentHtml,
+        );
+
+        return new BackofficeApiControllerStoreAlbumSuccessResponse(
+            success: (bool)$newAlbum,
+            redirect: UrlBuilderUtil::buildBackofficeAlbumViewUrl(
+                language: $request->siteLanguage,
+                albumId: $newAlbum->id,
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /back/album/{albumId}
+     * Method: PUT
+     *
+     * @param int $albumId
+     * @param string|null $languageIsoCode
+     * @param int $mainMediaId
+     * @param int $templateId
+     * @param string $titleHtml
+     * @param string|null $contentHtml
+     * @param Request $request
+     * @return Response
+     */
+    protected function updateAlbum(
+        int $albumId,
+        ?string $languageIsoCode,
+        int $mainMediaId,
+        int $templateId,
+        string $titleHtml,
+        ?string $contentHtml,
+        Request $request
+    ): Response {
+        $album = $this->albumService->getAlbumForId($albumId);
+        if (!$album) {
+            return new BackofficeApiControllerUpdateAlbumSuccessResponse(
+                success: false,
+                errorMessage: 'Album ID not found',
+            );
+        }
+
+        $mainMedia = $this->mediaService->getMediaForId($mainMediaId);
+        if (!$mainMedia) {
+            return new BackofficeApiControllerUpdateAlbumSuccessResponse(
+                success: false,
+                errorMessage: 'Main media ID not found',
+            );
+        }
+
+        if (!Template::tryFrom($templateId)) {
+            return new BackofficeApiControllerUpdateAlbumSuccessResponse(
+                success: false,
+                errorMessage: 'Template ID not valid',
+            );
+        }
+
+        $contentHtml = StringUtil::sanitiseHtml($contentHtml);
+        $titleHtml = StringUtil::sanitiseHtml($titleHtml);
+
+        $language = $languageIsoCode && Language::tryFrom(strtoupper($languageIsoCode))
+            ? Language::from(strtoupper($languageIsoCode))
+            : $request->siteLanguage;
+
+        $updatedAlbum = $this->albumService->workflowUpdateAlbum(
+            existingAlbum: $album,
+            language: $language,
+            template: Template::from($templateId),
+            mainMedia: $mainMedia,
+            titleHtml: $titleHtml,
+            contentHtml: $contentHtml,
+        );
+
+        return new BackofficeApiControllerUpdateAlbumSuccessResponse(
+            success: (bool)$updatedAlbum,
+            redirect: UrlBuilderUtil::buildBackofficeAlbumViewUrl(
+                language: $request->siteLanguage,
+                albumId: $albumId,
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /back/album/{albumId}/status/{statusId}
+     * Method: PUT
+     *
+     * @param int $albumId
+     * @param int $statusId
+     * @param Request $request
+     * @return Response
+     */
+    protected function updateAlbumStatus(
+        int $albumId,
+        int $statusId,
+        Request $request
+    ): Response {
+        $album = $this->albumService->getAlbumForId($albumId);
+        if (!$album) {
+            return new BackofficeApiControllerUpdateAlbumSuccessResponse(
+                success: false,
+                errorMessage: 'Album ID not found',
+            );
+        }
+
+        if (!AlbumStatus::tryFrom($statusId)) {
+            return new BackofficeApiControllerUpdateAlbumSuccessResponse(
+                success: false,
+                errorMessage: 'Status ID not valid',
+            );
+        }
+
+        $newStatus = AlbumStatus::from($statusId);
+        if ($album->status === $newStatus) {
+            return new BackofficeApiControllerUpdateAlbumSuccessResponse(
+                success: true,
+            );
+        }
+
+        $res = $this->albumService->workflowUpdateAlbumStatus(
+            albumId: $albumId,
+            newStatus: $newStatus,
+        );
+
+        return new BackofficeApiControllerUpdateAlbumStatusSuccessResponse(
+            success: $res,
         );
     }
 }

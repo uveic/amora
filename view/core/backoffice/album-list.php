@@ -1,8 +1,8 @@
 <?php
 
-use Amora\Core\Module\Article\Model\Article;
+use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
-use Amora\Core\Util\Helper\ArticleHtmlGenerator;
+use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -13,14 +13,15 @@ $this->layout('base', ['responseData' => $responseData,]);
 <?=$this->insert('partials/albums/header', ['responseData' => $responseData])?>
 <?=$this->insert('partials/albums/filter', ['responseData' => $responseData])?>
     <div class="backoffice-wrapper">
-      <div class="table">
-        <div class="table-row header">
-          <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalTitle')?></div>
-        </div>
+      <div class="album-wrapper">
 <?php
-    /** @var Article $article */
-    foreach ($responseData->articles as $article) {
-        echo ArticleHtmlGenerator::generateArticleRowHtml($responseData, $article);
+    /** @var Album $album */
+    foreach ($responseData->albums as $album) {
+        echo AlbumHtmlGenerator::generateAlbumRowHtml(
+            responseData: $responseData,
+            album: $album,
+            indentation: '        ',
+        );
     }
 ?>
       </div>

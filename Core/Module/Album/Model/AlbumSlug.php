@@ -5,23 +5,23 @@ namespace Amora\Core\Module\Album\Model;
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
 
-class AlbumPath
+class AlbumSlug
 {
     public function __construct(
         public ?int $id,
-        public readonly int $albumId,
-        public readonly string $path,
+        public readonly ?int $albumId,
+        public readonly string $slug,
         public readonly DateTimeImmutable $createdAt,
     ) {}
 
     public static function fromArray(array $item): self
     {
         return new self(
-            id: (int)$item['album_path_id'],
-            albumId: (int)$item['album_path_album_id'],
-            path: $item['album_path_path'],
+            id: (int)$item['album_slug_id'],
+            albumId: isset($item['album_slug_album_id']) ? (int)$item['album_slug_album_id'] : null,
+            slug: $item['album_slug_slug'],
             createdAt: DateUtil::convertStringToDateTimeImmutable(
-                $item['album_path_created_at'],
+                $item['album_slug_created_at'],
             ),
         );
     }
@@ -31,7 +31,7 @@ class AlbumPath
         return [
             'id' => $this->id,
             'album_id' => $this->albumId,
-            'path' => $this->path,
+            'slug' => $this->slug,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
         ];
     }

@@ -27,7 +27,7 @@ class AlbumCore extends Core
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/Album.php';
-                require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumPath.php';
+                require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumSlug.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/DataLayer/MediaDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/DataLayer/AlbumDataLayer.php';
@@ -47,7 +47,7 @@ class AlbumCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Album/Value/AlbumStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Value/Template.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/Album.php';
-                require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumPath.php';
+                require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumSlug.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Service/AlbumService.php';
                 return new AlbumService(
                     albumDataLayer:  self::getAlbumDataLayer(),
