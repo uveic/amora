@@ -1316,6 +1316,270 @@
           }
         }
       }
+    },
+    "/back/album": {
+      "post": {
+        "tags": [],
+        "description": "Store new album",
+        "operationId": "storeAlbum",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "languageIsoCode": {
+                  "type": "string"
+                },
+                "mainMediaId": {
+                  "type": "integer"
+                },
+                "templateId": {
+                  "type": "integer"
+                },
+                "titleHtml": {
+                  "type": "string"
+                },
+                "contentHtml": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "mainMediaId",
+                "templateId",
+                "titleHtml"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "redirect": {
+                  "type": "string",
+                  "description": "Redirect URL"
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/album/{albumId}": {
+      "put": {
+        "tags": [],
+        "description": "Update album",
+        "operationId": "updateAlbum",
+        "parameters": [
+          {
+            "name": "albumId",
+            "in": "path",
+            "description": "Album ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "languageIsoCode": {
+                  "type": "string"
+                },
+                "mainMediaId": {
+                  "type": "integer"
+                },
+                "templateId": {
+                  "type": "integer"
+                },
+                "titleHtml": {
+                  "type": "string"
+                },
+                "contentHtml": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "mainMediaId",
+                "templateId",
+                "titleHtml"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "redirect": {
+                  "type": "string",
+                  "description": "Redirect URL"
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "message"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/album/{albumId}/status/{statusId}": {
+      "put": {
+        "tags": [],
+        "description": "Update album status",
+        "operationId": "updateAlbumStatus",
+        "parameters": [
+          {
+            "name": "albumId",
+            "in": "path",
+            "description": "Album ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "statusId",
+            "in": "path",
+            "description": "Status ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

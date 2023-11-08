@@ -14,7 +14,7 @@ $closeUrl = match($articleType) {
     ArticleType::Blog => UrlBuilderUtil::buildBackofficeArticleListUrl($responseData->siteLanguage, ArticleType::Blog),
 };
 
-$this->insert('partials/articles-edit/modal-add-image', ['responseData' => $responseData]);
+$this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
 ?>
   <div class="control-bar-wrapper">
     <div class="control-bar-left">

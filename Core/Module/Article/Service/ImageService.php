@@ -83,7 +83,9 @@ class ImageService
             cameraModel: $exif['Model'] ?? null,
             date: $date ? DateTimeImmutable::createFromFormat('Y:m:d H:i:s', $date) : null,
             exposureTime: $exif['ExposureTime'] ?? null,
-            ISO: $exif['ISOSpeedRatings'] ?? null,
+            ISO: isset($exif['ISOSpeedRatings'])
+                ? (is_array($exif['ISOSpeedRatings']) ? $exif['ISOSpeedRatings'][0] : $exif['ISOSpeedRatings'])
+                : null,
             rawDataJson: json_encode($exif),
         );
     }

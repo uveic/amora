@@ -103,6 +103,26 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
     abstract protected function getAlbumsPage(Request $request): Response;
 
     /**
+     * Endpoint: /backoffice/albums/{albumId}
+     * Method: GET
+     *
+     * @param int $albumId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getViewAlbumPage(int $albumId, Request $request): Response;
+
+    /**
+     * Endpoint: /backoffice/albums/{albumId}/edit
+     * Method: GET
+     *
+     * @param int $albumId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getEditAlbumPage(int $albumId, Request $request): Response;
+
+    /**
      * Endpoint: /backoffice/albums/new
      * Method: GET
      *
@@ -482,6 +502,108 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in BackofficeHtmlControllerAbstract - Method: getAlbumsPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetViewAlbumPage(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['backoffice', 'albums', '{albumId}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $albumId = null;
+        if (!isset($pathParams['albumId'])) {
+            $errors[] = [
+                'field' => 'albumId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['albumId'])) {
+                $errors[] = [
+                    'field' => 'albumId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $albumId = intval($pathParams['albumId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getViewAlbumPage(
+                $albumId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getViewAlbumPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetEditAlbumPage(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['backoffice', 'albums', '{albumId}', 'edit'],
+            $pathParts
+        );
+        $errors = [];
+
+        $albumId = null;
+        if (!isset($pathParams['albumId'])) {
+            $errors[] = [
+                'field' => 'albumId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['albumId'])) {
+                $errors[] = [
+                    'field' => 'albumId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $albumId = intval($pathParams['albumId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getEditAlbumPage(
+                $albumId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getEditAlbumPage()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -889,6 +1011,26 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetAlbumsPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['backoffice', 'albums', '{albumId}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallGetViewAlbumPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['backoffice', 'albums', '{albumId}', 'edit'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetEditAlbumPage($request);
         }
 
         if ($method === 'GET' &&

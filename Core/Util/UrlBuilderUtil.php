@@ -29,6 +29,7 @@ class UrlBuilderUtil
 
     const BACKOFFICE_ALBUM_LIST = '/backoffice/albums';
     const BACKOFFICE_ALBUM_VIEW = '/backoffice/albums/%d';
+    const BACKOFFICE_ALBUM_EDIT = '/backoffice/albums/%d/edit';
     const BACKOFFICE_ALBUM_NEW = '/backoffice/albums/new';
 
     const BACKOFFICE_CONTENT = '/backoffice/content';
@@ -56,6 +57,8 @@ class UrlBuilderUtil
     const PUBLIC_CREATE_PASSWORD = '/user/create/%s';
     const PUBLIC_VERIFY_USER = '/user/verify/%s';
     const PUBLIC_RESET_PASSWORD = '/user/reset/%s';
+
+    const PUBLIC_ALBUM_VIEW = '/album/%s';
 
     const PUBLIC_RSS = '/rss';
     const PUBLIC_JSON_FEED = '/json-feed';
@@ -206,6 +209,11 @@ class UrlBuilderUtil
         return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_ALBUM_VIEW, $albumId);
     }
 
+    public static function buildBackofficeAlbumEditUrl(Language $language, int $albumId): string
+    {
+        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_ALBUM_EDIT, $albumId);
+    }
+
     public static function buildBackofficeAlbumNewUrl(Language $language): string
     {
         return self::buildBaseUrl($language) . self::BACKOFFICE_ALBUM_NEW;
@@ -316,6 +324,17 @@ class UrlBuilderUtil
                 : self::buildBaseUrl($language)
             )
             . '/' . $path;
+    }
+
+    public static function buildPublicAlbumUrl(
+        string $slug,
+        ?Language $language = null,
+    ): string {
+        return (empty($language) || count(Core::getAllLanguages()) === 1
+                ? self::buildBaseUrlWithoutLanguage()
+                : self::buildBaseUrl($language)
+            )
+            . sprintf(self::PUBLIC_ALBUM_VIEW, $slug);
     }
 
     public static function buildPublicRssUrl(): string

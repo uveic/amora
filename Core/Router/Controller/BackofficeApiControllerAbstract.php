@@ -36,6 +36,11 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetTagsSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdatePageContentSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdatePageContentFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreAlbumSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreAlbumFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumStatusSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -249,6 +254,65 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?string $subtitleHtml,
         string $contentHtml,
         ?int $mainImageId,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /back/album
+     * Method: POST
+     *
+     * @param string|null $languageIsoCode
+     * @param int $mainMediaId
+     * @param int $templateId
+     * @param string $titleHtml
+     * @param string|null $contentHtml
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function storeAlbum(
+        ?string $languageIsoCode,
+        int $mainMediaId,
+        int $templateId,
+        string $titleHtml,
+        ?string $contentHtml,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /back/album/{albumId}
+     * Method: PUT
+     *
+     * @param int $albumId
+     * @param string|null $languageIsoCode
+     * @param int $mainMediaId
+     * @param int $templateId
+     * @param string $titleHtml
+     * @param string|null $contentHtml
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function updateAlbum(
+        int $albumId,
+        ?string $languageIsoCode,
+        int $mainMediaId,
+        int $templateId,
+        string $titleHtml,
+        ?string $contentHtml,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /back/album/{albumId}/status/{statusId}
+     * Method: PUT
+     *
+     * @param int $albumId
+     * @param int $statusId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function updateAlbumStatus(
+        int $albumId,
+        int $statusId,
         Request $request
     ): Response;
 
@@ -1002,6 +1066,246 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallStoreAlbum(Request $request): Response
+    {
+        $bodyParams = $request->getBodyPayload();
+        $errors = [];
+
+        if (!isset($bodyParams)) {
+            $errors[] = [
+                'field' => 'payload',
+                'message' => 'required'
+            ];
+        }
+
+        $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
+        $mainMediaId = null;
+        if (!isset($bodyParams['mainMediaId'])) {
+            $errors[] = [
+                'field' => 'mainMediaId',
+                'message' => 'required'
+            ];
+        } else {
+            $mainMediaId = $bodyParams['mainMediaId'] ?? null;
+        }
+
+        $templateId = null;
+        if (!isset($bodyParams['templateId'])) {
+            $errors[] = [
+                'field' => 'templateId',
+                'message' => 'required'
+            ];
+        } else {
+            $templateId = $bodyParams['templateId'] ?? null;
+        }
+
+        $titleHtml = null;
+        if (!isset($bodyParams['titleHtml'])) {
+            $errors[] = [
+                'field' => 'titleHtml',
+                'message' => 'required'
+            ];
+        } else {
+            $titleHtml = $bodyParams['titleHtml'] ?? null;
+        }
+
+        $contentHtml = $bodyParams['contentHtml'] ?? null;
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->storeAlbum(
+                $languageIsoCode,
+                $mainMediaId,
+                $templateId,
+                $titleHtml,
+                $contentHtml,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: storeAlbum()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallUpdateAlbum(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['back', 'album', '{albumId}'],
+            $pathParts
+        );
+        $bodyParams = $request->getBodyPayload();
+        $errors = [];
+
+        $albumId = null;
+        if (!isset($pathParams['albumId'])) {
+            $errors[] = [
+                'field' => 'albumId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['albumId'])) {
+                $errors[] = [
+                    'field' => 'albumId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $albumId = intval($pathParams['albumId']);
+            }
+        }
+
+        if (!isset($bodyParams)) {
+            $errors[] = [
+                'field' => 'payload',
+                'message' => 'required'
+            ];
+        }
+
+        $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
+        $mainMediaId = null;
+        if (!isset($bodyParams['mainMediaId'])) {
+            $errors[] = [
+                'field' => 'mainMediaId',
+                'message' => 'required'
+            ];
+        } else {
+            $mainMediaId = $bodyParams['mainMediaId'] ?? null;
+        }
+
+        $templateId = null;
+        if (!isset($bodyParams['templateId'])) {
+            $errors[] = [
+                'field' => 'templateId',
+                'message' => 'required'
+            ];
+        } else {
+            $templateId = $bodyParams['templateId'] ?? null;
+        }
+
+        $titleHtml = null;
+        if (!isset($bodyParams['titleHtml'])) {
+            $errors[] = [
+                'field' => 'titleHtml',
+                'message' => 'required'
+            ];
+        } else {
+            $titleHtml = $bodyParams['titleHtml'] ?? null;
+        }
+
+        $contentHtml = $bodyParams['contentHtml'] ?? null;
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->updateAlbum(
+                $albumId,
+                $languageIsoCode,
+                $mainMediaId,
+                $templateId,
+                $titleHtml,
+                $contentHtml,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updateAlbum()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallUpdateAlbumStatus(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['back', 'album', '{albumId}', 'status', '{statusId}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $albumId = null;
+        if (!isset($pathParams['albumId'])) {
+            $errors[] = [
+                'field' => 'albumId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['albumId'])) {
+                $errors[] = [
+                    'field' => 'albumId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $albumId = intval($pathParams['albumId']);
+            }
+        }
+
+        $statusId = null;
+        if (!isset($pathParams['statusId'])) {
+            $errors[] = [
+                'field' => 'statusId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['statusId'])) {
+                $errors[] = [
+                    'field' => 'statusId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $statusId = intval($pathParams['statusId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->updateAlbumStatus(
+                $albumId,
+                $statusId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updateAlbumStatus()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): ?Response
     {
@@ -1121,6 +1425,36 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallUpdatePageContent($request);
+        }
+
+        if ($method === 'POST' &&
+            $this->pathParamsMatcher(
+                ['back', 'album'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallStoreAlbum($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'album', '{albumId}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallUpdateAlbum($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'album', '{albumId}', 'status', '{statusId}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallUpdateAlbumStatus($request);
         }
 
         return null;
