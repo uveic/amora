@@ -271,7 +271,7 @@
 
 .editor-content {
   min-height: 250px !important;
-  margin: 0 0 2rem;
+  margin: 0;
   font-family: var(--font-title);
 }
 
@@ -1031,7 +1031,45 @@ h2.page-content-subtitle {
 .album-item .album-title {
   margin: 0.25rem 0;
 }
+
+.album-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.album-content p:first-of-type {
+  margin-top: 0;
+}
+
+.album-content p:last-of-type {
+  margin-bottom: 0;
+}
+
+.album-image {
+  padding: 0;
+  gap: 0.25rem;
+  margin-bottom: 0;
+}
+
+.album-add-section {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
 /* Album ends here */
+
+.modal-header-content {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.modal-header-title {
+  font-weight: bold;
+}
 
 .width-100 { width: 100%;}
 .width-40 { width: 40%; }

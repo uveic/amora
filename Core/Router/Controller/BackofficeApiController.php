@@ -16,6 +16,7 @@ use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumStatusSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSuccessResponse;
@@ -939,6 +940,56 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             publicLinkHtml: $newStatus->isPublic()
                 ? ('<a href=' . $link . '">' . $link . '</a>')
                 : $link,
+        );
+    }
+
+    /**
+     * Endpoint: /back/album/{albumId}/section
+     * Method: POST
+     *
+     * @param int $albumId
+     * @param int $mainMediaId
+     * @param string $titleHtml
+     * @param string|null $contentHtml
+     * @param Request $request
+     * @return Response
+     */
+    protected function storeAlbumSection(
+        int $albumId,
+        int $mainMediaId,
+        string $titleHtml,
+        ?string $contentHtml,
+        Request $request
+    ): Response {
+        $album = $this->albumService->getAlbumForId($albumId);
+        if (!$album) {
+            return new BackofficeApiControllerUpdateAlbumSuccessResponse(
+                success: false,
+                errorMessage: 'Album ID not found',
+            );
+        }
+
+        $mainMedia = $this->mediaService->getMediaForId($mainMediaId);
+        if (!$mainMedia) {
+            return new BackofficeApiControllerUpdateAlbumSuccessResponse(
+                success: false,
+                errorMessage: 'Main media ID not found',
+            );
+        }
+
+        $contentHtml = StringUtil::sanitiseHtml($contentHtml);
+        $titleHtml = StringUtil::sanitiseHtml($titleHtml);
+
+        $newAlbum = $this->albumService->workflowStoreAlbumSection(
+            album: $album,
+            mainMedia: $mainMedia,
+            titleHtml: $titleHtml,
+            contentHtml: $contentHtml,
+        );
+
+        return new BackofficeApiControllerStoreAlbumSectionSuccessResponse(
+            success: (bool)$newAlbum,
+            html: '',
         );
     }
 }

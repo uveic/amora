@@ -1583,6 +1583,72 @@
           }
         }
       }
+    },
+    "/back/album/{albumId}/section": {
+      "post": {
+        "tags": [],
+        "description": "Store new album section",
+        "operationId": "storeAlbumSection",
+        "parameters": [
+          {
+            "name": "albumId",
+            "in": "path",
+            "description": "Album ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "mainMediaId": {
+                  "type": "integer"
+                },
+                "titleHtml": {
+                  "type": "string"
+                },
+                "contentHtml": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "mainMediaId",
+                "titleHtml"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "html": {
+                  "type": "string"
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

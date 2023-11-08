@@ -7,6 +7,7 @@ use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\Album\Datalayer\AlbumDataLayer;
 use Amora\Core\Module\Album\Model\Album;
+use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Module\Album\Model\AlbumSlug;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
@@ -225,6 +226,42 @@ readonly class AlbumService
             albumId: $albumId,
             newStatus: $newStatus,
         );
+    }
+
+    public function workflowStoreAlbumSection(
+        Album $album,
+        Media $mainMedia,
+        string $titleHtml,
+        ?string $contentHtml,
+    ): AlbumSection {
+        $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
+            function () use (
+                $album,
+                $mainMedia,
+                $titleHtml,
+                $contentHtml,
+            ) {
+                $now = new DateTimeImmutable();
+                $resStore = $this->albumDataLayer->storeAlbumSection(
+                    new AlbumSection(
+                        id: null,
+                        albumId: $album->id,
+                        mainMedia: $mainMedia,
+                        titleHtml: $titleHtml,
+                        contentHtml: $contentHtml,
+                        createdAt: $now,
+                        updatedAt: $now,
+                    ),
+                );
+
+                return new Feedback(
+                    isSuccess: true,
+                    response: $resStore,
+                );
+            }
+        );
+
+        return $resTransaction->response;
     }
 
     public function getTotalAlbums(): int {
