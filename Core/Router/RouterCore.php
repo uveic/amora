@@ -41,6 +41,7 @@ class RouterCore extends Core
                     userService:  UserCore::getUserService(),
                     articleService:  ArticleCore::getArticleService(),
                     feedService:  ArticleCore::getFeedService(),
+                    albumService: AlbumCore::getAlbumService(),
                 );
             },
         );

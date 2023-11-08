@@ -28,6 +28,7 @@ class Router
         'json-feed' => true,
         'sitemap' => true,
         'user' => true,
+        'album' => true,
     ];
 
     private const PUBLIC_API_CONTROLLER_ACTIONS = [

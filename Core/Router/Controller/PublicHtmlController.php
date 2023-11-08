@@ -6,6 +6,7 @@ use Amora\App\Router\AppPublicHtmlController;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Entity\Response\Feedback;
+use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\FeedService;
 use Amora\Core\Module\Article\Value\ArticleType;
@@ -21,6 +22,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         private readonly UserService $userService,
         private readonly ArticleService $articleService,
         private readonly FeedService $feedService,
+        private readonly AlbumService $albumService,
     ) {
         parent::__construct();
     }
@@ -269,6 +271,46 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)->getValue('navSignUp'),
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /album/{albumSlug}
+     * Method: GET
+     *
+     * @param string $albumSlug
+     * @param Request $request
+     * @return Response
+     */
+    protected function getAlbumPage(string $albumSlug, Request $request): Response
+    {
+        $album = $this->albumService->getAlbumForSlug($albumSlug);
+        if (!$album) {
+            $slug = $this->albumService->getAlbumSlugForSlug($albumSlug);
+            if ($slug) {
+                Response::createPermanentRedirectResponse(
+                    url: UrlBuilderUtil::buildPublicAlbumUrl(
+                        slug: $slug->slug,
+                    ),
+                );
+            }
+
+            return Response::createNotFoundResponse($request);
+        }
+
+        if (!$request->session?->isAdmin() && !$album->status->isPublic()) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        return Response::createHtmlResponse(
+            template: 'core/frontend/public/album/' . $album->template->getTemplate(),
+            responseData: new HtmlResponseData(
+                request: $request,
+                pageTitle: $album->titleHtml,
+                pageDescription: $album->buildDescription(),
+                siteImagePath: $album->mainMedia->getPathWithNameMedium(),
+                album: $album,
             ),
         );
     }
