@@ -929,8 +929,16 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             newStatus: $newStatus,
         );
 
+        $link = UrlBuilderUtil::buildPublicAlbumUrl(
+            slug: $album->slug->slug,
+            language: $album->language,
+        );
+
         return new BackofficeApiControllerUpdateAlbumStatusSuccessResponse(
             success: $res,
+            publicLinkHtml: $newStatus->isPublic()
+                ? ('<a href=' . $link . '">' . $link . '</a>')
+                : $link,
         );
     }
 }

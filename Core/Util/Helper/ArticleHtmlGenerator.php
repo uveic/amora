@@ -83,12 +83,12 @@ final class ArticleHtmlGenerator
             $output[] = '          <li><a data-checked="' . ($language === $articleLanguage ? '1' : '0') .
                 '" data-value="' . $language->value .
                 '" class="dropdown-menu-option article-lang-dd-option background-light-text-color"' .
-                ' href="#">' . Language::getIconFlag($language, 'm-r-05') . $language->name . '</a></li>';
+                ' href="#">' . $language->getIconFlag('m-r-05') . $language->name . '</a></li>';
         }
 
         $output[] = '        </ul>';
         $output[] = '        <label id="article-lang-dd-label" for="article-lang-dd-checkbox" class="dropdown-menu-label background-light-text-color">';
-        $output[] = '          <span>' . Language::getIconFlag($articleLanguage, 'm-r-05') . $articleLanguage->name . '</span>';
+        $output[] = '          <span>' . $articleLanguage->getIconFlag('m-r-05') . $articleLanguage->name . '</span>';
         $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Change">';
         $output[] = '        </label>';
         $output[] = '      </div>';
@@ -149,7 +149,7 @@ final class ArticleHtmlGenerator
         $output[] = $indentation . '  <div class="table-item table-item-flex-column">';
         $output[] = $indentation . '    <div>';
         $output[] = $indentation . '      <span class="light-text-color font-0-9">#' . $article->id . '</span>';
-        $output[] = $indentation . '      ' . Language::getIconFlag($article->language, 'm-l-05 m-r-05');
+        $output[] = $indentation . '      ' . $article->language->getIconFlag('m-l-05 m-r-05');
         $output[] = $indentation . '      ' . $articleTitleHtml;
         $output[] = $indentation . '      ' . $articlePublicLinkHtml;
         $output[] = $indentation . '    </div>';

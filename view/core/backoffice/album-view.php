@@ -29,7 +29,9 @@ $albumPublicLink = UrlBuilderUtil::buildPublicAlbumUrl(
     language: $responseData->siteLanguage,
 );
 
-$publicLinkClass = $album->status->isPublic() ? '' : ' null';
+$publicLinkHtml = $album->status->isPublic()
+    ? '<a href="' . $albumPublicLink . '">' . $albumPublicLink . '</a>'
+    : $albumPublicLink;
 
 ?>
   <main>
@@ -52,11 +54,17 @@ $publicLinkClass = $album->status->isPublic() ? '' : ' null';
             <span class="title">Creado o:</span>
             <span class="value"><?=$createdAt?></span>
           </div>
-          <div class="card-info-item form-public-link<?=$publicLinkClass?>">
+          <div class="card-info-item form-public-link">
             <span class="title">Enderezo público:</span>
-            <span class="value word-break">
-              <a class="slug-slug" data-slug="<?=$album->slug->slug?>" href="<?=$albumPublicLink?>"><?=$albumPublicLink?></a>
-            </span>
+            <span class="value word-break"><?=$publicLinkHtml?></span>
+          </div>
+          <div class="card-info-item">
+            <span class="title">Deseño do álbum:</span>
+            <span class="value"><?=$album->template->name?></span>
+          </div>
+          <div class="card-info-item">
+            <span class="title"><?=$responseData->getLocalValue('globalLanguage')?>:</span>
+            <span class="value one-line"><?=$album->language->getIconFlag('m-r-05') . $album->language->getName()?></span>
           </div>
         </section>
         <section class="flex-child">

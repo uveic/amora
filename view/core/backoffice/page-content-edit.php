@@ -13,7 +13,7 @@ $pageContent = $responseData->pageContent;
 $title = $responseData->getLocalValue('pageContentEditTitle' . $pageContent->type->name);
 $languageIcon = count(Core::getAllLanguages()) === 1
     ? ''
-    : Language::getIconFlag($pageContent->language, 'm-l-1');
+    : $pageContent->language->getIconFlag('m-l-1');
 $submitButtonValue = $pageContent
     ? $responseData->getLocalValue('globalUpdate')
     : $responseData->getLocalValue('globalSend');
