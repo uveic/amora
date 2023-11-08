@@ -87,11 +87,8 @@ abstract class App
         $this->logger->logInfo($this->logPrefix . 'Running...');
         $f();
 
-        $usedMiB = memory_get_usage(false) / 1024 / 1024;
-        $this->logger->logInfo(
-            $this->logPrefix . 'Done' .
-            ' - Memory: ' . number_format($usedMiB, 3) . ' MiB'
-        );
+        $usedMiB = memory_get_usage() / 1024 / 1024;
+        $this->logger->logInfo($this->logPrefix . 'Memory: ' . number_format($usedMiB, 3) . ' MiB');
         unset($usedMiB);
     }
 
