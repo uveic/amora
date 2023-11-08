@@ -12,7 +12,6 @@ use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\User\Model\User;
-use Amora\Core\Util\Logger;
 use Amora\Core\Util\StringUtil;
 use DateTimeImmutable;
 
@@ -29,6 +28,15 @@ readonly class AlbumService
         $res = $this->filterAlbumBy(
             albumIds: [$id],
             languageIsoCodes: $language ? [$language->value] : [],
+        );
+
+        return empty($res[0]) ? null : $res[0];
+    }
+
+    public function getAlbumForSlug(string $slug): ?Album
+    {
+        $res = $this->filterAlbumBy(
+            slug: $slug,
         );
 
         return empty($res[0]) ? null : $res[0];
@@ -52,7 +60,7 @@ readonly class AlbumService
         );
     }
 
-    public function getSlugForAlbum(string $slug): ?AlbumSlug
+    public function getAlbumSlugForSlug(string $slug): ?AlbumSlug
     {
         $res = $this->albumDataLayer->filterAlbumSlugBy(
             slug: $slug,
@@ -194,7 +202,7 @@ readonly class AlbumService
         $count = 0;
         do {
             $validSlug = $slug . ($count > 0 ? '-' . $count : '');
-            $res = $this->getSlugForAlbum($validSlug);
+            $res = $this->getAlbumForSlug($validSlug);
             if ($existingSlug && $res && $res->id === $existingSlug->id) {
                 return $existingSlug;
             }

@@ -183,6 +183,31 @@
         }
       }
     },
+    "/album/{albumSlug}": {
+      "get": {
+        "tags": [],
+        "summary": "Return the HTML to render the page",
+        "description": "",
+        "operationId": "getAlbumPage",
+        "parameters": [
+          {
+            "name": "albumSlug",
+            "in": "path",
+            "description": "Album slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return HTML for homepage",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "/json-feed": {
       "get": {
         "tags": [],

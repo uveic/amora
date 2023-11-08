@@ -63,6 +63,11 @@ class Album
 
     private function getFullPath(): string
     {
-        return rtrim(Core::getConfig()->baseUrl, '/ ') . '/' . $this->path;
+        return rtrim(Core::getConfig()->baseUrl, '/ ') . '/' . $this->slug->slug;
+    }
+
+    public function buildDescription(): string
+    {
+        return $this->titleHtml;
     }
 }

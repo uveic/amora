@@ -104,6 +104,16 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
     abstract protected function getInviteRequestPage(Request $request): Response;
 
     /**
+     * Endpoint: /album/{albumSlug}
+     * Method: GET
+     *
+     * @param string $albumSlug
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getAlbumPage(string $albumSlug, Request $request): Response;
+
+    /**
      * Endpoint: /json-feed
      * Method: GET
      *
@@ -402,6 +412,50 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         }
     }
 
+    private function validateAndCallGetAlbumPage(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['album', '{albumSlug}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $albumSlug = null;
+        if (!isset($pathParams['albumSlug'])) {
+            $errors[] = [
+                'field' => 'albumSlug',
+                'message' => 'required'
+            ];
+        } else {
+            $albumSlug = $pathParams['albumSlug'] ?? null;
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getAlbumPage(
+                $albumSlug,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicHtmlControllerAbstract - Method: getAlbumPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
     private function validateAndCallGetJsonFeed(Request $request): Response
     {
         $errors = [];
@@ -574,6 +628,16 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetInviteRequestPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['album', '{albumSlug}'],
+                $pathParts,
+                ['fixed', 'string']
+            )
+        ) {
+            return $this->validateAndCallGetAlbumPage($request);
         }
 
         if ($method === 'GET' &&
