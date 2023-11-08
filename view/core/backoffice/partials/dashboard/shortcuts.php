@@ -14,8 +14,8 @@ $partialContentLinks = [];
 
 /** @var Language $language */
 foreach (Core::getAllLanguages() as $language) {
-    $homepageLinks[] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, PageContentType::Homepage, $language) . '">' . Language::getIconFlag($language, 'img-svg-25') . '</a>';
-    $partialContentLinks[] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, PageContentType::BlogBottom, $language) . '">' . Language::getIconFlag($language, 'img-svg-25') . '</a>';
+    $homepageLinks[] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, PageContentType::Homepage, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
+    $partialContentLinks[] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, PageContentType::BlogBottom, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
 }
 ?>
         <div class="m-t-2">

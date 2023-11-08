@@ -180,7 +180,7 @@ final class StringUtil
         int $decimals = 0,
         bool $includeThousandsSeparator = true,
     ): string {
-        if ($language === Language::Español || $language === Language::Galego) {
+        if ($language === Language::Spanish || $language === Language::Galego) {
             $thousandsSeparator = $includeThousandsSeparator ? '.' : '';
             $decimalsSeparator = ',';
         } else {

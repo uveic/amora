@@ -1569,6 +1569,9 @@
                     false
                   ]
                 },
+                "publicLinkHtml": {
+                  "type": "string"
+                },
                 "errorMessage": {
                   "type": "string"
                 }

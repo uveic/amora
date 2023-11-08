@@ -155,7 +155,7 @@ final class DateUtil
                     . ' '
                     . $value
                     . ($diff[$key] > 1
-                        ? ($key === 'm' && ($language === Language::Español || $language === Language::Galego) ? 'es' : 's')
+                        ? ($key === 'm' && ($language === Language::Spanish || $language === Language::Galego) ? 'es' : 's')
                         : ''
                     );
             } else {

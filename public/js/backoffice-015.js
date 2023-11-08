@@ -1256,8 +1256,10 @@ document.querySelectorAll('.album-status-dd-option').forEach(op => {
     const statusId = Number.parseInt(op.dataset.value);
 
     xhr.put('/back/album/' + albumId + '/status/' + statusId, '')
-      .then(() => {
+      .then((response) => {
         handleDropdownOptionClick(op, 'album-status');
+
+        document.querySelector('.form-public-link .value').innerHTML = response.publicLinkHtml;
       })
       .catch((error) => {
         document.querySelector('#event-status-dd-checkbox').checked = false;
