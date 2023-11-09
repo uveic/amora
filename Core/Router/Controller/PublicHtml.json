@@ -183,6 +183,23 @@
         }
       }
     },
+    "/json-feed": {
+      "get": {
+        "tags": [],
+        "summary": "Return the latest articles in JSON Feed format",
+        "description": "",
+        "operationId": "getJsonFeed",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return the latest articles in JSON Feed format",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "/rss": {
       "get": {
         "tags": [],

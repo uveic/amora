@@ -39,7 +39,7 @@ class RouterCore extends Core
                     appPublicHtmlController: AppRouterCore::getAppPublicHtmlController(),
                     userService:  UserCore::getUserService(),
                     articleService:  ArticleCore::getArticleService(),
-                    xmlService:  ArticleCore::getXmlService(),
+                    feedService:  ArticleCore::getFeedService(),
                 );
             },
         );

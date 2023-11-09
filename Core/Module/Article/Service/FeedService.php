@@ -14,10 +14,10 @@ use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 use DateTimeZone;
 
-class XmlService
+readonly class FeedService
 {
     public function __construct(
-        private readonly Logger $logger,
+        private Logger $logger,
     ) {}
 
     public function buildSitemap(array $sitemapItems): string
@@ -74,6 +74,23 @@ class XmlService
         $this->logger->logInfo('Building RSS done.');
 
         return implode('', $xml);
+    }
+
+    public function buildJsonFeed(
+        LocalisationUtil $localisationUtil,
+        array $articles,
+    ): string {
+        $this->logger->logInfo('Building JSON Feed...');
+
+        $output = $this->buildJsonFeedHeader($localisationUtil);
+        $output['items'] = $this->buildJsonFeedContent(
+            siteLanguage: $localisationUtil->language,
+            articles: $articles,
+        );
+
+        $this->logger->logInfo('Building JSON Feed done.');
+
+        return json_encode($output);
     }
 
     private function buildRssHeader(
@@ -158,6 +175,83 @@ class XmlService
             $output[] = '<url>';
             $output[] = '<loc>' . UrlBuilderUtil::buildPublicArticlePath(path: $path) . '</loc>';
             $output[] = '</url>';
+        }
+
+        return $output;
+    }
+
+    private function buildJsonFeedHeader(LocalisationUtil $localisationUtil): array
+    {
+        $baseUrl = Core::getConfig()->baseUrl;
+        $siteTitle = $this->getSiteTitle(
+            siteTitle: $localisationUtil->getValue('siteTitle'),
+            siteName: $localisationUtil->getValue('siteName'),
+        );
+        $siteDescription = $localisationUtil->getValue('siteDescription');
+        $siteIcon = Core::getConfig()->siteIcon512pixels;
+        $siteFavicon = Core::getConfig()->siteIcon64pixels;
+
+        $output = [
+            'version' => 'https://jsonfeed.org/version/1.1',
+            'title' => $siteTitle,
+            'home_page_url' => $baseUrl,
+            'feed_url' => UrlBuilderUtil::buildPublicJsonFeedUrl(),
+            'description' => $siteDescription,
+            'language' => strtolower($localisationUtil->language->value),
+        ];
+
+        if ($siteIcon) {
+            $output['icon'] = rtrim($baseUrl, ' /') . $siteIcon;
+        }
+
+        if ($siteFavicon) {
+            $output['favicon'] = rtrim($baseUrl, ' /') . $siteFavicon;
+        }
+
+        return $output;
+    }
+
+    private function buildJsonFeedContent(Language $siteLanguage, array $articles): array
+    {
+        $output = [];
+
+        /** @var Article $article */
+        foreach ($articles as $article) {
+            $link = UrlBuilderUtil::buildPublicArticlePath(
+                path: $article->path,
+                language: $siteLanguage,
+            );
+            $title = $article->title ? htmlspecialchars($article->title) : '';
+            $content = $this->getContent($article);
+
+            $item = [
+                'id' => $link,
+                'url' => $link,
+                'title' => $title,
+                'content_html' => $content,
+                'date_published' => $article->publishOn->format('c'),
+                'language' => strtolower($article->language->value),
+            ];
+
+            if ($article->mainImage) {
+                $item['image'] = $article->mainImage->getPathWithNameMedium();
+            }
+
+            if ($article->updatedAt > $article->publishOn) {
+                $item['date_modified'] = $article->updatedAt->format('c');
+            }
+
+            $tags = [];
+            /** @var Tag $tag */
+            foreach ($article->tags as $tag) {
+                $tags[] = $tag->name;
+            }
+
+            if ($tags) {
+                $item['tags'] = $tags;
+            }
+
+            $output[] = $item;
         }
 
         return $output;

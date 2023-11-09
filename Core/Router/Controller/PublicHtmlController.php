@@ -9,7 +9,7 @@ use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Service\ArticleService;
-use Amora\Core\Module\Article\Service\XmlService;
+use Amora\Core\Module\Article\Service\FeedService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Service\UserService;
@@ -24,7 +24,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         private readonly AppPublicHtmlController $appPublicHtmlController,
         private readonly UserService $userService,
         private readonly ArticleService $articleService,
-        private readonly XmlService $xmlService,
+        private readonly FeedService $feedService,
     ) {
         parent::__construct();
     }
@@ -278,6 +278,32 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     }
 
     /**
+     * Endpoint: /json-feed
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getJsonFeed(Request $request): Response
+    {
+        $articles = $this->articleService->filterArticlesBy(
+            statusIds: [ArticleStatus::Published->value],
+            typeIds: [ArticleType::Blog->value],
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
+                pagination: new Response\Pagination(itemsPerPage: 20),
+            ),
+        );
+
+        $json = $this->feedService->buildJsonFeed(
+            localisationUtil: Core::getLocalisationUtil(Core::getDefaultLanguage()),
+            articles: $articles,
+        );
+
+        return Response::createSuccessJsonResponse($json);
+    }
+
+    /**
      * Endpoint: /rss
      * Method: GET
      *
@@ -291,11 +317,11 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             typeIds: [ArticleType::Blog->value],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
-                pagination: new Response\Pagination(itemsPerPage: 10),
+                pagination: new Response\Pagination(itemsPerPage: 20),
             ),
         );
 
-        $xml = $this->xmlService->buildRss(
+        $xml = $this->feedService->buildRss(
             localisationUtil: Core::getLocalisationUtil(Core::getDefaultLanguage()),
             articles: $articles,
         );
@@ -313,7 +339,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     protected function getSitemap(Request $request): Response
     {
         $sitemapItems = $this->articleService->getSitemapItemsForArticles();
-        $xml = $this->xmlService->buildSitemap(
+        $xml = $this->feedService->buildSitemap(
             sitemapItems: $sitemapItems,
         );
 
