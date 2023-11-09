@@ -8,6 +8,8 @@ App/Config/AppConfig.php
 vendor
 public/uploads
 public/blogovic
+DatabaseDiagram/*.bkp
+DatabaseDiagram/*.dtmp
 
 # Other
 .DS_Store
