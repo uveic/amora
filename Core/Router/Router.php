@@ -6,7 +6,6 @@ use Amora\App\Router\AppRouter;
 use Amora\App\Router\AppRouterCore;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
 use Amora\Core\Module\Article\Model\Article;
-use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Util\UrlBuilderUtil;
 use Exception;
@@ -26,6 +25,7 @@ class Router
         'login' => true,
         'register' => true,
         'rss' => true,
+        'json-feed' => true,
         'sitemap' => true,
         'user' => true,
     ];

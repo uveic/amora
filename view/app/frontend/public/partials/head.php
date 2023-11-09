@@ -44,5 +44,6 @@ if (isset($responseData->article)) {
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <link rel="manifest" href="/manifest.json">
   <link rel="alternate" type="application/rss+xml" title="<?=$responseData->siteName?>" href="<?=UrlBuilderUtil::buildPublicRssUrl()?>">
+  <link rel="alternate" type="application/feed+json" title="<?=$responseData->siteName?>" href="<?=UrlBuilderUtil::buildPublicJsonFeedUrl()?>">
   <link rel="alternate" href="<?=$responseData->siteUrl?>" hreflang="x-default">
 <?=$canonical?>

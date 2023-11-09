@@ -260,6 +260,15 @@ class Response
         );
     }
 
+    public static function createSuccessJsonResponse(string $payload): Response
+    {
+        return new Response(
+            output: $payload,
+            contentType: ContentType::JSON,
+            httpStatus: HttpStatusCode::HTTP_200_OK,
+        );
+    }
+
     protected static function getResponseType($payload): array
     {
         if ($payload instanceof SimpleXMLElement) {

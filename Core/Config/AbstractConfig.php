@@ -75,6 +75,8 @@ abstract class AbstractConfig {
         public readonly string $baseUrl,
         public readonly string $siteImageUrl,
         public readonly string $logoImageUrl,
+        public readonly string $siteIcon512pixels,
+        public readonly string $siteIcon64pixels,
         public readonly string $mediaBaseDir,
         public readonly string $mediaBaseUrl,
 

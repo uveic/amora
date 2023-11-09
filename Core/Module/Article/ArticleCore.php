@@ -11,7 +11,7 @@ use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\DataLayer\MediaDataLayer;
 use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Module\Article\Service\MediaService;
-use Amora\Core\Module\Article\Service\XmlService;
+use Amora\Core\Module\Article\Service\FeedService;
 use Amora\Core\Module\Article\Service\TagService;
 
 class ArticleCore extends Core
@@ -170,13 +170,13 @@ class ArticleCore extends Core
         );
     }
 
-    public static function getXmlService(): XmlService
+    public static function getFeedService(): FeedService
     {
         return self::getInstance(
-            className: 'XmlService',
+            className: 'FeedService',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Module/Article/Service/XmlService.php';
-                return new XmlService(
+                require_once self::getPathRoot() . '/Core/Module/Article/Service/FeedService.php';
+                return new FeedService(
                     logger: self::getArticleLogger(),
                 );
             },

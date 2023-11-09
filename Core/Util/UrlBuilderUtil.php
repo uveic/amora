@@ -54,6 +54,7 @@ class UrlBuilderUtil
     const PUBLIC_RESET_PASSWORD = '/user/reset/%s';
 
     const PUBLIC_RSS = '/rss';
+    const PUBLIC_JSON_FEED = '/json-feed';
 
     public static function buildBaseUrl(Language $siteLanguage): string
     {
@@ -301,5 +302,10 @@ class UrlBuilderUtil
     public static function buildPublicRssUrl(): string
     {
         return self::buildBaseUrlWithoutLanguage() . self::PUBLIC_RSS;
+    }
+
+    public static function buildPublicJsonFeedUrl(): string
+    {
+        return self::buildBaseUrlWithoutLanguage() . self::PUBLIC_JSON_FEED;
     }
 }
