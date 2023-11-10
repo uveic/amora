@@ -3,11 +3,9 @@
 namespace Amora\Core\Module\Article\Service;
 
 use Amora\App\Router\AppRouter;
-use Amora\App\Value\Language;
 use Amora\Core\Core;
-use Amora\Core\Module\Article\Entity\SitemapItem;
+use Amora\Core\Module\Article\Entity\FeedItem;
 use Amora\Core\Util\Logger;
-use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Util\LocalisationUtil;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -20,7 +18,7 @@ readonly class FeedService
         private Logger $logger,
     ) {}
 
-    public function buildSitemap(array $sitemapItems): string
+    public function buildSitemap(array $feedItems): string
     {
         $this->logger->logInfo('Building sitemap...');
 
@@ -30,7 +28,7 @@ readonly class FeedService
                 '<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">',
             ],
             $this->buildSitemapContent(
-                sitemapItems: $sitemapItems,
+                feedItems: $feedItems,
             ),
             [
                 '</urlset>',
@@ -44,11 +42,11 @@ readonly class FeedService
 
     public function buildRss(
         LocalisationUtil $localisationUtil,
-        array $articles,
+        array $feedItems,
     ): string {
         $this->logger->logInfo('Building RSS...');
 
-        $lastBuildDate = $this->getBuildDate($articles);
+        $lastBuildDate = $this->getBuildDate($feedItems);
 
         $xml = array_merge(
             [
@@ -58,13 +56,10 @@ readonly class FeedService
             ],
             $this->buildRssHeader(
                 localisationUtil: $localisationUtil,
-                lastPubDate: $this->getLastPubDate($articles[0] ?? null),
+                lastPubDate: $this->getLastPubDate($feedItems[0] ?? null),
                 lastBuildDate: $lastBuildDate,
             ),
-            $this->buildRssContent(
-                siteLanguage: $localisationUtil->language,
-                articles: $articles,
-            ),
+            $this->buildRssContent($feedItems),
             [
                 '</channel>',
                 '</rss>',
@@ -78,15 +73,12 @@ readonly class FeedService
 
     public function buildJsonFeed(
         LocalisationUtil $localisationUtil,
-        array $articles,
+        array $feedItems,
     ): string {
         $this->logger->logInfo('Building JSON Feed...');
 
         $output = $this->buildJsonFeedHeader($localisationUtil);
-        $output['items'] = $this->buildJsonFeedContent(
-            siteLanguage: $localisationUtil->language,
-            articles: $articles,
-        );
+        $output['items'] = $this->buildJsonFeedContent($feedItems);
 
         $this->logger->logInfo('Building JSON Feed done.');
 
@@ -127,29 +119,28 @@ readonly class FeedService
         return $output;
     }
 
-    private function buildRssContent(Language $siteLanguage, array $articles): array
+    private function buildRssContent(array $feedItems): array
     {
         $output = [];
 
-        /** @var Article $article */
-        foreach ($articles as $article) {
-            $link = UrlBuilderUtil::buildPublicArticlePath(
-                path: $article->path,
-                language: $siteLanguage,
-            );
-            $title = $article->title ? htmlspecialchars($article->title) : '';
-            $content = $this->getContent($article);
+        /** @var FeedItem $feedItem */
+        foreach ($feedItems as $feedItem) {
+            $link = $feedItem->fullPath;
+            $title = $feedItem->title ? htmlspecialchars($feedItem->title) : '';
+            $content = $this->getContent($feedItem);
 
             $output[] = '<item>';
             $output[] = '<title>' . $title . '</title>';
             $output[] = '<link>' . $link . '</link>';
             $output[] = '<guid>' . $link . '</guid>';
-            $output[] = '<author>' . $article->user->email . ' (' . $article->user->name . ')</author>';
+            if ($feedItem->user) {
+                $output[] = '<author>' . $feedItem->user->email . ' (' . $feedItem->user->name . ')</author>';
+            }
             $output[] = '<description>' . $content . '</description>';
-            $output[] = '<pubDate>' . $article->publishOn->format('r') . '</pubDate>';
+            $output[] = '<pubDate>' . $feedItem->publishedOn->format('r') . '</pubDate>';
 
             /** @var Tag $tag */
-            foreach ($article->tags as $tag) {
+            foreach ($feedItem->tags as $tag) {
                 $output[] = '<category>' . $tag->name . '</category>';
             }
 
@@ -159,15 +150,15 @@ readonly class FeedService
         return $output;
     }
 
-    private function buildSitemapContent(array $sitemapItems): array
+    private function buildSitemapContent(array $feedItems): array
     {
         $output = [];
 
-        /** @var SitemapItem $sitemapItem */
-        foreach ($sitemapItems as $sitemapItem) {
+        /** @var FeedItem $feedItem */
+        foreach ($feedItems as $feedItem) {
             $output[] = '<url>';
-            $output[] = '<loc>' . $sitemapItem->fullPath . '</loc>';
-            $output[] = '<lastmod>' . $sitemapItem->updatedAt->format('Y-m-d') . '</lastmod>';
+            $output[] = '<loc>' . $feedItem->fullPath . '</loc>';
+            $output[] = '<lastmod>' . $feedItem->updatedAt->format('Y-m-d') . '</lastmod>';
             $output[] = '</url>';
         }
 
@@ -211,39 +202,37 @@ readonly class FeedService
         return $output;
     }
 
-    private function buildJsonFeedContent(Language $siteLanguage, array $articles): array
+    private function buildJsonFeedContent(array $feedItems): array
     {
+        $baseUrl = Core::getConfig()->baseUrl;
+
         $output = [];
 
-        /** @var Article $article */
-        foreach ($articles as $article) {
-            $link = UrlBuilderUtil::buildPublicArticlePath(
-                path: $article->path,
-                language: $siteLanguage,
-            );
-            $title = $article->title ? htmlspecialchars($article->title) : '';
-            $content = $this->getContent($article);
+        /** @var FeedItem $feedItem */
+        foreach ($feedItems as $feedItem) {
+            $title = $feedItem->title ? htmlspecialchars($feedItem->title) : '';
+            $content = $this->getContent($feedItem);
 
             $item = [
-                'id' => $link,
-                'url' => $link,
+                'id' => $feedItem->fullPath,
+                'url' => $feedItem->fullPath,
                 'title' => $title,
                 'content_html' => $content,
-                'date_published' => $article->publishOn->format('c'),
-                'language' => strtolower($article->language->value),
+                'date_published' => $feedItem->publishedOn->format('c'),
+                'language' => strtolower($feedItem->language->value),
             ];
 
-            if ($article->mainImage) {
-                $item['image'] = $article->mainImage->getPathWithNameMedium();
+            if ($feedItem->media) {
+                $item['image'] = rtrim($baseUrl, ' /') . $feedItem->media->getPathWithNameMedium();
             }
 
-            if ($article->updatedAt > $article->publishOn) {
-                $item['date_modified'] = $article->updatedAt->format('c');
+            if ($feedItem->updatedAt > $feedItem->media) {
+                $item['date_modified'] = $feedItem->updatedAt->format('c');
             }
 
             $tags = [];
             /** @var Tag $tag */
-            foreach ($article->tags as $tag) {
+            foreach ($feedItem->tags as $tag) {
                 $tags[] = $tag->name;
             }
 
@@ -257,13 +246,13 @@ readonly class FeedService
         return $output;
     }
 
-    private function getContent(Article $article): string
+    private function getContent(FeedItem $feedItem): string
     {
         return htmlspecialchars(
             str_replace(
                 search: 'src="/',
                 replace: 'src="' . UrlBuilderUtil::buildBaseUrlWithoutLanguage() . '/',
-                subject: $article->contentHtml,
+                subject: $feedItem->contentHtml,
             )
         );
     }
@@ -273,26 +262,26 @@ readonly class FeedService
         return $siteName . ($siteTitle ? ' - ' . $siteTitle : '');
     }
 
-    private function getLastPubDate(?Article $article): DateTimeImmutable
+    private function getLastPubDate(?FeedItem $feedItem): DateTimeImmutable
     {
-        if (!$article) {
+        if (!$feedItem) {
             return new DateTimeImmutable('now');
         }
 
-        return $article->publishOn;
+        return $feedItem->publishedOn;
     }
 
-    private function getBuildDate(array $articles): DateTimeImmutable
+    private function getBuildDate(array $feedItems): DateTimeImmutable
     {
-        if (!$articles) {
+        if (!$feedItems) {
             return new DateTimeImmutable();
         }
 
-        $buildDate = $this->getLastPubDate($articles[0]);
+        $buildDate = $this->getLastPubDate($feedItems[0]);
 
-        /** @var Article $article */
-        foreach ($articles as $article) {
-            $updatedAt = $article->publishOn;
+        /** @var FeedItem $feedItem */
+        foreach ($feedItems as $feedItem) {
+            $updatedAt = $feedItem->publishedOn;
             if ($buildDate < $updatedAt) {
                 $buildDate = $updatedAt;
             }

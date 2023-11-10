@@ -6,9 +6,8 @@ use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Router\AppRouter;
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
-use Amora\Core\Core;
 use Amora\Core\Entity\Response\Feedback;
-use Amora\Core\Module\Article\Entity\SitemapItem;
+use Amora\Core\Module\Article\Entity\FeedItem;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\PageContentType;
@@ -619,28 +618,39 @@ readonly class ArticleService
         return $resTransaction->isSuccess;
     }
 
-    public function getSitemapItemsForArticles(): array
-    {
+    public function getFeedItemsForArticles(
+        ?ArticleType $articleType = null,
+        ?Language $languageIsoCode = null,
+        ?int $maxItems = null,
+    ): array {
         $articles = $this->filterArticlesBy(
-            languageIsoCodes: [Core::getDefaultLanguage()->value],
+            languageIsoCodes: $languageIsoCode ? [$languageIsoCode->value] : [],
             statusIds: [ArticleStatus::Published->value],
-            typeIds: [ArticleType::Page->value],
+            typeIds: $articleType ? [$articleType->value] : [],
             publishedBefore: new DateTimeImmutable(),
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
+                pagination: $maxItems ? new Pagination($maxItems) : null,
             ),
         );
 
-        $sitemapItems = [];
+        $feedItems = [];
         /** @var Article $article */
         foreach ($articles as $article) {
-            $sitemapItems[] = new SitemapItem(
+            $feedItems[] = new FeedItem(
                 fullPath: UrlBuilderUtil::buildPublicArticlePath($article->path),
+                title: $article->title ?: '',
+                contentHtml: $article->contentHtml,
+                publishedOn: $article->publishOn,
+                language: $article->language,
+                user: $article->user,
+                media: $article->mainImage,
                 updatedAt: $article->updatedAt,
+                tags: $article->tags,
             );
         }
 
-        return $sitemapItems;
+        return $feedItems;
     }
 
     public function getTotalArticles(): array {
