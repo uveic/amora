@@ -4,10 +4,10 @@ namespace Amora\Core\Module\Analytics\Entity;
 
 use DateTimeImmutable;
 
-class PageView
+readonly class PageView
 {
     public function __construct(
-        public readonly int $count,
-        public readonly DateTimeImmutable $date,
+        public int $count,
+        public DateTimeImmutable $date,
     ) {}
 }

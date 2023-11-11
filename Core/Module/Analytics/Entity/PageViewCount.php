@@ -2,10 +2,10 @@
 
 namespace Amora\Core\Module\Analytics\Entity;
 
-class PageViewCount
+readonly class PageViewCount
 {
     public function __construct(
-        public readonly int $count,
-        public readonly string $name,
+        public int $count,
+        public string $name,
     ) {}
 }

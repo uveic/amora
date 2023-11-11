@@ -19,11 +19,11 @@ use Amora\Core\Entity\Request;
 use Amora\Core\Module\Analytics\DataLayer\AnalyticsDataLayer;
 use Amora\Core\Module\Analytics\Model\EventRaw;
 
-class AnalyticsService
+readonly class AnalyticsService
 {
     public function __construct(
-        private readonly Logger $logger,
-        private readonly AnalyticsDataLayer $analyticsDataLayer,
+        private Logger $logger,
+        private AnalyticsDataLayer $analyticsDataLayer,
     ) {}
 
     public function logEvent(Request $request): void

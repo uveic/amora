@@ -7,15 +7,15 @@ use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Value\AggregateBy;
 use DateTimeImmutable;
 
-class ReportViewCount
+readonly class ReportViewCount
 {
     public function __construct(
-        public readonly DateTimeImmutable $from,
-        public readonly DateTimeImmutable $to,
-        public readonly AggregateBy $aggregateBy,
-        public readonly Period $period,
-        public readonly array $pageViews = [],
-        public readonly int $total = 0,
-        public readonly ?EventType $eventType = null,
+        public DateTimeImmutable $from,
+        public DateTimeImmutable $to,
+        public AggregateBy $aggregateBy,
+        public Period $period,
+        public array $pageViews = [],
+        public int $total = 0,
+        public ?EventType $eventType = null,
     ) {}
 }
