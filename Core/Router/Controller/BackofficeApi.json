@@ -1649,6 +1649,78 @@
           }
         }
       }
+    },
+    "/back/album/{albumId}/section/{albumSectionId}/media": {
+      "post": {
+        "tags": [],
+        "description": "Store media for album section",
+        "operationId": "storeMediaForAlbumSection",
+        "parameters": [
+          {
+            "name": "albumId",
+            "in": "path",
+            "description": "Album ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "albumSectionId",
+            "in": "path",
+            "description": "Album section ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "mediaId": {
+                  "type": "integer"
+                },
+                "titleHtml": {
+                  "type": "string"
+                },
+                "contentHtml": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "mediaId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "html": {
+                  "type": "string"
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

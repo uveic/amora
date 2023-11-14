@@ -8,6 +8,7 @@ use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\Album\Datalayer\AlbumDataLayer;
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
+use Amora\Core\Module\Album\Model\AlbumSectionMedia;
 use Amora\Core\Module\Album\Model\AlbumSlug;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
@@ -25,10 +26,24 @@ readonly class AlbumService
     public function getAlbumForId(
         int $id,
         ?Language $language = null,
+        bool $includeSections = false,
     ): ?Album {
         $res = $this->filterAlbumBy(
             albumIds: [$id],
             languageIsoCodes: $language ? [$language->value] : [],
+            includeSections: $includeSections,
+        );
+
+        return empty($res[0]) ? null : $res[0];
+    }
+
+    public function getAlbumSectionForId(
+        int $id,
+        bool $includeMedia = false,
+    ): ?Album {
+        $res = $this->filterAlbumSectionBy(
+            albumIds: [$id],
+            includeMedia: $includeMedia,
         );
 
         return empty($res[0]) ? null : $res[0];
@@ -49,6 +64,7 @@ readonly class AlbumService
         array $statusIds = [],
         array $templateIds = [],
         ?string $slug = null,
+        bool $includeSections = false,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->albumDataLayer->filterAlbumBy(
@@ -57,6 +73,23 @@ readonly class AlbumService
             statusIds: $statusIds,
             templateIds: $templateIds,
             slug: $slug,
+            includeSections: $includeSections,
+            queryOptions: $queryOptions,
+        );
+    }
+
+    public function filterAlbumSectionBy(
+        array $albumSectionIds = [],
+        array $albumIds = [],
+        array $mediaIds = [],
+        bool $includeMedia = false,
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        return $this->albumDataLayer->filterAlbumSectionBy(
+            albumSectionIds: $albumSectionIds,
+            albumIds: $albumIds,
+            mediaIds: $mediaIds,
+            includeMedia: $includeMedia,
             queryOptions: $queryOptions,
         );
     }
@@ -247,6 +280,42 @@ readonly class AlbumService
                         id: null,
                         albumId: $album->id,
                         mainMedia: $mainMedia,
+                        titleHtml: $titleHtml,
+                        contentHtml: $contentHtml,
+                        createdAt: $now,
+                        updatedAt: $now,
+                    ),
+                );
+
+                return new Feedback(
+                    isSuccess: true,
+                    response: $resStore,
+                );
+            }
+        );
+
+        return $resTransaction->response;
+    }
+
+    public function workflowStoreMediaForAlbumSection(
+        AlbumSection $albumSection,
+        Media $media,
+        ?string $titleHtml,
+        ?string $contentHtml,
+    ): AlbumSection {
+        $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
+            function () use (
+                $albumSection,
+                $media,
+                $titleHtml,
+                $contentHtml,
+            ) {
+                $now = new DateTimeImmutable();
+                $resStore = $this->albumDataLayer->storeMediaForAlbumSection(
+                    new AlbumSectionMedia(
+                        id: null,
+                        albumSectionId: $albumSection->id,
+                        mainMedia: $media,
                         titleHtml: $titleHtml,
                         contentHtml: $contentHtml,
                         createdAt: $now,
