@@ -92,6 +92,7 @@ class AlbumDataLayer
             'm.filename_medium AS media_filename_medium',
             'm.filename_large AS media_filename_large',
             'm.caption_html AS media_caption_html',
+            'm.filename_source AS media_filename_source',
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
 

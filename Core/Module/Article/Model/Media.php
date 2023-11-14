@@ -24,6 +24,7 @@ class Media
         public readonly ?string $filenameMedium,
         public readonly ?string $filenameSmall,
         public readonly ?string $captionHtml,
+        public readonly ?string $filenameSource,
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt
     ) {}
@@ -41,6 +42,7 @@ class Media
             filenameMedium: $data['media_filename_medium'] ?? null,
             filenameSmall: $data['media_filename_small'] ?? null,
             captionHtml: $data['media_caption_html'] ?? null,
+            filenameSource: $data['media_filename_source'] ?? null,
             createdAt: DateUtil::convertStringToDateTimeImmutable($data['media_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($data['media_updated_at']),
         );
@@ -60,6 +62,7 @@ class Media
             'filename_medium' => $this->filenameMedium,
             'filename_large' => $this->filenameLarge,
             'caption_html' => $this->captionHtml,
+            'filename_source' => $this->filenameSource,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
         ];

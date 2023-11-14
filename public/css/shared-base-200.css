@@ -313,6 +313,11 @@ blockquote *:last-child {
   justify-content: space-between;
   align-items: center;
 }
+
+.modal-header-title {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
 /* Modal style ends here*/
 
 /* Feedback style starts here */
@@ -591,6 +596,7 @@ a.form-edit {
   justify-content: space-between;
   align-items: center;
   flex-flow: row wrap;
+  flex-grow: 1;
 }
 
 .control {
