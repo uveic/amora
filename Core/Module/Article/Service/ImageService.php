@@ -34,6 +34,7 @@ class ImageService
         RawFile $rawFile,
         ?User $user,
         ?bool $includeLarge = false,
+        ?string $captionHtml = null,
     ): Media {
         $imageSmall = $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_SMALL);
         $imageMedium = $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_MEDIUM);
@@ -51,9 +52,10 @@ class ImageService
             path: $rawFile->extraPath,
             filenameOriginal: $rawFile->name,
             filenameLarge: $imageLarge?->name,
-            filenameMedium: $imageMedium->name,
-            filenameSmall: $imageSmall->name,
-            captionHtml: $rawFile->originalName,
+            filenameMedium: $imageMedium?->name,
+            filenameSmall: $imageSmall?->name,
+            captionHtml: $captionHtml,
+            filenameSource: $rawFile->originalName,
             createdAt: $now,
             updatedAt: $now,
         );
@@ -138,6 +140,7 @@ class ImageService
             filenameMedium: $existingMedia->filenameMedium,
             filenameSmall: $imageSmall->name,
             captionHtml: $existingMedia->captionHtml,
+            filenameSource: $existingMedia->filenameSource,
             createdAt: $existingMedia->createdAt,
             updatedAt: new DateTimeImmutable(),
         );
@@ -264,44 +267,48 @@ class ImageService
         int $originalWidth,
         int $originalHeight
     ): void {
-        switch ($imageTypeExtension) {
-            case 'jpg':
-            case 'jpeg':
-                $this->resizeJpgImage(
-                    $sourceFullPath,
-                    $outputFullPath,
-                    $newWidth,
-                    $newHeight,
-                    $originalWidth,
-                    $originalHeight
-                );
-                break;
-            case 'webp':
-                $this->resizeWebpImage(
-                    $sourceFullPath,
-                    $outputFullPath,
-                    $newWidth,
-                    $newHeight,
-                    $originalWidth,
-                    $originalHeight
-                );
-                break;
-            case 'png':
-                $this->resizePngImage(
-                    $sourceFullPath,
-                    $outputFullPath,
-                    $newWidth,
-                    $newHeight,
-                    $originalWidth,
-                    $originalHeight
-                );
-                break;
-            default:
-                $this->logger->logWarning(
-                    'Image type resizing not supported: ' . $imageTypeExtension .
-                    ' - Image path: ' . $sourceFullPath
-                );
+        if ($imageTypeExtension === 'jpg' || $imageTypeExtension === 'jpeg') {
+            $this->resizeJpgImage(
+                $sourceFullPath,
+                $outputFullPath,
+                $newWidth,
+                $newHeight,
+                $originalWidth,
+                $originalHeight
+            );
+
+            return;
         }
+
+        if ($imageTypeExtension === 'webp') {
+            $this->resizeWebpImage(
+                $sourceFullPath,
+                $outputFullPath,
+                $newWidth,
+                $newHeight,
+                $originalWidth,
+                $originalHeight
+            );
+
+            return;
+        }
+
+        if ($imageTypeExtension === 'png') {
+            $this->resizePngImage(
+                $sourceFullPath,
+                $outputFullPath,
+                $newWidth,
+                $newHeight,
+                $originalWidth,
+                $originalHeight
+            );
+
+            return;
+        }
+
+        $this->logger->logWarning(
+            'Image type not supported (resizing): ' . $imageTypeExtension . ' - Image path: ' . $sourceFullPath
+        );
     }
 
     private function resizeJpgImage(
@@ -312,27 +319,39 @@ class ImageService
         int $originalWidth,
         int $originalHeight
     ): void {
-        $outputImage = imagecreatetruecolor($newWidth, $newHeight);
-        $sourceImage = imagecreatefromjpeg($sourceFullPath);
-        imagecopyresampled(
-            $outputImage,
-            $sourceImage,
-            0,
-            0,
-            0,
-            0,
-            $newWidth,
-            $newHeight,
-            $originalWidth,
-            $originalHeight
-        );
+        try {
+            $outputImage = imagecreatetruecolor($newWidth, $newHeight);
+            $sourceImage = @imagecreatefromjpeg($sourceFullPath);
 
-        $outputImage = $this->checkExifAndRotateIfNecessary($outputImage, $sourceFullPath);
+            if (!$sourceImage) {
+                $this->logger->logError('Error creating PNG image: ' . $sourceFullPath);
+            }
 
-        $res = imagejpeg($outputImage, $outputFullPath, 90);
+            imagecopyresampled(
+                $outputImage,
+                $sourceImage,
+                0,
+                0,
+                0,
+                0,
+                $newWidth,
+                $newHeight,
+                $originalWidth,
+                $originalHeight
+            );
 
-        if (!$res) {
-            $this->logger->logError('Error resizing image: ' . $outputFullPath);
+            $outputImage = $this->checkExifAndRotateIfNecessary($outputImage, $sourceFullPath);
+
+            $res = imagejpeg($outputImage, $outputFullPath, 90);
+
+            if (!$res) {
+                $this->logger->logError('Error resizing JPG image: ' . $outputFullPath);
+            }
+        } catch (Throwable $t) {
+            $this->logger->logError(
+                'Error resizing JPG image: ' . $sourceFullPath
+                . ' - Error: ' . $t->getMessage(),
+            );
         }
     }
 
@@ -344,25 +363,37 @@ class ImageService
         int $originalWidth,
         int $originalHeight
     ): void {
-        $outputImage = imagecreatetruecolor($newWidth, $newHeight);
-        $sourceImage = imagecreatefromwebp($sourceFullPath);
-        imagecopyresampled(
-            $outputImage,
-            $sourceImage,
-            0,
-            0,
-            0,
-            0,
-            $newWidth,
-            $newHeight,
-            $originalWidth,
-            $originalHeight
-        );
+        try {
+            $outputImage = imagecreatetruecolor($newWidth, $newHeight);
+            $sourceImage = @imagecreatefromwebp($sourceFullPath);
 
-        $res = imagewebp($outputImage, $outputFullPath, 90);
+            if (!$sourceImage) {
+                $this->logger->logError('Error creating Webp image: ' . $sourceFullPath);
+            }
 
-        if (!$res) {
-            $this->logger->logError('Error resizing image: ' . $outputFullPath);
+            imagecopyresampled(
+                $outputImage,
+                $sourceImage,
+                0,
+                0,
+                0,
+                0,
+                $newWidth,
+                $newHeight,
+                $originalWidth,
+                $originalHeight
+            );
+
+            $res = imagewebp($outputImage, $outputFullPath, 90);
+
+            if (!$res) {
+                $this->logger->logError('Error resizing Webp image: ' . $outputFullPath);
+            }
+        } catch (Throwable $t) {
+            $this->logger->logError(
+                'Error resizing Webp image: ' . $sourceFullPath
+                . ' - Error: ' . $t->getMessage(),
+            );
         }
     }
 
@@ -374,25 +405,37 @@ class ImageService
         int $originalWidth,
         int $originalHeight
     ): void {
-        $outputImage = imagecreatetruecolor($newWidth, $newHeight);
-        $sourceImage = imagecreatefrompng($sourceFullPath);
-        imagecopyresampled(
-            $outputImage,
-            $sourceImage,
-            0,
-            0,
-            0,
-            0,
-            $newWidth,
-            $newHeight,
-            $originalWidth,
-            $originalHeight
-        );
+        try {
+            $outputImage = imagecreatetruecolor($newWidth, $newHeight);
+            $sourceImage = @imagecreatefrompng($sourceFullPath);
 
-        $res = imagepng($outputImage, $outputFullPath);
+            if (!$sourceImage) {
+                $this->logger->logError('Error creating PNG image: ' . $sourceFullPath);
+            }
 
-        if (!$res) {
-            $this->logger->logError('Error resizing image: ' . $outputFullPath);
+            imagecopyresampled(
+                $outputImage,
+                $sourceImage,
+                0,
+                0,
+                0,
+                0,
+                $newWidth,
+                $newHeight,
+                $originalWidth,
+                $originalHeight
+            );
+
+            $res = imagepng($outputImage, $outputFullPath);
+
+            if (!$res) {
+                $this->logger->logError('Error resizing PNG image: ' . $outputFullPath);
+            }
+        } catch (Throwable $t) {
+            $this->logger->logError(
+                'Error resizing PNG image: ' . $sourceFullPath
+                . ' - Error: ' . $t->getMessage(),
+            );
         }
     }
 

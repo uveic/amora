@@ -235,12 +235,16 @@ readonly class MediaService
         );
     }
 
-    public function processRawFileImage(RawFile $rawFile, ?User $user): ?Media
-    {
+    public function processRawFileImage(
+        RawFile $rawFile,
+        ?User $user,
+        ?string $captionHtml = null,
+    ): ?Media {
         try {
             return $this->imageService->resizeOriginalImage(
                 rawFile: $rawFile,
                 user: $user,
+                captionHtml: $captionHtml,
             );
         } catch (Throwable $t) {
             $this->logger->logError(
@@ -266,7 +270,8 @@ readonly class MediaService
             filenameLarge: null,
             filenameMedium: null,
             filenameSmall: null,
-            captionHtml: $rawFile->originalName,
+            captionHtml: null,
+            filenameSource: $rawFile->originalName,
             createdAt: $now,
             updatedAt: $now,
         );
