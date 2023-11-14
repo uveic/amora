@@ -272,7 +272,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      */
     protected function getViewAlbumPage(int $albumId, Request $request): Response
     {
-        $album = $this->albumService->getAlbumForId($albumId);
+        $album = $this->albumService->getAlbumForId(
+            id: $albumId,
+            includeSections: true,
+        );
+
         if (!$album) {
             return Response::createNotFoundResponse($request);
         }

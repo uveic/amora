@@ -2,8 +2,10 @@
 
 namespace Amora\Core\Util\Helper;
 
+use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Album\Model\Album;
+use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Util\UrlBuilderUtil;
 
@@ -66,6 +68,30 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    <a href="' . $albumEditUrl . '" class="album-title">' . $album->titleHtml . '</a>';
         $output[] = $indentation . '    ' . $albumPublicLinkHtml;
         $output[] = $indentation . '  </div>';
+        $output[] = $indentation . '</div>';
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
+    }
+
+    public static function generateAlbumSectionHtml(
+        AlbumSection $section,
+        string $indentation = '',
+    ): string
+    {
+        $output = [];
+        $output[] = $indentation . '<div class="album-section-item" data-album-section-id="' . $section->id . '">';
+        $output[] = $indentation . '  <div class="album-section-item-content">';
+        $output[] = $indentation . '    <h3>' . $section->titleHtml . '</h3>';
+        $output[] = $indentation . '    <p>' . $section->contentHtml;
+        $output[] = $indentation . '    <img src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '">';
+        $output[] = $indentation . '  </div>';
+        $output[] = $indentation . '  <div class="album-section-item-media">';
+        $output[] = $indentation . '    <a href="#" class="button is-success select-media-action" data-album-section-id="' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
+        $output[] = $indentation . '      <img class="img-svg img-svg-30" width="30" height="30" src="/img/svg/image-white.svg" alt="Img">';
+        $output[] = $indentation . '      <span>Engadir</span>';
+        $output[] = $indentation . '    </a>';
+        $output[] = $indentation . '  </div>';
+
         $output[] = $indentation . '</div>';
 
         return implode(PHP_EOL, $output) . PHP_EOL;

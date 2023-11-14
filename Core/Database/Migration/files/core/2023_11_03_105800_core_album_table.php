@@ -63,7 +63,7 @@ return "
         CONSTRAINT `core_album_section_main_media_id_fk` FOREIGN KEY (`main_media_id`) REFERENCES `core_media` (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-    CREATE TABLE `core_album_media` (
+    CREATE TABLE `core_album_section_media` (
         `id` int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
         `album_section_id` int(10) unsigned NOT NULL,
         `media_id` int(10) unsigned NOT NULL,
@@ -71,9 +71,9 @@ return "
         `updated_at` TIMESTAMP NOT NULL,
         `title_html` varchar(500) COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
         `content_html` text COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-        KEY `core_album_media_album_section_id_idx` (`album_section_id`),
-        KEY `core_album_media_media_id_idx` (`media_id`),
-        CONSTRAINT `core_album_media_album_section_id_fk` FOREIGN KEY (`album_section_id`) REFERENCES `core_album_section` (`id`),
-        CONSTRAINT `core_album_media_media_id_fk` FOREIGN KEY (`media_id`) REFERENCES `core_media` (`id`)
+        KEY `core_album_section_media_album_section_id_idx` (`album_section_id`),
+        KEY `core_album_section_media_media_id_idx` (`media_id`),
+        CONSTRAINT `core_album_section_media_album_section_id_fk` FOREIGN KEY (`album_section_id`) REFERENCES `core_album_section` (`id`),
+        CONSTRAINT `core_album_section_media_media_id_fk` FOREIGN KEY (`media_id`) REFERENCES `core_media` (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ";

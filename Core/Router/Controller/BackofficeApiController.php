@@ -18,6 +18,7 @@ use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumStatusSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSuccessResponse;
@@ -988,6 +989,53 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         return new BackofficeApiControllerStoreAlbumSectionSuccessResponse(
+            success: (bool)$newAlbum,
+            html: '',
+        );
+    }
+
+    /**
+     * Endpoint: /back/album/{albumId}/section/{albumSectionId}/media
+     * Method: POST
+     *
+     * @param int $albumId
+     * @param int $albumSectionId
+     * @param int $mediaId
+     * @param string|null $titleHtml
+     * @param string|null $contentHtml
+     * @param Request $request
+     * @return Response
+     */
+    protected function storeMediaForAlbumSection(
+        int $albumId,
+        int $albumSectionId,
+        int $mediaId,
+        ?string $titleHtml,
+        ?string $contentHtml,
+        Request $request
+    ): Response {
+        $album = $this->albumService->getAlbumSectionForId($albumId);
+        if (!$album) {
+            return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(
+                success: false,
+                errorMessage: 'Album ID not found',
+            );
+        }
+
+        $mainMedia = $this->mediaService->getMediaForId($mainMediaId);
+        if (!$mainMedia) {
+            return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(
+                success: false,
+                errorMessage: 'Main media ID not found',
+            );
+        }
+
+        $newAlbumMedia = $this->albumService->workflowStoreMediaForAlbumSection(
+            albumSection: $albumSection,
+        );
+
+
+        return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(
             success: (bool)$newAlbum,
             html: '',
         );

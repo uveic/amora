@@ -4,6 +4,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
+use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Util\StringUtil;
@@ -33,18 +34,24 @@ $publicLinkHtml = $album->status->isPublic()
     ? '<a href="' . $albumPublicLink . '">' . $albumPublicLink . '</a>'
     : $albumPublicLink;
 
+$closeLink = UrlBuilderUtil::buildBackofficeAlbumListUrl($responseData->siteLanguage);
+
 $this->insert('partials/albums/modal-add-section', ['responseData' => $responseData]);
+$this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
 
 ?>
   <main>
     <div id="feedback" class="feedback null"></div>
+    <section class="page-header">
+      <h3><img src="/img/svg/images.svg" class="img-svg img-svg-25 m-r-05" width="25" height="25" alt="Edición"><?=$album->titleHtml?></h3>
+      <div class="links">
+        <span class="number">#<?=$album->id?></span>
+        <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="30" height="30" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
+      </div>
+    </section>
     <section class="form-content-container">
       <section class="form-content-wrapper">
         <section class="flex-child m-b-15">
-          <div class="block-title">
-            <h2><img src="/img/svg/file-text.svg" class="img-svg img-svg-25 m-r-05" width="25" height="25" alt="Edición"><?=$album->titleHtml?></h2>
-            <span class="number">#<?=$album->id?></span>
-          </div>
           <div class="card-info-item">
             <span class="title">Estado:</span>
             <span class="value">
@@ -68,7 +75,16 @@ $this->insert('partials/albums/modal-add-section', ['responseData' => $responseD
             <span class="value one-line"><?=$album->language->getIconFlag('m-r-05') . $album->language->getName()?></span>
           </div>
         </section>
-        <section class="album-sections-wrapper"></section>
+        <section class="album-sections-wrapper">
+<?php
+    /** @var AlbumSection $section */
+    foreach ($album->sections as $section) {
+        echo AlbumHtmlGenerator::generateAlbumSectionHtml(
+            section: $section,
+            indentation: '          ',
+        );
+}?>
+        </section>
         <a href="#" class="album-add-section-js button is-standard">
           <img src="/img/svg/image-white.svg" class="img-svg img-svg-30" width="20" height="20" alt="Nova sección">
           <span class="one-line">Nova sección</span>

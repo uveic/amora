@@ -4,6 +4,7 @@ namespace Amora\Core\Module\Album\Datalayer;
 
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
+use Amora\Core\Module\Album\Model\AlbumSectionMedia;
 use Amora\Core\Module\Album\Model\AlbumSlug;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
@@ -21,7 +22,7 @@ class AlbumDataLayer
 
     const ALBUM_TABLE = 'core_album';
     const ALBUM_SECTION_TABLE = 'core_album_section';
-    const ALBUM_MEDIA_TABLE = 'core_album_media';
+    const ALBUM_SECTION_MEDIA_TABLE = 'core_album_section_media';
     const ALBUM_SLUG_TABLE = 'core_album_slug';
 
     const ALBUM_STATUS_TABLE = 'core_album_status';
@@ -30,6 +31,7 @@ class AlbumDataLayer
     public function __construct(
         private readonly MySqlDb $db,
         private readonly Logger $logger,
+        private readonly MediaDataLayer $mediaDataLayer,
     ) {}
 
     public function getDb(): MySqlDb
@@ -43,6 +45,7 @@ class AlbumDataLayer
         array $statusIds = [],
         array $templateIds = [],
         ?string $slug = null,
+        bool $includeSections = false,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -138,7 +141,160 @@ class AlbumDataLayer
 
         $output = [];
         foreach ($res as $item) {
-            $output[] = Album::fromArray($item);
+            $output[] = Album::fromArray(
+                data: $item,
+                sections: $includeSections
+                    ? $this->filterAlbumSectionBy(albumIds: [$item['album_id']])
+                    : [],
+            );
+        }
+
+        return $output;
+    }
+
+    public function filterAlbumSectionBy(
+        array $albumSectionIds = [],
+        array $albumIds = [],
+        array $mediaIds = [],
+        bool $includeMedia = false,
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
+        }
+
+        $orderByMapping = [
+            'id' => '`as`.id',
+        ];
+
+        $params = [];
+        $baseSql = 'SELECT ';
+        $fields = [
+            '`as`.id AS album_section_id',
+            '`as`.album_id AS album_section_album_id',
+            '`as`.main_media_id AS album_section_main_media_id',
+            '`as`.created_at AS album_section_created_at',
+            '`as`.updated_at AS album_section_updated_at',
+            '`as`.title_html AS album_section_title_html',
+            '`as`.content_html AS album_section_content_html',
+
+            'm.id AS media_id',
+            'm.user_id AS media_user_id',
+            'm.type_id AS media_type_id',
+            'm.status_id AS media_status_id',
+            'm.path AS media_path',
+            'm.filename_original AS media_filename_original',
+            'm.filename_small AS media_filename_small',
+            'm.filename_medium AS media_filename_medium',
+            'm.filename_large AS media_filename_large',
+            'm.caption_html AS media_caption_html',
+            'm.filename_source AS media_filename_source',
+            'm.created_at AS media_created_at',
+            'm.updated_at AS media_updated_at',
+        ];
+
+        $joins = ' FROM ' . self::ALBUM_SECTION_TABLE . ' AS `as`';
+        $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = `as`.main_media_id';
+
+        $where = ' WHERE 1';
+
+        if ($albumSectionIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $albumSectionIds, '`as`.id', 'albumSectionId');
+        }
+
+        if ($albumIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $albumIds, '`as`.album_id', 'albumId');
+        }
+
+        if ($mediaIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, '`as`.main_media_id', 'mainMediaId');
+        }
+
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
+
+        $res = $this->db->fetchAll($sql, $params);
+
+        $output = [];
+        foreach ($res as $item) {
+            $output[] = AlbumSection::fromArray(
+                data: $item,
+                media: $includeMedia
+                    ? $this->filterAlbumSectionMediaBy(albumSectionIds: [$item['album_section_id']])
+                    : [],
+            );
+        }
+
+        return $output;
+    }
+
+    public function filterAlbumSectionMediaBy(
+        array $albumSectionMediaIds = [],
+        array $albumSectionIds = [],
+        array $mediaIds = [],
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
+        }
+
+        $orderByMapping = [
+            'id' => '`as`.id',
+        ];
+
+        $params = [];
+        $baseSql = 'SELECT ';
+        $fields = [
+            '`as`.id AS album_section_id',
+            '`as`.album_id AS album_section_album_id',
+            '`as`.main_media_id AS album_section_main_media_id',
+            '`as`.created_at AS album_section_created_at',
+            '`as`.updated_at AS album_section_updated_at',
+            '`as`.title_html AS album_section_title_html',
+            '`as`.content_html AS album_section_content_html',
+
+            'm.id AS media_id',
+            'm.user_id AS media_user_id',
+            'm.type_id AS media_type_id',
+            'm.status_id AS media_status_id',
+            'm.path AS media_path',
+            'm.filename_original AS media_filename_original',
+            'm.filename_small AS media_filename_small',
+            'm.filename_medium AS media_filename_medium',
+            'm.filename_large AS media_filename_large',
+            'm.caption_html AS media_caption_html',
+            'm.filename_source AS media_filename_source',
+            'm.created_at AS media_created_at',
+            'm.updated_at AS media_updated_at',
+        ];
+
+        $joins = ' FROM ' . self::ALBUM_SECTION_MEDIA_TABLE . ' AS `as`';
+        $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = `as`.main_media_id';
+
+        $where = ' WHERE 1';
+
+        if ($albumSectionMediaIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $albumSectionMediaIds, '`as`.album_id', 'albumId');
+        }
+
+        if ($albumSectionIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $albumSectionIds, '`as`.id', 'albumSectionId');
+        }
+
+        if ($mediaIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, '`as`.main_media_id', 'mainMediaId');
+        }
+
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
+
+        $res = $this->db->fetchAll($sql, $params);
+
+        $output = [];
+        foreach ($res as $item) {
+            $output[] = AlbumSectionMedia::fromArray($item);
         }
 
         return $output;
@@ -218,6 +374,18 @@ class AlbumDataLayer
     {
         $res = $this->db->insert(
             tableName: self::ALBUM_SECTION_TABLE,
+            data: $item->asArray(),
+        );
+
+        $item->id = $res;
+
+        return $item;
+    }
+
+    public function storeMediaForAlbumSection(AlbumSectionMedia $item): AlbumSectionMedia
+    {
+        $res = $this->db->insert(
+            tableName: self::ALBUM_SECTION_MEDIA_TABLE,
             data: $item->asArray(),
         );
 

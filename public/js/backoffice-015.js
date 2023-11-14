@@ -430,6 +430,24 @@ const albumSelectMainMedia = (e) => {
   imageContainer.scrollIntoView();
 };
 
+const albumSectionAddMedia = (e) => {
+  const mediaId = e.currentTarget.mediaId;
+
+  const container = document.querySelector('.album-section-item-media');
+  const sourceImg = document.querySelector('img[data-media-id="' + mediaId + '"]');
+
+  const newImage = new Image();
+  newImage.src = sourceImg.dataset.pathMedium;
+  newImage.alt = sourceImg.alt;
+  newImage.title = sourceImg.title;
+  newImage.dataset.mediaId = sourceImg.dataset.mediaId;
+  newImage.className = 'album-section-image';
+  container.insertBefore(newImage, container.querySelector('.select-media-action'));
+
+  document.querySelector('.select-media-modal').classList.add('null');
+  container.scrollIntoView();
+};
+
 const displayImageFromApiCall = (container, images, eventListenerAction) => {
   images.forEach(image => {
     const existingImage = container.querySelector('img[data-media-id="' + image.id + '"]');
@@ -442,7 +460,9 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
         existingImage.addEventListener('click', articleSelectMainImage);
       } else if (eventListenerAction === 'albumSelectMainMedia') {
         existingImage.addEventListener('click', albumSelectMainMedia);
-      }
+      } else if (eventListenerAction === 'albumSectionAddMedia') {
+          existingImage.addEventListener('click', albumSectionAddMedia);
+        }
 
       existingImage.mediaId = image.id;
 
@@ -470,6 +490,8 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
       imageEl.addEventListener('click', articleSelectMainImage);
     } else if (eventListenerAction === 'albumSelectMainMedia') {
       imageEl.addEventListener('click', albumSelectMainMedia);
+    } else if (eventListenerAction === 'albumSectionAddMedia') {
+      imageEl.addEventListener('click', albumSectionAddMedia);
     }
 
     figureContainer.appendChild(imageEl);
