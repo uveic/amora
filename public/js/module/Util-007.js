@@ -133,6 +133,14 @@ class UtilClass {
 
     return element.innerHTML.trim();
   }
+
+  createLoadingAnimation() {
+    const loadingAnimation = new Image();
+    loadingAnimation.src = '/img/loading.gif';
+    loadingAnimation.alt = global.get('globalLoading');
+    loadingAnimation.className = 'img-svg img-svg-50';
+    return loadingAnimation;
+  }
 }
 
 export const Util = new UtilClass();

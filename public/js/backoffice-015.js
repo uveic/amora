@@ -7,6 +7,48 @@ let globalTags = [];
 
 const feedbackDiv = document.querySelector('#feedback');
 
+const selectMediaAction = (e) => {
+  e.preventDefault();
+
+  const button = e.currentTarget;
+
+  const modal = document.querySelector('.select-media-modal');
+  const loading = modal.querySelector('.select-media-modal-loading');
+  const imagesContainer = modal.querySelector('#images-list');
+  const loadMoreButton = modal.querySelector('.media-load-more-js');
+  const eventListenerAction = button.dataset.eventListenerAction;
+  const targetContainerId = button.dataset.targetContainerId ?? null;
+  modal.querySelector('input[name="select-media-action-upload"]').dataset.eventListenerAction = eventListenerAction;
+  loadMoreButton.dataset.eventListenerAction = eventListenerAction;
+  loadMoreButton.dataset.targetContainerId = targetContainerId;
+  modal.classList.remove('null');
+
+  const qty = 25;
+  const existingImages = imagesContainer.querySelectorAll('.image-item');
+  existingImages.forEach(img => {
+    addEventListenerAction(img, img.dataset.mediaId, eventListenerAction, targetContainerId);
+  });
+
+  if (existingImages.length >= qty) {
+    return;
+  }
+
+  loading.classList.remove('null');
+  const typeId = button.dataset.typeId ? Number.parseInt(button.dataset.typeId) : '';
+
+  xhr.get('/api/file?typeId=' + typeId + '&qty=' + qty)
+    .then(response => {
+      loading.classList.add('null');
+      imagesContainer.classList.remove('null');
+      displayImageFromApiCall(imagesContainer, response.files, eventListenerAction, targetContainerId);
+    })
+    .catch(error => {
+      modal.classList.add('null');
+      loading.classList.add('null');
+      Util.logError(error);
+    });
+};
+
 document.querySelectorAll('.article-save-button').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
@@ -376,7 +418,7 @@ const insertImageInArticle = (e) => {
 
   document.querySelector('.select-media-modal').classList.add('null');
 
-  imageCaption.scrollIntoView();
+  imageCaption.scrollIntoView({behavior: 'smooth', block: 'start' });
   imageCaption.focus();
 };
 
@@ -399,7 +441,7 @@ const articleSelectMainImage = (e) => {
 
   document.querySelector('.select-media-action span').textContent = global.get('globalModify');
   document.querySelector('.select-media-modal').classList.add('null');
-  document.querySelector('.article-main-image-wrapper').scrollIntoView();
+  document.querySelector('.article-main-image-wrapper').scrollIntoView({behavior: 'smooth', block: 'start' });
 };
 
 const albumSelectMainMedia = (e) => {
@@ -427,45 +469,66 @@ const albumSelectMainMedia = (e) => {
 
   e.currentTarget.textContent = global.get('globalModify');
   document.querySelector('.select-media-modal').classList.add('null');
-  imageContainer.scrollIntoView();
+  imageContainer.scrollIntoView({behavior: 'smooth', block: 'start' });
 };
 
 const albumSectionAddMedia = (e) => {
   const mediaId = e.currentTarget.mediaId;
+  const targetContainerId = e.currentTarget.targetContainerId;
 
-  const container = document.querySelector('.album-section-item-media');
-  const sourceImg = document.querySelector('img[data-media-id="' + mediaId + '"]');
+  const container = document.querySelector('#' + targetContainerId);
+  const albumSectionId = container.dataset.albumSectionId;
+  const actionButton = container.querySelector('.select-media-action');
 
-  const newImage = new Image();
-  newImage.src = sourceImg.dataset.pathMedium;
-  newImage.alt = sourceImg.alt;
-  newImage.title = sourceImg.title;
-  newImage.dataset.mediaId = sourceImg.dataset.mediaId;
-  newImage.className = 'album-section-image';
-  container.insertBefore(newImage, container.querySelector('.select-media-action'));
+  const loadingContainer = document.createElement('div');
+  loadingContainer.className = 'album-media-loading';
+  const loadingAnimation = Util.createLoadingAnimation();
+  loadingContainer.appendChild(loadingAnimation);
+  container.insertBefore(loadingContainer, actionButton);
+
+  const payload = {
+    mediaId: mediaId,
+  };
 
   document.querySelector('.select-media-modal').classList.add('null');
-  container.scrollIntoView();
+  actionButton.scrollIntoView({behavior: 'smooth', block: 'center' });
+
+  xhr.post('/back/album-section/' + albumSectionId + '/media', JSON.stringify(payload))
+    .then(response => {
+      if (response.html) {
+        actionButton.insertAdjacentHTML('beforebegin', response.html);
+      } else {
+        Util.notifyUser('A imaxe xa fora engadida.');
+      }
+    })
+    .catch(error => {
+      container.removeChild(container.querySelector('img[data-media-id="' + mediaId + '"]'));
+      Util.logError(error);
+    }).finally(() => container.removeChild(loadingContainer));
 };
 
-const displayImageFromApiCall = (container, images, eventListenerAction) => {
+const addEventListenerAction = (image, mediaId, eventListenerAction, targetContainerId) => {
+  if (eventListenerAction === 'displayImagePopup') {
+    image.addEventListener('click', displayImagePopup);
+  } else if (eventListenerAction === 'insertImageInArticle') {
+    image.addEventListener('click', insertImageInArticle);
+  } else if (eventListenerAction === 'articleSelectMainImage') {
+    image.addEventListener('click', articleSelectMainImage);
+  } else if (eventListenerAction === 'albumSelectMainMedia') {
+    image.addEventListener('click', albumSelectMainMedia);
+  } else if (eventListenerAction === 'albumSectionAddMedia') {
+    image.addEventListener('click', albumSectionAddMedia);
+  }
+
+  image.targetContainerId = targetContainerId;
+  image.mediaId = mediaId;
+};
+
+const displayImageFromApiCall = (container, images, eventListenerAction, targetContainerId = null) => {
   images.forEach(image => {
     const existingImage = container.querySelector('img[data-media-id="' + image.id + '"]');
     if (existingImage) {
-      if (eventListenerAction === 'displayImagePopup') {
-        existingImage.addEventListener('click', displayImagePopup);
-      } else if (eventListenerAction === 'insertImageInArticle') {
-        existingImage.addEventListener('click', insertImageInArticle);
-      } else if (eventListenerAction === 'articleSelectMainImage') {
-        existingImage.addEventListener('click', articleSelectMainImage);
-      } else if (eventListenerAction === 'albumSelectMainMedia') {
-        existingImage.addEventListener('click', albumSelectMainMedia);
-      } else if (eventListenerAction === 'albumSectionAddMedia') {
-          existingImage.addEventListener('click', albumSectionAddMedia);
-        }
-
-      existingImage.mediaId = image.id;
-
+      addEventListenerAction(existingImage, image.id, eventListenerAction, targetContainerId);
       return;
     }
 
@@ -481,18 +544,7 @@ const displayImageFromApiCall = (container, images, eventListenerAction) => {
     imageEl.dataset.pathMedium = image.pathMedium;
     imageEl.className = 'image-item';
     imageEl.loading = 'lazy';
-    imageEl.mediaId = image.id;
-    if (eventListenerAction === 'displayImagePopup') {
-      imageEl.addEventListener('click', displayImagePopup);
-    } else if (eventListenerAction === 'insertImageInArticle') {
-      imageEl.addEventListener('click', insertImageInArticle);
-    } else if (eventListenerAction === 'articleSelectMainImage') {
-      imageEl.addEventListener('click', articleSelectMainImage);
-    } else if (eventListenerAction === 'albumSelectMainMedia') {
-      imageEl.addEventListener('click', albumSelectMainMedia);
-    } else if (eventListenerAction === 'albumSectionAddMedia') {
-      imageEl.addEventListener('click', albumSectionAddMedia);
-    }
+    addEventListenerAction(imageEl, image.id, eventListenerAction, targetContainerId);
 
     figureContainer.appendChild(imageEl);
     container.appendChild(figureContainer);
@@ -1001,12 +1053,13 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
     const typeId = lm.dataset.typeId ? Number.parseInt(lm.dataset.typeId) : '';
     const dir = lm.dataset.direccion ?? '';
     const eventListenerAction = lm.dataset.eventListenerAction;
+    const targetContainerId = lm.dataset.targetContainerId ?? null;
 
     xhr.get('/api/file/' + lastImageId + '/next?direction=' + dir + '&typeId=' + typeId + '&qty=' + qty)
       .then(response => {
         const container = document.querySelector('#images-list');
 
-        displayImageFromApiCall(container, response.files, eventListenerAction);
+        displayImageFromApiCall(container, response.files, eventListenerAction, targetContainerId);
 
         lm.disabled = false;
 
@@ -1018,33 +1071,7 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
 });
 
 document.querySelectorAll('.select-media-action').forEach(am => {
-  am.addEventListener('click', e => {
-    e.preventDefault();
-
-    const modal = document.querySelector('.select-media-modal');
-    const loading = modal.querySelector('.select-media-modal-loading');
-    const imagesContainer = modal.querySelector('#images-list');
-    const eventListenerAction = am.dataset.eventListenerAction;
-    modal.querySelector('input[name="select-media-action-upload"]').dataset.eventListenerAction = eventListenerAction;
-    modal.querySelector('.media-load-more-js').dataset.eventListenerAction = eventListenerAction;
-    modal.classList.remove('null');
-    loading.classList.remove('null');
-
-    const qty = 25;
-    const typeId = am.dataset.typeId ? Number.parseInt(am.dataset.typeId) : '';
-
-    xhr.get('/api/file?typeId=' + typeId + '&qty=' + qty)
-      .then(response => {
-        loading.classList.add('null');
-        imagesContainer.classList.remove('null');
-        displayImageFromApiCall(imagesContainer, response.files, eventListenerAction);
-      })
-      .catch(error => {
-        modal.classList.add('null');
-        loading.classList.remove('null');
-        Util.logError(error);
-      });
-  });
+  am.addEventListener('click', selectMediaAction);
 });
 
 document.querySelectorAll('input[name="select-media-action-upload"]').forEach(im => {
@@ -1294,10 +1321,24 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
 
-    const modal = document.querySelector('.album-add-section-modal-js');
-    modal.querySelector('.modal-loading').classList.add('null');
-    modal.querySelector('.modal-inner').classList.remove('null');
-    modal.classList.remove('null');
+    const container = document.querySelector('.album-sections-wrapper');
+    const albumId = a.dataset.albumId;
+
+    const loadingContainer = document.createElement('div');
+    loadingContainer.className = 'album-section-loading';
+    const loadingAnimation = Util.createLoadingAnimation();
+    loadingContainer.appendChild(loadingAnimation);
+    container.appendChild(loadingContainer);
+
+    xhr.post('/back/album/' + albumId + '/section', '')
+      .then(response => {
+        container.insertAdjacentHTML('beforeend', response.html);
+        container.querySelector('.album-section-item[data-album-section-id="' + response.newSectionId + '"] .select-media-action')
+          .addEventListener('click', selectMediaAction);
+      })
+      .catch(error => {
+        Util.logError(error);
+      }).finally(() => container.removeChild(loadingContainer));
   });
 });
 

@@ -275,6 +275,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $album = $this->albumService->getAlbumForId(
             id: $albumId,
             includeSections: true,
+            includeMedia: true,
         );
 
         if (!$album) {

@@ -8,6 +8,7 @@ class BackofficeApiControllerStoreAlbumSectionSuccessResponse extends Response
 {
     public function __construct(
         bool $success,
+        ?int $newSectionId = null,
         ?string $html = null,
         ?string $errorMessage = null
     ) {
@@ -15,6 +16,10 @@ class BackofficeApiControllerStoreAlbumSectionSuccessResponse extends Response
         $responseData = [
             'success' => $success,
         ];
+
+        $responseData['newSectionId'] = is_null($newSectionId)
+            ? null
+            : $newSectionId;
 
         $responseData['html'] = is_null($html)
             ? null

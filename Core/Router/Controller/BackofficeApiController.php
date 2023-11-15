@@ -950,16 +950,16 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Method: POST
      *
      * @param int $albumId
-     * @param int $mainMediaId
-     * @param string $titleHtml
+     * @param int|null $mainMediaId
+     * @param string|null $titleHtml
      * @param string|null $contentHtml
      * @param Request $request
      * @return Response
      */
     protected function storeAlbumSection(
         int $albumId,
-        int $mainMediaId,
-        string $titleHtml,
+        ?int $mainMediaId,
+        ?string $titleHtml,
         ?string $contentHtml,
         Request $request
     ): Response {
@@ -971,8 +971,11 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $mainMedia = $this->mediaService->getMediaForId($mainMediaId);
-        if (!$mainMedia) {
+        $mainMedia = $mainMediaId
+            ? $this->mediaService->getMediaForId($mainMediaId)
+            : null;
+
+        if ($mainMediaId && !$mainMedia) {
             return new BackofficeApiControllerUpdateAlbumSuccessResponse(
                 success: false,
                 errorMessage: 'Main media ID not found',
@@ -982,7 +985,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $contentHtml = StringUtil::sanitiseHtml($contentHtml);
         $titleHtml = StringUtil::sanitiseHtml($titleHtml);
 
-        $newAlbum = $this->albumService->workflowStoreAlbumSection(
+        $newAlbumSection = $this->albumService->workflowStoreAlbumSection(
             album: $album,
             mainMedia: $mainMedia,
             titleHtml: $titleHtml,
@@ -990,13 +993,14 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         return new BackofficeApiControllerStoreAlbumSectionSuccessResponse(
-            success: (bool)$newAlbum,
-            html: '',
+            success: true,
+            newSectionId: $newAlbumSection->id,
+            html: AlbumHtmlGenerator::generateAlbumSectionHtml($newAlbumSection),
         );
     }
 
     /**
-     * Endpoint: /back/album/{albumId}/section/{albumSectionId}/media
+     * Endpoint: /back/album-section/{albumSectionId}/media
      * Method: POST
      *
      * @param int $albumSectionId
@@ -1029,6 +1033,17 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
+        $existingMedia = $this->albumService->getAlbumSectionMediaForIds(
+            albumSectionId: $albumSectionId,
+            mediaId: $mediaId,
+        );
+
+        if ($existingMedia) {
+            return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(
+                success: true,
+            );
+        }
+
         $newAlbumMedia = $this->albumService->workflowStoreMediaForAlbumSection(
             albumSection: $albumSection,
             media: $media,
@@ -1039,7 +1054,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(
             success: (bool)$newAlbumMedia,
             html: AlbumHtmlGenerator::generateAlbumSectionMediaHtml(
-                $media,
+                $newAlbumMedia,
             ),
         );
     }

@@ -110,6 +110,7 @@ class RouterCore extends Core
             className: 'BackofficeApiController',
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Entity/Response/Feedback.php';
+                require_once self::getPathRoot() . '/Core/Util/Helper/AlbumHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/BackofficeApiController.php';

@@ -483,7 +483,7 @@ class Pexego {
         ?? existingSections[existingSections.length - 1].dataset.editorId;
       const divEditor =document.querySelector('#' + Pexego.classes.sectionParagraph + '-' + id)
         .querySelector('.' + Pexego.classes.contentParagraph);
-      divEditor.scrollIntoView();
+      divEditor.scrollIntoView({behavior: 'smooth', block: 'start' });
       divEditor.focus();
       return;
     }
@@ -523,7 +523,7 @@ class Pexego {
     this.loadEditor(sectionId);
 
     if (focus) {
-      divEditor.scrollIntoView();
+      divEditor.scrollIntoView({behavior: 'smooth', block: 'start' });
       divEditor.focus();
     }
   }

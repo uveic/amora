@@ -1091,6 +1091,13 @@ h2.page-content-subtitle {
   justify-content: flex-start;
 }
 
+.album-section-item-number {
+  margin-bottom: -0.75rem;
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: var(--color-text-light);
+}
+
 .album-section-item {
   display: flex;
   flex-flow: row wrap;
@@ -1140,6 +1147,18 @@ h2.page-content-subtitle {
   max-width: 200px;
   height: auto;
   flex-grow: 1;
+}
+
+.album-media-loading {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  min-width: 140px;
+  max-width: 200px;
+  height: auto;
+  min-height: 100px;
 }
 /* Album ends here */
 
