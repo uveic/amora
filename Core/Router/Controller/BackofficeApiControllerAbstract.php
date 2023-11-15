@@ -323,16 +323,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Method: POST
      *
      * @param int $albumId
-     * @param int $mainMediaId
-     * @param string $titleHtml
+     * @param int|null $mainMediaId
+     * @param string|null $titleHtml
      * @param string|null $contentHtml
      * @param Request $request
      * @return Response
      */
     abstract protected function storeAlbumSection(
         int $albumId,
-        int $mainMediaId,
-        string $titleHtml,
+        ?int $mainMediaId,
+        ?string $titleHtml,
         ?string $contentHtml,
         Request $request
     ): Response;
@@ -1381,26 +1381,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
-        $mainMediaId = null;
-        if (!isset($bodyParams['mainMediaId'])) {
-            $errors[] = [
-                'field' => 'mainMediaId',
-                'message' => 'required'
-            ];
-        } else {
-            $mainMediaId = $bodyParams['mainMediaId'] ?? null;
-        }
-
-        $titleHtml = null;
-        if (!isset($bodyParams['titleHtml'])) {
-            $errors[] = [
-                'field' => 'titleHtml',
-                'message' => 'required'
-            ];
-        } else {
-            $titleHtml = $bodyParams['titleHtml'] ?? null;
-        }
-
+        $mainMediaId = $bodyParams['mainMediaId'] ?? null;
+        $titleHtml = $bodyParams['titleHtml'] ?? null;
         $contentHtml = $bodyParams['contentHtml'] ?? null;
 
         if ($errors) {

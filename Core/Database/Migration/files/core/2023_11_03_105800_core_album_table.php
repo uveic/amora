@@ -52,7 +52,7 @@ return "
     CREATE TABLE `core_album_section` (
         `id` int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
         `album_id` int(10) unsigned NOT NULL,
-        `main_media_id` int(10) unsigned NOT NULL,
+        `main_media_id` int(10) unsigned NULL DEFAULT NULL,
         `created_at` TIMESTAMP NOT NULL,
         `updated_at` TIMESTAMP NOT NULL,
         `title_html` varchar(500) COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,

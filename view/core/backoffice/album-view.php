@@ -85,7 +85,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
         );
 }?>
         </section>
-        <a href="#" class="album-add-section-js button is-standard">
+        <a href="#" class="album-add-section-js button is-standard" data-album-id="<?=$album->id?>">
           <img src="/img/svg/image-white.svg" class="img-svg img-svg-30" width="20" height="20" alt="Nova sección">
           <span class="one-line">Nova sección</span>
         </a>

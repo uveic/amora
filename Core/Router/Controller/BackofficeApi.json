@@ -1613,11 +1613,7 @@
                 "contentHtml": {
                   "type": "string"
                 }
-              },
-              "required": [
-                "mainMediaId",
-                "titleHtml"
-              ]
+              }
             }
           }
         ],
@@ -1634,6 +1630,9 @@
                     true,
                     false
                   ]
+                },
+                "newSectionId": {
+                  "type": "integer"
                 },
                 "html": {
                   "type": "string"

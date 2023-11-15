@@ -5,6 +5,7 @@ namespace Amora\Core\Util\Helper;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
+use Amora\Core\Module\Album\Model\AlbumSectionMedia;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -77,14 +78,23 @@ final class AlbumHtmlGenerator
         string $indentation = '',
     ): string {
         $output = [];
+        $output[] = $indentation . '<span class="album-section-item-number">#' . $section->id . '</span>';
         $output[] = $indentation . '<div class="album-section-item" data-album-section-id="' . $section->id . '">';
         $output[] = $indentation . '  <div class="album-section-item-content">';
-        $output[] = $indentation . '    <h3>' . $section->titleHtml . '</h3>';
-        $output[] = $indentation . '    <p>' . $section->contentHtml;
-        $output[] = $indentation . '    <img src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '">';
+        $output[] = $indentation . '    <h3>' . ($section->titleHtml ?: '-') . '</h3>';
+        $output[] = $indentation . '    <div>' . ($section->contentHtml ?: '-') . '</div>';
+        if ($section->mainMedia) {
+            $output[] = $indentation . '    <img src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '">';
+        }
         $output[] = $indentation . '  </div>';
-        $output[] = $indentation . '  <div class="album-section-item-media">';
-        $output[] = $indentation . '    <a href="#" class="button is-success select-media-action" data-album-section-id="' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
+        $output[] = $indentation . '  <div id="album-section-item-media-' . $section->id . '" class="album-section-item-media" data-album-section-id="' . $section->id . '">';
+
+        /** @var Media $media */
+        foreach ($section->media as $media) {
+            $output[] = $indentation . '    ' . self::generateAlbumSectionMediaHtml($media);
+        }
+
+        $output[] = $indentation . '    <a href="#" class="button is-success select-media-action" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
         $output[] = $indentation . '      <img class="img-svg img-svg-30" width="30" height="30" src="/img/svg/image-white.svg" alt="Img">';
         $output[] = $indentation . '      <span>Engadir</span>';
         $output[] = $indentation . '    </a>';
@@ -96,13 +106,13 @@ final class AlbumHtmlGenerator
     }
 
     public static function generateAlbumSectionMediaHtml(
-        Media $media,
+        AlbumSectionMedia $albumSectionMedia,
         string $indentation = '',
     ): string {
-        $titleAlt = $media->buildAltText();
+        $titleAlt = $albumSectionMedia->media->buildAltText();
 
         $output = [];
-        $output[] = $indentation . '<img src="' . $media->getPathWithNameSmall() . '" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $media->id . '" class="album-section-image">';
+        $output[] = $indentation . '<img src="' . $albumSectionMedia->media->getPathWithNameSmall() . '" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $albumSectionMedia->media->id . '" class="album-section-image">';
 
         return implode(PHP_EOL, $output) . PHP_EOL;
     }

@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Album\Datalayer;
 
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Module\Album\Model\AlbumSectionMedia;
@@ -14,6 +15,7 @@ use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\User\DataLayer\UserDataLayer;
+use Amora\Core\Value\QueryOrderDirection;
 
 class AlbumDataLayer
 {
@@ -45,6 +47,7 @@ class AlbumDataLayer
         array $templateIds = [],
         ?string $slug = null,
         bool $includeSections = false,
+        bool $includeMedia = false,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -143,7 +146,13 @@ class AlbumDataLayer
             $output[] = Album::fromArray(
                 data: $item,
                 sections: $includeSections
-                    ? $this->filterAlbumSectionBy(albumIds: [$item['album_id']])
+                    ? $this->filterAlbumSectionBy(
+                        albumIds: [$item['album_id']],
+                        includeMedia: $includeMedia,
+                        queryOptions: new QueryOptions(
+                            orderBy: [new QueryOrderBy('id', QueryOrderDirection::ASC)],
+                        ),
+                    )
                     : [],
             );
         }
@@ -193,7 +202,7 @@ class AlbumDataLayer
         ];
 
         $joins = ' FROM ' . self::ALBUM_SECTION_TABLE . ' AS `as`';
-        $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = `as`.main_media_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = `as`.main_media_id';
 
         $where = ' WHERE 1';
 
@@ -220,7 +229,12 @@ class AlbumDataLayer
             $output[] = AlbumSection::fromArray(
                 data: $item,
                 media: $includeMedia
-                    ? $this->filterAlbumSectionMediaBy(albumSectionIds: [$item['album_section_id']])
+                    ? $this->filterAlbumSectionMediaBy(
+                        albumSectionIds: [$item['album_section_id']],
+                        queryOptions: new QueryOptions(
+                            orderBy: [new QueryOrderBy('id', QueryOrderDirection::ASC)],
+                        ),
+                    )
                     : [],
             );
         }

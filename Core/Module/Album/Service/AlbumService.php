@@ -27,23 +27,35 @@ readonly class AlbumService
         int $id,
         ?Language $language = null,
         bool $includeSections = false,
+        bool $includeMedia = false,
     ): ?Album {
         $res = $this->filterAlbumBy(
             albumIds: [$id],
             languageIsoCodes: $language ? [$language->value] : [],
             includeSections: $includeSections,
+            includeMedia: $includeMedia,
         );
 
         return empty($res[0]) ? null : $res[0];
     }
 
     public function getAlbumSectionForId(
-        int $id,
+        int $albumSectionId,
         bool $includeMedia = false,
     ): ?AlbumSection {
         $res = $this->filterAlbumSectionBy(
-            albumIds: [$id],
+            albumSectionIds: [$albumSectionId],
             includeMedia: $includeMedia,
+        );
+
+        return empty($res[0]) ? null : $res[0];
+    }
+
+    public function getAlbumSectionMediaForIds(int $albumSectionId, int $mediaId): ?AlbumSectionMedia
+    {
+        $res = $this->filterAlbumSectionMediaBy(
+            albumSectionIds: [$albumSectionId],
+            mediaIds: [$mediaId],
         );
 
         return empty($res[0]) ? null : $res[0];
@@ -65,6 +77,7 @@ readonly class AlbumService
         array $templateIds = [],
         ?string $slug = null,
         bool $includeSections = false,
+        bool $includeMedia = false,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->albumDataLayer->filterAlbumBy(
@@ -74,6 +87,7 @@ readonly class AlbumService
             templateIds: $templateIds,
             slug: $slug,
             includeSections: $includeSections,
+            includeMedia: $includeMedia,
             queryOptions: $queryOptions,
         );
     }
@@ -90,6 +104,20 @@ readonly class AlbumService
             albumIds: $albumIds,
             mediaIds: $mediaIds,
             includeMedia: $includeMedia,
+            queryOptions: $queryOptions,
+        );
+    }
+
+    public function filterAlbumSectionMediaBy(
+        array $albumSectionMediaIds = [],
+        array $albumSectionIds = [],
+        array $mediaIds = [],
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        return $this->albumDataLayer->filterAlbumSectionMediaBy(
+            albumSectionMediaIds: $albumSectionMediaIds,
+            albumSectionIds: $albumSectionIds,
+            mediaIds: $mediaIds,
             queryOptions: $queryOptions,
         );
     }
@@ -263,8 +291,8 @@ readonly class AlbumService
 
     public function workflowStoreAlbumSection(
         Album $album,
-        Media $mainMedia,
-        string $titleHtml,
+        ?Media $mainMedia,
+        ?string $titleHtml,
         ?string $contentHtml,
     ): AlbumSection {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
@@ -315,7 +343,7 @@ readonly class AlbumService
                     new AlbumSectionMedia(
                         id: null,
                         albumSectionId: $albumSection->id,
-                        mainMedia: $media,
+                        media: $media,
                         titleHtml: $titleHtml,
                         contentHtml: $contentHtml,
                         createdAt: $now,
