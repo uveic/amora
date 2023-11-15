@@ -1650,19 +1650,12 @@
         }
       }
     },
-    "/back/album/{albumId}/section/{albumSectionId}/media": {
+    "/back/album-section/{albumSectionId}/media": {
       "post": {
         "tags": [],
         "description": "Store media for album section",
         "operationId": "storeMediaForAlbumSection",
         "parameters": [
-          {
-            "name": "albumId",
-            "in": "path",
-            "description": "Album ID",
-            "required": true,
-            "type": "integer"
-          },
           {
             "name": "albumSectionId",
             "in": "path",

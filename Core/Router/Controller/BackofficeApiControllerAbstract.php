@@ -338,10 +338,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     ): Response;
 
     /**
-     * Endpoint: /back/album/{albumId}/section/{albumSectionId}/media
+     * Endpoint: /back/album-section/{albumSectionId}/media
      * Method: POST
      *
-     * @param int $albumId
      * @param int $albumSectionId
      * @param int $mediaId
      * @param string|null $titleHtml
@@ -350,7 +349,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function storeMediaForAlbumSection(
-        int $albumId,
         int $albumSectionId,
         int $mediaId,
         ?string $titleHtml,
@@ -1437,28 +1435,11 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     {
         $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
-            ['back', 'album', '{albumId}', 'section', '{albumSectionId}', 'media'],
+            ['back', 'album-section', '{albumSectionId}', 'media'],
             $pathParts
         );
         $bodyParams = $request->getBodyPayload();
         $errors = [];
-
-        $albumId = null;
-        if (!isset($pathParams['albumId'])) {
-            $errors[] = [
-                'field' => 'albumId',
-                'message' => 'required'
-            ];
-        } else {
-            if (!is_numeric($pathParams['albumId'])) {
-                $errors[] = [
-                    'field' => 'albumId',
-                    'message' => 'must be an integer'
-                ];
-            } else {
-                $albumId = intval($pathParams['albumId']);
-            }
-        }
 
         $albumSectionId = null;
         if (!isset($pathParams['albumSectionId'])) {
@@ -1509,7 +1490,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         try {
             return $this->storeMediaForAlbumSection(
-                $albumId,
                 $albumSectionId,
                 $mediaId,
                 $titleHtml,
@@ -1688,9 +1668,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         if ($method === 'POST' &&
             $pathParams = $this->pathParamsMatcher(
-                ['back', 'album', '{albumId}', 'section', '{albumSectionId}', 'media'],
+                ['back', 'album-section', '{albumSectionId}', 'media'],
                 $pathParts,
-                ['fixed', 'fixed', 'int', 'fixed', 'int', 'fixed']
+                ['fixed', 'fixed', 'int', 'fixed']
             )
         ) {
             return $this->validateAndCallStoreMediaForAlbumSection($request);

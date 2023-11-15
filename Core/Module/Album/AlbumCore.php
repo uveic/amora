@@ -4,6 +4,7 @@ namespace Amora\Core\Module\Album;
 
 use Amora\Core\Core;
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Util\Logger;
 use Amora\Core\Module\Album\DataLayer\AlbumDataLayer;
 use Amora\Core\Module\Album\Service\AlbumService;
@@ -35,6 +36,7 @@ class AlbumCore extends Core
                 return new AlbumDataLayer(
                     db: self::getDb(),
                     logger: self::getAlbumLogger(),
+                    mediaDataLayer: ArticleCore::getMediaDataLayer(),
                 );
             },
         );
