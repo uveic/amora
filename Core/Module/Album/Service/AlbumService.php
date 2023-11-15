@@ -40,7 +40,7 @@ readonly class AlbumService
     public function getAlbumSectionForId(
         int $id,
         bool $includeMedia = false,
-    ): ?Album {
+    ): ?AlbumSection {
         $res = $this->filterAlbumSectionBy(
             albumIds: [$id],
             includeMedia: $includeMedia,
@@ -302,7 +302,7 @@ readonly class AlbumService
         Media $media,
         ?string $titleHtml,
         ?string $contentHtml,
-    ): AlbumSection {
+    ): AlbumSectionMedia {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
             function () use (
                 $albumSection,

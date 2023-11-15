@@ -2,11 +2,11 @@
 
 namespace Amora\Core\Util\Helper;
 
-use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Module\Album\Value\AlbumStatus;
+use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Util\UrlBuilderUtil;
 
 final class AlbumHtmlGenerator
@@ -43,8 +43,7 @@ final class AlbumHtmlGenerator
         HtmlResponseDataAdmin $responseData,
         Album $album,
         string $indentation = '',
-    ): string
-    {
+    ): string {
         $albumEditUrl = UrlBuilderUtil::buildBackofficeAlbumViewUrl(
             language: $responseData->siteLanguage,
             albumId: $album->id,
@@ -76,8 +75,7 @@ final class AlbumHtmlGenerator
     public static function generateAlbumSectionHtml(
         AlbumSection $section,
         string $indentation = '',
-    ): string
-    {
+    ): string {
         $output = [];
         $output[] = $indentation . '<div class="album-section-item" data-album-section-id="' . $section->id . '">';
         $output[] = $indentation . '  <div class="album-section-item-content">';
@@ -93,6 +91,18 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '  </div>';
 
         $output[] = $indentation . '</div>';
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
+    }
+
+    public static function generateAlbumSectionMediaHtml(
+        Media $media,
+        string $indentation = '',
+    ): string {
+        $titleAlt = $media->buildAltText();
+
+        $output = [];
+        $output[] = $indentation . '<img src="' . $media->getPathWithNameSmall() . '" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $media->id . '" class="album-section-image">';
 
         return implode(PHP_EOL, $output) . PHP_EOL;
     }

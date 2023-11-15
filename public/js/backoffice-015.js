@@ -505,7 +505,7 @@ document.querySelectorAll('.image-item').forEach(im => {
 });
 
 document.querySelectorAll('.image-next-action, .image-previous-action, .image-random-action').forEach(ina => {
-  ina.addEventListener('click', e => {
+  ina.addEventListener('click', () => {
     const img = document.querySelector('.image-wrapper .image-main img');
     img.classList.add('hidden');
     img.mediaId = img.dataset.mediaId;

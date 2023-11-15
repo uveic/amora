@@ -8,7 +8,6 @@ use Amora\Core\Module\Album\Model\AlbumSectionMedia;
 use Amora\Core\Module\Album\Model\AlbumSlug;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
-use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Util\DateUtil;
@@ -240,19 +239,19 @@ class AlbumDataLayer
         }
 
         $orderByMapping = [
-            'id' => '`as`.id',
+            'id' => 'asm.id',
         ];
 
         $params = [];
         $baseSql = 'SELECT ';
         $fields = [
-            '`as`.id AS album_section_id',
-            '`as`.album_id AS album_section_album_id',
-            '`as`.main_media_id AS album_section_main_media_id',
-            '`as`.created_at AS album_section_created_at',
-            '`as`.updated_at AS album_section_updated_at',
-            '`as`.title_html AS album_section_title_html',
-            '`as`.content_html AS album_section_content_html',
+            'asm.id AS album_section_media_id',
+            'asm.album_section_id AS album_section_media_album_section_id',
+            'asm.media_id AS album_section_media_media_id',
+            'asm.created_at AS album_section_media_created_at',
+            'asm.updated_at AS album_section_media_updated_at',
+            'asm.title_html AS album_section_media_title_html',
+            'asm.content_html AS album_section_media_content_html',
 
             'm.id AS media_id',
             'm.user_id AS media_user_id',
@@ -269,21 +268,21 @@ class AlbumDataLayer
             'm.updated_at AS media_updated_at',
         ];
 
-        $joins = ' FROM ' . self::ALBUM_SECTION_MEDIA_TABLE . ' AS `as`';
-        $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = `as`.main_media_id';
+        $joins = ' FROM ' . self::ALBUM_SECTION_MEDIA_TABLE . ' AS `asm`';
+        $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = asm.media_id';
 
         $where = ' WHERE 1';
 
         if ($albumSectionMediaIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $albumSectionMediaIds, '`as`.album_id', 'albumId');
+            $where .= $this->generateWhereSqlCodeForIds($params, $albumSectionMediaIds, 'asm.id', 'albumSectionMediaId');
         }
 
         if ($albumSectionIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $albumSectionIds, '`as`.id', 'albumSectionId');
+            $where .= $this->generateWhereSqlCodeForIds($params, $albumSectionIds, 'asm.album_section_id', 'albumSectionId');
         }
 
         if ($mediaIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, '`as`.main_media_id', 'mainMediaId');
+            $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, 'asm.media_id', 'mediaId');
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
