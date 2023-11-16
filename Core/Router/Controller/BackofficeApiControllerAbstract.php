@@ -326,6 +326,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param int|null $mainMediaId
      * @param string|null $titleHtml
      * @param string|null $contentHtml
+     * @param int $sequence
      * @param Request $request
      * @return Response
      */
@@ -334,6 +335,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?int $mainMediaId,
         ?string $titleHtml,
         ?string $contentHtml,
+        int $sequence,
         Request $request
     ): Response;
 
@@ -345,6 +347,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param int $mediaId
      * @param string|null $titleHtml
      * @param string|null $contentHtml
+     * @param int $sequence
      * @param Request $request
      * @return Response
      */
@@ -353,6 +356,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         int $mediaId,
         ?string $titleHtml,
         ?string $contentHtml,
+        int $sequence,
         Request $request
     ): Response;
 
@@ -1384,6 +1388,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         $mainMediaId = $bodyParams['mainMediaId'] ?? null;
         $titleHtml = $bodyParams['titleHtml'] ?? null;
         $contentHtml = $bodyParams['contentHtml'] ?? null;
+        $sequence = null;
+        if (!isset($bodyParams['sequence'])) {
+            $errors[] = [
+                'field' => 'sequence',
+                'message' => 'required'
+            ];
+        } else {
+            $sequence = $bodyParams['sequence'] ?? null;
+        }
+
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -1401,6 +1415,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $mainMediaId,
                 $titleHtml,
                 $contentHtml,
+                $sequence,
                 $request
             );
         } catch (Throwable $t) {
@@ -1459,6 +1474,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         $titleHtml = $bodyParams['titleHtml'] ?? null;
         $contentHtml = $bodyParams['contentHtml'] ?? null;
+        $sequence = null;
+        if (!isset($bodyParams['sequence'])) {
+            $errors[] = [
+                'field' => 'sequence',
+                'message' => 'required'
+            ];
+        } else {
+            $sequence = $bodyParams['sequence'] ?? null;
+        }
+
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -1476,6 +1501,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $mediaId,
                 $titleHtml,
                 $contentHtml,
+                $sequence,
                 $request
             );
         } catch (Throwable $t) {

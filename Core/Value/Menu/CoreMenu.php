@@ -22,7 +22,7 @@ final class CoreMenu
             new MenuItem(
                 path: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
                 text: $localisationUtil->getValue('navAdministrator'),
-                order: 100,
+                sequence: 100,
             ),
             new MenuItem(
                 text: $localisationUtil->getValue('navAdminContent'),
@@ -32,58 +32,58 @@ final class CoreMenu
                         path: UrlBuilderUtil::buildBackofficeContentListUrl($language),
                         text: $localisationUtil->getValue('navAdminPageContentEdit'),
                         icon: '<img class="img-svg" width="20" height="20" src="/img/svg/house-line-white.svg" alt="' . $localisationUtil->getValue('navAdminPageContentEdit') . '">',
-                        order: 2000,
+                        sequence: 2000,
                     ),
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeAlbumListUrl($language),
                         text: $localisationUtil->getValue('navAdminAlbums'),
                         icon: '<img class="img-svg" width="20" height="20" src="/img/svg/images-white.svg" alt="' . $localisationUtil->getValue('navAdminAlbums') . '">',
-                        order: 2010,
+                        sequence: 2010,
                     ),
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeImageListUrl($language),
                         text: $localisationUtil->getValue('navAdminImages'),
                         icon: '<img class="img-svg" width="20" height="20" src="/img/svg/image-white.svg" alt="' . $localisationUtil->getValue('navAdminImages') . '">',
-                        order: 2020,
+                        sequence: 2020,
                     ),
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeMediaListUrl($language),
                         text: $localisationUtil->getValue('navAdminMedia'),
                         icon: '<img class="img-svg" width="20" height="20" src="/img/svg/files-white.svg" alt="' . $localisationUtil->getValue('navAdminMedia') . '">',
-                        order: 2030,
+                        sequence: 2030,
                     ),
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeArticleListUrl($language, ArticleType::Page),
                         text: $localisationUtil->getValue('navAdminArticles'),
                         icon: ArticleType::getIcon(item: ArticleType::Page, white: true, alt: $localisationUtil->getValue('navAdminArticles')),
-                        order: 2040,
+                        sequence: 2040,
                     ),
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeArticleListUrl($language, ArticleType::Blog),
                         text: $localisationUtil->getValue('navAdminBlogPosts'),
                         icon: ArticleType::getIcon(item: ArticleType::Blog, white: true, alt: $localisationUtil->getValue('navAdminBlogPosts')),
-                        order: 2050,
+                        sequence: 2050,
                     ),
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeUserListUrl($language),
                         text: $localisationUtil->getValue('navAdminUsers'),
                         icon: '<img class="img-svg" width="20" height="20" src="/img/svg/users-white.svg" alt="' . $localisationUtil->getValue('navAdminUsers') . '">',
-                        order: 2060,
+                        sequence: 2060,
                     ),
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeAnalyticsUrl($language, eventType: EventType::Visitor),
                         text: $localisationUtil->getValue('navAdminAnalytics'),
                         icon: '<img class="img-svg" width="20" height="20" src="/img/svg/chart-line-white.svg" alt="' . $localisationUtil->getValue('navAdminAnalytics') . '">',
-                        order: 2070,
+                        sequence: 2070,
                     ),
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeMailsUrl($language),
                         text: $localisationUtil->getValue('navAdminEmails'),
                         icon: '<img class="img-svg" width="20" height="20" src="/img/svg/envelope-simple-white.svg" alt="' . $localisationUtil->getValue('navAdminEmails') . '">',
-                        order: 2080,
+                        sequence: 2080,
                     ),
                 ],
-                order: 200,
+                sequence: 200,
             ),
             new MenuItem(
                 text: $username ?? $localisationUtil->getValue('navAccount'),
@@ -100,7 +100,7 @@ final class CoreMenu
                         icon: '<img class="img-svg" width="20" height="20" src="/img/svg/sign-out-white.svg" alt="' . $localisationUtil->getValue('navSignOut') . '">',
                     ),
                 ],
-                order: 9999,
+                sequence: 9999,
             ),
         ];
 
@@ -108,7 +108,7 @@ final class CoreMenu
             $output[] = new MenuItem(
                 path: UrlBuilderUtil::buildAppDashboardUrl($language),
                 text: $localisationUtil->getValue('navDashboard'),
-                order: 0,
+                sequence: 0,
             );
         }
 
@@ -128,7 +128,7 @@ final class CoreMenu
             $output[] = new MenuItem(
                 path: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
                 text: $localisationUtil->getValue('navAdministrator'),
-                order: 0,
+                sequence: 0,
             );
         }
 
@@ -151,7 +151,7 @@ final class CoreMenu
                     icon: '<img class="img-svg" width="20" height="20" src="/img/svg/sign-out' . ($whiteIcon ? '-white' : '') . '.svg" alt="' . $localisationUtil->getValue('navSignOut') . '">',
                 ),
             ],
-            order: 9999,
+            sequence: 9999,
         );
 
         return $output;

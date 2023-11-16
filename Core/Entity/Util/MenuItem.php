@@ -2,14 +2,14 @@
 
 namespace Amora\Core\Entity\Util;
 
-class MenuItem
+readonly class MenuItem
 {
     public function __construct(
-        public readonly ?string $path = null,
-        public readonly ?string $text = null,
-        public readonly ?string $icon = null,
-        public readonly array $children = [],
-        public readonly int $order = 0,
-        public readonly ?string $class = null,
+        public ?string $path = null,
+        public ?string $text = null,
+        public ?string $icon = null,
+        public array $children = [],
+        public int $sequence = 0,
+        public ?string $class = null,
     ) {}
 }

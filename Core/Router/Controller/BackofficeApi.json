@@ -527,9 +527,9 @@
                         "type": "string",
                         "description": "Content HTML"
                       },
-                      "order": {
+                      "sequence": {
                         "type": "integer",
-                        "description": "Section order"
+                        "description": "Section sequence"
                       },
                       "imageId": {
                         "type": "integer",
@@ -1612,8 +1612,14 @@
                 },
                 "contentHtml": {
                   "type": "string"
+                },
+                "sequence": {
+                  "type": "integer"
                 }
-              }
+              },
+              "required": [
+                "sequence"
+              ]
             }
           }
         ],
@@ -1677,10 +1683,14 @@
                 },
                 "contentHtml": {
                   "type": "string"
+                },
+                "sequence": {
+                  "type": "integer"
                 }
               },
               "required": [
-                "mediaId"
+                "mediaId",
+                "sequence"
               ]
             }
           }

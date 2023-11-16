@@ -16,6 +16,7 @@ class AlbumSection
         public readonly ?string $contentHtml,
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt,
+        public readonly int $sequence,
         public readonly array $media = [],
     ) {}
 
@@ -29,6 +30,7 @@ class AlbumSection
             contentHtml: $data['album_section_content_html'],
             createdAt: DateUtil::convertStringToDateTimeImmutable($data['album_section_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($data['album_section_updated_at']),
+            sequence: (int)$data['album_section_sequence'],
             media: $media,
         );
     }
@@ -43,6 +45,7 @@ class AlbumSection
             'content_html' => $this->contentHtml,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'sequence' => $this->sequence,
         ];
     }
 }
