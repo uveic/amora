@@ -544,7 +544,7 @@ class ArticleDataLayer
             $params[':articleSectionTypeId'] = $sectionTypeId;
         }
 
-        $sql .= ' ORDER BY aSec.`order` ASC, aSec.id DESC';
+        $sql .= ' ORDER BY aSec.`sequence` ASC, aSec.id DESC';
 
         $res = $this->db->fetchAll($sql, $params);
 

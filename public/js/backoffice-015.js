@@ -485,9 +485,11 @@ const albumSectionAddMedia = (e) => {
   const loadingAnimation = Util.createLoadingAnimation();
   loadingContainer.appendChild(loadingAnimation);
   container.insertBefore(loadingContainer, actionButton);
+  const sequence = container.querySelector('.').dataset.sequence;
 
   const payload = {
     mediaId: mediaId,
+    sequence: sequence,
   };
 
   document.querySelector('.select-media-modal').classList.add('null');

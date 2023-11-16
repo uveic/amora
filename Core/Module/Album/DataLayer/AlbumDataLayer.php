@@ -150,7 +150,10 @@ class AlbumDataLayer
                         albumIds: [$item['album_id']],
                         includeMedia: $includeMedia,
                         queryOptions: new QueryOptions(
-                            orderBy: [new QueryOrderBy('id', QueryOrderDirection::ASC)],
+                            orderBy: [
+                                new QueryOrderBy('order', QueryOrderDirection::ASC),
+                                new QueryOrderBy('id', QueryOrderDirection::ASC),
+                            ],
                         ),
                     )
                     : [],
@@ -172,6 +175,7 @@ class AlbumDataLayer
         }
 
         $orderByMapping = [
+            'order' => '`as`.sequence',
             'id' => '`as`.id',
         ];
 
@@ -185,6 +189,7 @@ class AlbumDataLayer
             '`as`.updated_at AS album_section_updated_at',
             '`as`.title_html AS album_section_title_html',
             '`as`.content_html AS album_section_content_html',
+            '`as`.`sequence` AS album_section_sequence',
 
             'm.id AS media_id',
             'm.user_id AS media_user_id',
@@ -232,7 +237,10 @@ class AlbumDataLayer
                     ? $this->filterAlbumSectionMediaBy(
                         albumSectionIds: [$item['album_section_id']],
                         queryOptions: new QueryOptions(
-                            orderBy: [new QueryOrderBy('id', QueryOrderDirection::ASC)],
+                            orderBy: [
+                                new QueryOrderBy('order', QueryOrderDirection::ASC),
+                                new QueryOrderBy('id', QueryOrderDirection::ASC),
+                            ],
                         ),
                     )
                     : [],
@@ -253,6 +261,7 @@ class AlbumDataLayer
         }
 
         $orderByMapping = [
+            'order' => 'asm.`sequence`',
             'id' => 'asm.id',
         ];
 
@@ -266,6 +275,7 @@ class AlbumDataLayer
             'asm.updated_at AS album_section_media_updated_at',
             'asm.title_html AS album_section_media_title_html',
             'asm.content_html AS album_section_media_content_html',
+            'asm.`sequence` AS album_section_media_sequence',
 
             'm.id AS media_id',
             'm.user_id AS media_user_id',

@@ -57,8 +57,10 @@ return "
         `updated_at` TIMESTAMP NOT NULL,
         `title_html` varchar(500) COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
         `content_html` text COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+        `sequence` smallint(5) unsigned NOT NULL DEFAULT 0,
         KEY `core_album_section_album_id_idx` (`album_id`),
         KEY `core_album_section_main_media_id_idx` (`main_media_id`),
+        KEY `core_album_section_sequence_idx` (`sequence`),
         CONSTRAINT `core_album_section_album_id_fk` FOREIGN KEY (`album_id`) REFERENCES `core_album` (`id`),
         CONSTRAINT `core_album_section_main_media_id_fk` FOREIGN KEY (`main_media_id`) REFERENCES `core_media` (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -71,8 +73,10 @@ return "
         `updated_at` TIMESTAMP NOT NULL,
         `title_html` varchar(500) COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
         `content_html` text COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+        `sequence` smallint(5) unsigned NOT NULL DEFAULT 0,
         KEY `core_album_section_media_album_section_id_idx` (`album_section_id`),
         KEY `core_album_section_media_media_id_idx` (`media_id`),
+        KEY `core_album_section_media_sequence_idx` (`sequence`),
         CONSTRAINT `core_album_section_media_album_section_id_fk` FOREIGN KEY (`album_section_id`) REFERENCES `core_album_section` (`id`),
         CONSTRAINT `core_album_section_media_media_id_fk` FOREIGN KEY (`media_id`) REFERENCES `core_media` (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

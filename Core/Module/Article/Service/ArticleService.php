@@ -363,7 +363,7 @@ readonly class ArticleService
                 articleId: $articleId,
                 articleSectionType: $sectionType,
                 contentHtml: $contentHtml,
-                order: isset($section['order']) ? (int)$section['order'] : null,
+                sequence: isset($section['sequence']) ? (int)$section['sequence'] : null,
                 mediaId: isset($section['imageId']) ? (int)$section['imageId'] : null,
                 mediaCaption: $mediaCaption,
                 createdAt: $newSectionId && isset($articleSectionsById[$newSectionId])

@@ -953,6 +953,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int|null $mainMediaId
      * @param string|null $titleHtml
      * @param string|null $contentHtml
+     * @param int|null $sequence
      * @param Request $request
      * @return Response
      */
@@ -961,6 +962,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?int $mainMediaId,
         ?string $titleHtml,
         ?string $contentHtml,
+        ?int $sequence,
         Request $request
     ): Response {
         $album = $this->albumService->getAlbumForId($albumId);
@@ -990,6 +992,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             mainMedia: $mainMedia,
             titleHtml: $titleHtml,
             contentHtml: $contentHtml,
+            sequence: $sequence,
         );
 
         return new BackofficeApiControllerStoreAlbumSectionSuccessResponse(
@@ -1007,6 +1010,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int $mediaId
      * @param string|null $titleHtml
      * @param string|null $contentHtml
+     * @param int $sequence
      * @param Request $request
      * @return Response
      */
@@ -1015,6 +1019,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         int $mediaId,
         ?string $titleHtml,
         ?string $contentHtml,
+        int $sequence,
         Request $request
     ): Response {
         $albumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
@@ -1049,6 +1054,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             media: $media,
             titleHtml: $titleHtml,
             contentHtml: $contentHtml,
+            sequence: $sequence,
         );
 
         return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(

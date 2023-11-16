@@ -294,6 +294,7 @@ readonly class AlbumService
         ?Media $mainMedia,
         ?string $titleHtml,
         ?string $contentHtml,
+        int $sequence,
     ): AlbumSection {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
             function () use (
@@ -301,6 +302,7 @@ readonly class AlbumService
                 $mainMedia,
                 $titleHtml,
                 $contentHtml,
+                $sequence,
             ) {
                 $now = new DateTimeImmutable();
                 $resStore = $this->albumDataLayer->storeAlbumSection(
@@ -312,6 +314,7 @@ readonly class AlbumService
                         contentHtml: $contentHtml,
                         createdAt: $now,
                         updatedAt: $now,
+                        sequence: $sequence,
                     ),
                 );
 
@@ -330,6 +333,7 @@ readonly class AlbumService
         Media $media,
         ?string $titleHtml,
         ?string $contentHtml,
+        int $sequence,
     ): AlbumSectionMedia {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
             function () use (
@@ -337,6 +341,7 @@ readonly class AlbumService
                 $media,
                 $titleHtml,
                 $contentHtml,
+                $sequence,
             ) {
                 $now = new DateTimeImmutable();
                 $resStore = $this->albumDataLayer->storeMediaForAlbumSection(
@@ -348,6 +353,7 @@ readonly class AlbumService
                         contentHtml: $contentHtml,
                         createdAt: $now,
                         updatedAt: $now,
+                        sequence: $sequence,
                     ),
                 );
 
