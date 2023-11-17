@@ -114,6 +114,7 @@ return [
     'globalRole' => 'Role',
     'globalTimezone' => 'Timezone',
     'globalBio' => 'Bio',
+    'globalCancel' => 'Cancel',
     'globalSave' => 'Save',
     'globalSend' => 'Send',
     'globalUpdate' => 'Update',

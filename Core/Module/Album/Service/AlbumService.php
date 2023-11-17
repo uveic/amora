@@ -61,10 +61,15 @@ readonly class AlbumService
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getAlbumForSlug(string $slug): ?Album
-    {
+    public function getAlbumForSlug(
+        string $slug,
+        bool $includeSections = false,
+        bool $includeMedia = false,
+    ): ?Album {
         $res = $this->filterAlbumBy(
             slug: $slug,
+            includeSections: $includeSections,
+            includeMedia: $includeMedia,
         );
 
         return empty($res[0]) ? null : $res[0];
@@ -294,7 +299,6 @@ readonly class AlbumService
         ?Media $mainMedia,
         ?string $titleHtml,
         ?string $contentHtml,
-        int $sequence,
     ): AlbumSection {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
             function () use (
@@ -302,8 +306,9 @@ readonly class AlbumService
                 $mainMedia,
                 $titleHtml,
                 $contentHtml,
-                $sequence,
             ) {
+                $sequence = $this->albumDataLayer->getMaxAlbumSectionSequence($album->id);
+
                 $now = new DateTimeImmutable();
                 $resStore = $this->albumDataLayer->storeAlbumSection(
                     new AlbumSection(
@@ -314,7 +319,7 @@ readonly class AlbumService
                         contentHtml: $contentHtml,
                         createdAt: $now,
                         updatedAt: $now,
-                        sequence: $sequence,
+                        sequence: $sequence + 1,
                     ),
                 );
 
@@ -333,7 +338,6 @@ readonly class AlbumService
         Media $media,
         ?string $titleHtml,
         ?string $contentHtml,
-        int $sequence,
     ): AlbumSectionMedia {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
             function () use (
@@ -341,8 +345,9 @@ readonly class AlbumService
                 $media,
                 $titleHtml,
                 $contentHtml,
-                $sequence,
             ) {
+                $sequence = $this->albumDataLayer->getMaxAlbumSectionMediaSequence($albumSection->id);
+
                 $now = new DateTimeImmutable();
                 $resStore = $this->albumDataLayer->storeMediaForAlbumSection(
                     new AlbumSectionMedia(
@@ -353,7 +358,7 @@ readonly class AlbumService
                         contentHtml: $contentHtml,
                         createdAt: $now,
                         updatedAt: $now,
-                        sequence: $sequence,
+                        sequence: $sequence + 1,
                     ),
                 );
 

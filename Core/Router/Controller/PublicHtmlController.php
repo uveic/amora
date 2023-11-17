@@ -285,7 +285,12 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getAlbumPage(string $albumSlug, Request $request): Response
     {
-        $album = $this->albumService->getAlbumForSlug($albumSlug);
+        $album = $this->albumService->getAlbumForSlug(
+            slug: $albumSlug,
+            includeSections: true,
+            includeMedia: true,
+        );
+
         if (!$album) {
             $slug = $this->albumService->getAlbumSlugForSlug($albumSlug);
             if ($slug) {

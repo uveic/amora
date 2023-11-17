@@ -1612,14 +1612,8 @@
                 },
                 "contentHtml": {
                   "type": "string"
-                },
-                "sequence": {
-                  "type": "integer"
                 }
-              },
-              "required": [
-                "sequence"
-              ]
+              }
             }
           }
         ],
@@ -1683,14 +1677,10 @@
                 },
                 "contentHtml": {
                   "type": "string"
-                },
-                "sequence": {
-                  "type": "integer"
                 }
               },
               "required": [
-                "mediaId",
-                "sequence"
+                "mediaId"
               ]
             }
           }

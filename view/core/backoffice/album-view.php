@@ -80,6 +80,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     /** @var AlbumSection $section */
     foreach ($album->sections as $section) {
         echo AlbumHtmlGenerator::generateAlbumSectionHtml(
+            language: $responseData->siteLanguage,
             section: $section,
             indentation: '          ',
         );

@@ -114,6 +114,7 @@ return [
     'globalRole' => 'Rol',
     'globalTimezone' => 'Zona horaria',
     'globalBio' => 'Breve biografía',
+    'globalCancel' => 'Cancelar',
     'globalSave' => 'Guardar',
     'globalSend' => 'Enviar',
     'globalUpdate' => 'Actualizar',

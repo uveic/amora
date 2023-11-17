@@ -6,7 +6,6 @@ use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
-use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
@@ -400,7 +399,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 path: $path,
                 tags: [],
             ),
-            sections: $sections ?? [],
+            sections: $sections,
             tags: $tags ?? [],
             userIp: $request->sourceIp,
             userAgent: $request->userAgent,
@@ -940,7 +939,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerUpdateAlbumStatusSuccessResponse(
             success: $res,
             publicLinkHtml: $newStatus->isPublic()
-                ? ('<a href=' . $link . '">' . $link . '</a>')
+                ? ('<a href="' . $link . '">' . $link . '</a>')
                 : $link,
         );
     }
@@ -953,7 +952,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int|null $mainMediaId
      * @param string|null $titleHtml
      * @param string|null $contentHtml
-     * @param int|null $sequence
      * @param Request $request
      * @return Response
      */
@@ -962,7 +960,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?int $mainMediaId,
         ?string $titleHtml,
         ?string $contentHtml,
-        ?int $sequence,
         Request $request
     ): Response {
         $album = $this->albumService->getAlbumForId($albumId);
@@ -992,13 +989,15 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             mainMedia: $mainMedia,
             titleHtml: $titleHtml,
             contentHtml: $contentHtml,
-            sequence: $sequence,
         );
 
         return new BackofficeApiControllerStoreAlbumSectionSuccessResponse(
             success: true,
             newSectionId: $newAlbumSection->id,
-            html: AlbumHtmlGenerator::generateAlbumSectionHtml($newAlbumSection),
+            html: AlbumHtmlGenerator::generateAlbumSectionHtml(
+                language: $request->siteLanguage,
+                section: $newAlbumSection,
+            ),
         );
     }
 
@@ -1010,7 +1009,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int $mediaId
      * @param string|null $titleHtml
      * @param string|null $contentHtml
-     * @param int $sequence
      * @param Request $request
      * @return Response
      */
@@ -1019,7 +1017,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         int $mediaId,
         ?string $titleHtml,
         ?string $contentHtml,
-        int $sequence,
         Request $request
     ): Response {
         $albumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
@@ -1054,7 +1051,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             media: $media,
             titleHtml: $titleHtml,
             contentHtml: $contentHtml,
-            sequence: $sequence,
         );
 
         return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(
