@@ -1713,6 +1713,65 @@
           }
         }
       }
+    },
+    "/back/album-section/{albumSectionId}": {
+      "put": {
+        "tags": [],
+        "description": "Update album section",
+        "operationId": "updateAlbumSection",
+        "parameters": [
+          {
+            "name": "albumSectionId",
+            "in": "path",
+            "description": "Album ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "mainMediaId": {
+                  "type": "integer"
+                },
+                "titleHtml": {
+                  "type": "string"
+                },
+                "contentHtml": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}

@@ -6,6 +6,7 @@ use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
+use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
@@ -18,6 +19,7 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousPath
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumStatusSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSuccessResponse;
@@ -1046,6 +1048,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
+        $contentHtml = StringUtil::sanitiseHtml($contentHtml);
+        $titleHtml = StringUtil::sanitiseHtml($titleHtml);
+
         $newAlbumMedia = $this->albumService->workflowStoreMediaForAlbumSection(
             albumSection: $albumSection,
             media: $media,
@@ -1058,6 +1063,69 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             html: AlbumHtmlGenerator::generateAlbumSectionMediaHtml(
                 $newAlbumMedia,
             ),
+        );
+    }
+
+    /**
+     * Endpoint: /back/album-section/{albumSectionId}
+     * Method: PUT
+     *
+     * @param int $albumSectionId
+     * @param int|null $mainMediaId
+     * @param string|null $titleHtml
+     * @param string|null $contentHtml
+     * @param Request $request
+     * @return Response
+     */
+    protected function updateAlbumSection(
+        int $albumSectionId,
+        ?int $mainMediaId,
+        ?string $titleHtml,
+        ?string $contentHtml,
+        Request $request
+    ): Response {
+        sleep(1);
+        return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
+            success: false,
+        );
+
+        $existingAlbumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
+        if (!$existingAlbumSection) {
+            return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
+                success: false,
+                errorMessage: 'Album section ID not found',
+            );
+        }
+
+        $media = $mainMediaId
+            ? $this->mediaService->getMediaForId($mainMediaId)
+            : $existingAlbumSection->mainMedia;
+
+        if ($mainMediaId && !$media) {
+            return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
+                success: false,
+                errorMessage: 'Media ID not found',
+            );
+        }
+
+        $contentHtml = StringUtil::sanitiseHtml($contentHtml);
+        $titleHtml = StringUtil::sanitiseHtml($titleHtml);
+
+        $res = $this->albumService->updateAlbumSection(
+            new AlbumSection(
+                id: $existingAlbumSection->id,
+                albumId: $existingAlbumSection->albumId,
+                mainMedia: $media,
+                titleHtml: $titleHtml,
+                contentHtml: $contentHtml,
+                createdAt: $existingAlbumSection->createdAt,
+                updatedAt: new DateTimeImmutable(),
+                sequence: $existingAlbumSection->sequence,
+            ),
+        );
+
+        return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
+            success: $res,
         );
     }
 }
