@@ -49,6 +49,47 @@ const selectMediaAction = (e) => {
     });
 };
 
+const addMediaToModalContainer = (existingModalContainer, existingImage) => {
+  if (!existingImage) {
+    return;
+  }
+
+  const existingMediaId = existingImage.dataset.mediaId;
+
+  const existingInModal = existingModalContainer.querySelector('.img[data-media-id="' + existingMediaId + '"]');
+  if (existingInModal) {
+    existingModalContainer.parentElement.classList.add('null');
+  }
+
+  existingModalContainer.querySelectorAll('figure .null').forEach(i => {
+    i.classList.remove('null');
+  });
+
+  existingModalContainer.querySelectorAll('.media-dynamically-added').forEach(i => {
+    existingModalContainer.removeChild(i.parentElement);
+  });
+
+  const figureContainer = document.createElement('figure');
+  figureContainer.className = 'image-container';
+
+  const newImage = new Image();
+  newImage.src = existingImage.src;
+  newImage.alt = existingImage.alt;
+  newImage.title = existingImage.title;
+  newImage.dataset.mediaId = existingMediaId;
+  newImage.dataset.pathMedium = existingImage.src;
+  newImage.className = 'image-item media-dynamically-added';
+
+
+  figureContainer.appendChild(newImage);
+
+  if (existingModalContainer.firstChild) {
+    existingModalContainer.insertBefore(figureContainer, existingModalContainer.firstChild);
+  } else {
+    existingModalContainer.appendChild(figureContainer);
+  }
+};
+
 document.querySelectorAll('.article-save-button').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
@@ -485,11 +526,11 @@ const albumSectionAddMedia = (e) => {
   const loadingAnimation = Util.createLoadingAnimation();
   loadingContainer.appendChild(loadingAnimation);
   container.insertBefore(loadingContainer, actionButton);
-  const sequence = container.querySelector('.').dataset.sequence;
 
   const payload = {
+    titleHtml: null,
+    contentHtml: null,
     mediaId: mediaId,
-    sequence: sequence,
   };
 
   document.querySelector('.select-media-modal').classList.add('null');
@@ -509,6 +550,84 @@ const albumSectionAddMedia = (e) => {
     }).finally(() => container.removeChild(loadingContainer));
 };
 
+const editAlbumSection = (e) => {
+  e.preventDefault();
+
+  const albumSectionId = e.currentTarget.dataset.albumSectionId;
+
+  document.querySelectorAll('.album-section-item').forEach(s => {
+    const otherAlbumSectionId = s.dataset.albumSectionId;
+    if (albumSectionId !== otherAlbumSectionId) {
+      makeAlbumSectionNonEditable(otherAlbumSectionId);
+    }
+  })
+
+  const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
+  const titleEl = container.querySelector('.section-title-html');
+  const contentEl = container.querySelector('.section-content-html');
+
+  titleEl.contentEditable = true;
+  titleEl.classList.add('album-content-editable');
+  contentEl.contentEditable = true;
+  contentEl.classList.add('album-content-editable');
+  container.querySelector('.main-image-button-container').classList.remove('null');
+  container.querySelector('.album-section-button-container-js').classList.remove('null');
+  e.currentTarget.classList.add('null');
+  titleEl.focus();
+};
+
+const updateAlbumSection = (e) => {
+  e.preventDefault();
+
+  cancelAlbumSectionEdit(e);
+};
+
+const makeAlbumSectionNonEditable = (albumSectionId) => {
+  const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
+  const titleEl = container.querySelector('.section-title-html');
+  const contentEl = container.querySelector('.section-content-html');
+  const mediaButtonsContainer = container.querySelector('.main-image-button-container');
+  const editButton = container.querySelector('.album-section-edit-js');
+
+  titleEl.contentEditable = false;
+  titleEl.classList.remove('album-content-editable');
+  contentEl.contentEditable = false;
+  contentEl.classList.remove('album-content-editable');
+  mediaButtonsContainer.classList.add('null');
+  editButton.classList.remove('null');
+  container.querySelector('.album-section-button-container-js').classList.add('null');
+};
+
+const cancelAlbumSectionEdit = (e) => {
+  e.preventDefault();
+
+  const albumSectionId = e.currentTarget.dataset.albumSectionId;
+
+  makeAlbumSectionNonEditable(albumSectionId);
+};
+
+const albumSectionSelectMainMedia = (e) => {
+  e.preventDefault();
+
+  const targetContainerId = e.currentTarget.targetContainerId;
+  const mediaId = e.currentTarget.mediaId;
+
+  console.log(targetContainerId, mediaId);
+
+  // ToDo
+};
+
+const albumSectionDeleteMainMedia = (e) => {
+  e.preventDefault();
+
+  const mediaId = e.currentTarget.mediaId;
+  const targetContainerId = e.currentTarget.targetContainerId;
+
+  console.log(mediaId, targetContainerId);
+
+  // ToDo
+};
+
 const addEventListenerAction = (image, mediaId, eventListenerAction, targetContainerId) => {
   if (eventListenerAction === 'displayImagePopup') {
     image.addEventListener('click', displayImagePopup);
@@ -520,6 +639,8 @@ const addEventListenerAction = (image, mediaId, eventListenerAction, targetConta
     image.addEventListener('click', albumSelectMainMedia);
   } else if (eventListenerAction === 'albumSectionAddMedia') {
     image.addEventListener('click', albumSectionAddMedia);
+  } else if (eventListenerAction === 'albumSectionSelectMainMedia') {
+    image.addEventListener('click', albumSectionSelectMainMedia);
   }
 
   image.targetContainerId = targetContainerId;
@@ -1364,6 +1485,45 @@ document.querySelectorAll('#album-add-section-form-js').forEach(f => {
         modal.classList.add('null');
       });
   });
+});
+
+document.querySelectorAll('.album-section-edit-js').forEach(bu => {
+  bu.addEventListener('click', editAlbumSection);
+});
+
+document.querySelectorAll('.album-section-save-js').forEach(bu => {
+  bu.addEventListener('click', updateAlbumSection);
+});
+
+document.querySelectorAll('.album-section-cancel-js').forEach(bu => {
+  bu.addEventListener('click', cancelAlbumSectionEdit);
+});
+
+document.querySelectorAll('.album-section-main-media-js').forEach(bu => {
+  bu.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const targetContainerId = bu.dataset.targetContainerId;
+    const mediaId = bu.dataset.mediaId;
+
+    const existingModalContainer = document.querySelector('#images-list');
+    const existingImage = document.querySelector('img[data-media-id="' + mediaId + '"]');
+    const targetContainer = document.querySelector('#' + targetContainerId);
+
+    targetContainer.querySelectorAll('.album-section-image').forEach(i => {
+      addMediaToModalContainer(existingModalContainer, i);
+    });
+
+    addMediaToModalContainer(existingModalContainer, existingImage);
+
+    selectMediaAction(e);
+  });
+});
+
+document.querySelectorAll('.album-section-main-media-delete-js').forEach(bu => {
+  bu.targetContainerId = bu.dataset.targetContainerId;
+  bu.mediaId = bu.dataset.mediaId;
+  bu.addEventListener('click', albumSectionDeleteMainMedia);
 });
 
 export {handleDropdownOptionClick};

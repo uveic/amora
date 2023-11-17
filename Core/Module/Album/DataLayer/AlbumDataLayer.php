@@ -469,6 +469,34 @@ class AlbumDataLayer
         return $this->db->execute($sql, $params);
     }
 
+    public function getMaxAlbumSectionSequence(int $albumId): int
+    {
+        return (int)$this->db->fetchColumn(
+            '
+                SELECT COALESCE(MAX(`sequence`), 0)
+                FROM ' . self::ALBUM_SECTION_TABLE . '
+                WHERE `album_id` = :albumId
+            ',
+            [
+                ':albumId' => $albumId,
+            ]
+        );
+    }
+
+    public function getMaxAlbumSectionMediaSequence(int $albumSectionId): int
+    {
+        return (int)$this->db->fetchColumn(
+            '
+                SELECT COALESCE(MAX(`sequence`), 0)
+                FROM ' . self::ALBUM_SECTION_MEDIA_TABLE . '
+                WHERE `album_section_id` = :albumSectionId
+            ',
+            [
+                ':albumSectionId' => $albumSectionId,
+            ]
+        );
+    }
+
     public function getTotalAlbums(): int
     {
         return (int)$this->db->fetchColumn(
