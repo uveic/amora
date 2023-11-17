@@ -33,6 +33,7 @@ class Global {
       "globalUploadedOn": "Uploaded on",
       "globalAppearsOn": "Appears on",
       "globalBy": "by",
+      "globalSelectImage": "Add image",
 
       "feedbackDeleteGeneric": "Are you sure you want to delete it?",
       "feedbackPasswordsDoNotMatch": "The passwords do not match. Please, fix it and try it again.",
@@ -95,6 +96,7 @@ class Global {
       "globalUploadedOn": "Subida el",
       "globalAppearsOn": "Aparece en",
       "globalBy": "por",
+      "globalSelectImage": "Seleccionar imagen",
 
       "feedbackDeleteGeneric": "¿Estás seguro/a de querer borrarlo?",
       "feedbackPasswordsDoNotMatch": "Las contraseñas no coinciden. Corrígelo y vuelve a intentarlo.",
@@ -157,6 +159,7 @@ class Global {
       "globalUploadedOn": "Subida o",
       "globalAppearsOn": "Aparece en",
       "globalBy": "por",
+      "globalSelectImage": "Seleccionar imaxe",
 
       "feedbackDeleteGeneric": "Estás seguro/a de querer borralo?",
       "feedbackPasswordsDoNotMatch": "Os contrasinais non coinciden. Corríxeo e volve intentalo.",

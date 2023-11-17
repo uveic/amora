@@ -333,6 +333,11 @@ readonly class AlbumService
         return $resTransaction->response;
     }
 
+    public function updateAlbumSection(AlbumSection $item): bool
+    {
+        return $this->albumDataLayer->updateAlbumSection($item);
+    }
+
     public function workflowStoreMediaForAlbumSection(
         AlbumSection $albumSection,
         Media $media,

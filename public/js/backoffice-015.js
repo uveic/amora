@@ -566,6 +566,14 @@ const editAlbumSection = (e) => {
   const titleEl = container.querySelector('.section-title-html');
   const contentEl = container.querySelector('.section-content-html');
 
+  if (titleEl.textContent.trim() === '-') {
+    titleEl.textContent = '';
+  }
+
+  if (contentEl.textContent.trim() === '-') {
+    contentEl.textContent = '';
+  }
+
   titleEl.contentEditable = true;
   titleEl.classList.add('album-content-editable');
   contentEl.contentEditable = true;
@@ -579,7 +587,27 @@ const editAlbumSection = (e) => {
 const updateAlbumSection = (e) => {
   e.preventDefault();
 
+  const albumSectionId = e.currentTarget.dataset.albumSectionId;
+
   cancelAlbumSectionEdit(e);
+
+  const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
+  const titleHtml = container.querySelector('.section-title-html').textContent;
+  const contentHtml = container.querySelector('.section-content-html').textContent;
+  const mainMedia = container.querySelector('img.album-section-main-media');
+  const mainMediaId = mainMedia ? Number.parseInt(mainMedia.dataset.mediaId) : null;
+
+  const payload = {
+    titleHtml: titleHtml,
+    contentHtml: contentHtml,
+    mainMediaId: mainMediaId,
+  };
+
+  xhr.put('/back/album-section/' + albumSectionId, JSON.stringify(payload))
+    .catch(error => {
+      Util.logError(error);
+      makeAlbumSectionNonEditable(albumSectionId);
+    });
 };
 
 const makeAlbumSectionNonEditable = (albumSectionId) => {
@@ -588,6 +616,14 @@ const makeAlbumSectionNonEditable = (albumSectionId) => {
   const contentEl = container.querySelector('.section-content-html');
   const mediaButtonsContainer = container.querySelector('.main-image-button-container');
   const editButton = container.querySelector('.album-section-edit-js');
+
+  if (titleEl.textContent.trim() === '') {
+    titleEl.textContent = '-';
+  }
+
+  if (contentEl.textContent.trim() === '') {
+    contentEl.textContent = '-';
+  }
 
   titleEl.contentEditable = false;
   titleEl.classList.remove('album-content-editable');
@@ -612,9 +648,29 @@ const albumSectionSelectMainMedia = (e) => {
   const targetContainerId = e.currentTarget.targetContainerId;
   const mediaId = e.currentTarget.mediaId;
 
-  console.log(targetContainerId, mediaId);
+  const container = document.querySelector('#' + targetContainerId);
+  const sourceImg = document.querySelector('img[data-media-id="' + mediaId + '"]');
+  const targetImg = container.querySelector('.album-section-main-media');
 
-  // ToDo
+  if (targetImg) {
+    targetImg.src = sourceImg.src;
+    targetImg.alt = sourceImg.alt;
+    targetImg.title = sourceImg.title;
+    targetImg.dataset.mediaId = sourceImg.dataset.mediaId;
+    targetImg.className = 'album-section-main-media';
+  } else {
+    const newImage = new Image();
+    newImage.src = sourceImg.src;
+    newImage.alt = sourceImg.alt;
+    newImage.title = sourceImg.title;
+    newImage.dataset.mediaId = sourceImg.dataset.mediaId;
+    newImage.className = 'album-section-main-media';
+    container.insertBefore(newImage, container.firstChild);
+  }
+
+  container.querySelector('.album-section-main-media-js span').textContent = global.get('globalModify');
+  container.querySelector('.album-section-main-media-delete-js').classList.remove('null');
+  document.querySelector('.select-media-modal').classList.add('null');
 };
 
 const albumSectionDeleteMainMedia = (e) => {
@@ -623,9 +679,15 @@ const albumSectionDeleteMainMedia = (e) => {
   const mediaId = e.currentTarget.mediaId;
   const targetContainerId = e.currentTarget.targetContainerId;
 
-  console.log(mediaId, targetContainerId);
+  const container = document.querySelector('#' + targetContainerId);
+  const targetImg = container.querySelector('.album-section-main-media');
 
-  // ToDo
+  if (targetImg) {
+    container.removeChild(targetImg);
+  }
+
+  container.querySelector('.album-section-main-media-delete-js').classList.add('null');
+  container.querySelector('.album-section-main-media-js span').textContent = global.get('globalSelectImage');
 };
 
 const addEventListenerAction = (image, mediaId, eventListenerAction, targetContainerId) => {

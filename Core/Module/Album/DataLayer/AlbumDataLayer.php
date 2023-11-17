@@ -405,6 +405,15 @@ class AlbumDataLayer
         return $item;
     }
 
+    public function updateAlbumSection(AlbumSection $item): bool
+    {
+        return $this->db->update(
+            tableName: self::ALBUM_SECTION_TABLE,
+            id: $item->id,
+            data: $item->asArray(),
+        );
+    }
+
     public function storeMediaForAlbumSection(AlbumSectionMedia $item): AlbumSectionMedia
     {
         $res = $this->db->insert(
