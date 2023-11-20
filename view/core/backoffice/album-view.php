@@ -24,7 +24,6 @@ $createdAt = DateUtil::formatDate(
     includeTime: true,
 );
 
-$now = new DateTimeImmutable();
 $albumPublicLink = UrlBuilderUtil::buildPublicAlbumUrl(
     slug: $album->slug->slug,
     language: $responseData->siteLanguage,

@@ -1518,8 +1518,11 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
     xhr.post('/back/album/' + albumId + '/section', '')
       .then(response => {
         container.insertAdjacentHTML('beforeend', response.html);
-        container.querySelector('.album-section-item[data-album-section-id="' + response.newSectionId + '"] .select-media-action')
-          .addEventListener('click', selectMediaAction);
+        const sectionContainer = container.querySelector('.album-section-item[data-album-section-id="' + response.newSectionId + '"]');
+        sectionContainer.querySelector('.select-media-action').addEventListener('click', selectMediaAction);
+        sectionContainer.querySelector('.album-section-edit-js').addEventListener('click', editAlbumSection);
+        sectionContainer.querySelector('.album-section-save-js').addEventListener('click', updateAlbumSection);
+        sectionContainer.querySelector('.album-section-delete-js').addEventListener('click', cancelAlbumSectionEdit);
       })
       .catch(error => {
         Util.logError(error);
