@@ -1084,11 +1084,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $contentHtml,
         Request $request
     ): Response {
-        sleep(1);
-        return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
-            success: false,
-        );
-
         $existingAlbumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
         if (!$existingAlbumSection) {
             return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
