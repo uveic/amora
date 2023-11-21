@@ -66,7 +66,7 @@ final class AlbumHtmlGenerator
             language: $responseData->siteLanguage,
         );
 
-        $albumPublicLinkHtml = $album->status->isPublic()
+        $albumPublicLinkHtml = $album->status->isPublished()
             ? '<a href="' . $albumPublicUrl . '"><img src="/img/svg/arrow-square-out.svg" class="img-svg m-l-05" alt="Public link" width="20" height="20"></a>'
             : '';
 

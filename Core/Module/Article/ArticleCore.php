@@ -4,6 +4,7 @@ namespace Amora\Core\Module\Article;
 
 use Amora\Core\Core;
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Module\Album\AlbumCore;
 use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\DataLayer\ArticleDataLayer;
 use Amora\Core\Module\Article\DataLayer\TagDataLayer;
@@ -116,6 +117,7 @@ class ArticleCore extends Core
                     articleService: self::getArticleService(),
                     mediaDataLayer: self::getMediaDataLayer(),
                     imageService: self::getImageService(),
+                    albumService: AlbumCore::getAlbumService(),
                     mediaBaseDir: self::getConfig()->mediaBaseDir,
                 );
             },

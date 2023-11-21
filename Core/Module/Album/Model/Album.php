@@ -2,13 +2,13 @@
 
 namespace Amora\Core\Module\Album\Model;
 
-use Amora\Core\Core;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\DateUtil;
 use Amora\App\Value\Language;
+use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 
 class Album
@@ -65,11 +65,28 @@ class Album
 
     private function getFullPath(): string
     {
-        return rtrim(Core::getConfig()->baseUrl, '/ ') . '/' . $this->slug->slug;
+        return UrlBuilderUtil::buildPublicAlbumUrl(
+            slug: $this->slug->slug,
+            language: $this->language,
+        );
     }
 
     public function buildDescription(): string
     {
         return $this->titleHtml;
+    }
+
+    public function buildPublicDataArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'languageIsoCode' => $this->language->value,
+            'userId' => $this->user->id,
+            'userName' => $this->user->getNameOrEmail(),
+            'path' => $this->getFullPath(),
+            'title' => $this->titleHtml,
+            'publishedOn' => $this->createdAt->format('c'),
+            'tags' => [],
+        ];
     }
 }

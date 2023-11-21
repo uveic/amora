@@ -1157,6 +1157,7 @@ h2.page-content-subtitle {
   max-width: 200px;
   height: auto;
   flex-grow: 1;
+  cursor: pointer;
 }
 
 .album-media-loading {

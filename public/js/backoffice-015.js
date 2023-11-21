@@ -368,12 +368,18 @@ const displayImage = (image) => {
   modal.querySelector('.image-meta .copy-link')
     .addEventListener('click', e => handleCopyLink(e, image.fullPathMedium));
 
+  const imageDeleteEl = modal.querySelector('.image-delete');
+  imageDeleteEl.dataset.mediaId = image.id;
   const appearsOnContainer = modal.querySelector('.image-appears-on');
   appearsOnContainer.innerHTML = '';
   if (image.appearsOn && image.appearsOn.length) {
+    imageDeleteEl.classList.add('null');
+
+    const appearsTitle = document.createElement('h3');
+    appearsTitle.textContent = global.get('globalAppearsOn') + ':';
+    appearsOnContainer.appendChild(appearsTitle);
+
     image.appearsOn.forEach(ao => {
-      const appearsTitle = document.createElement('h3');
-      appearsTitle.textContent = global.get('globalAppearsOn') + ':';
       const appearsLink = document.createElement('a');
       appearsLink.href = ao.path;
       appearsLink.target = '_blank';
@@ -382,9 +388,10 @@ const displayImage = (image) => {
       appearsInfo.innerHTML = '<img src="/img/svg/calendar-white.svg" class="img-svg m-r-025" alt="Calendar">'
         + global.formatDate(new Date(ao.publishedOn), false, false, true, false, false);
       appearsLink.appendChild(appearsInfo);
-      appearsOnContainer.appendChild(appearsTitle);
       appearsOnContainer.appendChild(appearsLink);
     });
+  } else {
+    imageDeleteEl.classList.remove('null');
   }
 
   imageInfoData.classList.remove('null');
@@ -676,7 +683,6 @@ const albumSectionSelectMainMedia = (e) => {
 const albumSectionDeleteMainMedia = (e) => {
   e.preventDefault();
 
-  const mediaId = e.currentTarget.mediaId;
   const targetContainerId = e.currentTarget.targetContainerId;
 
   const container = document.querySelector('#' + targetContainerId);
@@ -770,7 +776,7 @@ const deleteImage = async function (e, mediaId) {
 
 document.querySelectorAll('.image-delete').forEach(imgEl => {
   imgEl.addEventListener('click', e => {
-    const mediaId = document.querySelector('.image-wrapper .image-main img').dataset.mediaId;
+    const mediaId = imgEl.dataset.mediaId;
     deleteImage(e, mediaId).then();
   });
 });

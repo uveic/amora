@@ -7,6 +7,7 @@ use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Album\Service\AlbumService;
+use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\FeedService;
 use Amora\Core\Module\Article\Value\ArticleType;
@@ -304,7 +305,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             return Response::createNotFoundResponse($request);
         }
 
-        if (!$request->session?->isAdmin() && !$album->status->isPublic()) {
+        if (!$request->session?->isAdmin() && $album->status !== AlbumStatus::Published) {
             return Response::createNotFoundResponse($request);
         }
 
