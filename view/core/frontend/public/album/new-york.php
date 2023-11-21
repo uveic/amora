@@ -1,6 +1,9 @@
 <?php
 
 use Amora\Core\Entity\Response\HtmlResponseData;
+use Amora\Core\Module\Album\Model\Album;
+use Amora\Core\Module\Album\Model\AlbumSection;
+use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 
 /** @var HtmlResponseData $responseData */
 
@@ -8,6 +11,7 @@ if (!$responseData->album) {
   return;
 }
 
+/** @var Album $album */
 $album = $responseData->album;
 
 ?>
@@ -20,6 +24,15 @@ $album = $responseData->album;
 </head>
 <body>
   <main class="content-main">
+<?php
+    /** @var AlbumSection $section */
+    foreach ($album->sections as $section) {
+        echo AlbumHtmlGenerator::generateAlbumTemplateNewYorkSectionHtml(
+            section: $section,
+            indentation: '    ',
+        ) . PHP_EOL;
+    }
+?>
     <section class="content-child js-content-slider-fade">
       <div class="media-wrapper">
         <img src="/uploads/001.jpg" class="media-item media-opacity-active" alt="Imaxe">

@@ -46,4 +46,14 @@ class AlbumSectionMedia
             'sequence' => $this->sequence,
         ];
     }
+
+    public function buildAltText(): string
+    {
+        $html = $this->titleHtml ?: $this->media->captionHtml;
+        if (empty($html)) {
+            return '';
+        }
+
+        return strip_tags($html);
+    }
 }
