@@ -29,7 +29,7 @@ $albumPublicLink = UrlBuilderUtil::buildPublicAlbumUrl(
     language: $responseData->siteLanguage,
 );
 
-$publicLinkHtml = $album->status->isPublic()
+$publicLinkHtml = $album->status->isPublished()
     ? '<a href="' . $albumPublicLink . '">' . $albumPublicLink . '</a>'
     : $albumPublicLink;
 

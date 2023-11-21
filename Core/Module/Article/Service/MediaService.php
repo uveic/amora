@@ -5,6 +5,8 @@ namespace Amora\Core\Module\Article\Service;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\Util\QueryOrderBy;
+use Amora\Core\Module\Album\Model\Album;
+use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Media;
@@ -27,6 +29,7 @@ readonly class MediaService
         private ArticleService $articleService,
         private MediaDataLayer $mediaDataLayer,
         private ImageService $imageService,
+        private AlbumService $albumService,
         private string $mediaBaseDir,
     ) {}
 
@@ -157,10 +160,19 @@ readonly class MediaService
                     imageIds: [$file->id],
                 );
 
+                $albums = $this->albumService->filterAlbumBy(
+                    mediaIds: [$file->id],
+                );
+
                 $appearsOn = [];
                 /** @var Article $article */
                 foreach ($articles as $article) {
                     $appearsOn[] = $article->buildPublicDataArray();
+                }
+
+                /** @var Album $album */
+                foreach ($albums as $album) {
+                    $appearsOn[] = $album->buildPublicDataArray();
                 }
 
                 $fileOutput['appearsOn'] = $appearsOn;

@@ -45,6 +45,7 @@ class AlbumDataLayer
         array $languageIsoCodes = [],
         array $statusIds = [],
         array $templateIds = [],
+        array $mediaIds = [],
         ?string $slug = null,
         bool $includeSections = false,
         bool $includeMedia = false,
@@ -128,6 +129,22 @@ class AlbumDataLayer
 
         if ($templateIds) {
             $where .= $this->generateWhereSqlCodeForIds($params, $templateIds, 'a.template_id', 'templateId');
+        }
+
+        if ($mediaIds) {
+            $allKeys = [];
+            foreach (array_values($mediaIds) as $key => $value) {
+                $currentKey = ':albumSectionMediaId' . $key;
+                $allKeys[] = $currentKey;
+                $params[$currentKey] = $value;
+            }
+
+            $where .= ' AND a.id IN (
+                SELECT `as`.album_id
+                FROM ' . self::ALBUM_SECTION_TABLE . ' AS `as`
+                    INNER JOIN ' . self::ALBUM_SECTION_MEDIA_TABLE . ' AS asm ON asm.album_section_id = `as`.id
+                WHERE asm.media_id IN (' . implode(', ', $allKeys) . ')
+            )';
         }
 
         if (isset($slug)) {

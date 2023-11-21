@@ -9,6 +9,7 @@ use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\App\Value\Language;
+use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 
 class Article
@@ -129,6 +130,9 @@ class Article
 
     private function getFullPath(): string
     {
-        return rtrim(Core::getConfig()->baseUrl, '/ ') . '/' . $this->path;
+        return UrlBuilderUtil::buildPublicArticlePath(
+            path: $this->path,
+            language: $this->language,
+        );
     }
 }

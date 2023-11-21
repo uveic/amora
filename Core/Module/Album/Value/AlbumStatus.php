@@ -21,7 +21,7 @@ enum AlbumStatus: int
         ];
     }
 
-    public function isPublic(): bool
+    public function isPublished(): bool
     {
         return match ($this) {
             self::Published, self::Private, self::Unlisted => true,

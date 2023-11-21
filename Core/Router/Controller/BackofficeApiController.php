@@ -940,7 +940,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerUpdateAlbumStatusSuccessResponse(
             success: $res,
-            publicLinkHtml: $newStatus->isPublic()
+            publicLinkHtml: $newStatus->isPublished()
                 ? ('<a href="' . $link . '">' . $link . '</a>')
                 : $link,
         );
