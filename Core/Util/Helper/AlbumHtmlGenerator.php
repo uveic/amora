@@ -9,7 +9,6 @@ use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Module\Album\Model\AlbumSectionMedia;
 use Amora\Core\Module\Album\Value\AlbumStatus;
-use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Util\UrlBuilderUtil;
 
 final class AlbumHtmlGenerator
@@ -160,6 +159,65 @@ final class AlbumHtmlGenerator
 
         $output = [];
         $output[] = $indentation . '<img src="' . $albumSectionMedia->media->getPathWithNameSmall() . '" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $albumSectionMedia->media->id . '" data-sequence="' . $albumSectionMedia->sequence . '" class="album-section-image">';
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
+    }
+
+    public static function generateAlbumTemplateNewYorkSectionHtml(
+        AlbumSection $section,
+        string $indentation = '',
+    ): string {
+        if (!$section->media) {
+            return '';
+        }
+
+        $output = [];
+        $output[] = $indentation . '<section class="content-child js-content-slider" data-media-id="' . $section->id . '">';
+        $output[] = $indentation . '  <div class="media-wrapper">';
+
+        $count = 0;
+        /** @var AlbumSectionMedia $media */
+        foreach ($section->media as $media) {
+            $class = $count === 0 ? 'media-active' : 'media-hidden';
+            $lazyLoading = $count === 0 ? '' : ' loading="lazy"';
+            $output[] = $indentation . '    <img src="' . $media->media->getPathWithNameMedium() . '" class="media-item ' . $class . '" alt="' . $media->buildAltText() . '"' . $lazyLoading . '>';
+            $count++;
+        }
+
+        $output[] = $indentation . '  </div>';
+        $output[] = $indentation . '  <div class="media-content-wrapper">';
+        $output[] = $indentation . '    <div class="content-header">';
+
+        $title = $section->sequence . '. ' . $section->titleHtml;
+        $output[] = $indentation . '      <h1 class="media-title">' . $title . '</h1>';
+        $output[] = $indentation . '      <p class="media-subtitle">Country</p>';
+        $output[] = $indentation . '    </div>';
+        $output[] = $indentation . '    <div class="content-text">';
+        $output[] = $indentation . '      <div class="media-text">' . $section->contentHtml . '</div>';
+        $output[] = $indentation . '      <div class="media-links">';
+        $output[] = $indentation . '        <a href="#" class="js-media-read-more" data-media-id="' . $section->id . '">Ler máis<img src="/img/svg/article-white.svg" alt="Ler máis" width="20" height="20"></a>';
+        $output[] = $indentation . '        <a href="#" class="js-media-view" data-media-id="' . $section->id . '">Ver as fotos<img src="/img/svg/arrow-right-white.svg" alt="Ver as fotos" width="20" height="20"></a>';
+        $output[] = $indentation . '      </div>';
+        $output[] = $indentation . '    </div>';
+
+        $output[] = $indentation . '    <div class="media-content-navigation">';
+        $output[] = $indentation . '      <div class="js-navigation-left"></div>';
+        $output[] = $indentation . '      <div class="js-navigation-right"></div>';
+        $output[] = $indentation . '    </div>';
+
+        $output[] = $indentation . '    <div class="media-text-panel null" id="media-text-panel-' . $section->id . '">';
+        $output[] = $indentation . '      <a class="media-panel-close" href="#"><img src="/img/svg/x-white.svg" alt="Close" width="20" height="20"></a>';
+        $output[] = $indentation . '      <div class="media-panel-content">';
+
+        if ($section->mainMedia) {
+            $output[] = $indentation . '      <img loading="lazy" src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '">';
+        }
+
+        $output[] = $indentation . '      <p>' . $section->contentHtml . '</p>';
+        $output[] = $indentation . '      </div>';
+        $output[] = $indentation . '    </div>';
+        $output[] = $indentation . '  </div>';
+        $output[] = $indentation . '</section>';
 
         return implode(PHP_EOL, $output) . PHP_EOL;
     }
