@@ -16,9 +16,11 @@ const selectMediaAction = (e) => {
   const loading = modal.querySelector('.select-media-modal-loading');
   const imagesContainer = modal.querySelector('#images-list');
   const loadMoreButton = modal.querySelector('.media-load-more-js');
+  const uploadMediaButton = modal.querySelector('input[name="select-media-action-upload"]');
   const eventListenerAction = button.dataset.eventListenerAction;
   const targetContainerId = button.dataset.targetContainerId ?? null;
-  modal.querySelector('input[name="select-media-action-upload"]').dataset.eventListenerAction = eventListenerAction;
+  uploadMediaButton.dataset.eventListenerAction = eventListenerAction;
+  uploadMediaButton.dataset.targetContainerId = targetContainerId;
   loadMoreButton.dataset.eventListenerAction = eventListenerAction;
   loadMoreButton.dataset.targetContainerId = targetContainerId;
   modal.classList.remove('null');
@@ -606,16 +608,16 @@ const updateAlbumSection = (e) => {
   cancelAlbumSectionEdit(e);
 
   const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
-  const titleHtml = container.querySelector('.section-title-html').textContent;
-  const subtitleHtml = container.querySelector('.section-subtitle-html').textContent;
-  const contentHtml = container.querySelector('.section-content-html').textContent;
+  const titleHtml = container.querySelector('.section-title-html').textContent.trim();
+  const subtitleHtml = container.querySelector('.section-subtitle-html').textContent.trim();
+  const contentHtml = container.querySelector('.section-content-html').textContent.trim();
   const mainMedia = container.querySelector('img.album-section-main-media');
   const mainMediaId = mainMedia ? Number.parseInt(mainMedia.dataset.mediaId) : null;
 
   const payload = {
-    titleHtml: titleHtml,
-    subtitleHtml: subtitleHtml,
-    contentHtml: contentHtml,
+    titleHtml: titleHtml === '-' ? '' : titleHtml,
+    subtitleHtml: subtitleHtml === '-' ? '' : subtitleHtml,
+    contentHtml: contentHtml === '-' ? '' : contentHtml,
     mainMediaId: mainMediaId,
   };
 
@@ -1287,6 +1289,8 @@ document.querySelectorAll('input[name="select-media-action-upload"]').forEach(im
 
     const container = document.querySelector('#images-list');
     const feedbackDiv = document.querySelector('#feedback');
+    const eventListenerAction = im.dataset.eventListenerAction;
+    const targetContainerId = im.dataset.targetContainerId;
 
     for (let i = 0; i < im.files.length; i++) {
       let file = im.files[i];
@@ -1297,7 +1301,7 @@ document.querySelectorAll('input[name="select-media-action-upload"]').forEach(im
         'image-item',
         feedbackDiv,
         (response) => {
-          displayImageFromApiCall(container, [response.file], im.dataset.eventListenerAction);
+          displayImageFromApiCall(container, [response.file], eventListenerAction, targetContainerId);
         },
       );
     }

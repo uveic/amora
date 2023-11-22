@@ -324,7 +324,7 @@ readonly class AlbumService
                         contentHtml: $contentHtml,
                         createdAt: $now,
                         updatedAt: $now,
-                        sequence: $sequence + 1,
+                        sequence: isset($sequence) ? $sequence + 1 : 0,
                     ),
                 );
 

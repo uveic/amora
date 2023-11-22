@@ -242,4 +242,6 @@ return [
     'albumFormContent' => 'Contenido',
     'albumFormNew' => 'Nuevo álbum',
     'albumFormMainImageTitle' => 'Imagen principal',
+    'albumPublicReadMore' => 'Leer más',
+    'albumPublicMorePictures' => 'Ver más fotos',
 ];
