@@ -132,6 +132,11 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
       mediaTextPanel.classList.add('null');
     }
 
+    const contentMediaSequence = mediaContainer.parentElement.querySelector('.media-sequence');
+    if (contentMediaSequence) {
+      contentMediaSequence.textContent = nextImage.dataset.sequence;
+    }
+
     const nextImageToPreload = getNextImage(mediaContainer, goRight);
     const imgTemp = new Image();
     imgTemp.src = nextImageToPreload.src;
