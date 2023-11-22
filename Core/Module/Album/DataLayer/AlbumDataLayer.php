@@ -496,11 +496,11 @@ class AlbumDataLayer
         return $this->db->execute($sql, $params);
     }
 
-    public function getMaxAlbumSectionSequence(int $albumId): int
+    public function getMaxAlbumSectionSequence(int $albumId): ?int
     {
-        return (int)$this->db->fetchColumn(
+        $res = $this->db->fetchColumn(
             '
-                SELECT COALESCE(MAX(`sequence`), 0)
+                SELECT MAX(`sequence`)
                 FROM ' . self::ALBUM_SECTION_TABLE . '
                 WHERE `album_id` = :albumId
             ',
@@ -508,6 +508,8 @@ class AlbumDataLayer
                 ':albumId' => $albumId,
             ]
         );
+
+        return isset($res) ? (int)$res : null;
     }
 
     public function getMaxAlbumSectionMediaSequence(int $albumSectionId): int
