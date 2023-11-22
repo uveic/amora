@@ -97,6 +97,7 @@ return [
     'globalYes' => 'Si',
     'globalNo' => 'Non',
     'globalBy' => 'por',
+    'globalOf' => 'de',
     'globalSettings' => 'Configuración',
     'globalClose' => 'Pechar',
     'globalRemove' => 'Eliminar',

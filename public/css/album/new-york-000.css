@@ -130,6 +130,20 @@ a:focus {
   z-index: 5;
 }
 
+.media-content-wrapper .content-header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  font-size: 2rem;
+  line-height: 0.9;
+  font-weight: 300;
+  margin: 0;
+  max-width: 25rem;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.65);
+}
+
 .media-content-navigation {
   display: flex;
   flex-flow: row nowrap;
@@ -148,17 +162,18 @@ a:focus {
   display: block;
 }
 
-.media-title {
-  font-size: 2rem;
-  line-height: 0.9;
-  font-weight: 300;
-  margin: 0;
-  max-width: 25rem;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.65);
+.media-content-wrapper .content-text-wrapper {
+  width: 100%;
 }
 
-.media-title .number {
-  font-size: 1.6rem;
+.media-content-wrapper .content-header .number {
+  font-size: 1.3rem;
+  margin-top: 0.4rem;
+}
+
+.media-title {
+  font-weight: 300;
+  margin: 0;
 }
 
 .media-subtitle {
@@ -224,6 +239,12 @@ a:focus {
 
 .media-links a:hover {
   background-color: rgb(0, 0, 0, 0.3);
+}
+
+.media-content-wrapper .media-info {
+  width: 100%;
+  margin-top: 1rem;
+  text-align: right;
 }
 
 .media-text-panel {
