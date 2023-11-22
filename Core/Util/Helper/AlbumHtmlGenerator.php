@@ -114,6 +114,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    </div>';
 
         $output[] = $indentation . '    <h3 class="section-title-html">' . ($section->titleHtml ?: '-') . '</h3>';
+        $output[] = $indentation . '    <div class="section-subtitle-html">' . ($section->subtitleHtml ?: '-') . '</div>';
         $output[] = $indentation . '    <div class="section-content-html">' . ($section->contentHtml ?: '-') . '</div>';
 
         $output[] = $indentation . '    <div id="album-section-main-media-' . $section->id . '" class="main-image-container main-image-container-full m-t-2">';
@@ -190,7 +191,9 @@ final class AlbumHtmlGenerator
 
         $title = $section->sequence . '. ' . $section->titleHtml;
         $output[] = $indentation . '      <h1 class="media-title">' . $title . '</h1>';
-        $output[] = $indentation . '      <p class="media-subtitle">Country</p>';
+        if ($section->subtitleHtml) {
+            $output[] = $indentation . '      <p class="media-subtitle">' . $section->subtitleHtml . '</p>';
+        }
         $output[] = $indentation . '    </div>';
         $output[] = $indentation . '    <div class="content-text">';
         $output[] = $indentation . '      <div class="media-text">' . $section->contentHtml . '</div>';

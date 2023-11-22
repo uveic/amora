@@ -571,10 +571,15 @@ const editAlbumSection = (e) => {
 
   const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
   const titleEl = container.querySelector('.section-title-html');
+  const subtitleEl = container.querySelector('.section-subtitle-html');
   const contentEl = container.querySelector('.section-content-html');
 
   if (titleEl.textContent.trim() === '-') {
     titleEl.textContent = '';
+  }
+
+  if (subtitleEl.textContent.trim() === '-') {
+    subtitleEl.textContent = '';
   }
 
   if (contentEl.textContent.trim() === '-') {
@@ -583,6 +588,8 @@ const editAlbumSection = (e) => {
 
   titleEl.contentEditable = true;
   titleEl.classList.add('album-content-editable');
+  subtitleEl.contentEditable = true;
+  subtitleEl.classList.add('album-content-editable');
   contentEl.contentEditable = true;
   contentEl.classList.add('album-content-editable');
   container.querySelector('.main-image-button-container').classList.remove('null');
@@ -600,12 +607,14 @@ const updateAlbumSection = (e) => {
 
   const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
   const titleHtml = container.querySelector('.section-title-html').textContent;
+  const subtitleHtml = container.querySelector('.section-subtitle-html').textContent;
   const contentHtml = container.querySelector('.section-content-html').textContent;
   const mainMedia = container.querySelector('img.album-section-main-media');
   const mainMediaId = mainMedia ? Number.parseInt(mainMedia.dataset.mediaId) : null;
 
   const payload = {
     titleHtml: titleHtml,
+    subtitleHtml: subtitleHtml,
     contentHtml: contentHtml,
     mainMediaId: mainMediaId,
   };
@@ -620,6 +629,7 @@ const updateAlbumSection = (e) => {
 const makeAlbumSectionNonEditable = (albumSectionId) => {
   const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
   const titleEl = container.querySelector('.section-title-html');
+  const subtitleEl = container.querySelector('.section-subtitle-html');
   const contentEl = container.querySelector('.section-content-html');
   const mediaButtonsContainer = container.querySelector('.main-image-button-container');
   const editButton = container.querySelector('.album-section-edit-js');
@@ -628,12 +638,18 @@ const makeAlbumSectionNonEditable = (albumSectionId) => {
     titleEl.textContent = '-';
   }
 
+  if (subtitleEl.textContent.trim() === '') {
+    subtitleEl.textContent = '-';
+  }
+
   if (contentEl.textContent.trim() === '') {
     contentEl.textContent = '-';
   }
 
   titleEl.contentEditable = false;
   titleEl.classList.remove('album-content-editable');
+  subtitleEl.contentEditable = false;
+  subtitleEl.classList.remove('album-content-editable');
   contentEl.contentEditable = false;
   contentEl.classList.remove('album-content-editable');
   mediaButtonsContainer.classList.add('null');
