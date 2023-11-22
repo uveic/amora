@@ -326,6 +326,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param int $albumId
      * @param int|null $mainMediaId
      * @param string|null $titleHtml
+     * @param string|null $subtitleHtml
      * @param string|null $contentHtml
      * @param Request $request
      * @return Response
@@ -334,6 +335,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         int $albumId,
         ?int $mainMediaId,
         ?string $titleHtml,
+        ?string $subtitleHtml,
         ?string $contentHtml,
         Request $request
     ): Response;
@@ -364,6 +366,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param int $albumSectionId
      * @param int|null $mainMediaId
      * @param string|null $titleHtml
+     * @param string|null $subtitleHtml
      * @param string|null $contentHtml
      * @param Request $request
      * @return Response
@@ -372,6 +375,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         int $albumSectionId,
         ?int $mainMediaId,
         ?string $titleHtml,
+        ?string $subtitleHtml,
         ?string $contentHtml,
         Request $request
     ): Response;
@@ -1403,6 +1407,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         $mainMediaId = $bodyParams['mainMediaId'] ?? null;
         $titleHtml = $bodyParams['titleHtml'] ?? null;
+        $subtitleHtml = $bodyParams['subtitleHtml'] ?? null;
         $contentHtml = $bodyParams['contentHtml'] ?? null;
 
         if ($errors) {
@@ -1420,6 +1425,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $albumId,
                 $mainMediaId,
                 $titleHtml,
+                $subtitleHtml,
                 $contentHtml,
                 $request
             );
@@ -1544,6 +1550,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         $mainMediaId = $bodyParams['mainMediaId'] ?? null;
         $titleHtml = $bodyParams['titleHtml'] ?? null;
+        $subtitleHtml = $bodyParams['subtitleHtml'] ?? null;
         $contentHtml = $bodyParams['contentHtml'] ?? null;
 
         if ($errors) {
@@ -1561,6 +1568,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $albumSectionId,
                 $mainMediaId,
                 $titleHtml,
+                $subtitleHtml,
                 $contentHtml,
                 $request
             );

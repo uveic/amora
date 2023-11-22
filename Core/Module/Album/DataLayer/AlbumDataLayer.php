@@ -205,6 +205,7 @@ class AlbumDataLayer
             '`as`.created_at AS album_section_created_at',
             '`as`.updated_at AS album_section_updated_at',
             '`as`.title_html AS album_section_title_html',
+            '`as`.subtitle_html AS album_section_subtitle_html',
             '`as`.content_html AS album_section_content_html',
             '`as`.`sequence` AS album_section_sequence',
 

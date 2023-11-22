@@ -953,6 +953,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int $albumId
      * @param int|null $mainMediaId
      * @param string|null $titleHtml
+     * @param string|null $subtitleHtml
      * @param string|null $contentHtml
      * @param Request $request
      * @return Response
@@ -961,6 +962,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         int $albumId,
         ?int $mainMediaId,
         ?string $titleHtml,
+        ?string $subtitleHtml,
         ?string $contentHtml,
         Request $request
     ): Response {
@@ -990,6 +992,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             album: $album,
             mainMedia: $mainMedia,
             titleHtml: $titleHtml,
+            subtitleHtml: $subtitleHtml,
             contentHtml: $contentHtml,
         );
 
@@ -1073,6 +1076,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int $albumSectionId
      * @param int|null $mainMediaId
      * @param string|null $titleHtml
+     * @param string|null $subtitleHtml
      * @param string|null $contentHtml
      * @param Request $request
      * @return Response
@@ -1081,6 +1085,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         int $albumSectionId,
         ?int $mainMediaId,
         ?string $titleHtml,
+        ?string $subtitleHtml,
         ?string $contentHtml,
         Request $request
     ): Response {
@@ -1112,6 +1117,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 albumId: $existingAlbumSection->albumId,
                 mainMedia: $media,
                 titleHtml: $titleHtml,
+                subtitleHtml: $subtitleHtml,
                 contentHtml: $contentHtml,
                 createdAt: $existingAlbumSection->createdAt,
                 updatedAt: new DateTimeImmutable(),

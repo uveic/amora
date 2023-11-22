@@ -300,6 +300,7 @@ readonly class AlbumService
         Album $album,
         ?Media $mainMedia,
         ?string $titleHtml,
+        ?string $subtitleHtml,
         ?string $contentHtml,
     ): AlbumSection {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
@@ -307,6 +308,7 @@ readonly class AlbumService
                 $album,
                 $mainMedia,
                 $titleHtml,
+                $subtitleHtml,
                 $contentHtml,
             ) {
                 $sequence = $this->albumDataLayer->getMaxAlbumSectionSequence($album->id);
@@ -318,6 +320,7 @@ readonly class AlbumService
                         albumId: $album->id,
                         mainMedia: $mainMedia,
                         titleHtml: $titleHtml,
+                        subtitleHtml: $subtitleHtml,
                         contentHtml: $contentHtml,
                         createdAt: $now,
                         updatedAt: $now,

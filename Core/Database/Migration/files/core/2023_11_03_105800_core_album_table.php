@@ -56,6 +56,7 @@ return "
         `created_at` TIMESTAMP NOT NULL,
         `updated_at` TIMESTAMP NOT NULL,
         `title_html` varchar(500) COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+        `subtitle_html` varchar(500) COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
         `content_html` text COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
         `sequence` smallint(5) unsigned NOT NULL DEFAULT 0,
         KEY `core_album_section_album_id_idx` (`album_id`),
