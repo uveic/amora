@@ -1,5 +1,6 @@
 <?php
 
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 
 /** @var HtmlResponseDataAdmin $responseData */
@@ -76,11 +77,13 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
         </section>
         <section class="album-sections-wrapper">
 <?php
+    $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
+
     /** @var AlbumSection $section */
     foreach ($album->sections as $section) {
         echo AlbumHtmlGenerator::generateAlbumSectionHtml(
-            language: $responseData->siteLanguage,
             section: $section,
+            localisationUtil: $localisationUtil,
             indentation: '          ',
         );
 }?>

@@ -996,12 +996,13 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             contentHtml: $contentHtml,
         );
 
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return new BackofficeApiControllerStoreAlbumSectionSuccessResponse(
             success: true,
             newSectionId: $newAlbumSection->id,
             html: AlbumHtmlGenerator::generateAlbumSectionHtml(
-                language: $request->siteLanguage,
                 section: $newAlbumSection,
+                localisationUtil: $localisationUtil,
             ),
         );
     }
