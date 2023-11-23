@@ -1126,14 +1126,24 @@ h2.page-content-subtitle {
   margin-top: 0;
 }
 
+.album-section-item-media-wrapper {
+  flex-grow: 2;
+  width: 50%;
+}
+
+.album-section-item-media-header {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  text-align: right;
+}
+
 .album-section-item-media {
   display: flex;
   flex-flow: row wrap;
   gap: 0.5rem;
   justify-content: flex-start;
   align-items: flex-start;
-  width: 50%;
-  flex-grow: 2;
+  width: 100%;
 }
 
 .album-section-item-media .button {

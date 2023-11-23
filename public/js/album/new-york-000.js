@@ -26,7 +26,7 @@ document.querySelectorAll('a.js-media-view').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
 
-    a.parentElement.parentElement.parentElement.querySelector('.js-navigation-right').click();
+    a.parentElement.parentElement.parentElement.parentElement.querySelector('.js-navigation-right').click();
   });
 });
 
