@@ -549,6 +549,8 @@ const albumSectionAddMedia = (e) => {
     .then(response => {
       if (response.html) {
         actionButton.insertAdjacentHTML('beforebegin', response.html);
+        const countEl = container.parentElement.querySelector('.album-section-item-media-header .count');
+        countEl.textContent = (Number.parseInt(countEl.textContent) + 1).toString();
       } else {
         Util.notifyUser('A imaxe xa fora engadida.');
       }
@@ -1548,7 +1550,7 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
         sectionContainer.querySelector('.select-media-action').addEventListener('click', selectMediaAction);
         sectionContainer.querySelector('.album-section-edit-js').addEventListener('click', editAlbumSection);
         sectionContainer.querySelector('.album-section-save-js').addEventListener('click', updateAlbumSection);
-        sectionContainer.querySelector('.album-section-delete-js').addEventListener('click', cancelAlbumSectionEdit);
+        sectionContainer.scrollIntoView({behavior: 'smooth', block: 'center' });
       })
       .catch(error => {
         Util.logError(error);

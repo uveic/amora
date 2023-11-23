@@ -130,6 +130,10 @@ a:focus {
   z-index: 5;
 }
 
+.media-content-wrapper .content-text {
+  width: 100%;
+}
+
 .media-content-wrapper .content-header {
   display: flex;
   flex-flow: row nowrap;
@@ -163,6 +167,11 @@ a:focus {
 }
 
 .media-content-wrapper .content-text-wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 2rem;
   width: 100%;
 }
 
@@ -244,9 +253,10 @@ a:focus {
 }
 
 .media-content-wrapper .media-info {
-  width: 100%;
-  margin-top: 1rem;
   text-align: right;
+  font-size: 0.8rem;
+  font-family: arial, helvetica, sans-serif;
+  max-width: 30rem;
 }
 
 .media-text-panel {

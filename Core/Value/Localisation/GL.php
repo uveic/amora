@@ -149,6 +149,7 @@ return [
     'globalAddImage' => 'Engadir imaxe(s)',
     'globalRemoveImage' => 'Eliminar imaxe',
     'globalSelectImage' => 'Selecionar imaxe',
+    'globalImages' => 'imaxes',
     'globalAddParagraph' => 'Engadir párrafo',
     'globalAddTextTitle' => 'Engadir título',
     'globalAddTextSubtitle' => 'Engadir subtítulo',
