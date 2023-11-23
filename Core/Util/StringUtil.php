@@ -306,6 +306,12 @@ final class StringUtil
         return preg_replace($url, '<a href="http$2://$4" title="$0">$0</a>', $str);
     }
 
+    public static function removeHttpFromLink(string $text): string
+    {
+        $text = str_replace('http://', '', $text);
+        return str_replace('https://', '', $text);
+    }
+
     public static function getFirstParagraphAsPlainText(?string $text): string
     {
         if (!$text) {
@@ -348,5 +354,23 @@ final class StringUtil
         } while($res);
 
         return $validSlug;
+    }
+
+    public static function getFirstWord(?string $text, int $minLength = 4): string
+    {
+        if (!$text) {
+            return '';
+        }
+
+        $tok = strtok($text, ' ');
+        while($tok !== false) {
+            if (strlen($tok) >= $minLength) {
+                return $tok;
+            }
+
+            $tok = strtok(' ');
+        }
+
+        return '';
     }
 }
