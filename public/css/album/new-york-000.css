@@ -194,6 +194,8 @@ a:focus {
 
 .main-slide-title {
   font-size: 3.5rem;
+  max-width: 75%;
+  line-height: 1;
 }
 
 .media-opacity-active {
@@ -289,6 +291,7 @@ a:focus {
 
   .main-slide-title {
     font-size: 4rem;
+    max-width: 25rem;
   }
 
   .media-content-wrapper {
@@ -314,6 +317,7 @@ a:focus {
 
   .main-slide-title {
     font-size: 5rem;
+    max-width: 30rem;
   }
 
   .media-content-wrapper {

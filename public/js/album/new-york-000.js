@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleIntersect(entries, observer) {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
+        entry.target.classList.add('js-content-child-active');
         const textPanel = entry.target.querySelector('.media-text-panel');
         if (textPanel) {
           textPanel.classList.add('null');
@@ -94,6 +95,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (contentText) {
           contentText.classList.remove('null');
         }
+      } else {
+        entry.target.classList.remove('js-content-child-active');
       }
     });
   }
@@ -141,4 +144,42 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
     const imgTemp = new Image();
     imgTemp.src = nextImageToPreload.src;
   });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+    return;
+  }
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    const nextActiveContent = document.querySelector('.js-content-child-active + .content-child');
+    if (nextActiveContent) {
+      nextActiveContent.scrollIntoView({behavior: 'smooth', block: 'start' });
+    }
+  } else if (e.key === 'ArrowUp') {
+    let previous = null;
+    document.querySelectorAll('.content-main .content-child').forEach(cc => {
+      if (cc.classList.contains('js-content-child-active') && previous) {
+        previous.scrollIntoView({behavior: 'smooth', block: 'start' });
+      }
+      previous = cc;
+    });
+  } else if (e.key === 'ArrowRight') {
+    const activeContent = document.querySelector('.js-content-child-active');
+    if (activeContent) {
+      const rightActionEl = activeContent.querySelector('.js-navigation-right');
+      if (rightActionEl) {
+        rightActionEl.click();
+      }
+    }
+  } else if (e.key === 'ArrowLeft') {
+    const activeContent = document.querySelector('.js-content-child-active');
+    if (activeContent) {
+      const rightActionEl = activeContent.querySelector('.js-navigation-left');
+      if (rightActionEl) {
+        rightActionEl.click();
+      }
+    }
+  }
 });
