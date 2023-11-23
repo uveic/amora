@@ -2,13 +2,12 @@
 
 namespace Amora\Core\Util\Helper;
 
-use Amora\App\Value\Language;
-use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Module\Album\Model\AlbumSectionMedia;
 use Amora\Core\Module\Album\Value\AlbumStatus;
+use Amora\Core\Util\LocalisationUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 
 final class AlbumHtmlGenerator
@@ -94,12 +93,10 @@ final class AlbumHtmlGenerator
     }
 
     public static function generateAlbumSectionHtml(
-        Language $language,
         AlbumSection $section,
+        LocalisationUtil $localisationUtil,
         string $indentation = '',
     ): string {
-        $localisationUtil = Core::getLocalisationUtil($language);
-
         $output = [];
         $output[] = $indentation . '<div class="album-section-item" data-album-section-id="' . $section->id . '">';
         $output[] = $indentation . '  <div class="album-section-item-content">';
@@ -166,6 +163,7 @@ final class AlbumHtmlGenerator
 
     public static function generatePublicAlbumSectionMediaArray(
         array $mediaArray,
+        int $sectionSequence,
         string $indentation = '',
         ?string $cssClass = 'media',
     ): array {
@@ -175,7 +173,7 @@ final class AlbumHtmlGenerator
         /** @var AlbumSectionMedia $albumSectionMedia */
         foreach ($mediaArray as $albumSectionMedia) {
             $class = $cssClass . ($count === 0 ? '-active' : '-hidden');
-            $lazyLoading = $count === 0 ? '' : ' loading="lazy"';
+            $lazyLoading = $count === 0 && $sectionSequence === 0 ? '' : ' loading="lazy"';
             $output[] = $indentation . '    <img src="' . $albumSectionMedia->media->getPathWithNameMedium() . '" class="media-item ' . $class . '" data-sequence="' . $albumSectionMedia->sequence . '" alt="' . $albumSectionMedia->buildAltText() . '"' . $lazyLoading . '>';
             $count++;
         }
@@ -199,6 +197,7 @@ final class AlbumHtmlGenerator
             $output,
             self::generatePublicAlbumSectionMediaArray(
                 mediaArray: $section->media,
+                sectionSequence: $section->sequence,
                 indentation: '    ',
                 cssClass: 'media-opacity',
             )
@@ -216,20 +215,18 @@ final class AlbumHtmlGenerator
 
     public static function generateAlbumTemplateNewYorkSectionHtml(
         AlbumSection $section,
-        Language $language,
+        LocalisationUtil $localisationUtil,
         string $indentation = '',
     ): string {
         if (!$section->media) {
             return '';
         }
 
-        $localisation = Core::getLocalisationUtil($language);
-
         $maxMediaSequence = 0;
         /** @var AlbumSectionMedia $media */
         foreach ($section->media as $media) {
             if ($media->sequence > $maxMediaSequence) {
-                $maxMediaSequence = $section->sequence;
+                $maxMediaSequence = $media->sequence;
             }
         }
 
@@ -241,6 +238,7 @@ final class AlbumHtmlGenerator
             $output,
             self::generatePublicAlbumSectionMediaArray(
                 mediaArray: $section->media,
+                sectionSequence: $section->sequence,
                 indentation: '    ',
             )
         );
@@ -264,18 +262,18 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '        <div class="media-links">';
 
         if ($section->contentHtml) {
-            $output[] = $indentation . '          <a href="#" class="js-media-read-more" data-media-id="' . $section->id . '">' . $localisation->getValue('albumPublicReadMore') . '<img src="/img/svg/article-white.svg" alt="Ler máis" width="20" height="20"></a>';
+            $output[] = $indentation . '          <a href="#" class="js-media-read-more" data-media-id="' . $section->id . '">' . $localisationUtil->getValue('albumPublicReadMore') . '<img src="/img/svg/article-white.svg" alt="Ler máis" width="20" height="20"></a>';
         }
 
         if (count($section->media) > 1) {
-            $output[] = $indentation . '          <a href="#" class="js-media-view" data-media-id="' . $section->id . '">' . $localisation->getValue('albumPublicMorePictures') . '<img src="/img/svg/arrow-right-white.svg" alt="Ver as fotos" width="20" height="20"></a>';
+            $output[] = $indentation . '          <a href="#" class="js-media-view" data-media-id="' . $section->id . '">' . $localisationUtil->getValue('albumPublicMorePictures') . '<img src="/img/svg/arrow-right-white.svg" alt="Ver as fotos" width="20" height="20"></a>';
         }
 
         $output[] = $indentation . '        </div>';
         $output[] = $indentation . '      </div>';
 
         $output[] = $indentation . '      <div class="media-info">';
-        $output[] = $indentation . '        <div><span class="media-sequence">1</span> ' . $localisation->getValue('globalOf') . ' ' . $maxMediaSequence . '<span class="media-text"></span></div>';
+        $output[] = $indentation . '        <div><span class="media-sequence">1</span> ' . $localisationUtil->getValue('globalOf') . ' ' . $maxMediaSequence . '<span class="media-text"></span></div>';
         $output[] = $indentation . '      </div>';
         $output[] = $indentation . '    </div>';
 

@@ -1,5 +1,6 @@
 <?php
 
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
@@ -30,6 +31,8 @@ $album = $responseData->album;
         indentation: '    ',
     ) . PHP_EOL;
 
+    $localisationUtil = Core::getLocalisationUtil($album->language);
+
     /** @var AlbumSection $section */
     foreach ($album->sections as $key => $section) {
         if ($key === 0) {
@@ -38,7 +41,7 @@ $album = $responseData->album;
 
         echo AlbumHtmlGenerator::generateAlbumTemplateNewYorkSectionHtml(
             section: $section,
-            language: $album->language,
+            localisationUtil: $localisationUtil,
             indentation: '    ',
         ) . PHP_EOL;
     }
