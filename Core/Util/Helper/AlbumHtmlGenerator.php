@@ -237,7 +237,7 @@ final class AlbumHtmlGenerator
         }
 
         $output = [];
-        $output[] = $indentation . '<section class="content-child js-content-slider" data-media-id="' . $section->id . '">';
+        $output[] = $indentation . '<section class="content-child js-content-slider" data-section-id="' . $section->id . '">';
         $output[] = $indentation . '  <div class="media-wrapper">';
 
         $output = array_merge(
@@ -253,13 +253,18 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '  <div class="media-content-wrapper">';
         $output[] = $indentation . '    <div class="content-header">';
 
-        $output[] = $indentation . '      <span class="number">' . $section->sequence . '</span>';
-        $output[] = $indentation . '      <div>';
-        $output[] = $indentation . '        <h1 class="media-title">' . $section->titleHtml . '</h1>';
+        $output[] = $indentation . '      <div class="content-header-left">';
+        $output[] = $indentation . '        <span class="number">' . $section->sequence . '</span>';
+        $output[] = $indentation . '        <div>';
+        $output[] = $indentation . '          <h1 class="media-title">' . $section->titleHtml . '</h1>';
         if ($section->subtitleHtml) {
-            $output[] = $indentation . '        <p class="media-subtitle">' . $section->subtitleHtml . '</p>';
+            $output[] = $indentation . '          <p class="media-subtitle">' . $section->subtitleHtml . '</p>';
         }
+        $output[] = $indentation . '        </div>';
         $output[] = $indentation . '      </div>';
+
+        $output[] = $indentation . '      <img class="img-svg img-svg-30 menu-button" data-section-id="' . $section->id . '" width="30" height="30" src="/img/svg/dots-nine-bold-white.svg" alt="Menu">';
+
         $output[] = $indentation . '    </div>';
 
         $output[] = $indentation . '    <div class="content-text-wrapper">';
@@ -268,11 +273,11 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '        <div class="media-links">';
 
         $output[] = $indentation . ($section->contentHtml
-            ? '          <a href="#" class="js-media-read-more" data-media-id="' . $section->id . '">' . $localisationUtil->getValue('albumPublicReadMore') . '<img src="/img/svg/article-white.svg" alt="Ler máis" width="20" height="20"></a>'
+            ? '          <a href="#" class="js-media-read-more" data-section-id="' . $section->id . '">' . $localisationUtil->getValue('albumPublicReadMore') . '<img src="/img/svg/article-white.svg" alt="Ler máis" width="20" height="20"></a>'
             : '<span></span>');
 
         $output[] = $indentation . (count($section->media) > 1
-            ? '          <a href="#" class="js-media-view" data-media-id="' . $section->id . '">' . $localisationUtil->getValue('albumPublicMorePictures') . '<img src="/img/svg/arrow-right-white.svg" alt="Ver as fotos" width="20" height="20"></a>'
+            ? '          <a href="#" class="js-media-view">' . $localisationUtil->getValue('albumPublicMorePictures') . '<img src="/img/svg/arrow-right-white.svg" alt="Ver as fotos" width="20" height="20"></a>'
             : '<span></span>');
 
         $output[] = $indentation . '        </div>';
@@ -303,6 +308,21 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    </div>';
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '</section>';
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
+    }
+
+    public static function generateAlbumTemplateNewYorkModalSectionsHtml(
+        LocalisationUtil $localisationUtil,
+        array $sections,
+        string $indentation = '',
+    ): string {
+        $output = [];
+        $output[] = $indentation . '<div class="album-new-york-sections-modal-js modal-wrapper null">';
+        $output[] = $indentation . '  <a href="#" class="modal-close-button">';
+        $output[] = $indentation . '    <img src="/img/svg/x-white.svg" class="img-svg img-svg-30" width="30" height="30" alt="' . $localisationUtil->getValue('globalClose') . '">';
+        $output[] = $indentation . '  </a>';
+                $output[] = $indentation . '</div>';
 
         return implode(PHP_EOL, $output) . PHP_EOL;
     }
