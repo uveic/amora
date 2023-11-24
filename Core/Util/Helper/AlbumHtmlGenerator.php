@@ -7,6 +7,7 @@ use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Module\Album\Model\AlbumSectionMedia;
 use Amora\Core\Module\Album\Value\AlbumStatus;
+use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Util\LocalisationUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 
@@ -318,11 +319,40 @@ final class AlbumHtmlGenerator
         string $indentation = '',
     ): string {
         $output = [];
-        $output[] = $indentation . '<div class="album-new-york-sections-modal-js modal-wrapper null">';
+        $output[] = $indentation . '<div class="album-new-york-sections-modal-js modal-wrapper">';
         $output[] = $indentation . '  <a href="#" class="modal-close-button">';
-        $output[] = $indentation . '    <img src="/img/svg/x-white.svg" class="img-svg img-svg-30" width="30" height="30" alt="' . $localisationUtil->getValue('globalClose') . '">';
+        $output[] = $indentation . '    <img src="/img/svg/x-white.svg" class="img-svg" width="20" height="20" alt="' . $localisationUtil->getValue('globalClose') . '">';
         $output[] = $indentation . '  </a>';
-                $output[] = $indentation . '</div>';
+
+        $count = 0;
+        /** @var AlbumSection $section */
+        foreach ($sections as $section) {
+            if ($section->sequence === 0 || !$section->media) {
+                continue;
+            }
+
+            $text = $section->titleHtml . ($section->subtitleHtml ? ', ' . $section->subtitleHtml : '');
+            $output[] = $indentation . '  <div class="modal-item" data-section-id="' . $section->id . '">';
+
+            /** @var Media $sectionMedia */
+            $sectionMedia = $section->mainMedia ?? $section->media[0]?->media ?? null;
+            if ($sectionMedia) {
+                $output[] = $indentation . '    <img src="' . $sectionMedia->getPathWithNameSmall() . '" class="modal-item-thumb" alt="' . $sectionMedia->buildAltText() . '">';
+            }
+
+            $output[] = $indentation . '    <a href="#" class="js-section-item" data-section-id="' . $section->id . '">';
+            $output[] = $indentation . '      <span class="number">' . $section->sequence . '</span>';
+            $output[] = $indentation . '      <span>' . $text . '</span>';
+            $output[] = $indentation . '    </a>';
+            $output[] = $indentation . '  </div>';
+            $count++;
+        }
+
+        for ($i = 0 ;$i<=round($count/3); $i++) {
+            $output[] = $indentation . '  <div class="modal-item hidden"></div>';
+        }
+
+        $output[] = $indentation . '</div>';
 
         return implode(PHP_EOL, $output) . PHP_EOL;
     }

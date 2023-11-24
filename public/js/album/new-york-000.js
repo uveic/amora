@@ -149,22 +149,34 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
 document.querySelectorAll('.menu-button').forEach(b => {
   b.addEventListener('click', e => {
     e.preventDefault();
-
-    const sectionId = b.dataset.sectionId;
-    console.log(sectionId);
-
-    document.querySelector('.album-new-york-sections-modal-js').classList.remove('null');
+    document.querySelector('.album-new-york-sections-modal-js').classList.add('modal-wrapper-open');
   });
 });
 
 document.querySelectorAll('.modal-close-button').forEach(b => {
   b.addEventListener('click', e => {
-    document.querySelector('.album-new-york-sections-modal-js').classList.add('null');
+    document.querySelector('.album-new-york-sections-modal-js').classList.remove('modal-wrapper-open');
+  });
+});
+
+document.querySelectorAll('.js-section-item').forEach(b => {
+  b.addEventListener('click', e => {
+    e.preventDefault();
+
+    const sectionId = b.dataset.sectionId;
+    document.querySelector('.album-new-york-sections-modal-js').classList.remove('modal-wrapper-open');
+    document.querySelector('.content-child[data-section-id="' + sectionId + '"]')
+      .scrollIntoView({behavior: 'smooth', block: 'start' });
   });
 });
 
 document.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+    return;
+  }
+
+  const modal = document.querySelector('.album-new-york-sections-modal-js');
+  if (modal && modal.classList.contains('modal-wrapper-open')) {
     return;
   }
 
