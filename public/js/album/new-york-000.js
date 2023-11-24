@@ -17,8 +17,8 @@ document.querySelectorAll('a.js-media-read-more').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
 
-    const mediaId = a.dataset.mediaId;
-    document.querySelector('#media-text-panel-' + mediaId).classList.remove('null');
+    const sectionId = a.dataset.sectionId;
+    document.querySelector('#media-text-panel-' + sectionId).classList.remove('null');
   });
 });
 
@@ -146,6 +146,23 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
   });
 });
 
+document.querySelectorAll('.menu-button').forEach(b => {
+  b.addEventListener('click', e => {
+    e.preventDefault();
+
+    const sectionId = b.dataset.sectionId;
+    console.log(sectionId);
+
+    document.querySelector('.album-new-york-sections-modal-js').classList.remove('null');
+  });
+});
+
+document.querySelectorAll('.modal-close-button').forEach(b => {
+  b.addEventListener('click', e => {
+    document.querySelector('.album-new-york-sections-modal-js').classList.add('null');
+  });
+});
+
 document.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
     return;
@@ -158,6 +175,7 @@ document.addEventListener('keydown', e => {
       nextActiveContent.scrollIntoView({behavior: 'smooth', block: 'start' });
     }
   } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
     let previous = null;
     document.querySelectorAll('.content-main .content-child').forEach(cc => {
       if (cc.classList.contains('js-content-child-active') && previous) {

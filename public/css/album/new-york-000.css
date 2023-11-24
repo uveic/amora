@@ -125,7 +125,22 @@ a:focus {
   font-feature-settings: "kern";
 }
 
-.media-content-wrapper .content-header,
+.media-content-wrapper .content-header {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.media-content-wrapper .content-header .menu-button {
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.65);
+  z-index: 20;
+  cursor: pointer;
+}
+
+.media-content-wrapper .content-header-left,
 .media-content-wrapper .content-text {
   z-index: 5;
 }
@@ -134,7 +149,7 @@ a:focus {
   width: 100%;
 }
 
-.media-content-wrapper .content-header {
+.media-content-wrapper .content-header-left {
   display: flex;
   flex-flow: row nowrap;
   align-items: flex-start;
@@ -175,7 +190,7 @@ a:focus {
   width: 100%;
 }
 
-.media-content-wrapper .content-header .number {
+.media-content-wrapper .content-header-left .number {
   font-size: 1.3rem;
   margin-top: 0.4rem;
 }
@@ -290,6 +305,27 @@ a:focus {
   position: absolute;
   top: 1rem;
   right: 1rem;
+}
+
+.modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0,.90);
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  z-index: 998;
+}
+
+.modal-close-button {
+  position: absolute;
+  padding: 1rem;
+  top: 0;
+  right: 0;
+  z-index: 999;
 }
 
 .null {display: none !important;}
