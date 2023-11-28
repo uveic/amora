@@ -124,7 +124,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '        <a href="#" class="main-image-button main-image-button-red album-section-main-media-delete-js' . ($section->mainMedia ? '' : ' null') . '" data-media-id="' . $section->mainMedia?->id . '" data-event-listener-action="albumSectionDeleteMainMedia" data-target-container-id="album-section-main-media-' . $section->id . '">';
         $output[] = $indentation . '          <img class="img-svg" src="/img/svg/trash-white.svg" alt="' . $localisationUtil->getValue('globalRemoveImage') . '" title="' . $localisationUtil->getValue('globalRemoveImage') . '">';
         $output[] = $indentation . '        </a>';
-        $output[] = $indentation . '        <a href="#" class="main-image-button album-section-main-media-js" data-media-id="' . $section->mainMedia?->id . '" data-event-listener-action="albumSectionSelectMainMedia" data-target-container-id="album-section-main-media-' . $section->id . '">';
+        $output[] = $indentation . '        <a href="#" class="main-image-button album-section-main-media-js" data-section-id="' . $section->id . '" data-media-id="' . $section->mainMedia?->id . '" data-event-listener-action="albumSectionSelectMainMedia" data-target-container-id="album-section-main-media-' . $section->id . '">';
         $output[] = $indentation . '          <img class="img-svg" src="/img/svg/image.svg" alt="' . $localisationUtil->getValue('globalAddImage') . '" title="' . $localisationUtil->getValue('globalAddImage') . '">';
         $output[] = $indentation . '          <span>' . ($section->mainMedia ? $localisationUtil->getValue('globalModify') : $localisationUtil->getValue('globalAddImage')) . '</span>';
         $output[] = $indentation . '        </a>';
@@ -141,7 +141,7 @@ final class AlbumHtmlGenerator
 
         /** @var AlbumSectionMedia $sectionMedia */
         foreach ($section->media as $sectionMedia) {
-            $output[] = $indentation . '      ' . self::generateAlbumSectionMediaHtml($sectionMedia);
+            $output[] = $indentation . self::generateAlbumSectionMediaHtml($sectionMedia, $localisationUtil, '      ');
         }
 
         $output[] = $indentation . '      <a href="#" class="button is-success select-media-action" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
@@ -158,12 +158,19 @@ final class AlbumHtmlGenerator
 
     public static function generateAlbumSectionMediaHtml(
         AlbumSectionMedia $albumSectionMedia,
+        LocalisationUtil $localisationUtil,
         string $indentation = '',
     ): string {
         $titleAlt = $albumSectionMedia->media->buildAltText();
 
         $output = [];
-        $output[] = $indentation . '<img src="' . $albumSectionMedia->media->getPathWithNameSmall() . '" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $albumSectionMedia->media->id . '" data-sequence="' . $albumSectionMedia->sequence . '" class="album-section-image">';
+        $output[] = $indentation . '<div class="album-section-media-container">';
+        $output[] = $indentation . '  <figure>';
+        $output[] = $indentation . '    <img src="' . $albumSectionMedia->media->getPathWithNameSmall() . '" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $albumSectionMedia->media->id . '" data-sequence="' . $albumSectionMedia->sequence . '">';
+        $output[] = $indentation . '    <img class="img-svg album-section-image-delete album-section-media-delete-js" src="/img/svg/trash-white.svg" alt="' . $localisationUtil->getValue('globalRemoveImage') . '" title="' . $localisationUtil->getValue('globalRemoveImage') . '" data-album-section-media-id="' . $albumSectionMedia->id . '" data-media-id="' . $albumSectionMedia->media->id . '" data-event-listener-action="albumSectionDeleteMedia" data-target-container-id="album-section-item-media-' . $albumSectionMedia->albumSectionId . '">';
+        $output[] = $indentation . '  </figure>';
+        $output[] = $indentation . '  <div class="media-caption album-section-media-caption-js" data-media-id="' . $albumSectionMedia->media->id . '" data-album-section-media-id="' . $albumSectionMedia->id . '">' . ($albumSectionMedia->captionHtml ?: '-') . '</div>';
+        $output[] = $indentation . '</div>';
 
         return implode(PHP_EOL, $output) . PHP_EOL;
     }
@@ -181,7 +188,7 @@ final class AlbumHtmlGenerator
         foreach ($mediaArray as $albumSectionMedia) {
             $class = $cssClass . ($count === 0 ? '-active' : '-hidden');
             $lazyLoading = $count === 0 && $sectionSequence === 0 ? '' : ' loading="lazy"';
-            $output[] = $indentation . '    <img src="' . $albumSectionMedia->media->getPathWithNameMedium() . '" class="media-item ' . $class . '" data-sequence="' . $albumSectionMedia->sequence . '" alt="' . $albumSectionMedia->buildAltText() . '"' . $lazyLoading . '>';
+            $output[] = $indentation . '    <img src="' . $albumSectionMedia->media->getPathWithNameMedium() . '" class="media-item ' . $class . '" data-caption="' . $albumSectionMedia->captionHtml . '" data-sequence="' . $albumSectionMedia->sequence . '" alt="' . $albumSectionMedia->buildAltText() . '"' . $lazyLoading . '>';
             $count++;
         }
 
@@ -229,9 +236,14 @@ final class AlbumHtmlGenerator
             return '';
         }
 
+        $mediaCaptionForFirstMedia = null;
         $maxMediaSequence = 0;
         /** @var AlbumSectionMedia $media */
         foreach ($section->media as $media) {
+            if (!$mediaCaptionForFirstMedia) {
+                $mediaCaptionForFirstMedia = $media->captionHtml;
+            }
+
             if ($media->sequence > $maxMediaSequence) {
                 $maxMediaSequence = $media->sequence;
             }
@@ -284,10 +296,9 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '        </div>';
         $output[] = $indentation . '      </div>';
 
-        $mediaText = $media->contentHtml ?: 'Ut excepturi aut qui a. Ut repellat qui quam enim. Commodi quae velit vitae at veritatis qui odit odio. Quae voluptatem nulla veniam laboriosam et.';
         $output[] = $indentation . '      <div class="media-info">';
         $output[] = $indentation . '        <div><span class="media-sequence">1</span> ' . $localisationUtil->getValue('globalOf') . ' ' . $maxMediaSequence . '</div>';
-        $output[] = $indentation . '        <div>' . $mediaText . '</div>';
+        $output[] = $indentation . '        <div class="media-caption-html">' . $mediaCaptionForFirstMedia . '</div>';
         $output[] = $indentation . '      </div>';
         $output[] = $indentation . '    </div>';
 

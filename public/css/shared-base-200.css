@@ -272,6 +272,10 @@ blockquote *:last-child {
   overflow: auto;
 }
 
+.modal-inner-no-min-width {
+  min-width: revert;
+}
+
 .modal-close-button {
   position: absolute;
   padding: 0.75rem;

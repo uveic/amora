@@ -140,6 +140,11 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
       contentMediaSequence.textContent = nextImage.dataset.sequence;
     }
 
+    const contentMediaHtmlEl = mediaContainer.parentElement.querySelector('.media-caption-html');
+    if (contentMediaHtmlEl) {
+      contentMediaHtmlEl.textContent = nextImage.dataset.caption;
+    }
+
     const nextImageToPreload = getNextImage(mediaContainer, goRight);
     const imgTemp = new Image();
     imgTemp.src = nextImageToPreload.src;

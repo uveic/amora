@@ -37,6 +37,7 @@ $publicLinkHtml = $album->status->isPublished()
 $closeLink = UrlBuilderUtil::buildBackofficeAlbumListUrl($responseData->siteLanguage);
 
 $this->insert('partials/albums/modal-add-section', ['responseData' => $responseData]);
+$this->insert('partials/albums/modal-media-caption-edit', ['responseData' => $responseData]);
 $this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
 
 ?>

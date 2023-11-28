@@ -1675,10 +1675,7 @@
                 "mediaId": {
                   "type": "integer"
                 },
-                "titleHtml": {
-                  "type": "string"
-                },
-                "contentHtml": {
+                "captionHtml": {
                   "type": "string"
                 }
               },
@@ -1751,6 +1748,100 @@
                 }
               }
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/album-section-media/{albumSectionMediaId}": {
+      "put": {
+        "tags": [],
+        "description": "Update album section media",
+        "operationId": "updateAlbumSectionMedia",
+        "parameters": [
+          {
+            "name": "albumSectionMediaId",
+            "in": "path",
+            "description": "Album section media ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "captionHtml": {
+                  "type": "string"
+                },
+                "sequence": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "description": "Delete media for album section",
+        "operationId": "deleteAlbumSectionMedia",
+        "parameters": [
+          {
+            "name": "albumSectionMediaId",
+            "in": "path",
+            "description": "Album section media ID",
+            "required": true,
+            "type": "integer"
           }
         ],
         "responses": {

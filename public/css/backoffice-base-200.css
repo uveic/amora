@@ -952,6 +952,8 @@ h2.page-content-subtitle {
   display: flex;
   flex-flow: row wrap;
   gap: 1rem;
+  align-content: stretch;
+  justify-content: center;
 }
 
 .form-two-columns-wrapper > * {
@@ -996,9 +998,15 @@ h2.page-content-subtitle {
 }
 
 /* Album starts here */
+.media-caption-html,
 .album-content-html {
   padding: 1rem;
   border: 1px dotted var(--color-light-3);
+  margin-bottom: 0;
+}
+
+.media-caption-html {
+  width: 100%;
 }
 
 .album-wrapper {
@@ -1123,7 +1131,16 @@ h2.page-content-subtitle {
 }
 
 .album-section-item-content h3:first-of-type {
-  margin-top: 0;
+  margin: 0;
+}
+
+.album-section-item-content .section-subtitle-html {
+  margin: 0.5rem 0;
+  color: var(--color-light-5);
+}
+
+.album-section-item-content .section-content-html {
+  color: var(--color-light-4);
 }
 
 .album-section-item-media-wrapper {
@@ -1140,7 +1157,7 @@ h2.page-content-subtitle {
 .album-section-item-media {
   display: flex;
   flex-flow: row wrap;
-  gap: 0.5rem;
+  gap: 1rem 0.5rem;
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
@@ -1153,21 +1170,67 @@ h2.page-content-subtitle {
   justify-content: center;
   align-items: center;
   width: 20%;
-  min-width: 140px;
-  max-width: 200px;
+  min-width: 95px;
+  max-width: 140px;
   height: auto;
   min-height: 100px;
   flex-grow: 1;
   margin: 0;
 }
 
-.album-section-image {
+.album-section-media-container {
   width: 20%;
-  min-width: 140px;
-  max-width: 200px;
-  height: auto;
+  min-width: 95px;
+  max-width: 140px;
   flex-grow: 1;
+}
+
+.album-section-media-container figure {
+  height: auto;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.album-section-media-container .image-item {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: auto;
+  max-height: 140px;
+}
+
+.album-section-media-container .album-section-image-delete {
+  position: absolute;
+  bottom: 0.2rem;
+  right: 0.2rem;
   cursor: pointer;
+}
+
+.album-section-media-container > .media-caption {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--color-light-5);
+  cursor: pointer;
+}
+
+.album-section-media-container > .media-caption p:first-of-type{
+  margin-top: 0;
+}
+
+.album-section-media-container > .media-caption p:last-of-type{
+  margin-bottom: 0;
+}
+
+.album-media-edit-container {
+  width: auto;
+  max-width: 200px;
 }
 
 .album-media-loading {
@@ -1251,6 +1314,10 @@ h2.page-content-subtitle {
   .content-images {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+
+  .media-caption-html {
+    width: 500px !important;
   }
 }
 
