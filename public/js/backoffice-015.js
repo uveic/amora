@@ -756,12 +756,19 @@ const albumSectionEditMediaCaption = (e) => {
   e.preventDefault();
 
   const albumSectionMediaId = e.currentTarget.dataset.albumSectionMediaId;
+  const albumSectionId = e.currentTarget.dataset.albumSectionId;
   const mediaId = e.currentTarget.mediaId;
   const modal = document.querySelector('.album-media-caption-edit-modal-js');
   const mediaContainer = modal.querySelector('.album-media-edit-container');
   mediaContainer.querySelectorAll('img').forEach(i => mediaContainer.removeChild(i));
   modal.querySelector('input[name="albumSectionMediaId"]').value = albumSectionMediaId;
   const existingMedia = e.currentTarget.parentElement.querySelector('img[data-media-id="' + mediaId + '"]');
+  const sectionContentContainer = document.querySelector(
+    '.album-section-item[data-album-section-id="' + albumSectionId + '"]'
+  );
+  const titleText = sectionContentContainer.querySelector('.section-title-html').textContent;
+  const subtitleText = sectionContentContainer.querySelector('.album-section-item-number').textContent
+    + (titleText === '-' ? '' : (' ' + titleText));
 
   const newMediaEl = new Image();
   newMediaEl.src = existingMedia.src;
@@ -771,6 +778,7 @@ const albumSectionEditMediaCaption = (e) => {
 
   const htmlContainer = modal.querySelector('.media-caption-html');
   htmlContainer.innerHTML = e.currentTarget.textContent === '-' ? '' : e.currentTarget.textContent;
+  modal.querySelector('.modal-header-subtitle').textContent = subtitleText;
 
   modal.classList.remove('null');
   htmlContainer.focus();

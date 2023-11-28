@@ -19,7 +19,7 @@ $album = $responseData->album;
       </div>
       <div class="modal-header-content">
         <div class="modal-header-title"><?=$album->titleHtml?></div>
-        <div class="modal-header-subtitle">Example</div>
+        <div class="modal-header-subtitle"></div>
       </div>
     </div>
 
