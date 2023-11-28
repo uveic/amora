@@ -51,21 +51,21 @@ const selectMediaAction = (e) => {
     });
 };
 
-const addMediaToModalContainer = (existingModalContainer, existingImage) => {
-  if (!existingImage) {
+const addMediaToModalContainer = (existingModalContainer, mediaId) => {
+  const existingMedia = document.querySelector('img[data-media-id="' + mediaId + '"]');
+
+  if (!existingMedia) {
     return;
-  }
-
-  const existingMediaId = existingImage.dataset.mediaId;
-
-  const existingInModal = existingModalContainer.querySelector('.img[data-media-id="' + existingMediaId + '"]');
-  if (existingInModal) {
-    existingModalContainer.parentElement.classList.add('null');
   }
 
   existingModalContainer.querySelectorAll('figure .null').forEach(i => {
     i.classList.remove('null');
   });
+
+  const existingInModal = existingModalContainer.querySelector('img[data-media-id="' + mediaId + '"]');
+  if (existingInModal) {
+    existingModalContainer.parentElement.classList.add('null');
+  }
 
   existingModalContainer.querySelectorAll('.media-dynamically-added').forEach(i => {
     existingModalContainer.removeChild(i.parentElement);
@@ -75,14 +75,12 @@ const addMediaToModalContainer = (existingModalContainer, existingImage) => {
   figureContainer.className = 'image-container';
 
   const newImage = new Image();
-  newImage.src = existingImage.src;
-  newImage.alt = existingImage.alt;
-  newImage.title = existingImage.title;
-  newImage.dataset.mediaId = existingMediaId;
-  newImage.dataset.pathMedium = existingImage.src;
+  newImage.src = existingMedia.src;
+  newImage.alt = existingMedia.alt;
+  newImage.title = existingMedia.title;
+  newImage.dataset.mediaId = mediaId;
+  newImage.dataset.pathMedium = existingMedia.src;
   newImage.className = 'image-item media-dynamically-added';
-
-
   figureContainer.appendChild(newImage);
 
   if (existingModalContainer.firstChild) {
@@ -551,6 +549,15 @@ const albumSectionAddMedia = (e) => {
         actionButton.insertAdjacentHTML('beforebegin', response.html);
         const countEl = container.parentElement.querySelector('.album-section-item-media-header .count');
         countEl.textContent = (Number.parseInt(countEl.textContent) + 1).toString();
+
+        const deleteMediaEl = container.querySelector('.album-section-media-delete-js[data-media-id="' + mediaId + '"]');
+        deleteMediaEl.targetContainerId = targetContainerId;
+        deleteMediaEl.mediaId = mediaId;
+        deleteMediaEl.addEventListener('click', albumSectionDeleteMedia);
+
+        const editMediaEl = container.querySelector('.album-section-media-caption-js[data-media-id="' + mediaId + '"]');
+        editMediaEl.mediaId = mediaId;
+        editMediaEl.addEventListener('click', albumSectionEditMediaCaption);
       } else {
         Util.notifyUser('A imaxe xa fora engadida.');
       }
@@ -703,6 +710,11 @@ const albumSectionSelectMainMedia = (e) => {
 const albumSectionDeleteMainMedia = (e) => {
   e.preventDefault();
 
+  const delRes = confirm(global.get('feedbackDeleteGeneric'));
+  if (!delRes) {
+    return;
+  }
+
   const targetContainerId = e.currentTarget.targetContainerId;
 
   const container = document.querySelector('#' + targetContainerId);
@@ -714,6 +726,54 @@ const albumSectionDeleteMainMedia = (e) => {
 
   container.querySelector('.album-section-main-media-delete-js').classList.add('null');
   container.querySelector('.album-section-main-media-js span').textContent = global.get('globalSelectImage');
+};
+
+const albumSectionDeleteMedia = (e) => {
+  e.preventDefault();
+
+  const delRes = confirm(global.get('feedbackDeleteGeneric'));
+  if (!delRes) {
+    return;
+  }
+
+  const mediaId = e.currentTarget.mediaId;
+  const albumSectionMediaId = e.currentTarget.dataset.albumSectionMediaId;
+  const targetContainerId = e.currentTarget.targetContainerId;
+
+  const container = document.querySelector('#' + targetContainerId);
+  const targetMediaContainer = container.querySelector('img[data-media-id="' + mediaId + '"]');
+
+  targetMediaContainer.parentElement.parentElement.classList.add('null');
+
+  xhr.delete('/back/album-section-media/' + albumSectionMediaId, null, feedbackDiv)
+    .catch(error => {
+      targetMediaContainer.parentElement.parentElement.classList.remove('null');
+      Util.logError(error);
+    });
+};
+
+const albumSectionEditMediaCaption = (e) => {
+  e.preventDefault();
+
+  const albumSectionMediaId = e.currentTarget.dataset.albumSectionMediaId;
+  const mediaId = e.currentTarget.mediaId;
+  const modal = document.querySelector('.album-media-caption-edit-modal-js');
+  const mediaContainer = modal.querySelector('.album-media-edit-container');
+  mediaContainer.querySelectorAll('img').forEach(i => mediaContainer.removeChild(i));
+  modal.querySelector('input[name="albumSectionMediaId"]').value = albumSectionMediaId;
+  const existingMedia = e.currentTarget.parentElement.querySelector('img[data-media-id="' + mediaId + '"]');
+
+  const newMediaEl = new Image();
+  newMediaEl.src = existingMedia.src;
+  newMediaEl.alt = existingMedia.alt;
+  newMediaEl.title = existingMedia.title;
+  mediaContainer.appendChild(newMediaEl);
+
+  const htmlContainer = modal.querySelector('.media-caption-html');
+  htmlContainer.innerHTML = e.currentTarget.textContent === '-' ? '' : e.currentTarget.textContent;
+
+  modal.classList.remove('null');
+  htmlContainer.focus();
 };
 
 const addEventListenerAction = (image, mediaId, eventListenerAction, targetContainerId) => {
@@ -1596,18 +1656,17 @@ document.querySelectorAll('.album-section-main-media-js').forEach(bu => {
   bu.addEventListener('click', (e) => {
     e.preventDefault();
 
-    const targetContainerId = bu.dataset.targetContainerId;
     const mediaId = bu.dataset.mediaId;
+    const sectionId = bu.dataset.sectionId;
 
     const existingModalContainer = document.querySelector('#images-list');
-    const existingImage = document.querySelector('img[data-media-id="' + mediaId + '"]');
-    const targetContainer = document.querySelector('#' + targetContainerId);
+    const sectionMediaContainer = document.querySelector('#album-section-item-media-' + sectionId);
 
-    targetContainer.querySelectorAll('.album-section-image').forEach(i => {
-      addMediaToModalContainer(existingModalContainer, i);
+    sectionMediaContainer.querySelectorAll('.album-section-media-container .image-item').forEach(i => {
+      addMediaToModalContainer(existingModalContainer, i.dataset.mediaId);
     });
 
-    addMediaToModalContainer(existingModalContainer, existingImage);
+    addMediaToModalContainer(existingModalContainer, mediaId);
 
     selectMediaAction(e);
   });
@@ -1617,6 +1676,44 @@ document.querySelectorAll('.album-section-main-media-delete-js').forEach(bu => {
   bu.targetContainerId = bu.dataset.targetContainerId;
   bu.mediaId = bu.dataset.mediaId;
   bu.addEventListener('click', albumSectionDeleteMainMedia);
+});
+
+document.querySelectorAll('.album-section-media-delete-js').forEach(bu => {
+  bu.targetContainerId = bu.dataset.targetContainerId;
+  bu.mediaId = bu.dataset.mediaId;
+  bu.addEventListener('click', albumSectionDeleteMedia);
+});
+
+document.querySelectorAll('.album-section-media-caption-js').forEach(el => {
+  el.mediaId = el.dataset.mediaId;
+  el.addEventListener('click', albumSectionEditMediaCaption);
+});
+
+document.querySelectorAll('form#album-media-caption-edit-form-js').forEach(f => {
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const albumSectionMediaId = Number.parseInt(f.querySelector('input[name="albumSectionMediaId"]').value);
+    const captionHtml = f.querySelector('.media-caption-html').textContent;
+
+    const targetCaptionHtmlEl = document.querySelector(
+      '.album-section-media-caption-js[data-album-section-media-id="' + albumSectionMediaId + '"]'
+    );
+    const captionHtmlBefore = targetCaptionHtmlEl.textContent;
+
+    targetCaptionHtmlEl.textContent = captionHtml;
+    document.querySelector('.album-media-caption-edit-modal-js').classList.add('null');
+
+    const payload = JSON.stringify({
+      captionHtml: captionHtml,
+    });
+
+    xhr.put('/back/album-section-media/' + albumSectionMediaId, payload, feedbackDiv)
+      .catch(error => {
+        targetCaptionHtmlEl.textContent = captionHtmlBefore;
+        Util.logError(error);
+      });
+  });
 });
 
 export {handleDropdownOptionClick};

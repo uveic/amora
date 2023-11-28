@@ -51,6 +51,15 @@ readonly class AlbumService
         return empty($res[0]) ? null : $res[0];
     }
 
+    public function getAlbumSectionMediaForId(int $albumSectionMediaId): ?AlbumSectionMedia
+    {
+        $res = $this->filterAlbumSectionMediaBy(
+            albumSectionMediaIds: [$albumSectionMediaId],
+        );
+
+        return empty($res[0]) ? null : $res[0];
+    }
+
     public function getAlbumSectionMediaForIds(int $albumSectionId, int $mediaId): ?AlbumSectionMedia
     {
         $res = $this->filterAlbumSectionMediaBy(
@@ -343,18 +352,26 @@ readonly class AlbumService
         return $this->albumDataLayer->updateAlbumSection($item);
     }
 
+    public function updateAlbumSectionMedia(AlbumSectionMedia $item): bool
+    {
+        return $this->albumDataLayer->updateAlbumSectionMedia($item);
+    }
+
+    public function deleteMediaForAlbumSection(int $albumSectionMediaId): bool
+    {
+        return $this->albumDataLayer->deleteMediaForAlbumSection($albumSectionMediaId);
+    }
+
     public function workflowStoreMediaForAlbumSection(
         AlbumSection $albumSection,
         Media $media,
-        ?string $titleHtml,
-        ?string $contentHtml,
+        ?string $captionHtml,
     ): AlbumSectionMedia {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
             function () use (
                 $albumSection,
                 $media,
-                $titleHtml,
-                $contentHtml,
+                $captionHtml,
             ) {
                 $sequence = $this->albumDataLayer->getMaxAlbumSectionMediaSequence($albumSection->id);
 
@@ -364,8 +381,7 @@ readonly class AlbumService
                         id: null,
                         albumSectionId: $albumSection->id,
                         media: $media,
-                        titleHtml: $titleHtml,
-                        contentHtml: $contentHtml,
+                        captionHtml: $captionHtml,
                         createdAt: $now,
                         updatedAt: $now,
                         sequence: $sequence + 1,

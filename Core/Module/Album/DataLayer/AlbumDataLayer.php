@@ -291,8 +291,7 @@ class AlbumDataLayer
             'asm.media_id AS album_section_media_media_id',
             'asm.created_at AS album_section_media_created_at',
             'asm.updated_at AS album_section_media_updated_at',
-            'asm.title_html AS album_section_media_title_html',
-            'asm.content_html AS album_section_media_content_html',
+            'asm.caption_html AS album_section_media_caption_html',
             'asm.`sequence` AS album_section_media_sequence',
 
             'm.id AS media_id',
@@ -442,6 +441,23 @@ class AlbumDataLayer
         $item->id = $res;
 
         return $item;
+    }
+
+    public function updateAlbumSectionMedia(AlbumSectionMedia $item): bool
+    {
+        return $this->db->update(
+            tableName: self::ALBUM_SECTION_MEDIA_TABLE,
+            id: $item->id,
+            data: $item->asArray(),
+        );
+    }
+
+    public function deleteMediaForAlbumSection(int $albumSectionMediaId): bool
+    {
+        return $this->db->delete(
+            tableName: self::ALBUM_SECTION_MEDIA_TABLE,
+            where: ['id' => $albumSectionMediaId],
+        );
     }
 
     public function storeAlbumSlug(AlbumSlug $item): AlbumSlug
