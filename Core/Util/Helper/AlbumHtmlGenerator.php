@@ -101,6 +101,7 @@ final class AlbumHtmlGenerator
         $output = [];
         $output[] = $indentation . '<div class="album-section-item" data-album-section-id="' . $section->id . '">';
         $output[] = $indentation . '  <div class="album-section-item-content">';
+        $output[] = $indentation . '    <div class="drop-loading null"><img src="/img/loading.gif" class="img-svg img-svg-40" width="40" height="40" alt="' . $localisationUtil->getValue('globalSaving') . '"></div>';
 
         $output[] = $indentation . '    <div class="album-section-item-edit-container">';
         $output[] = $indentation . '      <span class="album-section-item-number">#' . $section->sequence . '</span>';
@@ -164,9 +165,9 @@ final class AlbumHtmlGenerator
         $titleAlt = $albumSectionMedia->media->buildAltText();
 
         $output = [];
-        $output[] = $indentation . '<div class="album-section-media-container">';
+        $output[] = $indentation . '<div class="album-section-media-container item-draggable">';
         $output[] = $indentation . '  <figure>';
-        $output[] = $indentation . '    <img src="' . $albumSectionMedia->media->getPathWithNameSmall() . '" class="image-item" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $albumSectionMedia->media->id . '" data-sequence="' . $albumSectionMedia->sequence . '">';
+        $output[] = $indentation . '    <img id="album-section-media-' . $albumSectionMedia->id . '" src="' . $albumSectionMedia->media->getPathWithNameSmall() . '" class="media-item" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $albumSectionMedia->media->id . '" data-sequence="' . $albumSectionMedia->sequence . '" data-album-section-media-id=' . $albumSectionMedia->id . ' draggable="true">';
         $output[] = $indentation . '    <img class="img-svg album-section-image-delete album-section-media-delete-js" src="/img/svg/trash-white.svg" alt="' . $localisationUtil->getValue('globalRemoveImage') . '" title="' . $localisationUtil->getValue('globalRemoveImage') . '" data-album-section-media-id="' . $albumSectionMedia->id . '" data-media-id="' . $albumSectionMedia->media->id . '" data-event-listener-action="albumSectionDeleteMedia" data-target-container-id="album-section-item-media-' . $albumSectionMedia->albumSectionId . '">';
         $output[] = $indentation . '  </figure>';
         $output[] = $indentation . '  <div class="media-caption album-section-media-caption-js" data-media-id="' . $albumSectionMedia->media->id . '" data-album-section-id="' . $albumSectionMedia->albumSectionId . '" data-album-section-media-id="' . $albumSectionMedia->id . '">' . ($albumSectionMedia->captionHtml ?: '-') . '</div>';

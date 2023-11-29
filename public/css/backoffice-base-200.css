@@ -1192,7 +1192,7 @@ h2.page-content-subtitle {
   aspect-ratio: 1/1;
 }
 
-.album-section-media-container .image-item {
+.album-section-media-container .media-item {
   object-fit: cover;
   object-position: center;
   width: 100%;
@@ -1277,6 +1277,37 @@ h2.page-content-subtitle {
   padding: calc(0.5rem - 1px) 0.75rem;
   min-height: revert;
   margin: 0;
+}
+
+.item-draggable {
+  cursor: grab;
+}
+
+.item-grabbing {
+  cursor: grabbing;
+  padding: 0.25rem;
+}
+
+.item-grabbing-over {
+  padding: 0.25rem;
+  margin: 0;
+}
+
+.item-dropped {
+  padding: 0.25rem;
+  margin: 0;
+}
+
+.drop-loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 /* Album ends here */
 

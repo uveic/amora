@@ -43,6 +43,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumStatusSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreAlbumSectionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumSectionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumSectionMediaSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDeleteAlbumSectionMediaSuccessResponse.php';
@@ -356,6 +357,29 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         int $albumSectionId,
         int $mediaId,
         ?string $captionHtml,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /back/album-section/{albumSectionId}/sequence
+     * Method: PUT
+     *
+     * @param int $albumSectionId
+     * @param int $sequenceTo
+     * @param int $albumMediaIdTo
+     * @param int $sequenceFrom
+     * @param int $albumMediaIdFrom
+     * @param string $countDelta
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function updateMediaSequenceForAlbumSection(
+        int $albumSectionId,
+        int $sequenceTo,
+        int $albumMediaIdTo,
+        int $sequenceFrom,
+        int $albumMediaIdFrom,
+        string $countDelta,
         Request $request
     ): Response;
 
@@ -1542,6 +1566,121 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
+    private function validateAndCallUpdateMediaSequenceForAlbumSection(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['back', 'album-section', '{albumSectionId}', 'sequence'],
+            $pathParts
+        );
+        $bodyParams = $request->getBodyPayload();
+        $errors = [];
+
+        $albumSectionId = null;
+        if (!isset($pathParams['albumSectionId'])) {
+            $errors[] = [
+                'field' => 'albumSectionId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['albumSectionId'])) {
+                $errors[] = [
+                    'field' => 'albumSectionId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $albumSectionId = intval($pathParams['albumSectionId']);
+            }
+        }
+
+        if (!isset($bodyParams)) {
+            $errors[] = [
+                'field' => 'payload',
+                'message' => 'required'
+            ];
+        }
+
+        $sequenceTo = null;
+        if (!isset($bodyParams['sequenceTo'])) {
+            $errors[] = [
+                'field' => 'sequenceTo',
+                'message' => 'required'
+            ];
+        } else {
+            $sequenceTo = $bodyParams['sequenceTo'] ?? null;
+        }
+
+        $albumMediaIdTo = null;
+        if (!isset($bodyParams['albumMediaIdTo'])) {
+            $errors[] = [
+                'field' => 'albumMediaIdTo',
+                'message' => 'required'
+            ];
+        } else {
+            $albumMediaIdTo = $bodyParams['albumMediaIdTo'] ?? null;
+        }
+
+        $sequenceFrom = null;
+        if (!isset($bodyParams['sequenceFrom'])) {
+            $errors[] = [
+                'field' => 'sequenceFrom',
+                'message' => 'required'
+            ];
+        } else {
+            $sequenceFrom = $bodyParams['sequenceFrom'] ?? null;
+        }
+
+        $albumMediaIdFrom = null;
+        if (!isset($bodyParams['albumMediaIdFrom'])) {
+            $errors[] = [
+                'field' => 'albumMediaIdFrom',
+                'message' => 'required'
+            ];
+        } else {
+            $albumMediaIdFrom = $bodyParams['albumMediaIdFrom'] ?? null;
+        }
+
+        $countDelta = null;
+        if (!isset($bodyParams['countDelta'])) {
+            $errors[] = [
+                'field' => 'countDelta',
+                'message' => 'required'
+            ];
+        } else {
+            $countDelta = $bodyParams['countDelta'] ?? null;
+        }
+
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->updateMediaSequenceForAlbumSection(
+                $albumSectionId,
+                $sequenceTo,
+                $albumMediaIdTo,
+                $sequenceFrom,
+                $albumMediaIdFrom,
+                $countDelta,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updateMediaSequenceForAlbumSection()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
     private function validateAndCallUpdateAlbumSection(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
@@ -1893,6 +2032,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallStoreMediaForAlbumSection($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'album-section', '{albumSectionId}', 'sequence'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallUpdateMediaSequenceForAlbumSection($request);
         }
 
         if ($method === 'PUT' &&

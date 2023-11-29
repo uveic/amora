@@ -26,6 +26,7 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSect
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumStatusSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSuccessResponse;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -1068,6 +1069,34 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 albumSectionMedia: $newAlbumMedia,
                 localisationUtil: Core::getLocalisationUtil($request->siteLanguage),
             ),
+        );
+    }
+
+    /**
+     * Endpoint: /back/album-section/{albumSectionId}/sequence
+     * Method: PUT
+     *
+     * @param int $albumSectionId
+     * @param int $sequenceTo
+     * @param int $albumMediaIdTo
+     * @param int $sequenceFrom
+     * @param int $albumMediaIdFrom
+     * @param string $countDelta
+     * @param Request $request
+     * @return Response
+     */
+    protected function updateMediaSequenceForAlbumSection(
+        int $albumSectionId,
+        int $sequenceTo,
+        int $albumMediaIdTo,
+        int $sequenceFrom,
+        int $albumMediaIdFrom,
+        string $countDelta,
+        Request $request
+    ): Response {
+        sleep(2);
+        return new BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse(
+            success: true,
         );
     }
 
