@@ -552,7 +552,7 @@ h2.page-content-subtitle {
 }
 
 #images-list .image-container {
-  height: 200px;
+  height: auto;
   width: 200px;
   min-width: 100px;
   max-width: 400px;
@@ -562,13 +562,14 @@ h2.page-content-subtitle {
   overflow: hidden;
   margin: 0;
   padding: 0;
+  aspect-ratio: 1/1;
 }
 
 #images-list .image-item {
   object-fit: cover;
   object-position: center;
   width: 100%;
-  height: 200px;
+  height: 100%;
 }
 
 #upload-media {
@@ -714,7 +715,6 @@ h2.page-content-subtitle {
   white-space: nowrap;
   text-overflow: ellipsis;
   scrollbar-width: none;
-  -webkit-scrollbar: 0;
 }
 
 .image-wrapper .image-path {
@@ -1169,20 +1169,17 @@ h2.page-content-subtitle {
   gap: 0.5rem;
   justify-content: center;
   align-items: center;
-  width: 20%;
-  min-width: 95px;
-  max-width: 140px;
-  height: auto;
-  min-height: 100px;
-  flex-grow: 1;
   margin: 0;
+  aspect-ratio: 1/1;
 }
 
-.album-section-media-container {
-  width: 20%;
-  min-width: 95px;
-  max-width: 140px;
-  flex-grow: 1;
+.album-section-media-container,
+.album-section-item-media .button {
+  width: 10%;
+  min-width: 90px;
+  max-width: 110px;
+  flex: 1 1 10%;
+  height: auto;
 }
 
 .album-section-media-container figure {
@@ -1192,14 +1189,14 @@ h2.page-content-subtitle {
   overflow: hidden;
   margin: 0;
   padding: 0;
+  aspect-ratio: 1/1;
 }
 
 .album-section-media-container .image-item {
   object-fit: cover;
   object-position: center;
   width: 100%;
-  height: auto;
-  max-height: 140px;
+  height: 100%;
 }
 
 .album-section-media-container .album-section-image-delete {

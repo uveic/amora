@@ -25,7 +25,7 @@
   --color-failure: #ff0000;
   --color-warning: #c6da28;
   --color-success: #2ed06e;
-  --color-success-light: #69d02e;
+  --color-success-light: #afdbc0;
   --color-success-highlight: #97e294;
 
   --color-light-0: #f4f4f4;
@@ -706,6 +706,17 @@ button.is-link.is-light,
   background-color: var(--color-success);
   color: var(--color-link-success);
   border: 1px solid var(--color-success);
+}
+
+.is-success-light, .is-success-light:active, .is-success-light:visited, .is-success-light:focus {
+  background-color: var(--color-success-light);
+  color: var(--color-link-success);
+  border: 1px solid var(--color-success-light);
+}
+
+.is-success-light:hover {
+  color: var(--color-link-success);
+  border: 1px solid var(--color-bg);
 }
 
 .is-standard, .is-standard:active, .is-standard:visited, .is-standard:hover, .is-standard:focus {
