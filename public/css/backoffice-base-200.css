@@ -1151,7 +1151,6 @@ h2.page-content-subtitle {
 .album-section-item-media-header {
   width: 100%;
   margin-bottom: 0.5rem;
-  text-align: right;
 }
 
 .album-section-item-media {
@@ -1353,6 +1352,14 @@ h2.page-content-subtitle {
   .activity-wrapper {
     max-width: 35%;
     flex-grow: 1;
+  }
+
+  .album-section-item-content {
+    max-width: 300px;
+  }
+
+  .dashboard-column-narrow-width {
+    max-width: 300px;
   }
 
   .form-content-wrapper {

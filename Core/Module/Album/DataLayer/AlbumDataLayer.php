@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Album\Datalayer;
 
+use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
@@ -510,6 +511,62 @@ class AlbumDataLayer
         ';
 
         return $this->db->execute($sql, $params);
+    }
+
+    public function updateSequenceForAlbumSection(
+        AlbumSection $albumSection,
+        AlbumSectionMedia $albumSectionMedia,
+        int $sequenceFrom,
+        int $sequenceTo,
+    ): bool {
+        $resTrans = $this->db->withTransaction(
+            function () use($albumSection, $albumSectionMedia, $sequenceFrom, $sequenceTo) {
+                if ($sequenceFrom > $sequenceTo) {
+                    $sql = '
+                        UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
+                            SET `sequence` = `sequence` + 1
+                        WHERE album_section_id = :albumSectionId
+                            AND `sequence` <= :sequenceFrom
+                            AND `sequence` >= :sequenceTo
+                    ';
+                } else {
+                    $sql = '
+                        UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
+                            SET `sequence` = `sequence` - 1
+                        WHERE album_section_id = :albumSectionId
+                            AND `sequence` >= :sequenceFrom
+                            AND `sequence` <= :sequenceTo
+                    ';
+                }
+
+                $params = [
+                    ':sequenceTo' => $sequenceTo,
+                    ':sequenceFrom' => $sequenceFrom,
+                    ':albumSectionId' => $albumSection->id,
+                ];
+
+                $resAgain = $this->db->execute($sql, $params);
+
+                if (empty($resAgain)) {
+                    return new Feedback($resAgain);
+                }
+
+                $sql = '
+                    UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
+                        SET `sequence` = :sequenceTo
+                    WHERE id = :albumSectionMediaId
+                ';
+                $params = [
+                    ':sequenceTo' => $sequenceTo,
+                    ':albumSectionMediaId' => $albumSectionMedia->id,
+                ];
+                $res = $this->db->execute($sql, $params);
+
+                return new Feedback($res);
+            }
+        );
+
+        return $resTrans->isSuccess;
     }
 
     public function getMaxAlbumSectionSequence(int $albumId): ?int

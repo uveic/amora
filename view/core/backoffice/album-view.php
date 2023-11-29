@@ -94,7 +94,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
           <span class="one-line">Nova sección</span>
         </a>
       </section>
-      <section class="flex-child activity-wrapper">
+      <section class="flex-child activity-wrapper dashboard-column-narrow-width">
         <a class="form-edit" href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a>
         <div class="album-title"><?=$album->titleHtml?></div>
         <div class="album-content"><?=StringUtil::nl2p($album->contentHtml)?></div>

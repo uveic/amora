@@ -305,6 +305,20 @@ readonly class AlbumService
         );
     }
 
+    public function updateSequenceForAlbumSection(
+        AlbumSection $albumSection,
+        AlbumSectionMedia $albumSectionMedia,
+        int $sequenceFrom,
+        int $sequenceTo,
+    ): bool {
+        return $this->albumDataLayer->updateSequenceForAlbumSection(
+            albumSection: $albumSection,
+            albumSectionMedia: $albumSectionMedia,
+            sequenceFrom: $sequenceFrom,
+            sequenceTo: $sequenceTo,
+        );
+    }
+
     public function workflowStoreAlbumSection(
         Album $album,
         ?Media $mainMedia,

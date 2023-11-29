@@ -1737,13 +1737,13 @@
                 "sequenceTo": {
                   "type": "integer"
                 },
-                "albumMediaIdTo": {
+                "albumSectionMediaIdTo": {
                   "type": "integer"
                 },
                 "sequenceFrom": {
                   "type": "integer"
                 },
-                "albumMediaIdFrom": {
+                "albumSectionMediaIdFrom": {
                   "type": "integer"
                 },
                 "countDelta": {
@@ -1752,9 +1752,9 @@
               },
               "required": [
                 "sequenceTo",
-                "albumMediaIdTo",
+                "albumSectionMediaIdTo",
                 "sequenceFrom",
-                "albumMediaIdFrom",
+                "albumSectionMediaIdFrom",
                 "countDelta"
               ]
             }
