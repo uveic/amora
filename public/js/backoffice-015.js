@@ -25,7 +25,7 @@ const selectMediaAction = (e) => {
   loadMoreButton.dataset.targetContainerId = targetContainerId;
   modal.classList.remove('null');
 
-  const qty = 25;
+  const qty = 50;
   const existingImages = imagesContainer.querySelectorAll('.image-item');
   existingImages.forEach(img => {
     addEventListenerAction(img, img.dataset.mediaId, eventListenerAction, targetContainerId);

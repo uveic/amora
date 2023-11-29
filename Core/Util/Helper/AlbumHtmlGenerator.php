@@ -144,7 +144,7 @@ final class AlbumHtmlGenerator
             $output[] = $indentation . self::generateAlbumSectionMediaHtml($sectionMedia, $localisationUtil, '      ');
         }
 
-        $output[] = $indentation . '      <a href="#" class="button is-success select-media-action" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
+        $output[] = $indentation . '      <a href="#" class="button is-success-light select-media-action" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
         $output[] = $indentation . '        <img class="img-svg img-svg-30" width="30" height="30" src="/img/svg/image-white.svg" alt="Image">';
         $output[] = $indentation . '        <span>Engadir</span>';
         $output[] = $indentation . '      </a>';
@@ -166,7 +166,7 @@ final class AlbumHtmlGenerator
         $output = [];
         $output[] = $indentation . '<div class="album-section-media-container">';
         $output[] = $indentation . '  <figure>';
-        $output[] = $indentation . '    <img src="' . $albumSectionMedia->media->getPathWithNameSmall() . '" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $albumSectionMedia->media->id . '" data-sequence="' . $albumSectionMedia->sequence . '">';
+        $output[] = $indentation . '    <img src="' . $albumSectionMedia->media->getPathWithNameSmall() . '" class="image-item" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $albumSectionMedia->media->id . '" data-sequence="' . $albumSectionMedia->sequence . '">';
         $output[] = $indentation . '    <img class="img-svg album-section-image-delete album-section-media-delete-js" src="/img/svg/trash-white.svg" alt="' . $localisationUtil->getValue('globalRemoveImage') . '" title="' . $localisationUtil->getValue('globalRemoveImage') . '" data-album-section-media-id="' . $albumSectionMedia->id . '" data-media-id="' . $albumSectionMedia->media->id . '" data-event-listener-action="albumSectionDeleteMedia" data-target-container-id="album-section-item-media-' . $albumSectionMedia->albumSectionId . '">';
         $output[] = $indentation . '  </figure>';
         $output[] = $indentation . '  <div class="media-caption album-section-media-caption-js" data-media-id="' . $albumSectionMedia->media->id . '" data-album-section-id="' . $albumSectionMedia->albumSectionId . '" data-album-section-media-id="' . $albumSectionMedia->id . '">' . ($albumSectionMedia->captionHtml ?: '-') . '</div>';
