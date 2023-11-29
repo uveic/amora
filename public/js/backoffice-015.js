@@ -1670,7 +1670,7 @@ document.querySelectorAll('.album-section-main-media-js').forEach(bu => {
     const existingModalContainer = document.querySelector('#images-list');
     const sectionMediaContainer = document.querySelector('#album-section-item-media-' + sectionId);
 
-    sectionMediaContainer.querySelectorAll('.album-section-media-container .image-item').forEach(i => {
+    sectionMediaContainer.querySelectorAll('.album-section-media-container .media-item').forEach(i => {
       addMediaToModalContainer(existingModalContainer, i.dataset.mediaId);
     });
 
@@ -1722,6 +1722,121 @@ document.querySelectorAll('form#album-media-caption-edit-form-js').forEach(f => 
         Util.logError(error);
       });
   });
+});
+
+const handleAlbumMediaDragEnter = (ev) => {
+  ev.preventDefault();
+};
+
+const handleAlbumMediaDragLeave = (ev) => {
+  ev.preventDefault();
+  ev.currentTarget.classList.remove('item-grabbing-over');
+};
+
+const handleAlbumMediaDragOver = (ev) => {
+  ev.preventDefault();
+  ev.currentTarget.classList.add('item-grabbing-over');
+};
+
+const handleAlbumMediaDragEnd = (ev) => {
+  document.querySelectorAll('.item-draggable .media-item').forEach(id => {
+    id.removeEventListener('dragenter', handleAlbumMediaDragEnter);
+    id.removeEventListener('dragover', handleAlbumMediaDragOver);
+  });
+
+  ev.currentTarget.classList.remove('item-grabbing-over');
+  ev.currentTarget.classList.remove('item-grabbing');
+};
+
+const handleAlbumMediaDragStart = (ev) => {
+  const sectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
+
+  sectionContainer.querySelectorAll('.item-draggable .media-item').forEach(id => {
+    id.addEventListener('dragenter', handleAlbumMediaDragEnter);
+    id.addEventListener('dragover', handleAlbumMediaDragOver);
+  });
+
+  ev.dataTransfer.setData("text/plain", ev.currentTarget.id);
+  ev.dataTransfer.dropEffect = "move";
+  ev.effectAllowed = "move";
+  ev.currentTarget.classList.add('item-grabbing');
+};
+
+const handleAlbumMediaDrop = (ev) => {
+  ev.preventDefault();
+
+  const sectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
+  const draggedId = ev.dataTransfer.getData("text/plain");
+  const draggedEl = document.getElementById(draggedId);
+  if (!draggedEl) {
+    return;
+  }
+
+  ev.currentTarget.classList.remove('item-grabbing-over');
+  draggedEl.classList.add('item-dropped');
+
+  if (draggedEl.id === ev.currentTarget.id) {
+    return;
+  }
+
+  const loadingEl = document.querySelector('.drop-loading');
+  draggedEl.parentElement.appendChild(loadingEl);
+  loadingEl.classList.remove('null');
+
+  const droppedSequence = Number.parseInt(ev.currentTarget.dataset.sequence);
+  const draggedSequence = Number.parseInt(draggedEl.dataset.sequence);
+
+  const targetContainer = ev.currentTarget.parentElement.parentElement;
+  const sourceContainer = draggedEl.parentElement.parentElement;
+  let countDelta = 0;
+  if (droppedSequence < draggedSequence) {
+    targetContainer.parentNode.insertBefore(sourceContainer, targetContainer);
+    countDelta = 1;
+  } else {
+    targetContainer.parentNode.insertBefore(sourceContainer, targetContainer.nextSibling);
+    countDelta = -1;
+  }
+
+  const albumSectionId = sectionContainer.parentElement.parentElement.dataset.albumSectionId;
+  const data = {
+    sequenceTo: droppedSequence,
+    albumMediaIdTo: Number.parseInt(ev.currentTarget.dataset.albumSectionMediaId),
+    sequenceFrom: draggedSequence,
+    albumMediaIdFrom: Number.parseInt(draggedEl.dataset.albumSectionMediaId),
+    countDelta: countDelta,
+  };
+
+  xhr.put('/back/album-section/' + albumSectionId + '/sequence', JSON.stringify(data))
+    .then(() => {
+      draggedEl.dataset.sequence = droppedSequence.toString();
+
+      sectionContainer.querySelectorAll('.item-draggable .media-item').forEach(fi => {
+        if (draggedEl.id === fi.id) {
+          return;
+        }
+
+        const v = Number.parseInt(fi.dataset.sequence);
+        if ((v >= droppedSequence && v < draggedSequence) || (v <= droppedSequence && v > draggedSequence)) {
+          fi.sequence = (v + countDelta).toString();
+        }
+      });
+      loadingEl.classList.add('null');
+      draggedEl.classList.remove('item-dropped');
+    })
+    .catch(error => Util.logError(error))
+    .finally(() => {
+      loadingEl.classList.add('null');
+      draggedEl.classList.remove('item-dropped');
+    });
+};
+
+document.querySelectorAll('.item-draggable .media-item').forEach(f => {
+  f.addEventListener('dragstart', handleAlbumMediaDragStart);
+
+  f.addEventListener('dragleave', handleAlbumMediaDragLeave);
+  f.addEventListener('dragend', handleAlbumMediaDragEnd);
+
+  f.addEventListener('drop', handleAlbumMediaDrop);
 });
 
 export {handleDropdownOptionClick};

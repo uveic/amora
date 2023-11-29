@@ -1714,6 +1714,78 @@
         }
       }
     },
+    "/back/album-section/{albumSectionId}/sequence": {
+      "put": {
+        "tags": [],
+        "description": "Update media sequence for album section",
+        "operationId": "updateMediaSequenceForAlbumSection",
+        "parameters": [
+          {
+            "name": "albumSectionId",
+            "in": "path",
+            "description": "Album section ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "sequenceTo": {
+                  "type": "integer"
+                },
+                "albumMediaIdTo": {
+                  "type": "integer"
+                },
+                "sequenceFrom": {
+                  "type": "integer"
+                },
+                "albumMediaIdFrom": {
+                  "type": "integer"
+                },
+                "countDelta": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sequenceTo",
+                "albumMediaIdTo",
+                "sequenceFrom",
+                "albumMediaIdFrom",
+                "countDelta"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
     "/back/album-section/{albumSectionId}": {
       "put": {
         "tags": [],
