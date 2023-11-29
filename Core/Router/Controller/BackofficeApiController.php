@@ -1078,9 +1078,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      *
      * @param int $albumSectionId
      * @param int $sequenceTo
-     * @param int $albumMediaIdTo
+     * @param int $albumSectionMediaIdTo
      * @param int $sequenceFrom
-     * @param int $albumMediaIdFrom
+     * @param int $albumSectionMediaIdFrom
      * @param string $countDelta
      * @param Request $request
      * @return Response
@@ -1088,15 +1088,44 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     protected function updateMediaSequenceForAlbumSection(
         int $albumSectionId,
         int $sequenceTo,
-        int $albumMediaIdTo,
+        int $albumSectionMediaIdTo,
         int $sequenceFrom,
-        int $albumMediaIdFrom,
+        int $albumSectionMediaIdFrom,
         string $countDelta,
         Request $request
     ): Response {
-        sleep(2);
+        $albumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
+        if (!$albumSection) {
+            return new BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse(
+                success: false,
+                errorMessage: 'Album section ID not found',
+            );
+        }
+
+        $albumSectionMedias = $this->albumService->filterAlbumSectionMediaBy(
+            albumSectionMediaIds: [$albumSectionMediaIdTo, $albumSectionMediaIdFrom],
+        );
+
+        if (count($albumSectionMedias) !== 2) {
+            return new BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse(
+                success: false,
+                errorMessage: 'Album section media IDs mismatch',
+            );
+        }
+
+        $albumSectionMedia = $albumSectionMedias[0]->id === $albumSectionMediaIdTo
+            ? $albumSectionMedias[0]
+            : $albumSectionMedias[1];
+
+        $res = $this->albumService->updateSequenceForAlbumSection(
+            albumSection: $albumSection,
+            albumSectionMedia: $albumSectionMedia,
+            sequenceFrom: $sequenceFrom,
+            sequenceTo: $sequenceTo,
+        );
+
         return new BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse(
-            success: true,
+            success: $res,
         );
     }
 

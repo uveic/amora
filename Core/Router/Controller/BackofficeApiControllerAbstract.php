@@ -366,9 +366,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      *
      * @param int $albumSectionId
      * @param int $sequenceTo
-     * @param int $albumMediaIdTo
+     * @param int $albumSectionMediaIdTo
      * @param int $sequenceFrom
-     * @param int $albumMediaIdFrom
+     * @param int $albumSectionMediaIdFrom
      * @param string $countDelta
      * @param Request $request
      * @return Response
@@ -376,9 +376,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     abstract protected function updateMediaSequenceForAlbumSection(
         int $albumSectionId,
         int $sequenceTo,
-        int $albumMediaIdTo,
+        int $albumSectionMediaIdTo,
         int $sequenceFrom,
-        int $albumMediaIdFrom,
+        int $albumSectionMediaIdFrom,
         string $countDelta,
         Request $request
     ): Response;
@@ -1610,14 +1610,14 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             $sequenceTo = $bodyParams['sequenceTo'] ?? null;
         }
 
-        $albumMediaIdTo = null;
-        if (!isset($bodyParams['albumMediaIdTo'])) {
+        $albumSectionMediaIdTo = null;
+        if (!isset($bodyParams['albumSectionMediaIdTo'])) {
             $errors[] = [
-                'field' => 'albumMediaIdTo',
+                'field' => 'albumSectionMediaIdTo',
                 'message' => 'required'
             ];
         } else {
-            $albumMediaIdTo = $bodyParams['albumMediaIdTo'] ?? null;
+            $albumSectionMediaIdTo = $bodyParams['albumSectionMediaIdTo'] ?? null;
         }
 
         $sequenceFrom = null;
@@ -1630,14 +1630,14 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             $sequenceFrom = $bodyParams['sequenceFrom'] ?? null;
         }
 
-        $albumMediaIdFrom = null;
-        if (!isset($bodyParams['albumMediaIdFrom'])) {
+        $albumSectionMediaIdFrom = null;
+        if (!isset($bodyParams['albumSectionMediaIdFrom'])) {
             $errors[] = [
-                'field' => 'albumMediaIdFrom',
+                'field' => 'albumSectionMediaIdFrom',
                 'message' => 'required'
             ];
         } else {
-            $albumMediaIdFrom = $bodyParams['albumMediaIdFrom'] ?? null;
+            $albumSectionMediaIdFrom = $bodyParams['albumSectionMediaIdFrom'] ?? null;
         }
 
         $countDelta = null;
@@ -1665,9 +1665,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             return $this->updateMediaSequenceForAlbumSection(
                 $albumSectionId,
                 $sequenceTo,
-                $albumMediaIdTo,
+                $albumSectionMediaIdTo,
                 $sequenceFrom,
-                $albumMediaIdFrom,
+                $albumSectionMediaIdFrom,
                 $countDelta,
                 $request
             );
