@@ -107,7 +107,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '      <span class="album-section-item-number">#' . $section->sequence . '</span>';
         $output[] = $indentation . '      <img class="img-svg album-section-edit-js" data-album-section-id="' . $section->id . '" width="20" height="20" src="/img/svg/pencil.svg" alt="' . $localisationUtil->getValue('globalEdit') . '">';
         $output[] = $indentation . '      <div class="album-section-button-container-js null">';
-        $output[] = $indentation . '        <button class="album-section-button album-section-cancel-js m-r-05" data-album-section-id="' . $section->id . '">' . $localisationUtil->getValue('globalCancel') . '</button>';
+        $output[] = $indentation . '        <button class="album-section-button album-section-cancel-js" data-album-section-id="' . $section->id . '">' . $localisationUtil->getValue('globalCancel') . '</button>';
         $output[] = $indentation . '        <button class="album-section-button is-success album-section-save-js" data-album-section-id="' . $section->id . '">' . $localisationUtil->getValue('globalSave') . '</button>';
         $output[] = $indentation . '      </div>';
         $output[] = $indentation . '    </div>';
@@ -126,8 +126,8 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '          <img class="img-svg" src="/img/svg/trash-white.svg" alt="' . $localisationUtil->getValue('globalRemoveImage') . '" title="' . $localisationUtil->getValue('globalRemoveImage') . '">';
         $output[] = $indentation . '        </a>';
         $output[] = $indentation . '        <a href="#" class="main-image-button album-section-main-media-js" data-section-id="' . $section->id . '" data-media-id="' . $section->mainMedia?->id . '" data-event-listener-action="albumSectionSelectMainMedia" data-target-container-id="album-section-main-media-' . $section->id . '">';
-        $output[] = $indentation . '          <img class="img-svg" src="/img/svg/image.svg" alt="' . $localisationUtil->getValue('globalAddImage') . '" title="' . $localisationUtil->getValue('globalAddImage') . '">';
-        $output[] = $indentation . '          <span>' . ($section->mainMedia ? $localisationUtil->getValue('globalModify') : $localisationUtil->getValue('globalAddImage')) . '</span>';
+        $output[] = $indentation . '          <img class="img-svg" src="/img/svg/image.svg" alt="' . $localisationUtil->getValue('globalSelectImage') . '" title="' . $localisationUtil->getValue('globalSelectImage') . '">';
+        $output[] = $indentation . '          <span>' . ($section->mainMedia ? $localisationUtil->getValue('globalModify') : $localisationUtil->getValue('globalSelectImage')) . '</span>';
         $output[] = $indentation . '        </a>';
         $output[] = $indentation . '      </div>';
         $output[] = $indentation . '    </div>';

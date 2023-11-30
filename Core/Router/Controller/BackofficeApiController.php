@@ -1161,7 +1161,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $media = $mainMediaId
             ? $this->mediaService->getMediaForId($mainMediaId)
-            : $existingAlbumSection->mainMedia;
+            : null;
 
         if ($mainMediaId && !$media) {
             return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
