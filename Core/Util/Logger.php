@@ -69,7 +69,7 @@ final class Logger
         }
 
         if ($pre) {
-            echo '<pre>' . print_r($message, true) . '</pre>';
+            $this->logInfo(print_r($message, true));
             return;
         }
 

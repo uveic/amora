@@ -306,16 +306,12 @@ readonly class AlbumService
     }
 
     public function updateSequenceForAlbumSection(
-        AlbumSection $albumSection,
-        AlbumSectionMedia $albumSectionMedia,
-        int $sequenceFrom,
-        int $sequenceTo,
+        AlbumSectionMedia $albumSectionMediaFrom,
+        AlbumSectionMedia $albumSectionMediaTo,
     ): bool {
         return $this->albumDataLayer->updateSequenceForAlbumSection(
-            albumSection: $albumSection,
-            albumSectionMedia: $albumSectionMedia,
-            sequenceFrom: $sequenceFrom,
-            sequenceTo: $sequenceTo,
+            albumSectionMediaFrom: $albumSectionMediaFrom,
+            albumSectionMediaTo:  $albumSectionMediaTo,
         );
     }
 

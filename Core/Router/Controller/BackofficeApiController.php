@@ -1113,15 +1113,17 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $albumSectionMedia = $albumSectionMedias[0]->id === $albumSectionMediaIdTo
+        $albumSectionMediaTo = $albumSectionMedias[0]->id === $albumSectionMediaIdTo
+            ? $albumSectionMedias[0]
+            : $albumSectionMedias[1];
+
+        $albumSectionMediaFrom = $albumSectionMedias[0]->id === $albumSectionMediaIdFrom
             ? $albumSectionMedias[0]
             : $albumSectionMedias[1];
 
         $res = $this->albumService->updateSequenceForAlbumSection(
-            albumSection: $albumSection,
-            albumSectionMedia: $albumSectionMedia,
-            sequenceFrom: $sequenceFrom,
-            sequenceTo: $sequenceTo,
+            albumSectionMediaFrom: $albumSectionMediaFrom,
+            albumSectionMediaTo: $albumSectionMediaTo,
         );
 
         return new BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse(

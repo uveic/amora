@@ -1769,9 +1769,6 @@ const handleAlbumMediaDrop = (ev) => {
   const draggedId = ev.dataTransfer.getData("text/plain");
   const draggedEl = document.getElementById(draggedId);
 
-  console.log('dropped: ', ev.currentTarget);
-  console.log('dragged: ', draggedEl);
-
   if (!draggedEl) {
     return;
   }
@@ -1810,23 +1807,18 @@ const handleAlbumMediaDrop = (ev) => {
     countDelta: countDelta,
   };
 
-  console.log('dropped sequence: ', droppedSequence);
-  console.log('dragged sequence: ', draggedSequence);
-
   xhr.put('/back/album-section/' + albumSectionId + '/sequence', JSON.stringify(data))
     .then(() => {
       draggedEl.dataset.sequence = droppedSequence.toString();
-      console.log('updated out: ', draggedEl.dataset.sequence, droppedSequence);
 
       sectionContainer.querySelectorAll('.item-draggable .media-item').forEach(mi => {
         if (draggedEl.id === mi.id) {
           return;
         }
 
-        const v = Number.parseInt(mi.dataset.sequence);
-        if ((v >= droppedSequence && v < draggedSequence) || (v <= droppedSequence && v > draggedSequence)) {
-          mi.dataset.sequence = (v + countDelta).toString();
-          console.log('updated in: ', mi.dataset.sequence, (v + countDelta).toString());
+        const cSeq = Number.parseInt(mi.dataset.sequence);
+        if ((cSeq >= droppedSequence && cSeq < draggedSequence) || (cSeq <= droppedSequence && cSeq > draggedSequence)) {
+          mi.dataset.sequence = (cSeq + countDelta).toString();
         }
       });
       loadingEl.classList.add('null');
