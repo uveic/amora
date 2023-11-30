@@ -1175,8 +1175,8 @@ h2.page-content-subtitle {
 .album-section-media-container,
 .album-section-item-media .button {
   width: 10%;
-  min-width: 90px;
-  max-width: 110px;
+  min-width: 100px;
+  max-width: 150px;
   flex: 1 1 10%;
   height: auto;
 }
@@ -1222,6 +1222,23 @@ h2.page-content-subtitle {
 
 .album-section-media-container > .media-caption p:last-of-type{
   margin-bottom: 0;
+}
+
+.album-section-main-image-container {
+  height: 150px;
+  width: auto;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  aspect-ratio: 1/1;
+  flex-grow: 0 !important;
+}
+
+.album-section-main-image-container img {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
 }
 
 .album-media-edit-container {

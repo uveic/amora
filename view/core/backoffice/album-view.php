@@ -52,30 +52,49 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     </section>
     <section class="form-content-container">
       <section class="form-content-wrapper">
-        <section class="flex-child m-b-15">
-          <div class="card-info-item">
-            <span class="title">Estado:</span>
-            <span class="value">
-<?= AlbumHtmlGenerator::generateDynamicAlbumStatusHtml($album->status, '              ')?>
-            </span>
+        <div class="form-two-columns-wrapper">
+          <div class="flex-child m-b-15">
+            <a class="form-edit" href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a>
+            <div class="card-info-item">
+              <span class="title">Estado:</span>
+              <span class="value">
+<?=AlbumHtmlGenerator::generateDynamicAlbumStatusHtml($album->status, '              ')?>
+              </span>
+            </div>
+            <div class="card-info-item">
+              <span class="title">Creado o:</span>
+              <span class="value"><?=$createdAt?></span>
+            </div>
+            <div class="card-info-item">
+              <span class="title"><?=$responseData->getLocalValue('globalLanguage')?>:</span>
+              <span class="value one-line"><?=$album->language->getIconFlag('m-r-05') . $album->language->getName()?></span>
+            </div>
+            <div class="card-info-item form-public-link">
+              <span class="title">Enderezo público:</span>
+              <span class="value word-break"><?=$publicLinkHtml?></span>
+            </div>
           </div>
-          <div class="card-info-item">
-            <span class="title">Creado o:</span>
-            <span class="value"><?=$createdAt?></span>
+          <div class="flex-child m-b-15">
+            <div class="card-info-item">
+              <span class="title"><?=$responseData->getLocalValue('globalTitle')?>:</span>
+              <span class="value"><?=$album->titleHtml?></span>
+            </div>
+            <div class="card-info-item">
+              <span class="title"><?=$responseData->getLocalValue('globalContent')?>:</span>
+              <span class="value ellipsis"><?=StringUtil::nl2p($album->contentHtml) ?: '-'?></span>
+            </div>
+            <div class="card-info-item">
+              <span class="title">Deseño do álbum:</span>
+              <span class="value"><?=$album->template->name?></span>
+            </div>
+            <div class="card-info-item">
+              <span class="title"><?=$responseData->getLocalValue('editorMainImage')?>:</span>
+              <div class="value album-section-main-image-container">
+                <img src="<?=$album->mainMedia->getPathWithNameMedium()?>" alt="<?=$album->mainMedia->buildAltText()?>">
+              </div>
+            </div>
           </div>
-          <div class="card-info-item form-public-link">
-            <span class="title">Enderezo público:</span>
-            <span class="value word-break"><?=$publicLinkHtml?></span>
-          </div>
-          <div class="card-info-item">
-            <span class="title">Deseño do álbum:</span>
-            <span class="value"><?=$album->template->name?></span>
-          </div>
-          <div class="card-info-item">
-            <span class="title"><?=$responseData->getLocalValue('globalLanguage')?>:</span>
-            <span class="value one-line"><?=$album->language->getIconFlag('m-r-05') . $album->language->getName()?></span>
-          </div>
-        </section>
+        </div>
         <section class="album-sections-wrapper">
 <?php
     $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
@@ -93,17 +112,6 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
           <img src="/img/svg/image-white.svg" class="img-svg img-svg-30" width="20" height="20" alt="Nova sección">
           <span class="one-line">Nova sección</span>
         </a>
-      </section>
-      <section class="flex-child activity-wrapper dashboard-column-narrow-width">
-        <a class="form-edit" href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a>
-        <div class="album-title"><?=$album->titleHtml?></div>
-        <div class="album-content"><?=StringUtil::nl2p($album->contentHtml)?></div>
-        <div class="card-info-item album-image">
-          <span class="title"><?=$responseData->getLocalValue('editorMainImage')?>:</span>
-          <div class="main-image-container main-image-container-full">
-            <img src="<?=$album->mainMedia->getPathWithNameMedium()?>" alt="<?=$album->mainMedia->buildAltText()?>">
-          </div>
-        </div>
       </section>
     </section>
   </main>

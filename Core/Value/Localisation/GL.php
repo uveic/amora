@@ -108,6 +108,7 @@ return [
     'globalModify' => 'Modificar',
     'globalTitle' => 'Título',
     'globalSubtitle' => 'Subtítulo',
+    'globalContent' => 'Contido',
     'globalName' => 'Nome',
     'globalEmail' => 'Correo electrónico',
     'globalPassword' => 'Contrasinal',

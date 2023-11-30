@@ -800,6 +800,13 @@ button.is-link.is-light,
 
 .null {display: none !important;}
 .hidden {visibility: hidden;}
+.ellipsis {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  scrollbar-width: none;
+}
 
 svg,
 .img-svg {
