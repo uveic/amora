@@ -1730,12 +1730,12 @@ const handleAlbumMediaDragEnter = (ev) => {
 
 const handleAlbumMediaDragLeave = (ev) => {
   ev.preventDefault();
-  ev.currentTarget.classList.remove('item-grabbing-over');
+  ev.currentTarget.classList.remove('media-item-grabbing-over');
 };
 
 const handleAlbumMediaDragOver = (ev) => {
   ev.preventDefault();
-  ev.currentTarget.classList.add('item-grabbing-over');
+  ev.currentTarget.classList.add('media-item-grabbing-over');
 };
 
 const handleAlbumMediaDragEnd = (ev) => {
@@ -1744,8 +1744,8 @@ const handleAlbumMediaDragEnd = (ev) => {
     id.removeEventListener('dragover', handleAlbumMediaDragOver);
   });
 
-  ev.currentTarget.classList.remove('item-grabbing-over');
-  ev.currentTarget.classList.remove('item-grabbing');
+  ev.currentTarget.classList.remove('media-item-grabbing-over');
+  ev.currentTarget.classList.remove('media-item-grabbing');
 };
 
 const handleAlbumMediaDragStart = (ev) => {
@@ -1759,7 +1759,7 @@ const handleAlbumMediaDragStart = (ev) => {
   ev.dataTransfer.setData("text/plain", ev.currentTarget.id);
   ev.dataTransfer.dropEffect = "move";
   ev.effectAllowed = "move";
-  ev.currentTarget.classList.add('item-grabbing');
+  ev.currentTarget.classList.add('media-item-grabbing');
 };
 
 const handleAlbumMediaDrop = (ev) => {
@@ -1773,8 +1773,8 @@ const handleAlbumMediaDrop = (ev) => {
     return;
   }
 
-  ev.currentTarget.classList.remove('item-grabbing-over');
-  draggedEl.classList.add('item-dropped');
+  ev.currentTarget.classList.remove('media-item-grabbing-over');
+  draggedEl.classList.add('media-item-grabbing');
 
   if (draggedEl.id === ev.currentTarget.id) {
     return;
@@ -1822,12 +1822,12 @@ const handleAlbumMediaDrop = (ev) => {
         }
       });
       loadingEl.classList.add('null');
-      draggedEl.classList.remove('item-dropped');
+      draggedEl.classList.remove('media-item-grabbing');
     })
     .catch(error => Util.logError(error))
     .finally(() => {
       loadingEl.classList.add('null');
-      draggedEl.classList.remove('item-dropped');
+      draggedEl.classList.remove('media-item-grabbing');
     });
 };
 
