@@ -247,7 +247,7 @@ return [
     'albumFormNew' => 'New album',
     'albumFormMainImageTitle' => 'Main image',
     'albumFormPublicLinkTitle' => 'Public address',
-    'albumFormTemplateTitle' => 'Album design',
+    'albumFormTemplateTitle' => 'Album template',
     'albumPublicReadMore' => 'Read more',
     'albumPublicMorePictures' => 'More Pictures',
 ];

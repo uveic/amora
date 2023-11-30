@@ -1109,11 +1109,14 @@ h2.page-content-subtitle {
   justify-content: flex-start;
 }
 
-.album-section-item-number {
-  margin-bottom: -0.75rem;
+.section-sequence {
   font-size: 0.8rem;
   font-family: monospace;
   color: var(--color-text-light);
+  max-width: 60px;
+  margin: 0 !important;
+  padding: 0.5rem !important;
+  text-align: center;
 }
 
 .album-section-item {

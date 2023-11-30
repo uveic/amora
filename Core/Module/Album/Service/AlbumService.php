@@ -305,11 +305,11 @@ readonly class AlbumService
         );
     }
 
-    public function updateSequenceForAlbumSection(
+    public function updateMediaSequenceForAlbumSection(
         AlbumSectionMedia $albumSectionMediaFrom,
         AlbumSectionMedia $albumSectionMediaTo,
     ): bool {
-        return $this->albumDataLayer->updateSequenceForAlbumSection(
+        return $this->albumDataLayer->updateMediaSequenceForAlbumSection(
             albumSectionMediaFrom: $albumSectionMediaFrom,
             albumSectionMediaTo:  $albumSectionMediaTo,
         );
@@ -357,9 +357,31 @@ readonly class AlbumService
         return $resTransaction->response;
     }
 
-    public function updateAlbumSection(AlbumSection $item): bool
-    {
-        return $this->albumDataLayer->updateAlbumSection($item);
+    public function workflowUpdateAlbumSection(
+        AlbumSection $albumSectionFrom,
+        AlbumSection $albumSectionTo,
+        AlbumSection $updated,
+    ): bool {
+        $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
+            function () use ($albumSectionFrom, $albumSectionTo, $updated)
+            {
+                $res = $this->albumDataLayer->updateAlbumSection($updated);
+                if (!$res) {
+                    return new Feedback(false);
+                }
+
+                if ($albumSectionFrom->sequence !== $albumSectionTo->sequence) {
+                    $this->albumDataLayer->updateSectionSequenceForAlbum(
+                        albumSectionFrom: $albumSectionFrom,
+                        albumSectionTo: $albumSectionTo,
+                    );
+                }
+
+                return new Feedback(true);
+            }
+        );
+
+        return $resTransaction->isSuccess;
     }
 
     public function updateAlbumSectionMedia(AlbumSectionMedia $item): bool

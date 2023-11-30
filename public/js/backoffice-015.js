@@ -584,6 +584,7 @@ const editAlbumSection = (e) => {
   const titleEl = container.querySelector('.section-title-html');
   const subtitleEl = container.querySelector('.section-subtitle-html');
   const contentEl = container.querySelector('.section-content-html');
+  const sequenceEl = container.querySelector('.section-sequence');
 
   if (titleEl.textContent.trim() === '-') {
     titleEl.textContent = '';
@@ -603,6 +604,9 @@ const editAlbumSection = (e) => {
   subtitleEl.classList.add('album-content-editable');
   contentEl.contentEditable = true;
   contentEl.classList.add('album-content-editable');
+  sequenceEl.contentEditable = true;
+  sequenceEl.classList.add('album-content-editable');
+  sequenceEl.textContent = sequenceEl.textContent.trim().replace('#', '');
   container.querySelector('.main-image-button-container').classList.remove('null');
   container.querySelector('.album-section-button-container-js').classList.remove('null');
   e.currentTarget.classList.add('null');
@@ -614,26 +618,46 @@ const updateAlbumSection = (e) => {
 
   const albumSectionId = e.currentTarget.dataset.albumSectionId;
 
-  cancelAlbumSectionEdit(e);
+  makeAlbumSectionNonEditable(albumSectionId);
 
   const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
-  const titleHtml = container.querySelector('.section-title-html').textContent.trim();
-  const subtitleHtml = container.querySelector('.section-subtitle-html').textContent.trim();
-  const contentHtml = container.querySelector('.section-content-html').textContent.trim();
+
+  const titleHtmlEl = container.querySelector('.section-title-html');
+  const titleHtml = titleHtmlEl.textContent.trim();
+  titleHtmlEl.dataset.before = titleHtml;
+
+  const subtitleHtmlEl = container.querySelector('.section-subtitle-html');
+  const subtitleHtml = subtitleHtmlEl.textContent.trim();
+  subtitleHtmlEl.dataset.before = subtitleHtml;
+
+  const contentHtmlEl = container.querySelector('.section-content-html');
+  const contentHtml = contentHtmlEl.textContent.trim();
+  contentHtmlEl.dataset.before = contentHtml;
+
   const mainMedia = container.querySelector('img.album-section-main-media');
-  const mainMediaId = mainMedia ? Number.parseInt(mainMedia.dataset.mediaId) : null;
+  const mainMediaId = mainMedia && !mainMedia.parentElement.classList.contains('null')
+    ? Number.parseInt(mainMedia.dataset.mediaId)
+    : null;
+
+  const sequenceEl = container.querySelector('.section-sequence');
+  const sequenceRaw = sequenceEl.textContent.trim().replace('#', '');
+  const sequence = Number.isNaN(sequenceRaw)
+    ? Number.parseInt(sequenceEl.dataset.before)
+    : Number.parseInt(sequenceEl.textContent.trim().replace('#', ''));
+
+  updateAlbumSectionSequences(Number.parseInt(sequenceEl.dataset.before), sequence);
 
   const payload = {
     titleHtml: titleHtml === '-' ? '' : titleHtml,
     subtitleHtml: subtitleHtml === '-' ? '' : subtitleHtml,
     contentHtml: contentHtml === '-' ? '' : contentHtml,
     mainMediaId: mainMediaId,
+    sequence: sequence,
   };
 
   xhr.put('/back/album-section/' + albumSectionId, JSON.stringify(payload))
     .catch(error => {
       Util.logError(error);
-      makeAlbumSectionNonEditable(albumSectionId);
     });
 };
 
@@ -644,6 +668,7 @@ const makeAlbumSectionNonEditable = (albumSectionId) => {
   const contentEl = container.querySelector('.section-content-html');
   const mediaButtonsContainer = container.querySelector('.main-image-button-container');
   const editButton = container.querySelector('.album-section-edit-js');
+  const sequenceEl = container.querySelector('.section-sequence');
 
   if (titleEl.textContent.trim() === '') {
     titleEl.textContent = '-';
@@ -663,6 +688,11 @@ const makeAlbumSectionNonEditable = (albumSectionId) => {
   subtitleEl.classList.remove('album-content-editable');
   contentEl.contentEditable = false;
   contentEl.classList.remove('album-content-editable');
+  sequenceEl.contentEditable = false;
+  sequenceEl.classList.remove('album-content-editable');
+  if (!sequenceEl.textContent.includes('#')) {
+    sequenceEl.textContent = '#' + sequenceEl.textContent;
+  }
   mediaButtonsContainer.classList.add('null');
   editButton.classList.remove('null');
   container.querySelector('.album-section-button-container-js').classList.add('null');
@@ -672,6 +702,19 @@ const cancelAlbumSectionEdit = (e) => {
   e.preventDefault();
 
   const albumSectionId = e.currentTarget.dataset.albumSectionId;
+
+  const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
+  const titleHtmlEl = container.querySelector('.section-title-html');
+  titleHtmlEl.textContent = titleHtmlEl.dataset.before;
+  const subtitleHtmlEl = container.querySelector('.section-subtitle-html');
+  subtitleHtmlEl.textContent = subtitleHtmlEl.dataset.before;
+  const contentHtmlEl = container.querySelector('.section-content-html');
+  contentHtmlEl.textContent = contentHtmlEl.dataset.before;
+  container.querySelector('.main-image-container').classList.remove('null');
+  container.querySelector('.album-section-main-media-delete-js').classList.remove('null');
+  container.querySelector('.album-section-main-media-js span').textContent = global.get('globalModify');
+  const sequenceEl = container.querySelector('.section-sequence');
+  sequenceEl.textContent = '#' + sequenceEl.dataset.before;
 
   makeAlbumSectionNonEditable(albumSectionId);
 };
@@ -718,11 +761,7 @@ const albumSectionDeleteMainMedia = (e) => {
   const targetContainerId = e.currentTarget.targetContainerId;
 
   const container = document.querySelector('#' + targetContainerId);
-  const targetImg = container.querySelector('.album-section-main-media');
-
-  if (targetImg) {
-    container.removeChild(targetImg);
-  }
+  container.classList.add('null');
 
   container.querySelector('.album-section-main-media-delete-js').classList.add('null');
   container.querySelector('.album-section-main-media-js span').textContent = global.get('globalSelectImage');
@@ -767,7 +806,7 @@ const albumSectionEditMediaCaption = (e) => {
     '.album-section-item[data-album-section-id="' + albumSectionId + '"]'
   );
   const titleText = sectionContentContainer.querySelector('.section-title-html').textContent;
-  const subtitleText = sectionContentContainer.querySelector('.album-section-item-number').textContent
+  const subtitleText = sectionContentContainer.querySelector('.section-sequence').textContent
     + (titleText === '-' ? '' : (' ' + titleText));
 
   const newMediaEl = new Image();
@@ -783,6 +822,64 @@ const albumSectionEditMediaCaption = (e) => {
   modal.classList.remove('null');
   htmlContainer.focus();
 };
+
+const updateAlbumSectionSequences = (sourceSequence, targetSequence) => {
+  if (sourceSequence === targetSequence) {
+    return;
+  }
+
+  const container = document.querySelector('.album-sections-wrapper');
+  const sourceSection = container.querySelector('.album-section-item[data-sequence="' + sourceSequence + '"]');
+  let targetSection = container.querySelector('.album-section-item[data-sequence="' + targetSequence + '"]');
+  if (!targetSection) {
+    console.log('target sequence', targetSequence);
+    let closestSequence = 0;
+    container.querySelectorAll('.album-section-item').forEach(asi => {
+      const seq = Number.parseInt(asi.dataset.sequence);
+      if (closestSequence <= targetSequence && targetSequence >= seq) {
+        closestSequence = seq;
+        console.log(closestSequence);
+      }
+    });
+
+    targetSection = closestSequence
+      ? container.querySelector('.album-section-item[data-sequence="' + closestSequence + '"]')
+      : container.querySelector('.album-section-item:last-of-type');
+  }
+
+  const currentSectionEl = sourceSection.querySelector('.section-sequence');
+  currentSectionEl.textContent = '#' + targetSequence.toString();
+  currentSectionEl.dataset.before = targetSequence.toString();
+  sourceSection.dataset.sequence = targetSequence.toString();
+
+  let countDelta = 0;
+  if (targetSequence < sourceSequence) {
+    container.insertBefore(sourceSection, targetSection);
+    countDelta = 1;
+  } else {
+    targetSection.nextSibling
+      ? container.insertBefore(sourceSection, targetSection.nextSibling)
+      : container.insertAdjacentElement('beforeend', sourceSection);
+    countDelta = -1;
+  }
+
+  container.querySelectorAll('.album-section-item').forEach(asi => {
+    if (asi.dataset.sectionId === sourceSection.dataset.sectionId) {
+      return;
+    }
+
+    const cSeq = Number.parseInt(asi.dataset.sequence);
+    if ((cSeq >= targetSequence && cSeq < sourceSequence) || (cSeq <= targetSequence && cSeq > sourceSequence)) {
+
+      asi.dataset.sequence = (cSeq + countDelta).toString();
+      const asiSequenceEl = asi.querySelector('.section-sequence');
+      asiSequenceEl.textContent = '#' + (cSeq + countDelta).toString();
+      asiSequenceEl.dataset.before = (cSeq + countDelta).toString();
+    }
+  });
+
+  currentSectionEl.scrollIntoView();
+}
 
 const addEventListenerAction = (image, mediaId, eventListenerAction, targetContainerId) => {
   if (eventListenerAction === 'displayImagePopup') {

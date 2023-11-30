@@ -1121,7 +1121,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             ? $albumSectionMedias[0]
             : $albumSectionMedias[1];
 
-        $res = $this->albumService->updateSequenceForAlbumSection(
+        $res = $this->albumService->updateMediaSequenceForAlbumSection(
             albumSectionMediaFrom: $albumSectionMediaFrom,
             albumSectionMediaTo: $albumSectionMediaTo,
         );
@@ -1140,6 +1140,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string|null $titleHtml
      * @param string|null $subtitleHtml
      * @param string|null $contentHtml
+     * @param int|null $sequence
      * @param Request $request
      * @return Response
      */
@@ -1149,6 +1150,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $titleHtml,
         ?string $subtitleHtml,
         ?string $contentHtml,
+        ?int $sequence,
         Request $request
     ): Response {
         $existingAlbumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
@@ -1173,8 +1175,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $contentHtml = StringUtil::sanitiseHtml($contentHtml);
         $titleHtml = StringUtil::sanitiseHtml($titleHtml);
 
-        $res = $this->albumService->updateAlbumSection(
-            new AlbumSection(
+        $res = $this->albumService->workflowUpdateAlbumSection(
+            albumSectionFrom: $existingAlbumSection,
+            albumSectionTo: $existingAlbumSection, // ToDo
+            updated: new AlbumSection(
                 id: $existingAlbumSection->id,
                 albumId: $existingAlbumSection->albumId,
                 mainMedia: $media,
@@ -1183,7 +1187,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 contentHtml: $contentHtml,
                 createdAt: $existingAlbumSection->createdAt,
                 updatedAt: new DateTimeImmutable(),
-                sequence: $existingAlbumSection->sequence,
+                sequence: $sequence,
             ),
         );
 

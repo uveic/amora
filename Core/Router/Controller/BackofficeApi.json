@@ -1817,6 +1817,9 @@
                 },
                 "contentHtml": {
                   "type": "string"
+                },
+                "sequence": {
+                  "type": "integer"
                 }
               }
             }

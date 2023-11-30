@@ -588,13 +588,6 @@ a.link-title:focus {
   text-decoration: underline;
 }
 
-a.form-edit {
-  padding: 0 0 1rem 1rem;
-  display: block;
-  text-align: right;
-  float: right;
-}
-
 .field {
   display: flex;
   justify-content: space-between;

@@ -99,12 +99,12 @@ final class AlbumHtmlGenerator
         string $indentation = '',
     ): string {
         $output = [];
-        $output[] = $indentation . '<div class="album-section-item" data-album-section-id="' . $section->id . '">';
+        $output[] = $indentation . '<div class="album-section-item" data-album-section-id="' . $section->id . '" data-sequence="' . $section->sequence . '">';
         $output[] = $indentation . '  <div class="album-section-item-content">';
         $output[] = $indentation . '    <div class="drop-loading null"><img src="/img/loading.gif" class="img-svg img-svg-40" width="40" height="40" alt="' . $localisationUtil->getValue('globalSaving') . '"></div>';
 
         $output[] = $indentation . '    <div class="album-section-item-edit-container">';
-        $output[] = $indentation . '      <span class="album-section-item-number">#' . $section->sequence . '</span>';
+        $output[] = $indentation . '      <span class="section-sequence" data-before="' . $section->sequence . '">#' . $section->sequence . '</span>';
         $output[] = $indentation . '      <img class="img-svg album-section-edit-js" data-album-section-id="' . $section->id . '" width="20" height="20" src="/img/svg/pencil.svg" alt="' . $localisationUtil->getValue('globalEdit') . '">';
         $output[] = $indentation . '      <div class="album-section-button-container-js null">';
         $output[] = $indentation . '        <button class="album-section-button album-section-cancel-js" data-album-section-id="' . $section->id . '">' . $localisationUtil->getValue('globalCancel') . '</button>';
@@ -112,11 +112,11 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '      </div>';
         $output[] = $indentation . '    </div>';
 
-        $output[] = $indentation . '    <h3 class="section-title-html">' . ($section->titleHtml ?: '-') . '</h3>';
-        $output[] = $indentation . '    <div class="section-subtitle-html">' . ($section->subtitleHtml ?: '-') . '</div>';
-        $output[] = $indentation . '    <div class="section-content-html">' . ($section->contentHtml ?: '-') . '</div>';
+        $output[] = $indentation . '    <h3 class="section-title-html" data-before="' . $section->titleHtml . '">' . ($section->titleHtml ?: '-') . '</h3>';
+        $output[] = $indentation . '    <div class="section-subtitle-html" data-before="' . $section->subtitleHtml . '">' . ($section->subtitleHtml ?: '-') . '</div>';
+        $output[] = $indentation . '    <div class="section-content-html" data-before="' . $section->contentHtml . '">' . ($section->contentHtml ?: '-') . '</div>';
 
-        $output[] = $indentation . '    <div id="album-section-main-media-' . $section->id . '" class="main-image-container main-image-container-full m-t-2">';
+        $output[] = $indentation . '    <div id="album-section-main-media-' . $section->id . '" class="main-image-container main-image-container-full m-t-1">';
         if ($section->mainMedia) {
             $output[] = $indentation . '      <img class="album-section-main-media" data-media-id="' . $section->mainMedia->id . '" src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '">';
         }
