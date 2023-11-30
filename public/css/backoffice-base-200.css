@@ -1245,9 +1245,17 @@ h2.page-content-subtitle {
   display: flex;
   flex-flow: row nowrap;
   gap: 0.5rem;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 1rem;
+}
+
+.album-section-button-container-js {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .album-section-edit-js {
