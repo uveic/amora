@@ -1307,17 +1307,17 @@ h2.page-content-subtitle {
   cursor: grab;
 }
 
-.item-grabbing {
+.media-item-grabbing {
   cursor: grabbing;
   padding: 0.25rem;
 }
 
-.item-grabbing-over {
+.media-item-grabbing-over {
   padding: 0.25rem;
   margin: 0;
 }
 
-.item-dropped {
+.media-item-grabbing {
   padding: 0.25rem;
   margin: 0;
 }
