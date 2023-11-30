@@ -513,7 +513,7 @@ class AlbumDataLayer
         return $this->db->execute($sql, $params);
     }
 
-    public function updateSequenceForAlbumSection(
+    public function updateMediaSequenceForAlbumSection(
         AlbumSectionMedia $albumSectionMediaFrom,
         AlbumSectionMedia $albumSectionMediaTo,
     ): bool {
@@ -574,6 +574,56 @@ class AlbumDataLayer
 
                 $res = $this->db->execute($sql, $params);
 
+                return new Feedback($res);
+            }
+        );
+
+        return $resTrans->isSuccess;
+    }
+
+    public function updateSectionSequenceForAlbum(
+        AlbumSection $albumSectionFrom,
+        AlbumSection $albumSectionTo,
+    ): bool {
+        $resTrans = $this->db->withTransaction(
+            function () use($albumSectionFrom, $albumSectionTo) {
+                if ($albumSectionFrom->sequence === $albumSectionTo->sequence) {
+                    return new Feedback(true);
+                }
+
+                if ($albumSectionFrom->sequence > $albumSectionTo->sequence) {
+                    $sql = '
+                        UPDATE ' . self::ALBUM_SECTION_TABLE . '
+                            SET `sequence` = `sequence` + :countDelta
+                        WHERE album_id = :albumId
+                            AND `sequence` >= :sequenceTo
+                            AND `sequence` < :sequenceFrom
+                    ';
+
+                    $params = [
+                        ':countDelta' => 1,
+                        ':sequenceTo' => $albumSectionTo->sequence,
+                        ':sequenceFrom' => $albumSectionFrom->sequence,
+                        ':albumId' => $albumSectionFrom->albumId,
+                    ];
+                } else {
+                    $sql = '
+                        UPDATE ' . self::ALBUM_SECTION_TABLE . '
+                            SET `sequence` = `sequence` + :countDelta
+                        WHERE album_id = :albumId
+                            AND `sequence` > :sequenceFrom
+                            AND `sequence` <= :sequenceTo
+                    ';
+
+                    $params = [
+                        ':countDelta' => -1,
+                        ':sequenceFrom' => $albumSectionFrom->sequence,
+                        ':sequenceTo' => $albumSectionTo->sequence,
+                        ':albumId' => $albumSectionFrom->albumId,
+                    ];
+                }
+
+                $res = $this->db->execute($sql, $params);
                 return new Feedback($res);
             }
         );

@@ -46,6 +46,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     <section class="page-header">
       <h3><img src="/img/svg/images.svg" class="img-svg img-svg-25 m-r-05" width="25" height="25" alt="Edición"><?=$album->titleHtml?></h3>
       <div class="links">
+        <span class="value"><a href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a></span>
         <span class="number">#<?=$album->id?></span>
         <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="30" height="30" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
       </div>
@@ -54,7 +55,6 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
       <section class="form-content-wrapper">
         <div class="form-two-columns-wrapper">
           <div class="flex-child m-b-15">
-            <a class="form-edit" href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a>
             <div class="card-info-item">
               <span class="title"><?=$responseData->getLocalValue('globalStatus')?>:</span>
               <span class="value">
@@ -75,14 +75,12 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
             </div>
           </div>
           <div class="flex-child m-b-15">
-            <div class="card-info-item">
-              <span class="title"><?=$responseData->getLocalValue('globalTitle')?>:</span>
-              <span class="value"><?=$album->titleHtml?></span>
-            </div>
+<?php if ($album->contentHtml) { ?>
             <div class="card-info-item">
               <span class="title"><?=$responseData->getLocalValue('globalContent')?>:</span>
               <span class="value ellipsis"><?=StringUtil::nl2p($album->contentHtml) ?: '-'?></span>
             </div>
+<?php } ?>
             <div class="card-info-item">
               <span class="title"><?=$responseData->getLocalValue('albumFormTemplateTitle')?>:</span>
               <span class="value"><?=$album->template->name?></span>

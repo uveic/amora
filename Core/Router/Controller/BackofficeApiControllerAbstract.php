@@ -392,6 +392,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string|null $titleHtml
      * @param string|null $subtitleHtml
      * @param string|null $contentHtml
+     * @param int|null $sequence
      * @param Request $request
      * @return Response
      */
@@ -401,6 +402,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?string $titleHtml,
         ?string $subtitleHtml,
         ?string $contentHtml,
+        ?int $sequence,
         Request $request
     ): Response;
 
@@ -1719,6 +1721,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         $titleHtml = $bodyParams['titleHtml'] ?? null;
         $subtitleHtml = $bodyParams['subtitleHtml'] ?? null;
         $contentHtml = $bodyParams['contentHtml'] ?? null;
+        $sequence = $bodyParams['sequence'] ?? null;
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -1737,6 +1740,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $titleHtml,
                 $subtitleHtml,
                 $contentHtml,
+                $sequence,
                 $request
             );
         } catch (Throwable $t) {
