@@ -514,36 +514,46 @@ class AlbumDataLayer
     }
 
     public function updateSequenceForAlbumSection(
-        AlbumSection $albumSection,
-        AlbumSectionMedia $albumSectionMedia,
-        int $sequenceFrom,
-        int $sequenceTo,
+        AlbumSectionMedia $albumSectionMediaFrom,
+        AlbumSectionMedia $albumSectionMediaTo,
     ): bool {
         $resTrans = $this->db->withTransaction(
-            function () use($albumSection, $albumSectionMedia, $sequenceFrom, $sequenceTo) {
-                if ($sequenceFrom > $sequenceTo) {
+            function () use($albumSectionMediaFrom, $albumSectionMediaTo) {
+                if ($albumSectionMediaFrom->sequence === $albumSectionMediaTo->sequence) {
+                    return new Feedback(true);
+                }
+
+                if ($albumSectionMediaFrom->sequence > $albumSectionMediaTo->sequence) {
                     $sql = '
                         UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
-                            SET `sequence` = `sequence` + 1
+                            SET `sequence` = `sequence` + :countDelta
                         WHERE album_section_id = :albumSectionId
-                            AND `sequence` <= :sequenceFrom
                             AND `sequence` >= :sequenceTo
+                            AND `sequence` < :sequenceFrom
                     ';
+
+                    $params = [
+                        ':countDelta' => 1,
+                        ':sequenceTo' => $albumSectionMediaTo->sequence,
+                        ':sequenceFrom' => $albumSectionMediaFrom->sequence,
+                        ':albumSectionId' => $albumSectionMediaFrom->albumSectionId,
+                    ];
                 } else {
                     $sql = '
                         UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
-                            SET `sequence` = `sequence` - 1
+                            SET `sequence` = `sequence` + :countDelta
                         WHERE album_section_id = :albumSectionId
-                            AND `sequence` >= :sequenceFrom
+                            AND `sequence` > :sequenceFrom
                             AND `sequence` <= :sequenceTo
                     ';
-                }
 
-                $params = [
-                    ':sequenceTo' => $sequenceTo,
-                    ':sequenceFrom' => $sequenceFrom,
-                    ':albumSectionId' => $albumSection->id,
-                ];
+                    $params = [
+                        ':countDelta' => -1,
+                        ':sequenceFrom' => $albumSectionMediaFrom->sequence,
+                        ':sequenceTo' => $albumSectionMediaTo->sequence,
+                        ':albumSectionId' => $albumSectionMediaFrom->albumSectionId,
+                    ];
+                }
 
                 $resAgain = $this->db->execute($sql, $params);
 
@@ -553,13 +563,15 @@ class AlbumDataLayer
 
                 $sql = '
                     UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
-                        SET `sequence` = :sequenceTo
+                        SET `sequence` = :newSequence
                     WHERE id = :albumSectionMediaId
                 ';
+
                 $params = [
-                    ':sequenceTo' => $sequenceTo,
-                    ':albumSectionMediaId' => $albumSectionMedia->id,
+                    ':newSequence' => $albumSectionMediaTo->sequence,
+                    ':albumSectionMediaId' => $albumSectionMediaFrom->id,
                 ];
+
                 $res = $this->db->execute($sql, $params);
 
                 return new Feedback($res);
