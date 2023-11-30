@@ -56,13 +56,13 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
           <div class="flex-child m-b-15">
             <a class="form-edit" href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a>
             <div class="card-info-item">
-              <span class="title">Estado:</span>
+              <span class="title"><?=$responseData->getLocalValue('globalStatus')?>:</span>
               <span class="value">
 <?=AlbumHtmlGenerator::generateDynamicAlbumStatusHtml($album->status, '              ')?>
               </span>
             </div>
             <div class="card-info-item">
-              <span class="title">Creado o:</span>
+              <span class="title"><?=$responseData->getLocalValue('globalCreatedAt')?>:</span>
               <span class="value"><?=$createdAt?></span>
             </div>
             <div class="card-info-item">
@@ -70,7 +70,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
               <span class="value one-line"><?=$album->language->getIconFlag('m-r-05') . $album->language->getName()?></span>
             </div>
             <div class="card-info-item form-public-link">
-              <span class="title">Enderezo público:</span>
+              <span class="title"><?=$responseData->getLocalValue('albumFormPublicLinkTitle')?>:</span>
               <span class="value word-break"><?=$publicLinkHtml?></span>
             </div>
           </div>
@@ -84,7 +84,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
               <span class="value ellipsis"><?=StringUtil::nl2p($album->contentHtml) ?: '-'?></span>
             </div>
             <div class="card-info-item">
-              <span class="title">Deseño do álbum:</span>
+              <span class="title"><?=$responseData->getLocalValue('albumFormTemplateTitle')?>:</span>
               <span class="value"><?=$album->template->name?></span>
             </div>
             <div class="card-info-item">

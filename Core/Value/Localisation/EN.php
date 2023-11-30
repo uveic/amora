@@ -125,6 +125,7 @@ return [
     'globalSubmittedAt' => 'Submitted At',
     'globalPublishOn' => 'Publish On',
     'globalCreated' => 'Created',
+    'globalCreatedAt' => 'Created at',
     'globalStatus' => 'Status',
     'globalPreview' => 'Preview',
     'globalArticle' => 'Page',
@@ -245,6 +246,8 @@ return [
     'albumFormContent' => 'Content',
     'albumFormNew' => 'New album',
     'albumFormMainImageTitle' => 'Main image',
+    'albumFormPublicLinkTitle' => 'Public address',
+    'albumFormTemplateTitle' => 'Album design',
     'albumPublicReadMore' => 'Read more',
     'albumPublicMorePictures' => 'More Pictures',
 ];

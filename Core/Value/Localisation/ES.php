@@ -125,6 +125,7 @@ return [
     'globalSubmittedAt' => 'Hora envío',
     'globalPublishOn' => 'Publicar el',
     'globalCreated' => 'Creado',
+    'globalCreatedAt' => 'Creado el',
     'globalStatus' => 'Estado',
     'globalPreview' => 'Previsualizar',
     'globalArticle' => 'página',
@@ -245,6 +246,8 @@ return [
     'albumFormContent' => 'Contenido',
     'albumFormNew' => 'Nuevo álbum',
     'albumFormMainImageTitle' => 'Imagen principal',
+    'albumFormPublicLinkTitle' => 'Dirección pública',
+    'albumFormTemplateTitle' => 'Diseño del álbum',
     'albumPublicReadMore' => 'Leer más',
     'albumPublicMorePictures' => 'Ver más fotos',
 ];
