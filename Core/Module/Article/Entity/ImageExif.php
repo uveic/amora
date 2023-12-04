@@ -4,17 +4,17 @@ namespace Amora\Core\Module\Article\Entity;
 
 use DateTimeImmutable;
 
-class ImageExif
+readonly class ImageExif
 {
     public function __construct(
-        public readonly ?int $width,
-        public readonly ?int $height,
-        public readonly ?int $sizeBytes,
-        public readonly ?string $cameraModel,
-        public readonly ?DateTimeImmutable $date,
-        public readonly ?string $exposureTime,
-        public readonly ?string $ISO,
-        public readonly ?string $rawDataJson = null,
+        public ?int $width,
+        public ?int $height,
+        public ?int $sizeBytes,
+        public ?string $cameraModel,
+        public ?DateTimeImmutable $date,
+        public ?string $exposureTime,
+        public ?string $ISO,
+        public ?string $rawDataJson = null,
     ) {}
 
     public function asArray(): array
