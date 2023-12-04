@@ -609,6 +609,14 @@ const editAlbumSection = (e) => {
   sequenceEl.textContent = sequenceEl.textContent.trim().replace('#', '');
   container.querySelector('.main-image-button-container').classList.remove('null');
   container.querySelector('.album-section-button-container-js').classList.remove('null');
+  container.querySelector('.main-image-container').classList.remove('null');
+  const mainMedia = container.querySelector('.main-image-container .album-section-main-media');
+  if (mainMedia && !mainMedia.classList.contains('null')) {
+    container.querySelector('.album-section-main-media-delete-js').classList.remove('null');
+  } else {
+    container.querySelector('.album-section-main-media-delete-js').classList.add('null');
+  }
+
   e.currentTarget.classList.add('null');
   titleEl.focus();
 };
@@ -635,9 +643,10 @@ const updateAlbumSection = (e) => {
   contentHtmlEl.dataset.before = contentHtml;
 
   const mainMedia = container.querySelector('img.album-section-main-media');
-  const mainMediaId = mainMedia && !mainMedia.parentElement.classList.contains('null')
+  const mainMediaId = mainMedia && !mainMedia.classList.contains('null')
     ? Number.parseInt(mainMedia.dataset.mediaId)
     : null;
+  container.querySelector('.main-image-container').dataset.before = mainMediaId ?? '';
 
   const sequenceEl = container.querySelector('.section-sequence');
   const sequenceRaw = sequenceEl.textContent.trim().replace('#', '');
@@ -656,6 +665,11 @@ const updateAlbumSection = (e) => {
   };
 
   xhr.put('/back/album-section/' + albumSectionId, JSON.stringify(payload))
+    .then(() => {
+      if (mainMedia && mainMedia.classList.contains('null')) {
+        mainMedia.parentElement.removeChild(mainMedia);
+      }
+    })
     .catch(error => {
       Util.logError(error);
     });
@@ -712,7 +726,25 @@ const cancelAlbumSectionEdit = (e) => {
   contentHtmlEl.textContent = contentHtmlEl.dataset.before;
   container.querySelector('.main-image-container').classList.remove('null');
   container.querySelector('.album-section-main-media-delete-js').classList.remove('null');
-  container.querySelector('.album-section-main-media-js span').textContent = global.get('globalModify');
+  const mainMedia = container.querySelector('.main-image-container .album-section-main-media');
+  if (mainMedia) {
+    if (mainMedia.parentElement.dataset.before
+      && mainMedia.parentElement.dataset.before !== mainMedia.dataset.mediaId
+    ) {
+      const originalMedia = document.querySelector('img[data-media-id="' + mainMedia.parentElement.dataset.before + '"]');
+      if (originalMedia) {
+        mainMedia.src = originalMedia.src;
+        mainMedia.dataset.mediaId = originalMedia.dataset.mediaId;
+        mainMedia.alt = originalMedia.alt;
+        mainMedia.title = originalMedia.title;
+      }
+    }
+
+    mainMedia.classList.remove('null');
+    mainMedia.classList.contains('null')
+      ? container.querySelector('.album-section-main-media-js span').textContent = global.get('globalSelectImage')
+      : container.querySelector('.album-section-main-media-js span').textContent = global.get('globalModify');
+  }
   const sequenceEl = container.querySelector('.section-sequence');
   sequenceEl.textContent = '#' + sequenceEl.dataset.before;
 
@@ -759,10 +791,9 @@ const albumSectionDeleteMainMedia = (e) => {
   }
 
   const targetContainerId = e.currentTarget.targetContainerId;
-
   const container = document.querySelector('#' + targetContainerId);
-  container.classList.add('null');
 
+  container.querySelector('.album-section-main-media').classList.add('null');
   container.querySelector('.album-section-main-media-delete-js').classList.add('null');
   container.querySelector('.album-section-main-media-js span').textContent = global.get('globalSelectImage');
 };
