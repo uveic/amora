@@ -359,7 +359,7 @@ readonly class AlbumService
 
     public function workflowUpdateAlbumSection(
         AlbumSection $albumSectionFrom,
-        AlbumSection $albumSectionTo,
+        ?AlbumSection $albumSectionTo,
         AlbumSection $updated,
     ): bool {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
@@ -370,7 +370,7 @@ readonly class AlbumService
                     return new Feedback(false);
                 }
 
-                if ($albumSectionFrom->sequence !== $albumSectionTo->sequence) {
+                if ($albumSectionTo && $albumSectionFrom->sequence !== $albumSectionTo->sequence) {
                     $this->albumDataLayer->updateSectionSequenceForAlbum(
                         albumSectionFrom: $albumSectionFrom,
                         albumSectionTo: $albumSectionTo,

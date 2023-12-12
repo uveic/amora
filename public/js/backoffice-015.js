@@ -654,14 +654,18 @@ const updateAlbumSection = (e) => {
     ? Number.parseInt(sequenceEl.dataset.before)
     : Number.parseInt(sequenceEl.textContent.trim().replace('#', ''));
 
-  updateAlbumSectionSequences(Number.parseInt(sequenceEl.dataset.before), sequence);
+  const targetAlbumSectionId = updateAlbumSectionSequences(
+    Number.parseInt(sequenceEl.dataset.before),
+    sequence,
+  );
 
   const payload = {
     titleHtml: titleHtml === '-' ? '' : titleHtml,
     subtitleHtml: subtitleHtml === '-' ? '' : subtitleHtml,
     contentHtml: contentHtml === '-' ? '' : contentHtml,
     mainMediaId: mainMediaId,
-    sequence: sequence,
+    newSequence: sequence,
+    albumSectionIdSequenceTo: targetAlbumSectionId,
   };
 
   xhr.put('/back/album-section/' + albumSectionId, JSON.stringify(payload))
@@ -863,19 +867,22 @@ const updateAlbumSectionSequences = (sourceSequence, targetSequence) => {
   const sourceSection = container.querySelector('.album-section-item[data-sequence="' + sourceSequence + '"]');
   let targetSection = container.querySelector('.album-section-item[data-sequence="' + targetSequence + '"]');
   if (!targetSection) {
-    console.log('target sequence', targetSequence);
-    let closestSequence = 0;
-    container.querySelectorAll('.album-section-item').forEach(asi => {
-      const seq = Number.parseInt(asi.dataset.sequence);
-      if (closestSequence <= targetSequence && targetSequence >= seq) {
-        closestSequence = seq;
-        console.log(closestSequence);
+    let closestSequence = null;
+    const sequences = [];
+    container.querySelectorAll('.album-section-item').forEach(asi => sequences.push(Number.parseInt(asi.dataset.sequence)));
+
+    for (let i = 0; i < sequences.length; i++) {
+      closestSequence = sequences[i];
+      if (sequences[i] >= closestSequence) {
+        break;
       }
-    });
+    }
 
     targetSection = closestSequence
       ? container.querySelector('.album-section-item[data-sequence="' + closestSequence + '"]')
       : container.querySelector('.album-section-item:last-of-type');
+
+    targetSequence = Number.parseInt(targetSection.dataset.sequence);
   }
 
   const currentSectionEl = sourceSection.querySelector('.section-sequence');
@@ -895,21 +902,25 @@ const updateAlbumSectionSequences = (sourceSequence, targetSequence) => {
   }
 
   container.querySelectorAll('.album-section-item').forEach(asi => {
-    if (asi.dataset.sectionId === sourceSection.dataset.sectionId) {
+    if (asi.dataset.albumSectionId === sourceSection.dataset.albumSectionId) {
       return;
     }
 
-    const cSeq = Number.parseInt(asi.dataset.sequence);
-    if ((cSeq >= targetSequence && cSeq < sourceSequence) || (cSeq <= targetSequence && cSeq > sourceSequence)) {
-
-      asi.dataset.sequence = (cSeq + countDelta).toString();
+    const currentSequence = Number.parseInt(asi.dataset.sequence);
+    if (
+      (currentSequence >= targetSequence && currentSequence < sourceSequence)
+      || (currentSequence <= targetSequence && currentSequence > sourceSequence)
+    ) {
+      asi.dataset.sequence = (currentSequence + countDelta).toString();
       const asiSequenceEl = asi.querySelector('.section-sequence');
-      asiSequenceEl.textContent = '#' + (cSeq + countDelta).toString();
-      asiSequenceEl.dataset.before = (cSeq + countDelta).toString();
+      asiSequenceEl.textContent = '#' + (currentSequence + countDelta).toString();
+      asiSequenceEl.dataset.before = (currentSequence + countDelta).toString();
     }
   });
 
   currentSectionEl.scrollIntoView();
+
+  return Number.parseInt(targetSection.dataset.albumSectionId);
 }
 
 const addEventListenerAction = (image, mediaId, eventListenerAction, targetContainerId) => {

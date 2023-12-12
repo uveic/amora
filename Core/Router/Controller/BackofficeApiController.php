@@ -1077,21 +1077,15 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Method: PUT
      *
      * @param int $albumSectionId
-     * @param int $sequenceTo
      * @param int $albumSectionMediaIdTo
-     * @param int $sequenceFrom
      * @param int $albumSectionMediaIdFrom
-     * @param string $countDelta
      * @param Request $request
      * @return Response
      */
     protected function updateMediaSequenceForAlbumSection(
         int $albumSectionId,
-        int $sequenceTo,
         int $albumSectionMediaIdTo,
-        int $sequenceFrom,
         int $albumSectionMediaIdFrom,
-        string $countDelta,
         Request $request
     ): Response {
         $albumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
@@ -1140,7 +1134,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string|null $titleHtml
      * @param string|null $subtitleHtml
      * @param string|null $contentHtml
-     * @param int|null $sequence
+     * @param int|null $albumSectionIdSequenceTo
      * @param Request $request
      * @return Response
      */
@@ -1150,11 +1144,22 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $titleHtml,
         ?string $subtitleHtml,
         ?string $contentHtml,
-        ?int $sequence,
+        ?int $albumSectionIdSequenceTo,
         Request $request
     ): Response {
         $existingAlbumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
         if (!$existingAlbumSection) {
+            return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
+                success: false,
+                errorMessage: 'Album section ID not found',
+            );
+        }
+
+        $existingAlbumSectionTo = $albumSectionIdSequenceTo
+            ? $this->albumService->getAlbumSectionForId($albumSectionIdSequenceTo)
+            : null;
+
+        if ($albumSectionIdSequenceTo && !$existingAlbumSectionTo) {
             return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
                 success: false,
                 errorMessage: 'Album section ID not found',
@@ -1177,7 +1182,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $res = $this->albumService->workflowUpdateAlbumSection(
             albumSectionFrom: $existingAlbumSection,
-            albumSectionTo: $existingAlbumSection, // ToDo
+            albumSectionTo: $existingAlbumSectionTo,
             updated: new AlbumSection(
                 id: $existingAlbumSection->id,
                 albumId: $existingAlbumSection->albumId,
@@ -1187,7 +1192,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 contentHtml: $contentHtml,
                 createdAt: $existingAlbumSection->createdAt,
                 updatedAt: new DateTimeImmutable(),
-                sequence: $sequence,
+                sequence: $existingAlbumSectionTo
+                    ? $existingAlbumSectionTo->sequence
+                    : $existingAlbumSection->sequence,
             ),
         );
 
