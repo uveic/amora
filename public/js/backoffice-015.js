@@ -735,6 +735,7 @@ const cancelAlbumSectionEdit = (e) => {
   contentHtmlEl.textContent = contentHtmlEl.dataset.before;
   container.querySelector('.main-image-container').classList.remove('null');
   container.querySelector('.album-section-main-media-delete-js').classList.remove('null');
+
   const mainMedia = container.querySelector('.main-image-container .album-section-main-media');
   if (mainMedia) {
     if (mainMedia.parentElement.dataset.before
@@ -749,11 +750,15 @@ const cancelAlbumSectionEdit = (e) => {
       }
     }
 
-    mainMedia.classList.remove('null');
+    mainMedia.parentElement.dataset.before
+      ? mainMedia.classList.remove('null')
+      : mainMedia.classList.add('null');
+
     mainMedia.classList.contains('null')
       ? container.querySelector('.album-section-main-media-js span').textContent = global.get('globalSelectImage')
       : container.querySelector('.album-section-main-media-js span').textContent = global.get('globalModify');
   }
+
   const sequenceEl = container.querySelector('.section-sequence');
   sequenceEl.textContent = '#' + sequenceEl.dataset.before;
 
@@ -1760,8 +1765,11 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
         container.insertAdjacentHTML('beforeend', response.html);
         const sectionContainer = container.querySelector('.album-section-item[data-album-section-id="' + response.newSectionId + '"]');
         sectionContainer.querySelector('.select-media-action').addEventListener('click', selectMediaAction);
+        sectionContainer.querySelector('.album-section-main-media-js').addEventListener('click', selectMediaAction);
         sectionContainer.querySelector('.album-section-edit-js').addEventListener('click', editAlbumSection);
         sectionContainer.querySelector('.album-section-save-js').addEventListener('click', updateAlbumSection);
+        sectionContainer.querySelector('.album-section-cancel-js').addEventListener('click', cancelAlbumSectionEdit);
+        sectionContainer.querySelector('.album-section-main-media-delete-js').addEventListener('click', albumSectionDeleteMainMedia);
         sectionContainer.scrollIntoView({behavior: 'smooth', block: 'center' });
       })
       .catch(error => {
