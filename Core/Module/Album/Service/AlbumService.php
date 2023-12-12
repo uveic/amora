@@ -365,19 +365,20 @@ readonly class AlbumService
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
             function () use ($albumSectionFrom, $albumSectionTo, $updated)
             {
-                $res = $this->albumDataLayer->updateAlbumSection($updated);
-                if (!$res) {
-                    return new Feedback(false);
-                }
-
                 if ($albumSectionTo && $albumSectionFrom->sequence !== $albumSectionTo->sequence) {
-                    $this->albumDataLayer->updateSectionSequenceForAlbum(
+                    $resSequence = $this->albumDataLayer->updateSectionSequenceForAlbum(
                         albumSectionFrom: $albumSectionFrom,
                         albumSectionTo: $albumSectionTo,
                     );
+
+                    if (!$resSequence) {
+                        return new Feedback(false);
+                    }
                 }
 
-                return new Feedback(true);
+                $res = $this->albumDataLayer->updateAlbumSection($updated);
+
+                return new Feedback($res);
             }
         );
 
