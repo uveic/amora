@@ -365,21 +365,15 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * Method: PUT
      *
      * @param int $albumSectionId
-     * @param int $sequenceTo
      * @param int $albumSectionMediaIdTo
-     * @param int $sequenceFrom
      * @param int $albumSectionMediaIdFrom
-     * @param string $countDelta
      * @param Request $request
      * @return Response
      */
     abstract protected function updateMediaSequenceForAlbumSection(
         int $albumSectionId,
-        int $sequenceTo,
         int $albumSectionMediaIdTo,
-        int $sequenceFrom,
         int $albumSectionMediaIdFrom,
-        string $countDelta,
         Request $request
     ): Response;
 
@@ -392,7 +386,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string|null $titleHtml
      * @param string|null $subtitleHtml
      * @param string|null $contentHtml
-     * @param int|null $sequence
+     * @param int|null $albumSectionIdSequenceTo
      * @param Request $request
      * @return Response
      */
@@ -402,7 +396,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?string $titleHtml,
         ?string $subtitleHtml,
         ?string $contentHtml,
-        ?int $sequence,
+        ?int $albumSectionIdSequenceTo,
         Request $request
     ): Response;
 
@@ -1602,16 +1596,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
-        $sequenceTo = null;
-        if (!isset($bodyParams['sequenceTo'])) {
-            $errors[] = [
-                'field' => 'sequenceTo',
-                'message' => 'required'
-            ];
-        } else {
-            $sequenceTo = $bodyParams['sequenceTo'] ?? null;
-        }
-
         $albumSectionMediaIdTo = null;
         if (!isset($bodyParams['albumSectionMediaIdTo'])) {
             $errors[] = [
@@ -1622,16 +1606,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             $albumSectionMediaIdTo = $bodyParams['albumSectionMediaIdTo'] ?? null;
         }
 
-        $sequenceFrom = null;
-        if (!isset($bodyParams['sequenceFrom'])) {
-            $errors[] = [
-                'field' => 'sequenceFrom',
-                'message' => 'required'
-            ];
-        } else {
-            $sequenceFrom = $bodyParams['sequenceFrom'] ?? null;
-        }
-
         $albumSectionMediaIdFrom = null;
         if (!isset($bodyParams['albumSectionMediaIdFrom'])) {
             $errors[] = [
@@ -1640,16 +1614,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         } else {
             $albumSectionMediaIdFrom = $bodyParams['albumSectionMediaIdFrom'] ?? null;
-        }
-
-        $countDelta = null;
-        if (!isset($bodyParams['countDelta'])) {
-            $errors[] = [
-                'field' => 'countDelta',
-                'message' => 'required'
-            ];
-        } else {
-            $countDelta = $bodyParams['countDelta'] ?? null;
         }
 
 
@@ -1666,11 +1630,8 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         try {
             return $this->updateMediaSequenceForAlbumSection(
                 $albumSectionId,
-                $sequenceTo,
                 $albumSectionMediaIdTo,
-                $sequenceFrom,
                 $albumSectionMediaIdFrom,
-                $countDelta,
                 $request
             );
         } catch (Throwable $t) {
@@ -1721,7 +1682,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         $titleHtml = $bodyParams['titleHtml'] ?? null;
         $subtitleHtml = $bodyParams['subtitleHtml'] ?? null;
         $contentHtml = $bodyParams['contentHtml'] ?? null;
-        $sequence = $bodyParams['sequence'] ?? null;
+        $albumSectionIdSequenceTo = $bodyParams['albumSectionIdSequenceTo'] ?? null;
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -1740,7 +1701,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $titleHtml,
                 $subtitleHtml,
                 $contentHtml,
-                $sequence,
+                $albumSectionIdSequenceTo,
                 $request
             );
         } catch (Throwable $t) {

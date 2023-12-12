@@ -919,6 +919,7 @@ h2.page-content-subtitle {
   flex-flow: column nowrap;
   background-color: var(--color-bg);
   border: 1px solid var(--color-light-2);
+  z-index: 10;
 }
 
 .analytics-controls-options a {
@@ -932,6 +933,10 @@ h2.page-content-subtitle {
 .analytics-controls-option:hover {
   color: var(--color-text);
   background-color: var(--color-light-2);
+}
+
+.analytics-controls-event-type-options {
+  z-index: 11;
 }
 
 .chart-title {

@@ -1734,28 +1734,16 @@
             "required": true,
             "schema": {
               "properties": {
-                "sequenceTo": {
-                  "type": "integer"
-                },
                 "albumSectionMediaIdTo": {
-                  "type": "integer"
-                },
-                "sequenceFrom": {
                   "type": "integer"
                 },
                 "albumSectionMediaIdFrom": {
                   "type": "integer"
-                },
-                "countDelta": {
-                  "type": "string"
                 }
               },
               "required": [
-                "sequenceTo",
                 "albumSectionMediaIdTo",
-                "sequenceFrom",
-                "albumSectionMediaIdFrom",
-                "countDelta"
+                "albumSectionMediaIdFrom"
               ]
             }
           }
@@ -1818,7 +1806,7 @@
                 "contentHtml": {
                   "type": "string"
                 },
-                "sequence": {
+                "albumSectionIdSequenceTo": {
                   "type": "integer"
                 }
               }
