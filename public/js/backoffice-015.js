@@ -585,6 +585,7 @@ const editAlbumSection = (e) => {
   const subtitleEl = container.querySelector('.section-subtitle-html');
   const contentEl = container.querySelector('.section-content-html');
   const sequenceEl = container.querySelector('.section-sequence');
+  const sequenceValue = Number.parseInt(sequenceEl.dataset.before);
 
   if (titleEl.textContent.trim() === '-') {
     titleEl.textContent = '';
@@ -604,9 +605,13 @@ const editAlbumSection = (e) => {
   subtitleEl.classList.add('album-content-editable');
   contentEl.contentEditable = true;
   contentEl.classList.add('album-content-editable');
-  sequenceEl.contentEditable = true;
-  sequenceEl.classList.add('album-content-editable');
-  sequenceEl.textContent = sequenceEl.textContent.trim().replace('#', '');
+
+  if (sequenceValue > 0) {
+    sequenceEl.contentEditable = true;
+    sequenceEl.classList.add('album-content-editable');
+    sequenceEl.textContent = sequenceEl.textContent.trim().replace('#', '');
+  }
+
   container.querySelector('.main-image-button-container').classList.remove('null');
   container.querySelector('.album-section-button-container-js').classList.remove('null');
   container.querySelector('.main-image-container').classList.remove('null');
@@ -660,9 +665,9 @@ const updateAlbumSection = (e) => {
   );
 
   const payload = {
-    titleHtml: titleHtml === '-' ? '' : titleHtml,
-    subtitleHtml: subtitleHtml === '-' ? '' : subtitleHtml,
-    contentHtml: contentHtml === '-' ? '' : contentHtml,
+    titleHtml: titleHtml === '-' ? null : titleHtml,
+    subtitleHtml: subtitleHtml === '-' ? null : subtitleHtml,
+    contentHtml: contentHtml === '-' ? null : contentHtml,
     mainMediaId: mainMediaId,
     newSequence: sequence,
     albumSectionIdSequenceTo: targetAlbumSectionId,
