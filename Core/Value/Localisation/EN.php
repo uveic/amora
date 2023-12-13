@@ -104,6 +104,7 @@ return [
     'globalFormat' => 'Format',
     'globalRequired' => 'Required',
     'globalNew' => 'New',
+    'globalAdd' => 'Add',
     'globalEdit' => 'Edit',
     'globalModify' => 'Modify',
     'globalTitle' => 'Title',
@@ -250,4 +251,5 @@ return [
     'albumFormTemplateTitle' => 'Album template',
     'albumPublicReadMore' => 'Read more',
     'albumPublicMorePictures' => 'More Pictures',
+    'albumAddSection' => 'Add section',
 ];

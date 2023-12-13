@@ -105,9 +105,9 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
         );
 }?>
         </section>
-        <a href="#" class="album-add-section-js button is-standard" data-album-id="<?=$album->id?>">
-          <img src="/img/svg/image-white.svg" class="img-svg img-svg-30" width="20" height="20" alt="Nova sección">
-          <span class="one-line">Nova sección</span>
+        <a href="#" class="album-add-section-js button button-media-add" data-album-id="<?=$album->id?>">
+          <img src="/img/svg/image.svg" class="img-svg img-svg-25 m-r-05" width="25" height="25" alt="<?=$responseData->getLocalValue('albumAddSection')?>">
+          <span class="one-line"><?=$responseData->getLocalValue('albumAddSection')?></span>
         </a>
       </section>
     </section>
