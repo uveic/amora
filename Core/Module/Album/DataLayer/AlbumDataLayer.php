@@ -432,7 +432,7 @@ class AlbumDataLayer
         );
     }
 
-    public function storeMediaForAlbumSection(AlbumSectionMedia $item): AlbumSectionMedia
+    public function storeAlbumSectionMedia(AlbumSectionMedia $item): AlbumSectionMedia
     {
         $res = $this->db->insert(
             tableName: self::ALBUM_SECTION_MEDIA_TABLE,

@@ -4,5 +4,5 @@
  */
 
 return "
-    ALTER TABLE `core_article_section` RENAME COLUMN `order` TO `sequence`;;
+    ALTER TABLE `core_article_section` RENAME COLUMN `order` TO `sequence`;
 ";

@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Util\Helper;
 
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Model\AlbumSection;
@@ -13,17 +14,20 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 final class AlbumHtmlGenerator
 {
-    public static function generateAlbumStatusHtml(AlbumStatus $status): string
-    {
+    public static function generateAlbumStatusHtml(
+        AlbumStatus $status,
+        LocalisationUtil $localisationUtil,
+    ): string {
         return '<span class="article-status m-t-0 '
             . $status->getClass() . '">'
             . $status->getIcon()
-            . $status->getName()
+            . $localisationUtil->getValue('articleStatus' . $status->name)
             . '</span>' . PHP_EOL;
     }
 
     public static function generateDynamicAlbumStatusHtml(
         AlbumStatus $albumStatus,
+        LocalisationUtil $localisationUtil,
         string $indentation = '',
     ): string {
         $output = [
@@ -35,14 +39,15 @@ final class AlbumHtmlGenerator
         foreach (AlbumStatus::getAll() as $item) {
             $statusClassname = $item->getClass();
             $icon = $item->getIcon();
-            $output[] = $indentation . '    <li><a data-checked="' . ($albumStatus === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option album-status-dd-option ' . $statusClassname . '" href="#">' . $icon . $item->getName() . '</a></li>';
+            $statusName = $localisationUtil->getValue('articleStatus' . $item->name);
+            $output[] = $indentation . '    <li><a data-checked="' . ($albumStatus === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option album-status-dd-option ' . $statusClassname . '" href="#">' . $icon . $statusName . '</a></li>';
         }
 
         $icon = $albumStatus->getIcon();
         $selectedStatusClassname = $albumStatus->getClass();
         $output[] = $indentation . '  </ul>';
         $output[] = $indentation . '  <label id="album-status-dd-label" for="album-status-dd-checkbox" data-status-id="' . $albumStatus->value . '" class="dropdown-menu-label ' . $selectedStatusClassname . '">';
-        $output[] = $indentation . '    <span>' . $icon . $albumStatus->getName() . '</span>';
+        $output[] = $indentation . '    <span>' . $icon . $localisationUtil->getValue('articleStatus' . $albumStatus->name) . '</span>';
         $output[] = $indentation . '    <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Change">';
         $output[] = $indentation . '  </label>';
         $output[] = $indentation . '</div>';
@@ -69,6 +74,8 @@ final class AlbumHtmlGenerator
             ? '<a href="' . $albumPublicUrl . '"><img src="/img/svg/arrow-square-out.svg" class="img-svg m-l-05" alt="Public link" width="20" height="20"></a>'
             : '';
 
+        $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
+
         $output = [];
         $output[] = $indentation . '<div class="album-card-item">';
         $output[] = $indentation . '  <div class="album-image">';
@@ -83,7 +90,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    </div>';
 
         $output[] = $indentation . '    <div>';
-        $output[] = $indentation . '      ' . self::generateAlbumStatusHtml($album->status);
+        $output[] = $indentation . '      ' . self::generateAlbumStatusHtml($album->status, $localisationUtil);
         $output[] = $indentation . '    </div>';
 
         $output[] = $indentation . '  </div>';

@@ -40,17 +40,6 @@ enum AlbumStatus: int
         };
     }
 
-    public function getName(): string
-    {
-        return match ($this) {
-            self::Published => 'Publicada',
-            self::Deleted => 'Eliminada',
-            self::Draft => 'Borrador',
-            self::Private => 'Privado',
-            self::Unlisted => 'No listado',
-        };
-    }
-
     public function getClass(): string
     {
         return match ($this) {
