@@ -152,9 +152,9 @@ final class AlbumHtmlGenerator
             $output[] = $indentation . self::generateAlbumSectionMediaHtml($sectionMedia, $localisationUtil, '      ');
         }
 
-        $output[] = $indentation . '      <a href="#" class="button is-success-light select-media-action" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
-        $output[] = $indentation . '        <img class="img-svg img-svg-30" width="30" height="30" src="/img/svg/image-white.svg" alt="Image">';
-        $output[] = $indentation . '        <span>Engadir</span>';
+        $output[] = $indentation . '      <a href="#" class="button select-media-action button-media-add" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
+        $output[] = $indentation . '        <img class="img-svg img-svg-30" width="30" height="30" src="/img/svg/image.svg" alt="Image">';
+        $output[] = $indentation . '        <span>' . $localisationUtil->getValue('globalAdd') . '</span>';
         $output[] = $indentation . '      </a>';
         $output[] = $indentation . '    </div>';
         $output[] = $indentation . '  </div>';

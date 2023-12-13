@@ -1341,6 +1341,14 @@ h2.page-content-subtitle {
   justify-content: center;
   align-items: center;
 }
+
+.button-media-add {
+  border: 1px dashed;
+}
+
+.button-media-add:hover {
+  border: 1px solid;
+}
 /* Album ends here */
 
 .modal-header-content {
