@@ -409,7 +409,7 @@ readonly class AlbumService
                 $sequence = $this->albumDataLayer->getMaxAlbumSectionMediaSequence($albumSection->id);
 
                 $now = new DateTimeImmutable();
-                $resStore = $this->albumDataLayer->storeMediaForAlbumSection(
+                $resStore = $this->albumDataLayer->storeAlbumSectionMedia(
                     new AlbumSectionMedia(
                         id: null,
                         albumSectionId: $albumSection->id,

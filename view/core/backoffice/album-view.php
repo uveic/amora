@@ -40,6 +40,7 @@ $this->insert('partials/albums/modal-add-section', ['responseData' => $responseD
 $this->insert('partials/albums/modal-media-caption-edit', ['responseData' => $responseData]);
 $this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
 
+$localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
 ?>
   <main>
     <div id="feedback" class="feedback null"></div>
@@ -58,7 +59,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
             <div class="card-info-item">
               <span class="title"><?=$responseData->getLocalValue('globalStatus')?>:</span>
               <span class="value">
-<?=AlbumHtmlGenerator::generateDynamicAlbumStatusHtml($album->status, '              ')?>
+<?=AlbumHtmlGenerator::generateDynamicAlbumStatusHtml($album->status, $localisationUtil, '              ')?>
               </span>
             </div>
             <div class="card-info-item">
@@ -95,8 +96,6 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
         </div>
         <section class="album-sections-wrapper">
 <?php
-    $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
-
     /** @var AlbumSection $section */
     foreach ($album->sections as $section) {
         echo AlbumHtmlGenerator::generateAlbumSectionHtml(
