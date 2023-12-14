@@ -1343,11 +1343,15 @@ h2.page-content-subtitle {
 }
 
 .button-media-add {
-  border: 1px dashed;
+  border: 1px dashed var(--color-text);
+  color: var(--color-text) !important;
+  background-color: var(--color-bg);
 }
 
 .button-media-add:hover {
-  border: 1px solid;
+  border: 1px solid var(--color-text);
+  color: var(--color-text) !important;
+  background-color: var(--color-bg);
 }
 /* Album ends here */
 
