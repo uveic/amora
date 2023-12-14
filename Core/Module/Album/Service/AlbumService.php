@@ -165,6 +165,7 @@ readonly class AlbumService
                 $contentHtml,
             ) {
                 $now = new DateTimeImmutable();
+                $slug = $this->getOrStoreAvailableSlugForAlbum(title: $titleHtml);
                 $resStore = $this->albumDataLayer->storeAlbum(
                     new Album(
                         id: null,
@@ -173,9 +174,7 @@ readonly class AlbumService
                         status: AlbumStatus::Draft,
                         mainMedia: $mainMedia,
                         template: $template,
-                        slug: $this->getOrStoreAvailableSlugForAlbum(
-                            title: $titleHtml,
-                        ),
+                        slug: $slug,
                         createdAt: $now,
                         updatedAt: $now,
                         titleHtml: $titleHtml,

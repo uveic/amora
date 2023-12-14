@@ -44,7 +44,7 @@ return "
         CONSTRAINT `core_album_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `core_user` (`id`),
         CONSTRAINT `core_album_status_id_fk` FOREIGN KEY (`status_id`) REFERENCES `core_album_status` (`id`),
         CONSTRAINT `core_album_main_media_id_fk` FOREIGN KEY (`main_media_id`) REFERENCES `core_media` (`id`),
-        CONSTRAINT `core_album_slug_id_fk` FOREIGN KEY (`slug_id`) REFERENCES `core_media` (`id`)
+        CONSTRAINT `core_album_slug_id_fk` FOREIGN KEY (`slug_id`) REFERENCES `core_album_slug` (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
     ALTER TABLE `core_album_slug` ADD CONSTRAINT `core_album_slug_album_id_fk` FOREIGN KEY (`album_id`) REFERENCES `core_album` (`id`);

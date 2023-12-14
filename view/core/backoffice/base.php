@@ -24,7 +24,7 @@ $menuItems = AppMenu::getAdmin(
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <link rel="manifest" href="/manifest.json">
-  <link href="/css/editor/medium-editor.min.css" rel="stylesheet" >
+  <link href="/css/editor/medium-editor.min.css" rel="stylesheet">
   <link href="/css/editor/custom-theme.css" rel="stylesheet">
   <link href="/css/navbar-base-200.css" rel="stylesheet" type="text/css">
   <link href="/css/shared-base-200.css" rel="stylesheet" type="text/css">
