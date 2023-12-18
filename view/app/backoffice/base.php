@@ -27,7 +27,7 @@ $menuItems = AppMenu::getAdmin(
   <link href="/css/editor/medium-editor.min.css" rel="stylesheet">
   <link href="/css/editor/custom-theme.css" rel="stylesheet">
   <link href="/css/navbar-base-200.css" rel="stylesheet" type="text/css">
-  <link href="/css/shared-base-200.css" rel="stylesheet" type="text/css">
+  <link href="/css/shared-base-201.css" rel="stylesheet" type="text/css">
   <link href="/css/backoffice-base-200.css" rel="stylesheet" type="text/css">
 </head>
 <body>

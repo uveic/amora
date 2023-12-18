@@ -864,6 +864,34 @@ svg,
   align-items: center;
   padding: 1.5rem;
 }
+
+.loader-container {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 99;
+}
+
+.loader {
+  width: 60px;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side,var(--color-bg) 90%,#0000) 0/calc(100%/3) 100% no-repeat;
+  animation: loader2 1s steps(3) infinite;
+}
+@keyframes loader2 {to{background-position: 150%}}
+
+.loader-container progress {
+  width: 80%;
+  height: 15px;
+  background-color: var(--color-bg);
+  appearance: none;
+  border: none;
+}
+
 /* Classes for generic use ends here */
 /* Homepage style starts here */
 .home-main {

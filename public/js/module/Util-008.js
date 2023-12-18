@@ -1,9 +1,9 @@
-import {global} from './localisation-003.js';
+import {Global} from './localisation-004.js';
 
 class UtilClass {
   getUpdatedAtTime() {
     const now = new Date();
-    const prefix = ' ' + global.get('globalAt') + ' ';
+    const prefix = ' ' + Global.get('globalAt') + ' ';
 
     return prefix + now.getHours().toString().padStart(2, '0') +
       ':' + now.getMinutes().toString().padStart(2, '0');
@@ -31,11 +31,13 @@ class UtilClass {
 
     if (!feedbackDiv) return;
 
-    feedbackDiv.textContent = errorMessage ?? (errorObj ? errorObj.message : global.get('genericError'));
+    feedbackDiv.textContent = errorMessage ?? (errorObj ? errorObj.message : Global.get('genericError'));
     feedbackDiv.classList.remove('feedback-success');
     feedbackDiv.classList.add('feedback-error');
     feedbackDiv.classList.remove('null');
     setTimeout(() => {feedbackDiv.classList.add('null')}, 15000);
+
+    console.log(errorObj);
   }
 
   notifyUser(message) {
@@ -64,12 +66,12 @@ class UtilClass {
         targetBlank: true,
         anchor: {
           linkValidation: true,
-          placeholderText: global.get('editorLinkPlaceholder'),
+          placeholderText: Global.get('editorLinkPlaceholder'),
           targetCheckbox: true,
-          targetCheckboxText: global.get('editorLinkOpenBlank'),
+          targetCheckboxText: Global.get('editorLinkOpenBlank'),
         },
         placeholder: {
-          text: global.get('editorParagraphPlaceholder'),
+          text: Global.get('editorParagraphPlaceholder'),
           hideOnClick: true
         },
         paste: {
@@ -137,7 +139,7 @@ class UtilClass {
   createLoadingAnimation() {
     const loadingAnimation = new Image();
     loadingAnimation.src = '/img/loading.gif';
-    loadingAnimation.alt = global.get('globalLoading');
+    loadingAnimation.alt = Global.get('globalLoading');
     loadingAnimation.className = 'img-svg img-svg-50';
     return loadingAnimation;
   }

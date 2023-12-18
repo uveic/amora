@@ -1,80 +1,80 @@
-import {global} from "./localisation-003.js";
-import {Uploader} from "./Uploader-008.js";
+import {Global} from "./localisation-004.js";
+import {Uploader} from "./Uploader-009.js";
 
 class Pexego {
   static defaultActions = {
     bold: {
-      icon: '<img src="/img/svg/text-bolder.svg" class="img-svg" title="' + global.get('editorBold') + '" alt="' + global.get('editorBold') + '">',
-      title: global.get('editorBold'),
+      icon: '<img src="/img/svg/text-bolder.svg" class="img-svg" title="' + Global.get('editorBold') + '" alt="' + Global.get('editorBold') + '">',
+      title: Global.get('editorBold'),
       state: () => document.queryCommandState('bold'),
       result: () => Pexego.exec('bold')
     },
     italic: {
-      icon: '<img src="/img/svg/text-italic.svg" class="img-svg" title="' + global.get('editorItalic') + '" alt="' + global.get('editorItalic') + '">',
-      title: global.get('editorItalic'),
+      icon: '<img src="/img/svg/text-italic.svg" class="img-svg" title="' + Global.get('editorItalic') + '" alt="' + Global.get('editorItalic') + '">',
+      title: Global.get('editorItalic'),
       state: () => document.queryCommandState('italic'),
       result: () => Pexego.exec('italic')
     },
     underline: {
-      icon: '<img src="/img/svg/text-underline.svg" class="img-svg" title="' + global.get('editorUnderline') + '" alt="' + global.get('editorUnderline') + '">',
-      title: global.get('editorUnderline'),
+      icon: '<img src="/img/svg/text-underline.svg" class="img-svg" title="' + Global.get('editorUnderline') + '" alt="' + Global.get('editorUnderline') + '">',
+      title: Global.get('editorUnderline'),
       state: () => document.queryCommandState('underline'),
       result: () => Pexego.exec('underline')
     },
     strikethrough: {
-      icon: '<img src="/img/svg/text-strikethrough.svg" class="img-svg" title="' + global.get('editorStrikeThrough') + '" alt="' + global.get('editorStrikeThrough') + '">',
-      title: global.get('editorStrikeThrough'),
+      icon: '<img src="/img/svg/text-strikethrough.svg" class="img-svg" title="' + Global.get('editorStrikeThrough') + '" alt="' + Global.get('editorStrikeThrough') + '">',
+      title: Global.get('editorStrikeThrough'),
       state: () => document.queryCommandState('strikeThrough'),
       result: () => Pexego.exec('strikeThrough')
     },
     heading1: {
-      icon: '<img src="/img/svg/text-h-one.svg" class="img-svg" title="' + global.get('editorHeadingOne') + '" alt="' + global.get('editorHeadingOne') + '">',
-      title: global.get('editorHeadingOne'),
+      icon: '<img src="/img/svg/text-h-one.svg" class="img-svg" title="' + Global.get('editorHeadingOne') + '" alt="' + Global.get('editorHeadingOne') + '">',
+      title: Global.get('editorHeadingOne'),
       result: () => Pexego.exec('formatBlock', '<h1>')
     },
     heading2: {
-      icon: '<img src="/img/svg/text-h-two.svg" class="img-svg" title="' + global.get('editorHeadingTwo') + '" alt="' + global.get('editorHeadingTwo') + '">',
-      title: global.get('editorHeadingTwo'),
+      icon: '<img src="/img/svg/text-h-two.svg" class="img-svg" title="' + Global.get('editorHeadingTwo') + '" alt="' + Global.get('editorHeadingTwo') + '">',
+      title: Global.get('editorHeadingTwo'),
       result: () => Pexego.exec('formatBlock', '<h2>')
     },
     heading3: {
-      icon: '<img src="/img/svg/text-h-three.svg" class="img-svg" title="' + global.get('editorHeadingThree') + '" alt="' + global.get('editorHeadingThree') + '">',
-      title: global.get('editorHeadingThree'),
+      icon: '<img src="/img/svg/text-h-three.svg" class="img-svg" title="' + Global.get('editorHeadingThree') + '" alt="' + Global.get('editorHeadingThree') + '">',
+      title: Global.get('editorHeadingThree'),
       result: () => Pexego.exec('formatBlock', '<h3>')
     },
     paragraph: {
-      icon: '<img src="/img/svg/text-t.svg" class="img-svg" title="' + global.get('editorParagraph') + '" alt="' + global.get('editorParagraph') + '">',
-      title: global.get('editorParagraph'),
+      icon: '<img src="/img/svg/text-t.svg" class="img-svg" title="' + Global.get('editorParagraph') + '" alt="' + Global.get('editorParagraph') + '">',
+      title: Global.get('editorParagraph'),
       result: () => Pexego.exec('formatBlock', '<p>')
     },
     quote: {
-      icon: '<img src="/img/svg/quotes.svg" class="img-svg" title="' + global.get('editorQuote') + '" alt="' + global.get('editorQuote') + '">',
-      title: global.get('editorQuote'),
+      icon: '<img src="/img/svg/quotes.svg" class="img-svg" title="' + Global.get('editorQuote') + '" alt="' + Global.get('editorQuote') + '">',
+      title: Global.get('editorQuote'),
       result: () => Pexego.exec('formatBlock', '<blockquote>')
     },
     olist: {
-      icon: '<img src="/img/svg/list-numbers.svg" class="img-svg" title="' + global.get('editorOrderedList') + '" alt="' + global.get('editorOrderedList') + '">',
-      title: global.get('editorOrderedList'),
+      icon: '<img src="/img/svg/list-numbers.svg" class="img-svg" title="' + Global.get('editorOrderedList') + '" alt="' + Global.get('editorOrderedList') + '">',
+      title: Global.get('editorOrderedList'),
       result: () => Pexego.exec('insertOrderedList')
     },
     ulist: {
-      icon: '<img src="/img/svg/list-dashes.svg" class="img-svg" title="' + global.get('editorUnorderedList') + '" alt="' + global.get('editorUnorderedList') + '">',
-      title: global.get('editorUnorderedList'),
+      icon: '<img src="/img/svg/list-dashes.svg" class="img-svg" title="' + Global.get('editorUnorderedList') + '" alt="' + Global.get('editorUnorderedList') + '">',
+      title: Global.get('editorUnorderedList'),
       result: () => Pexego.exec('insertUnorderedList'),
     },
     code: {
-      icon: '<img src="/img/svg/list-dashes.svg" class="img-svg" title="' + global.get('editorCode') + '" alt="' + global.get('editorCode') + '">',
-      title: global.get('editorCode'),
+      icon: '<img src="/img/svg/list-dashes.svg" class="img-svg" title="' + Global.get('editorCode') + '" alt="' + Global.get('editorCode') + '">',
+      title: Global.get('editorCode'),
       result: () => Pexego.exec('formatBlock', '<pre>'),
     },
     line: {
       icon: '&#8213;',
-      title: global.get('editorInsertHorizontalLine'),
+      title: Global.get('editorInsertHorizontalLine'),
       result: () => Pexego.exec('insertHorizontalRule'),
     },
     link: {
-      icon: '<img src="/img/svg/link.svg" class="img-svg" title="' + global.get('editorInsertLink') + '" alt="' + global.get('editorInsertLink') + '">',
-      title: global.get('editorInsertLink'),
+      icon: '<img src="/img/svg/link.svg" class="img-svg" title="' + Global.get('editorInsertLink') + '" alt="' + Global.get('editorInsertLink') + '">',
+      title: Global.get('editorInsertLink'),
       result: () => {
         const url = window.prompt('Enter the link URL');
         if (url) Pexego.exec('createLink', url);
@@ -82,15 +82,15 @@ class Pexego {
     },
     image: {
       icon: '&#128247;',
-      title: global.get('editorInsertImage'),
+      title: Global.get('editorInsertImage'),
       result: () => {
         const url = window.prompt('Enter the image URL')
         if (url) Pexego.exec('insertImage', url)
       }
     },
     eraser: {
-      icon: '<img src="/img/svg/eraser.svg" class="img-svg" title="' + global.get('editorClearFormat') + '" alt="' + global.get('editorClearFormat') + '">',
-      title: global.get('editorClearFormat'),
+      icon: '<img src="/img/svg/eraser.svg" class="img-svg" title="' + Global.get('editorClearFormat') + '" alt="' + Global.get('editorClearFormat') + '">',
+      title: Global.get('editorClearFormat'),
       result: (e) => {
         Pexego.exec('removeFormat');
         document.getSelection().removeAllRanges();
@@ -98,8 +98,8 @@ class Pexego {
       },
     },
     close: {
-      icon: '<img src="/img/svg/x.svg" class="img-svg" title="' + global.get('globalClose') + '" alt="' + global.get('globalClose') + '">',
-      title: global.get('globalClose'),
+      icon: '<img src="/img/svg/x.svg" class="img-svg" title="' + Global.get('globalClose') + '" alt="' + Global.get('globalClose') + '">',
+      title: Global.get('globalClose'),
       result: (e) => {
         e.target.parentNode.parentNode.classList.add(Pexego.classes.displayNone);
       },
@@ -322,7 +322,7 @@ class Pexego {
   removeSection(e, sectionId) {
     e.preventDefault();
 
-    const delRes = confirm(global.get('feedbackDeleteSectionConfirmation'));
+    const delRes = confirm(Global.get('feedbackDeleteSectionConfirmation'));
     if (!delRes) {
       return;
     }
@@ -395,8 +395,8 @@ class Pexego {
 
     let trashImg = new Image();
     trashImg.className = 'img-svg img-svg-30';
-    trashImg.title = global.get('editorSectionRemove');
-    trashImg.alt = global.get('editorSectionRemove');
+    trashImg.title = Global.get('editorSectionRemove');
+    trashImg.alt = Global.get('editorSectionRemove');
     trashImg.src = '/img/svg/trash.svg';
 
     let deleteButton = document.createElement('a');
@@ -610,17 +610,18 @@ document.querySelectorAll('input[name="pexego-add-image-input"]').forEach(pi => 
       Uploader.uploadImage(
         file,
         pexegoSectionImage,
-        Pexego.classes.contentImage,
-        document.querySelector('#feedback'),
-        () => {pexegoSectionImage.appendChild(imageCaption)},
+        () => {
+          pexegoSectionImage.appendChild(imageCaption)
+        },
         () => {
           const pexegoContentDiv = document.querySelector('.' + Pexego.classes.container);
           const sectionWrapper = document.querySelector('#' + Pexego.classes.sectionWrapper + '-' + id);
           if (pexegoContentDiv && sectionWrapper) {
             pexegoContentDiv.removeChild(sectionWrapper);
           }
-        }
-      );
+        },
+        Pexego.classes.contentImage,
+      ).then();
     }
 
     PexegoEditor.addNewParagraph();

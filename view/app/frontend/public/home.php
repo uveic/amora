@@ -17,7 +17,7 @@ if ($responseData->feedback) {
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
 <?=$this->insert('partials/head', ['responseData' => $responseData])?>
-  <link href="/css/shared-base-200.css" rel="stylesheet" type="text/css">
+  <link href="/css/shared-base-201.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <?=$feedbackHtml?>
@@ -25,6 +25,6 @@ if ($responseData->feedback) {
 <?=$this->insert('partials/home/articles', ['responseData' => $responseData])?>
 <?=$this->insert('partials/home/blog', ['responseData' => $responseData])?>
 <?=$this->insert('partials/footer', ['responseData' => $responseData])?>
-  <script type="module" src="/js/main-003.js"></script>
+  <script type="module" src="/js/main-004.js"></script>
 </body>
 </html>

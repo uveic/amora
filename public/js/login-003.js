@@ -1,5 +1,5 @@
-import {xhr} from './module/xhr-002.js';
-import {global} from './module/localisation-003.js';
+import {Request} from './module/Request-002.js';
+import {Global} from './module/localisation-004.js';
 
 const formLogin = document.querySelector('form#form-login');
 const loginFailureFeedback = document.querySelector('#login-failure-message');
@@ -36,7 +36,7 @@ if (formLogin) {
       'languageIsoCode': siteLanguage
     };
 
-    xhr.post('/papi/login', JSON.stringify(data))
+    Request.post('/papi/login', JSON.stringify(data))
       .then((response) => window.location = response.redirect)
       .catch((error) => {
         password.value = '';
@@ -60,7 +60,7 @@ if (formRegister) {
       : 'en';
 
     if (password.value.length < 10) {
-      loginFailureFeedback.textContent = global.get('feedbackPasswordTooShort');
+      loginFailureFeedback.textContent = Global.get('feedbackPasswordTooShort');
       loginFailureFeedback.classList.remove('null');
       password.focus();
       return;
@@ -74,7 +74,7 @@ if (formRegister) {
       'timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 
-    xhr.post('/papi/register', JSON.stringify(data))
+    Request.post('/papi/register', JSON.stringify(data))
       .then((response) => {
         window.location = response.redirect;
       }).catch((error) => {
@@ -96,7 +96,7 @@ if (formLoginForgot) {
       'email': email.value
     };
 
-    xhr.post('/papi/login/forgot', JSON.stringify(data))
+    Request.post('/papi/login/forgot', JSON.stringify(data))
       .then(() => {
         document.querySelector('span#register-feedback-email').textContent = email.value;
         document.querySelector('div#register-form').classList.add('null');
@@ -123,14 +123,14 @@ if (formPasswordReset) {
     const verificationIdentifier = window.location.pathname.split('/').pop();
 
     if (password.value.length < 10) {
-      loginFailureFeedback.textContent = global.get('feedbackPasswordTooShort');
+      loginFailureFeedback.textContent = Global.get('feedbackPasswordTooShort');
       loginFailureFeedback.classList.remove('null');
       password.focus();
       return;
     }
 
     if (passwordConfirmation.value !== password.value) {
-      loginFailureFeedback.textContent = global.get('feedbackPasswordsDoNotMatch');
+      loginFailureFeedback.textContent = Global.get('feedbackPasswordsDoNotMatch');
       loginFailureFeedback.classList.remove('null');
       password.focus();
       return;
@@ -149,7 +149,7 @@ if (formPasswordReset) {
       'languageIsoCode': siteLanguage
     };
 
-    xhr.post(postUrl, JSON.stringify(data))
+    Request.post(postUrl, JSON.stringify(data))
       .then(() => {
         document.querySelector('div#password-reset-form').classList.add('null');
         document.querySelector('div#password-reset-success').classList.remove('null');
@@ -195,7 +195,7 @@ document.querySelectorAll('form#form-invite-request').forEach(f => {
       'languageIsoCode': siteLanguage
     };
 
-    xhr.post('/papi/invite-request', JSON.stringify(data))
+    Request.post('/papi/invite-request', JSON.stringify(data))
       .then(() => {
         document.querySelector('span#register-feedback-email').textContent = email.value;
         document.querySelector('div.div-request-form').classList.add('null');

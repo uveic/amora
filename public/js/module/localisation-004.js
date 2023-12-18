@@ -1,4 +1,4 @@
-class Global {
+class GlobalClass {
   DEFAULT_LANGUAGE_ISO_CODE = 'en';
 
   constructor() {
@@ -26,6 +26,7 @@ class Global {
       "globalUpdate": "Update",
       "globalUpdated": "Updated",
       "globalSaved": "Saved",
+      "globalSent": "Sent",
       "globalLoading": "Loading...",
       "globalAt": "at",
       "globalMinutes": "minutes",
@@ -89,6 +90,7 @@ class Global {
       "globalUpdate": "Actualizar",
       "globalUpdated": "Actualizado",
       "globalSaved": "Guardado",
+      "globalSent": "Enviado",
       "globalLoading": "Cargando...",
       "globalAt": "a las",
       "globalMinutes": "minutos",
@@ -152,6 +154,7 @@ class Global {
       "globalUpdate": "Actualizar",
       "globalUpdated": "Actualizado",
       "globalSaved": "Gardado",
+      "globalSent": "Enviado",
       "globalLoading": "Cargando...",
       "globalAt": "ás",
       "globalMinutes": "minutos",
@@ -251,4 +254,4 @@ class Global {
   }
 }
 
-export const global = new Global();
+export const Global = new GlobalClass();

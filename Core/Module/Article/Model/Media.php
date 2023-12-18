@@ -86,6 +86,7 @@ class Media
             'name' => $this->type === MediaType::Image
                 ? $this->filenameMedium
                 : $this->filenameOriginal,
+            'sourceName' => $this->filenameSource,
             'createdAt' => $this->createdAt->format('c'),
             'userId' => $this->user?->id,
             'userName' => $this->user?->getNameOrEmail(),

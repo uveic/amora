@@ -1,7 +1,5 @@
-import {xhr} from './module/xhr-002.js';
-import {global} from './module/localisation-003.js';
-
-const feedbackDiv = document.querySelector('#feedback');
+import {Request} from './module/Request-002.js';
+import {Global} from './module/localisation-004.js';
 
 document.querySelectorAll('a.verified-link').forEach(el => {
   el.addEventListener('click', e => {
@@ -9,7 +7,8 @@ document.querySelectorAll('a.verified-link').forEach(el => {
 
     const userId = el.dataset.userId;
 
-    xhr.post('/api/user/' + userId + '/verification-email', null, feedbackDiv, 'Enviado');
+    Request.post('/api/user/' + userId + '/verification-email', null, Global.get('globalSent'))
+      .then();
   });
 });
 
@@ -36,12 +35,11 @@ document.querySelectorAll('form#form-user-account-update').forEach(f => {
       repeatPassword: repeatPassword ? repeatPassword.value : null
     };
 
-    xhr.put(
+    Request.put(
       '/api/user/' + userId.value,
       JSON.stringify(payload),
-      feedbackDiv,
-      global.get('feedbackAccountUpdated')
-    );
+      Global.get('feedbackAccountUpdated')
+    ).then();
   });
 });
 

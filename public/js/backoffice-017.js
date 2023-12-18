@@ -1,11 +1,9 @@
-import {Util} from './module/Util-007.js';
-import {xhr} from './module/xhr-002.js';
-import {global} from "./module/localisation-003.js";
-import {Uploader} from "./module/Uploader-008.js";
+import {Util} from './module/Util-008.js';
+import {Request} from './module/Request-002.js';
+import {Global} from "./module/localisation-004.js";
+import {Uploader} from "./module/Uploader-009.js";
 
 let globalTags = [];
-
-const feedbackDiv = document.querySelector('#feedback');
 
 const selectMediaAction = (e) => {
   e.preventDefault();
@@ -38,7 +36,7 @@ const selectMediaAction = (e) => {
   loading.classList.remove('null');
   const typeId = button.dataset.typeId ? Number.parseInt(button.dataset.typeId) : '';
 
-  xhr.get('/api/file?typeId=' + typeId + '&qty=' + qty)
+  Request.get('/api/file?typeId=' + typeId + '&qty=' + qty)
     .then(response => {
       loading.classList.add('null');
       imagesContainer.classList.remove('null');
@@ -100,7 +98,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
 
       document.querySelectorAll('#side-options').forEach(i => i.classList.add('null'));
       document.querySelectorAll('.article-save-button').forEach(b => {
-        b.value = global.get('globalUpdate');
+        b.value = Global.get('globalUpdate');
       });
       document.querySelectorAll('.article-preview').forEach(b => {
         b.href = articlePublicPath;
@@ -211,11 +209,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     const content = getContentHtmlAndSections();
 
     if (!content.contentHtml) {
-      feedbackDiv.textContent = global.get('feedbackSaving');
-      feedbackDiv.classList.remove('feedback-error');
-      feedbackDiv.classList.add('feedback-success');
-      feedbackDiv.classList.remove('null');
-      setTimeout(() => {feedbackDiv.classList.add('null')}, 5000);
+      Util.logError(new Error(Global.get('feedbackSaving')));
       return;
     }
 
@@ -237,10 +231,10 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     const articleIdEl = document.querySelector('input[name="articleId"]');
     const url = '/back/article';
     if (articleIdEl && articleIdEl.value) {
-      xhr.put(url + '/' + articleIdEl.value, payload, feedbackDiv, global.get('globalUpdated'))
+      Request.put(url + '/' + articleIdEl.value, payload, Global.get('globalUpdated'))
         .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath));
     } else {
-      xhr.post(url, payload, feedbackDiv, global.get('globalSaved'))
+      Request.post(url, payload, Global.get('globalSaved'))
         .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath));
     }
   });
@@ -250,14 +244,14 @@ const handleCopyLink = (ev, href) => {
   ev.preventDefault();
 
   if (!navigator.clipboard) {
-    Util.logError(new Error(global.get('feedbackCopyLinkError')));
+    Util.logError(new Error(Global.get('feedbackCopyLinkError')));
     return;
   }
 
   navigator.clipboard.writeText(href).then(() => {
-    Util.notifyUser(global.get('feedbackCopyLinkSuccess'));
+    Util.notifyUser(Global.get('feedbackCopyLinkSuccess'));
   })
-    .catch(error => Util.logError(error, global.get('feedbackCopyLinkError')));
+    .catch(error => Util.logError(error, Global.get('feedbackCopyLinkError')));
 };
 
 const imageLoaded = (imageEl) => {
@@ -310,7 +304,7 @@ const displayImage = (image) => {
   let takenAt = '';
   if (image.exif && image.exif.date) {
     takenAt += '<img src="/img/svg/calendar-white.svg" class="img-svg" alt="Taken on">'
-    + global.formatDate(new Date(image.exif.date), true, true, true, true, true);
+    + Global.formatDate(new Date(image.exif.date), true, true, true, true, true);
   }
 
   let camera = '';
@@ -350,7 +344,7 @@ const displayImage = (image) => {
   modal.querySelector('.image-caption').textContent = image.caption;
   modal.querySelector('.image-meta').innerHTML =
     '<div><img src="/img/svg/upload-simple-white.svg" class="img-svg" alt="Upload">'
-    + global.formatDate(new Date(image.createdAt), true, true, true, true, true)
+    + Global.formatDate(new Date(image.createdAt), true, true, true, true, true)
     + '</div>'
     + (image.userName ? '<div><img src="/img/svg/user-white.svg" class="img-svg" alt="User">' + image.userName + '</div>': '')
     + '<div class="image-path">'
@@ -376,7 +370,7 @@ const displayImage = (image) => {
     imageDeleteEl.classList.add('null');
 
     const appearsTitle = document.createElement('h3');
-    appearsTitle.textContent = global.get('globalAppearsOn') + ':';
+    appearsTitle.textContent = Global.get('globalAppearsOn') + ':';
     appearsOnContainer.appendChild(appearsTitle);
 
     image.appearsOn.forEach(ao => {
@@ -386,7 +380,7 @@ const displayImage = (image) => {
       appearsLink.textContent = ao.title;
       const appearsInfo = document.createElement('span');
       appearsInfo.innerHTML = '<img src="/img/svg/calendar-white.svg" class="img-svg m-r-025" alt="Calendar">'
-        + global.formatDate(new Date(ao.publishedOn), false, false, true, false, false);
+        + Global.formatDate(new Date(ao.publishedOn), false, false, true, false, false);
       appearsLink.appendChild(appearsInfo);
       appearsOnContainer.appendChild(appearsLink);
     });
@@ -433,7 +427,7 @@ const displayImagePopup = (e) => {
   const apiUrl = next
     ? '/api/file/' + mediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty
     : '/api/file/' + mediaId
-  xhr.get(apiUrl)
+  Request.get(apiUrl)
     .then(response => {
       next === true
         ? displayImage(response.files[0] ?? null)
@@ -487,7 +481,7 @@ const articleSelectMainImage = (e) => {
     imageContainer.appendChild(sourceImgEl);
   }
 
-  document.querySelector('.select-media-action span').textContent = global.get('globalModify');
+  document.querySelector('.select-media-action span').textContent = Global.get('globalModify');
   document.querySelector('.select-media-modal').classList.add('null');
   document.querySelector('.article-main-image-wrapper').scrollIntoView({behavior: 'smooth', block: 'start' });
 };
@@ -515,7 +509,7 @@ const albumSelectMainMedia = (e) => {
     imageContainer.appendChild(newImage);
   }
 
-  e.currentTarget.textContent = global.get('globalModify');
+  e.currentTarget.textContent = Global.get('globalModify');
   document.querySelector('.select-media-modal').classList.add('null');
   imageContainer.scrollIntoView({behavior: 'smooth', block: 'start' });
 };
@@ -543,7 +537,7 @@ const albumSectionAddMedia = (e) => {
   document.querySelector('.select-media-modal').classList.add('null');
   actionButton.scrollIntoView({behavior: 'smooth', block: 'center' });
 
-  xhr.post('/back/album-section/' + albumSectionId + '/media', JSON.stringify(payload))
+  Request.post('/back/album-section/' + albumSectionId + '/media', JSON.stringify(payload))
     .then(response => {
       if (response.html) {
         actionButton.insertAdjacentHTML('beforebegin', response.html);
@@ -673,7 +667,7 @@ const updateAlbumSection = (e) => {
     albumSectionIdSequenceTo: targetAlbumSectionId,
   };
 
-  xhr.put('/back/album-section/' + albumSectionId, JSON.stringify(payload))
+  Request.put('/back/album-section/' + albumSectionId, JSON.stringify(payload))
     .then(() => {
       if (mainMedia && mainMedia.classList.contains('null')) {
         mainMedia.parentElement.removeChild(mainMedia);
@@ -755,8 +749,8 @@ const cancelAlbumSectionEdit = (e) => {
       : mainMedia.classList.add('null');
 
     mainMedia.classList.contains('null')
-      ? container.querySelector('.album-section-main-media-js span').textContent = global.get('globalSelectImage')
-      : container.querySelector('.album-section-main-media-js span').textContent = global.get('globalModify');
+      ? container.querySelector('.album-section-main-media-js span').textContent = Global.get('globalSelectImage')
+      : container.querySelector('.album-section-main-media-js span').textContent = Global.get('globalModify');
   }
 
   const sequenceEl = container.querySelector('.section-sequence');
@@ -791,7 +785,7 @@ const albumSectionSelectMainMedia = (e) => {
     container.insertBefore(newImage, container.firstChild);
   }
 
-  container.querySelector('.album-section-main-media-js span').textContent = global.get('globalModify');
+  container.querySelector('.album-section-main-media-js span').textContent = Global.get('globalModify');
   container.querySelector('.album-section-main-media-delete-js').classList.remove('null');
   document.querySelector('.select-media-modal').classList.add('null');
 };
@@ -799,7 +793,7 @@ const albumSectionSelectMainMedia = (e) => {
 const albumSectionDeleteMainMedia = (e) => {
   e.preventDefault();
 
-  const delRes = confirm(global.get('feedbackDeleteGeneric'));
+  const delRes = confirm(Global.get('feedbackDeleteGeneric'));
   if (!delRes) {
     return;
   }
@@ -809,13 +803,13 @@ const albumSectionDeleteMainMedia = (e) => {
 
   container.querySelector('.album-section-main-media').classList.add('null');
   container.querySelector('.album-section-main-media-delete-js').classList.add('null');
-  container.querySelector('.album-section-main-media-js span').textContent = global.get('globalSelectImage');
+  container.querySelector('.album-section-main-media-js span').textContent = Global.get('globalSelectImage');
 };
 
 const albumSectionDeleteMedia = (e) => {
   e.preventDefault();
 
-  const delRes = confirm(global.get('feedbackDeleteGeneric'));
+  const delRes = confirm(Global.get('feedbackDeleteGeneric'));
   if (!delRes) {
     return;
   }
@@ -829,7 +823,7 @@ const albumSectionDeleteMedia = (e) => {
 
   targetMediaContainer.parentElement.parentElement.classList.add('null');
 
-  xhr.delete('/back/album-section-media/' + albumSectionMediaId, null, feedbackDiv)
+  Request.delete('/back/album-section-media/' + albumSectionMediaId)
     .catch(error => {
       targetMediaContainer.parentElement.parentElement.classList.remove('null');
       Util.logError(error);
@@ -999,14 +993,14 @@ document.querySelectorAll('.image-next-action, .image-previous-action, .image-ra
 const deleteImage = async function (e, mediaId) {
   e.preventDefault();
 
-  const delRes = confirm(global.get('feedbackDeleteImageConfirmation'));
+  const delRes = confirm(Global.get('feedbackDeleteImageConfirmation'));
   if (!delRes) {
     return;
   }
 
-  xhr.delete('/api/file/' + mediaId, null, feedbackDiv)
+  Request.delete('/api/file/' + mediaId)
     .then(() => {
-      document.querySelector(".image-item[data-media-id='" + mediaId + "']").classList.add('null');
+      document.querySelector(".image-item[data-media-id='" + mediaId + "']").parentElement.classList.add('null');
       document.querySelector('.image-modal').classList.add('null');
     });
 }
@@ -1024,23 +1018,19 @@ document.querySelectorAll('input#images').forEach(im => {
 
     const container = document.querySelector('#images-list');
 
-    for (let i = 0; i < im.files.length; i++) {
-      let file = im.files[i];
-
-      Uploader.uploadImage(
-        file,
-        container,
-        'image-item',
-        feedbackDiv,
-        (response) => {
-          if (response && response.file.id) {
-            const newImage = container.querySelector('.image-item[data-media-id="' + response.file.id + '"]');
-            newImage.addEventListener('click', displayImagePopup);
-            newImage.mediaId = response.file.id;
-          }
-        },
-      );
-    }
+    Uploader.uploadMediaSequence(
+      im.files,
+      container,
+      (response) => {
+        if (response && response.file.id) {
+          const newMediaEl = container.querySelector('.image-item[data-media-id="' + response.file.id + '"]');
+          newMediaEl.addEventListener('click', displayImagePopup);
+          newMediaEl.mediaId = response.file.id;
+        }
+      },
+    )
+      .then()
+      .catch(error => Util.logError(error));
   });
 });
 
@@ -1063,7 +1053,6 @@ document.querySelectorAll('input#media').forEach(im => {
         file,
         newMediaContainer,
         '',
-        feedbackDiv,
         (response) => {
           if (response && response.file.id) {
             newMediaContainer.dataset.mediaId = response.file.id;
@@ -1077,9 +1066,9 @@ document.querySelectorAll('input#media').forEach(im => {
             mediaName.className = 'media-name';
             const mediaInfo = document.createElement('span');
             mediaInfo.className = 'media-info';
-            mediaInfo.textContent = global.get('globalUploadedOn') + ' '
-              + global.formatDate(new Date(response.file.createdAt), true, true, true, true, true)
-              + ' ' + global.get('globalBy') + ' ' + response.file.userName + '.';
+            mediaInfo.textContent = Global.get('globalUploadedOn') + ' '
+              + Global.formatDate(new Date(response.file.createdAt), true, true, true, true, true)
+              + ' ' + Global.get('globalBy') + ' ' + response.file.userName + '.';
 
             newMediaContainer.appendChild(mediaId);
             newMediaContainer.innerHTML += '<img src="/img/svg/file-pdf.svg" class="img-svg img-svg-40 m-r-05" alt="PDF">';
@@ -1119,14 +1108,14 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
     });
 
     if (userId) {
-      xhr.put('/back/user/' + userId, payload, feedbackDiv)
+      Request.put('/back/user/' + userId, payload)
         .then((response) => {
           if (response.redirect) {
             window.location = response.redirect;
           }
         });
     } else {
-      xhr.post('/back/user', payload, feedbackDiv)
+      Request.post('/back/user', payload)
         .then((response) => {
           if (response.redirect) {
             window.location = response.redirect;
@@ -1197,7 +1186,7 @@ document.querySelectorAll('a.article-settings').forEach(el => {
 
     if (!globalTags.length) {
       const searchResultEl = document.querySelector('#search-results-tags');
-      xhr.get('/back/tag')
+      Request.get('/back/tag')
         .then(response => {
           globalTags = response.tags;
           globalTags.forEach(tag => {
@@ -1214,13 +1203,13 @@ document.querySelectorAll('a.article-settings').forEach(el => {
 
     const articleId = document.querySelector('input[name="articleId"]').value;
     if (articleId) {
-      xhr.get('/back/article/' + articleId + '/previous-path')
+      Request.get('/back/article/' + articleId + '/previous-path')
         .then(response => {
           response.paths.forEach(p => {
             const newPathEl = document.createElement('div');
             newPathEl.dataset.pathId = p.id;
             newPathEl.innerHTML = '<span>' + p.path + '</span><span>'
-              + global.formatDate(new Date(p.createdAt), false) + '</span>';
+              + Global.formatDate(new Date(p.createdAt), false) + '</span>';
             newPathEl.className = 'article-edit-previous-path';
             pathContainer.appendChild(newPathEl);
           });
@@ -1260,8 +1249,8 @@ const handleTagSearchResultClick = (tagId, tagName, tagInnerHtml, tagElement = n
   const generateNewTagHtml = function(id, name, html) {
     let imgClose = new Image();
     imgClose.className = 'img-svg m-l-05';
-    imgClose.title = global.get('globalRemove');
-    imgClose.alt = global.get('globalRemove');
+    imgClose.title = Global.get('globalRemove');
+    imgClose.alt = Global.get('globalRemove');
     imgClose.src = '/img/svg/x.svg';
     imgClose.addEventListener('click', (e) => handleRemoveArticleTag(e));
 
@@ -1298,7 +1287,7 @@ const handleTagSearchResultClick = (tagId, tagName, tagInnerHtml, tagElement = n
     return;
   }
 
-  xhr.post('/back/tag', JSON.stringify({name: tagName}))
+  Request.post('/back/tag', JSON.stringify({name: tagName}))
     .then(res => {
       if (tagElement) {
         tagElement.parentNode.removeChild(tagElement);
@@ -1483,7 +1472,7 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
     const eventListenerAction = lm.dataset.eventListenerAction;
     const targetContainerId = lm.dataset.targetContainerId ?? null;
 
-    xhr.get('/api/file/' + lastImageId + '/next?direction=' + dir + '&typeId=' + typeId + '&qty=' + qty)
+    Request.get('/api/file/' + lastImageId + '/next?direction=' + dir + '&typeId=' + typeId + '&qty=' + qty)
       .then(response => {
         const container = document.querySelector('#images-list');
 
@@ -1507,23 +1496,18 @@ document.querySelectorAll('input[name="select-media-action-upload"]').forEach(im
     e.preventDefault();
 
     const container = document.querySelector('#images-list');
-    const feedbackDiv = document.querySelector('#feedback');
     const eventListenerAction = im.dataset.eventListenerAction;
     const targetContainerId = im.dataset.targetContainerId;
 
-    for (let i = 0; i < im.files.length; i++) {
-      let file = im.files[i];
-
-      Uploader.uploadImage(
-        file,
-        container,
-        'image-item',
-        feedbackDiv,
-        (response) => {
-          displayImageFromApiCall(container, [response.file], eventListenerAction, targetContainerId);
-        },
-      );
-    }
+    Uploader.uploadMediaSequence(
+      im.files,
+      container,
+      (response) => {
+        displayImageFromApiCall(container, [response.file], eventListenerAction, targetContainerId);
+      },
+    )
+      .then()
+      .catch(error => Util.logError(error));
   });
 });
 
@@ -1533,7 +1517,7 @@ document.querySelectorAll('.editor-title').forEach(t => {
 
     t.classList.remove('editor-placeholder');
 
-    if (content === global.get('editorTitlePlaceholder')) {
+    if (content === Global.get('editorTitlePlaceholder')) {
       t.innerHTML = '';
     }
   });
@@ -1542,7 +1526,7 @@ document.querySelectorAll('.editor-title').forEach(t => {
     const content = t.textContent.trim();
 
     if (!content.length) {
-      t.innerHTML = global.get('editorTitlePlaceholder');
+      t.innerHTML = Global.get('editorTitlePlaceholder');
       t.classList.add('editor-placeholder');
     }
   });
@@ -1554,7 +1538,7 @@ document.querySelectorAll('.editor-subtitle').forEach(t => {
 
     t.classList.remove('editor-placeholder');
 
-    if (content === global.get('editorSubtitlePlaceholder')) {
+    if (content === Global.get('editorSubtitlePlaceholder')) {
       t.innerHTML = '';
     }
   });
@@ -1563,7 +1547,7 @@ document.querySelectorAll('.editor-subtitle').forEach(t => {
     const content = t.textContent.trim();
 
     if (!content.length) {
-      t.innerHTML = global.get('editorSubtitlePlaceholder');
+      t.innerHTML = Global.get('editorSubtitlePlaceholder');
       t.classList.add('editor-placeholder');
     }
   });
@@ -1596,10 +1580,10 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
 
     const payload = JSON.stringify({
       titleHtml: titleHtml.length
-        ? (titleHtml === global.get('editorTitlePlaceholder') ? null : titleHtml)
+        ? (titleHtml === Global.get('editorTitlePlaceholder') ? null : titleHtml)
         : null,
       subtitleHtml: subtitleHtml.length
-        ? (subtitleHtml === global.get('editorSubtitlePlaceholder') ? null : subtitleHtml)
+        ? (subtitleHtml === Global.get('editorSubtitlePlaceholder') ? null : subtitleHtml)
         : null,
       contentHtml: contentHtml,
       mainImageId: mainImageEl && mainImageEl.dataset.mediaId
@@ -1607,7 +1591,7 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
         : null,
     });
 
-    xhr.put('/back/content/' + contentId, payload, feedbackDiv)
+    Request.put('/back/content/' + contentId, payload)
       .then((response) => window.location = response.redirect);
   });
 });
@@ -1627,7 +1611,7 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
   bu.addEventListener('click', (e) => {
     e.preventDefault();
 
-    const videoUrl = window.prompt(global.get('editorVideoUrlTitle'));
+    const videoUrl = window.prompt(Global.get('editorVideoUrlTitle'));
     if (videoUrl) {
       const ytVideoId = Util.getYoutubeVideoIdFromUrl(videoUrl);
       if (!ytVideoId) {
@@ -1710,14 +1694,14 @@ document.querySelectorAll('#form-album-edit').forEach(f => {
     });
 
     if (albumId) {
-      xhr.put('/back/album/' + albumId, payload, feedbackDiv)
+      Request.put('/back/album/' + albumId, payload)
         .then((response) => {
           if (response.redirect) {
             window.location = response.redirect;
           }
         });
     } else {
-      xhr.post('/back/album', payload, feedbackDiv)
+      Request.post('/back/album', payload)
         .then((response) => {
           if (response.redirect) {
             window.location = response.redirect;
@@ -1734,7 +1718,7 @@ document.querySelectorAll('.album-status-dd-option').forEach(op => {
     const albumId = Number.parseInt(document.querySelector('input[name="albumId"]').value);
     const statusId = Number.parseInt(op.dataset.value);
 
-    xhr.put('/back/album/' + albumId + '/status/' + statusId, '')
+    Request.put('/back/album/' + albumId + '/status/' + statusId, '')
       .then((response) => {
         handleDropdownOptionClick(op, 'album-status');
 
@@ -1760,7 +1744,7 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
     loadingContainer.appendChild(loadingAnimation);
     container.appendChild(loadingContainer);
 
-    xhr.post('/back/album/' + albumId + '/section', '')
+    Request.post('/back/album/' + albumId + '/section', '')
       .then(response => {
         container.insertAdjacentHTML('beforeend', response.html);
         const sectionContainer = container.querySelector('.album-section-item[data-album-section-id="' + response.newSectionId + '"]');
@@ -1790,7 +1774,7 @@ document.querySelectorAll('#album-add-section-form-js').forEach(f => {
       contentHtml: f.querySelector('.medium-editor-content').innerHTML.trim(),
     };
 
-    xhr.post('/back/album/' + albumId + '/section', JSON.stringify(payload))
+    Request.post('/back/album/' + albumId + '/section', JSON.stringify(payload))
       .then(response => {
         const modal = document.querySelector('.album-add-section-modal-js');
         const sectionContainer = document.querySelector('.album-sections-wrapper');
@@ -1868,7 +1852,7 @@ document.querySelectorAll('form#album-media-caption-edit-form-js').forEach(f => 
       captionHtml: captionHtml,
     });
 
-    xhr.put('/back/album-section-media/' + albumSectionMediaId, payload, feedbackDiv)
+    Request.put('/back/album-section-media/' + albumSectionMediaId, payload)
       .catch(error => {
         targetCaptionHtmlEl.textContent = captionHtmlBefore;
         Util.logError(error);
@@ -1959,7 +1943,7 @@ const handleAlbumMediaDrop = (ev) => {
     countDelta: countDelta,
   };
 
-  xhr.put('/back/album-section/' + albumSectionId + '/sequence', JSON.stringify(data))
+  Request.put('/back/album-section/' + albumSectionId + '/sequence', JSON.stringify(data))
     .then(() => {
       draggedEl.dataset.sequence = droppedSequence.toString();
 

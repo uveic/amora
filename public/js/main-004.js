@@ -1,5 +1,5 @@
-import {xhr} from './module/xhr-002.js';
-import {global} from './module/localisation-003.js';
+import {Request} from './module/Request-002.js';
+import {Global} from './module/localisation-004.js';
 
 document.querySelectorAll('.blog-posts-load-more').forEach(el => {
   el.addEventListener('click', e => {
@@ -11,7 +11,7 @@ document.querySelectorAll('.blog-posts-load-more').forEach(el => {
     const offset = Number.parseInt(el.dataset.offset);
     const itemsPerPage = Number.parseInt(el.dataset.itemsPerPage);
 
-    xhr.get('/papi/blog/post?offset=' + offset + '&itemsPerPage=' + itemsPerPage)
+    Request.get('/papi/blog/post?offset=' + offset + '&itemsPerPage=' + itemsPerPage)
       .then(response => {
         const postsParent = document.querySelector('div.blog-items');
         const years = [];
@@ -38,7 +38,7 @@ document.querySelectorAll('.blog-posts-load-more').forEach(el => {
 
           const spanBlogInfo = document.createElement('span');
           spanBlogInfo.className = 'blog-info';
-          spanBlogInfo.textContent = global.formatDate(publishedOn, false, true, false);
+          spanBlogInfo.textContent = Global.formatDate(publishedOn, false, true, false);
 
           const postItem = document.createElement('div');
           postItem.className = 'blog-item';
