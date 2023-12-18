@@ -37,8 +37,9 @@ class UploaderClass {
 
     return new Promise((resolve, reject) => {
       const figureContainer = document.querySelector('#' + Util.cleanString(media.name));
-      const progressEl = UploaderClass.buildProgressElement();
-      figureContainer.appendChild(progressEl);
+      const progressBarContainer = UploaderClass.buildProgressElement();
+      const progressEl = progressBarContainer.querySelector('progress');
+      figureContainer.appendChild(progressBarContainer);
       figureContainer.removeChild(figureContainer.querySelector('.loader-container'));
 
       formData.append('files[]', media);
@@ -53,8 +54,8 @@ class UploaderClass {
       }
 
       xhr.upload.addEventListener('progress', (e) => {
-        progressEl.setAttribute('value', (e.loaded / e.total * 100).toString());
-      })
+        progressEl.value = Math.round((e.loaded / e.total) * 100);
+      });
 
       xhr.open('POST', apiUploadEndpoint);
       xhr.send(formData);
