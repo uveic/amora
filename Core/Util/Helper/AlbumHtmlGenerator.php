@@ -123,7 +123,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    <div class="section-subtitle-html" data-before="' . $section->subtitleHtml . '">' . ($section->subtitleHtml ?: '-') . '</div>';
         $output[] = $indentation . '    <div class="section-content-html" data-before="' . $section->contentHtml . '">' . ($section->contentHtml ?: '-') . '</div>';
 
-        $output[] = $indentation . '    <div id="album-section-main-media-' . $section->id . '" class="main-image-container main-image-container-full m-t-1" data-before="' . $section->mainMedia?->id . '">';
+        $output[] = $indentation . '    <div id="album-section-main-media-' . $section->id . '" class="main-image-container" data-before="' . $section->mainMedia?->id . '">';
         if ($section->mainMedia) {
             $output[] = $indentation . '      <img class="album-section-main-media" data-media-id="' . $section->mainMedia->id . '" src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '">';
         }

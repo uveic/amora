@@ -1111,7 +1111,7 @@ h2.page-content-subtitle {
 .album-sections-wrapper {
   display: flex;
   flex-flow: row wrap;
-  gap: 1rem;
+  gap: 3rem;
   align-items: flex-start;
   justify-content: flex-start;
 }
@@ -1127,15 +1127,22 @@ h2.page-content-subtitle {
 
 .album-section-item {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column wrap;
   gap: 0.5rem;
-  border-bottom: 1px dotted var(--color-text);
-  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-light-2);
+  padding: 0 0 3rem;
   width: 100%;
 }
 
+.album-section-item:first-of-type {
+  margin-top: 1rem;
+}
+
+.album-section-item:last-of-type {
+  border: none;
+}
+
 .album-section-item-content {
-  width: 25%;
   flex-grow: 1;
 }
 
@@ -1153,8 +1160,8 @@ h2.page-content-subtitle {
 }
 
 .album-section-item-media-wrapper {
+  margin-top: 1rem;
   flex-grow: 2;
-  width: 50%;
 }
 
 .album-section-item-media-header {
@@ -1405,7 +1412,16 @@ h2.page-content-subtitle {
   }
 
   .album-section-item {
-    gap: 1rem;
+    flex-flow: row wrap;
+  }
+
+  .album-section-item-content {
+    width: 25%;
+  }
+
+  .album-section-item-media-wrapper {
+    margin-top: 0;
+    width: 50%;
   }
 }
 
@@ -1450,6 +1466,15 @@ h2.page-content-subtitle {
   }
 
   .album-section-item {
-    gap: 1rem;
+    flex-flow: row wrap;
+  }
+
+  .album-section-item-content {
+    width: 25%;
+  }
+
+  .album-section-item-media-wrapper {
+    margin-top: 0;
+    width: 50%;
   }
 }
