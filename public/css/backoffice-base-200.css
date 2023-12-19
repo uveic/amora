@@ -311,7 +311,7 @@ h2.page-content-subtitle {
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   gap: 0.5rem;
   border-bottom: 1px solid var(--color-light-3);
   background-color: var(--color-light-0);
@@ -330,6 +330,8 @@ h2.page-content-subtitle {
   flex-grow: 1;
   flex-shrink: 1;
   margin: 0;
+  line-height: 1;
+  font-size: 1rem;
 }
 
 .page-header .links {
@@ -337,7 +339,7 @@ h2.page-content-subtitle {
   flex-shrink: 1;
   text-align: right;
   display: flex;
-  gap: 1.25rem;
+  gap: 1rem;
   align-items: center;
   padding: 0;
 }
@@ -535,7 +537,7 @@ h2.page-content-subtitle {
   gap: 1rem;
   padding: 1rem 4rem 1rem 1rem;
   position: fixed;
-  z-index: 998;
+  z-index: 20;
   background-color: var(--color-text);
   top: 0;
   left: 0;
@@ -553,7 +555,7 @@ h2.page-content-subtitle {
 
 #images-list .image-container {
   height: auto;
-  width: 200px;
+  width: 30%;
   min-width: 100px;
   max-width: 400px;
   flex-grow: 1;
@@ -956,7 +958,7 @@ h2.page-content-subtitle {
 .form-two-columns-wrapper {
   display: flex;
   flex-flow: row wrap;
-  gap: 1rem;
+  gap: 0.5rem;
   align-content: stretch;
   justify-content: center;
 }
@@ -965,7 +967,7 @@ h2.page-content-subtitle {
   width: 100%;
   flex-grow: 1;
 }
-/* Form two columns starts here */
+/* Form two columns ends here */
 
 .main-image-button,
 .main-image-button:hover,
@@ -1011,7 +1013,7 @@ h2.page-content-subtitle {
 }
 
 .media-caption-html {
-  width: 100%;
+  width: 70%;
 }
 
 .album-wrapper {
@@ -1120,16 +1122,15 @@ h2.page-content-subtitle {
   color: var(--color-text-light);
   max-width: 60px;
   margin: 0 !important;
-  padding: 0.5rem !important;
   text-align: center;
 }
 
 .album-section-item {
   display: flex;
   flex-flow: row wrap;
-  gap: 1rem;
-  border: 1px solid var(--color-light-2);
-  padding: 0.5rem;
+  gap: 0.5rem;
+  border-bottom: 1px dotted var(--color-text);
+  padding: 1rem 0;
   width: 100%;
 }
 
@@ -1250,8 +1251,7 @@ h2.page-content-subtitle {
 }
 
 .album-media-edit-container {
-  width: auto;
-  max-width: 200px;
+  width: 27%;
 }
 
 .album-media-loading {
@@ -1272,7 +1272,7 @@ h2.page-content-subtitle {
   gap: 0.5rem;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
 }
 
 .album-section-button-container-js {
@@ -1336,7 +1336,7 @@ h2.page-content-subtitle {
   right: 0;
   left: 0;
   bottom: 0;
-  z-index: 9999;
+  z-index: 99;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1371,6 +1371,14 @@ h2.page-content-subtitle {
 .text-small { font-size: 0.8rem; }
 
 @media screen and (min-width: 800px) {
+  .page-header {
+    padding: 0.5rem 1rem;
+  }
+
+  .page-header h3 {
+    font-size: revert;
+  }
+
   .slug-modal .modal-inner,
   .web-content-modal .modal-inner,
   .tag-modal .modal-inner {
@@ -1391,9 +1399,25 @@ h2.page-content-subtitle {
   .media-caption-html {
     width: 500px !important;
   }
+
+  #images-list .image-container {
+    width: 200px;
+  }
+
+  .album-section-item {
+    gap: 1rem;
+  }
 }
 
 @media screen and (min-width: 1000px) {
+  .page-header {
+    padding: 0.5rem 1rem;
+  }
+
+  .page-header h3 {
+    font-size: revert;
+  }
+
   .activity-wrapper {
     max-width: 35%;
     flex-grow: 1;
@@ -1410,9 +1434,22 @@ h2.page-content-subtitle {
   .form-content-wrapper {
     width: 62%;
     flex-grow: 3;
+    gap: 1rem;
+  }
+
+  .form-two-columns-wrapper {
+    gap: 1rem;
   }
 
   .form-two-columns-wrapper > * {
     width: 40%;
+  }
+
+  #images-list .image-container {
+    width: 200px;
+  }
+
+  .album-section-item {
+    gap: 1rem;
   }
 }
