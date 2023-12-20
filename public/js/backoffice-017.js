@@ -840,7 +840,7 @@ const albumSectionEditMediaCaption = (e) => {
   const mediaContainer = modal.querySelector('.album-media-edit-container');
   mediaContainer.querySelectorAll('img').forEach(i => mediaContainer.removeChild(i));
   modal.querySelector('input[name="albumSectionMediaId"]').value = albumSectionMediaId;
-  const existingMedia = e.currentTarget.parentElement.querySelector('img[data-media-id="' + mediaId + '"]');
+  const existingMedia = e.currentTarget.parentElement.parentElement.querySelector('img[data-media-id="' + mediaId + '"]');
   const sectionContentContainer = document.querySelector(
     '.album-section-item[data-album-section-id="' + albumSectionId + '"]'
   );
