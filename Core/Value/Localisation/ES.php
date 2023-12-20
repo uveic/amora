@@ -146,6 +146,7 @@ return [
     'globalSaving' => 'Guardando...',
     'globalSending' => 'Enviando...',
     'globalMore' => 'Más...',
+    'globalSequence' => 'Posición',
 
     'globalUploadImage' => 'Subir imagen(es)',
     'globalUploadMedia' => 'Subir archivo(s)',

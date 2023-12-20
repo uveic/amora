@@ -456,6 +456,7 @@ h2.page-content-subtitle {
   height: auto;
   overflow: clip;
   position: relative;
+  margin: 1rem 0;
 }
 
 .main-image-container-full {
@@ -1112,18 +1113,24 @@ h2.page-content-subtitle {
 .album-sections-wrapper {
   display: flex;
   flex-flow: row wrap;
-  gap: 3rem;
+  gap: 2.5rem;
   align-items: flex-start;
   justify-content: flex-start;
 }
 
 .section-sequence {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-family: monospace;
   color: var(--color-text-light);
   max-width: 60px;
-  margin: 0 !important;
-  text-align: center;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+.section-label {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  color: var(--color-light-3);
 }
 
 .album-section-item {
@@ -1131,7 +1138,7 @@ h2.page-content-subtitle {
   flex-flow: column wrap;
   gap: 0.5rem;
   border-bottom: 1px solid var(--color-light-2);
-  padding: 0 0 3rem;
+  padding: 0 0 2.5rem;
   width: 100%;
 }
 
@@ -1307,15 +1314,11 @@ h2.page-content-subtitle {
 }
 
 .album-content-editable {
-  width: 100%;
   border: 1px solid var(--color-input-border);
   padding: calc(0.5rem - 1px) 0.75rem;
-  font-family: var(--font-paragraph);
-  font-size: 1rem;
   margin: 1rem auto;
   color: var(--color-input-text);
   background-color: var(--color-input-bg);
-  min-height: var(--input-height);
 }
 
 .album-section-button {

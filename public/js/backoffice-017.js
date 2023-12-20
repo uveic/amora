@@ -593,6 +593,12 @@ const editAlbumSection = (e) => {
     contentEl.textContent = '';
   }
 
+  container.querySelectorAll('.section-label').forEach(sl => sl.classList.remove('null'));
+  titleEl.classList.add('m-t-0');
+  subtitleEl.classList.add('m-t-0');
+  contentEl.classList.add('m-t-0');
+  sequenceEl.classList.add('m-t-0');
+
   titleEl.contentEditable = true;
   titleEl.classList.add('album-content-editable');
   subtitleEl.contentEditable = true;
@@ -698,6 +704,12 @@ const makeAlbumSectionNonEditable = (albumSectionId) => {
   if (contentEl.textContent.trim() === '') {
     contentEl.textContent = '-';
   }
+
+  container.querySelectorAll('.section-label').forEach(sl => sl.classList.add('null'));
+  titleEl.classList.remove('m-t-0');
+  subtitleEl.classList.remove('m-t-0');
+  contentEl.classList.remove('m-t-0');
+  sequenceEl.classList.remove('m-t-0');
 
   titleEl.contentEditable = false;
   titleEl.classList.remove('album-content-editable');

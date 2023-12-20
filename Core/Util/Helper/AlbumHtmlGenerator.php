@@ -110,17 +110,11 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '  <div class="album-section-item-content">';
         $output[] = $indentation . '    <div class="drop-loading null"><img src="/img/loading.gif" class="img-svg img-svg-40" width="40" height="40" alt="' . $localisationUtil->getValue('globalSaving') . '"></div>';
 
-        $output[] = $indentation . '    <div class="album-section-item-edit-container">';
-        $output[] = $indentation . '      <span class="section-sequence" data-before="' . $section->sequence . '">#' . $section->sequence . '</span>';
-        $output[] = $indentation . '      <img class="img-svg album-section-edit-js" data-album-section-id="' . $section->id . '" width="20" height="20" src="/img/svg/pencil.svg" alt="' . $localisationUtil->getValue('globalEdit') . '">';
-        $output[] = $indentation . '      <div class="album-section-button-container-js null">';
-        $output[] = $indentation . '        <button class="album-section-button album-section-cancel-js" data-album-section-id="' . $section->id . '">' . $localisationUtil->getValue('globalCancel') . '</button>';
-        $output[] = $indentation . '        <button class="album-section-button is-success album-section-save-js" data-album-section-id="' . $section->id . '">' . $localisationUtil->getValue('globalSave') . '</button>';
-        $output[] = $indentation . '      </div>';
-        $output[] = $indentation . '    </div>';
-
+        $output[] = $indentation . '    <p class="section-label null">' . $localisationUtil->getValue('globalTitle') . '</p>';
         $output[] = $indentation . '    <h3 class="section-title-html" data-before="' . $section->titleHtml . '">' . ($section->titleHtml ?: '-') . '</h3>';
+        $output[] = $indentation . '    <p class="section-label null">' . $localisationUtil->getValue('globalSubtitle') . '</p>';
         $output[] = $indentation . '    <div class="section-subtitle-html" data-before="' . $section->subtitleHtml . '">' . ($section->subtitleHtml ?: '-') . '</div>';
+        $output[] = $indentation . '    <p class="section-label null">' . $localisationUtil->getValue('globalContent') . '</p>';
         $output[] = $indentation . '    <div class="section-content-html" data-before="' . $section->contentHtml . '">' . ($section->contentHtml ?: '-') . '</div>';
 
         $output[] = $indentation . '    <div id="album-section-main-media-' . $section->id . '" class="main-image-container" data-before="' . $section->mainMedia?->id . '">';
@@ -139,6 +133,19 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '      </div>';
         $output[] = $indentation . '    </div>';
 
+        $output[] = $indentation . '    <div class="m-b-1">';
+        $output[] = $indentation . '      <a href="#" class="album-section-edit-js" data-album-section-id="' . $section->id . '">' . $localisationUtil->getValue('globalEdit') . '</a>';
+        $output[] = $indentation . '      <p class="section-label null">' . $localisationUtil->getValue('globalSequence') . '</p>';
+        $output[] = $indentation . '      <div><span class="section-sequence" data-before="' . $section->sequence . '">#' . $section->sequence . '</span></div>';
+        $output[] = $indentation . '    </div>';
+
+        $output[] = $indentation . '    <div class="album-section-item-edit-container">';
+        $output[] = $indentation . '      <div class="album-section-button-container-js null">';
+        $output[] = $indentation . '        <button class="album-section-button album-section-cancel-js" data-album-section-id="' . $section->id . '">' . $localisationUtil->getValue('globalCancel') . '</button>';
+        $output[] = $indentation . '        <button class="album-section-button is-success album-section-save-js" data-album-section-id="' . $section->id . '">' . $localisationUtil->getValue('globalSave') . '</button>';
+        $output[] = $indentation . '      </div>';
+        $output[] = $indentation . '    </div>';
+
         $output[] = $indentation . '  </div>';
 
         $output[] = $indentation . '  <div class="album-section-item-media-wrapper">';
@@ -149,7 +156,7 @@ final class AlbumHtmlGenerator
 
         /** @var AlbumSectionMedia $sectionMedia */
         foreach ($section->media as $sectionMedia) {
-            $output[] = $indentation . self::generateAlbumSectionMediaHtml($sectionMedia, $localisationUtil, '      ');
+            $output[] = self::generateAlbumSectionMediaHtml($sectionMedia, $localisationUtil, $indentation . '      ');
         }
 
         $output[] = $indentation . '      <a href="#" class="button select-media-action button-media-add" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
@@ -182,7 +189,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '  </figure>';
         $output[] = $indentation . '</div>';
 
-        return implode(PHP_EOL, $output) . PHP_EOL;
+        return implode(PHP_EOL, $output);
     }
 
     public static function generatePublicAlbumSectionMediaArray(
