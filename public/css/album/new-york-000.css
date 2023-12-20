@@ -153,7 +153,7 @@ a:focus {
 .media-content-wrapper .content-header-left {
   display: flex;
   flex-flow: row nowrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   gap: 1.5rem;
   font-size: 2rem;
@@ -199,6 +199,7 @@ a:focus {
 .media-title {
   font-weight: 300;
   margin: 0;
+  line-height: 1;
 }
 
 .media-subtitle {
