@@ -518,7 +518,7 @@ class ArticleDataLayer
                 aSec.article_id,
                 aSec.article_section_type_id,
                 aSec.content_html,
-                aSec.order,
+                aSec.sequence,
                 aSecI.media_id,
                 aSecI.caption AS media_caption,
                 aSec.created_at,

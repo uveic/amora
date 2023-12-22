@@ -552,6 +552,12 @@ const albumSectionAddMedia = (e) => {
         const editMediaEl = container.querySelector('.album-section-media-caption-js[data-media-id="' + mediaId + '"]');
         editMediaEl.mediaId = mediaId;
         editMediaEl.addEventListener('click', albumSectionEditMediaCaption);
+
+        const newMediaEl = container.querySelector('.item-draggable:last-of-type .media-item');
+        newMediaEl.addEventListener('dragstart', handleAlbumMediaDragStart);
+        newMediaEl.addEventListener('dragleave', handleAlbumMediaDragLeave);
+        newMediaEl.addEventListener('dragend', handleAlbumMediaDragEnd);
+        newMediaEl.addEventListener('drop', handleAlbumMediaDrop);
       } else {
         Util.notifyUser('A imaxe xa fora engadida.');
       }
