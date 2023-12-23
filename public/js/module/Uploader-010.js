@@ -83,6 +83,8 @@ class UploaderClass {
         : imageContainer.appendChild(figureContainer);
     }
 
+    imageContainer.scrollIntoView({behavior: 'smooth', block: 'start' });
+
     for (const media of Array.from(files)) {
       try {
         await this.uploadMedia(media)

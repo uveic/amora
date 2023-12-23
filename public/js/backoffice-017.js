@@ -1,7 +1,7 @@
 import {Util} from './module/Util-008.js';
 import {Request} from './module/Request-002.js';
 import {Global} from "./module/localisation-004.js";
-import {Uploader} from "./module/Uploader-009.js";
+import {Uploader} from "./module/Uploader-010.js";
 
 let globalTags = [];
 
