@@ -105,6 +105,8 @@ final class AlbumHtmlGenerator
         LocalisationUtil $localisationUtil,
         string $indentation = '',
     ): string {
+        $lazyLoading = $section->sequence > 1;
+
         $output = [];
         $output[] = $indentation . '<div class="album-section-item" data-album-section-id="' . $section->id . '" data-sequence="' . $section->sequence . '">';
         $output[] = $indentation . '  <div class="album-section-item-content">';
@@ -119,7 +121,7 @@ final class AlbumHtmlGenerator
 
         $output[] = $indentation . '    <div id="album-section-main-media-' . $section->id . '" class="main-image-container" data-before="' . $section->mainMedia?->id . '">';
         if ($section->mainMedia) {
-            $output[] = $indentation . '      <img class="album-section-main-media" data-media-id="' . $section->mainMedia->id . '" src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '">';
+            $output[] = $indentation . '      <img class="album-section-main-media" data-media-id="' . $section->mainMedia->id . '" src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '"' . ($lazyLoading ? ' loading="lazy"' : '') . '>';
         }
 
         $output[] = $indentation . '      <div class="main-image-button-container null">';
@@ -156,7 +158,7 @@ final class AlbumHtmlGenerator
 
         /** @var AlbumSectionMedia $sectionMedia */
         foreach ($section->media as $sectionMedia) {
-            $output[] = self::generateAlbumSectionMediaHtml($sectionMedia, $localisationUtil, $indentation . '      ');
+            $output[] = self::generateAlbumSectionMediaHtml($sectionMedia, $localisationUtil, $indentation . '      ', $lazyLoading);
         }
 
         $output[] = $indentation . '      <a href="#" class="button select-media-action button-media-add" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
@@ -175,8 +177,10 @@ final class AlbumHtmlGenerator
         AlbumSectionMedia $albumSectionMedia,
         LocalisationUtil $localisationUtil,
         string $indentation = '',
+        bool $lazyLoading = false,
     ): string {
         $titleAlt = $albumSectionMedia->media->buildAltText();
+        $lazyLoadingString = $lazyLoading ? ' loading="lazy"' : '';
 
         $output = [];
         $output[] = $indentation . '<div class="album-section-media-container item-draggable">';
@@ -184,7 +188,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    <img id="album-section-media-' . $albumSectionMedia->id . '" src="' . $albumSectionMedia->media->getPathWithNameSmall() . '" class="media-item" alt="' . $titleAlt . '" title="' . $titleAlt . '" data-media-id="' . $albumSectionMedia->media->id . '" data-sequence="' . $albumSectionMedia->sequence . '" data-album-section-media-id=' . $albumSectionMedia->id . ' draggable="true">';
         $output[] = $indentation . '    <div class="album-section-media-options">';
         $output[] = $indentation . '      <div class="media-caption album-section-media-caption-js" data-media-id="' . $albumSectionMedia->media->id . '" data-album-section-id="' . $albumSectionMedia->albumSectionId . '" data-album-section-media-id="' . $albumSectionMedia->id . '">' . ($albumSectionMedia->captionHtml ?: '-') . '</div>';
-        $output[] = $indentation . '      <img class="img-svg album-section-image-delete album-section-media-delete-js" src="/img/svg/trash-white.svg" alt="' . $localisationUtil->getValue('globalRemoveImage') . '" title="' . $localisationUtil->getValue('globalRemoveImage') . '" data-album-section-media-id="' . $albumSectionMedia->id . '" data-media-id="' . $albumSectionMedia->media->id . '" data-event-listener-action="albumSectionDeleteMedia" data-target-container-id="album-section-item-media-' . $albumSectionMedia->albumSectionId . '">';
+        $output[] = $indentation . '      <img class="img-svg album-section-image-delete album-section-media-delete-js" src="/img/svg/trash-white.svg" alt="' . $localisationUtil->getValue('globalRemoveImage') . '" title="' . $localisationUtil->getValue('globalRemoveImage') . '" data-album-section-media-id="' . $albumSectionMedia->id . '" data-media-id="' . $albumSectionMedia->media->id . '" data-event-listener-action="albumSectionDeleteMedia" data-target-container-id="album-section-item-media-' . $albumSectionMedia->albumSectionId . '"' . $lazyLoadingString . '>';
         $output[] = $indentation . '    </div>';
         $output[] = $indentation . '  </figure>';
         $output[] = $indentation . '</div>';
@@ -302,13 +306,17 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '        <div class="media-text">' . $section->contentHtml . '</div>';
         $output[] = $indentation . '        <div class="media-links">';
 
-        $output[] = $indentation . ($section->contentHtml
-            ? '          <a href="#" class="js-media-read-more" data-section-id="' . $section->id . '">' . $localisationUtil->getValue('albumPublicReadMore') . '<img src="/img/svg/article-white.svg" alt="Ler máis" width="20" height="20"></a>'
-            : '<span></span>');
+        $output[] = $indentation . (
+            $section->contentHtml
+                ? '          <a href="#" class="js-media-read-more" data-section-id="' . $section->id . '">' . $localisationUtil->getValue('albumPublicReadMore') . '<img src="/img/svg/article-white.svg" alt="Ler máis" width="20" height="20"></a>'
+                : '<span></span>'
+            );
 
-        $output[] = $indentation . (count($section->media) > 1
-            ? '          <a href="#" class="js-media-view">' . $localisationUtil->getValue('albumPublicMorePictures') . '<img src="/img/svg/arrow-right-white.svg" alt="Ver as fotos" width="20" height="20"></a>'
-            : '<span></span>');
+        $output[] = $indentation . (
+            count($section->media) > 1
+                ? '          <a href="#" class="js-media-view">' . $localisationUtil->getValue('albumPublicMorePictures') . '<img src="/img/svg/arrow-right-white.svg" alt="Ver as fotos" width="20" height="20"></a>'
+                : '<span></span>'
+            );
 
         $output[] = $indentation . '        </div>';
         $output[] = $indentation . '      </div>';
