@@ -133,7 +133,7 @@ class Response
                 'Cache-Control: public',
                 'Content-Transfer-Encoding: Binary',
                 'Content-Length:' . filesize($localPath),
-                "Content-Disposition: attachment; filename={$fileName}"
+                "Content-Disposition: attachment; filename=$fileName"
             ],
         );
     }
@@ -160,7 +160,7 @@ class Response
                 'Cache-Control: public',
                 'Content-Transfer-Encoding: Binary',
                 'Content-Length:' . filesize($localPath),
-                "Content-Disposition: attachment; filename={$fileName}",
+                "Content-Disposition: attachment; filename=$fileName",
                 'Location: ' . $url,
             ],
         );

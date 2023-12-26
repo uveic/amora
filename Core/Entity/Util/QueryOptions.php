@@ -4,12 +4,12 @@ namespace Amora\Core\Entity\Util;
 
 use Amora\Core\Entity\Response\Pagination;
 
-class QueryOptions
+readonly class QueryOptions
 {
     public function __construct(
-        public readonly array $orderBy = [],
-        public readonly ?Pagination $pagination = null,
-        public readonly bool $orderRandomly = false,
+        public array $orderBy = [],
+        public ?Pagination $pagination = null,
+        public bool $orderRandomly = false,
     ) {}
 
     public function getItemsPerPage(): int

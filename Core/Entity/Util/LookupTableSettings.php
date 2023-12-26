@@ -4,7 +4,7 @@ namespace Amora\Core\Entity\Util;
 
 use Amora\Core\Database\MySqlDb;
 
-class LookupTableSettings
+readonly class LookupTableSettings
 {
     public function __construct(
         private MySqlDb $database,

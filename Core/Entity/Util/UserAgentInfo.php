@@ -2,12 +2,12 @@
 
 namespace Amora\Core\Entity\Util;
 
-class UserAgentInfo
+readonly class UserAgentInfo
 {
     public function __construct(
-        public readonly ?string $platform = null,
-        public readonly ?string $browser = null,
-        public readonly ?string $version = null,
+        public ?string $platform = null,
+        public ?string $browser = null,
+        public ?string $version = null,
     ) {}
 
     public function getBrowserAndPlatform(): string
