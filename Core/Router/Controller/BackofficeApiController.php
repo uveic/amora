@@ -17,7 +17,6 @@ use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDeleteAlbumSectionMediaSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerDeleteMediaForAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
@@ -1266,7 +1265,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $res = $this->albumService->deleteMediaForAlbumSection($albumSectionMediaId);
+        $res = $this->albumService->workflowDeleteMediaForAlbumSection($existingAlbumSectionMedia);
 
         return new BackofficeApiControllerDeleteAlbumSectionMediaSuccessResponse(
             success: $res,

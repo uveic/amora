@@ -624,6 +624,25 @@ class AlbumDataLayer
         return $this->db->execute($sql, $params);
     }
 
+    public function updateSectionSequenceWhenMediaIsDeletedForAlbum(
+        AlbumSectionMedia $albumSectionMediaDeleted,
+    ): bool {
+        $sql = '
+            UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
+                SET `sequence` = `sequence` + :countDelta
+            WHERE album_section_id = :albumSectionId
+                AND `sequence` > :sequenceFrom
+        ';
+
+        $params = [
+            ':countDelta' => -1,
+            ':sequenceFrom' => $albumSectionMediaDeleted->sequence,
+            ':albumSectionId' => $albumSectionMediaDeleted->albumSectionId,
+        ];
+
+        return $this->db->execute($sql, $params);
+    }
+
     public function getMaxAlbumSectionSequence(int $albumId): ?int
     {
         $res = $this->db->fetchColumn(

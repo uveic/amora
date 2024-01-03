@@ -389,9 +389,22 @@ readonly class AlbumService
         return $this->albumDataLayer->updateAlbumSectionMedia($item);
     }
 
-    public function deleteMediaForAlbumSection(int $albumSectionMediaId): bool
+    public function workflowDeleteMediaForAlbumSection(AlbumSectionMedia $albumSectionMedia): bool
     {
-        return $this->albumDataLayer->deleteMediaForAlbumSection($albumSectionMediaId);
+        $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
+            function () use ($albumSectionMedia)
+            {
+                $this->albumDataLayer->updateSectionSequenceWhenMediaIsDeletedForAlbum($albumSectionMedia);
+
+                $res = $this->albumDataLayer->deleteMediaForAlbumSection($albumSectionMedia->id);
+
+                return new Feedback(
+                    isSuccess: $res,
+                );
+            }
+        );
+
+        return $resTransaction->isSuccess;
     }
 
     public function workflowStoreMediaForAlbumSection(

@@ -841,10 +841,31 @@ const albumSectionDeleteMedia = (e) => {
 
   targetMediaContainer.parentElement.parentElement.classList.add('null');
 
+  const countEl = container.parentElement.querySelector('.album-section-item-media-header .count');
+  countEl.textContent = (Number.parseInt(countEl.textContent) - 1).toString();
+
+  const deletedMediaSequence= Number.parseInt(targetMediaContainer.dataset.sequence);
+  container.querySelectorAll('.media-item').forEach(mi => {
+    const currentSequence = Number.parseInt(mi.dataset.sequence);
+    if (currentSequence > deletedMediaSequence) {
+      mi.dataset.sequence = (currentSequence - 1).toString();
+    }
+  });
+
   Request.delete('/back/album-section-media/' + albumSectionMediaId)
     .catch(error => {
       targetMediaContainer.parentElement.parentElement.classList.remove('null');
       Util.logError(error);
+
+      countEl.textContent = (Number.parseInt(countEl.textContent) + 1).toString();
+
+      container.querySelectorAll('.media-item').forEach(mi => {
+        const currentSequence = Number.parseInt(mi.dataset.sequence);
+        const currentMediaId = mi.dataset.mediaId;
+        if (currentSequence >= deletedMediaSequence && mediaId !== currentMediaId) {
+          mi.dataset.sequence = (currentSequence + 1).toString();
+        }
+      });
     });
 };
 
