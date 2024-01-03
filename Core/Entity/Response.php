@@ -54,7 +54,7 @@ class Response
             [
                 $httpStatus->value,
                 "Content-Type: $contentType->value",
-                "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate, no-store",
+                "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate",
                 "Content-Security-Policy: default-src 'self'; script-src 'self'$nonce; report-uri /papi/csp;" . $insecureRequests,
                 "X-Content-Type-Options: nosniff",
                 "Referrer-Policy: strict-origin-when-cross-origin",
