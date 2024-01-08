@@ -248,8 +248,8 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '        <div class="media-text">' . $section->contentHtml . '</div>';
         $output[] = $indentation . '      </div>';
 
-        $output[] = $indentation . '      <div class="menu-button-wrapper">';
-        $output[] = $indentation . '        <img class="img-svg img-svg-30 menu-button" data-section-id="' . $section->id . '" width="30" height="30" src="/img/svg/dots-nine-bold-white.svg" alt="Menu">';
+        $output[] = $indentation . '      <div class="dots-nine-wrapper">';
+        $output[] = $indentation . '        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>';
         $output[] = $indentation . '      </div>';
 
         $output[] = $indentation . '    </div>';
@@ -309,8 +309,8 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '        </div>';
         $output[] = $indentation . '      </div>';
 
-        $output[] = $indentation . '      <div class="menu-button-wrapper">';
-        $output[] = $indentation . '        <img class="img-svg img-svg-30 menu-button" data-section-id="' . $section->id . '" width="30" height="30" src="/img/svg/dots-nine-bold-white.svg" alt="Menu">';
+        $output[] = $indentation . '      <div class="dots-nine-wrapper">';
+        $output[] = $indentation . '        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>';
         $output[] = $indentation . '      </div>';
 
         $output[] = $indentation . '    </div>';

@@ -151,7 +151,7 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
   });
 });
 
-document.querySelectorAll('.menu-button').forEach(b => {
+document.querySelectorAll('.dots-nine-wrapper').forEach(b => {
   b.addEventListener('click', e => {
     e.preventDefault();
     document.querySelector('.album-new-york-sections-modal-js').classList.add('modal-wrapper-open');
