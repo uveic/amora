@@ -10,6 +10,7 @@ use Amora\Core\Module\Album\Model\AlbumSectionMedia;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Util\LocalisationUtil;
+use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 
 final class AlbumHtmlGenerator
@@ -117,7 +118,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    <p class="section-label null">' . $localisationUtil->getValue('globalSubtitle') . '</p>';
         $output[] = $indentation . '    <div class="section-subtitle-html" data-before="' . $section->subtitleHtml . '">' . ($section->subtitleHtml ?: '-') . '</div>';
         $output[] = $indentation . '    <p class="section-label null">' . $localisationUtil->getValue('globalContent') . '</p>';
-        $output[] = $indentation . '    <div class="section-content-html" data-before="' . $section->contentHtml . '">' . ($section->contentHtml ?: '-') . '</div>';
+        $output[] = $indentation . '    <div class="section-content-html section-content-html-' . $section->id . '" data-before="' . $section->contentHtml . '">' . ($section->contentHtml ?: '-') . '</div>';
 
         $output[] = $indentation . '    <div id="album-section-main-media-' . $section->id . '" class="main-image-container" data-before="' . $section->mainMedia?->id . '">';
         if ($section->mainMedia) {
@@ -240,8 +241,19 @@ final class AlbumHtmlGenerator
 
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '  <div class="media-content-wrapper">';
-        $output[] = $indentation . '    <h1 class="media-title main-slide-title">' . $section->titleHtml . '</h1>';
-        $output[] = $indentation . '    <div class="media-text">' . $section->contentHtml . '</div>';
+
+        $output[] = $indentation . '    <div class="content-main-header">';
+        $output[] = $indentation . '      <div class="content-main-header-left">';
+        $output[] = $indentation . '        <h1 class="media-title main-slide-title">' . $section->titleHtml . '</h1>';
+        $output[] = $indentation . '        <div class="media-text">' . $section->contentHtml . '</div>';
+        $output[] = $indentation . '      </div>';
+
+        $output[] = $indentation . '      <div class="menu-button-wrapper">';
+        $output[] = $indentation . '        <img class="img-svg img-svg-30 menu-button" data-section-id="' . $section->id . '" width="30" height="30" src="/img/svg/dots-nine-bold-white.svg" alt="Menu">';
+        $output[] = $indentation . '      </div>';
+
+        $output[] = $indentation . '    </div>';
+
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '</section>';
 
@@ -297,13 +309,15 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '        </div>';
         $output[] = $indentation . '      </div>';
 
-        $output[] = $indentation . '      <img class="img-svg img-svg-30 menu-button" data-section-id="' . $section->id . '" width="30" height="30" src="/img/svg/dots-nine-bold-white.svg" alt="Menu">';
+        $output[] = $indentation . '      <div class="menu-button-wrapper">';
+        $output[] = $indentation . '        <img class="img-svg img-svg-30 menu-button" data-section-id="' . $section->id . '" width="30" height="30" src="/img/svg/dots-nine-bold-white.svg" alt="Menu">';
+        $output[] = $indentation . '      </div>';
 
         $output[] = $indentation . '    </div>';
 
         $output[] = $indentation . '    <div class="content-text-wrapper">';
         $output[] = $indentation . '      <div class="content-text">';
-        $output[] = $indentation . '        <div class="media-text">' . $section->contentHtml . '</div>';
+        $output[] = $indentation . '        <div class="media-text">' . StringUtil::getFirstParagraphAsPlainText($section->contentHtml) . '</div>';
         $output[] = $indentation . '        <div class="media-links">';
 
         $output[] = $indentation . (

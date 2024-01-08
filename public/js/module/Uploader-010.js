@@ -62,9 +62,9 @@ class UploaderClass {
     });
   }
 
-  async uploadMediaSequence(
+  async uploadMediaAsync(
     files,
-    imageContainer,
+    mediaContainer,
     then = () => {},
     catchError = () => {},
     imageClassName = 'image-item',
@@ -77,13 +77,13 @@ class UploaderClass {
 
       figureContainer.appendChild(loaderEl);
 
-      imageContainer.appendChild(figureContainer);
-      imageContainer.firstChild
-        ? imageContainer.insertBefore(figureContainer, imageContainer.firstChild)
-        : imageContainer.appendChild(figureContainer);
+      mediaContainer.appendChild(figureContainer);
+      mediaContainer.firstChild
+        ? mediaContainer.insertBefore(figureContainer, mediaContainer.firstChild)
+        : mediaContainer.appendChild(figureContainer);
     }
 
-    imageContainer.scrollIntoView({behavior: 'smooth', block: 'start' });
+    mediaContainer.scrollIntoView({behavior: 'smooth', block: 'start' });
 
     for (const media of Array.from(files)) {
       try {

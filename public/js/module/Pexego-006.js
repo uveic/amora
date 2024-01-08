@@ -220,7 +220,7 @@ class Pexego {
 
     this.init({
       mainContainer: container,
-      onChange: (html) => {containerHtml.textContent = html},
+      onChange: (html) => containerHtml.textContent = html,
       paragraphSeparator: 'p',
       actions: [
         'bold',
@@ -527,20 +527,6 @@ class Pexego {
       divEditor.focus();
     }
   }
-
-  getSectionTypeIdFromClassList(classList) {
-    if (classList.contains(pexegoClasses.sectionParagraph)) {
-      return 1;
-    }
-
-    if (classList.contains(pexegoClasses.sectionImage)) {
-      return 2;
-    }
-
-    if (classList.contains(pexegoClasses.sectionVideo)) {
-      return 3;
-    }
-  }
 }
 
 const PexegoEditor = new Pexego();
@@ -597,7 +583,7 @@ document.querySelectorAll('input[name="pexego-add-image-input"]').forEach(pi => 
       pexegoSectionImage.className =  Pexego.classes.section + ' ' + Pexego.classes.sectionImage;
 
       let imageCaption = document.createElement('div');
-      imageCaption.dataset.placeholder = global.get('editorImageCaptionPlaceholder');
+      imageCaption.dataset.placeholder = Global.get('editorImageCaptionPlaceholder');
       imageCaption.contentEditable = 'true';
       imageCaption.innerHTML = '<p>' + imageCaption.dataset.placeholder + '</p>';
       imageCaption.classList.add(Pexego.classes.contentImageCaption);

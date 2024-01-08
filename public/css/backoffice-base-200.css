@@ -524,6 +524,7 @@ h2.page-content-subtitle {
 
 .add-image-wrapper {
   height: 100%;
+  width: 100%;
   overflow: auto;
   color: var(--color-bg);
   background-color: var(--color-text);

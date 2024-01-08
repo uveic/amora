@@ -460,7 +460,7 @@ const insertImageInArticle = (e) => {
 
   document.querySelector('.select-media-modal').classList.add('null');
 
-  imageCaption.scrollIntoView({behavior: 'smooth', block: 'start' });
+  imageCaption.scrollIntoView({ behavior: 'smooth', block: 'start' });
   imageCaption.focus();
 };
 
@@ -483,7 +483,7 @@ const articleSelectMainImage = (e) => {
 
   document.querySelector('.select-media-action span').textContent = Global.get('globalModify');
   document.querySelector('.select-media-modal').classList.add('null');
-  document.querySelector('.article-main-image-wrapper').scrollIntoView({behavior: 'smooth', block: 'start' });
+  document.querySelector('.article-main-image-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
 const albumSelectMainMedia = (e) => {
@@ -511,7 +511,7 @@ const albumSelectMainMedia = (e) => {
 
   e.currentTarget.textContent = Global.get('globalModify');
   document.querySelector('.select-media-modal').classList.add('null');
-  imageContainer.scrollIntoView({behavior: 'smooth', block: 'start' });
+  imageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
 const albumSectionAddMedia = (e) => {
@@ -535,7 +535,7 @@ const albumSectionAddMedia = (e) => {
   };
 
   document.querySelector('.select-media-modal').classList.add('null');
-  actionButton.scrollIntoView({behavior: 'smooth', block: 'center' });
+  actionButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
   Request.post('/back/album-section/' + albumSectionId + '/media', JSON.stringify(payload))
     .then(response => {
@@ -630,6 +630,10 @@ const editAlbumSection = (e) => {
 
   e.currentTarget.classList.add('null');
   titleEl.focus();
+
+  Util.createMediumEditor('section-content-html-' + albumSectionId);
+
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
 const updateAlbumSection = (e) => {
@@ -650,7 +654,7 @@ const updateAlbumSection = (e) => {
   subtitleHtmlEl.dataset.before = subtitleHtml;
 
   const contentHtmlEl = container.querySelector('.section-content-html');
-  const contentHtml = contentHtmlEl.textContent.trim();
+  const contentHtml = contentHtmlEl.innerHTML.trim();
   contentHtmlEl.dataset.before = contentHtml;
 
   const mainMedia = container.querySelector('img.album-section-main-media');
@@ -1057,7 +1061,7 @@ document.querySelectorAll('input#images').forEach(im => {
 
     const container = document.querySelector('#images-list');
 
-    Uploader.uploadMediaSequence(
+    Uploader.uploadMediaAsync(
       im.files,
       container,
       (response) => {
@@ -1538,7 +1542,7 @@ document.querySelectorAll('input[name="select-media-action-upload"]').forEach(im
     const eventListenerAction = im.dataset.eventListenerAction;
     const targetContainerId = im.dataset.targetContainerId;
 
-    Uploader.uploadMediaSequence(
+    Uploader.uploadMediaAsync(
       im.files,
       container,
       (response) => {
@@ -1793,7 +1797,7 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
         sectionContainer.querySelector('.album-section-save-js').addEventListener('click', updateAlbumSection);
         sectionContainer.querySelector('.album-section-cancel-js').addEventListener('click', cancelAlbumSectionEdit);
         sectionContainer.querySelector('.album-section-main-media-delete-js').addEventListener('click', albumSectionDeleteMainMedia);
-        sectionContainer.scrollIntoView({behavior: 'smooth', block: 'center' });
+        sectionContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
       })
       .catch(error => {
         Util.logError(error);

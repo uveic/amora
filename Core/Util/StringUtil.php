@@ -312,15 +312,13 @@ final class StringUtil
         return str_replace('https://', '', $text);
     }
 
-    public static function getFirstParagraphAsPlainText(?string $text): string
+    public static function getFirstParagraphAsPlainText(?string $text, int $maxLength = 400): string
     {
         if (!$text) {
             return '';
         }
 
-        $maxLength = 400;
         $position = strpos($text, '</p>');
-
         if ($position) {
             $firstParagraph = trim(strip_tags(substr($text, 0, $position)));
 

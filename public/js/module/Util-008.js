@@ -1,6 +1,8 @@
 import {Global} from './localisation-004.js';
 
 class UtilClass {
+  editors = [];
+
   getUpdatedAtTime() {
     const now = new Date();
     const prefix = ' ' + Global.get('globalAt') + ' ';
@@ -59,6 +61,10 @@ class UtilClass {
   }
 
   createMediumEditor(containerClassName) {
+    if (this.editors.includes(containerClassName)) {
+      return;
+    }
+
     new MediumEditor(
       '.' + containerClassName,
       {
@@ -81,6 +87,8 @@ class UtilClass {
         },
       }
     );
+
+    this.editors.push(containerClassName);
   }
 
   getAndCleanHtmlFromElement(element, addParagraph = false) {
@@ -97,6 +105,10 @@ class UtilClass {
 
       return html;
     };
+
+    if (!element) {
+      return '';
+    }
 
     element.childNodes.forEach(currentNode => {
       if (currentNode.nodeName === '#text' && !currentNode.textContent.trim().length) {
