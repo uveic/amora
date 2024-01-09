@@ -2,14 +2,13 @@
 
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
-
-/** @var HtmlResponseDataAdmin $responseData */
-
 use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
+
+/** @var HtmlResponseDataAdmin $responseData */
 
 if (empty($responseData->album)) {
     return;
@@ -27,7 +26,7 @@ $createdAt = DateUtil::formatDate(
 
 $albumPublicLink = UrlBuilderUtil::buildPublicAlbumUrl(
     slug: $album->slug->slug,
-    language: $responseData->siteLanguage,
+    language: $album->language,
 );
 
 $publicLinkHtml = $album->status->isPublished()

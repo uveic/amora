@@ -336,7 +336,10 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '      </div>';
 
         $output[] = $indentation . '      <div class="media-info">';
-        $output[] = $indentation . '        <div><span class="media-sequence">1</span> ' . $localisationUtil->getValue('globalOf') . ' ' . $maxMediaSequence . '</div>';
+        $output[] = $indentation . '        <div class="media-info-inner">';
+        $output[] = $indentation . '          <img src="/img/svg/article-white.svg" class="js-media-read-more js-media-read-more-icon null" alt="Ler máis" width="20" height="20" data-section-id="' . $section->id . '">';
+        $output[] = $indentation . '          <div><span class="media-sequence">1</span> ' . $localisationUtil->getValue('globalOf') . ' ' . $maxMediaSequence . '</div>';
+        $output[] = $indentation . '        </div>';
         $output[] = $indentation . '        <div class="media-caption-html">' . $mediaCaptionForFirstMedia . '</div>';
         $output[] = $indentation . '      </div>';
         $output[] = $indentation . '    </div>';

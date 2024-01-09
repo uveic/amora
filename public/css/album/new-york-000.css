@@ -316,6 +316,15 @@ a:focus {
   font-size: 0.8rem;
   font-family: var(--font-picture);
   max-width: 30rem;
+  position: relative;
+  z-index: 5;
+}
+
+.media-content-wrapper .media-info-inner {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1rem;
+  cursor: pointer;
 }
 
 .media-text-panel {

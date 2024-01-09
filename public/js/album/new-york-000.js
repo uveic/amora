@@ -13,7 +13,7 @@ const changeMedia = () => {
 
 setInterval(changeMedia, 8000);
 
-document.querySelectorAll('a.js-media-read-more').forEach(a => {
+document.querySelectorAll('.js-media-read-more').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
 
@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const mediaContainer = entry.target.querySelector('.media-wrapper');
+        const contentContainer = entry.target.querySelector('.media-content-wrapper');
         const nextImageToPreload = getNextImage(mediaContainer);
         const imgTemp = new Image();
         imgTemp.src = nextImageToPreload.src;
@@ -94,6 +95,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const contentText = entry.target.querySelector('.content-text');
         if (contentText) {
           contentText.classList.remove('null');
+        }
+
+        const readMoreIcon = contentContainer.querySelector('.js-media-read-more-icon');
+        if (readMoreIcon) {
+          readMoreIcon.classList.add('null');
         }
       } else {
         entry.target.classList.remove('js-content-child-active');
@@ -110,6 +116,7 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
     e.preventDefault();
 
     const mediaContainer = a.parentElement.parentElement.parentElement.querySelector('.media-wrapper');
+    const contentContainer = a.parentElement.parentElement.parentElement.querySelector('.media-content-wrapper');
     const activeImage = mediaContainer.querySelector('img.media-active')
       ?? mediaContainer.querySelector('img.media-item');
     const goRight = a.classList.contains('js-navigation-right');
@@ -128,6 +135,11 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
     const contentText = mediaContainer.parentElement.querySelector('.media-content-wrapper .content-text');
     if (contentText) {
       contentText.classList.add('null');
+    }
+
+    const readMoreIcon = contentContainer.querySelector('.js-media-read-more-icon');
+    if (readMoreIcon) {
+      readMoreIcon.classList.remove('null');
     }
 
     const mediaTextPanel = mediaContainer.parentElement.querySelector('.media-text-panel');
