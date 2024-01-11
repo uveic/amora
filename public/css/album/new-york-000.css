@@ -343,11 +343,17 @@ a:focus {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   overflow: auto;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .media-panel-content {
   overflow-y: scroll;
   padding: 1.5rem;
+}
+
+.media-panel-content p:first-of-type {
+  margin-top: 0;
 }
 
 .media-panel-content p:last-of-type {
@@ -356,8 +362,9 @@ a:focus {
 
 .media-panel-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0;
+  right: 0;
+  padding: 0.5rem 0.5rem 1rem 1rem;
 }
 
 .modal-wrapper {

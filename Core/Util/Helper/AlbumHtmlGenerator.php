@@ -357,7 +357,7 @@ final class AlbumHtmlGenerator
             $output[] = $indentation . '      <img loading="lazy" src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '">';
         }
 
-        $output[] = $indentation . '      <p>' . $section->contentHtml . '</p>';
+        $output[] = $indentation . '        <div>' . $section->contentHtml . '</div>';
         $output[] = $indentation . '      </div>';
         $output[] = $indentation . '    </div>';
         $output[] = $indentation . '  </div>';

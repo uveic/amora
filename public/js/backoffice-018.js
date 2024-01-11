@@ -1,4 +1,4 @@
-import {Util} from './module/Util-008.js';
+import {Util} from './module/Util-009.js';
 import {Request} from './module/Request-002.js';
 import {Global} from "./module/localisation-004.js";
 import {Uploader} from "./module/Uploader-010.js";
@@ -654,7 +654,7 @@ const updateAlbumSection = (e) => {
   subtitleHtmlEl.dataset.before = subtitleHtml;
 
   const contentHtmlEl = container.querySelector('.section-content-html');
-  const contentHtml = contentHtmlEl.innerHTML.trim();
+  const contentHtml = Util.getAndCleanHtmlFromElement(contentHtmlEl);
   contentHtmlEl.dataset.before = contentHtml;
 
   const mainMedia = container.querySelector('img.album-section-main-media');
@@ -677,7 +677,7 @@ const updateAlbumSection = (e) => {
   const payload = {
     titleHtml: titleHtml === '-' ? null : titleHtml,
     subtitleHtml: subtitleHtml === '-' ? null : subtitleHtml,
-    contentHtml: contentHtml === '-' ? null : contentHtml,
+    contentHtml: contentHtml ? contentHtmlEl : null,
     mainMediaId: mainMediaId,
     newSequence: sequence,
     albumSectionIdSequenceTo: targetAlbumSectionId,

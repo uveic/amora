@@ -97,6 +97,10 @@ class UtilClass {
         return '';
       }
 
+      if (html === '-') {
+        return '';
+      }
+
       html = html.trim().replace(/^\s+|\s+$/gm, '');
 
       while (html.length && html.slice(-4) === '<br>') {
