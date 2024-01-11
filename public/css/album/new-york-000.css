@@ -33,6 +33,7 @@
   --font-title: Atlantica,sans-serif;
   --font-paragraph: Atlantica,sans-serif;
   --font-picture: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --text-shadow: 2px 2px 2px rgba(0,0,0,.24),0 0 10px rgba(0,0,0,.1);
 }
 
 *, *:before, *:after {
@@ -156,7 +157,7 @@ a:focus {
   flex-grow: 0;
   border-radius: 1px;
   background-color: var(--color-text);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.65);
+  box-shadow: var(--text-shadow);
 }
 
 .media-content-wrapper .content-header-left,
@@ -179,7 +180,7 @@ a:focus {
   font-weight: 300;
   margin: 0;
   max-width: 25rem;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.65);
+  text-shadow: var(--text-shadow);
 }
 
 .media-content-wrapper .content-main-header {
@@ -242,7 +243,7 @@ a:focus {
   font-size: 1.3rem;
   line-height: 1.2;
   max-width: 25rem;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.65);
+  text-shadow: var(--text-shadow);
   margin: 0.75rem 0 0;
 }
 
@@ -250,7 +251,7 @@ a:focus {
   font-size: 1.1rem;
   line-height: 1.4;
   max-width: 32rem;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.65);
+  text-shadow: var(--text-shadow);
   margin: 0 2rem 0 0;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -291,7 +292,7 @@ a:focus {
 .media-links a:focus,
 .media-links a:active {
   text-transform: uppercase;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.65);
+  text-shadow: var(--text-shadow);
   color: var(--color-text);
   background-color: transparent;
   box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.25);

@@ -11,7 +11,7 @@ const changeMedia = () => {
   });
 };
 
-setInterval(changeMedia, 8000);
+setInterval(changeMedia, 2500);
 
 document.querySelectorAll('.js-media-read-more').forEach(a => {
   a.addEventListener('click', (e) => {
