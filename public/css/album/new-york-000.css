@@ -212,11 +212,23 @@ a:focus {
   bottom: 0;
 }
 
-.media-content-navigation > * {
+.media-content-navigation > *,
+.media-content-navigation > *:hover,
+.media-content-navigation > *:active,
+.media-content-navigation > *:visited,
+.media-content-navigation > *:focus {
   cursor: pointer;
   width: 50%;
   height: 100lvh;
   display: block;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: none;
 }
 
 .media-content-wrapper .content-text-wrapper {
@@ -397,7 +409,7 @@ a:focus {
 }
 
 .modal-close-button {
-  position: absolute;
+  position: fixed;
   padding: 0.75rem;
   top: 0;
   right: 0;

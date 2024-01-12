@@ -401,7 +401,7 @@ final class AlbumHtmlGenerator
             $count++;
         }
 
-        for ($i = 0 ;$i<=round($count/3); $i++) {
+        for ($i = 0 ;$i<=round($count / 4); $i++) {
             $output[] = $indentation . '  <div class="modal-item hidden"></div>';
         }
 
