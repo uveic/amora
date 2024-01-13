@@ -305,7 +305,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             return Response::createNotFoundResponse($request);
         }
 
-        if (!$request->session?->isAdmin() && $album->status !== AlbumStatus::Published) {
+        if (!$request->session?->isAdmin() && !$album->status->isPublic()) {
             return Response::createNotFoundResponse($request);
         }
 

@@ -29,6 +29,14 @@ enum AlbumStatus: int
         };
     }
 
+    public function isPublic(): bool
+    {
+        return match ($this) {
+            self::Published, self::Unlisted => true,
+            default => false,
+        };
+    }
+
     public function getIcon(): string
     {
         return match ($this) {
