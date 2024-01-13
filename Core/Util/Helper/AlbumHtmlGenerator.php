@@ -390,7 +390,7 @@ final class AlbumHtmlGenerator
             /** @var Media $sectionMedia */
             $sectionMedia = $section->mainMedia ?? $section->media[0]?->media ?? null;
             if ($sectionMedia) {
-                $output[] = $indentation . '    <img src="' . $sectionMedia->getPathWithNameSmall() . '" class="modal-item-thumb" alt="' . $sectionMedia->buildAltText() . '">';
+                $output[] = $indentation . '    <img src="' . $sectionMedia->getPathWithNameSmall() . '" class="modal-item-thumb" alt="' . $sectionMedia->buildAltText() . '" loading="lazy">';
             }
 
             $output[] = $indentation . '    <a href="#" class="js-section-item" data-section-id="' . $section->id . '">';

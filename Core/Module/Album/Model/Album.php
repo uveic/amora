@@ -8,6 +8,7 @@ use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\DateUtil;
 use Amora\App\Value\Language;
+use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 
@@ -73,7 +74,7 @@ class Album
 
     public function buildDescription(): string
     {
-        return $this->titleHtml;
+        return StringUtil::getFirstParagraphAsPlainText($this->contentHtml);
     }
 
     public function buildPublicDataArray(): array
