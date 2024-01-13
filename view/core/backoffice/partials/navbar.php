@@ -36,7 +36,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
     foreach ($menuItems as $menuItem) {
         if (empty($menuItem->children)) {
             $class = $menuItem->class ? ' ' . $menuItem->class : '';
-            echo '      <li><a href="' . $menuItem->path . '" class="nav-dropdown-item' . $class . '">' . $menuItem->text . '</a></li>';
+            echo '        <li><a href="' . $menuItem->path . '" class="nav-dropdown-item' . $class . '">' . $menuItem->text . '</a></li>' . PHP_EOL;
             continue;
         }
 ?>
@@ -49,7 +49,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
 <?php
     /** @var MenuItem $child */
     foreach ($menuItem->children as $child) {
-        echo '            <li><a class="' . ($menuItem->class ?? '') . '" href="' . $child->path . '">' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
+        echo '              <li><a class="' . ($menuItem->class ?? '') . '" href="' . $child->path . '">' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
     }
 ?>
             </ul>
