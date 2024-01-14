@@ -677,7 +677,7 @@ const updateAlbumSection = (e) => {
   const payload = {
     titleHtml: titleHtml === '-' ? null : titleHtml,
     subtitleHtml: subtitleHtml === '-' ? null : subtitleHtml,
-    contentHtml: contentHtml ? contentHtmlEl : null,
+    contentHtml: contentHtml ? contentHtml : null,
     mainMediaId: mainMediaId,
     newSequence: sequence,
     albumSectionIdSequenceTo: targetAlbumSectionId,
