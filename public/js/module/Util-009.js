@@ -114,39 +114,46 @@ class UtilClass {
       return '';
     }
 
-    element.childNodes.forEach(currentNode => {
-      if (currentNode.nodeName === '#text' && !currentNode.textContent.trim().length) {
+    const cleanElement = (parentElement, childElement) => {
+      console.log(childElement.nodeName);
+
+      if (childElement.nodeName === '#text' && !childElement.textContent.trim().length) {
         return;
       }
 
-      if (currentNode.nodeName === 'DIV') {
+      if (childElement.nodeName === 'DIV') {
         const newParagraph = document.createElement('p');
-        newParagraph.innerHTML = currentNode.innerHTML;
-        element.insertBefore(newParagraph, currentNode);
-        element.removeChild(currentNode);
-        currentNode = newParagraph;
+        newParagraph.innerHTML = childElement.innerHTML;
+        parentElement.insertBefore(newParagraph, childElement);
+        parentElement.removeChild(childElement);
+        childElement = newParagraph;
       }
 
       if (addParagraph) {
-        if (currentNode.nodeName === '#text') {
-          if (currentNode.textContent.trim().length) {
+        if (childElement.nodeName === '#text') {
+          if (childElement.textContent.trim().length) {
             const newParagraph = document.createElement('p');
-            newParagraph.textContent = currentNode.textContent;
-            element.insertBefore(newParagraph, currentNode);
+            newParagraph.textContent = childElement.textContent;
+            parentElement.insertBefore(newParagraph, childElement);
           }
 
-          element.removeChild(currentNode);
+          parentElement.removeChild(childElement);
         }
       }
 
-      const html = currentNode.innerHTML ?? currentNode.textContent;
+      const html = childElement.innerHTML ?? childElement.textContent;
       const currentHtml = cleanHtml(html);
 
-      if (currentNode.nodeName === 'BR') {
-        currentNode.parentNode.removeChild(currentNode);
+      if (childElement.nodeName === 'BR') {
+        childElement.parentNode.removeChild(childElement);
       } else if (!currentHtml.length) {
-        element.removeChild(currentNode);
+        parentElement.removeChild(childElement);
       }
+    }
+
+    element.childNodes.forEach(childElement => {
+      cleanElement(element, childElement);
+      childElement.childNodes.forEach(anotherChild => cleanElement(childElement, anotherChild));
     });
 
     return element.innerHTML.trim();
