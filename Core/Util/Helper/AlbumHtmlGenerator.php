@@ -118,7 +118,8 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    <p class="section-label null">' . $localisationUtil->getValue('globalSubtitle') . '</p>';
         $output[] = $indentation . '    <div class="section-subtitle-html" data-before="' . $section->subtitleHtml . '">' . ($section->subtitleHtml ?: '-') . '</div>';
         $output[] = $indentation . '    <p class="section-label null">' . $localisationUtil->getValue('globalContent') . '</p>';
-        $output[] = $indentation . '    <div class="section-content-html section-content-html-' . $section->id . '" data-before="' . $section->contentHtml . '">' . ($section->contentHtml ?: '-') . '</div>';
+        $output[] = $indentation . '    <div class="section-content-html-before null">' . ($section->contentHtml ?: '') . '</div>';
+        $output[] = $indentation . '    <div class="section-content-html section-content-html-' . $section->id . '">' . ($section->contentHtml ?: '-') . '</div>';
 
         $output[] = $indentation . '    <div id="album-section-main-media-' . $section->id . '" class="main-image-container" data-before="' . $section->mainMedia?->id . '">';
         if ($section->mainMedia) {

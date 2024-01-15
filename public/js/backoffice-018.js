@@ -654,8 +654,9 @@ const updateAlbumSection = (e) => {
   subtitleHtmlEl.dataset.before = subtitleHtml;
 
   const contentHtmlEl = container.querySelector('.section-content-html');
+  const contentHtmlBeforeEl = container.querySelector('.section-content-html-before');
   const contentHtml = Util.getAndCleanHtmlFromElement(contentHtmlEl);
-  contentHtmlEl.dataset.before = contentHtml ?? '';
+  contentHtmlBeforeEl.innerHTML = contentHtml ?? '';
 
   const mainMedia = container.querySelector('img.album-section-main-media');
   const mainMediaId = mainMedia && !mainMedia.classList.contains('null')
@@ -748,7 +749,8 @@ const cancelAlbumSectionEdit = (e) => {
   const subtitleHtmlEl = container.querySelector('.section-subtitle-html');
   subtitleHtmlEl.textContent = subtitleHtmlEl.dataset.before;
   const contentHtmlEl = container.querySelector('.section-content-html');
-  contentHtmlEl.textContent = contentHtmlEl.dataset.before;
+  const contentHtmlBeforeEl = container.querySelector('.section-content-html-before');
+  contentHtmlEl.innerHTML = contentHtmlBeforeEl.innerHTML;
   container.querySelector('.main-image-container').classList.remove('null');
   container.querySelector('.album-section-main-media-delete-js').classList.remove('null');
 
