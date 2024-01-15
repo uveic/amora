@@ -109,9 +109,16 @@ class UploaderClass {
 
             then(json);
           })
-          .catch(error => Util.logError(error));
+          .catch(error => {
+            const figureContainer = document.querySelector('#' + Util.cleanString(media.name));
+            if (figureContainer) {
+              mediaContainer.removeChild(figureContainer);
+            }
+
+            Util.notifyError(error);
+          });
       } catch (error) {
-        Util.logError(error);
+        Util.notifyError(error);
       }
     }
   }
@@ -126,7 +133,7 @@ class UploaderClass {
     formData = new FormData(),
   ) {
     if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-      Util.logError(new Error(file.name + ' is not an image'));
+      Util.notifyError(new Error(file.name + ' is not an image'));
       return;
     }
 
@@ -170,7 +177,7 @@ class UploaderClass {
             imageContainer.removeChild(figureContainer);
           } catch {}
 
-          Util.logError(error);
+          Util.notifyError(error);
           catchError();
         });
     })
@@ -213,7 +220,7 @@ class UploaderClass {
           container.removeChild(fileNameSpan);
           container.removeChild(imgLoading);
 
-          Util.logError(error);
+          Util.notifyError(error);
           catchError();
         });
     });

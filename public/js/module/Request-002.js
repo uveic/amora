@@ -63,7 +63,7 @@ class RequestClass {
 
       return Promise.resolve(json);
     }).catch(error => {
-      Util.logError(error);
+      Util.notifyError(error);
       this.logError(error.message, url, method, stringPayload).then();
 
       return Promise.reject(error);

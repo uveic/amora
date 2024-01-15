@@ -45,7 +45,7 @@ const selectMediaAction = (e) => {
     .catch(error => {
       modal.classList.add('null');
       loading.classList.add('null');
-      Util.logError(error);
+      Util.notifyError(error);
     });
 };
 
@@ -209,7 +209,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     const content = getContentHtmlAndSections();
 
     if (!content.contentHtml) {
-      Util.logError(new Error(Global.get('feedbackSaving')));
+      Util.notifyError(new Error(Global.get('feedbackSaving')));
       return;
     }
 
@@ -244,14 +244,14 @@ const handleCopyLink = (ev, href) => {
   ev.preventDefault();
 
   if (!navigator.clipboard) {
-    Util.logError(new Error(Global.get('feedbackCopyLinkError')));
+    Util.notifyError(new Error(Global.get('feedbackCopyLinkError')));
     return;
   }
 
   navigator.clipboard.writeText(href).then(() => {
     Util.notifyUser(Global.get('feedbackCopyLinkSuccess'));
   })
-    .catch(error => Util.logError(error, Global.get('feedbackCopyLinkError')));
+    .catch(error => Util.notifyError(error, Global.get('feedbackCopyLinkError')));
 };
 
 const imageLoaded = (imageEl) => {
@@ -564,7 +564,7 @@ const albumSectionAddMedia = (e) => {
     })
     .catch(error => {
       container.removeChild(container.querySelector('img[data-media-id="' + mediaId + '"]'));
-      Util.logError(error);
+      Util.notifyError(error);
     }).finally(() => container.removeChild(loadingContainer));
 };
 
@@ -655,7 +655,7 @@ const updateAlbumSection = (e) => {
 
   const contentHtmlEl = container.querySelector('.section-content-html');
   const contentHtml = Util.getAndCleanHtmlFromElement(contentHtmlEl);
-  contentHtmlEl.dataset.before = contentHtml;
+  contentHtmlEl.dataset.before = contentHtml ?? '';
 
   const mainMedia = container.querySelector('img.album-section-main-media');
   const mainMediaId = mainMedia && !mainMedia.classList.contains('null')
@@ -677,7 +677,7 @@ const updateAlbumSection = (e) => {
   const payload = {
     titleHtml: titleHtml === '-' ? null : titleHtml,
     subtitleHtml: subtitleHtml === '-' ? null : subtitleHtml,
-    contentHtml: contentHtml ? contentHtml : null,
+    contentHtml: contentHtml,
     mainMediaId: mainMediaId,
     newSequence: sequence,
     albumSectionIdSequenceTo: targetAlbumSectionId,
@@ -690,7 +690,7 @@ const updateAlbumSection = (e) => {
       }
     })
     .catch(error => {
-      Util.logError(error);
+      Util.notifyError(error);
     });
 };
 
@@ -859,7 +859,7 @@ const albumSectionDeleteMedia = (e) => {
   Request.delete('/back/album-section-media/' + albumSectionMediaId)
     .catch(error => {
       targetMediaContainer.parentElement.parentElement.classList.remove('null');
-      Util.logError(error);
+      Util.notifyError(error);
 
       countEl.textContent = (Number.parseInt(countEl.textContent) + 1).toString();
 
@@ -1073,7 +1073,7 @@ document.querySelectorAll('input#images').forEach(im => {
       },
     )
       .then()
-      .catch(error => Util.logError(error));
+      .catch(error => Util.notifyError(error));
   });
 });
 
@@ -1550,7 +1550,7 @@ document.querySelectorAll('input[name="select-media-action-upload"]').forEach(im
       },
     )
       .then()
-      .catch(error => Util.logError(error));
+      .catch(error => Util.notifyError(error));
   });
 });
 
@@ -1722,7 +1722,7 @@ document.querySelectorAll('#form-album-edit').forEach(f => {
       : null;
 
     if (!mainMediaId) {
-      Util.logError(new Error('Media image is missing'));
+      Util.notifyError(new Error('Media image is missing'));
       return;
     }
 
@@ -1769,7 +1769,7 @@ document.querySelectorAll('.album-status-dd-option').forEach(op => {
       })
       .catch((error) => {
         document.querySelector('#event-status-dd-checkbox').checked = false;
-        Util.logError(error);
+        Util.notifyError(error);
       });
   });
 });
@@ -1800,7 +1800,7 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
         sectionContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
       })
       .catch(error => {
-        Util.logError(error);
+        Util.notifyError(error);
       }).finally(() => container.removeChild(loadingContainer));
   });
 });
@@ -1898,7 +1898,7 @@ document.querySelectorAll('form#album-media-caption-edit-form-js').forEach(f => 
     Request.put('/back/album-section-media/' + albumSectionMediaId, payload)
       .catch(error => {
         targetCaptionHtmlEl.textContent = captionHtmlBefore;
-        Util.logError(error);
+        Util.notifyError(error);
       });
   });
 });
@@ -2003,7 +2003,7 @@ const handleAlbumMediaDrop = (ev) => {
       loadingEl.classList.add('null');
       draggedEl.classList.remove('media-item-grabbing');
     })
-    .catch(error => Util.logError(error))
+    .catch(error => Util.notifyError(error))
     .finally(() => {
       loadingEl.classList.add('null');
       draggedEl.classList.remove('media-item-grabbing');

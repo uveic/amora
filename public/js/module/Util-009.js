@@ -28,7 +28,7 @@ class UtilClass {
       .replace(/-$/g, '');
   }
 
-  logError(errorObj = null, errorMessage = null) {
+  notifyError(errorObj = null, errorMessage = null) {
     const feedbackDiv = document.querySelector('#feedback');
 
     if (!feedbackDiv) return;
@@ -37,9 +37,7 @@ class UtilClass {
     feedbackDiv.classList.remove('feedback-success');
     feedbackDiv.classList.add('feedback-error');
     feedbackDiv.classList.remove('null');
-    setTimeout(() => {feedbackDiv.classList.add('null')}, 15000);
-
-    console.log(errorObj);
+    setTimeout(() => {feedbackDiv.classList.add('null')}, 5000);
   }
 
   notifyUser(message) {
@@ -93,11 +91,7 @@ class UtilClass {
 
   getAndCleanHtmlFromElement(element, addParagraph = false) {
     const cleanHtml = (html) => {
-      if (!html) {
-        return '';
-      }
-
-      if (html === '-') {
+      if (!html || html === '-') {
         return '';
       }
 
@@ -111,12 +105,10 @@ class UtilClass {
     };
 
     if (!element) {
-      return '';
+      return null;
     }
 
     const cleanElement = (parentElement, childElement) => {
-      console.log(childElement.nodeName);
-
       if (childElement.nodeName === '#text' && !childElement.textContent.trim().length) {
         return;
       }
@@ -156,7 +148,7 @@ class UtilClass {
       childElement.childNodes.forEach(anotherChild => cleanElement(childElement, anotherChild));
     });
 
-    return element.innerHTML.trim();
+    return element.innerHTML.trim().length ? element.innerHTML.trim() : null;
   }
 
   createLoadingAnimation() {

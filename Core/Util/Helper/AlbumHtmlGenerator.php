@@ -317,7 +317,7 @@ final class AlbumHtmlGenerator
 
         $output[] = $indentation . '    <div class="content-text-wrapper">';
         $output[] = $indentation . '      <div class="content-text">';
-        $output[] = $indentation . '        <div class="media-text">' . StringUtil::getFirstParagraphAsPlainText($section->contentHtml) . '</div>';
+        $output[] = $indentation . '        <div class="media-text">' . StringUtil::getFirstParagraphAsPlainText($section->contentHtml, 200) . '</div>';
         $output[] = $indentation . '        <div class="media-links">';
 
         $output[] = $indentation . (
