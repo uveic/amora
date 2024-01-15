@@ -26,7 +26,7 @@ class Media
         public readonly ?string $captionHtml,
         public readonly ?string $filenameSource,
         public readonly DateTimeImmutable $createdAt,
-        public readonly DateTimeImmutable $updatedAt
+        public readonly DateTimeImmutable $updatedAt,
     ) {}
 
     public static function fromArray(array $data): self
