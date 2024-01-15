@@ -77,7 +77,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
 <?php if ($album->contentHtml) { ?>
             <div class="card-info-item">
               <span class="title"><?=$responseData->getLocalValue('globalContent')?>:</span>
-              <span class="value ellipsis"><?=StringUtil::nl2p($album->contentHtml) ?: '-'?></span>
+              <div class="value"><?=StringUtil::nl2p($album->contentHtml) ?: '-'?></div>
             </div>
 <?php } ?>
             <div class="card-info-item">

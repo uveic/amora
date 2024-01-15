@@ -201,7 +201,7 @@
   margin: 0.5rem 0;
   padding: 0.25rem 0;
   width: 100%;
-  gap: 1rem;
+  gap: 0.25rem 1rem;
 }
 
 .card-info-item > .title {
@@ -215,6 +215,14 @@
   align-items: center;
   flex-grow: 1;
   text-align: right;
+}
+
+.card-info-item > .value p:first-of-type {
+  margin-top: 0;
+}
+
+.card-info-item > .value p:last-of-type {
+  margin-bottom: 0;
 }
 
 .card-info-item > .gap {
