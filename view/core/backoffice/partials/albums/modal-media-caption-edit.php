@@ -24,8 +24,8 @@ $album = $responseData->album;
     </div>
 
     <form action="#" method="post" id="album-media-caption-edit-form-js">
-      <input id="albumId" name="albumId" type="hidden" value="<?=$album->id?>" required>
-      <input id="albumSectionMediaId" name="albumSectionMediaId" type="hidden" value="" required>
+      <input id="albumId" name="albumId" type="hidden" value="<?=$album->id?>">
+      <input id="albumSectionMediaId" name="albumSectionMediaId" type="hidden" value="">
 
       <div class="form-two-columns-wrapper">
         <div class="album-media-edit-container"></div>

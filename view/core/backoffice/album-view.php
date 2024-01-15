@@ -50,15 +50,15 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
         <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="30" height="30" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
       </div>
     </section>
-    <section class="form-content-container">
-      <section class="form-content-wrapper">
+    <div class="form-content-container">
+      <div class="form-content-wrapper">
         <div class="form-two-columns-wrapper">
           <div class="flex-child m-b-15">
             <div class="card-info-item">
               <span class="title"><?=$responseData->getLocalValue('globalStatus')?>:</span>
-              <span class="value">
+              <div class="value">
 <?=AlbumHtmlGenerator::generateDynamicAlbumStatusHtml($album->status, $localisationUtil, '              ')?>
-              </span>
+              </div>
             </div>
             <div class="card-info-item">
               <span class="title"><?=$responseData->getLocalValue('globalCreatedAt')?>:</span>
@@ -107,6 +107,6 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
           <img src="/img/svg/image.svg" class="img-svg img-svg-25 m-r-05" width="25" height="25" alt="<?=$responseData->getLocalValue('albumAddSection')?>">
           <span class="one-line"><?=$responseData->getLocalValue('albumAddSection')?></span>
         </a>
-      </section>
-    </section>
+      </div>
+    </div>
   </main>
