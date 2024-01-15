@@ -33,7 +33,7 @@
   --font-title: Atlantica,sans-serif;
   --font-paragraph: Atlantica,sans-serif;
   --font-picture: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --text-shadow: 2px 2px 2px rgba(0,0,0,.24),0 0 10px rgba(0,0,0,.1);
+  --text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.65);
 }
 
 *, *:before, *:after {
@@ -311,13 +311,13 @@ a:focus {
   font: 900 0.6rem/1 arial, helvetica, sans-serif;
   letter-spacing: 0.1em;
   border-radius: 100px;
-  padding: 0.5em 1.25em;
+  padding: 0.25em 1em;
   text-decoration: none;
   border: 1px solid var(--color-text);
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
 }
 
 .media-links a:hover {
