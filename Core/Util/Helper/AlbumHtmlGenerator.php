@@ -369,7 +369,7 @@ final class AlbumHtmlGenerator
 
     public static function generateAlbumTemplateNewYorkModalSectionsHtml(
         LocalisationUtil $localisationUtil,
-        array $sections,
+        Album $album,
         string $indentation = '',
     ): string {
         $output = [];
@@ -378,27 +378,35 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    <img src="/img/svg/x-white.svg" class="img-svg" width="20" height="20" alt="' . $localisationUtil->getValue('globalClose') . '">';
         $output[] = $indentation . '  </a>';
 
+        $output[] = $indentation . '  <div class="album-modal-header">';
+        $output[] = $indentation . '    <h1 class="album-modal-title">' . $album->titleHtml . '</h1>';
+        $output[] = $indentation . '    <h2 class="album-modal-subtitle">de abril a agosto de 2023, por Víctor González</h2>';
+        $output[] = $indentation . '    <div class="media-text album-modal-text">' . $album->contentHtml . '</div>';
+        $output[] = $indentation . '  </div>';
+
+        $output[] = $indentation . '  <div class="album-sections-wrapper">';
+
         $count = 0;
         /** @var AlbumSection $section */
-        foreach ($sections as $section) {
+        foreach ($album->sections as $section) {
             if ($section->sequence === 0 || !$section->media) {
                 continue;
             }
 
             $text = $section->titleHtml . ($section->subtitleHtml ? ', ' . $section->subtitleHtml : '');
-            $output[] = $indentation . '  <div class="modal-item" data-section-id="' . $section->id . '">';
+            $output[] = $indentation . '    <div class="modal-item" data-section-id="' . $section->id . '">';
 
             /** @var Media $sectionMedia */
             $sectionMedia = $section->mainMedia ?? $section->media[0]?->media ?? null;
             if ($sectionMedia) {
-                $output[] = $indentation . '    <img src="' . $sectionMedia->getPathWithNameSmall() . '" class="modal-item-thumb" alt="' . $sectionMedia->buildAltText() . '" loading="lazy">';
+                $output[] = $indentation . '      <img src="' . $sectionMedia->getPathWithNameSmall() . '" class="modal-item-thumb" alt="' . $sectionMedia->buildAltText() . '" loading="lazy">';
             }
 
-            $output[] = $indentation . '    <a href="#" class="js-section-item" data-section-id="' . $section->id . '">';
-            $output[] = $indentation . '      <span class="number">' . $section->sequence . '</span>';
-            $output[] = $indentation . '      <span>' . $text . '</span>';
-            $output[] = $indentation . '    </a>';
-            $output[] = $indentation . '  </div>';
+            $output[] = $indentation . '      <a href="#" class="js-section-item" data-section-id="' . $section->id . '">';
+            $output[] = $indentation . '        <span class="number">' . $section->sequence . '</span>';
+            $output[] = $indentation . '        <span>' . $text . '</span>';
+            $output[] = $indentation . '      </a>';
+            $output[] = $indentation . '    </div>';
             $count++;
         }
 
@@ -411,6 +419,7 @@ final class AlbumHtmlGenerator
             $output[] = $indentation . '  <div class="modal-item hidden"></div>';
         }
 
+        $output[] = $indentation . '  </div>';
         $output[] = $indentation . '</div>';
 
         return implode(PHP_EOL, $output) . PHP_EOL;

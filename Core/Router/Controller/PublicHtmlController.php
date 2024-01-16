@@ -294,10 +294,12 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
         if (!$album) {
             $slug = $this->albumService->getAlbumSlugForSlug($albumSlug);
-            if ($slug) {
-                Response::createPermanentRedirectResponse(
+            if ($slug && $slug->albumId) {
+                $albumForSlug = $this->albumService->getAlbumForId($slug->albumId);
+
+                return Response::createPermanentRedirectResponse(
                     url: UrlBuilderUtil::buildPublicAlbumUrl(
-                        slug: $slug->slug,
+                        slug: $albumForSlug->slug->slug,
                     ),
                 );
             }

@@ -29,7 +29,7 @@ $localisationUtil = Core::getLocalisationUtil($album->language);
 <?php
   echo AlbumHtmlGenerator::generateAlbumTemplateNewYorkModalSectionsHtml(
         localisationUtil: $localisationUtil,
-        sections: $album->sections,
+        album: $album,
         indentation: '    ',
     ) . PHP_EOL;
 ?>

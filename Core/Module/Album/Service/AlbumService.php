@@ -279,12 +279,12 @@ readonly class AlbumService
         $count = 0;
         do {
             $validSlug = $slug . ($count > 0 ? '-' . $count : '');
-            $res = $this->getAlbumForSlug($validSlug);
-            if ($existingSlug && $res && $res->id === $existingSlug->id) {
+            $existingAlbum = $this->getAlbumForSlug($validSlug);
+            if ($existingSlug && $existingAlbum && $existingAlbum->id === $existingSlug->albumId) {
                 return $existingSlug;
             }
             $count++;
-        } while(!empty($res));
+        } while(!empty($existingAlbum));
 
         return $this->albumDataLayer->storeAlbumSlug(
             new AlbumSlug(

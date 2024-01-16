@@ -393,12 +393,6 @@ a:focus {
   height: 100%;
   width: 100%;
   background-color: rgba(0,0,0,.95);
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  align-content: flex-start;
-  gap: 1rem;
-  padding: 2rem 1rem;
   z-index: 998;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -408,7 +402,7 @@ a:focus {
 }
 
 .modal-wrapper-open {
-  display: flex;
+  display: block;
   opacity: 1;
 }
 
@@ -418,6 +412,16 @@ a:focus {
   top: 0;
   right: 0;
   z-index: 999;
+}
+
+.album-sections-wrapper {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 1rem;
+  padding: 2rem 1rem;
 }
 
 .modal-item {
@@ -471,6 +475,23 @@ a:focus {
 
 .modal-item a:hover {
   text-decoration: underline;
+}
+
+.album-modal-header {
+  padding: 2rem 1rem 0;
+}
+
+.album-modal-title {
+  margin: 0;
+}
+
+.album-modal-subtitle {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.album-modal-text {
+  font-size: 1rem;
 }
 
 .null {display: none !important;}
