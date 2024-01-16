@@ -227,7 +227,7 @@ final class AlbumHtmlGenerator
         }
 
         $output = [];
-        $output[] = $indentation . '<section class="content-child js-content-slider-fade">';
+        $output[] = $indentation . '<section class="content-child js-content-slider-fade js-content-first">';
         $output[] = $indentation . '  <div class="media-wrapper">';
 
         $output = array_merge(
@@ -284,7 +284,7 @@ final class AlbumHtmlGenerator
         }
 
         $output = [];
-        $output[] = $indentation . '<section class="content-child js-content-slider" data-section-id="' . $section->id . '">';
+        $output[] = $indentation . '<section id="' . $section->buildUniqueSlug() . '" class="content-child js-content-slider" data-section-id="' . $section->id . '">';
         $output[] = $indentation . '  <div class="media-wrapper">';
 
         $output = array_merge(

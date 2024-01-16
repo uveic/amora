@@ -331,12 +331,16 @@ a:focus {
   max-width: 30rem;
   position: relative;
   z-index: 5;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.25rem;
 }
 
 .media-content-wrapper .media-info-inner {
   display: flex;
   flex-flow: row nowrap;
   gap: 1rem;
+  justify-content: flex-end;
   cursor: pointer;
 }
 

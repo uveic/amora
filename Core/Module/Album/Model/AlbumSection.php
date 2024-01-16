@@ -4,6 +4,7 @@ namespace Amora\Core\Module\Album\Model;
 
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\StringUtil;
 use DateTimeImmutable;
 
 class AlbumSection
@@ -50,5 +51,14 @@ class AlbumSection
             'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'sequence' => $this->sequence,
         ];
+    }
+
+    public function buildUniqueSlug(): string
+    {
+        return strtolower(
+            StringUtil::cleanString(
+                $this->sequence . '-' . $this->titleHtml . '-' . $this->subtitleHtml
+            )
+        );
     }
 }

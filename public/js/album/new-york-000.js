@@ -101,6 +101,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if (readMoreIcon) {
           readMoreIcon.classList.add('null');
         }
+
+        const newHash = entry.target.id ? '#' + entry.target.id : '';
+        if (newHash !== window.location.hash) {
+          const newUrlPath = window.location.protocol
+            + '//'
+            + window.location.host
+            + window.location.pathname
+            + window.location.search
+            + newHash;
+
+          window.history.pushState(
+            {
+              targetId: entry.target.id,
+              urlPath: newUrlPath,
+            },
+            '',
+            newUrlPath,
+          );
+        }
       } else {
         entry.target.classList.remove('js-content-child-active');
       }
@@ -132,13 +151,15 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
     nextImage.classList.add('media-active');
     nextImage.classList.remove('media-hidden');
 
+    let textContent = false;
     const contentText = mediaContainer.parentElement.querySelector('.media-content-wrapper .content-text');
     if (contentText) {
       contentText.classList.add('null');
+      textContent = contentText.querySelector('.media-text').textContent.trim().length > 0;
     }
 
     const readMoreIcon = contentContainer.querySelector('.js-media-read-more-icon');
-    if (readMoreIcon) {
+    if (readMoreIcon && textContent) {
       readMoreIcon.classList.remove('null');
     }
 
@@ -172,6 +193,7 @@ document.querySelectorAll('.dots-nine-wrapper').forEach(b => {
 
 document.querySelectorAll('.modal-close-button').forEach(b => {
   b.addEventListener('click', e => {
+    e.preventDefault();
     document.querySelector('.album-new-york-sections-modal-js').classList.remove('modal-wrapper-open');
   });
 });
@@ -227,6 +249,20 @@ document.addEventListener('keydown', e => {
       if (rightActionEl) {
         rightActionEl.click();
       }
+    }
+  }
+});
+
+window.addEventListener("popstate", (event) => {
+  if (!window.location.hash) {
+    document.querySelector('.js-content-first').scrollIntoView({behavior: 'smooth', block: 'start' });
+    return;
+  }
+
+  if (event.state && event.state.targetId) {
+    const targetSection = document.getElementById(event.state.targetId);
+    if (targetSection) {
+      targetSection.scrollIntoView({behavior: 'smooth', block: 'start' });
     }
   }
 });
