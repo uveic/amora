@@ -180,8 +180,8 @@ return [
     'formFilterArticleTypeTitle' => 'Type',
 
     'pageContentEditTitle' => 'Edit content',
-    'pageContentEditTitleHomepage' => 'Edit homepage content',
-    'pageContentEditTitleBlogBottom' => 'Edit the content that follows a blog post',
+    'pageContentEditTitleHomepage' => 'Homepage',
+    'pageContentEditTitleBlogBottom' => 'Text that follows a blog post',
 
     'mediaUploadedBy' => 'Uploaded by %s on %s',
     'mediaSelectImageForArticle' => 'Select image to add to article',

@@ -180,8 +180,8 @@ return [
     'formFilterArticleTypeTitle' => 'Tipo',
 
     'pageContentEditTitle' => 'Editar contenido',
-    'pageContentEditTitleHomepage' => 'Editar contenido de la portada',
-    'pageContentEditTitleBlogBottom' => 'Editar contenido que se muestra después de un post del blog',
+    'pageContentEditTitleHomepage' => 'Portada',
+    'pageContentEditTitleBlogBottom' => 'Texto que se muestra después de un post del blog',
 
     'mediaUploadedBy' => 'Subido por %s el %s',
     'mediaSelectImageForArticle' => 'Selecciona una imagen para añadir al artículo',
