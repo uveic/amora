@@ -1,5 +1,6 @@
 :root {
   --color-bg: #fcfcfc;
+  --color-bg-dark: #212529;
   --color-text: #212529;
   --color-text-light: #5d7079;
   --color-text-hover: #1c1c1c;
@@ -270,6 +271,10 @@ blockquote *:last-child {
   min-width: 50%;
   background-color: var(--color-bg);
   overflow: auto;
+}
+
+.modal-bg-dark {
+  background-color: var(--color-bg-dark);
 }
 
 .modal-inner-no-min-width {
@@ -793,6 +798,7 @@ button.is-link.is-light,
 
 .null {display: none !important;}
 .hidden {visibility: hidden;}
+.filter-opacity { filter: opacity(0.25); }
 .ellipsis {
   display: inline-block;
   overflow: hidden;
