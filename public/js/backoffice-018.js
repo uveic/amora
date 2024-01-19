@@ -254,30 +254,25 @@ const handleCopyLink = (ev, href) => {
     .catch(error => Util.notifyError(error, Global.get('feedbackCopyLinkError')));
 };
 
-const imageLoaded = (imageEl) => {
-  imageEl.classList.remove('hidden');
-  document.querySelector('.image-modal .image-loading').classList.add('null');
-};
-
 const displayImage = (image) => {
-  const modal = document.querySelector('.image-modal');
-  const content = modal.querySelector('.image-wrapper');
-  const modalClose = modal.querySelector('.modal-close-button');
-  let imageContainer = modal.querySelector('.image-main img');
-  const imageInfoData = modal.querySelector('.image-info-data');
-  const imageInfoNext = modal.querySelector('.image-next-wrapper');
+  const modalContainer = document.querySelector('.modal-media');
+  const content = modalContainer.querySelector('.image-wrapper');
+  const modalClose = modalContainer.querySelector('.modal-close-button');
+  const imageWrapper = modalContainer.querySelector('.image-wrapper');
+  let imageContainer = modalContainer.querySelector('.image-main img');
+  const imageInfoData = modalContainer.querySelector('.image-info-data');
+  const imageInfoNext = modalContainer.querySelector('.image-next-wrapper');
 
   if (!imageContainer) {
     imageContainer = new Image();
-    modal.querySelector('.image-main').appendChild(imageContainer);
+    modalContainer.querySelector('.image-main').appendChild(imageContainer);
   }
 
   if (!image) {
     document.querySelectorAll('.image-next-action').forEach(i => i.classList.add('hidden'));
-    modal.querySelector('.image-loading').classList.add('null');
     content.classList.remove('null');
     modalClose.classList.remove('null');
-    imageContainer.classList.remove('hidden');
+    imageWrapper.classList.remove('filter-opacity');
     imageInfoData.classList.remove('null');
     imageInfoNext.classList.remove('null');
 
@@ -289,7 +284,7 @@ const displayImage = (image) => {
   imageContainer.alt = alt;
   imageContainer.title = alt;
   imageContainer.dataset.mediaId = image.id;
-  imageContainer.addEventListener('load', () => imageLoaded(imageContainer));
+  imageWrapper.classList.remove('filter-opacity');
 
   // Hide/display image nav buttons
   const firstImageEl = document.querySelector('#images-list .image-item');
@@ -340,9 +335,9 @@ const displayImage = (image) => {
       + '<a href="' + image.fullPathOriginal + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>';
   }
 
-  modal.querySelector('.image-number').textContent = '#' + image.id;
-  modal.querySelector('.image-caption').textContent = image.caption;
-  modal.querySelector('.image-meta').innerHTML =
+  modalContainer.querySelector('.image-number').textContent = '#' + image.id;
+  modalContainer.querySelector('.image-caption').textContent = image.caption;
+  modalContainer.querySelector('.image-meta').innerHTML =
     '<div><img src="/img/svg/upload-simple-white.svg" class="img-svg" alt="Upload">'
     + Global.formatDate(new Date(image.createdAt), true, true, true, true, true)
     + '</div>'
@@ -359,12 +354,12 @@ const displayImage = (image) => {
     + (pixels ? '<div>' + pixels + '</div>' : '')
     + (size ? '<div>' + size + '</div>' : '');
 
-  modal.querySelector('.image-meta .copy-link')
+  modalContainer.querySelector('.image-meta .copy-link')
     .addEventListener('click', e => handleCopyLink(e, image.fullPathMedium));
 
-  const imageDeleteEl = modal.querySelector('.image-delete');
+  const imageDeleteEl = modalContainer.querySelector('.image-delete');
   imageDeleteEl.dataset.mediaId = image.id;
-  const appearsOnContainer = modal.querySelector('.image-appears-on');
+  const appearsOnContainer = modalContainer.querySelector('.image-appears-on');
   appearsOnContainer.innerHTML = '';
   if (image.appearsOn && image.appearsOn.length) {
     imageDeleteEl.classList.add('null');
@@ -402,24 +397,14 @@ const displayImagePopup = (e) => {
   const next = e.currentTarget.next ?? false;
   const direction = e.currentTarget.direction ?? null;
 
-  const modal = document.querySelector('.image-modal');
-  const loadingContainer = modal.querySelector('.image-loading');
-  const modalClose = modal.querySelector('.modal-close-button');
-  const imageContainer = modal.querySelector('.image-main img');
-  const imageInfoData = modal.querySelector('.image-info-data');
-  const imageInfoNext = modal.querySelector('.image-next-wrapper');
+  const modalContainer = document.querySelector('.modal-media');
+  const modalClose = modalContainer.querySelector('.modal-close-button');
+  const imageWrapper = modalContainer.querySelector('.image-wrapper');
 
-  modal.classList.remove('null');
-  loadingContainer.classList.remove('null');
+  modalContainer.classList.remove('null');
   modalClose.classList.add('null');
-  if (imageContainer) {
-    imageContainer.classList.add('hidden');
-  }
-  if (imageInfoData) {
-    imageInfoData.classList.add('null');
-  }
-  if (imageInfoNext) {
-    imageInfoNext.classList.add('null');
+  if (imageWrapper) {
+    imageWrapper.classList.add('filter-opacity');
   }
 
   const qty = 1;
@@ -1025,8 +1010,7 @@ document.querySelectorAll('.image-item').forEach(im => {
 
 document.querySelectorAll('.image-next-action, .image-previous-action, .image-random-action').forEach(ina => {
   ina.addEventListener('click', () => {
-    const img = document.querySelector('.image-wrapper .image-main img');
-    img.classList.add('hidden');
+    const img = document.querySelector('.modal-media .image-wrapper .image-main img');
     img.mediaId = img.dataset.mediaId;
     img.direction = ina.dataset.direction
     img.next = true;
@@ -1046,7 +1030,7 @@ const deleteImage = async function (e, mediaId) {
   Request.delete('/api/file/' + mediaId)
     .then(() => {
       document.querySelector(".image-item[data-media-id='" + mediaId + "']").parentElement.classList.add('null');
-      document.querySelector('.image-modal').classList.add('null');
+      document.querySelector('.modal-media').classList.add('null');
     });
 }
 
@@ -1074,7 +1058,6 @@ document.querySelectorAll('input#images').forEach(im => {
         }
       },
     )
-      .then()
       .catch(error => Util.notifyError(error));
   });
 });
