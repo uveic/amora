@@ -262,6 +262,7 @@ const displayImage = (image) => {
   let imageContainer = modalContainer.querySelector('.image-main img');
   const imageInfoData = modalContainer.querySelector('.image-info-data');
   const imageInfoNext = modalContainer.querySelector('.image-next-wrapper');
+  const loaderContainer = modalContainer.querySelector('.loader-media');
 
   if (!imageContainer) {
     imageContainer = new Image();
@@ -275,6 +276,7 @@ const displayImage = (image) => {
     imageWrapper.classList.remove('filter-opacity');
     imageInfoData.classList.remove('null');
     imageInfoNext.classList.remove('null');
+    loaderContainer.classList.add('null');
 
     return;
   }
@@ -285,6 +287,7 @@ const displayImage = (image) => {
   imageContainer.title = alt;
   imageContainer.dataset.mediaId = image.id;
   imageWrapper.classList.remove('filter-opacity');
+  loaderContainer.classList.add('null');
 
   // Hide/display image nav buttons
   const firstImageEl = document.querySelector('#images-list .image-item');
@@ -406,6 +409,7 @@ const displayImagePopup = (e) => {
   if (imageWrapper) {
     imageWrapper.classList.add('filter-opacity');
   }
+  modalContainer.querySelector('.loader-media').classList.remove('null');
 
   const qty = 1;
   const typeId = 2; // See MediaType.php
