@@ -668,11 +668,16 @@ h2.page-content-subtitle {
   flex-grow: 1;
   flex-shrink: 1;
   background-color: transparent;
-  padding: 1rem;
+  padding: 0;
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
   position: relative;
+}
+
+.image-wrapper .image-info-data,
+.image-wrapper .image-next-wrapper {
+  padding: 1rem;
 }
 
 .image-wrapper .image-info .image-caption {

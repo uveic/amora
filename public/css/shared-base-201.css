@@ -898,6 +898,20 @@ svg,
   border: none;
 }
 
+.loader-media {
+  width: 100%;
+  height: 8px;
+  background:
+      linear-gradient(var(--color-bg-dark) 0 0) left/20px 20px no-repeat
+      var(--color-bg);
+  animation: loader3 1s infinite linear;
+  top: 0;
+  right: 0;
+}
+@keyframes loader3 {
+  50% {background-position: right }
+}
+
 /* Classes for generic use ends here */
 /* Homepage style starts here */
 .home-main {

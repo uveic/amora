@@ -18,6 +18,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
           </div>
         </div>
         <div class="image-info">
+          <div class="loader-media"></div>
           <div class="image-info-data">
             <div class="image-number"></div>
             <div class="image-caption"></div>
@@ -29,7 +30,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
               <?=$responseData->getLocalValue('globalRemove')?>
             </a>
           </div>
-          <div class="image-next-wrapper m-t-2">
+          <div class="image-next-wrapper">
             <a href="#" class="image-previous-action hidden" data-direction="ASC"><img src="/img/svg/caret-left-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalNext')?>"><?=strtolower($responseData->getLocalValue('globalNext'))?></a>
             <a href="#" class="image-random-action" data-direction="RAND()"><img src="/img/svg/shuffle-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalNext')?>"></a>
             <a href="#" class="image-next-action" data-direction="DESC"><?=strtolower($responseData->getLocalValue('globalPrevious'))?><img src="/img/svg/caret-right-white.svg" class="img-svg" alt="<?=$responseData->getLocalValue('globalPrevious')?>"></a>
