@@ -4,6 +4,9 @@ import {Global} from "./module/localisation-004.js";
 import {Uploader} from "./module/Uploader-010.js";
 
 let globalTags = [];
+const mediaCache = [];
+const mediaCacheNext = [];
+const mediaCachePrevious = [];
 
 const selectMediaAction = (e) => {
   e.preventDefault();
@@ -254,7 +257,7 @@ const handleCopyLink = (ev, href) => {
     .catch(error => Util.notifyError(error, Global.get('feedbackCopyLinkError')));
 };
 
-const displayImage = (image) => {
+const displayModalImage = (image) => {
   const modalContainer = document.querySelector('.modal-media');
   const content = modalContainer.querySelector('.image-wrapper');
   const modalClose = modalContainer.querySelector('.modal-close-button');
@@ -393,7 +396,83 @@ const displayImage = (image) => {
   modalClose.classList.remove('null');
 };
 
-const displayImagePopup = (e) => {
+const modalNextImage = async (mediaId, next, direction) => {
+  // const currentMediaEl = document.querySelector('.');
+  //
+  // const mediaId = e.currentTarget.mediaId;
+  // const next = e.currentTarget.next ?? false;
+  // const direction = e.currentTarget.direction ?? null;
+
+  const preloadMedia = (mediaId, next = true) => {
+    console.log('Preloading...');
+    const mediaIdToPreload = next ? mediaCacheNext[mediaId] : mediaCachePrevious[mediaId];
+    if (!mediaIdToPreload) {
+      return;
+    }
+
+    const mediaObj = mediaCache[mediaIdToPreload];
+    if (!mediaObj) {
+      return;
+    }
+
+    const imgTemp = new Image();
+    imgTemp.src = mediaObj.fullPathMedium;
+  };
+
+  if (direction === 'DESC' && mediaCacheNext[mediaId]) {
+    const nextMediaId = mediaCacheNext[mediaId];
+
+    if (mediaCache[nextMediaId]) {
+      preloadMedia(nextMediaId);
+      return mediaCache[nextMediaId];
+    }
+  } else if (direction === 'ASC' && mediaCachePrevious[mediaId]) {
+    const previousMediaId = mediaCachePrevious[mediaId];
+
+    if (mediaCache[previousMediaId]) {
+      preloadMedia(mediaId, false);
+      return mediaCache[previousMediaId];
+    }
+  }
+
+  const qty = 10;
+  const typeId = 2; // See MediaType.php
+  const apiUrl = next
+    ? '/api/file/' + mediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty
+    : '/api/file/' + mediaId
+
+  return Request.get(apiUrl)
+    .then(response => {
+      const updateMediaCache = (medias) => {
+        let previousId = null;
+
+        medias.forEach(item => {
+          if (!mediaCache[item.id]) {
+            mediaCache[item.id] = item;
+          }
+
+          if (previousId) {
+            mediaCacheNext[previousId] = item.id;
+            mediaCachePrevious[item.id] = previousId;
+          }
+
+          previousId = item.id;
+        });
+      };
+
+      if (response.file) {
+        updateMediaCache([response.file])
+      } else {
+        updateMediaCache(response.files);
+      }
+
+      return next === true
+        ? response.files[0] ?? null
+        : response.file ?? null;
+    });
+};
+
+const displayNextImagePopup = (e) => {
   e.preventDefault();
 
   const mediaId = e.currentTarget.mediaId;
@@ -411,16 +490,9 @@ const displayImagePopup = (e) => {
   }
   modalContainer.querySelector('.loader-media').classList.remove('null');
 
-  const qty = 1;
-  const typeId = 2; // See MediaType.php
-  const apiUrl = next
-    ? '/api/file/' + mediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty
-    : '/api/file/' + mediaId
-  Request.get(apiUrl)
+  modalNextImage(mediaId, next, direction)
     .then(response => {
-      next === true
-        ? displayImage(response.files[0] ?? null)
-        : displayImage(response.file ?? null);
+      displayModalImage(response);
     });
 };
 
@@ -962,8 +1034,8 @@ const updateAlbumSectionSequences = (sourceSequence, targetSequence) => {
 }
 
 const addEventListenerAction = (image, mediaId, eventListenerAction, targetContainerId) => {
-  if (eventListenerAction === 'displayImagePopup') {
-    image.addEventListener('click', displayImagePopup);
+  if (eventListenerAction === 'displayNextImagePopup') {
+    image.addEventListener('click', displayNextImagePopup);
   } else if (eventListenerAction === 'insertImageInArticle') {
     image.addEventListener('click', insertImageInArticle);
   } else if (eventListenerAction === 'articleSelectMainImage') {
@@ -1009,16 +1081,18 @@ const displayImageFromApiCall = (container, images, eventListenerAction, targetC
 
 document.querySelectorAll('.image-item').forEach(im => {
   im.mediaId = im.dataset.mediaId;
-  im.addEventListener('click', displayImagePopup);
+  im.addEventListener('click', displayNextImagePopup);
 });
 
 document.querySelectorAll('.image-next-action, .image-previous-action, .image-random-action').forEach(ina => {
-  ina.addEventListener('click', () => {
+  ina.addEventListener('click', (e) => {
+    e.preventDefault();
+
     const img = document.querySelector('.modal-media .image-wrapper .image-main img');
     img.mediaId = img.dataset.mediaId;
     img.direction = ina.dataset.direction
     img.next = true;
-    img.addEventListener('click', displayImagePopup);
+    img.addEventListener('click', displayNextImagePopup);
     img.click();
   });
 });
@@ -1057,7 +1131,7 @@ document.querySelectorAll('input#images').forEach(im => {
       (response) => {
         if (response && response.file.id) {
           const newMediaEl = container.querySelector('.image-item[data-media-id="' + response.file.id + '"]');
-          newMediaEl.addEventListener('click', displayImagePopup);
+          newMediaEl.addEventListener('click', displayNextImagePopup);
           newMediaEl.mediaId = response.file.id;
         }
       },
