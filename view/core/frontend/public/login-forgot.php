@@ -4,7 +4,7 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
-$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
+$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, className: 'logo-on-top');
 
 ?>
 <!DOCTYPE html>
@@ -23,7 +23,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
     </a>
     <form method="POST" id="form-login-forgot">
       <div>
-        <h1 id="register-title" class="logo m-b-4"><?=$siteLogoHtml?></h1>
+        <h1 id="register-title" class="m-b-3"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?></h2>
         <div id="register-form">
           <p class="light-text-color m-b-3"><?=$this->e($responseData->getLocalValue('authenticationForgotPasswordSubtitle'))?></p>

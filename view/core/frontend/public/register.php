@@ -5,7 +5,7 @@ use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
-$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
+$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, className: 'logo-on-top');
 
 ?>
 <!DOCTYPE html>
@@ -24,7 +24,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
     </a>
     <form method="POST" id="form-register">
       <div>
-        <h1 id="register-title" class="logo m-b-4"><?=$siteLogoHtml?></h1>
+        <h1 id="register-title" class="m-b-3"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationRegisterSubtitle'))?></h2>
         <p class="light-text-color m-b-3"><?=$responseData->getLocalValue('authenticationRegisterAlreadyLogin')?> <a href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navSignIn')?></a>.</p>
         <div class="field">

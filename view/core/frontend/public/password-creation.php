@@ -5,7 +5,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 
-$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage);
+$siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, className: 'logo-on-top');
 $titleHtml = $responseData->getLocalValue('authenticationPasswordCreateSubtitle');
 $subtitleHtml = '';
 $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink');
