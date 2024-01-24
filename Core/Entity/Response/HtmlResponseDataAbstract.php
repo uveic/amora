@@ -74,6 +74,7 @@ abstract class HtmlResponseDataAbstract
         string $indentation = '',
         ?int $logoWidth = null,
         ?int $logoHeight = null,
+        ?string $className = null,
     ): string {
         $imageUrl = Core::getConfig()->logoImageUrl;
         if (empty($siteName)) {
@@ -84,7 +85,7 @@ abstract class HtmlResponseDataAbstract
 
         $output[] = $indentation . '<div class="logo-wrapper">';
 
-        $output[] = $indentation . '  <a class="logo" href="' . UrlBuilderUtil::buildBaseUrl($siteLanguage) . '">';
+        $output[] = $indentation . '  <a class="logo' . ($className ? ' ' . $className : '') . '" href="' . UrlBuilderUtil::buildBaseUrl($siteLanguage) . '">';
 
         if ($imageUrl) {
             $widthAndHeight = $logoWidth ? (' width="' . $logoWidth . '"') : '';

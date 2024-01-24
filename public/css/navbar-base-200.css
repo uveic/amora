@@ -6,11 +6,16 @@
   width: 100%;
 }
 
-.logo {
+.logo,
+.logo:hover,
+.logo:active,
+.logo:visited,
+.logo:focus {
   display: flex;
   flex-flow: row nowrap;
-  gap: 0.75rem;
   align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
   letter-spacing: 0;
   font-family: var(--font-title);
   font-weight: bold;
@@ -19,6 +24,7 @@
   margin: 0;
   max-width: 400px;
   min-width: 175px;
+  min-height: 30px;
   height: auto;
   padding: 0;
   color: var(--color-bg);
@@ -31,18 +37,13 @@
   max-height: 40px;
 }
 
-.logo,
-.logo:hover,
-.logo:active,
-.logo:visited,
-.logo:focus {
-  color: var(--color-bg);
-  font-weight: bold;
-  font-size: 1.2rem;
-  line-height: 1;
-  padding: 0.3rem 0;
-  min-height: 30px;
-  display: flex;
+.logo-on-top,
+.logo-on-top:hover,
+.logo-on-top:active,
+.logo-on-top:visited,
+.logo-on-top:focus {
+  flex-flow: column nowrap;
+  justify-content: center;
 }
 
 .logo.white {
