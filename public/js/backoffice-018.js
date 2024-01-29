@@ -5,8 +5,8 @@ import {Uploader} from "./module/Uploader-010.js";
 
 let globalTags = [];
 const mediaCache = [];
-const mediaCacheNext = [];
-const mediaCachePrevious = [];
+const mediaCacheRight = [];
+const mediaCacheLeft = [];
 
 const selectMediaAction = (e) => {
   e.preventDefault();
@@ -258,6 +258,8 @@ const handleCopyLink = (ev, href) => {
 };
 
 const displayModalImage = (image) => {
+  console.log('Displaying media ID: ' + image.id);
+
   const modalContainer = document.querySelector('.modal-media');
   const content = modalContainer.querySelector('.image-wrapper');
   const modalClose = modalContainer.querySelector('.modal-close-button');
@@ -396,50 +398,44 @@ const displayModalImage = (image) => {
   modalClose.classList.remove('null');
 };
 
-const modalNextImage = async (mediaId, next, direction) => {
-  // const currentMediaEl = document.querySelector('.');
-  //
-  // const mediaId = e.currentTarget.mediaId;
-  // const next = e.currentTarget.next ?? false;
-  // const direction = e.currentTarget.direction ?? null;
+const preloadMedia = (mediaId, next = true) => {
+  const mediaIdToPreload = next ? mediaCacheRight[mediaId] : mediaCacheLeft[mediaId];
+  if (!mediaIdToPreload) {
+    return;
+  }
 
-  const preloadMedia = (mediaId, next = true) => {
-    console.log('Preloading...');
-    const mediaIdToPreload = next ? mediaCacheNext[mediaId] : mediaCachePrevious[mediaId];
-    if (!mediaIdToPreload) {
-      return;
-    }
+  const mediaObj = mediaCache[mediaIdToPreload];
+  if (!mediaObj) {
+    return;
+  }
 
-    const mediaObj = mediaCache[mediaIdToPreload];
-    if (!mediaObj) {
-      return;
-    }
+  console.log('Preloading media ID: ' + mediaObj.id);
 
-    const imgTemp = new Image();
-    imgTemp.src = mediaObj.fullPathMedium;
-  };
+  const imgTemp = new Image();
+  imgTemp.src = mediaObj.fullPathMedium;
+};
 
-  if (direction === 'DESC' && mediaCacheNext[mediaId]) {
-    const nextMediaId = mediaCacheNext[mediaId];
+const modalGetNextMedia = async (currentMediaId, next, direction) => {
+  let nextMediaId = null;
+  if (direction === 'DESC' && mediaCacheRight[currentMediaId]) {
+    nextMediaId = mediaCacheRight[currentMediaId];
+  } else if (direction === 'ASC' && mediaCacheLeft[currentMediaId]) {
+    nextMediaId = mediaCacheLeft[currentMediaId];
+  }
 
-    if (mediaCache[nextMediaId]) {
-      preloadMedia(nextMediaId);
-      return mediaCache[nextMediaId];
-    }
-  } else if (direction === 'ASC' && mediaCachePrevious[mediaId]) {
-    const previousMediaId = mediaCachePrevious[mediaId];
+  console.log('Next media ID: ' + nextMediaId);
 
-    if (mediaCache[previousMediaId]) {
-      preloadMedia(mediaId, false);
-      return mediaCache[previousMediaId];
-    }
+  if (nextMediaId && mediaCache[nextMediaId]) {
+    return mediaCache[nextMediaId];
   }
 
   const qty = 10;
   const typeId = 2; // See MediaType.php
   const apiUrl = next
-    ? '/api/file/' + mediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty
-    : '/api/file/' + mediaId
+    ? '/api/file/' + currentMediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty
+    : '/api/file/' + currentMediaId
+
+  console.log('Loading more...');
 
   return Request.get(apiUrl)
     .then(response => {
@@ -452,8 +448,9 @@ const modalNextImage = async (mediaId, next, direction) => {
           }
 
           if (previousId) {
-            mediaCacheNext[previousId] = item.id;
-            mediaCachePrevious[item.id] = previousId;
+            direction === 'ASC'
+              ? mediaCacheLeft[previousId] = item.id
+              : mediaCacheRight[previousId] = item.id;
           }
 
           previousId = item.id;
@@ -490,9 +487,12 @@ const displayNextImagePopup = (e) => {
   }
   modalContainer.querySelector('.loader-media').classList.remove('null');
 
-  modalNextImage(mediaId, next, direction)
-    .then(response => {
-      displayModalImage(response);
+  console.log('Current media ID: ' + mediaId);
+
+  modalGetNextMedia(mediaId, next, direction)
+    .then(mediaObj => {
+      displayModalImage(mediaObj);
+      preloadMedia(mediaObj.id, next);
     });
 };
 
