@@ -123,6 +123,7 @@ class UploaderClass {
     }
   }
 
+  // Deprecated
   async uploadImage(
     file,
     imageContainer,
