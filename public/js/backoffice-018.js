@@ -258,8 +258,6 @@ const handleCopyLink = (ev, href) => {
 };
 
 const displayModalImage = (image) => {
-  console.log('Displaying media ID: ' + image.id);
-
   const modalContainer = document.querySelector('.modal-media');
   const content = modalContainer.querySelector('.image-wrapper');
   const modalClose = modalContainer.querySelector('.modal-close-button');
@@ -409,11 +407,55 @@ const preloadMedia = (mediaId, next = true) => {
     return;
   }
 
-  console.log('Preloading media ID: ' + mediaObj.id);
-
   const imgTemp = new Image();
   imgTemp.src = mediaObj.fullPathMedium;
 };
+
+const updateMediaCache = (medias, direction, previousId) => {
+  medias.forEach(item => {
+    if (!mediaCache[item.id]) {
+      mediaCache[item.id] = item;
+    }
+
+    if (previousId) {
+      if (direction === 'ASC') {
+        mediaCacheLeft[previousId] = item.id;
+        mediaCacheRight[item.id] = previousId;
+      } else {
+        mediaCacheLeft[item.id] = previousId;
+        mediaCacheRight[previousId] = item.id;
+      }
+    }
+
+    previousId = item.id;
+  });
+};
+
+const modalMediaLoadMore = (nextMediaId, direction) => {
+  if (!nextMediaId) {
+    return;
+  }
+
+  const qty = 20;
+  const typeId = 2; // See MediaType.php
+  const apiUrl = '/api/file/' + nextMediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty;
+
+  Request.get(apiUrl)
+    .then(response => {
+        updateMediaCache(response.files, direction, nextMediaId);
+    });
+};
+
+const getThirdNextMediaId = (direction, nextMediaId) => {
+  const nextNextMediaId = direction === 'DESC' ? mediaCacheRight[nextMediaId] : mediaCacheLeft[nextMediaId];
+  const secondNextMediaId = nextNextMediaId
+    ? (direction === 'DESC' ? mediaCacheRight[nextNextMediaId] : mediaCacheLeft[nextNextMediaId])
+    : null;
+
+  return secondNextMediaId
+    ? (direction === 'DESC' ? mediaCacheRight[secondNextMediaId] : mediaCacheLeft[secondNextMediaId])
+    : null;
+}
 
 const modalGetNextMedia = async (currentMediaId, next, direction) => {
   let nextMediaId = null;
@@ -423,44 +465,30 @@ const modalGetNextMedia = async (currentMediaId, next, direction) => {
     nextMediaId = mediaCacheLeft[currentMediaId];
   }
 
-  console.log('Next media ID: ' + nextMediaId);
+  const nextNextMediaId = getThirdNextMediaId(direction, nextMediaId);
+  if (!nextNextMediaId) {
+    setTimeout(
+      () => modalMediaLoadMore(currentMediaId, direction),
+      250
+    );
+  }
 
   if (nextMediaId && mediaCache[nextMediaId]) {
     return mediaCache[nextMediaId];
   }
 
-  const qty = 10;
+  const qty = 5;
   const typeId = 2; // See MediaType.php
   const apiUrl = next
     ? '/api/file/' + currentMediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty
     : '/api/file/' + currentMediaId
 
-  console.log('Loading more...');
-
   return Request.get(apiUrl)
     .then(response => {
-      const updateMediaCache = (medias) => {
-        let previousId = null;
-
-        medias.forEach(item => {
-          if (!mediaCache[item.id]) {
-            mediaCache[item.id] = item;
-          }
-
-          if (previousId) {
-            direction === 'ASC'
-              ? mediaCacheLeft[previousId] = item.id
-              : mediaCacheRight[previousId] = item.id;
-          }
-
-          previousId = item.id;
-        });
-      };
-
       if (response.file) {
-        updateMediaCache([response.file])
+        updateMediaCache([response.file], direction)
       } else {
-        updateMediaCache(response.files);
+        updateMediaCache(response.files, direction);
       }
 
       return next === true
@@ -486,8 +514,6 @@ const displayNextImagePopup = (e) => {
     imageWrapper.classList.add('filter-opacity');
   }
   modalContainer.querySelector('.loader-media').classList.remove('null');
-
-  console.log('Current media ID: ' + mediaId);
 
   modalGetNextMedia(mediaId, next, direction)
     .then(mediaObj => {
