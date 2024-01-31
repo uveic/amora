@@ -500,7 +500,13 @@ const modalGetNextMedia = async (currentMediaId, direction) => {
 
   return modalRetrieveMediaAndAddToCache(currentMediaId, direction)
     .then(mediaObj => {
-      return mediaObj ?? null;
+      const newMedia = new Image();
+      newMedia.src = mediaObj.fullPathMedium;
+
+      return new Promise((resolve, reject) => {
+        newMedia.onload = () => resolve(mediaObj);
+        newMedia.onerror = reject;
+      });
     });
 };
 
