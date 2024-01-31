@@ -437,23 +437,22 @@ const updateMediaCache = (medias, direction = null, previousId = null) => {
   });
 };
 
-const modalMediaAddToCache = (mediaId, direction) => {
-  const fourthNextMediaId = getFourthNextMediaId(mediaId, direction);
-  if (fourthNextMediaId) {
-    return;
+const modalRetrieveMediaAndAddToCache = async (mediaId, direction) => {
+  if (direction === 'DESC' || direction === 'ASC') {
+    const fourthNextMediaId = getFourthNextMediaId(mediaId, direction);
+    if (fourthNextMediaId) {
+      return mediaCache[mediaId];
+    }
   }
 
-  if (!mediaId) {
-    return;
-  }
-
-  const qty = 20;
+  const qty = direction === 'DESC' || direction === 'ASC' ? 20 : 1;
   const typeId = 2; // See MediaType.php
   const apiUrl = '/api/file/' + mediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty;
 
-  Request.get(apiUrl)
+  return Request.get(apiUrl)
     .then(response => {
         updateMediaCache(response.files, direction, mediaId);
+        return response.files[0];
     });
 };
 
@@ -499,14 +498,9 @@ const modalGetNextMedia = async (currentMediaId, direction) => {
     return mediaCache[nextMediaId];
   }
 
-  const qty = 5;
-  const typeId = 2; // See MediaType.php
-  const apiUrl = '/api/file/' + currentMediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty;
-
-  return Request.get(apiUrl)
-    .then(response => {
-      updateMediaCache(response.files, direction);
-      return response.files[0] ?? [];
+  return modalRetrieveMediaAndAddToCache(currentMediaId, direction)
+    .then(mediaObj => {
+      return mediaObj ?? null;
     });
 };
 
@@ -536,15 +530,14 @@ const displayNextImagePopup = (e) => {
       .then(mediaObj => {
         displayModalImage(mediaObj);
         preloadMedia(mediaObj.id, direction);
-      }).then(() => {
-        modalMediaAddToCache(mediaId, direction);
       })
     : modalGetMedia(mediaId)
       .then(mediaObj => {
         displayModalImage(mediaObj);
         preloadMedia(mediaObj.id, direction);
       }).then(() => {
-        modalMediaAddToCache(mediaId, direction);
+        modalRetrieveMediaAndAddToCache(mediaId, direction)
+          .then();
       });
 };
 
