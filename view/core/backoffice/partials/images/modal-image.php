@@ -11,6 +11,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
         <img src="/img/svg/x-white.svg" class="img-svg img-svg-20" width="20" height="20" alt="<?=$responseData->getLocalValue('globalClose')?>">
       </a>
       <div class="image-wrapper null">
+        <div class="loader-media"></div>
         <div class="image-main">
           <div class="image-main-nav">
             <a href="#" class="image-previous-action hidden" data-direction="ASC"></a>
@@ -18,7 +19,6 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
           </div>
         </div>
         <div class="image-info">
-          <div class="loader-media"></div>
           <div class="image-info-data">
             <div class="image-number"></div>
             <div class="image-caption"></div>

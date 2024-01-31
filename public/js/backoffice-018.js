@@ -524,6 +524,17 @@ const displayNextImagePopup = (e) => {
   imageWrapper.classList.add('filter-opacity');
   imageWrapper.classList.remove('null');
   modalContainer.querySelector('.loader-media').classList.remove('null');
+
+  if (next) {
+    modalGetNextMedia(mediaId, direction)
+      .then(mediaObj => {
+        displayModalImage(mediaObj);
+        preloadMedia(mediaObj.id, direction);
+      });
+
+    return;
+  }
+
   const imageEl = imageWrapper.querySelector('.image-main img');
   if (imageEl) {
     imageEl.classList.add('hidden');
@@ -531,20 +542,14 @@ const displayNextImagePopup = (e) => {
   imageWrapper.querySelector('.image-info-data').classList.add('hidden');
   imageWrapper.querySelector('.image-next-wrapper').classList.add('hidden');
 
-  next
-    ? modalGetNextMedia(mediaId, direction)
-      .then(mediaObj => {
-        displayModalImage(mediaObj);
-        preloadMedia(mediaObj.id, direction);
-      })
-    : modalGetMedia(mediaId)
-      .then(mediaObj => {
-        displayModalImage(mediaObj);
-        preloadMedia(mediaObj.id, direction);
-      }).then(() => {
-        modalRetrieveMediaAndAddToCache(mediaId, direction)
-          .then();
-      });
+  modalGetMedia(mediaId)
+    .then(mediaObj => {
+      displayModalImage(mediaObj);
+      preloadMedia(mediaObj.id, direction);
+    }).then(() => {
+      modalRetrieveMediaAndAddToCache(mediaId, direction)
+        .then();
+    });
 };
 
 const insertImageInArticle = (e) => {
