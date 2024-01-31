@@ -530,7 +530,12 @@ const displayNextImagePopup = (e) => {
       .then(mediaObj => {
         displayModalImage(mediaObj);
         preloadMedia(mediaObj.id, direction);
-      });
+      }).then(() => {
+        if (direction === 'DESC' || direction === 'ASC') {
+          modalRetrieveMediaAndAddToCache(mediaId, direction)
+            .then();
+        }
+    });
 
     return;
   }
