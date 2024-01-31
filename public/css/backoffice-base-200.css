@@ -648,7 +648,7 @@ h2.page-content-subtitle {
 .image-wrapper > .image-main {
   width: auto;
   min-width: 300px;
-  flex-grow: 1;
+  flex-grow: 0;
   flex-shrink: 1;
   background-color: transparent;
   position: relative;
