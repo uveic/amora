@@ -289,8 +289,11 @@ const displayModalImage = (image) => {
   imageContainer.alt = alt;
   imageContainer.title = alt;
   imageContainer.dataset.mediaId = image.id;
+  imageContainer.classList.remove('hidden');
   imageWrapper.classList.remove('filter-opacity');
   loaderContainer.classList.add('null');
+  imageInfoData.classList.remove('hidden');
+  imageInfoNext.classList.remove('hidden');
 
   // Hide/display image nav buttons
   const firstImageEl = document.querySelector('#images-list .image-item');
@@ -396,8 +399,11 @@ const displayModalImage = (image) => {
   modalClose.classList.remove('null');
 };
 
-const preloadMedia = (mediaId, next = true) => {
-  const mediaIdToPreload = next ? mediaCacheRight[mediaId] : mediaCacheLeft[mediaId];
+const preloadMedia = (mediaId, direction = 'DESC') => {
+  const mediaIdToPreload = direction === 'DESC'
+    ? mediaCacheRight[mediaId]
+    : mediaCacheLeft[mediaId];
+
   if (!mediaIdToPreload) {
     return;
   }
@@ -411,7 +417,7 @@ const preloadMedia = (mediaId, next = true) => {
   imgTemp.src = mediaObj.fullPathMedium;
 };
 
-const updateMediaCache = (medias, direction, previousId) => {
+const updateMediaCache = (medias, direction = null, previousId = null) => {
   medias.forEach(item => {
     if (!mediaCache[item.id]) {
       mediaCache[item.id] = item;
@@ -421,7 +427,7 @@ const updateMediaCache = (medias, direction, previousId) => {
       if (direction === 'ASC') {
         mediaCacheLeft[previousId] = item.id;
         mediaCacheRight[item.id] = previousId;
-      } else {
+      } else if (direction === 'DESC') {
         mediaCacheLeft[item.id] = previousId;
         mediaCacheRight[previousId] = item.id;
       }
@@ -431,46 +437,62 @@ const updateMediaCache = (medias, direction, previousId) => {
   });
 };
 
-const modalMediaLoadMore = (nextMediaId, direction) => {
-  if (!nextMediaId) {
+const modalMediaAddToCache = (mediaId, direction) => {
+  const fourthNextMediaId = getFourthNextMediaId(mediaId, direction);
+  if (fourthNextMediaId) {
+    return;
+  }
+
+  if (!mediaId) {
     return;
   }
 
   const qty = 20;
   const typeId = 2; // See MediaType.php
-  const apiUrl = '/api/file/' + nextMediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty;
+  const apiUrl = '/api/file/' + mediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty;
 
   Request.get(apiUrl)
     .then(response => {
-        updateMediaCache(response.files, direction, nextMediaId);
+        updateMediaCache(response.files, direction, mediaId);
     });
 };
 
-const getThirdNextMediaId = (direction, nextMediaId) => {
-  const nextNextMediaId = direction === 'DESC' ? mediaCacheRight[nextMediaId] : mediaCacheLeft[nextMediaId];
-  const secondNextMediaId = nextNextMediaId
-    ? (direction === 'DESC' ? mediaCacheRight[nextNextMediaId] : mediaCacheLeft[nextNextMediaId])
+const getFourthNextMediaId = (mediaId, direction) => {
+  const nextMediaId = direction === 'DESC'
+    ? mediaCacheRight[mediaId]
+    : mediaCacheLeft[mediaId];
+
+  const secondNextMediaId = nextMediaId
+    ? (direction === 'DESC' ? mediaCacheRight[nextMediaId] : mediaCacheLeft[nextMediaId])
     : null;
 
-  return secondNextMediaId
+  const thirdNextMediaId = secondNextMediaId
     ? (direction === 'DESC' ? mediaCacheRight[secondNextMediaId] : mediaCacheLeft[secondNextMediaId])
+    : null;
+
+  return thirdNextMediaId
+    ? (direction === 'DESC' ? mediaCacheRight[thirdNextMediaId] : mediaCacheLeft[thirdNextMediaId])
     : null;
 }
 
-const modalGetNextMedia = async (currentMediaId, next, direction) => {
+const modalGetMedia = async (mediaId) => {
+  if (mediaCache[mediaId]) {
+    return mediaCache[mediaId];
+  }
+
+  return Request.get('/api/file/' + mediaId)
+    .then(response => {
+      updateMediaCache([response.file]);
+      return response.file;
+    });
+};
+
+const modalGetNextMedia = async (currentMediaId, direction) => {
   let nextMediaId = null;
   if (direction === 'DESC' && mediaCacheRight[currentMediaId]) {
     nextMediaId = mediaCacheRight[currentMediaId];
   } else if (direction === 'ASC' && mediaCacheLeft[currentMediaId]) {
     nextMediaId = mediaCacheLeft[currentMediaId];
-  }
-
-  const nextNextMediaId = getThirdNextMediaId(direction, nextMediaId);
-  if (!nextNextMediaId) {
-    setTimeout(
-      () => modalMediaLoadMore(currentMediaId, direction),
-      250
-    );
   }
 
   if (nextMediaId && mediaCache[nextMediaId]) {
@@ -479,21 +501,12 @@ const modalGetNextMedia = async (currentMediaId, next, direction) => {
 
   const qty = 5;
   const typeId = 2; // See MediaType.php
-  const apiUrl = next
-    ? '/api/file/' + currentMediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty
-    : '/api/file/' + currentMediaId
+  const apiUrl = '/api/file/' + currentMediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty;
 
   return Request.get(apiUrl)
     .then(response => {
-      if (response.file) {
-        updateMediaCache([response.file], direction)
-      } else {
-        updateMediaCache(response.files, direction);
-      }
-
-      return next === true
-        ? response.files[0] ?? null
-        : response.file ?? null;
+      updateMediaCache(response.files, direction);
+      return response.files[0] ?? [];
     });
 };
 
@@ -502,24 +515,37 @@ const displayNextImagePopup = (e) => {
 
   const mediaId = e.currentTarget.mediaId;
   const next = e.currentTarget.next ?? false;
-  const direction = e.currentTarget.direction ?? null;
+  const direction = e.currentTarget.direction ?? 'DESC';
 
   const modalContainer = document.querySelector('.modal-media');
-  const modalClose = modalContainer.querySelector('.modal-close-button');
   const imageWrapper = modalContainer.querySelector('.image-wrapper');
 
   modalContainer.classList.remove('null');
-  modalClose.classList.add('null');
-  if (imageWrapper) {
-    imageWrapper.classList.add('filter-opacity');
-  }
+  imageWrapper.classList.add('filter-opacity');
+  imageWrapper.classList.remove('null');
   modalContainer.querySelector('.loader-media').classList.remove('null');
+  const imageEl = imageWrapper.querySelector('.image-main img');
+  if (imageEl) {
+    imageEl.classList.add('hidden');
+  }
+  imageWrapper.querySelector('.image-info-data').classList.add('hidden');
+  imageWrapper.querySelector('.image-next-wrapper').classList.add('hidden');
 
-  modalGetNextMedia(mediaId, next, direction)
-    .then(mediaObj => {
-      displayModalImage(mediaObj);
-      preloadMedia(mediaObj.id, next);
-    });
+  next
+    ? modalGetNextMedia(mediaId, direction)
+      .then(mediaObj => {
+        displayModalImage(mediaObj);
+        preloadMedia(mediaObj.id, direction);
+      }).then(() => {
+        modalMediaAddToCache(mediaId, direction);
+      })
+    : modalGetMedia(mediaId)
+      .then(mediaObj => {
+        displayModalImage(mediaObj);
+        preloadMedia(mediaObj.id, direction);
+      }).then(() => {
+        modalMediaAddToCache(mediaId, direction);
+      });
 };
 
 const insertImageInArticle = (e) => {
@@ -1115,6 +1141,11 @@ document.querySelectorAll('.image-next-action, .image-previous-action, .image-ra
     e.preventDefault();
 
     const img = document.querySelector('.modal-media .image-wrapper .image-main img');
+    if (!img) {
+      // The previous image is still loading
+      return;
+    }
+
     img.mediaId = img.dataset.mediaId;
     img.direction = ina.dataset.direction
     img.next = true;
