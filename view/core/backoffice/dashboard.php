@@ -11,6 +11,7 @@ $this->layout('base', ['responseData' => $responseData])
       <div id="feedback" class="feedback null"></div>
       <div class="backoffice-wrapper">
 <?=$this->insert('partials/dashboard/links', ['responseData' => $responseData])?>
+<?=$this->insert('partials/dashboard/analytics', ['responseData' => $responseData])?>
 <?=$this->insert('partials/dashboard/shortcuts', ['responseData' => $responseData])?>
       </div>
     </section>

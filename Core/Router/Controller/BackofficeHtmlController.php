@@ -89,6 +89,25 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $userCount = $this->userService->getTotalUsers();
         $albumCount = $this->albumService->getTotalAlbums();
 
+        $now = new DateTimeImmutable();
+        $fromToday = DateUtil::convertStringToDateTimeImmutable($now->format('Y-m-d 00:00:00'));
+        $toToday = DateUtil::convertStringToDateTimeImmutable($now->format('Y-m-d 23:59:59'));
+
+        $visitorsToday = $this->analyticsService->countTop(
+            columnName: CountDbColumn::Visitor,
+            from: $fromToday,
+            to: $toToday,
+            eventType: EventType::Visitor,
+            limit: 1000000,
+        );
+
+        $reportPageViewsToday = $this->analyticsService->countPageViews(
+            from: $fromToday,
+            to: $toToday,
+            period: Period::Day,
+            eventType: EventType::Visitor,
+        );
+
         return Response::createHtmlResponse(
             template: 'core/backoffice/dashboard',
             responseData: new HtmlResponseDataAdmin(
@@ -101,6 +120,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                     blogPosts: $articlesCount[ArticleType::Blog->value] ?? 0,
                     users: $userCount,
                     albums: $albumCount,
+                    visitorsToday: count($visitorsToday),
+                    pageViewsToday: $reportPageViewsToday->total,
                 ),
             ),
         );
