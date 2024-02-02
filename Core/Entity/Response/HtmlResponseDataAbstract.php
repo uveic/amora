@@ -21,6 +21,7 @@ abstract class HtmlResponseDataAbstract
     public ?string $siteImagePath;
     public readonly int $lastUpdatedTimestamp;
     public readonly string $nonce;
+    public readonly string $themeColourHex;
 
     public function __construct(
         public readonly Request $request,
@@ -42,6 +43,7 @@ abstract class HtmlResponseDataAbstract
         $this->siteUrl = trim($this->baseUrl, ' /') . '/' . ltrim($this->sitePath, ' /');
         $this->siteLanguage = $request->siteLanguage;
         $this->siteName = $this->localisationUtil->getValue('siteName');
+        $this->themeColourHex = Core::getConfig()->themeColourHex;
 
         $imagePath = parse_url($siteImagePath ?? ($siteImageUrl ?? ''), PHP_URL_PATH);
         $this->siteImagePath = $imagePath ? UrlBuilderUtil::buildBaseUrlWithoutLanguage() . $imagePath : '';

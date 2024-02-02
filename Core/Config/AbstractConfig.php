@@ -10,46 +10,46 @@ enum Env {
     case Staging;
 }
 
-final class Database {
+final readonly class Database {
     public function __construct(
-        public readonly string $host = 'localhost',
-        public readonly string $user = 'user',
-        public readonly string $password = 'pass',
-        public readonly string $name = 'amora',
+        public string $host = 'localhost',
+        public string $user = 'user',
+        public string $password = 'pass',
+        public string $name = 'amora',
     ) {}
 }
 
-final class DatabaseBackup {
+final readonly class DatabaseBackup {
     public function __construct(
-        public readonly string $mysqlCommandPath = 'mysql',
-        public readonly string $mysqlDumpCommandPath = 'mysqldump',
-        public readonly string $gzipCommandPath = 'gzip',
-        public readonly string $folderPath = '/tmp/',
+        public string $mysqlCommandPath = 'mysql',
+        public string $mysqlDumpCommandPath = 'mysqldump',
+        public string $gzipCommandPath = 'gzip',
+        public string $folderPath = '/tmp/',
     ) {}
 }
 
-final class MailerSendGrid
+final readonly class MailerSendGrid
 {
     public function __construct(
-        public readonly string $apiKey = '',
-        public readonly string $baseApiUrl = 'https://api.sendgrid.com/v3',
+        public string $apiKey = '',
+        public string $baseApiUrl = 'https://api.sendgrid.com/v3',
     ) {}
 }
 
-final class Email
+final readonly class Email
 {
     public function __construct(
-        public readonly string $email = '',
-        public readonly string $name = '',
+        public string $email = '',
+        public string $name = '',
     ) {}
 }
 
-final class Mailer {
+final readonly class Mailer {
     public function __construct(
-        public readonly Email $from,
-        public readonly Email $replyTo,
-        public readonly MailerSendGrid $sendGrid,
-        public readonly bool $sendEmailSynchronously = false,
+        public Email $from,
+        public Email $replyTo,
+        public MailerSendGrid $sendGrid,
+        public bool $sendEmailSynchronously = false,
     ) {}
 }
 
@@ -77,6 +77,8 @@ abstract class AbstractConfig {
         public readonly string $logoImageUrl,
         public readonly string $siteIcon512pixels,
         public readonly string $siteIcon64pixels,
+        public readonly string $themeColourHex,
+
         public readonly string $mediaBaseDir,
         public readonly string $mediaBaseUrl,
 
