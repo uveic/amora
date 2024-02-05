@@ -1,12 +1,12 @@
 <?php
 
-use Amora\App\Entity\Response\HtmlAppResponseDataAdmin;
+use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlAppResponseDataAdmin $responseData */
+/** @var HtmlResponseDataAdmin $responseData */
 
 $totalPageViewsToday = StringUtil::formatNumber(
     language: $responseData->siteLanguage,
