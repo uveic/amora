@@ -15,6 +15,10 @@ use Amora\Core\Util\UrlBuilderUtil;
               <span class="value"><?=StringUtil::formatNumber($responseData->siteLanguage, $responseData->dashboardCount->images)?></span>
               <span><?=$responseData->getLocalValue('navAdminImages')?></span>
             </a>
+            <a href="<?=UrlBuilderUtil::buildBackofficeAlbumListUrl($responseData->siteLanguage)?>">
+              <span class="value"><?=StringUtil::formatNumber($responseData->siteLanguage, $responseData->dashboardCount->albums)?></span>
+              <span><?=$responseData->getLocalValue('navAdminAlbums')?></span>
+            </a>
             <a href="<?=UrlBuilderUtil::buildBackofficeMediaListUrl($responseData->siteLanguage)?>">
               <span class="value"><?=StringUtil::formatNumber($responseData->siteLanguage, $responseData->dashboardCount->files)?></span>
               <span><?=$responseData->getLocalValue('navAdminMedia')?></span>
