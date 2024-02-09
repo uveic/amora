@@ -91,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const nextImageToPreload = getNextImage(mediaContainer);
         const imgTemp = new Image();
         imgTemp.src = nextImageToPreload.src;
+        entry.target.querySelector('.media-content-shadow').classList.remove('null');
 
         const contentText = entry.target.querySelector('.content-text');
         if (contentText) {
@@ -134,8 +135,10 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
   a.addEventListener('click', e => {
     e.preventDefault();
 
-    const mediaContainer = a.parentElement.parentElement.parentElement.querySelector('.media-wrapper');
-    const contentContainer = a.parentElement.parentElement.parentElement.querySelector('.media-content-wrapper');
+    const sectionContainer = a.parentElement.parentElement.parentElement;
+    const mediaContainer = sectionContainer.querySelector('.media-wrapper');
+    const contentContainer = sectionContainer.querySelector('.media-content-wrapper');
+    const mediaShadow = sectionContainer.querySelector('.media-content-shadow');
     const activeImage = mediaContainer.querySelector('img.media-active')
       ?? mediaContainer.querySelector('img.media-item');
     const goRight = a.classList.contains('js-navigation-right');
@@ -150,6 +153,7 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
 
     nextImage.classList.add('media-active');
     nextImage.classList.remove('media-hidden');
+    mediaShadow.classList.add('null');
 
     let textContent = false;
     const contentText = mediaContainer.parentElement.querySelector('.media-content-wrapper .content-text');

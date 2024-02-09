@@ -241,6 +241,9 @@ final class AlbumHtmlGenerator
         );
 
         $output[] = $indentation . '  </div>';
+
+        $output[] = $indentation . '  <div class="media-content-shadow"></div>';
+
         $output[] = $indentation . '  <div class="media-content-wrapper">';
 
         $output[] = $indentation . '    <div class="content-main-header">';
@@ -297,6 +300,9 @@ final class AlbumHtmlGenerator
         );
 
         $output[] = $indentation . '  </div>';
+
+        $output[] = $indentation . '  <div class="media-content-shadow"></div>';
+
         $output[] = $indentation . '  <div class="media-content-wrapper">';
         $output[] = $indentation . '    <div class="content-header">';
 

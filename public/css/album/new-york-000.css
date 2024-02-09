@@ -26,7 +26,7 @@
 :root {
   --color-bg: #212529;
   --color-text: #fcfcfc;
-  --color-shadow: rgba(0, 0, 0, 0.05);
+  --color-shadow: rgba(0, 0, 0, 0.15);
 
   --text-panel-width: 420px;
 
@@ -111,9 +111,21 @@ a:focus {
   position: absolute;
 }
 
+.media-content-shadow {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background-color: var(--color-shadow);
+}
+
 .media-content-wrapper {
   margin: 0 auto;
-  z-index: 2;
+  z-index: 3;
   position: relative;
   padding: 2rem 1rem;
   display: flex;
