@@ -71,16 +71,18 @@ a:focus {
 }
 
 blockquote {
-  margin: 0;
+  margin: 1rem 0;
   font-style: italic;
-  padding: 1rem 1rem 1rem 2.5rem;
+  padding: 0 0 0 2.5rem;
   position: relative;
+  border: none;
 }
 
 blockquote::before{
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   content: "\201C";
   font-size: 4em;
+  line-height: 1;
   position: absolute;
   left: 0;
   top: 0;
