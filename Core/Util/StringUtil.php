@@ -312,8 +312,11 @@ final class StringUtil
         return str_replace('https://', '', $text);
     }
 
-    public static function getFirstParagraphAsPlainText(?string $text, int $maxLength = 400): string
-    {
+    public static function getFirstParagraphAsPlainText(
+        ?string $text,
+        int $maxLength = 400,
+        bool $trimToFirstSentence = false,
+    ): string {
         if (!$text) {
             return '';
         }
@@ -323,6 +326,13 @@ final class StringUtil
             $firstParagraph = trim(strip_tags(substr($text, 0, $position)));
 
             if (strlen($firstParagraph) > $maxLength) {
+                if ($trimToFirstSentence) {
+                    $position = strpos($firstParagraph, '. ');
+                    if ($position) {
+                        return trim(substr($firstParagraph, 0, $position)) . '.';
+                    }
+                }
+
                 return trim(substr($firstParagraph, 0, $maxLength), ' .') . '...';
             }
 

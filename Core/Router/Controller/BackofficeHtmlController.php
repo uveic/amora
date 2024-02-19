@@ -266,7 +266,14 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 
         $albums = $this->albumService->filterAlbumBy(
             languageIsoCodes: $albumLanguage ? [$albumLanguage->value] : [],
-            statusIds: $albumStatus ? [$albumStatus->value] : [],
+            statusIds: $albumStatus
+                ? [$albumStatus->value]
+                : [
+                    AlbumStatus::Published->value,
+                    AlbumStatus::Private->value,
+                    AlbumStatus::Unlisted->value,
+                    AlbumStatus::Draft->value,
+                ],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy(field: 'id', direction: QueryOrderDirection::DESC)],
             )

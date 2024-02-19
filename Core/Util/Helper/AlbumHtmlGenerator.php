@@ -324,7 +324,13 @@ final class AlbumHtmlGenerator
 
         $output[] = $indentation . '    <div class="content-text-wrapper">';
         $output[] = $indentation . '      <div class="content-text">';
-        $output[] = $indentation . '        <div class="media-text">' . StringUtil::getFirstParagraphAsPlainText($section->contentHtml, 200) . '</div>';
+
+        $mediaText = StringUtil::getFirstParagraphAsPlainText(
+            text: $section->contentHtml,
+            maxLength: 200,
+            trimToFirstSentence: true,
+        );
+        $output[] = $indentation . '        <div class="media-text">' . $mediaText . '</div>';
         $output[] = $indentation . '        <div class="media-links">';
 
         $output[] = $indentation . (
@@ -387,7 +393,14 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '  <div class="album-modal-header">';
         $output[] = $indentation . '    <h1 class="album-modal-title">' . $album->titleHtml . '</h1>';
         $output[] = $indentation . '    <h2 class="album-modal-subtitle">de abril a agosto de 2023, por Víctor González</h2>';
-        $output[] = $indentation . '    <div class="media-text album-modal-text">' . $album->contentHtml . '</div>';
+
+        $output[] = $indentation . '    <div class="media-text album-modal-text">';
+
+        if ($album->mainMedia) {
+            $output[] = $indentation . '    <img src="' . $album->mainMedia->getPathWithNameMedium() . '" alt="' . $album->mainMedia->buildAltText() . '" >';
+        }
+
+        $output[] = $album->contentHtml . '</div>';
         $output[] = $indentation . '  </div>';
 
         $output[] = $indentation . '  <div class="album-sections-wrapper">';

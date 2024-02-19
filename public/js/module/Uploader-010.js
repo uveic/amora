@@ -36,7 +36,7 @@ class UploaderClass {
     }
 
     return new Promise((resolve, reject) => {
-      const figureContainer = document.querySelector('#' + Util.cleanString(media.name));
+      const figureContainer = document.querySelector('#img' + Util.cleanString(media.name));
       const progressBarContainer = UploaderClass.buildProgressElement();
       const progressEl = progressBarContainer.querySelector('progress');
       figureContainer.appendChild(progressBarContainer);
@@ -73,7 +73,7 @@ class UploaderClass {
       const loaderEl = UploaderClass.buildImageLoadingElement();
       const figureContainer = document.createElement('figure');
       figureContainer.className = 'image-container media-uploading';
-      figureContainer.id = Util.cleanString(media.name);
+      figureContainer.id = 'img' + Util.cleanString(media.name);
 
       figureContainer.appendChild(loaderEl);
 
@@ -93,7 +93,7 @@ class UploaderClass {
               throw new Error(json.errorMessage ?? Global.get('genericError'));
             }
 
-            const figureContainer = document.querySelector('#' + Util.cleanString(json.file.sourceName));
+            const figureContainer = document.querySelector('#img' + Util.cleanString(json.file.sourceName));
 
             const media = new Image();
             media.className = imageClassName;
@@ -110,7 +110,7 @@ class UploaderClass {
             then(json);
           })
           .catch(error => {
-            const figureContainer = document.querySelector('#' + Util.cleanString(media.name));
+            const figureContainer = document.querySelector('#img' + Util.cleanString(media.name));
             if (figureContainer) {
               mediaContainer.removeChild(figureContainer);
             }

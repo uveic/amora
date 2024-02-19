@@ -70,6 +70,26 @@ a:focus {
   color: var(--color-text);
 }
 
+blockquote {
+  margin: 0;
+  font-style: italic;
+  padding: 1rem 1rem 1rem 2.5rem;
+  position: relative;
+}
+
+blockquote::before{
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  content: "\201C";
+  font-size: 4em;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+blockquote::after{
+  content: '';
+}
+
 .content-main {
   scroll-snap-stop: always;
   overflow-y: scroll;
@@ -498,8 +518,11 @@ a:focus {
 }
 
 .album-modal-subtitle {
-  margin: 0;
+  margin: 0 0 1rem 0;
   font-size: 0.8rem;
+  line-height: 1;
+  font-weight: 400;
+  font-family: var(--font-picture);
 }
 
 .album-modal-text {

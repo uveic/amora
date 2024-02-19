@@ -815,6 +815,8 @@ const updateAlbumSection = (e) => {
     .catch(error => {
       Util.notifyError(error);
     });
+
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
 const makeAlbumSectionNonEditable = (albumSectionId) => {
@@ -903,6 +905,7 @@ const cancelAlbumSectionEdit = (e) => {
   sequenceEl.textContent = '#' + sequenceEl.dataset.before;
 
   makeAlbumSectionNonEditable(albumSectionId);
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
 const albumSectionSelectMainMedia = (e) => {
