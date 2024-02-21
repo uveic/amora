@@ -12,8 +12,11 @@ use Amora\Core\Entity\Response;
 use Amora\Core\Value\QueryOrderDirection;
 use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
     AuthorisedApiControllerDestroyFileUnauthorisedResponse,
+    AuthorisedApiControllerGetFileFromSuccessResponse,
     AuthorisedApiControllerGetFilesSuccessResponse,
     AuthorisedApiControllerGetFileSuccessResponse,
+    AuthorisedApiControllerGetMediaFromSuccessResponse,
+    AuthorisedApiControllerGetMediaSuccessResponse,
     AuthorisedApiControllerGetNextFileSuccessResponse,
     AuthorisedApiControllerSendVerificationEmailFailureResponse,
     AuthorisedApiControllerSendVerificationEmailSuccessResponse,
@@ -53,18 +56,18 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      * @param Request $request
      * @return Response
      */
-    protected function getFiles(
+    protected function getFile(
         ?string $direction,
         ?int $qty,
         ?int $typeId,
-        Request $request
+        Request $request,
     ): Response {
         $direction = isset($direction) ? strtoupper(trim($direction)) : QueryOrderDirection::DESC->value;
         $direction = QueryOrderDirection::tryFrom($direction)
             ? QueryOrderDirection::from($direction)
             : QueryOrderDirection::DESC;
 
-        $qty = $qty ?? 10;
+        $qty = $qty ?? 1;
         $mediaType = isset($typeId) && MediaType::tryFrom($typeId) ? MediaType::from($typeId) : null;
 
         $output = $this->mediaService->workflowGetFiles(
@@ -72,12 +75,13 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             qty: $qty,
             mediaType: $mediaType,
             isAdmin: $request->session->isAdmin(),
+            includeAppearsOn: true,
             userId: $request->session->isAdmin() ? null : $request->session->user->id,
         );
 
-        return new AuthorisedApiControllerGetFilesSuccessResponse(
+        return new AuthorisedApiControllerGetFileSuccessResponse(
             success: true,
-            files: $output,
+            files: $output[0] ?? [],
         );
     }
 
@@ -121,32 +125,6 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
     /**
      * Endpoint: /api/file/{id}
-     * Method: GET
-     *
-     * @param int $id
-     * @param Request $request
-     * @return Response
-     */
-    protected function getFile(int $id, Request $request): Response
-    {
-        $output = $this->mediaService->workflowGetFiles(
-            direction: QueryOrderDirection::ASC,
-            qty: 1,
-            isAdmin: $request->session->isAdmin(),
-            includeAppearsOn: true,
-            mediaId: $id,
-            userId: $request->session->isAdmin() ? null : $request->session->user->id,
-        );
-
-        return new AuthorisedApiControllerGetFileSuccessResponse(
-            success: true,
-            file: $output[0] ?? [],
-            tags: [],
-        );
-    }
-
-    /**
-     * Endpoint: /api/file/{id}
      * Method: DELETE
      *
      * @param int $id
@@ -173,7 +151,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
     }
 
     /**
-     * Endpoint: /api/file/{id}/next
+     * Endpoint: /api/file/{id}
      * Method: GET
      *
      * @param int $id
@@ -183,7 +161,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      * @param Request $request
      * @return Response
      */
-    protected function getNextFile(
+    protected function getFileFrom(
         int $id,
         ?string $direction,
         ?int $qty,
@@ -195,7 +173,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             ? QueryOrderDirection::from($direction)
             : QueryOrderDirection::DESC;
 
-        $qty = $qty ?? 10;
+        $qty = $qty ?? 1;
         $mediaType = isset($typeId) && MediaType::tryFrom($typeId) ? MediaType::from($typeId) : null;
 
         $output = $this->mediaService->workflowGetFiles(
@@ -208,7 +186,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             userId: $request->session->isAdmin() ? null : $request->session->user->id,
         );
 
-        return new AuthorisedApiControllerGetNextFileSuccessResponse(
+        return new AuthorisedApiControllerGetFileFromSuccessResponse(
             success: true,
             files: $output,
         );
