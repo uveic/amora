@@ -79,7 +79,7 @@ blockquote {
 }
 
 blockquote::before{
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-picture);
   content: "\201C";
   font-size: 4em;
   line-height: 1;
