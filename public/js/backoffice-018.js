@@ -418,7 +418,9 @@ const preloadMedia = (mediaId, direction = 'DESC') => {
   imgTemp.src = mediaObj.fullPathMedium;
 };
 
-const updateMediaCache = (medias, direction = null, previousId = null) => {
+const updateMediaCache = (medias, direction = null) => {
+  let previousId = null;
+
   medias.forEach(item => {
     if (!mediaCache[item.id]) {
       mediaCache[item.id] = item;
@@ -452,8 +454,10 @@ const modalRetrieveMediaAndAddToCache = async (mediaId, direction) => {
 
   return Request.get(apiUrl)
     .then(response => {
-        updateMediaCache(response.files, direction, mediaId);
-        return response.files[0] ?? null;
+        updateMediaCache(response.files, direction);
+        return direction === 'DESC' || direction === 'ASC'
+          ? (response.files[1] ?? null)
+          : (response.files[0] ?? null);
     });
 };
 
@@ -1673,15 +1677,16 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
     const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.mediaId) : null;
     const qty = 50;
     const typeId = lm.dataset.typeId ? Number.parseInt(lm.dataset.typeId) : '';
-    const dir = lm.dataset.direccion ?? '';
+    const direction = lm.dataset.direccion ?? '';
     const eventListenerAction = lm.dataset.eventListenerAction;
     const targetContainerId = lm.dataset.targetContainerId ?? null;
 
-    Request.get('/api/file/' + lastImageId + '?direction=' + dir + '&typeId=' + typeId + '&qty=' + qty)
+    Request.get('/api/file/' + lastImageId + '?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty)
       .then(response => {
         const container = document.querySelector('#images-list');
 
         displayImageFromApiCall(container, response.files, eventListenerAction, targetContainerId);
+        updateMediaCache(response.files, direction);
 
         lm.disabled = false;
 

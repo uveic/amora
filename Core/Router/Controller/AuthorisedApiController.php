@@ -12,12 +12,8 @@ use Amora\Core\Entity\Response;
 use Amora\Core\Value\QueryOrderDirection;
 use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
     AuthorisedApiControllerDestroyFileUnauthorisedResponse,
-    AuthorisedApiControllerGetFileFromSuccessResponse,
+    AuthorisedApiControllerGetFilesFromSuccessResponse,
     AuthorisedApiControllerGetFilesSuccessResponse,
-    AuthorisedApiControllerGetFileSuccessResponse,
-    AuthorisedApiControllerGetMediaFromSuccessResponse,
-    AuthorisedApiControllerGetMediaSuccessResponse,
-    AuthorisedApiControllerGetNextFileSuccessResponse,
     AuthorisedApiControllerSendVerificationEmailFailureResponse,
     AuthorisedApiControllerSendVerificationEmailSuccessResponse,
     AuthorisedApiControllerStoreFileSuccessResponse,
@@ -56,7 +52,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      * @param Request $request
      * @return Response
      */
-    protected function getFile(
+    protected function getFiles(
         ?string $direction,
         ?int $qty,
         ?int $typeId,
@@ -79,7 +75,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             userId: $request->session->isAdmin() ? null : $request->session->user->id,
         );
 
-        return new AuthorisedApiControllerGetFileSuccessResponse(
+        return new AuthorisedApiControllerGetFilesSuccessResponse(
             success: true,
             files: $output,
         );
@@ -161,7 +157,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      * @param Request $request
      * @return Response
      */
-    protected function getFileFrom(
+    protected function getFilesFrom(
         int $id,
         ?string $direction,
         ?int $qty,
@@ -186,7 +182,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             userId: $request->session->isAdmin() ? null : $request->session->user->id,
         );
 
-        return new AuthorisedApiControllerGetFileFromSuccessResponse(
+        return new AuthorisedApiControllerGetFilesFromSuccessResponse(
             success: true,
             files: $output,
         );

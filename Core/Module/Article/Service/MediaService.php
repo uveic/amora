@@ -130,7 +130,7 @@ readonly class MediaService
                 statusIds: [MediaStatus::Active->value],
                 queryOptions: new QueryOptions(
                     pagination: new Response\Pagination(itemsPerPage: $qty),
-                    orderRandomly: QueryOrderDirection::RAND === $direction,
+                    orderRandomly: true,
                 ),
             )
             : $this->filterMediaBy(
