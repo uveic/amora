@@ -24,6 +24,7 @@ const selectMediaAction = (e) => {
   uploadMediaButton.dataset.targetContainerId = targetContainerId;
   loadMoreButton.dataset.eventListenerAction = eventListenerAction;
   loadMoreButton.dataset.targetContainerId = targetContainerId;
+  modal.querySelector('.add-image-wrapper').classList.remove('null');
   modal.classList.remove('null');
 
   const qty = 50;
@@ -39,7 +40,7 @@ const selectMediaAction = (e) => {
   loading.classList.remove('null');
   const typeId = button.dataset.typeId ? Number.parseInt(button.dataset.typeId) : '';
 
-  Request.get('/api/media?typeId=' + typeId + '&qty=' + qty)
+  Request.get('/api/file?typeId=' + typeId + '&qty=' + qty)
     .then(response => {
       loading.classList.add('null');
       imagesContainer.classList.remove('null');
@@ -656,7 +657,7 @@ const albumSectionAddMedia = (e) => {
   };
 
   document.querySelector('.select-media-modal').classList.add('null');
-  actionButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  container.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   Request.post('/back/album-section/' + albumSectionId + '/media', JSON.stringify(payload))
     .then(response => {
@@ -1099,15 +1100,45 @@ const updateAlbumSectionSequences = (sourceSequence, targetSequence) => {
 const addEventListenerAction = (image, mediaId, eventListenerAction, targetContainerId) => {
   if (eventListenerAction === 'displayNextImagePopup') {
     image.addEventListener('click', displayNextImagePopup);
+    image.removeEventListener('click', insertImageInArticle);
+    image.removeEventListener('click', articleSelectMainImage);
+    image.removeEventListener('click', albumSelectMainMedia);
+    image.removeEventListener('click', albumSectionAddMedia);
+    image.removeEventListener('click', albumSectionSelectMainMedia);
   } else if (eventListenerAction === 'insertImageInArticle') {
+    image.removeEventListener('click', displayNextImagePopup);
     image.addEventListener('click', insertImageInArticle);
+    image.removeEventListener('click', articleSelectMainImage);
+    image.removeEventListener('click', albumSelectMainMedia);
+    image.removeEventListener('click', albumSectionAddMedia);
+    image.removeEventListener('click', albumSectionSelectMainMedia);
   } else if (eventListenerAction === 'articleSelectMainImage') {
+    image.removeEventListener('click', displayNextImagePopup);
+    image.removeEventListener('click', insertImageInArticle);
     image.addEventListener('click', articleSelectMainImage);
+    image.removeEventListener('click', albumSelectMainMedia);
+    image.removeEventListener('click', albumSectionAddMedia);
+    image.removeEventListener('click', albumSectionSelectMainMedia);
   } else if (eventListenerAction === 'albumSelectMainMedia') {
+    image.removeEventListener('click', displayNextImagePopup);
+    image.removeEventListener('click', insertImageInArticle);
+    image.removeEventListener('click', articleSelectMainImage);
     image.addEventListener('click', albumSelectMainMedia);
+    image.removeEventListener('click', albumSectionAddMedia);
+    image.removeEventListener('click', albumSectionSelectMainMedia);
   } else if (eventListenerAction === 'albumSectionAddMedia') {
+    image.removeEventListener('click', displayNextImagePopup);
+    image.removeEventListener('click', insertImageInArticle);
+    image.removeEventListener('click', articleSelectMainImage);
+    image.removeEventListener('click', albumSelectMainMedia);
     image.addEventListener('click', albumSectionAddMedia);
+    image.removeEventListener('click', albumSectionSelectMainMedia);
   } else if (eventListenerAction === 'albumSectionSelectMainMedia') {
+    image.removeEventListener('click', displayNextImagePopup);
+    image.removeEventListener('click', insertImageInArticle);
+    image.removeEventListener('click', articleSelectMainImage);
+    image.removeEventListener('click', albumSelectMainMedia);
+    image.removeEventListener('click', albumSectionAddMedia);
     image.addEventListener('click', albumSectionSelectMainMedia);
   }
 
@@ -1928,7 +1959,7 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
         sectionContainer.querySelector('.album-section-save-js').addEventListener('click', updateAlbumSection);
         sectionContainer.querySelector('.album-section-cancel-js').addEventListener('click', cancelAlbumSectionEdit);
         sectionContainer.querySelector('.album-section-main-media-delete-js').addEventListener('click', albumSectionDeleteMainMedia);
-        sectionContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        sectionContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
       })
       .catch(error => {
         Util.notifyError(error);
