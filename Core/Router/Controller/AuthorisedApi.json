@@ -26,7 +26,7 @@
       "get": {
         "tags": [],
         "description": "Get batch of files",
-        "operationId": "getFiles",
+        "operationId": "getFile",
         "parameters": [
           {
             "name": "direction",
@@ -382,321 +382,9 @@
     "/api/file/{id}": {
       "get": {
         "tags": [],
-        "summary": "Get file info",
-        "description": "Get file info",
-        "operationId": "getFile",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "File ID",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "File info",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    true,
-                    false
-                  ]
-                },
-                "file": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "description": "File ID"
-                    },
-                    "url": {
-                      "type": "string",
-                      "description": "File path"
-                    },
-                    "caption": {
-                      "type": "string",
-                      "description": "File caption"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "File name"
-                    },
-                    "appearsOn": {
-                      "type": "array",
-                      "description": "List of articles/places where the image is used",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "integer",
-                            "description": "Article ID"
-                          },
-                          "languageIsoCode": {
-                            "type": "string",
-                            "description": "Language ISO code. Example: EN, ES, GL"
-                          },
-                          "userId": {
-                            "type": "integer",
-                            "description": "Article author user ID"
-                          },
-                          "userName": {
-                            "type": "string",
-                            "description": "Article author user name"
-                          },
-                          "title": {
-                            "type": "string",
-                            "description": "Article title"
-                          },
-                          "path": {
-                            "type": "string",
-                            "description": "Article path"
-                          },
-                          "publishedOn": {
-                            "type": "string",
-                            "description": "Date the article was published. Format: ISO. Example: 2022-01-01T00:25:00+00:00"
-                          },
-                          "tags": {
-                            "type": "array",
-                            "properties": {
-                              "id": {
-                                "type": "integer",
-                                "description": "Tag ID"
-                              },
-                              "name": {
-                                "type": "string",
-                                "description": "Tag name"
-                              },
-                              "url": {
-                                "type": "string",
-                                "description": "Tag link"
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "name",
-                              "url"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "languageIsoCode",
-                          "userId",
-                          "userName",
-                          "title",
-                          "path",
-                          "publishedOn",
-                          "tags"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "url",
-                    "caption",
-                    "name"
-                  ]
-                },
-                "errorMessage": {
-                  "type": "string",
-                  "description": "Error message"
-                },
-                "tags": {
-                  "type": "array",
-                  "description": "Tags",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "description": "Tag ID"
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "Tag name"
-                      },
-                      "url": {
-                        "type": "string",
-                        "description": "Tag URL"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "name",
-                      "url"
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorised",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "errorMessage": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "errorMessage"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "success"
-              ]
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [],
-        "summary": "Destroy a file",
-        "description": "Delete file",
-        "operationId": "destroyFile",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "File ID",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "File deleted",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    true,
-                    false
-                  ]
-                },
-                "errorMessage": {
-                  "type": "string",
-                  "description": "Error message"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorised",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "errorMessage": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "errorMessage"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "success"
-              ]
-            }
-          }
-        }
-      }
-    },
-    "/api/file/{id}/next": {
-      "get": {
-        "tags": [],
-        "summary": "Get next or previous batch of files",
-        "description": "Get next or previous batch of files",
-        "operationId": "getNextFile",
+        "summary": "Get batch of files",
+        "description": "Get batch of files",
+        "operationId": "getFileFrom",
         "parameters": [
           {
             "name": "id",
@@ -842,6 +530,100 @@
                       "name"
                     ]
                   }
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorised",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    false
+                  ]
+                },
+                "errorInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "Field name"
+                      },
+                      "errorMessage": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "errorMessage"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "summary": "Destroy a file",
+        "description": "Delete file",
+        "operationId": "destroyFile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "File ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File deleted",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    true,
+                    false
+                  ]
                 },
                 "errorMessage": {
                   "type": "string",

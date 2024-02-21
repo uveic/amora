@@ -39,7 +39,7 @@ const selectMediaAction = (e) => {
   loading.classList.remove('null');
   const typeId = button.dataset.typeId ? Number.parseInt(button.dataset.typeId) : '';
 
-  Request.get('/api/file?typeId=' + typeId + '&qty=' + qty)
+  Request.get('/api/media?typeId=' + typeId + '&qty=' + qty)
     .then(response => {
       loading.classList.add('null');
       imagesContainer.classList.remove('null');
@@ -447,12 +447,12 @@ const modalRetrieveMediaAndAddToCache = async (mediaId, direction) => {
 
   const qty = direction === 'DESC' || direction === 'ASC' ? 20 : 1;
   const typeId = 2; // See MediaType.php
-  const apiUrl = '/api/file/' + mediaId + '/next?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty;
+  const apiUrl = '/api/file/' + mediaId + '?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty;
 
   return Request.get(apiUrl)
     .then(response => {
         updateMediaCache(response.files, direction, mediaId);
-        return response.files[0];
+        return response.files[0] ?? null;
     });
 };
 
@@ -482,7 +482,7 @@ const modalGetMedia = async (mediaId) => {
   return Request.get('/api/file/' + mediaId)
     .then(response => {
       updateMediaCache([response.file]);
-      return response.file;
+      return response.files[0] ?? null;
     });
 };
 
@@ -1647,7 +1647,7 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
     const eventListenerAction = lm.dataset.eventListenerAction;
     const targetContainerId = lm.dataset.targetContainerId ?? null;
 
-    Request.get('/api/file/' + lastImageId + '/next?direction=' + dir + '&typeId=' + typeId + '&qty=' + qty)
+    Request.get('/api/file/' + lastImageId + '?direction=' + dir + '&typeId=' + typeId + '&qty=' + qty)
       .then(response => {
         const container = document.querySelector('#images-list');
 
