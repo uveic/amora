@@ -4,7 +4,7 @@ namespace Amora\Core\Router\Controller\Response;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\HttpStatusCode;
 
-class AuthorisedApiControllerGetFileSuccessResponse extends Response
+class AuthorisedApiControllerGetFilesFromSuccessResponse extends Response
 {
     public function __construct(bool $success, array $files, ?string $errorMessage = null)
     {

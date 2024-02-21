@@ -26,7 +26,7 @@
       "get": {
         "tags": [],
         "description": "Get batch of files",
-        "operationId": "getFile",
+        "operationId": "getFiles",
         "parameters": [
           {
             "name": "direction",
@@ -384,7 +384,7 @@
         "tags": [],
         "summary": "Get batch of files",
         "description": "Get batch of files",
-        "operationId": "getFileFrom",
+        "operationId": "getFilesFrom",
         "parameters": [
           {
             "name": "id",
