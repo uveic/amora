@@ -81,7 +81,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
         return new AuthorisedApiControllerGetFileSuccessResponse(
             success: true,
-            files: $output[0] ?? [],
+            files: $output,
         );
     }
 

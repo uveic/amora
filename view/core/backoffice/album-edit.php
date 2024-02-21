@@ -79,7 +79,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
                   <img class="main-image" data-media-id="<?=$album?->mainMedia->id?>" src="<?=$album?->mainMedia->getPathWithNameMedium()?>" alt="<?=$album?->mainMedia->buildAltText()?>">
 <?php } ?>
                   <div class="main-image-button-container">
-                    <a href="#" class="main-image-button select-media-action" data-event-listener-action="albumSelectMainMedia">
+                    <a href="#" class="main-image-button album-section-main-media-js" data-event-listener-action="albumSelectMainMedia">
                       <img class="img-svg" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
                       <span><?= $album?->mainMedia ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('editorMainImageActionTitle') ?></span>
                     </a>
