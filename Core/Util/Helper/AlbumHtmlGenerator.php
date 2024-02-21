@@ -9,6 +9,7 @@ use Amora\Core\Module\Album\Model\AlbumSection;
 use Amora\Core\Module\Album\Model\AlbumSectionMedia;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\LocalisationUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -163,7 +164,7 @@ final class AlbumHtmlGenerator
             $output[] = self::generateAlbumSectionMediaHtml($sectionMedia, $localisationUtil, $indentation . '      ', $lazyLoading);
         }
 
-        $output[] = $indentation . '      <a href="#" class="button select-media-action button-media-add" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
+        $output[] = $indentation . '      <a href="#" class="button select-media-action button-media-add" data-type-id="' . MediaType::Image->value . '" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
         $output[] = $indentation . '        <img class="img-svg img-svg-30" width="30" height="30" src="/img/svg/image.svg" alt="Image">';
         $output[] = $indentation . '        <span>' . $localisationUtil->getValue('globalAdd') . '</span>';
         $output[] = $indentation . '      </a>';

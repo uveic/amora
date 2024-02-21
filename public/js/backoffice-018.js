@@ -446,7 +446,7 @@ const modalRetrieveMediaAndAddToCache = async (mediaId, direction) => {
   }
 
   const qty = direction === 'DESC' || direction === 'ASC' ? 20 : 1;
-  const typeId = 2; // See MediaType.php
+  const typeId = document.querySelector('.media-load-more-js').dataset.typeId;
   const apiUrl = '/api/file/' + mediaId + '?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty;
 
   return Request.get(apiUrl)
@@ -474,14 +474,16 @@ const getFourthNextMediaId = (mediaId, direction) => {
     : null;
 }
 
-const modalGetMedia = async (mediaId) => {
+const modalGetMedia = async (mediaId, direction) => {
   if (mediaCache[mediaId]) {
     return mediaCache[mediaId];
   }
 
-  return Request.get('/api/file/' + mediaId)
+  const typeId = document.querySelector('.media-load-more-js').dataset.typeId;
+
+  return Request.get('/api/file/' + mediaId + '?direction=' + direction + '&typeId=' + typeId + '&qty=20')
     .then(response => {
-      updateMediaCache([response.file]);
+      updateMediaCache(response.files, direction);
       return response.files[0] ?? null;
     });
 };
@@ -547,13 +549,10 @@ const displayNextImagePopup = (e) => {
   imageWrapper.querySelector('.image-info-data').classList.add('hidden');
   imageWrapper.querySelector('.image-next-wrapper').classList.add('hidden');
 
-  modalGetMedia(mediaId)
+  modalGetMedia(mediaId, direction)
     .then(mediaObj => {
       displayModalImage(mediaObj);
       preloadMedia(mediaObj.id, direction);
-    }).then(() => {
-      modalRetrieveMediaAndAddToCache(mediaId, direction)
-        .then();
     });
 };
 
