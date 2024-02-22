@@ -897,13 +897,6 @@ function updateAlbumSectionSequences(sourceSequence, targetSequence) {
     const sequences = [];
     container.querySelectorAll('.album-section-item').forEach(asi => sequences.push(Number.parseInt(asi.dataset.sequence)));
 
-    for (let i = 0; i < sequences.length; i++) {
-      closestSequence = sequences[i];
-      if (sequences[i] >= closestSequence) {
-        break;
-      }
-    }
-
     targetSection = closestSequence
       ? container.querySelector('.album-section-item[data-sequence="' + closestSequence + '"]')
       : container.querySelector('.album-section-item:last-of-type');
@@ -1443,9 +1436,7 @@ document.querySelectorAll('input#media').forEach(im => {
 
     const container = document.querySelector('#media-container');
 
-    for (let i = 0; i < im.files.length; i++) {
-      let file = im.files[i];
-
+    for (const file in im.files) {
       let newMediaContainer = document.createElement('a');
       newMediaContainer.href = '#';
       newMediaContainer.className = 'media-item';

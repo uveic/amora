@@ -357,15 +357,15 @@ class Pexego {
       allSections.push({id: s.dataset.sectionId, element: s});
     });
 
-    for (let i = 0; i < allSections.length; i++) {
-      if (allSections[i].id === id) {
+    for (const section in allSections) {
+      if (section.id === id) {
         if (previousElement) {
           selectedSection.parentNode.insertBefore(selectedSection, previousElement);
         }
         break;
       }
 
-      previousElement = allSections[i].element;
+      previousElement = section.element;
     }
 
     this.displayUpAndDownArrowsWhenAppropriate();
@@ -575,9 +575,7 @@ document.querySelectorAll('input[name="pexego-add-image-input"]').forEach(pi => 
   pi.addEventListener('change', e => {
     e.preventDefault();
 
-    for (let i = 0; i < pi.files.length; i++) {
-      let file = pi.files[i];
-
+    for (const file in pi.files) {
       let id = PexegoEditor.generateRandomString(5);
       let pexegoSectionImage = document.createElement('section');
       pexegoSectionImage.className =  Pexego.classes.section + ' ' + Pexego.classes.sectionImage;
