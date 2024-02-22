@@ -241,7 +241,7 @@ class Pexego {
   }
 
   generateRandomString(length = 10) {
-    const dec2hex = function (dec) {
+    function dec2hex(dec) {
       return dec.toString(16).padStart(2, "0");
     }
 

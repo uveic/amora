@@ -90,7 +90,7 @@ class UtilClass {
   }
 
   getAndCleanHtmlFromElement(element, addParagraph = false) {
-    const cleanHtml = (html) => {
+    function cleanHtml(html) {
       if (!html || html === '-') {
         return '';
       }
@@ -102,13 +102,13 @@ class UtilClass {
       }
 
       return html;
-    };
+    }
 
     if (!element) {
       return null;
     }
 
-    const cleanElement = (parentElement, childElement) => {
+    function cleanElement(parentElement, childElement) {
       if (childElement.nodeName === '#text' && !childElement.textContent.trim().length) {
         return;
       }

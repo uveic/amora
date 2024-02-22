@@ -653,6 +653,7 @@ h2.page-content-subtitle {
   position: relative;
   display: flex;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .image-wrapper > .image-main img {

@@ -1,4 +1,4 @@
-const buildRedirectUrl = (period, newDate) => {
+function buildRedirectUrl(period, newDate) {
   const params = new URLSearchParams(window.location.search);
 
   let redirectUrl = window.location.origin + window.location.pathname

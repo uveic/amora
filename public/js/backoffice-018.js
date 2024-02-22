@@ -8,7 +8,7 @@ const mediaCache = [];
 const mediaCacheRight = [];
 const mediaCacheLeft = [];
 
-const selectMediaAction = (e) => {
+function selectMediaAction(e) {
   e.preventDefault();
 
   const button = e.currentTarget;
@@ -51,9 +51,9 @@ const selectMediaAction = (e) => {
       loading.classList.add('null');
       Util.notifyError(error);
     });
-};
+}
 
-const addMediaToModalContainer = (existingModalContainer, mediaId) => {
+function addMediaToModalContainer(existingModalContainer, mediaId) {
   const existingMedia = document.querySelector('img[data-media-id="' + mediaId + '"]');
 
   if (!existingMedia) {
@@ -90,161 +90,9 @@ const addMediaToModalContainer = (existingModalContainer, mediaId) => {
   } else {
     existingModalContainer.appendChild(figureContainer);
   }
-};
+}
 
-document.querySelectorAll('.article-save-button').forEach(el => {
-  el.addEventListener('click', e => {
-    e.preventDefault();
-
-    const afterApiCall = (articleId, articlePublicPath, articleBackofficePath) => {
-      history.pushState("", document.title, articleBackofficePath);
-      document.querySelector('input[name="articleId"]').value = articleId;
-
-      document.querySelectorAll('#side-options').forEach(i => i.classList.add('null'));
-      document.querySelectorAll('.article-save-button').forEach(b => {
-        b.value = Global.get('globalUpdate');
-      });
-      document.querySelectorAll('.article-preview').forEach(b => {
-        b.href = articlePublicPath;
-        b.classList.remove('null');
-      });
-      document.querySelectorAll('.article-path-value').forEach(i => {
-        i.textContent = articlePublicPath.trim().replace(/^\//,"");
-      });
-    };
-
-    const getTitleContent = () => {
-      const titleEl = document.querySelector('.articleTitle');
-      if (titleEl && titleEl.textContent.trim().length) {
-        return titleEl.textContent.trim();
-      }
-
-      return null;
-    };
-
-    const getTags = () => {
-      let tags = [];
-      document.querySelectorAll('#tags-selected > .result-selected')
-        .forEach(t => {
-          tags.push({
-            id: t.dataset.tagId ? Number.parseInt(t.dataset.tagId) : null,
-            name: t.dataset.tagName
-          });
-        });
-
-      return tags;
-    };
-
-    const getContentHtmlAndSections = () => {
-      const contentContainer = document.querySelector('.medium-editor-content');
-      const imageIds = [];
-
-      contentContainer.childNodes.forEach(node => {
-        let currentNode = node;
-        if (currentNode.nodeName === 'DIV') {
-          const newParagraph = document.createElement('p');
-          newParagraph.innerHTML = node.innerHTML;
-          contentContainer.insertBefore(newParagraph, node);
-          contentContainer.removeChild(node);
-          currentNode = newParagraph;
-        }
-
-        if (currentNode.nodeName === 'IMG' && currentNode.dataset.mediaId) {
-          imageIds.push(Number.parseInt(currentNode.dataset.mediaId));
-        }
-
-        if (currentNode.nodeName === '#text') {
-          if (currentNode.textContent.trim().length) {
-            const newParagraph = document.createElement('p');
-            newParagraph.textContent = currentNode.textContent;
-            contentContainer.insertBefore(newParagraph, node);
-          }
-
-          contentContainer.removeChild(node);
-        }
-      });
-
-      const firstImageElement = contentContainer.querySelector('.article-image');
-      const firstImageId = firstImageElement && firstImageElement.dataset.mediaId
-          ? Number.parseInt(firstImageElement.dataset.mediaId)
-          : null;
-
-      return {
-        sections: [],
-        contentHtml: contentContainer.innerHTML.trim().length ? contentContainer.innerHTML.trim() : null,
-        mainImageId: firstImageId,
-        mediaIds: imageIds,
-      };
-    };
-
-    const getPublishOnDateIsoString = () => {
-      const publishOnDateEl = document.querySelector('input[name="publishOnDate"]');
-      const publishOnTimeEl = document.querySelector('input[name="publishOnTime"]');
-
-      return publishOnDateEl.value && publishOnTimeEl.value
-        ? new Date(publishOnDateEl.value + 'T' + publishOnTimeEl.value + ':00').toISOString()
-        : null;
-    };
-
-    const getArticleTypeId = () => {
-      const articleTypeIdEl = document.querySelector('input[name="articleTypeId"]');
-      return articleTypeIdEl && articleTypeIdEl.value.length
-        ? Number.parseInt(articleTypeIdEl.value)
-        : null;
-    }
-
-    const getPath = () => {
-      const pathEl = document.querySelector('div.article-path-value');
-      return pathEl && pathEl.textContent.trim().length ? pathEl.textContent.trim() : null;
-    }
-
-    const getStatusId = () => {
-      const status = document.querySelector('.article-status-dd-option[data-checked="1"]');
-      return Number.parseInt(status.dataset.value);
-    };
-
-    const getLanguageIsoCode = () => {
-      const language = document.querySelector('.article-lang-dd-option[data-checked="1"]');
-      return language.dataset.value;
-    };
-
-    const articleTitle = getTitleContent();
-    const articleLanguageIsoCode = getLanguageIsoCode();
-    const content = getContentHtmlAndSections();
-
-    if (!content.contentHtml) {
-      Util.notifyError(new Error(Global.get('feedbackSaving')));
-      return;
-    }
-
-    const payload = JSON.stringify({
-      siteLanguageIsoCode: document.documentElement.lang ?? articleLanguageIsoCode,
-      articleLanguageIsoCode: articleLanguageIsoCode,
-      title: articleTitle,
-      path: getPath(),
-      contentHtml: content.contentHtml,
-      typeId: getArticleTypeId(),
-      statusId: getStatusId(),
-      mainImageId: content.mainImageId,
-      mediaIds: content.mediaIds,
-      sections: content.sections,
-      tags: getTags(),
-      publishOn: getPublishOnDateIsoString(),
-    });
-
-    const articleIdEl = document.querySelector('input[name="articleId"]');
-    const url = '/back/article';
-    if (articleIdEl && articleIdEl.value) {
-      Request.put(url + '/' + articleIdEl.value, payload, Global.get('globalUpdated'))
-        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath));
-    } else {
-      Request.post(url, payload, Global.get('globalSaved'))
-        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath));
-    }
-  });
-});
-
-const handleCopyLink = (ev, href) => {
+function handleCopyLink(ev, href) {
   ev.preventDefault();
 
   if (!navigator.clipboard) {
@@ -256,9 +104,9 @@ const handleCopyLink = (ev, href) => {
     Util.notifyUser(Global.get('feedbackCopyLinkSuccess'));
   })
     .catch(error => Util.notifyError(error, Global.get('feedbackCopyLinkError')));
-};
+}
 
-const displayModalImage = (image) => {
+function displayModalImage(image) {
   const modalContainer = document.querySelector('.modal-media');
   const content = modalContainer.querySelector('.image-wrapper');
   const modalClose = modalContainer.querySelector('.modal-close-button');
@@ -398,9 +246,9 @@ const displayModalImage = (image) => {
 
   content.classList.remove('null');
   modalClose.classList.remove('null');
-};
+}
 
-const preloadMedia = (mediaId, direction = 'DESC') => {
+function preloadMedia(mediaId, direction = 'DESC') {
   const mediaIdToPreload = direction === 'DESC'
     ? mediaCacheRight[mediaId]
     : mediaCacheLeft[mediaId];
@@ -416,9 +264,9 @@ const preloadMedia = (mediaId, direction = 'DESC') => {
 
   const imgTemp = new Image();
   imgTemp.src = mediaObj.fullPathMedium;
-};
+}
 
-const updateMediaCache = (medias, direction = null) => {
+function updateMediaCache(medias, direction = null) {
   let previousId = null;
 
   medias.forEach(item => {
@@ -438,9 +286,9 @@ const updateMediaCache = (medias, direction = null) => {
 
     previousId = item.id;
   });
-};
+}
 
-const modalRetrieveMediaAndAddToCache = async (mediaId, direction) => {
+async function modalRetrieveMediaAndAddToCache(mediaId, direction) {
   if (direction === 'DESC' || direction === 'ASC') {
     const fourthNextMediaId = getFourthNextMediaId(mediaId, direction);
     if (fourthNextMediaId) {
@@ -459,9 +307,9 @@ const modalRetrieveMediaAndAddToCache = async (mediaId, direction) => {
           ? (response.files[1] ?? null)
           : (response.files[0] ?? null);
     });
-};
+}
 
-const getFourthNextMediaId = (mediaId, direction) => {
+function getFourthNextMediaId(mediaId, direction) {
   const nextMediaId = direction === 'DESC'
     ? mediaCacheRight[mediaId]
     : mediaCacheLeft[mediaId];
@@ -479,7 +327,7 @@ const getFourthNextMediaId = (mediaId, direction) => {
     : null;
 }
 
-const modalGetMedia = async (mediaId, direction) => {
+async function modalGetMedia(mediaId, direction) {
   if (mediaCache[mediaId]) {
     return mediaCache[mediaId];
   }
@@ -491,9 +339,9 @@ const modalGetMedia = async (mediaId, direction) => {
       updateMediaCache(response.files, direction);
       return response.files[0] ?? null;
     });
-};
+}
 
-const modalGetNextMedia = async (currentMediaId, direction) => {
+async function modalGetNextMedia(currentMediaId, direction) {
   let nextMediaId = null;
   if (direction === 'DESC' && mediaCacheRight[currentMediaId]) {
     nextMediaId = mediaCacheRight[currentMediaId];
@@ -515,9 +363,9 @@ const modalGetNextMedia = async (currentMediaId, direction) => {
         newMedia.onerror = reject;
       });
     });
-};
+}
 
-const displayNextImagePopup = (e) => {
+function displayNextImagePopup(e) {
   e.preventDefault();
 
   const mediaId = e.currentTarget.mediaId;
@@ -559,9 +407,9 @@ const displayNextImagePopup = (e) => {
       displayModalImage(mediaObj);
       preloadMedia(mediaObj.id, direction);
     });
-};
+}
 
-const insertImageInArticle = (e) => {
+function insertImageInArticle(e) {
   const container = document.querySelector('.medium-editor-content');
   const mediaId = e.currentTarget.mediaId;
   const existingImage = document.querySelector('img[data-media-id="' + mediaId + '"]');
@@ -588,9 +436,9 @@ const insertImageInArticle = (e) => {
 
   imageCaption.scrollIntoView({ behavior: 'smooth', block: 'start' });
   imageCaption.focus();
-};
+}
 
-const articleSelectMainImage = (e) => {
+function articleSelectMainImage(e) {
   const imageContainer = document.querySelector('.article-main-image-container');
   const targetImg = imageContainer.querySelector('img.article-main-image');
   const mediaId = e.currentTarget.mediaId;
@@ -610,9 +458,9 @@ const articleSelectMainImage = (e) => {
   document.querySelector('.select-media-action span').textContent = Global.get('globalModify');
   document.querySelector('.select-media-modal').classList.add('null');
   document.querySelector('.article-main-image-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
-};
+}
 
-const albumSelectMainMedia = (e) => {
+function albumSelectMainMedia(e) {
   const mediaId = e.currentTarget.mediaId;
 
   const imageContainer = document.querySelector('.main-image-container');
@@ -638,9 +486,9 @@ const albumSelectMainMedia = (e) => {
   e.currentTarget.textContent = Global.get('globalModify');
   document.querySelector('.select-media-modal').classList.add('null');
   imageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-};
+}
 
-const albumSectionAddMedia = (e) => {
+function albumSectionAddMedia(e) {
   const mediaId = e.currentTarget.mediaId;
   const targetContainerId = e.currentTarget.targetContainerId;
 
@@ -692,9 +540,9 @@ const albumSectionAddMedia = (e) => {
       container.removeChild(container.querySelector('img[data-media-id="' + mediaId + '"]'));
       Util.notifyError(error);
     }).finally(() => container.removeChild(loadingContainer));
-};
+}
 
-const editAlbumSection = (e) => {
+function editAlbumSection(e) {
   e.preventDefault();
 
   const albumSectionId = e.currentTarget.dataset.albumSectionId;
@@ -760,9 +608,9 @@ const editAlbumSection = (e) => {
   Util.createMediumEditor('section-content-html-' + albumSectionId);
 
   container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-};
+}
 
-const updateAlbumSection = (e) => {
+function updateAlbumSection(e) {
   e.preventDefault();
 
   const albumSectionId = e.currentTarget.dataset.albumSectionId;
@@ -821,9 +669,9 @@ const updateAlbumSection = (e) => {
     });
 
   container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-};
+}
 
-const makeAlbumSectionNonEditable = (albumSectionId) => {
+function makeAlbumSectionNonEditable(albumSectionId) {
   const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
   const titleEl = container.querySelector('.section-title-html');
   const subtitleEl = container.querySelector('.section-subtitle-html');
@@ -864,9 +712,9 @@ const makeAlbumSectionNonEditable = (albumSectionId) => {
   mediaButtonsContainer.classList.add('null');
   editButton.classList.remove('null');
   container.querySelector('.album-section-button-container-js').classList.add('null');
-};
+}
 
-const cancelAlbumSectionEdit = (e) => {
+function cancelAlbumSectionEdit(e) {
   e.preventDefault();
 
   const albumSectionId = e.currentTarget.dataset.albumSectionId;
@@ -910,9 +758,9 @@ const cancelAlbumSectionEdit = (e) => {
 
   makeAlbumSectionNonEditable(albumSectionId);
   container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-};
+}
 
-const albumSectionSelectMainMedia = (e) => {
+function albumSectionSelectMainMedia(e) {
   e.preventDefault();
 
   const targetContainerId = e.currentTarget.targetContainerId;
@@ -941,9 +789,9 @@ const albumSectionSelectMainMedia = (e) => {
   container.querySelector('.album-section-main-media-js span').textContent = Global.get('globalModify');
   container.querySelector('.album-section-main-media-delete-js').classList.remove('null');
   document.querySelector('.select-media-modal').classList.add('null');
-};
+}
 
-const albumSectionDeleteMainMedia = (e) => {
+function albumSectionDeleteMainMedia(e) {
   e.preventDefault();
 
   const delRes = confirm(Global.get('feedbackDeleteGeneric'));
@@ -957,9 +805,9 @@ const albumSectionDeleteMainMedia = (e) => {
   container.querySelector('.album-section-main-media').classList.add('null');
   container.querySelector('.album-section-main-media-delete-js').classList.add('null');
   container.querySelector('.album-section-main-media-js span').textContent = Global.get('globalSelectImage');
-};
+}
 
-const albumSectionDeleteMedia = (e) => {
+function albumSectionDeleteMedia(e) {
   e.preventDefault();
 
   const delRes = confirm(Global.get('feedbackDeleteGeneric'));
@@ -1002,9 +850,9 @@ const albumSectionDeleteMedia = (e) => {
         }
       });
     });
-};
+}
 
-const albumSectionEditMediaCaption = (e) => {
+function albumSectionEditMediaCaption(e) {
   e.preventDefault();
 
   const albumSectionMediaId = e.currentTarget.dataset.albumSectionMediaId;
@@ -1034,9 +882,9 @@ const albumSectionEditMediaCaption = (e) => {
 
   modal.classList.remove('null');
   htmlContainer.focus();
-};
+}
 
-const updateAlbumSectionSequences = (sourceSequence, targetSequence) => {
+function updateAlbumSectionSequences(sourceSequence, targetSequence) {
   if (sourceSequence === targetSequence) {
     return;
   }
@@ -1101,7 +949,7 @@ const updateAlbumSectionSequences = (sourceSequence, targetSequence) => {
   return Number.parseInt(targetSection.dataset.albumSectionId);
 }
 
-const addEventListenerAction = (image, mediaId, eventListenerAction, targetContainerId) => {
+function addEventListenerAction(image, mediaId, eventListenerAction, targetContainerId) {
   if (eventListenerAction === 'displayNextImagePopup') {
     image.addEventListener('click', displayNextImagePopup);
     image.removeEventListener('click', insertImageInArticle);
@@ -1148,9 +996,9 @@ const addEventListenerAction = (image, mediaId, eventListenerAction, targetConta
 
   image.targetContainerId = targetContainerId;
   image.mediaId = mediaId;
-};
+}
 
-const displayImageFromApiCall = (container, images, eventListenerAction, targetContainerId = null) => {
+function displayImageFromApiCall(container, images, eventListenerAction, targetContainerId = null) {
   images.forEach(image => {
     const existingImage = container.querySelector('img[data-media-id="' + image.id + '"]');
     if (existingImage) {
@@ -1175,7 +1023,216 @@ const displayImageFromApiCall = (container, images, eventListenerAction, targetC
     figureContainer.appendChild(imageEl);
     container.appendChild(figureContainer);
   });
-};
+}
+
+async function deleteImage(e, mediaId) {
+  e.preventDefault();
+
+  const delRes = confirm(Global.get('feedbackDeleteImageConfirmation'));
+  if (!delRes) {
+    return;
+  }
+
+  Request.delete('/api/file/' + mediaId)
+    .then(() => {
+      document.querySelector(".image-item[data-media-id='" + mediaId + "']").parentElement.classList.add('null');
+      document.querySelector('.modal-media').classList.add('null');
+    });
+}
+
+function handleDropdownOptionClick(elementOption, dropDownIdentifier) {
+  const elementLabel = document.querySelector('#' + dropDownIdentifier + '-dd-label');
+  const elementCheckbox = document.querySelector('#' + dropDownIdentifier + '-dd-checkbox');
+  const optionClassName = dropDownIdentifier + '-dd-option';
+
+  if (elementOption.dataset.value === '1') {
+    elementLabel.classList.add('feedback-success');
+    elementLabel.classList.remove('background-light-text-color');
+  } else {
+    elementLabel.classList.remove('feedback-success');
+    elementLabel.classList.add('background-light-text-color');
+  }
+
+  elementLabel.querySelector('span').innerHTML = elementOption.innerHTML;
+  elementCheckbox.checked = false;
+
+  document.querySelectorAll('.' + optionClassName).forEach(o => {
+    o.dataset.checked = o.dataset.value === elementOption.dataset.value
+      ? '1'
+      : '0';
+  });
+}
+
+function handleRemoveArticleTag(event) {
+  event.target.parentNode.parentNode.removeChild(event.target.parentNode);
+
+  const allTags = document.querySelectorAll('#tags-selected span');
+  if (!allTags.length) {
+    document.querySelector('#tags-selected').classList.add('null');
+  }
+}
+
+function handleTagSearchResultClick(tagId, tagName, tagInnerHtml, tagElement = null) {
+  const tags = document.querySelector('#tags-selected');
+  tags.classList.remove('null');
+  const allResults = document.querySelectorAll('.search-results > .result-item');
+
+  const generateNewTagHtml = function(id, name, html) {
+    let imgClose = new Image();
+    imgClose.className = 'img-svg m-l-05';
+    imgClose.title = Global.get('globalRemove');
+    imgClose.alt = Global.get('globalRemove');
+    imgClose.src = '/img/svg/x.svg';
+    imgClose.addEventListener('click', (e) => handleRemoveArticleTag(e));
+
+    let newTag = document.createElement('span');
+    newTag.className = 'result-selected';
+    newTag.dataset.tagId = id;
+    newTag.dataset.tagName = name;
+    newTag.innerHTML = html;
+    newTag.appendChild(imgClose);
+    tags.appendChild(newTag);
+  }
+
+  document.querySelector('#search-results-tags').classList.add('null');
+  document.querySelector('input[name="tags"]').value = '';
+  allResults.forEach(r => r.classList.remove('null'));
+  tagId = Number.parseInt(tagId);
+
+  if (tagId) {
+    let existingTag = [];
+    document.querySelectorAll('#tags-selected > .result-selected')
+      .forEach(s => {
+        if (tagId === Number.parseInt(s.dataset.tagId)) {
+          s.classList.add('highlight-effect');
+          setTimeout(() => s.classList.remove('highlight-effect'), 2000);
+        }
+        existingTag.push(Number.parseInt(s.dataset.tagId));
+      });
+
+    if (existingTag.includes(tagId)) {
+      return;
+    }
+
+    generateNewTagHtml(tagId, tagName, tagInnerHtml);
+    return;
+  }
+
+  Request.post('/back/tag', JSON.stringify({name: tagName}))
+    .then(res => {
+      if (tagElement) {
+        tagElement.parentNode.removeChild(tagElement);
+      }
+      generateNewTagHtml(res.id, tagName, tagInnerHtml);
+    });
+}
+
+function handleAlbumMediaDragEnter(ev) {
+  ev.preventDefault();
+}
+
+function handleAlbumMediaDragLeave(ev) {
+  ev.preventDefault();
+  ev.currentTarget.classList.remove('media-item-grabbing-over');
+}
+
+function handleAlbumMediaDragOver(ev) {
+  ev.preventDefault();
+  ev.currentTarget.classList.add('media-item-grabbing-over');
+}
+
+function handleAlbumMediaDragEnd(ev) {
+  document.querySelectorAll('.item-draggable .media-item').forEach(id => {
+    id.removeEventListener('dragenter', handleAlbumMediaDragEnter);
+    id.removeEventListener('dragover', handleAlbumMediaDragOver);
+  });
+
+  ev.currentTarget.classList.remove('media-item-grabbing-over');
+  ev.currentTarget.classList.remove('media-item-grabbing');
+}
+
+function handleAlbumMediaDragStart(ev) {
+  const sectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
+
+  sectionContainer.querySelectorAll('.item-draggable .media-item').forEach(id => {
+    id.addEventListener('dragenter', handleAlbumMediaDragEnter);
+    id.addEventListener('dragover', handleAlbumMediaDragOver);
+  });
+
+  ev.dataTransfer.setData("text/plain", ev.currentTarget.id);
+  ev.dataTransfer.dropEffect = "move";
+  ev.effectAllowed = "move";
+  ev.currentTarget.classList.add('media-item-grabbing');
+}
+
+function handleAlbumMediaDrop(ev) {
+  ev.preventDefault();
+
+  const sectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
+  const draggedId = ev.dataTransfer.getData("text/plain");
+  const draggedEl = document.getElementById(draggedId);
+
+  if (!draggedEl) {
+    return;
+  }
+
+  ev.currentTarget.classList.remove('media-item-grabbing-over');
+  draggedEl.classList.add('media-item-grabbing');
+
+  if (draggedEl.id === ev.currentTarget.id) {
+    return;
+  }
+
+  const loadingEl = document.querySelector('.drop-loading');
+  draggedEl.parentElement.appendChild(loadingEl);
+  loadingEl.classList.remove('null');
+
+  const droppedSequence = Number.parseInt(ev.currentTarget.dataset.sequence);
+  const draggedSequence = Number.parseInt(draggedEl.dataset.sequence);
+
+  const targetContainer = ev.currentTarget.parentElement.parentElement;
+  const sourceContainer = draggedEl.parentElement.parentElement;
+  let countDelta = 0;
+  if (droppedSequence < draggedSequence) {
+    targetContainer.parentNode.insertBefore(sourceContainer, targetContainer);
+    countDelta = 1;
+  } else {
+    targetContainer.parentNode.insertBefore(sourceContainer, targetContainer.nextSibling);
+    countDelta = -1;
+  }
+
+  const albumSectionId = sectionContainer.parentElement.parentElement.dataset.albumSectionId;
+  const data = {
+    sequenceTo: droppedSequence,
+    albumSectionMediaIdTo: Number.parseInt(ev.currentTarget.dataset.albumSectionMediaId),
+    sequenceFrom: draggedSequence,
+    albumSectionMediaIdFrom: Number.parseInt(draggedEl.dataset.albumSectionMediaId),
+    countDelta: countDelta,
+  };
+
+  Request.put('/back/album-section/' + albumSectionId + '/sequence', JSON.stringify(data))
+    .then(() => {
+      draggedEl.dataset.sequence = droppedSequence.toString();
+
+      sectionContainer.querySelectorAll('.item-draggable .media-item').forEach(mi => {
+        if (draggedEl.id === mi.id) {
+          return;
+        }
+
+        const cSeq = Number.parseInt(mi.dataset.sequence);
+        if ((cSeq >= droppedSequence && cSeq < draggedSequence) || (cSeq <= droppedSequence && cSeq > draggedSequence)) {
+          mi.dataset.sequence = (cSeq + countDelta).toString();
+        }
+      });
+      loadingEl.classList.add('null');
+      draggedEl.classList.remove('media-item-grabbing');
+    })
+    .catch(error => Util.notifyError(error))
+    .finally(() => {
+      loadingEl.classList.add('null');
+      draggedEl.classList.remove('media-item-grabbing');
+    });
+}
 
 document.querySelectorAll('.image-item').forEach(im => {
   im.mediaId = im.dataset.mediaId;
@@ -1200,20 +1257,157 @@ document.querySelectorAll('.image-next-action, .image-previous-action, .image-ra
   });
 });
 
-const deleteImage = async function (e, mediaId) {
-  e.preventDefault();
+document.querySelectorAll('.article-save-button').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
 
-  const delRes = confirm(Global.get('feedbackDeleteImageConfirmation'));
-  if (!delRes) {
-    return;
-  }
+    function afterApiCall(articleId, articlePublicPath, articleBackofficePath) {
+      history.pushState("", document.title, articleBackofficePath);
+      document.querySelector('input[name="articleId"]').value = articleId;
 
-  Request.delete('/api/file/' + mediaId)
-    .then(() => {
-      document.querySelector(".image-item[data-media-id='" + mediaId + "']").parentElement.classList.add('null');
-      document.querySelector('.modal-media').classList.add('null');
+      document.querySelectorAll('#side-options').forEach(i => i.classList.add('null'));
+      document.querySelectorAll('.article-save-button').forEach(b => {
+        b.value = Global.get('globalUpdate');
+      });
+      document.querySelectorAll('.article-preview').forEach(b => {
+        b.href = articlePublicPath;
+        b.classList.remove('null');
+      });
+      document.querySelectorAll('.article-path-value').forEach(i => {
+        i.textContent = articlePublicPath.trim().replace(/^\//,"");
+      });
+    }
+
+    function getTitleContent() {
+      const titleEl = document.querySelector('.articleTitle');
+      if (titleEl && titleEl.textContent.trim().length) {
+        return titleEl.textContent.trim();
+      }
+
+      return null;
+    }
+
+    function getTags() {
+      let tags = [];
+      document.querySelectorAll('#tags-selected > .result-selected')
+        .forEach(t => {
+          tags.push({
+            id: t.dataset.tagId ? Number.parseInt(t.dataset.tagId) : null,
+            name: t.dataset.tagName
+          });
+        });
+
+      return tags;
+    }
+
+    function getContentHtmlAndSections() {
+      const contentContainer = document.querySelector('.medium-editor-content');
+      const imageIds = [];
+
+      contentContainer.childNodes.forEach(node => {
+        let currentNode = node;
+        if (currentNode.nodeName === 'DIV') {
+          const newParagraph = document.createElement('p');
+          newParagraph.innerHTML = node.innerHTML;
+          contentContainer.insertBefore(newParagraph, node);
+          contentContainer.removeChild(node);
+          currentNode = newParagraph;
+        }
+
+        if (currentNode.nodeName === 'IMG' && currentNode.dataset.mediaId) {
+          imageIds.push(Number.parseInt(currentNode.dataset.mediaId));
+        }
+
+        if (currentNode.nodeName === '#text') {
+          if (currentNode.textContent.trim().length) {
+            const newParagraph = document.createElement('p');
+            newParagraph.textContent = currentNode.textContent;
+            contentContainer.insertBefore(newParagraph, node);
+          }
+
+          contentContainer.removeChild(node);
+        }
+      });
+
+      const firstImageElement = contentContainer.querySelector('.article-image');
+      const firstImageId = firstImageElement && firstImageElement.dataset.mediaId
+        ? Number.parseInt(firstImageElement.dataset.mediaId)
+        : null;
+
+      return {
+        sections: [],
+        contentHtml: contentContainer.innerHTML.trim().length ? contentContainer.innerHTML.trim() : null,
+        mainImageId: firstImageId,
+        mediaIds: imageIds,
+      };
+    }
+
+    function getPublishOnDateIsoString() {
+      const publishOnDateEl = document.querySelector('input[name="publishOnDate"]');
+      const publishOnTimeEl = document.querySelector('input[name="publishOnTime"]');
+
+      return publishOnDateEl.value && publishOnTimeEl.value
+        ? new Date(publishOnDateEl.value + 'T' + publishOnTimeEl.value + ':00').toISOString()
+        : null;
+    }
+
+    function getArticleTypeId() {
+      const articleTypeIdEl = document.querySelector('input[name="articleTypeId"]');
+      return articleTypeIdEl && articleTypeIdEl.value.length
+        ? Number.parseInt(articleTypeIdEl.value)
+        : null;
+    }
+
+    function getPath() {
+      const pathEl = document.querySelector('div.article-path-value');
+      return pathEl && pathEl.textContent.trim().length ? pathEl.textContent.trim() : null;
+    }
+
+    function getStatusId() {
+      const status = document.querySelector('.article-status-dd-option[data-checked="1"]');
+      return Number.parseInt(status.dataset.value);
+    }
+
+    function getLanguageIsoCode() {
+      const language = document.querySelector('.article-lang-dd-option[data-checked="1"]');
+      return language.dataset.value;
+    }
+
+    const articleTitle = getTitleContent();
+    const articleLanguageIsoCode = getLanguageIsoCode();
+    const content = getContentHtmlAndSections();
+
+    if (!content.contentHtml) {
+      Util.notifyError(new Error(Global.get('feedbackSaving')));
+      return;
+    }
+
+    const payload = JSON.stringify({
+      siteLanguageIsoCode: document.documentElement.lang ?? articleLanguageIsoCode,
+      articleLanguageIsoCode: articleLanguageIsoCode,
+      title: articleTitle,
+      path: getPath(),
+      contentHtml: content.contentHtml,
+      typeId: getArticleTypeId(),
+      statusId: getStatusId(),
+      mainImageId: content.mainImageId,
+      mediaIds: content.mediaIds,
+      sections: content.sections,
+      tags: getTags(),
+      publishOn: getPublishOnDateIsoString(),
     });
-}
+
+    const articleIdEl = document.querySelector('input[name="articleId"]');
+    const url = '/back/article';
+    if (articleIdEl && articleIdEl.value) {
+      Request.put(url + '/' + articleIdEl.value, payload, Global.get('globalUpdated'))
+        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath));
+    } else {
+      Request.post(url, payload, Global.get('globalSaved'))
+        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath));
+    }
+  });
+});
 
 document.querySelectorAll('.image-delete').forEach(imgEl => {
   imgEl.addEventListener('click', e => {
@@ -1334,29 +1528,6 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
   });
 });
 
-const handleDropdownOptionClick = (elementOption, dropDownIdentifier) => {
-  const elementLabel = document.querySelector('#' + dropDownIdentifier + '-dd-label');
-  const elementCheckbox = document.querySelector('#' + dropDownIdentifier + '-dd-checkbox');
-  const optionClassName = dropDownIdentifier + '-dd-option';
-
-  if (elementOption.dataset.value === '1') {
-    elementLabel.classList.add('feedback-success');
-    elementLabel.classList.remove('background-light-text-color');
-  } else {
-    elementLabel.classList.remove('feedback-success');
-    elementLabel.classList.add('background-light-text-color');
-  }
-
-  elementLabel.querySelector('span').innerHTML = elementOption.innerHTML;
-  elementCheckbox.checked = false;
-
-  document.querySelectorAll('.' + optionClassName).forEach(o => {
-    o.dataset.checked = o.dataset.value === elementOption.dataset.value
-      ? '1'
-      : '0';
-  });
-};
-
 document.querySelectorAll('.article-status-dd-option').forEach(op => {
   op.addEventListener('click', (e) => {
     e.preventDefault();
@@ -1440,70 +1611,6 @@ document.querySelectorAll('a.close-button').forEach(el => {
     sideNav.classList.remove('side-options-open');
   });
 });
-
-const handleRemoveArticleTag = (event) => {
-  event.target.parentNode.parentNode.removeChild(event.target.parentNode);
-
-  const allTags = document.querySelectorAll('#tags-selected span');
-  if (!allTags.length) {
-    document.querySelector('#tags-selected').classList.add('null');
-  }
-};
-
-const handleTagSearchResultClick = (tagId, tagName, tagInnerHtml, tagElement = null) => {
-  const tags = document.querySelector('#tags-selected');
-  tags.classList.remove('null');
-  const allResults = document.querySelectorAll('.search-results > .result-item');
-
-  const generateNewTagHtml = function(id, name, html) {
-    let imgClose = new Image();
-    imgClose.className = 'img-svg m-l-05';
-    imgClose.title = Global.get('globalRemove');
-    imgClose.alt = Global.get('globalRemove');
-    imgClose.src = '/img/svg/x.svg';
-    imgClose.addEventListener('click', (e) => handleRemoveArticleTag(e));
-
-    let newTag = document.createElement('span');
-    newTag.className = 'result-selected';
-    newTag.dataset.tagId = id;
-    newTag.dataset.tagName = name;
-    newTag.innerHTML = html;
-    newTag.appendChild(imgClose);
-    tags.appendChild(newTag);
-  }
-
-  document.querySelector('#search-results-tags').classList.add('null');
-  document.querySelector('input[name="tags"]').value = '';
-  allResults.forEach(r => r.classList.remove('null'));
-  tagId = Number.parseInt(tagId);
-
-  if (tagId) {
-    let existingTag = [];
-    document.querySelectorAll('#tags-selected > .result-selected')
-      .forEach(s => {
-        if (tagId === Number.parseInt(s.dataset.tagId)) {
-          s.classList.add('highlight-effect');
-          setTimeout(() => s.classList.remove('highlight-effect'), 2000);
-        }
-        existingTag.push(Number.parseInt(s.dataset.tagId));
-      });
-
-    if (existingTag.includes(tagId)) {
-      return;
-    }
-
-    generateNewTagHtml(tagId, tagName, tagInnerHtml);
-    return;
-  }
-
-  Request.post('/back/tag', JSON.stringify({name: tagName}))
-    .then(res => {
-      if (tagElement) {
-        tagElement.parentNode.removeChild(tagElement);
-      }
-      generateNewTagHtml(res.id, tagName, tagInnerHtml);
-    });
-};
 
 document.querySelectorAll('input[name="tags"]').forEach(el => {
   const searchResultEl = document.querySelector('#search-results-tags');
@@ -2069,113 +2176,6 @@ document.querySelectorAll('form#album-media-caption-edit-form-js').forEach(f => 
       });
   });
 });
-
-const handleAlbumMediaDragEnter = (ev) => {
-  ev.preventDefault();
-};
-
-const handleAlbumMediaDragLeave = (ev) => {
-  ev.preventDefault();
-  ev.currentTarget.classList.remove('media-item-grabbing-over');
-};
-
-const handleAlbumMediaDragOver = (ev) => {
-  ev.preventDefault();
-  ev.currentTarget.classList.add('media-item-grabbing-over');
-};
-
-const handleAlbumMediaDragEnd = (ev) => {
-  document.querySelectorAll('.item-draggable .media-item').forEach(id => {
-    id.removeEventListener('dragenter', handleAlbumMediaDragEnter);
-    id.removeEventListener('dragover', handleAlbumMediaDragOver);
-  });
-
-  ev.currentTarget.classList.remove('media-item-grabbing-over');
-  ev.currentTarget.classList.remove('media-item-grabbing');
-};
-
-const handleAlbumMediaDragStart = (ev) => {
-  const sectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
-
-  sectionContainer.querySelectorAll('.item-draggable .media-item').forEach(id => {
-    id.addEventListener('dragenter', handleAlbumMediaDragEnter);
-    id.addEventListener('dragover', handleAlbumMediaDragOver);
-  });
-
-  ev.dataTransfer.setData("text/plain", ev.currentTarget.id);
-  ev.dataTransfer.dropEffect = "move";
-  ev.effectAllowed = "move";
-  ev.currentTarget.classList.add('media-item-grabbing');
-};
-
-const handleAlbumMediaDrop = (ev) => {
-  ev.preventDefault();
-
-  const sectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
-  const draggedId = ev.dataTransfer.getData("text/plain");
-  const draggedEl = document.getElementById(draggedId);
-
-  if (!draggedEl) {
-    return;
-  }
-
-  ev.currentTarget.classList.remove('media-item-grabbing-over');
-  draggedEl.classList.add('media-item-grabbing');
-
-  if (draggedEl.id === ev.currentTarget.id) {
-    return;
-  }
-
-  const loadingEl = document.querySelector('.drop-loading');
-  draggedEl.parentElement.appendChild(loadingEl);
-  loadingEl.classList.remove('null');
-
-  const droppedSequence = Number.parseInt(ev.currentTarget.dataset.sequence);
-  const draggedSequence = Number.parseInt(draggedEl.dataset.sequence);
-
-  const targetContainer = ev.currentTarget.parentElement.parentElement;
-  const sourceContainer = draggedEl.parentElement.parentElement;
-  let countDelta = 0;
-  if (droppedSequence < draggedSequence) {
-    targetContainer.parentNode.insertBefore(sourceContainer, targetContainer);
-    countDelta = 1;
-  } else {
-    targetContainer.parentNode.insertBefore(sourceContainer, targetContainer.nextSibling);
-    countDelta = -1;
-  }
-
-  const albumSectionId = sectionContainer.parentElement.parentElement.dataset.albumSectionId;
-  const data = {
-    sequenceTo: droppedSequence,
-    albumSectionMediaIdTo: Number.parseInt(ev.currentTarget.dataset.albumSectionMediaId),
-    sequenceFrom: draggedSequence,
-    albumSectionMediaIdFrom: Number.parseInt(draggedEl.dataset.albumSectionMediaId),
-    countDelta: countDelta,
-  };
-
-  Request.put('/back/album-section/' + albumSectionId + '/sequence', JSON.stringify(data))
-    .then(() => {
-      draggedEl.dataset.sequence = droppedSequence.toString();
-
-      sectionContainer.querySelectorAll('.item-draggable .media-item').forEach(mi => {
-        if (draggedEl.id === mi.id) {
-          return;
-        }
-
-        const cSeq = Number.parseInt(mi.dataset.sequence);
-        if ((cSeq >= droppedSequence && cSeq < draggedSequence) || (cSeq <= droppedSequence && cSeq > draggedSequence)) {
-          mi.dataset.sequence = (cSeq + countDelta).toString();
-        }
-      });
-      loadingEl.classList.add('null');
-      draggedEl.classList.remove('media-item-grabbing');
-    })
-    .catch(error => Util.notifyError(error))
-    .finally(() => {
-      loadingEl.classList.add('null');
-      draggedEl.classList.remove('media-item-grabbing');
-    });
-};
 
 document.querySelectorAll('.item-draggable .media-item').forEach(f => {
   f.addEventListener('dragstart', handleAlbumMediaDragStart);
