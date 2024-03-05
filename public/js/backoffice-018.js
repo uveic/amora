@@ -944,53 +944,60 @@ function updateAlbumSectionSequences(sourceSequence, targetSequence) {
   return Number.parseInt(targetSection.dataset.albumSectionId);
 }
 
-function addEventListenerAction(image, mediaId, eventListenerAction, targetContainerId) {
+function addEventListenerAction(media, mediaId, eventListenerAction, targetContainerId) {
   if (eventListenerAction === 'displayNextImagePopup') {
-    image.addEventListener('click', displayNextImagePopup);
-    image.removeEventListener('click', insertImageInArticle);
-    image.removeEventListener('click', articleSelectMainImage);
-    image.removeEventListener('click', albumSelectMainMedia);
-    image.removeEventListener('click', albumSectionAddMedia);
-    image.removeEventListener('click', albumSectionSelectMainMedia);
+    media.addEventListener('click', displayNextImagePopup);
+    media.removeEventListener('click', insertImageInArticle);
+    media.removeEventListener('click', articleSelectMainImage);
+    media.removeEventListener('click', albumSelectMainMedia);
+    media.removeEventListener('click', albumSectionAddMedia);
+    media.removeEventListener('click', albumSectionSelectMainMedia);
   } else if (eventListenerAction === 'insertImageInArticle') {
-    image.removeEventListener('click', displayNextImagePopup);
-    image.addEventListener('click', insertImageInArticle);
-    image.removeEventListener('click', articleSelectMainImage);
-    image.removeEventListener('click', albumSelectMainMedia);
-    image.removeEventListener('click', albumSectionAddMedia);
-    image.removeEventListener('click', albumSectionSelectMainMedia);
+    media.removeEventListener('click', displayNextImagePopup);
+    media.addEventListener('click', insertImageInArticle);
+    media.removeEventListener('click', articleSelectMainImage);
+    media.removeEventListener('click', albumSelectMainMedia);
+    media.removeEventListener('click', albumSectionAddMedia);
+    media.removeEventListener('click', albumSectionSelectMainMedia);
   } else if (eventListenerAction === 'articleSelectMainImage') {
-    image.removeEventListener('click', displayNextImagePopup);
-    image.removeEventListener('click', insertImageInArticle);
-    image.addEventListener('click', articleSelectMainImage);
-    image.removeEventListener('click', albumSelectMainMedia);
-    image.removeEventListener('click', albumSectionAddMedia);
-    image.removeEventListener('click', albumSectionSelectMainMedia);
+    media.removeEventListener('click', displayNextImagePopup);
+    media.removeEventListener('click', insertImageInArticle);
+    media.addEventListener('click', articleSelectMainImage);
+    media.removeEventListener('click', albumSelectMainMedia);
+    media.removeEventListener('click', albumSectionAddMedia);
+    media.removeEventListener('click', albumSectionSelectMainMedia);
   } else if (eventListenerAction === 'albumSelectMainMedia') {
-    image.removeEventListener('click', displayNextImagePopup);
-    image.removeEventListener('click', insertImageInArticle);
-    image.removeEventListener('click', articleSelectMainImage);
-    image.addEventListener('click', albumSelectMainMedia);
-    image.removeEventListener('click', albumSectionAddMedia);
-    image.removeEventListener('click', albumSectionSelectMainMedia);
+    media.removeEventListener('click', displayNextImagePopup);
+    media.removeEventListener('click', insertImageInArticle);
+    media.removeEventListener('click', articleSelectMainImage);
+    media.addEventListener('click', albumSelectMainMedia);
+    media.removeEventListener('click', albumSectionAddMedia);
+    media.removeEventListener('click', albumSectionSelectMainMedia);
   } else if (eventListenerAction === 'albumSectionAddMedia') {
-    image.removeEventListener('click', displayNextImagePopup);
-    image.removeEventListener('click', insertImageInArticle);
-    image.removeEventListener('click', articleSelectMainImage);
-    image.removeEventListener('click', albumSelectMainMedia);
-    image.addEventListener('click', albumSectionAddMedia);
-    image.removeEventListener('click', albumSectionSelectMainMedia);
+    media.removeEventListener('click', displayNextImagePopup);
+    media.removeEventListener('click', insertImageInArticle);
+    media.removeEventListener('click', articleSelectMainImage);
+    media.removeEventListener('click', albumSelectMainMedia);
+    media.addEventListener('click', albumSectionAddMedia);
+    media.removeEventListener('click', albumSectionSelectMainMedia);
   } else if (eventListenerAction === 'albumSectionSelectMainMedia') {
-    image.removeEventListener('click', displayNextImagePopup);
-    image.removeEventListener('click', insertImageInArticle);
-    image.removeEventListener('click', articleSelectMainImage);
-    image.removeEventListener('click', albumSelectMainMedia);
-    image.removeEventListener('click', albumSectionAddMedia);
-    image.addEventListener('click', albumSectionSelectMainMedia);
+    media.removeEventListener('click', displayNextImagePopup);
+    media.removeEventListener('click', insertImageInArticle);
+    media.removeEventListener('click', articleSelectMainImage);
+    media.removeEventListener('click', albumSelectMainMedia);
+    media.removeEventListener('click', albumSectionAddMedia);
+    media.addEventListener('click', albumSectionSelectMainMedia);
+  } else {
+    media.removeEventListener('click', displayNextImagePopup);
+    media.removeEventListener('click', insertImageInArticle);
+    media.removeEventListener('click', articleSelectMainImage);
+    media.removeEventListener('click', albumSelectMainMedia);
+    media.removeEventListener('click', albumSectionAddMedia);
+    media.removeEventListener('click', albumSectionSelectMainMedia);
   }
 
-  image.targetContainerId = targetContainerId;
-  image.mediaId = mediaId;
+  media.targetContainerId = targetContainerId;
+  media.mediaId = mediaId;
 }
 
 function displayImageFromApiCall(container, images, eventListenerAction, targetContainerId) {

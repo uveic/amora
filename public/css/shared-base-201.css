@@ -932,6 +932,11 @@ svg,
   50% {background-position: right }
 }
 
+.narrow-width {
+  margin: 0 auto;
+  width: 100%;
+  max-width: var(--content-max-width-narrow);
+}
 /* Classes for generic use ends here */
 /* Homepage style starts here */
 .home-main {

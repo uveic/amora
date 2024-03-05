@@ -103,6 +103,7 @@ return [
     'globalRemove' => 'Eliminar',
     'globalFormat' => 'Formato',
     'globalRequired' => 'Obrigatorio',
+    'globalCreate' => 'Crear',
     'globalNew' => 'Novo',
     'globalAdd' => 'Engadir',
     'globalEdit' => 'Editar',
@@ -161,8 +162,8 @@ return [
     'globalAddHtml' => 'Engadir HTML',
 
     'globalGenericError' => 'Algo non foi ben, por favor inténtao de novo.',
-    'globalPageNotFoundTitle' => 'Non se atopu a páxina :(',
-    'globalPageNotFoundContent' => 'A páxina que buscas non existe.',
+    'globalPageNotFoundTitle' => 'Vaia, chegaches a unha rúa sen saída...',
+    'globalPageNotFoundContent' => '<p>Este enderezo non existe (aínda).</p><p>Poida que sexa erro noso, mais tamén pode ser que escribises mal o enderezo, sobre todo se o fixeches manualmente.</p><p>Podes volver á <a href="%s">portada facendo clic aquí</a>.</p>',
     'globalPageDeactivatedTitle' => 'Temporalmente desactivada',
     'globalPageDeactivatedContent' => 'A páxina que buscas está desactivada temporalmente. Se tes algunha consulta podes poñerte en contacto con nós en <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Desculpa as molestias.',
 

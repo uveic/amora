@@ -103,6 +103,7 @@ return [
     'globalRemove' => 'Remove',
     'globalFormat' => 'Format',
     'globalRequired' => 'Required',
+    'globalCreate' => 'New',
     'globalNew' => 'New',
     'globalAdd' => 'Add',
     'globalEdit' => 'Edit',
@@ -162,7 +163,7 @@ return [
 
     'globalGenericError' => 'Something went wrong, please try again.',
     'globalPageNotFoundTitle' => 'Page Not Found :(',
-    'globalPageNotFoundContent' => 'The page you are looking for does not exist.',
+    'globalPageNotFoundContent' => '<p>The page you are looking for does not exist (yet).</p><p>You can go back to the <a href="%s">homepage</a>.</p>',
     'globalPageDeactivatedTitle' => 'Temporarily deactivated',
     'globalPageDeactivatedContent' => 'The page you are looking for is temporarily deactivated. You can get in touch at <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Sorry for the inconvenience.',
 

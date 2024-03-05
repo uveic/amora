@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Entity\Response\HtmlResponseData;
+use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseData $responseData */
 
@@ -14,9 +15,9 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 <body>
 <?=$this->insert('partials/header', ['responseData' => $responseData])?>
 <main>
-  <article>
+  <article class="narrow-width m-t-4 m-b-6">
     <h1 class="article-title"><?=$responseData->getLocalValue('globalPageNotFoundTitle')?></h1>
-    <p class="m-b-6"><?=$responseData->getLocalValue('globalPageNotFoundContent')?></p>
+    <p class="m-b-6"><?=sprintf($responseData->getLocalValue('globalPageNotFoundContent'), UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage))?></p>
   </article>
 </main>
 <?=$this->insert('partials/footer', ['responseData' => $responseData])?>
