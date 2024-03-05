@@ -7,7 +7,7 @@ use Amora\Core\Value\QueryOrderDirection;
 readonly class QueryOrderBy
 {
     public function __construct(
-        public string              $field,
+        public string $field,
         public QueryOrderDirection $direction,
     ) {}
 }

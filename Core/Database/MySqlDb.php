@@ -9,15 +9,14 @@ use Amora\Core\Util\Logger;
 
 final class MySqlDb
 {
-    private ?PDO $connection = null;
-    private bool $isInTransactionMode = false;
-
     public function __construct(
-        private Logger $logger,
+        private readonly Logger $logger,
         public readonly string $host,
         public readonly string $user,
         public readonly string $password,
-        public readonly string $name
+        public readonly string $name,
+        private ?PDO $connection = null,
+        private bool $isInTransactionMode = false,
     ) {}
 
     public function updateTimezone(): bool
@@ -49,14 +48,10 @@ final class MySqlDb
         }
     }
 
-    public function fetchOne(string $sql, array $params = [])
+    public function fetchOne(string $sql, array $params = []): mixed
     {
         $result = $this->fetchAll($sql, $params);
-        if (is_array($result) && count($result)) {
-            return $result[0];
-        }
-
-        return $result;
+        return $result[0] ?? null;
     }
 
     public function fetchColumn(string $sql, array $params = array())
@@ -125,7 +120,7 @@ final class MySqlDb
         return empty($lastInsertedId) ? null : (int)$lastInsertedId;
     }
 
-    public function update(string $tableName, int $id, array $data): bool
+    public function update(string $tableName, int|string $id, array $data): bool
     {
         $this->connect();
 
@@ -238,7 +233,7 @@ final class MySqlDb
         $sql = "DESCRIBE " . $tableName;
         $result = $this->fetchAll($sql);
 
-        foreach ($result as $key => $value) {
+        foreach ($result as $value) {
             $fields[] = $value['Field'];
 
             if ($value['Key'] == 'PRI') {
@@ -258,8 +253,8 @@ final class MySqlDb
         $tables = $this->fetchAll($sql);
         $result = array();
 
-        foreach ($tables as $key => $value) {
-            $result[] = array_values($value)[0];
+        foreach ($tables as $table) {
+            $result[] = array_values($table)[0];
         }
 
         return $result;
@@ -330,7 +325,7 @@ final class MySqlDb
         }
     }
 
-    private function beginTransaction(): bool
+    private function beginTransaction(): void
     {
         if ($this->isInTransactionMode) {
             $this->logger->logWarning(
@@ -338,22 +333,20 @@ final class MySqlDb
                 ' Please, commit/roll back the previous transaction before starting a new one.' .
                 ' Ignoring current request...'
             );
-            return true;
+            return;
         }
 
         $this->connect();
         $res = $this->execute('START TRANSACTION;');
 
         if (!$res) {
-            return false;
+            return;
         }
 
         $this->isInTransactionMode = true;
-
-        return true;
     }
 
-    private function commitTransaction(): bool
+    private function commitTransaction(): void
     {
         if (!$this->isInTransactionMode) {
             $this->logger->logWarning(
@@ -361,22 +354,20 @@ final class MySqlDb
                 ' Ignoring request...'
             );
 
-            return false;
+            return;
         }
 
         $this->connect();
         $res = $this->execute('COMMIT;');
 
         if (!$res) {
-            return false;
+            return;
         }
 
         $this->isInTransactionMode = false;
-
-        return true;
     }
 
-    private function rollBackTransaction(): bool
+    private function rollBackTransaction(): void
     {
         if (!$this->isInTransactionMode) {
             $this->logger->logError(
@@ -384,32 +375,30 @@ final class MySqlDb
                 ' Ignoring request...'
             );
 
-            return false;
+            return;
         }
 
         $this->connect();
         $res = $this->execute('ROLLBACK;');
 
         if (!$res) {
-            return false;
+            return;
         }
 
         $this->isInTransactionMode = false;
-
-        return true;
     }
 
     private function connect(): void
     {
-        if (!empty($this->connection)) {
+        if ($this->connection) {
             return;
         }
 
         try {
             $this->connection = new PDO(
-                "mysql:host={$this->host};dbname={$this->name}",
+                "mysql:host=$this->host;dbname=$this->name",
                 $this->user,
-                $this->password
+                $this->password,
             );
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->connection->exec("SET names utf8mb4;SET time_zone = '" . date('P') . "';");

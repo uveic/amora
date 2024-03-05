@@ -2111,14 +2111,16 @@ document.querySelectorAll('.album-section-main-media-js').forEach(bu => {
     const mediaId = bu.dataset.mediaId;
     const sectionId = bu.dataset.sectionId;
 
-    const existingModalContainer = document.querySelector('#images-list');
-    const sectionMediaContainer = document.querySelector('#album-section-item-media-' + sectionId);
+    if (mediaId && sectionId) {
+      const existingModalContainer = document.querySelector('#images-list');
+      const sectionMediaContainer = document.querySelector('#album-section-item-media-' + sectionId);
 
-    sectionMediaContainer.querySelectorAll('.album-section-media-container .media-item').forEach(i => {
-      addMediaToModalContainer(existingModalContainer, i.dataset.mediaId);
-    });
+      sectionMediaContainer.querySelectorAll('.album-section-media-container .media-item').forEach(i => {
+        addMediaToModalContainer(existingModalContainer, i.dataset.mediaId);
+      });
 
-    addMediaToModalContainer(existingModalContainer, mediaId);
+      addMediaToModalContainer(existingModalContainer, mediaId);
+    }
 
     selectMediaAction(e);
   });

@@ -73,6 +73,8 @@ final class SyncLookupTablesApp
         string $tableName,
         array $valueByDbFieldName
     ): void {
+        $this->logger->logInfo("Checking table '$tableName'...");
+
         if (empty($tableName)) {
             $this->logger->logError('Table name is empty - Check array configuration');
             exit(1);
@@ -194,15 +196,15 @@ final class SyncLookupTablesApp
      * @param array $theirs - Values in config file
      * @param string $tableName
      * @param MySqlDb $db
-     * @return boolean - Always true
+     * @return void
      */
     private function compareAndUpdate(
         int|string $rowId,
         array $ours,
         array $theirs,
         string $tableName,
-        MySqlDb $db
-    ): bool {
+        MySqlDb $db,
+    ): void {
         if (count($ours) !== count($theirs)) {
             $this->logger->logError(
                 "Number of fields in DB and configuration file doesn't match for this table: $tableName"
@@ -215,15 +217,13 @@ final class SyncLookupTablesApp
                 $db->update($tableName, $rowId, [$fieldName => $fieldValue]);
 
                 $this->logger->logInfo(
-                    "Updating row ID '$rowId' in '$tableName' - Field: $fieldName - New value: {$fieldValue}"
+                    "Updating row ID '$rowId' in '$tableName' - Field: $fieldName - New value: $fieldValue"
                 );
             }
         }
-
-        return true;
     }
 
-    private function insertRowInDb(MySqlDb $db, string $tableName, array $values): bool
+    private function insertRowInDb(MySqlDb $db, string $tableName, array $values): void
     {
         $db->insert($tableName, $values);
         $this->logger->logInfo(
@@ -231,7 +231,5 @@ final class SyncLookupTablesApp
             implode(', ', array_keys($values)) .
             " - Values: " . implode(', ', array_values($values))
         );
-
-        return true;
     }
 }

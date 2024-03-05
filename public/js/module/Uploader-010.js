@@ -68,6 +68,8 @@ class UploaderClass {
     then = () => {},
     catchError = () => {},
     imageClassName = 'image-item',
+    apiUploadEndpoint = '/api/file',
+    formData = new FormData(),
   ) {
     for (const media of Array.from(files)) {
       const loaderEl = UploaderClass.buildImageLoadingElement();
@@ -87,7 +89,7 @@ class UploaderClass {
 
     for (const media of Array.from(files)) {
       try {
-        await this.uploadMedia(media)
+        await this.uploadMedia(media, apiUploadEndpoint, formData)
           .then(json => {
             if (!json.success || !json.file) {
               throw new Error(json.errorMessage ?? Global.get('genericError'));
