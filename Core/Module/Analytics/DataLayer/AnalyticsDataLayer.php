@@ -157,7 +157,7 @@ class AnalyticsDataLayer
         return $reportDataOutput;
     }
 
-    public function filterEventsBy(
+    public function filterEventBy(
         array $ids = [],
         ?string $lockId = null,
         ?QueryOptions $queryOptions = null,
@@ -213,7 +213,7 @@ class AnalyticsDataLayer
 
     public function getEntriesFromQueue(string $lockId, int $qty = 10000): array
     {
-        return $this->filterEventsBy(
+        return $this->filterEventBy(
             lockId: $lockId,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy(field: 'raw_id', direction: QueryOrderDirection::ASC)],

@@ -124,14 +124,14 @@ final class AlbumHtmlGenerator
 
         $output[] = $indentation . '    <div id="album-section-main-media-' . $section->id . '" class="main-image-container" data-before="' . $section->mainMedia?->id . '">';
         if ($section->mainMedia) {
-            $output[] = $indentation . '      <img class="album-section-main-media" data-media-id="' . $section->mainMedia->id . '" src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '"' . ($lazyLoading ? ' loading="lazy"' : '') . '>';
+            $output[] = $indentation . '      <img class="media-item" data-media-id="' . $section->mainMedia->id . '" src="' . $section->mainMedia->getPathWithNameSmall() . '" alt="' . $section->mainMedia->buildAltText() . '"' . ($lazyLoading ? ' loading="lazy"' : '') . '>';
         }
 
         $output[] = $indentation . '      <div class="main-image-button-container null">';
-        $output[] = $indentation . '        <a href="#" class="main-image-button main-image-button-red album-section-main-media-delete-js' . ($section->mainMedia ? '' : ' null') . '" data-media-id="' . $section->mainMedia?->id . '" data-event-listener-action="albumSectionDeleteMainMedia" data-target-container-id="album-section-main-media-' . $section->id . '">';
+        $output[] = $indentation . '        <a href="#" class="main-image-button main-image-button-red generic-media-delete-js' . ($section->mainMedia ? '' : ' null') . '" data-media-id="' . $section->mainMedia?->id . '" data-event-listener-action="handleGenericMediaDeleteClick" data-target-container-id="album-section-main-media-' . $section->id . '">';
         $output[] = $indentation . '          <img class="img-svg" src="/img/svg/trash-white.svg" alt="' . $localisationUtil->getValue('globalRemoveImage') . '" title="' . $localisationUtil->getValue('globalRemoveImage') . '">';
         $output[] = $indentation . '        </a>';
-        $output[] = $indentation . '        <a href="#" class="main-image-button album-section-main-media-js" data-section-id="' . $section->id . '" data-media-id="' . $section->mainMedia?->id . '" data-event-listener-action="albumSectionSelectMainMedia" data-target-container-id="album-section-main-media-' . $section->id . '">';
+        $output[] = $indentation . '        <a href="#" class="main-image-button select-media-action" data-section-id="' . $section->id . '" data-media-id="' . $section->mainMedia?->id . '" data-event-listener-action="handleGenericMainMediaClick" data-target-container-id="album-section-main-media-' . $section->id . '">';
         $output[] = $indentation . '          <img class="img-svg" src="/img/svg/image.svg" alt="' . $localisationUtil->getValue('globalSelectImage') . '" title="' . $localisationUtil->getValue('globalSelectImage') . '">';
         $output[] = $indentation . '          <span>' . ($section->mainMedia ? $localisationUtil->getValue('globalModify') : $localisationUtil->getValue('globalSelectImage')) . '</span>';
         $output[] = $indentation . '        </a>';

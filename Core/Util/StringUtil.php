@@ -16,8 +16,7 @@ final class StringUtil
         string $text,
         string $charsToBeRemoved = '',
         string $replaceWith = '-'
-    ): string
-    {
+    ): string {
         if (!empty($charsToBeRemoved)) {
             foreach (str_split($charsToBeRemoved) as $item) {
                 $text = str_replace($item, $replaceWith, $text);

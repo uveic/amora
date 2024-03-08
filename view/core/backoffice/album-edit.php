@@ -74,12 +74,12 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
             <div class="field">
               <p class="label m-b-05 m-t-0"><?=$responseData->getLocalValue('albumFormMainImageTitle')?>:</p>
               <div class="control main-image-wrapper">
-                <div class="main-image-container main-image-container-full">
+                <div id="album-main-media-container" class="main-image-container main-image-container-full">
 <?php if ($album?->mainMedia) { ?>
-                  <img class="main-image" data-media-id="<?=$album?->mainMedia->id?>" src="<?=$album?->mainMedia->getPathWithNameMedium()?>" alt="<?=$album?->mainMedia->buildAltText()?>">
+                  <img class="media-item" data-media-id="<?=$album?->mainMedia->id?>" src="<?=$album?->mainMedia->getPathWithNameMedium()?>" alt="<?=$album?->mainMedia->buildAltText()?>">
 <?php } ?>
                   <div class="main-image-button-container">
-                    <a href="#" class="main-image-button album-section-main-media-js" data-event-listener-action="albumSelectMainMedia">
+                    <a href="#" class="main-image-button select-media-action" data-event-listener-action="handleGenericMainMediaClick"  data-target-container-id="album-main-media-container">
                       <img class="img-svg" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
                       <span><?= $album?->mainMedia ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('editorMainImageActionTitle') ?></span>
                     </a>
