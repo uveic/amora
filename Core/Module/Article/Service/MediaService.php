@@ -251,12 +251,14 @@ readonly class MediaService
         RawFile $rawFile,
         ?User $user,
         ?string $captionHtml = null,
+        bool $keepSameImageFormat = false,
     ): ?Media {
         try {
             return $this->imageService->resizeOriginalImage(
                 rawFile: $rawFile,
                 user: $user,
                 captionHtml: $captionHtml,
+                keepSameImageFormat: $keepSameImageFormat,
             );
         } catch (Throwable $t) {
             $this->logger->logError(
