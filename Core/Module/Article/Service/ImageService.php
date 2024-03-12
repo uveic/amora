@@ -96,17 +96,21 @@ readonly class ImageService
         ImageSize $newImageSize,
         string $imageExtension,
     ): Media {
-        $imageSmall = $this->resizeImage(
+        $outputImage = $this->resizeImage(
             image: $existingMedia->asRawFile($imageExtension),
             newSize: $newImageSize,
         );
 
-        if (!$imageSmall) {
+        if (!$outputImage) {
             $this->logger->logError('Error generating small image. Media ID: ' . $existingMedia->id);
             return $existingMedia;
         }
 
-        if ($newImageSize === ImageSize::Small && $existingMedia->filenameSmall) {
+        if ($newImageSize === ImageSize::XSmall && $existingMedia->filenameXSmall) {
+            if (file_exists($existingMedia->getDirWithNameXSmall())) {
+                unlink($existingMedia->getDirWithNameXSmall());
+            }
+        } elseif ($newImageSize === ImageSize::Small && $existingMedia->filenameSmall) {
             if (file_exists($existingMedia->getDirWithNameSmall())) {
                 unlink($existingMedia->getDirWithNameSmall());
             }
@@ -127,10 +131,10 @@ readonly class ImageService
             user: $existingMedia->user,
             path: $existingMedia->path,
             filenameOriginal: $existingMedia->filenameOriginal,
-            filenameLarge: $existingMedia->filenameLarge,
-            filenameMedium: $existingMedia->filenameMedium,
-            filenameSmall: $imageSmall->name,
-            filenameXSmall: $existingMedia->filenameXSmall,
+            filenameLarge: $newImageSize === ImageSize::Large ? $outputImage->name : $existingMedia->filenameLarge,
+            filenameMedium:  $newImageSize === ImageSize::Medium ? $outputImage->name : $existingMedia->filenameMedium,
+            filenameSmall:  $newImageSize === ImageSize::Small ? $outputImage->name : $existingMedia->filenameSmall,
+            filenameXSmall:  $newImageSize === ImageSize::XSmall ? $outputImage->name : $existingMedia->filenameXSmall,
             captionHtml: $existingMedia->captionHtml,
             filenameSource: $existingMedia->filenameSource,
             createdAt: $existingMedia->createdAt,
@@ -358,11 +362,14 @@ readonly class ImageService
 
             $outputImage = $this->checkExifAndRotateIfNecessary($outputImage, $sourceFullPath);
 
-            $res = imagejpeg($outputImage, $outputFullPath, 90);
+            $res = imagejpeg($outputImage, $outputFullPath, 85);
 
             if (!$res) {
                 $this->logger->logError('Error resizing JPG image: ' . $outputFullPath);
             }
+
+            imagedestroy($outputImage);
+            imagedestroy($sourceImage);
         } catch (Throwable $t) {
             $this->logger->logError(
                 'Error resizing JPG image: ' . $sourceFullPath
@@ -396,11 +403,14 @@ readonly class ImageService
                 $originalHeight
             );
 
-            $res = imagewebp($outputImage, $outputFullPath, 90);
+            $res = imagewebp($outputImage, $outputFullPath, 85);
 
             if (!$res) {
                 $this->logger->logError('Error resizing Webp image: ' . $outputFullPath);
             }
+
+            imagedestroy($outputImage);
+            imagedestroy($sourceImage);
         } catch (Throwable $t) {
             $this->logger->logError(
                 'Error resizing Webp image: ' . $sourceFullPath
@@ -439,6 +449,9 @@ readonly class ImageService
             if (!$res) {
                 $this->logger->logError('Error resizing PNG image: ' . $outputFullPath);
             }
+
+            imagedestroy($outputImage);
+            imagedestroy($sourceImage);
         } catch (Throwable $t) {
             $this->logger->logError(
                 'Error resizing PNG image: ' . $sourceFullPath
