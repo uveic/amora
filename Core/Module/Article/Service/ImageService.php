@@ -13,21 +13,17 @@ use Amora\Core\Util\Logger;
 use Amora\Core\Util\StringUtil;
 use Throwable;
 
-class ImageService
+enum ImageSize: int {
+    case XSmall = 350;
+    case Small = 800;
+    case Medium = 1200;
+    case Large = 1600;
+}
+
+readonly class ImageService
 {
-    const IMAGE_SIZE_SMALL = 1;
-    const IMAGE_SIZE_MEDIUM = 2;
-    const IMAGE_SIZE_LARGE = 3;
-
-    const IMAGE_SIZE_SMALL_MAX_HEIGHT = 600;
-    const IMAGE_SIZE_SMALL_MAX_WIDTH = 600;
-    const IMAGE_SIZE_MEDIUM_MAX_HEIGHT = 1200;
-    const IMAGE_SIZE_MEDIUM_MAX_WIDTH = 1200;
-    const IMAGE_SIZE_LARGE_MAX_HEIGHT = 1600;
-    const IMAGE_SIZE_LARGE_MAX_WIDTH = 1600;
-
     public function __construct(
-        private readonly Logger $logger,
+        private Logger $logger,
     ) {}
 
     public function resizeOriginalImage(
@@ -36,10 +32,11 @@ class ImageService
         ?bool $includeLarge = false,
         ?string $captionHtml = null,
     ): Media {
-        $imageSmall = $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_SMALL);
-        $imageMedium = $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_MEDIUM);
+        $imageXSmall = $this->resizeImage($rawFile, ImageSize::XSmall);
+        $imageSmall = $this->resizeImage($rawFile, ImageSize::Small);
+        $imageMedium = $this->resizeImage($rawFile, ImageSize::Medium);
         $imageLarge = $includeLarge
-            ? $this->resizeImageDefault($rawFile, self::IMAGE_SIZE_LARGE)
+            ? $this->resizeImage($rawFile, ImageSize::Large)
             : null;
 
         $now = new DateTimeImmutable();
@@ -54,6 +51,7 @@ class ImageService
             filenameLarge: $imageLarge?->name,
             filenameMedium: $imageMedium?->name,
             filenameSmall: $imageSmall?->name,
+            filenameXSmall: $imageXSmall?->name,
             captionHtml: $captionHtml,
             filenameSource: $rawFile->originalName,
             createdAt: $now,
@@ -94,20 +92,12 @@ class ImageService
 
     public function generateResizedImage(
         Media $existingMedia,
-        int $newImageSizeConstant,
+        ImageSize $newImageSize,
         string $imageExtension,
     ): Media {
-        if ($newImageSizeConstant !== self::IMAGE_SIZE_SMALL
-            && $newImageSizeConstant !== self::IMAGE_SIZE_MEDIUM
-            && $newImageSizeConstant !== self::IMAGE_SIZE_LARGE
-        ) {
-            $this->logger->logError('Image size constant not valid. Aborting...');
-            return $existingMedia;
-        }
-
-        $imageSmall = $this->resizeImageDefault(
+        $imageSmall = $this->resizeImage(
             image: $existingMedia->asRawFile($imageExtension),
-            newImageSizeConstant: $newImageSizeConstant,
+            newSize: $newImageSize,
         );
 
         if (!$imageSmall) {
@@ -115,15 +105,15 @@ class ImageService
             return $existingMedia;
         }
 
-        if ($newImageSizeConstant === self::IMAGE_SIZE_SMALL && $existingMedia->filenameSmall) {
+        if ($newImageSize === ImageSize::Small && $existingMedia->filenameSmall) {
             if (file_exists($existingMedia->getDirWithNameSmall())) {
                 unlink($existingMedia->getDirWithNameSmall());
             }
-        } elseif ($newImageSizeConstant === self::IMAGE_SIZE_MEDIUM && $existingMedia->filenameMedium) {
+        } elseif ($newImageSize === ImageSize::Medium && $existingMedia->filenameMedium) {
             if (file_exists($existingMedia->getDirWithNameMedium())) {
                 unlink($existingMedia->getDirWithNameMedium());
             }
-        } elseif ($newImageSizeConstant === self::IMAGE_SIZE_LARGE && $existingMedia->filenameLarge) {
+        } elseif ($newImageSize === ImageSize::Large && $existingMedia->filenameLarge) {
             if (file_exists($existingMedia->getDirWithNameLarge())) {
                 unlink($existingMedia->getDirWithNameLarge());
             }
@@ -139,6 +129,7 @@ class ImageService
             filenameLarge: $existingMedia->filenameLarge,
             filenameMedium: $existingMedia->filenameMedium,
             filenameSmall: $imageSmall->name,
+            filenameXSmall: $existingMedia->filenameXSmall,
             captionHtml: $existingMedia->captionHtml,
             filenameSource: $existingMedia->filenameSource,
             createdAt: $existingMedia->createdAt,
@@ -148,8 +139,7 @@ class ImageService
 
     private function resizeImage(
         RawFile $image,
-        int $newMaxWidth,
-        int $newMaxHeight,
+        ImageSize $newSize,
     ): ?RawFile {
         list($originalWidth, $originalHeight) = @getimagesize($image->getPathWithName());
 
@@ -162,7 +152,7 @@ class ImageService
             return null;
         }
 
-        if ($newMaxWidth >= $originalWidth && $newMaxHeight >= $originalHeight) {
+        if ($newSize->value >= $originalWidth && $newSize->value >= $originalHeight) {
             $this->logger->logInfo(
                 'The new size is smaller than the original size' .
                 ' - Returning original full path: ' . $image->getPathWithName()
@@ -171,14 +161,14 @@ class ImageService
             return $image;
         }
 
-        $ratio = $newMaxWidth / $originalWidth;
-        $newWidth = $newMaxWidth;
+        $ratio = $newSize->value / $originalWidth;
+        $newWidth = $newSize->value;
         $newHeight = (int)round($originalHeight * $ratio);
 
-        if ($newHeight > $newMaxHeight) {
-            $ratio = $newMaxHeight / $originalHeight;
+        if ($newHeight > $newSize->value) {
+            $ratio = $newSize->value / $originalHeight;
             $newWidth = (int)round($originalWidth * $ratio);
-            $newHeight = $newMaxHeight;
+            $newHeight = $newSize->value;
         }
 
         $newFilename = $this->getNewImageName($image->extension);
@@ -213,49 +203,9 @@ class ImageService
         );
     }
 
-    private function resizeImageDefault(
-        RawFile $image,
-        int $newImageSizeConstant,
-    ): ?RawFile {
-        $newWidth = $this->getDefaultWidthSize($newImageSizeConstant);
-        $newHeight = $this->getDefaultHeightSize($newImageSizeConstant);
-
-        return $this->resizeImage($image, $newWidth, $newHeight);
-    }
-
     private function getNewImageName(string $imageTypeExtension): string
     {
         return date('YmdHis') . StringUtil::generateRandomString(16) . '.' . $imageTypeExtension;
-    }
-
-    private function getDefaultWidthSize(int $imageDefaultSize): int
-    {
-        switch ($imageDefaultSize) {
-            case self::IMAGE_SIZE_SMALL:
-                return self::IMAGE_SIZE_SMALL_MAX_WIDTH;
-            case self::IMAGE_SIZE_MEDIUM:
-                return self::IMAGE_SIZE_MEDIUM_MAX_WIDTH;
-            case self::IMAGE_SIZE_LARGE:
-                return self::IMAGE_SIZE_LARGE_MAX_WIDTH;
-            default:
-                $this->logger->logWarning('No default image size found, returning medium');
-                return self::IMAGE_SIZE_MEDIUM_MAX_WIDTH;
-        }
-    }
-
-    private function getDefaultHeightSize(int $imageDefaultSize): int
-    {
-        switch ($imageDefaultSize) {
-            case self::IMAGE_SIZE_SMALL:
-                return self::IMAGE_SIZE_SMALL_MAX_HEIGHT;
-            case self::IMAGE_SIZE_MEDIUM:
-                return self::IMAGE_SIZE_MEDIUM_MAX_HEIGHT;
-            case self::IMAGE_SIZE_LARGE:
-                return self::IMAGE_SIZE_LARGE_MAX_HEIGHT;
-            default:
-                $this->logger->logWarning('No default image size found, returning medium');
-                return self::IMAGE_SIZE_MEDIUM_MAX_HEIGHT;
-        }
     }
 
     private function detectImageTypeAndResize(

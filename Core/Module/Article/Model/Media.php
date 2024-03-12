@@ -23,6 +23,7 @@ class Media
         public readonly ?string $filenameLarge,
         public readonly ?string $filenameMedium,
         public readonly ?string $filenameSmall,
+        public readonly ?string $filenameXSmall,
         public readonly ?string $captionHtml,
         public readonly ?string $filenameSource,
         public readonly DateTimeImmutable $createdAt,
@@ -41,6 +42,7 @@ class Media
             filenameLarge: $data['media_filename_large'] ?? null,
             filenameMedium: $data['media_filename_medium'] ?? null,
             filenameSmall: $data['media_filename_small'] ?? null,
+            filenameXSmall: $data['media_filename_extra_small'] ?? null,
             captionHtml: $data['media_caption_html'] ?? null,
             filenameSource: $data['media_filename_source'] ?? null,
             createdAt: DateUtil::convertStringToDateTimeImmutable($data['media_created_at']),
@@ -58,6 +60,7 @@ class Media
             'user' => $this->user ? $this->user->asArray() : [],
             'path' => $this->path,
             'filename_original' => $this->filenameOriginal,
+            'filename_extra_small' => $this->filenameXSmall,
             'filename_small' => $this->filenameSmall,
             'filename_medium' => $this->filenameMedium,
             'filename_large' => $this->filenameLarge,
@@ -73,6 +76,8 @@ class Media
         $baseUrl = UrlBuilderUtil::buildBaseUrlWithoutLanguage();
         return [
             'id' => $this->id,
+            'pathXSmall' => $this->getPathWithNameXSmall(),
+            'fullPathXSmall' => $baseUrl . $this->getPathWithNameXSmall(),
             'pathSmall' => $this->getPathWithNameSmall(),
             'fullPathSmall' => $baseUrl . $this->getPathWithNameSmall(),
             'pathMedium' => $this->getPathWithNameMedium(),
@@ -107,6 +112,13 @@ class Media
         return $this->buildDirPath() . $this->filenameOriginal;
     }
 
+    public function getDirWithNameXSmall(): string
+    {
+        return $this->filenameXSmall
+            ? $this->buildDirPath() . $this->filenameXSmall
+            : $this->getDirWithNameSmall();
+    }
+
     public function getDirWithNameSmall(): string
     {
         return $this->filenameSmall
@@ -131,6 +143,17 @@ class Media
     public function getPathWithNameOriginal(): string
     {
         return $this->buildPath() . $this->filenameOriginal;
+    }
+
+    public function getPathWithNameXSmall(): string
+    {
+        if ($this->type !== MediaType::Image) {
+            return $this->getPathWithNameOriginal();
+        }
+
+        return $this->filenameXSmall
+            ? $this->buildPath() . $this->filenameXSmall
+            : $this->getPathWithNameSmall();
     }
 
     public function getPathWithNameSmall(): string
