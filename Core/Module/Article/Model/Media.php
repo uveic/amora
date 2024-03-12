@@ -4,6 +4,7 @@ namespace Amora\Core\Module\Article\Model;
 
 use Amora\Core\Core;
 use Amora\Core\Module\Article\Entity\RawFile;
+use Amora\Core\Module\Article\Service\ImageSize;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Model\User;
@@ -199,6 +200,41 @@ class Media
             extension: $extension,
             mediaType: MediaType::Image,
         );
+    }
+
+    public function asHtml(
+        string $className = 'image-item',
+        bool $lazyLoading = true,
+        ?string $title = null,
+    ): string {
+        $srcset = [
+            $this->getPathWithNameXSmall() . ' ' . ImageSize::XSmall->value . 'w',
+            $this->getPathWithNameSmall() . ' ' . ImageSize::Small->value . 'w',
+            $this->getPathWithNameMedium() . ' ' . ImageSize::Medium->value . 'w',
+        ];
+
+        if ($this->filenameLarge) {
+            $srcset[] = $this->getPathWithNameLarge() . ' ' . ImageSize::Large->value . 'w';
+        }
+
+        $output = [
+            'class="' . $className . '"',
+            'data-media-id="' . $this->id . '"',
+            'data-path-medium="' . $this->getPathWithNameMedium() . '"',
+            'src="' . $this->getPathWithNameXSmall() . '"',
+            'srcset="' . implode(', ', $srcset) . '"',
+            'alt="' . $this->buildAltText() . '"',
+        ];
+
+        if ($title) {
+            $output[] = 'title="' . $title . '"';
+        }
+
+        if ($lazyLoading) {
+            $output[] = 'loading="lazy"';
+        }
+
+        return '<img ' . implode(' ', $output) . '>';
     }
 
     private function buildDirPath(): string
