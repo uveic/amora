@@ -32,11 +32,9 @@ $count = 0;
     /** @var Media $image */
     foreach ($responseData->files as $image) {
         $count++;
-        $lazyLoading = $count > 10 ? ' loading="lazy"' : '';
-        $alt = $image->buildAltText() ?: $image->filenameOriginal;
 ?>
         <figure class="image-container">
-          <img class="image-item" data-media-id="<?=$image->id?>" data-path-medium="<?=$image->getPathWithNameMedium()?>" src="<?=$image->getPathWithNameSmall()?>" title="<?=$alt?>" alt="<?=$alt?>"<?=$lazyLoading?>>
+          <?=$image->asHtml(lazyLoading: $count > 10) . PHP_EOL?>
         </figure>
 <?php } ?>
       </div>
