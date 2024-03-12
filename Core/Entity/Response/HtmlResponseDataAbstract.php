@@ -74,8 +74,8 @@ abstract class HtmlResponseDataAbstract
         PageContent $homeContent = null,
         bool $includeSubtitle = false,
         string $indentation = '',
-        ?int $logoWidth = null,
-        ?int $logoHeight = null,
+        int $logoWidth = 50,
+        int $logoHeight = 50,
         ?string $className = null,
     ): string {
         $imageUrl = Core::getConfig()->logoImageUrl;
@@ -90,8 +90,8 @@ abstract class HtmlResponseDataAbstract
         $output[] = $indentation . '  <a class="logo' . ($className ? ' ' . $className : '') . '" href="' . UrlBuilderUtil::buildBaseUrl($siteLanguage) . '">';
 
         if ($imageUrl) {
-            $widthAndHeight = $logoWidth ? (' width="' . $logoWidth . '"') : '';
-            $widthAndHeight .= $logoHeight ? (' height="' . $logoHeight . '"') : '';
+            $widthAndHeight = ' width="' . $logoWidth . '"';
+            $widthAndHeight .= ' height="' . $logoHeight . '"';
             $output[] = $indentation . '    <img src="' . $imageUrl . '" alt="' . $siteName . '"' . $widthAndHeight . '>';
         }
 
