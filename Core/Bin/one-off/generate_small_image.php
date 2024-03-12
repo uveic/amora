@@ -10,7 +10,7 @@ require_once '../../Core.php';
 
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Model\Media;
-use Amora\Core\Module\Article\Service\ImageService;
+use Amora\Core\Module\Article\Service\ImageSize;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\DateUtil;
@@ -39,6 +39,7 @@ try {
                 m.status_id AS media_status_id,
                 m.path AS media_path,
                 m.filename_original AS media_filename_original,
+                m.filename_extra_small AS media_filename_extra_small,
                 m.filename_small AS media_filename_small,
                 m.filename_medium AS media_filename_medium,
                 m.filename_large AS media_filename_large,
@@ -66,7 +67,7 @@ try {
         $extension = $mediaService->getFileExtension($media->filenameOriginal);
         $newMedia = $imageService->generateResizedImage(
             existingMedia: $media,
-            newImageSizeConstant: ImageService::IMAGE_SIZE_SMALL,
+            newImageSize: ImageSize::Small,
             imageExtension: $extension,
         );
 

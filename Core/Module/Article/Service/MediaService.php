@@ -282,6 +282,7 @@ readonly class MediaService
             filenameLarge: null,
             filenameMedium: null,
             filenameSmall: null,
+            filenameXSmall: null,
             captionHtml: null,
             filenameSource: $rawFile->originalName,
             createdAt: $now,

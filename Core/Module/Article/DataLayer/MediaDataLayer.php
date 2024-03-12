@@ -55,6 +55,7 @@ class MediaDataLayer
             'm.status_id AS media_status_id',
             'm.path AS media_path',
             'm.filename_original AS media_filename_original',
+            'm.filename_extra_small AS media_filename_extra_small',
             'm.filename_small AS media_filename_small',
             'm.filename_medium AS media_filename_medium',
             'm.filename_large AS media_filename_large',
