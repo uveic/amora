@@ -689,8 +689,7 @@ h2.page-content-subtitle {
   position: relative;
 }
 
-.image-wrapper .image-info-data,
-.image-wrapper .image-next-wrapper {
+.image-wrapper .image-info-data {
   padding: 1rem;
 }
 
@@ -702,16 +701,17 @@ h2.page-content-subtitle {
 .image-wrapper .image-next-wrapper {
   display: flex;
   flex-flow: row wrap;
-  gap: 2rem;
+  gap: 1rem;
   justify-content: space-between;
+  padding: 1rem;
 }
 
 .image-wrapper .image-next-wrapper a {
   display: flex;
   flex-flow: row nowrap;
-  gap: 0.5rem;
-  align-items: center;
+  gap: 0.1rem;
   color: var(--color-bg);
+  line-height: 1;
 }
 
 .image-wrapper .image-delete {
@@ -1453,7 +1453,7 @@ h2.page-content-subtitle {
   }
 
   #images-list .image-container {
-    width: 200px;
+    width: 150px;
   }
 
   .album-section-item {
@@ -1507,7 +1507,7 @@ h2.page-content-subtitle {
   }
 
   #images-list .image-container {
-    width: 200px;
+    width: 150px;
   }
 
   .album-section-item {

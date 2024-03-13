@@ -209,12 +209,12 @@ class Media
     ): string {
         $srcset = [
             $this->getPathWithNameXSmall() . ' ' . ImageSize::XSmall->value . 'w',
-            $this->getPathWithNameSmall() . ' ' . ImageSize::Small->value . 'w',
-            $this->getPathWithNameMedium() . ' ' . ImageSize::Medium->value . 'w',
+            $this->getPathWithNameSmall() . ' 2x',
+            $this->getPathWithNameMedium() . ' 3x',
         ];
 
         if ($this->filenameLarge) {
-            $srcset[] = $this->getPathWithNameLarge() . ' ' . ImageSize::Large->value . 'w';
+            $srcset[] = $this->getPathWithNameLarge() . ' 4x';
         }
 
         $output = [
@@ -222,6 +222,7 @@ class Media
             'data-media-id="' . $this->id . '"',
             'data-path-medium="' . $this->getPathWithNameMedium() . '"',
             'src="' . $this->getPathWithNameXSmall() . '"',
+            'width="' . ImageSize::XSmall->value . '"',
             'srcset="' . implode(', ', $srcset) . '"',
             'alt="' . $this->buildAltText() . '"',
         ];
