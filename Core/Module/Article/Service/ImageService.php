@@ -14,7 +14,7 @@ use Amora\Core\Util\StringUtil;
 use Throwable;
 
 enum ImageSize: int {
-    case XSmall = 350;
+    case XSmall = 400;
     case Small = 800;
     case Medium = 1200;
     case Large = 1600;
@@ -159,11 +159,6 @@ readonly class ImageService
         }
 
         if ($newSize->value >= $originalWidth && $newSize->value >= $originalHeight) {
-            $this->logger->logInfo(
-                'The new size is smaller than the original size' .
-                ' - Returning original full path: ' . $image->getPathWithName()
-            );
-
             return $image;
         }
 
