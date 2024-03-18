@@ -10,6 +10,7 @@ use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Model\MediaDestroyed;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
@@ -33,9 +34,14 @@ readonly class MediaService
         private string $mediaBaseDir,
     ) {}
 
-    public function storeMedia(Media $item): Media
+    public function updateMedia(Media $item): bool
     {
-        return $this->mediaDataLayer->storeFile($item);
+        return $this->mediaDataLayer->updateMedia($item);
+    }
+
+    public function storeMediaDestroyed(MediaDestroyed $item): MediaDestroyed
+    {
+        return $this->mediaDataLayer->storeMediaDestroyed($item);
     }
 
     public function getMediaForId(int $id): ?Media
@@ -242,7 +248,7 @@ readonly class MediaService
                         );
                     }
 
-                    $output = $this->storeMedia($processedMedia);
+                    $output = $this->mediaDataLayer->storeMedia($processedMedia);
 
                     return new Feedback(
                         isSuccess: true,
@@ -270,7 +276,7 @@ readonly class MediaService
         bool $keepSameImageFormat = false,
     ): ?Media {
         try {
-            return $this->imageService->resizeOriginalImage(
+            return $this->imageService->resizeRawImage(
                 rawFile: $rawFile,
                 user: $user,
                 captionHtml: $captionHtml,
@@ -295,6 +301,8 @@ readonly class MediaService
             type: $rawFile->mediaType,
             status: MediaStatus::Active,
             user: $user,
+            widthOriginal: null,
+            heightOriginal: null,
             path: $rawFile->extraPath,
             filenameOriginal: $rawFile->name,
             filenameXLarge: null,

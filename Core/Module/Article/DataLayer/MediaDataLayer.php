@@ -4,6 +4,7 @@ namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Model\MediaDestroyed;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Util\DateUtil;
@@ -19,6 +20,7 @@ class MediaDataLayer
     const MEDIA_TABLE = 'core_media';
     const MEDIA_TYPE_TABLE = 'core_media_type';
     const MEDIA_STATUS_TABLE = 'core_media_status';
+    const MEDIA_DESTROYED_TABLE = 'core_media_destroyed';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -53,6 +55,8 @@ class MediaDataLayer
             'm.user_id',
             'm.type_id AS media_type_id',
             'm.status_id AS media_status_id',
+            'm.width_original AS media_width_original',
+            'm.height_original AS media_height_original',
             'm.path AS media_path',
             'm.filename_original AS media_filename_original',
             'm.filename_extra_small AS media_filename_extra_small',
@@ -121,12 +125,25 @@ class MediaDataLayer
         return $output;
     }
 
-    public function storeFile(Media $data): Media
+    public function storeMedia(Media $data): Media
     {
         $resInsert = $this->db->insert(self::MEDIA_TABLE, $data->asArray());
 
         if (empty($resInsert)) {
             $this->logger->logError('Error inserting media');
+        }
+
+        $data->id = (int)$resInsert;
+
+        return $data;
+    }
+
+    public function storeMediaDestroyed(MediaDestroyed $data): MediaDestroyed
+    {
+        $resInsert = $this->db->insert(self::MEDIA_DESTROYED_TABLE, $data->asArray());
+
+        if (empty($resInsert)) {
+            $this->logger->logError('Error inserting media destroyed');
         }
 
         $data->id = (int)$resInsert;
@@ -148,6 +165,15 @@ class MediaDataLayer
                 ':statusId' => MediaStatus::Deleted->value,
                 ':updatedAt' => DateUtil::getCurrentDateForMySql(),
             ],
+        );
+    }
+
+    public function updateMedia(Media $media): bool
+    {
+        return $this->db->update(
+            tableName: self::MEDIA_TABLE,
+            id: $media->id,
+            data: $media->asArray(),
         );
     }
 

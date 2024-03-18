@@ -4,7 +4,7 @@ namespace Amora\Core\Module\Article\Model;
 
 use Amora\Core\Core;
 use Amora\Core\Module\Article\Entity\RawFile;
-use Amora\Core\Module\Article\Service\ImageSize;
+use Amora\Core\Module\Article\Value\ImageSize;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Model\User;
@@ -19,6 +19,8 @@ class Media
         public readonly MediaType $type,
         public readonly MediaStatus $status,
         public readonly ?User $user,
+        public readonly ?int $widthOriginal,
+        public readonly ?int $heightOriginal,
         public readonly ?string $path,
         public readonly string $filenameOriginal,
         public readonly ?string $filenameXLarge,
@@ -39,6 +41,8 @@ class Media
             type: MediaType::from($data['media_type_id']),
             status: MediaStatus::from($data['media_status_id']),
             user: isset($data['user_id']) ? User::fromArray($data) : null,
+            widthOriginal: isset($data['media_width_original']) ? (int)$data['media_width_original'] : null,
+            heightOriginal: isset($data['media_height_original']) ? (int)$data['media_height_original'] : null,
             path: $data['media_path'] ?? null,
             filenameOriginal: $data['media_filename_original'],
             filenameXLarge: $data['media_filename_extra_large'] ?? null,
@@ -61,6 +65,8 @@ class Media
             'status_id' => $this->status->value,
             'user_id' => $this->user?->id,
             'user' => $this->user ? $this->user->asArray() : [],
+            'width_original' => $this->widthOriginal,
+            'height_original' => $this->heightOriginal,
             'path' => $this->path,
             'filename_original' => $this->filenameOriginal,
             'filename_extra_small' => $this->filenameXSmall,
@@ -236,12 +242,31 @@ class Media
             $this->getPathWithNameXLarge() . ' ' . ImageSize::XLarge->value . 'w',
         ];
 
-        $sizes = [
-            '(min-width: ' . round(ImageSize::XSmall->value / 2) . 'px) ' . ImageSize::XSmall->value . 'px',
-            '(min-width: ' . round(ImageSize::Small->value / 2) . 'px) ' . ImageSize::Small->value . 'px',
-            '(min-width: ' . round(ImageSize::Medium->value / 2) . 'px) ' . ImageSize::Medium->value . 'px',
-            '(min-width: ' . round(ImageSize::Large->value / 2) . 'px) ' . ImageSize::Large->value . 'px',
-            '(min-width: ' . round(ImageSize::XLarge->value / 2) . 'px) ' . ImageSize::XLarge->value . 'px',
+//        $sizes = [
+//            '(min-width: ' . round(ImageSize::XSmall->value / 2) . 'px) ' . ImageSize::XSmall->value . 'px',
+//            '(min-width: ' . round(ImageSize::Small->value / 2) . 'px) ' . ImageSize::Small->value . 'px',
+//            '(min-width: ' . round(ImageSize::Medium->value / 2) . 'px) ' . ImageSize::Medium->value . 'px',
+//            '(min-width: ' . round(ImageSize::Large->value / 2) . 'px) ' . ImageSize::Large->value . 'px',
+//            ImageSize::XLarge->value . 'px',
+//        ];
+
+        $sizesAgain = [
+            '(min-width: 2960px) 5vw',
+            '(min-width: 2660px) calc(2.5vw + 85px)',
+            '(min-width: 2500px) calc(5.71vw + 8px)',
+            '(min-width: 2340px) 6.43vw',
+            '(min-width: 2200px) calc(7.5vw - 14px)',
+            '(min-width: 2040px) calc(7.86vw - 9px)',
+            '(min-width: 1880px) calc(8.57vw - 11px)',
+            '(min-width: 1740px) 9.17vw',
+            '(min-width: 1580px) 10vw',
+            '(min-width: 1420px) 10.71vw',
+            '(min-width: 1260px) calc(12.86vw - 12px)',
+            '(min-width: 1120px) 14.17vw',
+            '(min-width: 960px) calc(17.14vw - 14px)',
+            '(min-width: 800px) calc(20vw - 10px)',
+            '(min-width: 340px) calc(33.41vw - 9px)',
+            'calc(50vw - 10px)',
         ];
 
         $output = [
@@ -249,11 +274,16 @@ class Media
             'data-media-id="' . $this->id . '"',
             'data-path-medium="' . $this->getPathWithNameMedium() . '"',
             'src="' . $this->getPathWithNameXSmall() . '"',
-            'width="' . ImageSize::XSmall->value . '"',
             'srcset="' . implode(', ', $srcset) . '"',
-            'sizes="' . implode(', ', $sizes) . '"',
+            'sizes="' . implode(', ', $sizesAgain) . '"',
             'alt="' . $this->buildAltText() . '"',
+            'width="' . ImageSize::XSmall->value . '"',
         ];
+
+        if (!$this->heightOriginal) {
+            $height = (int)round(ImageSize::XSmall->value * 100 / $this->heightOriginal);
+            $output[] = 'height="' . $height . '"';
+        }
 
         if ($title) {
             $output[] = 'title="' . $title . '"';

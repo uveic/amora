@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article;
 
+use Amora\App\Module\Article\App\ImageResizeApp;
 use Amora\Core\Core;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Module\Album\AlbumCore;
@@ -43,7 +44,6 @@ class ArticleCore extends Core
                     tagDataLayer:  self::getTagDataLayer(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -70,7 +70,6 @@ class ArticleCore extends Core
                     tagDataLayer:  self::getTagDataLayer(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -88,7 +87,6 @@ class ArticleCore extends Core
                     logger:  self::getArticleLogger(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -121,7 +119,6 @@ class ArticleCore extends Core
                     mediaBaseDir: self::getConfig()->mediaBaseDir,
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -131,12 +128,12 @@ class ArticleCore extends Core
             className: 'ImageService',
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Entity/ImageExif.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/ImageSize.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/ImageService.php';
                 return new ImageService(
                     logger: self::getArticleLogger(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -152,7 +149,6 @@ class ArticleCore extends Core
                     logger: self::getArticleLogger(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -168,7 +164,6 @@ class ArticleCore extends Core
                     tagDataLayer:  self::getTagDataLayer(),
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -182,7 +177,29 @@ class ArticleCore extends Core
                     logger: self::getArticleLogger(),
                 );
             },
-            isSingleton: true,
+        );
+    }
+
+    public static function getImageResizeApp(): ImageResizeApp
+    {
+        return self::getInstance(
+            className: 'ImageResizeApp',
+            factory: function () {
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/MediaDestroyed.php';
+                require_once self::getPathRoot() . '/Core/App/LockManager.php';
+                require_once self::getPathRoot() . '/Core/App/App.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/App/ImageResizeApp.php';
+
+                return new ImageResizeApp(
+                    logger: self::getArticleLogger(),
+                    mediaService: self::getMediaService(),
+                    imageService: self::getImageService(),
+                );
+            },
         );
     }
 }
