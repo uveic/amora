@@ -21,6 +21,7 @@ class Media
         public readonly ?User $user,
         public readonly ?string $path,
         public readonly string $filenameOriginal,
+        public readonly ?string $filenameXLarge,
         public readonly ?string $filenameLarge,
         public readonly ?string $filenameMedium,
         public readonly ?string $filenameSmall,
@@ -40,6 +41,7 @@ class Media
             user: isset($data['user_id']) ? User::fromArray($data) : null,
             path: $data['media_path'] ?? null,
             filenameOriginal: $data['media_filename_original'],
+            filenameXLarge: $data['media_filename_extra_large'] ?? null,
             filenameLarge: $data['media_filename_large'] ?? null,
             filenameMedium: $data['media_filename_medium'] ?? null,
             filenameSmall: $data['media_filename_small'] ?? null,
@@ -65,6 +67,7 @@ class Media
             'filename_small' => $this->filenameSmall,
             'filename_medium' => $this->filenameMedium,
             'filename_large' => $this->filenameLarge,
+            'filename_extra_large' => $this->filenameXLarge,
             'caption_html' => $this->captionHtml,
             'filename_source' => $this->filenameSource,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
@@ -141,6 +144,13 @@ class Media
             : $this->getDirWithNameMedium();
     }
 
+    public function getDirWithNameXLarge(): string
+    {
+        return $this->filenameXLarge
+            ? $this->buildDirPath() . $this->filenameXLarge
+            : $this->getDirWithNameLarge();
+    }
+
     public function getPathWithNameOriginal(): string
     {
         return $this->buildPath() . $this->filenameOriginal;
@@ -190,6 +200,17 @@ class Media
             : $this->getPathWithNameMedium();
     }
 
+    public function getPathWithNameXLarge(): string
+    {
+        if ($this->type !== MediaType::Image) {
+            return $this->getPathWithNameOriginal();
+        }
+
+        return $this->filenameXLarge
+            ? $this->buildPath() . $this->filenameXLarge
+            : $this->getPathWithNameLarge();
+    }
+
     public function asRawFile(string $extension): RawFile
     {
         return new RawFile(
@@ -209,13 +230,19 @@ class Media
     ): string {
         $srcset = [
             $this->getPathWithNameXSmall() . ' ' . ImageSize::XSmall->value . 'w',
-            $this->getPathWithNameSmall() . ' 2x',
-            $this->getPathWithNameMedium() . ' 3x',
+            $this->getPathWithNameSmall() . ' ' . ImageSize::Small->value . 'w',
+            $this->getPathWithNameMedium() . ' ' . ImageSize::Medium->value . 'w',
+            $this->getPathWithNameLarge() . ' ' . ImageSize::Large->value . 'w',
+            $this->getPathWithNameXLarge() . ' ' . ImageSize::XLarge->value . 'w',
         ];
 
-        if ($this->filenameLarge) {
-            $srcset[] = $this->getPathWithNameLarge() . ' 4x';
-        }
+        $sizes = [
+            '(min-width: ' . round(ImageSize::XSmall->value / 2) . 'px) ' . ImageSize::XSmall->value . 'px',
+            '(min-width: ' . round(ImageSize::Small->value / 2) . 'px) ' . ImageSize::Small->value . 'px',
+            '(min-width: ' . round(ImageSize::Medium->value / 2) . 'px) ' . ImageSize::Medium->value . 'px',
+            '(min-width: ' . round(ImageSize::Large->value / 2) . 'px) ' . ImageSize::Large->value . 'px',
+            '(min-width: ' . round(ImageSize::XLarge->value / 2) . 'px) ' . ImageSize::XLarge->value . 'px',
+        ];
 
         $output = [
             'class="' . $className . '"',
@@ -224,6 +251,7 @@ class Media
             'src="' . $this->getPathWithNameXSmall() . '"',
             'width="' . ImageSize::XSmall->value . '"',
             'srcset="' . implode(', ', $srcset) . '"',
+            'sizes="' . implode(', ', $sizes) . '"',
             'alt="' . $this->buildAltText() . '"',
         ];
 

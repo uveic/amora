@@ -5,4 +5,5 @@
 
 return "
     ALTER TABLE `core_media` ADD COLUMN `filename_extra_small` varchar(255) DEFAULT NULL AFTER `filename_original`;
+    ALTER TABLE `core_media` ADD COLUMN `filename_extra_large` varchar(255) DEFAULT NULL AFTER `filename_large`;
 ";

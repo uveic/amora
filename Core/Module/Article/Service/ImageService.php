@@ -14,10 +14,11 @@ use Amora\Core\Util\StringUtil;
 use Throwable;
 
 enum ImageSize: int {
-    case XSmall = 400;
-    case Small = 800;
-    case Medium = 1200;
-    case Large = 1600;
+    case XSmall = 250;
+    case Small = 350;
+    case Medium = 720;
+    case Large = 1200;
+    case XLarge = 1600;
 }
 
 readonly class ImageService
@@ -29,16 +30,14 @@ readonly class ImageService
     public function resizeOriginalImage(
         RawFile $rawFile,
         ?User $user,
-        bool $includeLarge = false,
         ?string $captionHtml = null,
         bool $keepSameImageFormat = false,
     ): Media {
         $imageXSmall = $this->resizeImage($rawFile, ImageSize::XSmall, $keepSameImageFormat);
         $imageSmall = $this->resizeImage($rawFile, ImageSize::Small, $keepSameImageFormat);
         $imageMedium = $this->resizeImage($rawFile, ImageSize::Medium, $keepSameImageFormat);
-        $imageLarge = $includeLarge
-            ? $this->resizeImage($rawFile, ImageSize::Large, $keepSameImageFormat)
-            : null;
+        $imageLarge = $this->resizeImage($rawFile, ImageSize::Large, $keepSameImageFormat);
+        $imageXLarge = $this->resizeImage($rawFile, ImageSize::XLarge, $keepSameImageFormat);
 
         $now = new DateTimeImmutable();
 
@@ -49,6 +48,7 @@ readonly class ImageService
             user: $user,
             path: $rawFile->extraPath,
             filenameOriginal: $rawFile->name,
+            filenameXLarge: $imageXLarge?->name,
             filenameLarge: $imageLarge?->name,
             filenameMedium: $imageMedium?->name,
             filenameSmall: $imageSmall?->name,
@@ -122,6 +122,10 @@ readonly class ImageService
             if (file_exists($existingMedia->getDirWithNameLarge())) {
                 unlink($existingMedia->getDirWithNameLarge());
             }
+        } elseif ($newImageSize === ImageSize::XLarge && $existingMedia->filenameXLarge) {
+            if (file_exists($existingMedia->getDirWithNameXLarge())) {
+                unlink($existingMedia->getDirWithNameXLarge());
+            }
         }
 
         return new Media(
@@ -131,6 +135,7 @@ readonly class ImageService
             user: $existingMedia->user,
             path: $existingMedia->path,
             filenameOriginal: $existingMedia->filenameOriginal,
+            filenameXLarge: $newImageSize === ImageSize::XLarge ? $outputImage->name : $existingMedia->filenameXLarge,
             filenameLarge: $newImageSize === ImageSize::Large ? $outputImage->name : $existingMedia->filenameLarge,
             filenameMedium:  $newImageSize === ImageSize::Medium ? $outputImage->name : $existingMedia->filenameMedium,
             filenameSmall:  $newImageSize === ImageSize::Small ? $outputImage->name : $existingMedia->filenameSmall,

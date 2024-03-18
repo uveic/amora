@@ -43,6 +43,7 @@ try {
                 m.filename_small AS media_filename_small,
                 m.filename_medium AS media_filename_medium,
                 m.filename_large AS media_filename_large,
+                m.filename_extra_large AS media_filename_extra_large,
                 m.caption_html AS media_caption_html,
                 m.filename_source AS media_filename_source,
                 m.created_at AS media_created_at,
