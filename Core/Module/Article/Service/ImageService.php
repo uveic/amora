@@ -5,6 +5,7 @@ namespace Amora\Core\Module\Article\Service;
 use Amora\Core\Module\Article\Entity\ImageExif;
 use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Value\ImageSize;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\User\Model\User;
 use DateTimeImmutable;
@@ -13,21 +14,13 @@ use Amora\Core\Util\Logger;
 use Amora\Core\Util\StringUtil;
 use Throwable;
 
-enum ImageSize: int {
-    case XSmall = 250;
-    case Small = 350;
-    case Medium = 720;
-    case Large = 1200;
-    case XLarge = 1600;
-}
-
 readonly class ImageService
 {
     public function __construct(
         private Logger $logger,
     ) {}
 
-    public function resizeOriginalImage(
+    public function resizeRawImage(
         RawFile $rawFile,
         ?User $user,
         ?string $captionHtml = null,
@@ -39,6 +32,11 @@ readonly class ImageService
         $imageLarge = $this->resizeImage($rawFile, ImageSize::Large, $keepSameImageFormat);
         $imageXLarge = $this->resizeImage($rawFile, ImageSize::XLarge, $keepSameImageFormat);
 
+        $exif = $this->getExifData(
+            filePathWithName: $rawFile->getPathWithName(),
+            extension: $rawFile->extension,
+        );
+
         $now = new DateTimeImmutable();
 
         return new Media(
@@ -46,6 +44,8 @@ readonly class ImageService
             type: $rawFile->mediaType,
             status: MediaStatus::Active,
             user: $user,
+            widthOriginal: $exif?->width,
+            heightOriginal: $exif?->height,
             path: $rawFile->extraPath,
             filenameOriginal: $rawFile->name,
             filenameXLarge: $imageXLarge?->name,
@@ -91,63 +91,7 @@ readonly class ImageService
         );
     }
 
-    public function generateResizedImage(
-        Media $existingMedia,
-        ImageSize $newImageSize,
-        string $imageExtension,
-    ): Media {
-        $outputImage = $this->resizeImage(
-            image: $existingMedia->asRawFile($imageExtension),
-            newSize: $newImageSize,
-        );
-
-        if (!$outputImage) {
-            $this->logger->logError('Error generating small image. Media ID: ' . $existingMedia->id);
-            return $existingMedia;
-        }
-
-        if ($newImageSize === ImageSize::XSmall && $existingMedia->filenameXSmall) {
-            if (file_exists($existingMedia->getDirWithNameXSmall())) {
-                unlink($existingMedia->getDirWithNameXSmall());
-            }
-        } elseif ($newImageSize === ImageSize::Small && $existingMedia->filenameSmall) {
-            if (file_exists($existingMedia->getDirWithNameSmall())) {
-                unlink($existingMedia->getDirWithNameSmall());
-            }
-        } elseif ($newImageSize === ImageSize::Medium && $existingMedia->filenameMedium) {
-            if (file_exists($existingMedia->getDirWithNameMedium())) {
-                unlink($existingMedia->getDirWithNameMedium());
-            }
-        } elseif ($newImageSize === ImageSize::Large && $existingMedia->filenameLarge) {
-            if (file_exists($existingMedia->getDirWithNameLarge())) {
-                unlink($existingMedia->getDirWithNameLarge());
-            }
-        } elseif ($newImageSize === ImageSize::XLarge && $existingMedia->filenameXLarge) {
-            if (file_exists($existingMedia->getDirWithNameXLarge())) {
-                unlink($existingMedia->getDirWithNameXLarge());
-            }
-        }
-
-        return new Media(
-            id: $existingMedia->id,
-            type: $existingMedia->type,
-            status: $existingMedia->status,
-            user: $existingMedia->user,
-            path: $existingMedia->path,
-            filenameOriginal: $existingMedia->filenameOriginal,
-            filenameXLarge: $newImageSize === ImageSize::XLarge ? $outputImage->name : $existingMedia->filenameXLarge,
-            filenameLarge: $newImageSize === ImageSize::Large ? $outputImage->name : $existingMedia->filenameLarge,
-            filenameMedium:  $newImageSize === ImageSize::Medium ? $outputImage->name : $existingMedia->filenameMedium,
-            filenameSmall:  $newImageSize === ImageSize::Small ? $outputImage->name : $existingMedia->filenameSmall,
-            filenameXSmall:  $newImageSize === ImageSize::XSmall ? $outputImage->name : $existingMedia->filenameXSmall,
-            captionHtml: $existingMedia->captionHtml,
-            filenameSource: $existingMedia->filenameSource,
-            createdAt: $existingMedia->createdAt,
-            updatedAt: new DateTimeImmutable(),
-        );
-    }
-
-    private function resizeImage(
+    public function resizeImage(
         RawFile $image,
         ImageSize $newSize,
         bool $keepSameImageFormat = false,
@@ -163,12 +107,22 @@ readonly class ImageService
             return null;
         }
 
-        if ($newSize->value >= $originalWidth && $newSize->value >= $originalHeight) {
-            return $image;
+        // The new size is greater than 
+        if ($newSize->value >= $originalWidth && $newSize->value >= $originalHeight &&
+            $newSize->getLarger()->value < $originalWidth && $newSize->getLarger()->value < $originalHeight
+        ) {
+            // ToDo
+            return null;
         }
 
-        $ratio = $newSize->value / $originalWidth;
-        $newWidth = $newSize->value;
+        if ($newSize->value >= $originalWidth && $newSize->value >= $originalHeight) {
+            $ratio = 1;
+            $newWidth = $originalWidth;
+        } else {
+            $ratio = $newSize->value / $originalWidth;
+            $newWidth = $newSize->value;
+        }
+
         $newHeight = (int)round($originalHeight * $ratio);
 
         if ($newHeight > $newSize->value) {
@@ -239,9 +193,11 @@ readonly class ImageService
         return date('YmdHis') . StringUtil::generateRandomString(16) . '.' . $imageTypeExtension;
     }
 
-    private function getImageFromSourcePath(RawFile $sourceImage): ?GdImage
+    private function getImageFromSourcePath(RawFile $sourceImage): GdImage|null|false
     {
-        if ($sourceImage->extension === 'jpg' || $sourceImage->extension === 'jpeg') {
+        $imageType = exif_imagetype($sourceImage->getPathWithName());
+
+        if ($imageType === IMAGETYPE_JPEG) {
             $output = @imagecreatefromjpeg($sourceImage->getPathWithName());
 
             if (!$output) {
@@ -251,7 +207,7 @@ readonly class ImageService
             return $output;
         }
 
-        if ($sourceImage->extension === 'webp') {
+        if ($imageType === IMAGETYPE_WEBP) {
             $output = @imagecreatefromwebp($sourceImage->getPathWithName());
 
             if (!$output) {
@@ -261,7 +217,7 @@ readonly class ImageService
             return $output;
         }
 
-        if ($sourceImage->extension === 'png') {
+        if ($imageType === IMAGETYPE_PNG) {
             $output = @imagecreatefrompng($sourceImage->getPathWithName());
 
             if (!$output) {

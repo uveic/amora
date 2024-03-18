@@ -35,7 +35,8 @@ class AnalyticsProcessorApp extends App
         );
     }
 
-    public function run() {
+    public function run(): void
+    {
         $this->execute(function () {
             $timeBefore = microtime(true);
 
