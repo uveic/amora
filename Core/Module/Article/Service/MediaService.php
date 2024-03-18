@@ -85,6 +85,14 @@ readonly class MediaService
             }
         }
 
+        if ($media->filenameXSmall) {
+            if (file_exists($media->getDirWithNameXSmall())) {
+                if (!unlink($media->getDirWithNameXSmall())) {
+                    return false;
+                }
+            }
+        }
+
         if ($media->filenameSmall) {
             if (file_exists($media->getDirWithNameSmall())) {
                 if (!unlink($media->getDirWithNameSmall())) {
@@ -104,6 +112,14 @@ readonly class MediaService
         if ($media->filenameLarge) {
             if (file_exists($media->getDirWithNameLarge())) {
                 if (!unlink($media->getDirWithNameLarge())) {
+                    return false;
+                }
+            }
+        }
+
+        if ($media->filenameXLarge) {
+            if (file_exists($media->getDirWithNameXLarge())) {
+                if (!unlink($media->getDirWithNameXLarge())) {
                     return false;
                 }
             }
@@ -281,6 +297,7 @@ readonly class MediaService
             user: $user,
             path: $rawFile->extraPath,
             filenameOriginal: $rawFile->name,
+            filenameXLarge: null,
             filenameLarge: null,
             filenameMedium: null,
             filenameSmall: null,
