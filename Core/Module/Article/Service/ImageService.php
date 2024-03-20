@@ -170,11 +170,6 @@ readonly class ImageService
         }
 
         if (!file_exists($outputFullPath)) {
-            $this->logger->logError(
-                'Error resizing image, there is another image with the same name: '
-                . $image->getPathWithName()
-            );
-
             return $image;
         }
 

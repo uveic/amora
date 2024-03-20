@@ -34,6 +34,12 @@ readonly class MediaService
         private string $mediaBaseDir,
     ) {}
 
+    // Do not delete. Used in other projects.
+    public function storeMedia(Media $item): Media
+    {
+        return $this->mediaDataLayer->storeMedia($item);
+    }
+
     public function updateMedia(Media $item): bool
     {
         return $this->mediaDataLayer->updateMedia($item);
@@ -248,7 +254,7 @@ readonly class MediaService
                         );
                     }
 
-                    $output = $this->mediaDataLayer->storeMedia($processedMedia);
+                    $output = $this->storeMedia($processedMedia);
 
                     return new Feedback(
                         isSuccess: true,
