@@ -3,17 +3,6 @@ import {Global} from './localisation-004.js';
 import {Util} from "./Util-009.js";
 
 class UploaderClass {
-  static buildImageLoadingElement() {
-    let container = document.createElement('div');
-    container.className = 'loader-container';
-
-    let loaderDiv = document.createElement('div');
-    loaderDiv.className = 'loader';
-    container.appendChild(loaderDiv);
-
-    return container;
-  }
-
   static buildProgressElement() {
     let loaderContainer = document.createElement('div');
     loaderContainer.className = 'loader-container';
@@ -42,6 +31,7 @@ class UploaderClass {
       figureContainer.appendChild(progressBarContainer);
       figureContainer.removeChild(figureContainer.querySelector('.loader-container'));
 
+      formData.delete('files[]');
       formData.append('files[]', media);
 
       let xhr = new XMLHttpRequest()
@@ -54,7 +44,13 @@ class UploaderClass {
       }
 
       xhr.upload.addEventListener('progress', (e) => {
-        progressEl.value = Math.round((e.loaded / e.total) * 100);
+        const progressValue = Math.round((e.loaded / e.total) * 100);
+        progressEl.value = progressValue;
+
+        if (progressValue >= 95) {
+          figureContainer.removeChild(progressBarContainer);
+          figureContainer.appendChild(Util.buildImageLoadingElement());
+        }
       });
 
       xhr.open('POST', apiUploadEndpoint);
@@ -72,7 +68,7 @@ class UploaderClass {
     formData = new FormData(),
   ) {
     for (const media of Array.from(files)) {
-      const loaderEl = UploaderClass.buildImageLoadingElement();
+      const loaderEl = Util.buildImageLoadingElement();
       const figureContainer = document.createElement('figure');
       figureContainer.className = 'image-container media-uploading';
       figureContainer.id = 'img' + Util.cleanString(media.name);
@@ -80,9 +76,11 @@ class UploaderClass {
       figureContainer.appendChild(loaderEl);
 
       mediaContainer.appendChild(figureContainer);
-      mediaContainer.firstChild
-        ? mediaContainer.insertBefore(figureContainer, mediaContainer.firstChild)
-        : mediaContainer.appendChild(figureContainer);
+      if (mediaContainer.firstChild) {
+        mediaContainer.insertBefore(figureContainer, mediaContainer.firstChild);
+      } else {
+        mediaContainer.appendChild(figureContainer);
+      }
     }
 
     mediaContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -150,7 +148,7 @@ class UploaderClass {
       image.className = 'opacity' + (imageClassName ? ' ' + imageClassName : '');
       // image.src = String(reader.result);
 
-      const imgLoading = UploaderClass.buildImageLoadingElement();
+      const imgLoading = Util.buildImageLoadingElement();
       const figureContainer = document.createElement('figure');
       figureContainer.className = 'image-container';
 
@@ -207,7 +205,7 @@ class UploaderClass {
     reader.addEventListener('load', function () {
       let fileNameSpan = document.createElement('span');
       fileNameSpan.textContent = file.name;
-      const imgLoading = UploaderClass.buildImageLoadingElement();
+      const imgLoading = Util.buildImageLoadingElement();
 
       container.appendChild(fileNameSpan);
       container.appendChild(imgLoading);

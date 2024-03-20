@@ -158,6 +158,17 @@ class UtilClass {
     loadingAnimation.className = 'img-svg img-svg-50';
     return loadingAnimation;
   }
+
+  buildImageLoadingElement(className = '') {
+    let container = document.createElement('div');
+    container.className = 'loader-container' + (className.length ? ' ' + className : '');
+
+    let loaderDiv = document.createElement('div');
+    loaderDiv.className = 'loader';
+    container.appendChild(loaderDiv);
+
+    return container;
+  }
 }
 
 export const Util = new UtilClass();

@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Value\ImageSize;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Value\QueryOrderDirection;
 
@@ -20,7 +21,7 @@ $count = 0;
       <div id="upload-media">
         <h1><?=$responseData->getLocalValue('navAdminImages')?></h1>
         <div class="upload-media-control">
-          <input class="null" type="file" id="images" name="images" multiple="" accept="image/*">
+          <input class="null" type="file" id="images" name="images" multiple="" accept="image/png, image/jpeg, image/webp">
           <label for="images" class="input-file-label">
             <img class="img-svg img-svg-25 m-r-05" width="20" height="20" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('navAdminImages')?>">
             <span><?=$responseData->getLocalValue('globalUploadImage')?></span>
@@ -34,7 +35,7 @@ $count = 0;
         $count++;
 ?>
         <figure class="image-container">
-          <?=$image->asHtml(lazyLoading: $count > 10) . PHP_EOL?>
+          <?=$image->asHtml(size: ImageSize::Small, lazyLoading: $count > 10, includeSrcSet: true) . PHP_EOL?>
         </figure>
 <?php } ?>
       </div>

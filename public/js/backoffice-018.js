@@ -203,7 +203,6 @@ function handleCopyLink(ev, href) {
 
 function displayModalImage(image) {
   const modalContainer = document.querySelector('.modal-media');
-  const content = modalContainer.querySelector('.image-wrapper');
   const modalClose = modalContainer.querySelector('.modal-close-button');
   const imageWrapper = modalContainer.querySelector('.image-wrapper');
   let imageElement = modalContainer.querySelector('.image-main img');
@@ -218,7 +217,7 @@ function displayModalImage(image) {
 
   if (!image) {
     document.querySelectorAll('.image-next-action').forEach(i => i.classList.add('hidden'));
-    content.classList.remove('null');
+    imageWrapper.classList.remove('null');
     modalClose.classList.remove('null');
     imageWrapper.classList.remove('filter-opacity');
     imageInfoData.classList.remove('null');
@@ -299,9 +298,9 @@ function displayModalImage(image) {
     (image.userName ? '<div><img src="/img/svg/user-white.svg" class="img-svg" alt="User">' + image.userName + '</div>' : '') +
     '<div class="image-path">' +
     '<img src="/img/svg/link-white.svg" class="img-svg" alt="Link">' +
-    '<span class="ellipsis">' + image.pathMedium + '</span>' +
-    '<a href="' + image.fullPathMedium + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>' +
-    '<a href="' + image.fullPathMedium + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg" alt="Copy link"></a>' +
+    '<span class="ellipsis">' + image.pathLarge + '</span>' +
+    '<a href="' + image.fullPathLarge + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>' +
+    '<a href="' + image.fullPathLarge + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg" alt="Copy link"></a>' +
     '</div>' +
     (takenAt ? '<div>' + takenAt + '</div>' : '') +
     (camera ? '<div>' + camera + '</div>' : '') +
@@ -341,7 +340,7 @@ function displayModalImage(image) {
   imageInfoData.classList.remove('null');
   imageInfoNext.classList.remove('null');
 
-  content.classList.remove('null');
+  imageWrapper.classList.remove('null');
   modalClose.classList.remove('null');
 }
 
@@ -1750,6 +1749,9 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
     const direction = lm.dataset.direccion ?? '';
     const eventListenerAction = lm.dataset.eventListenerAction;
     const targetContainerId = lm.dataset.targetContainerId ?? null;
+    const loader = Util.buildImageLoadingElement('loader-container-100');
+    lm.parentElement.appendChild(loader);
+    lm.classList.add('null');
 
     Request.get('/api/file/' + lastImageId + '?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty)
       .then(response => {
@@ -1758,6 +1760,8 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
         displayImageFromApiCall(container, response.files, eventListenerAction, targetContainerId);
         updateMediaCache(response.files, direction);
 
+        lm.parentElement.removeChild(loader);
+        lm.classList.remove('null');
         lm.disabled = false;
 
         if (response.files.length < qty) {
