@@ -253,14 +253,14 @@ class Media
             'width="' . $size->value . '"',
         ];
 
-        if ($includeSrcSet) {
-            $output[] = 'srcset="' . $this->buildSrcset() . '"';
-            $output[] = 'sizes="' . $this->buildSizes() . '"';
-        }
-
         if ($this->heightOriginal && $this->widthOriginal) {
             $ratio = ImageSize::XSmall->value / $this->widthOriginal;
             $output[] = 'height="' . (int)round($ratio * $this->heightOriginal) . '"';
+        }
+
+        if ($includeSrcSet) {
+            $output[] = 'srcset="' . $this->buildSrcset() . '"';
+            $output[] = 'sizes="' . $this->buildSizes() . '"';
         }
 
         if ($title) {

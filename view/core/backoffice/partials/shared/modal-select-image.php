@@ -19,7 +19,7 @@ use Amora\Core\Value\QueryOrderDirection;
         <div class="add-image-header">
           <h2 class="m-t-0 m-b-0"><?=$responseData->getLocalValue('globalSelectImage')?></h2>
           <div>
-            <input class="null" type="file" id="select-media-action-upload" name="select-media-action-upload" multiple="" accept="image/*" data-event-listener-action="articleSelectMainImage">
+            <input class="null" type="file" id="select-media-action-upload" name="select-media-action-upload" multiple="" accept="image/png, image/jpeg, image/webp" data-event-listener-action="articleSelectMainImage">
             <label class="input-file-label" for="select-media-action-upload">
               <img class="img-svg img-svg-30 m-r-05" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>"><?=$responseData->getLocalValue('globalAddImage')?>
             </label>

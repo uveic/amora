@@ -897,6 +897,11 @@ svg,
   z-index: 99;
 }
 
+.loader-container-100 {
+  height: 100px;
+  position: relative;
+}
+
 .loader {
   width: 60px;
   aspect-ratio: 4;
