@@ -107,15 +107,21 @@ readonly class ImageService
             return null;
         }
 
-        // The new size is greater than 
-        if ($newSize->value >= $originalWidth && $newSize->value >= $originalHeight &&
-            $newSize->getLarger()->value < $originalWidth && $newSize->getLarger()->value < $originalHeight
+        $smallerSize = $newSize->getSmaller();
+
+        // The new size and the next smaller size are greater than the original width
+        if ($newSize->value > $originalWidth &&
+            $smallerSize &&
+            $smallerSize->value > $originalWidth
         ) {
-            // ToDo
             return null;
         }
 
-        if ($newSize->value >= $originalWidth && $newSize->value >= $originalHeight) {
+        // The original width stands between the new size and the next smaller size
+        if ($newSize->value >= $originalWidth &&
+            $smallerSize &&
+            $smallerSize->value <= $originalWidth
+        ) {
             $ratio = 1;
             $newWidth = $originalWidth;
         } else {
@@ -124,12 +130,6 @@ readonly class ImageService
         }
 
         $newHeight = (int)round($originalHeight * $ratio);
-
-        if ($newHeight > $newSize->value) {
-            $ratio = $newSize->value / $originalHeight;
-            $newWidth = (int)round($originalWidth * $ratio);
-            $newHeight = $newSize->value;
-        }
 
         $sourceImage = $this->getImageFromSourcePath($image);
         if (!$sourceImage) {
