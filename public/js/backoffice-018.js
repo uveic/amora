@@ -206,14 +206,14 @@ function displayModalImage(image) {
   const content = modalContainer.querySelector('.image-wrapper');
   const modalClose = modalContainer.querySelector('.modal-close-button');
   const imageWrapper = modalContainer.querySelector('.image-wrapper');
-  let imageContainer = modalContainer.querySelector('.image-main img');
+  let imageElement = modalContainer.querySelector('.image-main img');
   const imageInfoData = modalContainer.querySelector('.image-info-data');
   const imageInfoNext = modalContainer.querySelector('.image-next-wrapper');
   const loaderContainer = modalContainer.querySelector('.loader-media');
 
-  if (!imageContainer) {
-    imageContainer = new Image();
-    modalContainer.querySelector('.image-main').appendChild(imageContainer);
+  if (!imageElement) {
+    imageElement = new Image();
+    modalContainer.querySelector('.image-main').appendChild(imageElement);
   }
 
   if (!image) {
@@ -229,11 +229,11 @@ function displayModalImage(image) {
   }
 
   const alt = image.caption ?? image.name;
-  imageContainer.src = image.pathMedium;
-  imageContainer.alt = alt;
-  imageContainer.title = alt;
-  imageContainer.dataset.mediaId = image.id;
-  imageContainer.classList.remove('hidden');
+  imageElement.src = image.pathLarge;
+  imageElement.alt = alt;
+  imageElement.title = alt;
+  imageElement.dataset.mediaId = image.id;
+  imageElement.classList.remove('hidden');
   imageWrapper.classList.remove('filter-opacity');
   loaderContainer.classList.add('null');
   imageInfoData.classList.remove('hidden');
@@ -358,7 +358,7 @@ function preloadMedia(mediaId, direction) {
   }
 
   const imgTemp = new Image();
-  imgTemp.src = mediaObj.fullPathMedium;
+  imgTemp.src = mediaObj.fullPathLarge;
 }
 
 function updateMediaCache(medias, direction) {
@@ -977,6 +977,8 @@ function displayImageFromApiCall(container, images, eventListenerAction, targetC
 
     const imageEl = new Image();
     imageEl.src = image.pathSmall;
+    imageEl.sizes = image.sizes;
+    imageEl.srcset = image.srcset;
     const alt = image.caption ?? image.name;
     imageEl.alt = alt;
     imageEl.title = alt;

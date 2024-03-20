@@ -86,8 +86,6 @@ class Media
         $baseUrl = UrlBuilderUtil::buildBaseUrlWithoutLanguage();
         return [
             'id' => $this->id,
-            'pathXSmall' => $this->getPathWithNameXSmall(),
-            'fullPathXSmall' => $baseUrl . $this->getPathWithNameXSmall(),
             'pathSmall' => $this->getPathWithNameSmall(),
             'fullPathSmall' => $baseUrl . $this->getPathWithNameSmall(),
             'pathMedium' => $this->getPathWithNameMedium(),
@@ -105,6 +103,8 @@ class Media
             'createdAt' => $this->createdAt->format('c'),
             'userId' => $this->user?->id,
             'userName' => $this->user?->getNameOrEmail(),
+            'sizes' => $this->buildSizes(),
+            'srcset' => $this->buildSrcset(),
         ];
     }
 
@@ -230,59 +230,37 @@ class Media
     }
 
     public function asHtml(
+        ImageSize $size = ImageSize::XSmall,
         string $className = 'image-item',
         bool $lazyLoading = true,
+        bool $includeSrcSet = false,
         ?string $title = null,
     ): string {
-        $srcset = [
-            $this->getPathWithNameXSmall() . ' ' . ImageSize::XSmall->value . 'w',
-            $this->getPathWithNameSmall() . ' ' . ImageSize::Small->value . 'w',
-            $this->getPathWithNameMedium() . ' ' . ImageSize::Medium->value . 'w',
-            $this->getPathWithNameLarge() . ' ' . ImageSize::Large->value . 'w',
-            $this->getPathWithNameXLarge() . ' ' . ImageSize::XLarge->value . 'w',
-        ];
-
-//        $sizes = [
-//            '(min-width: ' . round(ImageSize::XSmall->value / 2) . 'px) ' . ImageSize::XSmall->value . 'px',
-//            '(min-width: ' . round(ImageSize::Small->value / 2) . 'px) ' . ImageSize::Small->value . 'px',
-//            '(min-width: ' . round(ImageSize::Medium->value / 2) . 'px) ' . ImageSize::Medium->value . 'px',
-//            '(min-width: ' . round(ImageSize::Large->value / 2) . 'px) ' . ImageSize::Large->value . 'px',
-//            ImageSize::XLarge->value . 'px',
-//        ];
-
-        $sizesAgain = [
-            '(min-width: 2960px) 5vw',
-            '(min-width: 2660px) calc(2.5vw + 85px)',
-            '(min-width: 2500px) calc(5.71vw + 8px)',
-            '(min-width: 2340px) 6.43vw',
-            '(min-width: 2200px) calc(7.5vw - 14px)',
-            '(min-width: 2040px) calc(7.86vw - 9px)',
-            '(min-width: 1880px) calc(8.57vw - 11px)',
-            '(min-width: 1740px) 9.17vw',
-            '(min-width: 1580px) 10vw',
-            '(min-width: 1420px) 10.71vw',
-            '(min-width: 1260px) calc(12.86vw - 12px)',
-            '(min-width: 1120px) 14.17vw',
-            '(min-width: 960px) calc(17.14vw - 14px)',
-            '(min-width: 800px) calc(20vw - 10px)',
-            '(min-width: 340px) calc(33.41vw - 9px)',
-            'calc(50vw - 10px)',
-        ];
+        $src = match ($size) {
+            ImageSize::XSmall => $this->getPathWithNameXSmall(),
+            ImageSize::Small => $this->getPathWithNameSmall(),
+            ImageSize::Medium => $this->getPathWithNameMedium(),
+            ImageSize::Large => $this->getPathWithNameLarge(),
+            ImageSize::XLarge => $this->getPathWithNameXLarge(),
+        };
 
         $output = [
             'class="' . $className . '"',
             'data-media-id="' . $this->id . '"',
             'data-path-medium="' . $this->getPathWithNameMedium() . '"',
-            'src="' . $this->getPathWithNameXSmall() . '"',
-            'srcset="' . implode(', ', $srcset) . '"',
-            'sizes="' . implode(', ', $sizesAgain) . '"',
+            'src="' . $src . '"',
             'alt="' . $this->buildAltText() . '"',
-            'width="' . ImageSize::XSmall->value . '"',
+            'width="' . $size->value . '"',
         ];
 
-        if (!$this->heightOriginal) {
-            $height = (int)round(ImageSize::XSmall->value * 100 / $this->heightOriginal);
-            $output[] = 'height="' . $height . '"';
+        if ($includeSrcSet) {
+            $output[] = 'srcset="' . $this->buildSrcset() . '"';
+            $output[] = 'sizes="' . $this->buildSizes() . '"';
+        }
+
+        if ($this->heightOriginal && $this->widthOriginal) {
+            $ratio = ImageSize::XSmall->value / $this->widthOriginal;
+            $output[] = 'height="' . (int)round($ratio * $this->heightOriginal) . '"';
         }
 
         if ($title) {
@@ -310,5 +288,56 @@ class Media
             ? (trim($this->path, '/ ') . '/')
             : '';
         return Core::getConfig()->mediaBaseUrl . '/' . $partialPath;
+    }
+
+    private function buildSrcset(): string
+    {
+        $output = [
+            $this->getPathWithNameXSmall() . ' ' . ImageSize::XSmall->value . 'w',
+            $this->getPathWithNameSmall() . ' ' . ImageSize::Small->value . 'w',
+            $this->getPathWithNameMedium() . ' ' . ImageSize::Medium->value . 'w',
+        ];
+
+        if ($this->filenameLarge) {
+            $output[] = $this->getPathWithNameLarge() . ' ' . ImageSize::Large->value . 'w';
+        }
+
+        if ($this->filenameXLarge) {
+            $output[] = $this->getPathWithNameXLarge() . ' ' . ImageSize::XLarge->value . 'w';
+        }
+
+        return implode(', ', $output);
+    }
+
+    private function buildSizes(): string
+    {
+//        $output = [
+//            '(min-width: ' . ImageSize::XLarge->value . 'px) ' . ImageSize::XLarge->value . 'px',
+//            '(min-width: ' . ImageSize::Large->value . 'px) ' . ImageSize::Large->value . 'px',
+//            '(min-width: ' . ImageSize::Medium->value . 'px) ' . ImageSize::Medium->value . 'px',
+//            '(min-width: ' . ImageSize::Small->value . 'px) ' . ImageSize::Small->value . 'px',
+//            ImageSize::XSmall->value . 'px',
+//        ];
+
+        $output = [
+            '(min-width: 2960px) 5vw',
+            '(min-width: 2660px) calc(2.5vw + 85px)',
+            '(min-width: 2500px) calc(5.71vw + 8px)',
+            '(min-width: 2340px) 6.43vw',
+            '(min-width: 2200px) calc(7.5vw - 14px)',
+            '(min-width: 2040px) calc(7.86vw - 9px)',
+            '(min-width: 1880px) calc(8.57vw - 11px)',
+            '(min-width: 1740px) 9.17vw',
+            '(min-width: 1580px) 10vw',
+            '(min-width: 1420px) 10.71vw',
+            '(min-width: 1260px) calc(12.86vw - 12px)',
+            '(min-width: 1120px) 14.17vw',
+            '(min-width: 960px) calc(17.14vw - 14px)',
+            '(min-width: 800px) calc(20vw - 10px)',
+            '(min-width: 340px) calc(33.41vw - 9px)',
+            'calc(50vw - 10px)',
+        ];
+
+        return implode(', ', $output);
     }
 }

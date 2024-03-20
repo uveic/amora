@@ -100,6 +100,8 @@ class UploaderClass {
             const media = new Image();
             media.className = imageClassName;
             media.src = json.file.pathSmall;
+            media.sizes = json.file.sizes;
+            media.srcset = json.file.srcset;
             media.dataset.mediaId = json.file.id;
             media.dataset.pathMedium = json.file.pathMedium;
             media.alt = json.file.caption ?? json.file.name;
@@ -168,6 +170,8 @@ class UploaderClass {
 
           image.classList.remove('opacity');
           image.src = response.file.pathSmall;
+          image.sizes = response.file.sizes;
+          image.srcset = response.file.srcset;
           image.dataset.mediaId = response.file.id;
           image.dataset.pathMedium = response.file.pathMedium;
           image.alt = response.file.caption ?? response.file.name;

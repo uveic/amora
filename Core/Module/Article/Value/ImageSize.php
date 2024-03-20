@@ -9,14 +9,14 @@ enum ImageSize: int {
     case Large = 1200;
     case XLarge = 1600;
 
-    public function getLarger(): ?self
+    public function getSmaller(): ?self
     {
         return match ($this) {
-            self::XSmall => self::Small,
-            self::Small => self::Medium,
-            self::Medium => self::Large,
-            self::Large => self::XLarge,
-            self::XLarge => null,
+            self::XSmall => null,
+            self::Small => self::XSmall,
+            self::Medium => self::Small,
+            self::Large => self::Medium,
+            self::XLarge => self::Large,
         };
     }
 }
