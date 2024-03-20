@@ -359,6 +359,8 @@ readonly class ImageService
                 $originalHeight
             );
 
+            $outputImage = $this->checkExifAndRotateIfNecessary($outputImage, $sourceFullPath);
+
             $res = imagewebp($outputImage, $outputFullPath, 85);
 
             if (!$res) {
@@ -416,7 +418,7 @@ readonly class ImageService
         }
     }
 
-    private function checkExifAndRotateIfNecessary(GdImage $image, string $imagePath): GdImage|bool
+    private function checkExifAndRotateIfNecessary(GdImage $image, string $imagePath): GdImage
     {
         try {
             $exif = @exif_read_data($imagePath, 0, true);
@@ -434,7 +436,7 @@ readonly class ImageService
 
         $orientation = $exif['Orientation'] ?? ($exif['IFD0']['Orientation'] ?? null);
 
-        if(!isset($orientation)) {
+        if (!isset($orientation)) {
             return $image;
         }
 
