@@ -206,11 +206,7 @@ readonly class MediaService
                 $fileOutput['appearsOn'] = $appearsOn;
 
                 if ($file->type === MediaType::Image) {
-                    $extension = $this->getFileExtension($file->getPathWithNameOriginal());
-                    $exif = $this->imageService->getExifData(
-                        filePathWithName: $file->getDirWithNameOriginal(),
-                        extension: $extension,
-                    );
+                    $exif = $this->imageService->getExifData($file->getDirWithNameOriginal());
 
                     if ($exif) {
                         $fileOutput['exif'] = $exif->asArray();
@@ -347,13 +343,18 @@ readonly class MediaService
         }
 
         $mediaType = MediaType::getTypeFromRawFileType($rawFiles['files']['type'][0]);
-
         $rawName = $rawFiles['files']['name'][0];
-        $extension = $this->getFileExtension($rawName);
-        $rawNameWithoutExtension = trim(str_replace($extension, '', $rawName), '. ');
-        $newName = $mediaType === MediaType::Image
-            ? $this->generateFilename($extension)
-            : StringUtil::cleanString($rawNameWithoutExtension) . '-' . $this->generateFilename($extension);
+
+        if ($mediaType === MediaType::Image) {
+            $phpNativeImageType = exif_imagetype($rawPathWithName);
+            $newName = $this->imageService->generateImageName($phpNativeImageType);
+        } else {
+            $extension = $this->getFileExtension($rawName);
+            $rawNameWithoutExtension = trim(str_replace($extension, '', $rawName), '. ');
+
+            $newName = StringUtil::cleanString($rawNameWithoutExtension) . '-' . $this->generateFilename($extension);
+        }
+
         $basePath = rtrim($this->mediaBaseDir, ' /');
         $extraPath = $this->getOrGenerateMediaFolder($basePath);
         $targetPath = $basePath . '/' . $extraPath . '/' . $newName;
@@ -376,7 +377,6 @@ readonly class MediaService
             name: $newName,
             basePath: $basePath,
             extraPath: $extraPath,
-            extension: $extension,
             mediaType: $mediaType,
             sizeBytes: (int)$rawFiles['files']['size'][0],
             error: $rawFiles['files']['error'][0],
@@ -417,6 +417,8 @@ readonly class MediaService
 
             $count++;
         } while(!is_dir($fullPath));
+
+        chmod($fullPath, 0755);
 
         return $mediaExtraPath;
     }

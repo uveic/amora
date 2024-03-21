@@ -558,13 +558,11 @@ h2.page-content-subtitle {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 4rem 1rem 1rem;
-  position: fixed;
-  z-index: 20;
-  background-color: var(--color-text);
-  top: 0;
-  left: 0;
-  right: 0;
+  padding: 0 3rem 0.5rem 0.5rem;
+}
+
+.add-image-header h2 {
+  font-size: 1.2rem;
 }
 
 #images-list {
@@ -626,15 +624,18 @@ h2.page-content-subtitle {
 
 .input-file-label {
   background: var(--color-bg);
-  border: 1px solid var(--color-text);
   color: var(--color-text);
   cursor: pointer;
-  display: inline-block;
   font-size: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
   position: relative;
   text-align: center;
   width: 100%;
+  font-weight: 500;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .input-file-label:hover {

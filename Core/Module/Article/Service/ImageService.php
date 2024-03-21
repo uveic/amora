@@ -32,11 +32,7 @@ readonly class ImageService
         $imageLarge = $this->resizeImage($rawFile, ImageSize::Large, $keepSameImageFormat);
         $imageXLarge = $this->resizeImage($rawFile, ImageSize::XLarge, $keepSameImageFormat);
 
-        $exif = $this->getExifData(
-            filePathWithName: $rawFile->getPathWithName(),
-            extension: $rawFile->extension,
-        );
-
+        list($widthOriginal, $heightOriginal) = @getimagesize($rawFile->getPathWithName());
         $now = new DateTimeImmutable();
 
         return new Media(
@@ -44,8 +40,8 @@ readonly class ImageService
             type: $rawFile->mediaType,
             status: MediaStatus::Active,
             user: $user,
-            widthOriginal: $exif?->width,
-            heightOriginal: $exif?->height,
+            widthOriginal: $widthOriginal,
+            heightOriginal: $heightOriginal,
             path: $rawFile->extraPath,
             filenameOriginal: $rawFile->name,
             filenameXLarge: $imageXLarge?->name,
@@ -60,9 +56,10 @@ readonly class ImageService
         );
     }
 
-    public function getExifData(string $filePathWithName, string $extension): ?ImageExif
+    public function getExifData(string $filePathWithName): ?ImageExif
     {
-        if ($extension !== 'jpg' && $extension !== 'jpeg') {
+        $phpNativeImageType = exif_imagetype($filePathWithName);
+        if ($phpNativeImageType !== IMAGETYPE_JPEG && $phpNativeImageType !== IMAGETYPE_WEBP) {
             return null;
         }
 
@@ -141,12 +138,13 @@ readonly class ImageService
         }
 
         if ($keepSameImageFormat) {
-            $newFilename = $this->getNewImageName($image->extension);
+            $phpNativeImageType = exif_imagetype($image->getPathWithName());
+            $newFilename = $this->generateImageName($phpNativeImageType);
             $outputFullPath = $image->getPath() . '/'  . $newFilename;
 
             $this->detectImageTypeAndResize(
                 $sourceImage,
-                $image->extension,
+                $phpNativeImageType,
                 $image->getPathWithName(),
                 $outputFullPath,
                 $newWidth,
@@ -155,7 +153,7 @@ readonly class ImageService
                 $originalHeight,
             );
         } else {
-            $newFilename = $this->getNewImageName('webp');
+            $newFilename = $this->generateImageName(IMAGETYPE_WEBP);
             $outputFullPath = $image->getPath() . '/'  . $newFilename;
 
             $this->resizeWebpImage(
@@ -178,14 +176,20 @@ readonly class ImageService
             name: $newFilename,
             basePath: $image->basePath,
             extraPath: $image->extraPath,
-            extension: $image->extension,
             mediaType: $image->mediaType,
         );
     }
 
-    private function getNewImageName(string $imageTypeExtension): string
+    public function generateImageName(int $phpNativeImageType): string
     {
-        return date('YmdHis') . StringUtil::generateRandomString(16) . '.' . $imageTypeExtension;
+        $extension = match($phpNativeImageType) {
+            IMAGETYPE_JPEG => '.jpg',
+            IMAGETYPE_WEBP => '.webp',
+            IMAGETYPE_PNG => '.png',
+            default => image_type_to_extension($phpNativeImageType),
+        };
+
+        return date('YmdHis') . StringUtil::generateRandomString(16) . $extension;
     }
 
     private function getImageFromSourcePath(RawFile $sourceImage): GdImage|null|false
@@ -223,7 +227,7 @@ readonly class ImageService
         }
 
         $this->logger->logWarning(
-            'Image type not supported (resizing): ' . $sourceImage->extension . ' - Image path: ' . $sourceImage->getPathWithName()
+            'Image type not supported: ' . $imageType . ' - Image path: ' . $sourceImage->getPathWithName()
         );
 
         return null;
@@ -231,7 +235,7 @@ readonly class ImageService
 
     private function detectImageTypeAndResize(
         GdImage $sourceImage,
-        string $imageTypeExtension,
+        int $phpNativeImageType,
         string $sourceFullPath,
         string $outputFullPath,
         int $newWidth,
@@ -239,7 +243,7 @@ readonly class ImageService
         int $originalWidth,
         int $originalHeight,
     ): void {
-        if ($imageTypeExtension === 'jpg' || $imageTypeExtension === 'jpeg') {
+        if ($phpNativeImageType === IMAGETYPE_JPEG) {
             $this->resizeJpgImage(
                 $sourceImage,
                 $sourceFullPath,
@@ -253,7 +257,7 @@ readonly class ImageService
             return;
         }
 
-        if ($imageTypeExtension === 'webp') {
+        if ($phpNativeImageType === IMAGETYPE_WEBP) {
             $this->resizeWebpImage(
                 $sourceImage,
                 $sourceFullPath,
@@ -267,7 +271,7 @@ readonly class ImageService
             return;
         }
 
-        if ($imageTypeExtension === 'png') {
+        if ($phpNativeImageType === IMAGETYPE_PNG) {
             $this->resizePngImage(
                 $sourceImage,
                 $sourceFullPath,
@@ -282,7 +286,7 @@ readonly class ImageService
         }
 
         $this->logger->logWarning(
-            'Image type not supported (resizing): ' . $imageTypeExtension . ' - Image path: ' . $sourceFullPath
+            'Resizing not supported for image type: ' . $phpNativeImageType . ' - Image path: ' . $sourceFullPath
         );
     }
 

@@ -82,10 +82,8 @@ class ImageResizeApp extends App
             return true;
         }
 
-        $extension = $this->mediaService->getFileExtension($existingMedia->filenameOriginal);
-
         $resizedMedia = $this->imageService->resizeRawImage(
-            rawFile: $existingMedia->asRawFile($extension),
+            rawFile: $existingMedia->asRawFile(),
             user: $existingMedia->user,
             captionHtml: $existingMedia->captionHtml,
         );

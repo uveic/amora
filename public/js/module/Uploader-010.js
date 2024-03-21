@@ -1,6 +1,6 @@
 import {Request} from './Request-002.js';
 import {Global} from './localisation-004.js';
-import {Util} from "./Util-009.js";
+import {Util} from "./Util-010.js";
 
 class UploaderClass {
   static buildProgressElement() {
@@ -82,8 +82,6 @@ class UploaderClass {
         mediaContainer.appendChild(figureContainer);
       }
     }
-
-    mediaContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     for (const media of Array.from(files)) {
       try {

@@ -11,7 +11,6 @@ readonly class RawFile
         public string $name,
         public string $basePath,
         public string $extraPath,
-        public string $extension,
         public MediaType $mediaType,
         public ?int $sizeBytes = null,
         public ?int $error = null,

@@ -217,14 +217,13 @@ class Media
             : $this->getPathWithNameLarge();
     }
 
-    public function asRawFile(string $extension): RawFile
+    public function asRawFile(): RawFile
     {
         return new RawFile(
             originalName: $this->filenameOriginal,
             name: $this->filenameOriginal,
             basePath: rtrim(Core::getConfig()->mediaBaseDir, ' /'),
             extraPath: $this->path ?? '',
-            extension: $extension,
             mediaType: MediaType::Image,
         );
     }
