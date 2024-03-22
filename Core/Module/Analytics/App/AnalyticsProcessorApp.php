@@ -15,6 +15,7 @@ use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Util\Logger;
 use Amora\Core\Util\NetworkUtil;
 use DateTimeImmutable;
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use UserAgentParserUtil;
 
 class AnalyticsProcessorApp extends App
@@ -79,10 +80,10 @@ class AnalyticsProcessorApp extends App
             ? NetworkUtil::getCityFromIP($eventRaw->ip)
             : null;
 
-        $userAgentInfo = UserAgentParserUtil::parse($eventRaw->userAgent);
+        $userAgentInfo = $this->getUserAgentInfo($eventRaw->userAgent);
         $languageIsoCode = $this->getLanguageIsoCode($eventRaw->clientLanguage);
 
-        $eventType = $this->getEventType($eventRaw, $userAgentInfo);
+        $eventType = $this->getEventType($eventRaw, $userAgentInfo, $languageIsoCode);
         $referrer = $this->getReferrer($eventRaw);
         $userHash = $this->getUserHash($eventRaw);
 
@@ -115,8 +116,11 @@ class AnalyticsProcessorApp extends App
         return true;
     }
 
-    private function getEventType(EventRaw $event, UserAgentInfo $userAgentInfo): EventType
-    {
+    private function getEventType(
+        EventRaw $event,
+        UserAgentInfo $userAgentInfo,
+        ?string $languageIsoCode,
+    ): EventType {
         $apiActions = AppRouter::getApiActions();
         $action = $this->getActionFromPath($event->url);
         if (isset($apiActions[$action])) {
@@ -127,15 +131,15 @@ class AnalyticsProcessorApp extends App
             return EventType::User;
         }
 
+        if ($this->isCrawler($userAgentInfo->browser, $event->userAgent)) {
+            return EventType::Crawler;
+        }
+
         if ($event->url && $this->isBot($event->url)) {
             return EventType::Bot;
         }
 
-        if ($userAgentInfo->browser && $this->isCrawler($userAgentInfo->browser)) {
-            return EventType::Crawler;
-        }
-
-        if (empty($event->clientLanguage)) {
+        if (!$this->isValidClientLanguage($languageIsoCode)) {
             return EventType::Bot;
         }
 
@@ -226,13 +230,53 @@ class AnalyticsProcessorApp extends App
         return $this->botPath[$item] ?? false;
     }
 
-    private function isCrawler(string $item): bool
+    private function isCrawler(?string $item, ?string $userAgentRaw): bool
     {
-        if (empty($item)) {
+        if ($item && isset($this->botUserAgent[$item])) {
+            return true;
+        }
+
+        $CrawlerDetect = new CrawlerDetect;
+        if ($CrawlerDetect->isCrawler($userAgentRaw)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function isValidClientLanguage(?string $languageIsoCode): bool
+    {
+        if (empty($languageIsoCode)) {
             return false;
         }
 
-        return $this->botUserAgent[$item] ?? false;
+        $length = strlen($languageIsoCode);
+
+        if ($length !== 2 && $length !== 3) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function getUserAgentInfo(string $userAgentRaw): UserAgentInfo
+    {
+        $output = UserAgentParserUtil::parse($userAgentRaw);
+
+        if ($output->browser) {
+            return $output;
+        }
+
+        $CrawlerDetect = new CrawlerDetect;
+        if ($CrawlerDetect->isCrawler($userAgentRaw)) {
+            return new UserAgentInfo(
+                platform: $output->platform,
+                browser: $CrawlerDetect->getMatches() ?: null,
+                version: $output->version,
+            );
+        }
+
+        return $output;
     }
 
     private function loadBotsMapping(): void
