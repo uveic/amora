@@ -35,7 +35,7 @@ $count = 0;
         $count++;
 ?>
         <figure class="image-container">
-          <?=$image->asHtml(size: ImageSize::Small, lazyLoading: $count > 10, includeSrcSet: true) . PHP_EOL?>
+          <?=$image->asHtml(size: ImageSize::Small, lazyLoading: $count > 10) . PHP_EOL?>
         </figure>
 <?php } ?>
       </div>

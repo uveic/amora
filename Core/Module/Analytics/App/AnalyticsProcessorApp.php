@@ -259,8 +259,12 @@ class AnalyticsProcessorApp extends App
         return true;
     }
 
-    private function getUserAgentInfo(string $userAgentRaw): UserAgentInfo
+    private function getUserAgentInfo(?string $userAgentRaw): UserAgentInfo
     {
+        if (!$userAgentRaw) {
+            return new UserAgentInfo();
+        }
+
         $output = UserAgentParserUtil::parse($userAgentRaw);
 
         if ($output->browser) {

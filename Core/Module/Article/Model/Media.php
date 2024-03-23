@@ -232,8 +232,9 @@ class Media
         ImageSize $size = ImageSize::XSmall,
         string $className = 'image-item',
         bool $lazyLoading = true,
-        bool $includeSrcSet = false,
+        string $sizes = '',
         ?string $title = null,
+        ?string $alt = null,
     ): string {
         $src = match ($size) {
             ImageSize::XSmall => $this->getPathWithNameXSmall(),
@@ -244,22 +245,22 @@ class Media
         };
 
         $output = [
-            'class="' . $className . '"',
             'data-media-id="' . $this->id . '"',
             'data-path-medium="' . $this->getPathWithNameMedium() . '"',
             'src="' . $src . '"',
-            'alt="' . $this->buildAltText() . '"',
+            'alt="' . ($alt ?? $this->buildAltText()) . '"',
+            'srcset="' . $this->buildSrcset() . '"',
+            'sizes="' . ($sizes ?: $this->buildSizes()) . '"',
             'width="' . $size->value . '"',
         ];
 
         if ($this->heightOriginal && $this->widthOriginal) {
-            $ratio = ImageSize::XSmall->value / $this->widthOriginal;
+            $ratio = $size->value / $this->widthOriginal;
             $output[] = 'height="' . (int)round($ratio * $this->heightOriginal) . '"';
         }
 
-        if ($includeSrcSet) {
-            $output[] = 'srcset="' . $this->buildSrcset() . '"';
-            $output[] = 'sizes="' . $this->buildSizes() . '"';
+        if ($className) {
+            $output[] = 'class="' . $className . '"';
         }
 
         if ($title) {
@@ -310,14 +311,6 @@ class Media
 
     private function buildSizes(): string
     {
-//        $output = [
-//            '(min-width: ' . ImageSize::XLarge->value . 'px) ' . ImageSize::XLarge->value . 'px',
-//            '(min-width: ' . ImageSize::Large->value . 'px) ' . ImageSize::Large->value . 'px',
-//            '(min-width: ' . ImageSize::Medium->value . 'px) ' . ImageSize::Medium->value . 'px',
-//            '(min-width: ' . ImageSize::Small->value . 'px) ' . ImageSize::Small->value . 'px',
-//            ImageSize::XSmall->value . 'px',
-//        ];
-
         $output = [
             '(min-width: 2960px) 5vw',
             '(min-width: 2660px) calc(2.5vw + 85px)',
