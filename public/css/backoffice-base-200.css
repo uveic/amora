@@ -984,6 +984,7 @@ h2.page-content-subtitle {
   color: var(--color-chart-02);
 }
 
+.analytics-page-js,
 .analytics-device-js,
 .analytics-browser-js,
 .analytics-country-js,

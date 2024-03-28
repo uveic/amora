@@ -240,10 +240,8 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
 ?>
       <div class="item">
         <div class="one-line-flex">
-          <a class="analytics-page-js" href="#">/<?=$name?></a>
-          <a class="one-line-flex" target="_blank" href="/<?=$name?>">
-            <img src="/img/svg/arrow-square-out.svg" class="img-svg img-svg-15" alt="Open" width="15" height="15">
-          </a>
+          <a href="/<?=$name?>">/<?=$name?></a>
+          <img src="/img/svg/funnel.svg" data-url="<?=$name?>" class="img-svg img-svg-15 analytics-page-js" alt="Filter" width="15" height="15">
         </div>
         <span class="no-break"><?=$value->count?></span>
       </div>

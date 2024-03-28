@@ -122,17 +122,16 @@ document.querySelectorAll('a.analytics-controls-event-type').forEach(m => {
   });
 });
 
-document.querySelectorAll('a.analytics-page-js').forEach(a => {
-  a.addEventListener('click', (e) => {
+document.querySelectorAll('.analytics-page-js').forEach(s => {
+  s.addEventListener('click', (e) => {
     e.preventDefault();
 
-    let href = a.parentElement.querySelector('a.one-line-flex').href;
-    href = href.replace(window.location.origin, '').substring(1);
-    if (!href) {
-      href = 'homepage';
+    let url = s.dataset.url;
+    if (!url) {
+      url = 'homepage';
     }
 
-    window.location = buildRedirectUrl(null, null, href);
+    window.location = buildRedirectUrl(null, null, url);
   });
 });
 
