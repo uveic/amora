@@ -63,16 +63,50 @@ class AnalyticsDataLayer
         DateTimeImmutable $to,
         AggregateBy $aggregateBy,
         ?EventType $eventType = null,
+        ?string $url = null,
+        ?string $device = null,
+        ?string $browser = null,
+        ?string $countryIsoCode = null,
+        ?string $languageIsoCode = null,
         ?CountDbColumn $columnName = null,
     ): array {
         $dateFormat = DateUtil::getMySqlAggregateFormat($aggregateBy);
 
         $params = [];
 
-        $typeSql = '';
+        $whereSql = '';
         if ($eventType) {
-            $typeSql = ' AND ep.type_id = :eventTypeId';
+            $whereSql .= ' AND ep.type_id = :eventTypeId';
             $params[':eventTypeId'] = $eventType->value;
+        }
+
+        if (isset($url)) {
+            if ($url === 'homepage') {
+                $whereSql .= ' AND er.url IS NULL';
+            } else {
+                $whereSql .= ' AND er.url = :url';
+                $params[':url'] = $url;
+            }
+        }
+
+        if ($device) {
+            $whereSql .= ' AND ep.user_agent_platform = :userAgentPlatform';
+            $params[':userAgentPlatform'] = $device;
+        }
+
+        if ($browser) {
+            $whereSql .= ' AND ep.user_agent_browser = :userAgentBrowser';
+            $params[':userAgentBrowser'] = $browser;
+        }
+
+        if ($countryIsoCode) {
+            $whereSql .= ' AND ep.country_iso_code = :countryIsoCode';
+            $params[':countryIsoCode'] = $countryIsoCode;
+        }
+
+        if ($languageIsoCode) {
+            $whereSql .= ' AND ep.language_iso_code = :languageIsoCode';
+            $params[':languageIsoCode'] = $languageIsoCode;
         }
 
         $countSql = $columnName
@@ -88,7 +122,7 @@ class AnalyticsDataLayer
             WHERE 1
                 AND er.created_at >= :createdAtFrom
                 AND er.created_at <= :createdAtTo
-                " . $typeSql . "
+                " . $whereSql . "
             GROUP BY
                 date_format
             ORDER BY
@@ -116,13 +150,47 @@ class AnalyticsDataLayer
         DateTimeImmutable $to,
         int $limit,
         ?EventType $eventType = null,
+        ?string $url = null,
+        ?string $device = null,
+        ?string $browser = null,
+        ?string $countryIsoCode = null,
+        ?string $languageIsoCode = null,
     ): array {
         $params = [];
 
-        $typeSql = '';
+        $whereSql = '';
         if ($eventType) {
-            $typeSql = ' AND ep.type_id = :eventTypeId';
+            $whereSql .= ' AND ep.type_id = :eventTypeId';
             $params[':eventTypeId'] = $eventType->value;
+        }
+
+        if (isset($url)) {
+            if ($url === 'homepage') {
+                $whereSql .= ' AND er.url IS NULL';
+            } else {
+                $whereSql .= ' AND er.url = :url';
+                $params[':url'] = $url;
+            }
+        }
+
+        if ($device) {
+            $whereSql .= ' AND ep.user_agent_platform = :userAgentPlatform';
+            $params[':userAgentPlatform'] = $device;
+        }
+
+        if ($browser) {
+            $whereSql .= ' AND ep.user_agent_browser = :userAgentBrowser';
+            $params[':userAgentBrowser'] = $browser;
+        }
+
+        if ($countryIsoCode) {
+            $whereSql .= ' AND ep.country_iso_code = :countryIsoCode';
+            $params[':countryIsoCode'] = $countryIsoCode;
+        }
+
+        if ($languageIsoCode) {
+            $whereSql .= ' AND ep.language_iso_code = :languageIsoCode';
+            $params[':languageIsoCode'] = $languageIsoCode;
         }
 
         $sql = "
@@ -134,7 +202,7 @@ class AnalyticsDataLayer
             WHERE 1
                 AND er.created_at >= :createdAtFrom
                 AND er.created_at <= :createdAtTo
-                " . $typeSql . "
+                " . $whereSql . "
             GROUP BY
                 " . $columnName->value . "
             ORDER BY

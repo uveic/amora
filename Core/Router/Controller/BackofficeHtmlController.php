@@ -164,7 +164,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
-                    $localisationUtil->getValue('globalUser')
+                    $localisationUtil->getValue('globalUser'),
             ),
         );
     }
@@ -476,6 +476,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      * @param string|null $period
      * @param string|null $date
      * @param int|null $eventTypeId
+     * @param string|null $url
+     * @param string|null $device
+     * @param string|null $browser
+     * @param string|null $countryIsoCode
+     * @param string|null $languageIsoCode
      * @param int|null $itemsCount
      * @param Request $request
      * @return Response
@@ -484,6 +489,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         ?string $period,
         ?string $date,
         ?int $eventTypeId,
+        ?string $url,
+        ?string $device,
+        ?string $browser,
+        ?string $countryIsoCode,
+        ?string $languageIsoCode,
         ?int $itemsCount,
         Request $request,
     ): Response {
@@ -506,6 +516,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             to: $to,
             period: $period,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
         );
 
         $reportVisitors = $this->analyticsService->countPageViews(
@@ -513,6 +528,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             to: $to,
             period: $period,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
             columnName: CountDbColumn::Visitor,
         );
 
@@ -521,6 +541,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
             limit: 1000000,
         );
 
@@ -529,6 +554,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
             limit: $limit,
         );
 
@@ -537,6 +567,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
             limit: $limit,
         );
 
@@ -545,6 +580,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
             limit: $limit,
         );
 
@@ -553,6 +593,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
             limit: $limit,
         );
 
@@ -561,6 +606,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
             limit: $limit,
         );
 
@@ -569,6 +619,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             from: $from,
             to: $to,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
             limit: $limit,
         );
 

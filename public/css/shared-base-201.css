@@ -813,7 +813,7 @@ button.is-link.is-light,
 
 .null {display: none !important;}
 .hidden {visibility: hidden;}
-.filter-opacity { filter: opacity(0.25); }
+.filter-opacity {filter: opacity(0.25);}
 .ellipsis {
   display: inline-block;
   overflow: hidden;
@@ -831,6 +831,11 @@ svg,
   height: auto;
   vertical-align: middle;
   margin: 0;
+}
+
+.img-svg-15 {
+  max-width: 15px;
+  max-height: 15px;
 }
 
 .img-svg-25 {
@@ -941,6 +946,15 @@ svg,
   margin: 0 auto;
   width: 100%;
   max-width: var(--content-max-width-narrow);
+}
+
+.one-line-flex {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: flex-start;
+  line-height: 1;
 }
 /* Classes for generic use ends here */
 /* Homepage style starts here */

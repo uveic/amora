@@ -327,7 +327,7 @@ h2.page-content-subtitle {
 /* Page header starts here */
 .page-header {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
@@ -354,7 +354,7 @@ h2.page-content-subtitle {
 }
 
 .page-header .links {
-  flex-grow: 0;
+  flex-grow: 1;
   flex-shrink: 1;
   text-align: right;
   display: flex;
@@ -982,6 +982,14 @@ h2.page-content-subtitle {
 
 .chart-color-02 {
   color: var(--color-chart-02);
+}
+
+.analytics-device-js,
+.analytics-browser-js,
+.analytics-country-js,
+.analytics-language-js,
+.analytics-close-js {
+  cursor: pointer;
 }
 /* Analytics style ends here */
 /* Form two columns starts here */

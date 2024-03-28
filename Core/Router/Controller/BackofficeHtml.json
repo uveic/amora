@@ -317,9 +317,38 @@
           {
             "name": "eventTypeId",
             "in": "query",
-            "description": "Event type ID",
             "required": false,
             "type": "integer"
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "device",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "browser",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "countryIsoCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "languageIsoCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "itemsCount",

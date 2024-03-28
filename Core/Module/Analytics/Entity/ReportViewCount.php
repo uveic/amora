@@ -17,5 +17,10 @@ readonly class ReportViewCount
         public array $pageViews = [],
         public int $total = 0,
         public ?EventType $eventType = null,
+        public ?string $url = null,
+        public ?string $device = null,
+        public ?string $browser = null,
+        public ?string $countryIsoCode = null,
+        public ?string $languageIsoCode = null,
     ) {}
 }

@@ -156,6 +156,11 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
      * @param string|null $period
      * @param string|null $date
      * @param int|null $eventTypeId
+     * @param string|null $url
+     * @param string|null $device
+     * @param string|null $browser
+     * @param string|null $countryIsoCode
+     * @param string|null $languageIsoCode
      * @param int|null $itemsCount
      * @param Request $request
      * @return Response
@@ -164,6 +169,11 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         ?string $period,
         ?string $date,
         ?int $eventTypeId,
+        ?string $url,
+        ?string $device,
+        ?string $browser,
+        ?string $countryIsoCode,
+        ?string $languageIsoCode,
         ?int $itemsCount,
         Request $request
     ): Response;
@@ -711,6 +721,16 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             $eventTypeId = null;
         }
 
+        $url = $queryParams['url'] ?? null;
+
+        $device = $queryParams['device'] ?? null;
+
+        $browser = $queryParams['browser'] ?? null;
+
+        $countryIsoCode = $queryParams['countryIsoCode'] ?? null;
+
+        $languageIsoCode = $queryParams['languageIsoCode'] ?? null;
+
         if (isset($queryParams['itemsCount']) && strlen($queryParams['itemsCount']) > 0) {
             $itemsCount = intval($queryParams['itemsCount']);
         } else {
@@ -731,6 +751,11 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
                 $period,
                 $date,
                 $eventTypeId,
+                $url,
+                $device,
+                $browser,
+                $countryIsoCode,
+                $languageIsoCode,
                 $itemsCount,
                 $request
             );

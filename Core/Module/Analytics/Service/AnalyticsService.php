@@ -56,6 +56,11 @@ readonly class AnalyticsService
         DateTimeImmutable $to,
         Period $period,
         ?EventType $eventType = null,
+        ?string $url = null,
+        ?string $device = null,
+        ?string $browser = null,
+        ?string $countryIsoCode = null,
+        ?string $languageIsoCode = null,
         ?CountDbColumn $columnName = null,
     ): ReportViewCount {
         $aggregateBy = Period::getAggregateBy($period);
@@ -64,6 +69,11 @@ readonly class AnalyticsService
             to: $to,
             aggregateBy: $aggregateBy,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
             columnName: $columnName,
         );
 
@@ -75,6 +85,11 @@ readonly class AnalyticsService
                 period: $period,
                 pageViews: $pageViews,
                 eventType: $eventType,
+                url: $url,
+                device: $device,
+                browser: $browser,
+                countryIsoCode: $countryIsoCode,
+                languageIsoCode: $languageIsoCode,
             ),
         );
     }
@@ -84,6 +99,11 @@ readonly class AnalyticsService
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         ?EventType $eventType = null,
+        ?string $url = null,
+        ?string $device = null,
+        ?string $browser = null,
+        ?string $countryIsoCode = null,
+        ?string $languageIsoCode = null,
         int $limit = 25,
     ): array {
         return $this->analyticsDataLayer->countTop(
@@ -92,6 +112,11 @@ readonly class AnalyticsService
             to: $to,
             limit: $limit,
             eventType: $eventType,
+            url: $url,
+            device: $device,
+            browser: $browser,
+            countryIsoCode: $countryIsoCode,
+            languageIsoCode: $languageIsoCode,
         );
     }
 
@@ -137,6 +162,11 @@ readonly class AnalyticsService
             pageViews: $output,
             total: $total,
             eventType: $report->eventType,
+            url: $report->url,
+            device: $report->device,
+            browser: $report->browser,
+            countryIsoCode: $report->countryIsoCode,
+            languageIsoCode: $report->languageIsoCode,
         );
     }
 

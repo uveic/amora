@@ -1,6 +1,7 @@
 <?php
 
 use Amora\App\Module\Analytics\Entity\ReportViewCount;
+use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Module\Analytics\Entity\PageViewCount;
 use Amora\Core\Module\Analytics\Value\EventType;
@@ -158,6 +159,35 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
             <a href="<?=$eventTypeApiUrl?>"><?=$responseData->getLocalValue('analyticsEventType' . EventType::Api->name)?></a>
             <a href="<?=$eventTypeCrawlerUrl?>"><?=$responseData->getLocalValue('analyticsEventType' . EventType::Crawler->name)?></a>
           </div>
+<?php
+    if ($report->url || $report->device || $report->browser || $report->countryIsoCode || $report->languageIsoCode) {
+        $output = [];
+        if ($report->url) {
+            $output[] = '<span>/' . $report->url . '</span>';
+        }
+
+        if ($report->device) {
+            $output[] = '<span>' . $report->device . '</span>';
+        }
+
+        if ($report->browser) {
+            $output[] = '<span>' . $report->browser . '</span>';
+        }
+
+        if ($report->countryIsoCode) {
+            $output[] = '<span>' . Country::getName($report->countryIsoCode) . '</span>';
+        }
+
+        if ($report->languageIsoCode) {
+            $lang = Language::tryFrom($report->languageIsoCode);
+            $output[] = '<span>' . ($lang ? $lang->getName() : $report->languageIsoCode) . '</span>';
+        }
+?>
+          <div class="one-line-flex">
+            <?=implode('', $output)?>
+            <img class="img-svg analytics-close-js" width="20" height="20" src="/img/svg/x.svg" alt="<?=$responseData->getLocalValue('globalClose')?>">
+          </div>
+<?php } ?>
         </div>
         <div class="analytics-controls-wrapper">
           <div class="analytics-controls" data-period="<?=$report->period->value?>" data-date="<?=$report->from->format('Y-m-d')?>">
@@ -209,7 +239,12 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
         }
 ?>
       <div class="item">
-        <a href="/<?=$name?>">/<?=$name?></a>
+        <div class="one-line-flex">
+          <a class="analytics-page-js" href="#">/<?=$name?></a>
+          <a class="one-line-flex" target="_blank" href="/<?=$name?>">
+            <img src="/img/svg/arrow-square-out.svg" class="img-svg img-svg-15" alt="Open" width="15" height="15">
+          </a>
+        </div>
         <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -221,7 +256,7 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     foreach ($responseData->browsers as $value) {
 ?>
       <div class="item">
-        <span><?=$value->name ?: '-'?></span>
+        <span class="analytics-browser-js"><?=$value->name ?: '-'?></span>
         <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -232,7 +267,7 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     /** @var PageViewCount $value */
     foreach ($responseData->devices as $value) { ?>
       <div class="item">
-        <span><?=$value->name ?: '-'?></span>
+        <span class="analytics-device-js"><?=$value->name ?: '-'?></span>
         <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -245,7 +280,7 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
         $name = Country::getName($value->name) ?: '-';
 ?>
       <div class="item">
-        <span><?=$name?></span>
+        <span class="analytics-country-js" data-iso-code="<?=$value->name?>"><?=$name?></span>
         <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -256,11 +291,11 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     /** @var PageViewCount $value */
     foreach ($responseData->languages as $value) { ?>
       <div class="item">
-        <span><?=$value->name ?: '-'?></span>
+        <span class="analytics-language-js"><?=$value->name ?: '-'?></span>
         <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>
   </main>
 <?=$this->insert('partials/analytics/chart-bar-day-js', ['responseData' => $responseData]);?>
-  <script type="module" src="/js/analytics-003.js"></script>
+  <script type="module" src="/js/analytics-004.js"></script>
