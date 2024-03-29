@@ -21,6 +21,8 @@ use Amora\Core\Module\Analytics\Model\EventRaw;
 
 readonly class AnalyticsService
 {
+    const URL_MAX_LENGTH = 255;
+
     public function __construct(
         private Logger $logger,
         private AnalyticsDataLayer $analyticsDataLayer,
@@ -39,8 +41,8 @@ readonly class AnalyticsService
                     userId: $request->session?->user->id,
                     sessionId: $request->session?->sessionId,
                     createdAt: new DateTimeImmutable(),
-                    url: $request->path ? substr($request->path, 0, 2000) : null,
-                    referrer: $request->referrer ? substr($request->referrer, 0, 2000) : null,
+                    url: $request->path ? substr($request->path, 0, self::URL_MAX_LENGTH) : null,
+                    referrer: $request->referrer ? substr($request->referrer, 0, self::URL_MAX_LENGTH) : null,
                     ip: $request->sourceIp,
                     userAgent: $request->userAgent ? substr($request->userAgent, 0, 255) : null,
                     clientLanguage: $request->clientLanguage ? substr($request->clientLanguage, 0, 255) : null,
