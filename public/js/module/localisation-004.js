@@ -16,8 +16,9 @@ class GlobalClass {
       "genericError": "Something went wrong, please try again.",
       "genericErrorGetInTouch": "An unexpected error has occurred. Please, refresh the page and try it again. Get in touch with support if the error persists. Error: ",
       "feedbackSaving": "Nothing to save...",
-      "feedbackCopyLinkSuccess": "Ligazón copiada!",
-      "feedbackCopyLinkError": "Non se puido copiar a ligazón",
+      "feedbackCopyLinkSuccess": "Link copied!",
+      "feedbackCopyLinkError": "Error copying link to clipboard",
+      "feedbackSearchNotFound": "Not found",
 
       "globalSave": "Save",
       "globalModify": "Modify",
@@ -82,6 +83,7 @@ class GlobalClass {
       "feedbackSaving": "Nada que guardar...",
       "feedbackCopyLinkSuccess": "¡Enlace copiado!",
       "feedbackCopyLinkError": "No se ha podido copiar el enlace",
+      "feedbackSearchNotFound": "¡Vaya! No se ha encontrado nada.",
 
       "globalSave": "Guardar",
       "globalModify": "Modificar",
@@ -146,6 +148,7 @@ class GlobalClass {
       "feedbackSaving": "Nada que gardar...",
       "feedbackCopyLinkSuccess": "Ligazón copiada!",
       "feedbackCopyLinkError": "Non se puido copiar a ligazón",
+      "feedbackSearchNotFound": "Vaia! Non se atopou nada.",
 
       "globalSave": "Gardar",
       "globalModify": "Modificar",

@@ -187,20 +187,6 @@ function addMediaToModalContainer(existingModalContainer, mediaId) {
   }
 }
 
-function handleCopyLink(ev, href) {
-  ev.preventDefault();
-
-  if (!navigator.clipboard) {
-    Util.notifyError(new Error(Global.get('feedbackCopyLinkError')));
-    return;
-  }
-
-  navigator.clipboard.writeText(href).then(() => {
-    Util.notifyUser(Global.get('feedbackCopyLinkSuccess'));
-  })
-    .catch(error => Util.notifyError(error, Global.get('feedbackCopyLinkError')));
-}
-
 function displayModalImage(image) {
   const modalContainer = document.querySelector('.modal-media');
   const modalClose = modalContainer.querySelector('.modal-close-button');
@@ -309,7 +295,7 @@ function displayModalImage(image) {
     (size ? '<div>' + size + '</div>' : '');
 
   modalContainer.querySelector('.image-meta .copy-link')
-    .addEventListener('click', e => handleCopyLink(e, image.fullPathMedium));
+    .addEventListener('click', e => Util.handleCopyLink(e, image.fullPathMedium));
 
   const imageDeleteEl = modalContainer.querySelector('.image-delete');
   imageDeleteEl.dataset.mediaId = image.id;
@@ -1885,7 +1871,7 @@ document.querySelectorAll('.modal-close-button').forEach(el => {
 });
 
 document.querySelectorAll('.copy-link').forEach(a => {
-  a.addEventListener('click', e => handleCopyLink(e, a.href));
+  a.addEventListener('click', e => Util.handleCopyLink(e, a.href));
 });
 
 document.querySelectorAll('.article-add-section-video').forEach(bu => {
