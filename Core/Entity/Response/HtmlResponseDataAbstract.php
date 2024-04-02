@@ -92,7 +92,7 @@ abstract class HtmlResponseDataAbstract
         if ($imageUrl) {
             $widthAndHeight = ' width="' . $logoWidth . '"';
             $widthAndHeight .= ' height="' . $logoHeight . '"';
-            $output[] = $indentation . '    <img src="' . $imageUrl . '" alt="' . $siteName . '"' . $widthAndHeight . '>';
+            $output[] = $indentation . '    <img src="' . $imageUrl . '" alt="Logo"' . $widthAndHeight . '>';
         }
 
         $output[] = $indentation . '    ' . ($homeContent?->titleHtml ?: '<span>' . $siteName . '</span>');

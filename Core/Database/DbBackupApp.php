@@ -3,6 +3,7 @@
 namespace Amora\Core\Database;
 
 use Amora\Core\App\App;
+use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Logger;
 use DateTime;
 use DateTimeZone;
@@ -25,7 +26,7 @@ final class DbBackupApp extends App
         );
     }
 
-    public function run()
+    public function run(): void
     {
         $this->execute(function () {
             $res = $this->createDbBackup();
@@ -38,7 +39,10 @@ final class DbBackupApp extends App
 
     private function generateDbBackupFileName(): string
     {
-        $now = new DateTime(timezone: new DateTimeZone('UTC'));
+        $now = DateUtil::convertStringToDateTimeImmutable(
+            date: 'now',
+            timezone: new DateTimeZone('UTC'),
+        );
 
         return 'backup_' . $this->db->name
             . $now->format("_Y-m-d_H\hi\m")
@@ -55,7 +59,7 @@ final class DbBackupApp extends App
         $this->log('Backing up to ' . $backupFileFullPath);
 
         exec(
-            "{$this->mysqlDumpCommand} -u {$this->db->user} \
+            "$this->mysqlDumpCommand -u {$this->db->user} \
             -p'{$this->db->password}' \
             --single-transaction \
             --skip-lock-tables \
@@ -66,7 +70,7 @@ final class DbBackupApp extends App
             --quick \
             --set-charset \
             {$this->db->name} \
-            | {$this->gzipCommand} > {$backupFileFullPath}"
+            | $this->gzipCommand > $backupFileFullPath"
         );
 
         if (!file_exists($backupFileFullPath)) {
@@ -93,16 +97,16 @@ final class DbBackupApp extends App
 
         $this->log('Restoring backup: ' . $backupFilename);
 
-        exec("{$this->gzipCommand} -dkf " . $backupFullPath);
+        exec("$this->gzipCommand -dkf " . $backupFullPath);
 
         $backupFilenameUnzipped = str_replace('.gz', '', $backupFilename);
         $unzippedFullPath = $this->backupFolderPath . $backupFilenameUnzipped;
 
         exec(
-            "{$this->mysqlCommand} -u {$this->db->user} \
+            "$this->mysqlCommand -u {$this->db->user} \
              -p'{$this->db->password}' \
              {$this->db->name} \
-             < {$unzippedFullPath}"
+             < $unzippedFullPath"
         );
 
         unlink($unzippedFullPath);
@@ -116,7 +120,7 @@ final class DbBackupApp extends App
     {
         $this->log('Checking for outdated backups...');
 
-        $now = new DateTime(timezone: new DateTimeZone('UTC'));
+        $now = DateUtil::convertStringToDateTimeImmutable(date: 'now', timezone: new DateTimeZone('UTC'));
         $hour = (int)$now->format('G');
         if ($hour < 3 || $hour > 6) {
             // Delete outdated files only between 3 and 6 AM UTC
@@ -126,9 +130,9 @@ final class DbBackupApp extends App
         $this->log('Deleting outdated backup files...');
 
         $utcTz = new DateTimeZone('UTC');
-        $oneDayAgo = new DateTime(timezone: $utcTz);
+        $oneDayAgo = DateUtil::convertStringToDateTimeImmutable(date: 'now', timezone: $utcTz);
         $oneDayAgo->setTimestamp(strtotime("-1 days"));
-        $twoMonthsAgo = new DateTime(timezone: $utcTz);
+        $twoMonthsAgo = DateUtil::convertStringToDateTimeImmutable(date: 'now', timezone: $utcTz);
         $twoMonthsAgo->setTimestamp(strtotime("-2 months"));
 
         $files = $this->getBackupFiles();

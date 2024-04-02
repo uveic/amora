@@ -81,7 +81,7 @@ class Media
         ];
     }
 
-    public function buildPublicDataArray(): array
+    public function asPublicArray(): array
     {
         $baseUrl = UrlBuilderUtil::buildBaseUrlWithoutLanguage();
         return [

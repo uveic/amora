@@ -176,7 +176,7 @@ readonly class MediaService
         $output = [];
         /** @var Media $file */
         foreach ($files as $file) {
-            $fileOutput = $file->buildPublicDataArray();
+            $fileOutput = $file->asPublicArray();
 
             if ($includeAppearsOn) {
                 $statusIds = $isAdmin
@@ -195,12 +195,12 @@ readonly class MediaService
                 $appearsOn = [];
                 /** @var Article $article */
                 foreach ($articles as $article) {
-                    $appearsOn[] = $article->buildPublicDataArray();
+                    $appearsOn[] = $article->asPublicArray();
                 }
 
                 /** @var Album $album */
                 foreach ($albums as $album) {
-                    $appearsOn[] = $album->buildPublicDataArray();
+                    $appearsOn[] = $album->asPublicArray();
                 }
 
                 $fileOutput['appearsOn'] = $appearsOn;

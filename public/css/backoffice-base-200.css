@@ -791,10 +791,22 @@ h2.page-content-subtitle {
   height: 100%;
 }
 
-.image-main-nav a {
+.image-main-nav a,
+.image-main-nav a:hover,
+.image-main-nav a:focus,
+.image-main-nav a:visited,
+.image-main-nav a:active {
   display: block;
   width: 50%;
   height: 100%;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: none;
 }
 
 .media-load-more,

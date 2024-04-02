@@ -212,7 +212,7 @@ final class DateUtil
                 format: 'U',
                 datetime: $unixSeconds,
             );
-            $d->setTimezone($timezone ?? new DateTimeZone(Core::getDefaultTimezone()));
+            $d->setTimezone($timezone ?? self::convertStringToDateTimeZone(Core::getDefaultTimezone()));
 
             return DateTimeImmutable::createFromMutable($d);
         } catch (Throwable) {

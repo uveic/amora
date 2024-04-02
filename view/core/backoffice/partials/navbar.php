@@ -58,6 +58,6 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
 <?php } ?>
       </ul>
     </nav>
-    <label for="mobile-nav" class="mobile-nav-label"><span></span></label>
+    <label for="mobile-nav" class="mobile-nav-label"><span class="null">Menu</span><span></span></label>
   </div>
 </header>

@@ -115,7 +115,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         $newFile = $res->response;
         return new AuthorisedApiControllerStoreFileSuccessResponse(
             success: true,
-            file: $newFile->buildPublicDataArray(),
+            file: $newFile->asPublicArray(),
         );
     }
 

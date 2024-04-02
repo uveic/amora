@@ -20,7 +20,7 @@ $offset = $responseData->pagination->offset + $itemsPerPage;
 
 ?>
   <section class="home-blog">
-    <h1>Blog <a href="<?=UrlBuilderUtil::buildPublicRssUrl()?>"><img class="img-svg img-svg-25 m-l-05" width="20" height="20" src="/img/svg/rss.svg" alt="RSS"></a></h1>
+    <h1>Blog <a href="<?=UrlBuilderUtil::buildPublicRssUrl()?>"><img class="img-svg img-svg-25 m-l-05" width="20" height="20" src="/img/svg/rss.svg" alt="RSS logo"></a></h1>
     <div class="blog-items">
 <?php
 $previousYear = null;

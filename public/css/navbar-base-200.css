@@ -121,7 +121,11 @@
   left: -9999px !important;
 }
 
-.mobile-nav-label {
+.mobile-nav-label,
+.mobile-nav-label:hover,
+.mobile-nav-label:visited,
+.mobile-nav-label:focus,
+.mobile-nav-label:active {
   position: absolute;
   top: 0;
   right: 0;
@@ -132,6 +136,14 @@
   cursor: pointer;
   justify-content: flex-end;
   max-width: 100px;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: none;
 }
 
 .mobile-nav-label span,

@@ -72,7 +72,7 @@ class Article
         ];
     }
 
-    public function buildPublicDataArray(): array
+    public function asPublicArray(): array
     {
         return [
             'id' => $this->id,

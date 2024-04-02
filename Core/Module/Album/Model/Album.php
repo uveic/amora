@@ -77,7 +77,7 @@ class Album
         return StringUtil::getFirstParagraphAsPlainText($this->contentHtml);
     }
 
-    public function buildPublicDataArray(): array
+    public function asPublicArray(): array
     {
         return [
             'id' => $this->id,

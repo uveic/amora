@@ -3,7 +3,6 @@
 namespace Amora\Core\Util;
 
 use Amora\Core\Core;
-use DateTimeImmutable;
 use DateTimeZone;
 use Throwable;
 
@@ -175,7 +174,13 @@ final class Logger
             }
 
             $outPath = '/tmp/' . $this->appName . '_' . date('Ymd') . '.log';
+            $fileExists = file_exists($outPath);
+
             $f = fopen($outPath, 'a');
+
+            if (!$fileExists) {
+                chmod($outPath, 0666);
+            }
 
             if (empty($f)) {
                 error_log("Failed to open log file: $outPath");
@@ -191,7 +196,7 @@ final class Logger
 
     private function getPrefix(): string
     {
-        $now = new DateTimeImmutable(timezone: new DateTimeZone('UTC'));
+        $now = DateUtil::convertStringToDateTimeImmutable(date: 'now', timezone: new DateTimeZone('UTC'));
         return '[' . $now->format('D M d H:i:s Y') . ']'
             . ($this->identifier ? '[' . $this->identifier . ']' : '')
             . ' == ';
