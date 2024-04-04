@@ -232,6 +232,7 @@ readonly class AlbumService
                     slug: $this->getOrStoreAvailableSlugForAlbum(
                         title: $titleHtml,
                         existingSlug: $existingAlbum->slug,
+                        albumId: $existingAlbum->id,
                     ),
                     createdAt: $existingAlbum->createdAt,
                     updatedAt: $now,
@@ -272,7 +273,7 @@ readonly class AlbumService
     public function getOrStoreAvailableSlugForAlbum(
         ?string $title = null,
         ?AlbumSlug $existingSlug = null,
-        ?int $eventId = null,
+        ?int $albumId = null,
     ): AlbumSlug {
         $slug = StringUtil::generateSlug($title);
 
@@ -280,6 +281,10 @@ readonly class AlbumService
         do {
             $validSlug = $slug . ($count > 0 ? '-' . $count : '');
             $existingAlbum = $this->getAlbumForSlug($validSlug);
+            if ($existingSlug && $albumId && $existingAlbum->slug->albumId === $albumId) {
+                return $existingAlbum->slug;
+            }
+
             if ($existingSlug && $existingAlbum && $existingAlbum->id === $existingSlug->albumId) {
                 return $existingSlug;
             }
@@ -289,7 +294,7 @@ readonly class AlbumService
         return $this->albumDataLayer->storeAlbumSlug(
             new AlbumSlug(
                 id: null,
-                albumId: $eventId,
+                albumId: $albumId,
                 slug: $validSlug,
                 createdAt: new DateTimeImmutable(),
             ),
