@@ -31,22 +31,19 @@ class MailerApp extends App
         );
     }
 
-    public function run() {
+    public function run(): void {
         $this->execute(function () {
-            $this->logger->logInfo($this->getLogPrefix() . 'Releasing locks...');
+            $this->log('Releasing locks...');
             $this->dataLayer->releaseMailerQueueLocksIfNeeded();
-            $this->logger->logInfo($this->getLogPrefix() . 'Generating unique lock ID...');
+            $this->log('Generating unique lock ID...');
             $lockId = $this->dataLayer->getUniqueLockId();
-            $this->logger->logInfo($this->getLogPrefix() . 'Locking mails in queue...');
+            $this->log('Locking mails in queue...');
             $res = $this->dataLayer->lockMailsInQueue($lockId);
             if (empty($res)) {
-                $this->logger->logError(
-                    $this->getLogPrefix()
-                    . 'Error locking mails in queue. Aborting...'
-                );
+                $this->log('Error locking mails in queue. Aborting...', true);
                 return;
             }
-            $this->logger->logInfo($this->getLogPrefix() . 'Getting mails to process...');
+            $this->log('Getting mails to process...');
             $mails = $this->dataLayer->getMailsFromQueue($lockId);
 
             /** @var MailerItem $mail */
@@ -58,9 +55,7 @@ class MailerApp extends App
 
     public function processMailItem(MailerItem $item): bool
     {
-        $this->logger->logInfo(
-            $this->getLogPrefix() . 'Building request for email ID: ' . $item->id
-        );
+        $this->log('Building request for email ID: ' . $item->id);
 
         $emailReceivers = [new Email($item->receiverEmailAddress, $item->receiverName)];
         $contentData = $this->requestBuilder->buildMailRequest(
@@ -71,12 +66,10 @@ class MailerApp extends App
         );
         $this->logger->logDebug($contentData);
 
-        $this->logger->logInfo(
-            $this->getLogPrefix() . 'Logging API request for email ID: ' . $item->id
-        );
+        $this->log('Logging API request for email ID: ' . $item->id);
         $newLogItemId = $this->logApiRequest($item->id, $contentData);
 
-        $this->logger->logInfo($this->getLogPrefix() . 'Sending email ID: ' . $item->id);
+        $this->log('Sending email ID: ' . $item->id);
         $apiResponse = Core::isRunningInLiveEnv()
             ? $this->apiClient->post(
                 $this->getLogPrefix(),
@@ -89,22 +82,16 @@ class MailerApp extends App
                 hasError: false,
             );
 
-        $this->logger->logInfo(
-            $this->getLogPrefix() . 'Logging API response for email ID: ' . $item->id
-        );
+        $this->log('Logging API response for email ID: ' . $item->id);
         $this->logApiResponse($newLogItemId, $apiResponse);
 
-        $this->logger->logInfo(
-            $this->getLogPrefix() . 'Marking email as processed ID: ' . $item->id
-        );
+        $this->log('Marking email as processed ID: ' . $item->id);
         $res = $this->dataLayer->markMailAsProcessed($item, $apiResponse->hasError);
 
         if ($res) {
-            $this->logger->logInfo($this->getLogPrefix() . 'Email sent ID: ' . $item->id);
+            $this->log('Email sent ID: ' . $item->id);
         } else {
-            $this->logger->logError(
-                $this->getLogPrefix() . 'Error sending email ID: ' . $item->id
-            );
+            $this->log('Error sending email ID: ' . $item->id, true);
         }
 
         return $res;
@@ -139,11 +126,7 @@ class MailerApp extends App
                 sent: !$res->hasError,
             );
         } catch (Throwable $t) {
-            $this->logger->logError(
-                $this->getLogPrefix() .
-                'Error updating API request - ID: ' . $newLogItemId .
-                ' - Error: ' . $t->getMessage()
-            );
+            $this->log('Error updating API request - ID: ' . $newLogItemId . ' - Error: ' . $t->getMessage(), true);
         }
     }
 }

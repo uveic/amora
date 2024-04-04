@@ -4,7 +4,6 @@ namespace Amora\Core\Module\Analytics\Service;
 
 use Amora\App\Module\Analytics\Entity\ReportViewCount;
 use Amora\Core\Module\Analytics\Entity\PageView;
-use Amora\Core\Module\Analytics\Model\EventProcessed;
 use Amora\Core\Module\Analytics\Value\CountDbColumn;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\Analytics\Value\Period;
@@ -170,53 +169,5 @@ readonly class AnalyticsService
             countryIsoCode: $report->countryIsoCode,
             languageIsoCode: $report->languageIsoCode,
         );
-    }
-
-    public function storeEventProcessed(EventProcessed $event): ?EventProcessed
-    {
-        return $this->analyticsDataLayer->storeEventProcessed($event);
-    }
-
-    public function markEventAsProcessed(int $rawId): bool
-    {
-        return $this->analyticsDataLayer->markEventAsProcessed($rawId);
-    }
-
-    public function getEntriesFromQueue(): array
-    {
-        $this->logger->logInfo('Releasing locks...');
-        $this->analyticsDataLayer->releaseQueueLocksIfNeeded();
-
-        $this->logger->logInfo('Checking for locked entries...');
-        $lockedEntries = $this->analyticsDataLayer->getNumberOfLockedEntries();
-        if ($lockedEntries) {
-            $this->logger->logInfo('There are (' . $lockedEntries . ') entries(s) locked. Aborting...'
-            );
-
-            return [];
-        }
-
-        $this->logger->logInfo('Generating unique lock ID...');
-        $lockId = $this->analyticsDataLayer->getUniqueLockId();
-
-        $this->logger->logInfo('Locking entries...');
-        $res = $this->analyticsDataLayer->lockQueueEntries(lockId: $lockId, qty: 5000);
-        if (empty($res)) {
-            $this->logger->logError('Error locking entries. Aborting...');
-            return [];
-        }
-
-        $this->logger->logInfo('Getting entries to process...');
-        return $this->analyticsDataLayer->getEntriesFromQueue($lockId);
-    }
-
-    public function loadBotPaths(): array
-    {
-        return $this->analyticsDataLayer->loadBotPaths();
-    }
-
-    public function loadBotUserAgents(): array
-    {
-        return $this->analyticsDataLayer->loadBotUserAgents();
     }
 }

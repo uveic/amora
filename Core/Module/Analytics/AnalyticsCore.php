@@ -79,7 +79,7 @@ class AnalyticsCore extends Core
                 $siteUrl = parse_url(self::getConfig()->baseUrl, PHP_URL_HOST);
                 return new AnalyticsProcessorApp(
                     logger: self::getAnalyticsLogger(),
-                    analyticsService: self::getAnalyticsService(),
+                    analyticsDataLayer: self::getAnalyticsDataLayer(),
                     siteUrl: $siteUrl,
                 );
             },

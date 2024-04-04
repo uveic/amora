@@ -7,9 +7,9 @@ use Amora\App\Value\Language;
 use Amora\Core\App\App;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\UserAgentInfo;
+use Amora\Core\Module\Analytics\Datalayer\AnalyticsDataLayer;
 use Amora\Core\Module\Analytics\Model\EventProcessed;
 use Amora\Core\Module\Analytics\Model\EventRaw;
-use Amora\Core\Module\Analytics\Service\AnalyticsService;
 use Amora\Core\Module\Analytics\AnalyticsCore;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Util\Logger;
@@ -25,7 +25,7 @@ class AnalyticsProcessorApp extends App
 
     public function __construct(
         Logger $logger,
-        private readonly AnalyticsService $analyticsService,
+        private readonly AnalyticsDataLayer $analyticsDataLayer,
         private readonly string $siteUrl,
     ) {
         parent::__construct(
@@ -42,7 +42,7 @@ class AnalyticsProcessorApp extends App
             $timeBefore = microtime(true);
 
             $this->loadBotsMapping();
-            $entries = $this->analyticsService->getEntriesFromQueue();
+            $entries = $this->getEntriesFromQueue();
 
             /** @var EventRaw $entry */
             foreach ($entries as $entry) {
@@ -87,7 +87,7 @@ class AnalyticsProcessorApp extends App
         $referrer = $this->getReferrer($eventRaw);
         $userHash = $this->getUserHash($eventRaw);
 
-        $res = $this->analyticsService->storeEventProcessed(
+        $res = $this->analyticsDataLayer->storeEventProcessed(
             event: new EventProcessed(
                 id: null,
                 rawId: $eventRaw->id,
@@ -105,13 +105,13 @@ class AnalyticsProcessorApp extends App
         );
 
         if (!$res) {
-            $this->logger->logInfo('Error processing event ID: ' . $eventRaw->id . '. Aborting...');
+            $this->log('Error processing event ID: ' . $eventRaw->id . '. Aborting...');
             return false;
         }
 
-        $this->analyticsService->markEventAsProcessed($eventRaw->id);
+        $this->analyticsDataLayer->markEventAsProcessed($eventRaw->id);
 
-        $this->logger->logInfo('Event ID (' . $eventRaw->id . ') successfully processed...');
+        $this->log('Event ID (' . $eventRaw->id . ') successfully processed...');
 
         return true;
     }
@@ -287,12 +287,38 @@ class AnalyticsProcessorApp extends App
     {
         if (empty($this->botPath)) {
             $this->log('Loading bot paths...');
-            $this->botPath = $this->analyticsService->loadBotPaths();
+            $this->botPath = $this->analyticsDataLayer->loadBotPaths();
         }
 
         if (empty($this->botUserAgent)) {
             $this->log('Loading bot user agents...');
-            $this->botUserAgent = $this->analyticsService->loadBotUserAgents();
+            $this->botUserAgent = $this->analyticsDataLayer->loadBotUserAgents();
         }
+    }
+
+    private function getEntriesFromQueue(): array
+    {
+        $this->log('Releasing locks...');
+        $this->analyticsDataLayer->releaseQueueLocksIfNeeded();
+
+        $this->log('Checking for locked entries...');
+        $lockedEntries = $this->analyticsDataLayer->getNumberOfLockedEntries();
+        if ($lockedEntries) {
+            $this->log('There are (' . $lockedEntries . ') entries(s) locked. Aborting...'
+            );
+
+            return [];
+        }
+
+        $lockId = $this->analyticsDataLayer->getUniqueLockId();
+
+        $res = $this->analyticsDataLayer->lockQueueEntries(lockId: $lockId, qty: 5000);
+        if (empty($res)) {
+            $this->logger->logError('Error locking entries. Aborting...');
+            return [];
+        }
+
+        $this->log('Getting entries to process...');
+        return $this->analyticsDataLayer->getEntriesFromQueue($lockId);
     }
 }
