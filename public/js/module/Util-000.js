@@ -187,6 +187,7 @@ class UtilClass {
 
       const resultItem = document.createElement('a');
       resultItem.className = 'search-result-item';
+      resultItem.dataset.itemId = results[i].id;
       resultItem.href = results[i].url;
 
       const resultContent = document.createElement('div');
@@ -220,6 +221,10 @@ class UtilClass {
       containerEl.appendChild(resultItem);
 
       previousHeaderTitle = results[i].headerTitle;
+    }
+
+    if (window.innerWidth <= 800) {
+      document.activeElement.blur();
     }
   }
 
