@@ -34,7 +34,6 @@ readonly class MediaService
         private string $mediaBaseDir,
     ) {}
 
-    // Do not delete. Used in other projects.
     public function storeMedia(Media $item): Media
     {
         return $this->mediaDataLayer->storeMedia($item);
@@ -149,6 +148,7 @@ readonly class MediaService
         ?int $mediaId = null,
         ?int $fromId = null,
         ?int $userId = null,
+        bool $includeExifData = false,
     ): array {
         $files = QueryOrderDirection::RAND === $direction
             ? $this->filterMediaBy(
@@ -205,7 +205,7 @@ readonly class MediaService
 
                 $fileOutput['appearsOn'] = $appearsOn;
 
-                if ($file->type === MediaType::Image) {
+                if ($includeExifData && $file->type === MediaType::Image) {
                     $exif = $this->imageService->getExifData($file->getDirWithNameOriginal());
 
                     if ($exif) {

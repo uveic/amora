@@ -58,6 +58,10 @@ readonly class ImageService
 
     public function getExifData(string $filePathWithName): ?ImageExif
     {
+        if (!file_exists($filePathWithName)) {
+            return null;
+        }
+
         $phpNativeImageType = exif_imagetype($filePathWithName);
         if ($phpNativeImageType !== IMAGETYPE_JPEG && $phpNativeImageType !== IMAGETYPE_WEBP) {
             return null;
