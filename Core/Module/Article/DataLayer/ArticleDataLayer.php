@@ -8,6 +8,7 @@ use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\StringUtil;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Database\MySqlDb;
@@ -53,7 +54,7 @@ class ArticleDataLayer
         return $this->db;
     }
 
-    public function filterArticlesBy(
+    public function filterArticleBy(
         array $articleIds = [],
         array $languageIsoCodes = [],
         array $statusIds = [],
@@ -62,6 +63,7 @@ class ArticleDataLayer
         ?string $previousPath = null,
         array $tagIds = [],
         array $imageIds = [],
+        ?string $searchQuery = null,
         bool $includeTags = false,
         bool $includePublishedAtInTheFuture = false,
         ?DateTimeImmutable $publishedBefore = null,
@@ -75,6 +77,9 @@ class ArticleDataLayer
         $orderByMapping = [
             'updated_at' => 'a.updated_at',
             'published_at' => 'a.published_at',
+            'begins_with' => 'begins_with',
+            'word_begins_with' => 'word_begins_with',
+            'title_contains' => 'title_contains',
         ];
 
         $params = [];
@@ -173,6 +178,15 @@ class ArticleDataLayer
                 . ' AS aSecI ON aSecI.article_section_id = aSec.id';
 
             $where .= $this->generateWhereSqlCodeForIds($params, $imageIds, 'aSecI.media_id', 'imageId');
+        }
+
+        if ($searchQuery) {
+            $searchQuery = StringUtil::cleanSearchQuery($searchQuery);
+
+            $where .= " AND (MATCH(a.title) AGAINST('$searchQuery') OR a.title LIKE '%$searchQuery%')";
+            $fields[] = "IF (a.title LIKE '%$searchQuery%', 1, 0) AS title_contains";
+            $fields[] = "IF (a.title LIKE '$searchQuery%', 1, 0) AS begins_with";
+            $fields[] = "IF (a.title LIKE '% $searchQuery%', 1, 0) AS word_begins_with";
         }
 
         if (!$includePublishedAtInTheFuture) {

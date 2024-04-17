@@ -221,7 +221,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             : null;
 
         $pagination = new Response\Pagination(itemsPerPage: 25);
-        $articles = $this->articleService->filterArticlesBy(
+        $articles = $this->articleService->filterArticleBy(
             languageIsoCodes: $articleLanguage ? [$articleLanguage->value] : [],
             statusIds: $articleStatus ? [$articleStatus->value] : [],
             typeIds: $articleType ? [$articleType->value] : [],

@@ -3,7 +3,6 @@
 namespace Amora\App\Router;
 
 use Amora\Core\Core;
-use Amora\Core\Module\Album\AlbumCore;
 use Amora\Core\Module\Article\ArticleCore;
 
 class AppRouterCore extends Core
@@ -83,9 +82,7 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicApiController.php';
-                return new AppPublicApiController(
-                    albumService: AlbumCore::getAlbumService(),
-                );
+                return new AppPublicApiController();
             },
         );
     }

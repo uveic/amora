@@ -14,6 +14,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 {
     public function __construct()
     {
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetSessionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreUserSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreUserFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreUserUnauthorisedResponse.php';
@@ -50,6 +51,15 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     }
 
     abstract protected function authenticate(Request $request): bool;
+
+    /**
+     * Endpoint: /back/session
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getSession(Request $request): Response;
 
     /**
      * Endpoint: /back/user
@@ -429,6 +439,34 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         int $albumSectionMediaId,
         Request $request
     ): Response;
+
+    private function validateAndCallGetSession(Request $request): Response
+    {
+        $errors = [];
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getSession(
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: getSession()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
 
     private function validateAndCallStoreUser(Request $request): Response
     {
@@ -1838,6 +1876,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         $pathParts = $request->pathWithoutLanguage;
         $method = $request->method;
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['back', 'session'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetSession($request);
+        }
 
         if ($method === 'POST' &&
             $this->pathParamsMatcher(

@@ -18,6 +18,7 @@ use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDeleteAlbumSectionMediaSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetSessionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse;
@@ -83,6 +84,32 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         return true;
+    }
+
+    /**
+     * Endpoint: /back/session
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getSession(Request $request): Response
+    {
+        $user = $request->session?->user;
+
+        $userArray = [];
+        if ($user) {
+            $userArray = $user->asArray();
+            $userArray['language_name'] = $user->language->name;
+            $userArray['role_name'] = $user->role->name;
+            $userArray['journey_status_name'] = $user->journeyStatus->name;
+            unset($userArray['password_hash']);
+        }
+
+        return new BackofficeApiControllerGetSessionSuccessResponse(
+            user: $userArray,
+            session: $request->session?->asArray(),
+        );
     }
 
     /**

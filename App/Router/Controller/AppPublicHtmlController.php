@@ -36,7 +36,7 @@ final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
             ? [ArticleStatus::Published->value, ArticleStatus::Unlisted->value, ArticleStatus::Private->value]
             : [ArticleStatus::Published->value];
         $pagination = new Response\Pagination(itemsPerPage: 15);
-        $blogArticles = $this->articleService->filterArticlesBy(
+        $blogArticles = $this->articleService->filterArticleBy(
             statusIds: $statusIds,
             typeIds: [ArticleType::Blog->value],
             queryOptions: new QueryOptions(

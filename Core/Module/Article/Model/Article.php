@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Article\Model;
 
 use Amora\Core\Core;
+use Amora\Core\Entity\Response\SearchResult;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
@@ -86,6 +87,31 @@ class Article
                 : $this->updatedAt->format('c'),
             'tags' => $this->tags,
         ];
+    }
+
+    public function asSearchResult(Language $language, bool $isPublicUrl = true): SearchResult
+    {
+        $subtitle = DateUtil::formatDate(
+            date: $this->publishOn,
+            lang: $language,
+        );
+
+        return new SearchResult(
+            id: $this->id,
+            title: $this->title,
+            url: $isPublicUrl ?
+                UrlBuilderUtil::buildPublicArticlePath(
+                    path: $this->path,
+                    language: $language,
+                ) :
+                UrlBuilderUtil::buildBackofficeArticleUrl(
+                    language: $language,
+                    articleId: $this->id,
+                ),
+            subtitle: $subtitle,
+            contentHtml: null,
+            media: $this->mainImage,
+        );
     }
 
     public function getContentExcerpt(): string

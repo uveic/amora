@@ -41,7 +41,7 @@ readonly class ArticleService
         bool $includeTags = false,
         ?Language $language = null,
     ): ?Article {
-        $res = $this->filterArticlesBy(
+        $res = $this->filterArticleBy(
             articleIds: [$id],
             languageIsoCodes: $language ? [$language->value] : [],
             includeTags: $includeTags,
@@ -72,7 +72,7 @@ readonly class ArticleService
 
     public function getArticleForPath(string $path, bool $includePublishedAtInTheFuture = true): ?Article
     {
-        $res = $this->filterArticlesBy(
+        $res = $this->filterArticleBy(
             typeIds: [ArticleType::Blog->value, ArticleType::Page->value],
             path: $path,
             includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
@@ -82,7 +82,7 @@ readonly class ArticleService
             return $res[0];
         }
 
-        $res = $this->filterArticlesBy(
+        $res = $this->filterArticleBy(
             typeIds: [ArticleType::Blog->value, ArticleType::Page->value],
             previousPath: $path,
             includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
@@ -99,7 +99,7 @@ readonly class ArticleService
             ? [ArticleStatus::Private->value, ArticleStatus::Published->value]
             : [ArticleStatus::Published->value];
 
-        $res = $this->filterArticlesBy(
+        $res = $this->filterArticleBy(
             statusIds: $statusIds,
             typeIds: [ArticleType::Blog->value],
             publishedBefore: $publishedBefore,
@@ -118,7 +118,7 @@ readonly class ArticleService
             ? [ArticleStatus::Private->value, ArticleStatus::Unlisted->value, ArticleStatus::Published->value]
             : [ArticleStatus::Published->value];
 
-        $res = $this->filterArticlesBy(
+        $res = $this->filterArticleBy(
             statusIds: $statusIds,
             typeIds: [ArticleType::Blog->value],
             publishedAfter: $publishedAfter,
@@ -131,7 +131,7 @@ readonly class ArticleService
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function filterArticlesBy(
+    public function filterArticleBy(
         array $articleIds = [],
         array $languageIsoCodes = [],
         array $statusIds = [],
@@ -140,13 +140,14 @@ readonly class ArticleService
         ?string $previousPath = null,
         array $tagIds = [],
         array $imageIds = [],
+        ?string $searchQuery = null,
         bool $includeTags = false,
         bool $includePublishedAtInTheFuture = false,
         ?DateTimeImmutable $publishedBefore = null,
         ?DateTimeImmutable $publishedAfter = null,
         ?QueryOptions $queryOptions = null,
     ): array {
-        return $this->articleDataLayer->filterArticlesBy(
+        return $this->articleDataLayer->filterArticleBy(
             articleIds: $articleIds,
             languageIsoCodes: $languageIsoCodes,
             statusIds: $statusIds,
@@ -155,6 +156,7 @@ readonly class ArticleService
             previousPath: $previousPath,
             tagIds: $tagIds,
             imageIds: $imageIds,
+            searchQuery: $searchQuery,
             includeTags: $includeTags,
             includePublishedAtInTheFuture: $includePublishedAtInTheFuture,
             publishedBefore: $publishedBefore,
@@ -624,7 +626,7 @@ readonly class ArticleService
         ?Language $languageIsoCode = null,
         ?int $maxItems = null,
     ): array {
-        $articles = $this->filterArticlesBy(
+        $articles = $this->filterArticleBy(
             languageIsoCodes: $languageIsoCode ? [$languageIsoCode->value] : [],
             statusIds: [ArticleStatus::Published->value],
             typeIds: $articleType ? [$articleType->value] : [],

@@ -152,51 +152,6 @@
         }
       }
     },
-    "/papi/session": {
-      "get": {
-        "tags": [],
-        "summary": "Get session data",
-        "description": "",
-        "operationId": "getSession",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "user": {
-                  "type": "object",
-                  "description": "",
-                  "properties": {
-                    "userId": {
-                      "type": "integer",
-                      "description": "User ID"
-                    }
-                  },
-                  "required": [
-                    "userId"
-                  ]
-                },
-                "session": {
-                  "type": "object",
-                  "description": "",
-                  "properties": {
-                    "sessionId": {
-                      "type": "integer",
-                      "description": "User ID"
-                    }
-                  },
-                  "required": [
-                    "sessionId"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/papi/login": {
       "post": {
         "tags": [],
@@ -899,6 +854,87 @@
                 "success",
                 "blogPosts",
                 "pagination"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/papi/search": {
+      "get": {
+        "tags": [],
+        "operationId": "getSearchResults",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "isPublic",
+            "in": "query",
+            "description": "Is a public page?",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "searchTypeId",
+            "in": "query",
+            "description": "Search type ID",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "headerTitle": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "subtitle": {
+                        "type": "string"
+                      },
+                      "contentHtml": {
+                        "type": "string"
+                      },
+                      "media": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "url"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "results"
               ]
             }
           }

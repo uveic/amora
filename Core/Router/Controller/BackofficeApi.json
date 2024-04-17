@@ -22,6 +22,51 @@
     "application/json"
   ],
   "paths": {
+    "/back/session": {
+      "get": {
+        "tags": [],
+        "summary": "Get session data",
+        "description": "",
+        "operationId": "getSession",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "description": "",
+                  "properties": {
+                    "userId": {
+                      "type": "integer",
+                      "description": "User ID"
+                    }
+                  },
+                  "required": [
+                    "userId"
+                  ]
+                },
+                "session": {
+                  "type": "object",
+                  "description": "",
+                  "properties": {
+                    "sessionId": {
+                      "type": "integer",
+                      "description": "User ID"
+                    }
+                  },
+                  "required": [
+                    "sessionId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/back/user": {
       "post": {
         "tags": [],
