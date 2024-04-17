@@ -11,8 +11,8 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
 <?=$this->insert('../../../app/frontend/public/partials/head', ['responseData' => $responseData])?>
-  <link href="/css/shared-base-201.css" rel="stylesheet" type="text/css">
-  <link href="/css/app/style-102.css" rel="stylesheet" type="text/css">
+  <link href="/css/shared-base-000.css" rel="stylesheet" type="text/css">
+  <link href="/css/app/style-000.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <main class="main-split-screen">
@@ -48,6 +48,6 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
     </form>
   </div>
 </main>
-<script type="module" src="/js/login-003.js"></script>
+<script type="module" src="/js/login-000.js"></script>
 </body>
 </html>

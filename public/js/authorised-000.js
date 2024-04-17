@@ -1,5 +1,5 @@
-import {Request} from './module/Request-002.js';
-import {Global} from './module/localisation-004.js';
+import {Request} from './module/Request-000.js';
+import {Global} from './module/localisation-000.js';
 
 document.querySelectorAll('a.verified-link').forEach(el => {
   el.addEventListener('click', e => {
