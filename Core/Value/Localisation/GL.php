@@ -24,7 +24,7 @@ return [
     'navAdminArticles' => 'Páxinas',
     'navAdminBlogPosts' => 'Entradas blog',
     'navAdminArticleOptions' => 'Configuración',
-    'navAdminPageContentEdit' => 'Textos',
+    'navAdminPageContentEdit' => 'Contido',
 
     'editorTitlePlaceholder' => 'Título...',
     'editorSubtitlePlaceholder' => 'Subtítulo...',
@@ -89,7 +89,7 @@ return [
     'formArticlePreviousPaths' => 'Enderezos anteriores',
     'formTimezone' => 'Zona horaria',
 
-    'dashboardGoTo' => 'Ir a...',
+    'dashboardGoTo' => 'Contido',
     'dashboardHomepage' => 'Portada',
     'dashboardShortcuts' => 'Accesos directos',
     'dashboardNewBlogPost' => 'Crear entrada no blog',

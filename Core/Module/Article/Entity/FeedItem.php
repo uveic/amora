@@ -10,6 +10,7 @@ use DateTimeImmutable;
 readonly class FeedItem
 {
     public function __construct(
+        public string $uniqueIdentifier,
         public string $fullPath,
         public string $title,
         public string $contentHtml,

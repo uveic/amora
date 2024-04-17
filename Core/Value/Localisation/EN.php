@@ -89,7 +89,7 @@ return [
     'formArticlePreviousPaths' => 'Previous paths',
     'formTimezone' => 'Timezone',
 
-    'dashboardGoTo' => 'Go to...',
+    'dashboardGoTo' => 'Content',
     'dashboardHomepage' => 'Homepage',
     'dashboardShortcuts' => 'Shortcuts',
     'dashboardNewBlogPost' => 'Create new blog post',

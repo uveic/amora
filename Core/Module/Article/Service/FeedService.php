@@ -125,14 +125,13 @@ readonly class FeedService
 
         /** @var FeedItem $feedItem */
         foreach ($feedItems as $feedItem) {
-            $link = $feedItem->fullPath;
             $title = $feedItem->title ? htmlspecialchars($feedItem->title) : '';
             $content = $this->getContent($feedItem);
 
             $output[] = '<item>';
             $output[] = '<title>' . $title . '</title>';
-            $output[] = '<link>' . $link . '</link>';
-            $output[] = '<guid>' . $link . '</guid>';
+            $output[] = '<link>' . $feedItem->fullPath . '</link>';
+            $output[] = '<guid>' . $feedItem->uniqueIdentifier . '</guid>';
             if ($feedItem->user) {
                 $output[] = '<author>' . $feedItem->user->email . ' (' . $feedItem->user->name . ')</author>';
             }

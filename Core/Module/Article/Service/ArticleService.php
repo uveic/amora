@@ -641,6 +641,7 @@ readonly class ArticleService
         /** @var Article $article */
         foreach ($articles as $article) {
             $feedItems[] = new FeedItem(
+                uniqueIdentifier: md5($article->id . $article->createdAt->getTimestamp()),
                 fullPath: UrlBuilderUtil::buildPublicArticlePath($article->path),
                 title: $article->title ?: '',
                 contentHtml: $article->contentHtml,
