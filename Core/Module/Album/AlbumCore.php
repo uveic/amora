@@ -48,6 +48,8 @@ class AlbumCore extends Core
         return self::getInstance(
             className: 'AlbumService',
             factory: function () {
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Value/AlbumStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Value/Template.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/AlbumSectionMedia.php';

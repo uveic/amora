@@ -158,6 +158,7 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'PublicApiController',
             factory: function () {
+                require_once self::getPathRoot() . '/Core/Entity/Response/SearchResult.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/PublicApiControllerAbstract.php';
@@ -168,6 +169,7 @@ class RouterCore extends Core
                     sessionService: UserCore::getSessionService(),
                     mailService: UserCore::getUserMailService(),
                     articleService: ArticleCore::getArticleService(),
+                    albumService: AlbumCore::getAlbumService(),
                 );
             },
         );

@@ -114,6 +114,7 @@ readonly class AlbumService
         array $albumSectionIds = [],
         array $albumIds = [],
         array $mediaIds = [],
+        ?string $searchQuery = null,
         bool $includeMedia = false,
         ?QueryOptions $queryOptions = null,
     ): array {
@@ -121,6 +122,7 @@ readonly class AlbumService
             albumSectionIds: $albumSectionIds,
             albumIds: $albumIds,
             mediaIds: $mediaIds,
+            searchQuery: $searchQuery,
             includeMedia: $includeMedia,
             queryOptions: $queryOptions,
         );

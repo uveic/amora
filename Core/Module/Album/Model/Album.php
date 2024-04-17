@@ -92,7 +92,7 @@ class Album
         ];
     }
 
-    public function asSearchResult(Language $language, bool $publicUrl = true): SearchResult
+    public function asSearchResult(Language $language, bool $isPublicUrl = true): SearchResult
     {
         $subtitle = DateUtil::formatDate(
             date: $this->createdAt,
@@ -102,7 +102,7 @@ class Album
         return new SearchResult(
             id: $this->id,
             title: strip_tags($this->titleHtml),
-            url: $publicUrl ?
+            url: $isPublicUrl ?
                 UrlBuilderUtil::buildPublicAlbumUrl(
                     slug: $this->slug->slug,
                     language: $language,

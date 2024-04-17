@@ -60,7 +60,6 @@ class AlbumDataLayer
 
         $orderByMapping = [
             'updated_at' => 'a.updated_at',
-            'published_at' => 'a.published_at',
             'begins_with' => 'begins_with',
             'word_begins_with' => 'word_begins_with',
             'title_contains' => 'title_contains',
@@ -205,6 +204,7 @@ class AlbumDataLayer
         array $albumSectionIds = [],
         array $albumIds = [],
         array $mediaIds = [],
+        ?string $searchQuery = null,
         bool $includeMedia = false,
         ?QueryOptions $queryOptions = null,
     ): array {
@@ -215,6 +215,9 @@ class AlbumDataLayer
         $orderByMapping = [
             'order' => '`as`.sequence',
             'id' => '`as`.id',
+            'begins_with' => 'begins_with',
+            'word_begins_with' => 'word_begins_with',
+            'title_contains' => 'title_contains',
         ];
 
         $params = [];
@@ -264,6 +267,15 @@ class AlbumDataLayer
 
         if ($mediaIds) {
             $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, '`as`.main_media_id', 'mainMediaId');
+        }
+
+        if ($searchQuery) {
+            $searchQuery = StringUtil::cleanSearchQuery($searchQuery);
+
+            $where .= " AND (MATCH(`as`.title_html) AGAINST('$searchQuery') OR `as`.title_html LIKE '%$searchQuery%')";
+            $fields[] = "IF (`as`.title_html LIKE '%$searchQuery%', 1, 0) AS title_contains";
+            $fields[] = "IF (`as`.title_html LIKE '$searchQuery%', 1, 0) AS begins_with";
+            $fields[] = "IF (`as`.title_html LIKE '% $searchQuery%', 1, 0) AS word_begins_with";
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);

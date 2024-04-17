@@ -183,7 +183,7 @@ readonly class MediaService
                     ? [ArticleStatus::Published->value, ArticleStatus::Unlisted->value, ArticleStatus::Private->value]
                     : [ArticleStatus::Published->value];
 
-                $articles = $this->articleService->filterArticlesBy(
+                $articles = $this->articleService->filterArticleBy(
                     statusIds: $statusIds,
                     imageIds: [$file->id],
                 );

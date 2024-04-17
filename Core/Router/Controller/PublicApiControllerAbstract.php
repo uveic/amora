@@ -18,7 +18,6 @@ abstract class PublicApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerLogErrorSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerLogCspErrorsSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerTriggerEmailSenderJobSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerGetSessionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserLoginSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserLoginFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerForgotPasswordSuccessResponse.php';
@@ -32,6 +31,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerRequestRegistrationInviteSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerRequestRegistrationInviteFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerGetBlogPostsSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerGetSearchResultsSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -85,15 +85,6 @@ abstract class PublicApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function triggerEmailSenderJob(Request $request): Response;
-
-    /**
-     * Endpoint: /papi/session
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function getSession(Request $request): Response;
 
     /**
      * Endpoint: /papi/login
@@ -214,6 +205,23 @@ abstract class PublicApiControllerAbstract extends AbstractController
     abstract protected function getBlogPosts(
         int $offset,
         ?int $itemsPerPage,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /papi/search
+     * Method: GET
+     *
+     * @param string $q
+     * @param string|null $isPublic
+     * @param int|null $searchTypeId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getSearchResults(
+        string $q,
+        ?string $isPublic,
+        ?int $searchTypeId,
         Request $request
     ): Response;
 
@@ -343,34 +351,6 @@ abstract class PublicApiControllerAbstract extends AbstractController
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in PublicApiControllerAbstract - Method: triggerEmailSenderJob()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
-
-    private function validateAndCallGetSession(Request $request): Response
-    {
-        $errors = [];
-
-        if ($errors) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->getSession(
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in PublicApiControllerAbstract - Method: getSession()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -886,6 +866,56 @@ abstract class PublicApiControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallGetSearchResults(Request $request): Response
+    {
+        $queryParams = $request->getParams;
+        $errors = [];
+
+        $q = null;
+        if (!isset($queryParams['q'])) {
+            $errors[] = [
+                'field' => 'q',
+                'message' => 'required'
+            ];
+        } else {
+            $q = $queryParams['q'] ?? null;
+        }
+
+
+        $isPublic = $queryParams['isPublic'] ?? null;
+
+        if (isset($queryParams['searchTypeId']) && strlen($queryParams['searchTypeId']) > 0) {
+            $searchTypeId = intval($queryParams['searchTypeId']);
+        } else {
+            $searchTypeId = null;
+        }
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getSearchResults(
+                $q,
+                $isPublic,
+                $searchTypeId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicApiControllerAbstract - Method: getSearchResults()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): ?Response
     {
@@ -935,16 +965,6 @@ abstract class PublicApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallTriggerEmailSenderJob($request);
-        }
-
-        if ($method === 'GET' &&
-            $this->pathParamsMatcher(
-                ['papi', 'session'],
-                $pathParts,
-                ['fixed', 'fixed']
-            )
-        ) {
-            return $this->validateAndCallGetSession($request);
         }
 
         if ($method === 'POST' &&
@@ -1015,6 +1035,16 @@ abstract class PublicApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetBlogPosts($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['papi', 'search'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetSearchResults($request);
         }
 
         return null;

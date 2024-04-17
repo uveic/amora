@@ -5,6 +5,10 @@ namespace Amora\Core\Router;
 use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
+use Amora\Core\Module\Album\Model\Album;
+use Amora\Core\Module\Album\Model\AlbumSection;
+use Amora\Core\Module\Album\Service\AlbumService;
+use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
@@ -14,6 +18,7 @@ use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\PublicApiControllerGetBlogPostsSuccessResponse;
+use Amora\Core\Router\Controller\Response\PublicApiControllerGetSearchResultsSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerLogCspErrorsSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerTriggerEmailSenderJobSuccessResponse;
 use Amora\Core\Util\DateUtil;
@@ -39,7 +44,6 @@ use Amora\Core\Router\Controller\Response\PublicApiControllerUserRegistrationSuc
 use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordCreationFailureResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordCreationSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerForgotPasswordSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerGetSessionSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerLogErrorSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerPingSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerRequestRegistrationInviteFailureResponse;
@@ -54,6 +58,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         private readonly SessionService $sessionService,
         private readonly UserMailService $mailService,
         private readonly ArticleService $articleService,
+        private readonly AlbumService $albumService,
     ) {
         parent::__construct();
     }
@@ -143,32 +148,6 @@ final class PublicApiController extends PublicApiControllerAbstract
         MailerCore::getMailerApp(isPersistent: false)->run();
 
         return new PublicApiControllerTriggerEmailSenderJobSuccessResponse();
-    }
-
-    /**
-     * Endpoint: /papi/session
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     */
-    protected function getSession(Request $request): Response
-    {
-        $user = $request->session?->user;
-
-        $userArray = [];
-        if ($user) {
-            $userArray = $user->asArray();
-            $userArray['language_name'] = $user->language->name;
-            $userArray['role_name'] = $user->role->name;
-            $userArray['journey_status_name'] = $user->journeyStatus->name;
-            unset($userArray['password_hash']);
-        }
-
-        return new PublicApiControllerGetSessionSuccessResponse(
-            user: $userArray,
-            session: $request->session?->asArray(),
-        );
     }
 
     /**
@@ -507,7 +486,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             ? [ArticleStatus::Published->value, ArticleStatus::Unlisted->value, ArticleStatus::Private->value]
             : [ArticleStatus::Published->value];
         $pagination = new Pagination(itemsPerPage: $itemsPerPage, offset: $offset);
-        $articles = $this->articleService->filterArticlesBy(
+        $articles = $this->articleService->filterArticleBy(
             statusIds: $statusIds,
             typeIds: [ArticleType::Blog->value],
             queryOptions: new QueryOptions(
@@ -534,6 +513,151 @@ final class PublicApiController extends PublicApiControllerAbstract
                 itemsPerPage: $itemsPerPage,
                 offset: $offset + count($output),
             ))->asArray(),
+        );
+    }
+
+    /**
+     * Endpoint: /papi/search
+     * Method: GET
+     *
+     * @param string $q Query string
+     * @param string|null $isPublic Is a public page?
+     * @param int|null $searchTypeId
+     * @param Request $request
+     * @return Response
+     */
+    protected function getSearchResults(string $q, ?string $isPublic, ?int $searchTypeId, Request $request): Response
+    {
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+
+        $albumStatusIds = [
+            AlbumStatus::Published->value,
+            AlbumStatus::Unlisted->value,
+        ];
+
+        if ($request->session->isAdmin()) {
+            $albumStatusIds[] = AlbumStatus::Private->value;
+        }
+
+        $albums = $this->albumService->filterAlbumBy(
+            statusIds: $albumStatusIds,
+            searchQuery: $q,
+            queryOptions: new QueryOptions(
+                orderBy: [
+                    new QueryOrderBy('begins_with', QueryOrderDirection::DESC),
+                    new QueryOrderBy('word_begins_with', QueryOrderDirection::DESC),
+                    new QueryOrderBy('title_contains', QueryOrderDirection::DESC),
+                    new QueryOrderBy('updated_at', QueryOrderDirection::DESC),
+                ],
+                pagination: new Response\Pagination(
+                    itemsPerPage: 10,
+                ),
+            ),
+        );
+
+        $existingAlbumIds = [];
+        $albumsOutput = [];
+        /** @var Album $album */
+        foreach ($albums as $album) {
+            $existingAlbumIds[$album->id] = true;
+            $albumsOutput[] = $album->asSearchResult(
+                language: $request->siteLanguage,
+                isPublicUrl: $isPublic,
+            )->asPublicArray($localisationUtil->getValue('navAdminAlbums'));
+        }
+
+        $albumSections = $this->albumService->filterAlbumSectionBy(
+            searchQuery: $q,
+            queryOptions: new QueryOptions(
+                orderBy: [
+                    new QueryOrderBy('begins_with', QueryOrderDirection::DESC),
+                    new QueryOrderBy('word_begins_with', QueryOrderDirection::DESC),
+                    new QueryOrderBy('title_contains', QueryOrderDirection::DESC),
+                ],
+                pagination: new Response\Pagination(
+                    itemsPerPage: 10,
+                ),
+            ),
+        );
+
+        $albumIds = [];
+        /** @var AlbumSection $albumSection */
+        foreach ($albumSections as $albumSection) {
+            $albumIds[] = $albumSection->albumId;
+        }
+
+        $totalAlbums = count($albumsOutput);
+        if ($albumIds && $totalAlbums <= 10) {
+            $moreAlbums = $this->albumService->filterAlbumBy(
+                albumIds: $albumIds,
+                statusIds: $albumStatusIds,
+            );
+
+            /** @var Album $album */
+            foreach ($moreAlbums as $album) {
+                if (isset($existingAlbumIds[$album->id])) {
+                    continue;
+                }
+
+                $existingAlbumIds[$album->id] = true;
+                $totalAlbums += 1;
+                $albumsOutput[] = $album->asSearchResult(
+                    language: $request->siteLanguage,
+                    isPublicUrl: $isPublic,
+                )->asPublicArray($localisationUtil->getValue('navAdminAlbums'));
+
+                if ($totalAlbums >= 10) {
+                    break;
+                }
+            }
+        }
+
+        $articleStatusIds = [
+            ArticleStatus::Published->value,
+            ArticleStatus::Unlisted->value,
+        ];
+
+        if ($request->session->isAdmin()) {
+            $articleStatusIds[] = ArticleStatus::Private->value;
+        }
+
+        $articles = $this->articleService->filterArticleBy(
+            statusIds: $articleStatusIds,
+            searchQuery: $q,
+            queryOptions: new QueryOptions(
+                orderBy: [
+                    new QueryOrderBy('begins_with', QueryOrderDirection::DESC),
+                    new QueryOrderBy('word_begins_with', QueryOrderDirection::DESC),
+                    new QueryOrderBy('title_contains', QueryOrderDirection::DESC),
+                    new QueryOrderBy('published_at', QueryOrderDirection::DESC),
+                    new QueryOrderBy('updated_at', QueryOrderDirection::DESC),
+                ],
+                pagination: new Response\Pagination(
+                    itemsPerPage: 10,
+                ),
+            ),
+        );
+
+        $blogPostsOutput = [];
+        $pagesOutput = [];
+        /** @var Article $article */
+        foreach ($articles as $article) {
+            if ($article->type === ArticleType::Blog) {
+                $blogPostsOutput[] = $article->asSearchResult(
+                    language: $request->siteLanguage,
+                    isPublicUrl: $isPublic,
+                )->asPublicArray($localisationUtil->getValue('navAdminBlogPosts'));
+            } elseif ($article->type === ArticleType::Page) {
+                $pagesOutput[] = $article->asSearchResult(
+                    language: $request->siteLanguage,
+                    isPublicUrl: $isPublic,
+                )->asPublicArray($localisationUtil->getValue('navAdminArticles'));
+            }
+        }
+
+        return new PublicApiControllerGetSearchResultsSuccessResponse(
+            success: true,
+            results: array_merge($albumsOutput, $pagesOutput, $blogPostsOutput),
         );
     }
 }
