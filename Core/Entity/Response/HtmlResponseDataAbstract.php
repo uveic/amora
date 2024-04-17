@@ -32,6 +32,7 @@ abstract class HtmlResponseDataAbstract
         ?int $lastUpdatedTimestamp = null,
         public readonly string $logoClass = '',
         public readonly string $menuClass = '',
+        public readonly bool $isPublicPage = false,
     ) {
         $this->localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
@@ -74,8 +75,8 @@ abstract class HtmlResponseDataAbstract
         PageContent $homeContent = null,
         bool $includeSubtitle = false,
         string $indentation = '',
-        int $logoWidth = 50,
-        int $logoHeight = 50,
+        int $logoWidth = 45,
+        int $logoHeight = 45,
         ?string $className = null,
     ): string {
         $imageUrl = Core::getConfig()->logoImageUrl;

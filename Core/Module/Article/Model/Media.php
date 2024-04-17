@@ -86,6 +86,8 @@ class Media
         $baseUrl = UrlBuilderUtil::buildBaseUrlWithoutLanguage();
         return [
             'id' => $this->id,
+            'pathXSmall' => $this->getPathWithNameXSmall(),
+            'fullPathXSmall' => $baseUrl . $this->getPathWithNameXSmall(),
             'pathSmall' => $this->getPathWithNameSmall(),
             'fullPathSmall' => $baseUrl . $this->getPathWithNameSmall(),
             'pathMedium' => $this->getPathWithNameMedium(),

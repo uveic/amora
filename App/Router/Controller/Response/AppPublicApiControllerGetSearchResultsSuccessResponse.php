@@ -1,21 +1,18 @@
 <?php
-namespace Amora\Core\Router\Controller\Response;
+namespace Amora\App\Router\Controller\Response;
 
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\HttpStatusCode;
 
-class BackofficeApiControllerDeleteMediaForAlbumSectionSuccessResponse extends Response
+class AppPublicApiControllerGetSearchResultsSuccessResponse extends Response
 {
-    public function __construct(bool $success, ?string $errorMessage = null)
+    public function __construct(bool $success, array $results)
     {
         // Required parameters
         $responseData = [
             'success' => $success,
+            'results' => $results,
         ];
-
-        $responseData['errorMessage'] = is_null($errorMessage)
-            ? null
-            : $errorMessage;
 
         list($output, $contentType) = self::getResponseType($responseData);
         parent::__construct($output, $contentType, HttpStatusCode::HTTP_200_OK);

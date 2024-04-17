@@ -16,6 +16,7 @@ use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\User\DataLayer\UserDataLayer;
+use Amora\Core\Util\StringUtil;
 use Amora\Core\Value\QueryOrderDirection;
 
 class AlbumDataLayer
@@ -48,6 +49,7 @@ class AlbumDataLayer
         array $templateIds = [],
         array $mediaIds = [],
         ?string $slug = null,
+        ?string $searchQuery = null,
         bool $includeSections = false,
         bool $includeMedia = false,
         ?QueryOptions $queryOptions = null,
@@ -59,6 +61,9 @@ class AlbumDataLayer
         $orderByMapping = [
             'updated_at' => 'a.updated_at',
             'published_at' => 'a.published_at',
+            'begins_with' => 'begins_with',
+            'word_begins_with' => 'word_begins_with',
+            'title_contains' => 'title_contains',
         ];
 
         $params = [];
@@ -93,6 +98,8 @@ class AlbumDataLayer
             'm.user_id AS media_user_id',
             'm.type_id AS media_type_id',
             'm.status_id AS media_status_id',
+            'm.width_original AS media_width_original',
+            'm.height_original AS media_height_original',
             'm.width_original AS media_width_original',
             'm.height_original AS media_height_original',
             'm.path AS media_path',
@@ -155,6 +162,15 @@ class AlbumDataLayer
         if (isset($slug)) {
             $where .= ' AND als.slug = :albumSlug';
             $params[':albumSlug'] = $slug;
+        }
+
+        if ($searchQuery) {
+            $searchQuery = StringUtil::cleanSearchQuery($searchQuery);
+
+            $where .= " AND (MATCH(a.title_html) AGAINST('$searchQuery') OR a.title_html LIKE '%$searchQuery%')";
+            $fields[] = "IF (a.title_html LIKE '%$searchQuery%', 1, 0) AS title_contains";
+            $fields[] = "IF (a.title_html LIKE '$searchQuery%', 1, 0) AS begins_with";
+            $fields[] = "IF (a.title_html LIKE '% $searchQuery%', 1, 0) AS word_begins_with";
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);

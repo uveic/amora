@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Album\Model;
 
+use Amora\Core\Entity\Response\SearchResult;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
 use Amora\Core\Module\Article\Model\Media;
@@ -89,5 +90,30 @@ class Album
             'publishedOn' => $this->createdAt->format('c'),
             'tags' => [],
         ];
+    }
+
+    public function asSearchResult(Language $language, bool $publicUrl = true): SearchResult
+    {
+        $subtitle = DateUtil::formatDate(
+            date: $this->createdAt,
+            lang: $language,
+        );
+
+        return new SearchResult(
+            id: $this->id,
+            title: strip_tags($this->titleHtml),
+            url: $publicUrl ?
+                UrlBuilderUtil::buildPublicAlbumUrl(
+                    slug: $this->slug->slug,
+                    language: $language,
+                ) :
+                UrlBuilderUtil::buildBackofficeAlbumViewUrl(
+                    language: $language,
+                    albumId: $this->id,
+                ),
+            subtitle: $subtitle,
+            contentHtml: $this->contentHtml,
+            media: $this->mainMedia,
+        );
     }
 }

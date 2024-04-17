@@ -21,6 +21,7 @@ use Amora\Core\Module\Analytics\Model\EventRaw;
 readonly class AnalyticsService
 {
     const URL_MAX_LENGTH = 255;
+    const SEARCH_ENDPOINT = 'papi/search';
 
     public function __construct(
         private Logger $logger,
@@ -34,7 +35,7 @@ readonly class AnalyticsService
                 return;
             }
 
-            $this->analyticsDataLayer->storeEventRaw(
+            $storedEventRaw = $this->analyticsDataLayer->storeEventRaw(
                 new EventRaw(
                     id: null,
                     userId: $request->session?->user->id,
@@ -47,6 +48,17 @@ readonly class AnalyticsService
                     clientLanguage: $request->clientLanguage ? substr($request->clientLanguage, 0, 255) : null,
                 ),
             );
+
+            if ($request->path === self::SEARCH_ENDPOINT) {
+                $searchQuery = $request->getGetParam('q');
+                if ($searchQuery) {
+                    $this->analyticsDataLayer->storeEventRawSearch(
+                        rawId: $storedEventRaw->id,
+                        searchQuery: $searchQuery,
+                    );
+                }
+            }
+
         } catch (Throwable $t) {
             $this->logger->logError('Error logging event: ' . $t->getMessage());
         }

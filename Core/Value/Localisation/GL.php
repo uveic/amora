@@ -148,6 +148,7 @@ return [
     'globalSending' => 'Enviando...',
     'globalMore' => 'Máis...',
     'globalSequence' => 'Posición',
+    'globalSearch' => 'Buscar',
 
     'globalUploadImage' => 'Subir imaxe(s)',
     'globalUploadMedia' => 'Subir arquivo(s)',

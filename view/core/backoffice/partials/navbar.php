@@ -37,7 +37,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
         <input id="searchFromPublicPage" name="searchFromPublicPage" type="hidden" value="0">
 <?php } ?>
         <div class="form-search-input-wrapper">
-          <img class="img-svg img-svg-30 search-action-js" width="30" height="30" src="/img/svg/magnifying-glass-bold-white.svg" alt="Search">
+          <img class="img-svg img-svg-30 search-action-js" width="30" height="30" src="/img/svg/magnifying-glass-bold-dark-blue.svg" alt="<?=$responseData->getLocalValue('globalSearch')?>">
           <input id="search" name="search" class="header-search" type="search" placeholder="<?=$responseData->getLocalValue('globalSearch')?>..." value="">
         </div>
         <input type="submit" value="Go" class="null">
@@ -78,6 +78,6 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
         </ul>
       </nav>
       <label for="mobile-nav" class="mobile-nav-label"><span class="null">Menu</span><span></span></label>
-      <img class="img-svg img-svg-30 search-action-js" width="30" height="30" src="/img/svg/magnifying-glass-bold-white.svg" alt="Search">
+      <img class="img-svg img-svg-30 search-action-js" width="30" height="30" src="/img/svg/magnifying-glass-bold-white.svg" alt="<?=$responseData->getLocalValue('globalSearch')?>">
     </div>
   </header>

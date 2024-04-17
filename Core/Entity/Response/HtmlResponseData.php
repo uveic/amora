@@ -15,6 +15,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         ?string $pageDescription = null,
         ?string $siteImagePath = null,
         ?Pagination $pagination = null,
+        bool $isPublicPage = false,
         public readonly ?Article $article = null,
         public readonly ?array $articles = [],
         public readonly ?Article $previousBlogPost = null,
@@ -32,6 +33,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
             pageTitle: $pageTitle,
             pageDescription: $pageDescription,
             siteImagePath: $siteImagePath,
+            isPublicPage: $isPublicPage,
         );
     }
 }
