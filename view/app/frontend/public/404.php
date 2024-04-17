@@ -10,7 +10,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
 <?=$this->insert('partials/head', ['responseData' => $responseData])?>
-  <link href="/css/shared-base-201.css" rel="stylesheet" type="text/css">
+  <link href="/css/shared-base-000.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <?=$this->insert('partials/header', ['responseData' => $responseData])?>

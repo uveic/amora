@@ -1,6 +1,6 @@
-import {Request} from './Request-002.js';
-import {Global} from './localisation-004.js';
-import {Util} from "./Util-010.js";
+import {Request} from './Request-000.js';
+import {Global} from './localisation-000.js';
+import {Util} from "./Util-000.js";
 
 class UploaderClass {
   static buildProgressElement() {

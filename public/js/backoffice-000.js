@@ -1,7 +1,7 @@
-import {Util} from './module/Util-009.js';
-import {Request} from './module/Request-002.js';
-import {Global} from "./module/localisation-004.js";
-import {Uploader} from "./module/Uploader-010.js";
+import {Util} from './module/Util-000.js';
+import {Request} from './module/Request-000.js';
+import {Global} from "./module/localisation-000.js";
+import {Uploader} from "./module/Uploader-000.js";
 import {appAddEventListenerAction} from "./app/back-000.js";
 
 let globalTags = [];

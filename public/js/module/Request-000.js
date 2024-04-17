@@ -1,5 +1,5 @@
-import {Global} from "./localisation-004.js";
-import {Util} from "./Util-009.js";
+import {Global} from "./localisation-000.js";
+import {Util} from "./Util-000.js";
 
 class RequestClass {
   async logError(errorMessage = null, endpoint = null, method = null, payload = null) {

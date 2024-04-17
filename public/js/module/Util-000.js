@@ -1,4 +1,4 @@
-import {Global} from './localisation-004.js';
+import {Global} from './localisation-000.js';
 
 class UtilClass {
   editors = [];
