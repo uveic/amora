@@ -17,6 +17,7 @@ class EventRaw
         public readonly ?string $ip,
         public readonly ?string $userAgent,
         public readonly ?string $clientLanguage,
+        public readonly ?string $searchQuery = null,
         public readonly ?DateTimeImmutable $processedAt = null,
         public readonly ?string $lockId = null,
     ) {}
@@ -33,6 +34,7 @@ class EventRaw
             ip: $data['event_raw_ip'] ?? null,
             userAgent: $data['event_raw_user_agent'] ?? null,
             clientLanguage: $data['event_raw_client_language'] ?? null,
+            searchQuery: $data['event_raw_search_query'] ?? null,
             processedAt: isset($data['event_raw_processed_at'])
                 ? DateUtil::convertStringToDateTimeImmutable($data['event_raw_processed_at'])
                 : null,
@@ -52,6 +54,7 @@ class EventRaw
             'ip' => $this->ip,
             'user_agent' => $this->userAgent,
             'client_language' => $this->clientLanguage,
+            'search_query' => $this->searchQuery,
             'processed_at' => $this->processedAt?->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'lock_id' => $this->lockId,
         ];

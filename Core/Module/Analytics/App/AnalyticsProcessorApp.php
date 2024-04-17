@@ -26,7 +26,6 @@ class AnalyticsProcessorApp extends App
     public function __construct(
         Logger $logger,
         private readonly AnalyticsDataLayer $analyticsDataLayer,
-        private readonly string $siteUrl,
     ) {
         parent::__construct(
             logger: $logger,
@@ -175,10 +174,6 @@ class AnalyticsProcessorApp extends App
     private function getReferrer(EventRaw $eventRaw): ?string
     {
         if (empty($eventRaw->referrer)) {
-            return null;
-        }
-
-        if (str_contains($eventRaw->referrer, $this->siteUrl)) {
             return null;
         }
 

@@ -380,4 +380,27 @@ final class StringUtil
 
         return '';
     }
+
+    public static function cleanSearchQuery(string $searchQuery, array $wordsToRemove = []): string
+    {
+        $originalQuery = $searchQuery;
+
+        foreach ($wordsToRemove as $word) {
+            $searchQuery = trim(str_ireplace($word, '', $searchQuery));
+        }
+
+        if (!$originalQuery) {
+            $searchQuery = trim($originalQuery);
+        }
+
+        $fulltextParts = [];
+        $parts = explode(' ', $searchQuery);
+        foreach ($parts as $part) {
+            if (strlen(trim($part)) >= 3) {
+                $fulltextParts[] = $part;
+            }
+        }
+
+        return $fulltextParts ? implode(' ', $fulltextParts) : $searchQuery;
+    }
 }

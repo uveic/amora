@@ -26,6 +26,7 @@ class AnalyticsDataLayer
     const EVENT_RAW_TABLE = 'event_raw';
     const EVENT_PROCESSED_TABLE = 'event_processed';
     const EVENT_TYPE_TABLE = 'event_type';
+    const EVENT_RAW_SEARCH_TABLE = 'event_raw_search';
 
     const BOT_PATH_TABLE = 'bot_path';
     const BOT_USER_AGENT = 'bot_user_agent';
@@ -56,6 +57,17 @@ class AnalyticsDataLayer
 
         $event->id = $res;
         return $event;
+    }
+
+    public function storeEventRawSearch(int $rawId, string $searchQuery): void
+    {
+        $this->db->insert(
+            self::EVENT_RAW_SEARCH_TABLE,
+            [
+                'raw_id' => $rawId,
+                'query' => $searchQuery,
+            ],
+        );
     }
 
     public function countPageViews(
@@ -252,9 +264,12 @@ class AnalyticsDataLayer
             'er.client_language AS event_raw_client_language',
             'er.processed_at AS event_raw_processed_at',
             'er.lock_id AS event_raw_lock_id',
+
+            'ers.query AS event_raw_search_query',
         ];
 
         $joins = ' FROM ' . self::EVENT_RAW_TABLE . ' AS er';
+        $joins .= ' LEFT JOIN ' . self::EVENT_RAW_SEARCH_TABLE . ' AS ers ON er.id = ers.raw_id';
         $where = ' WHERE 1';
 
         if ($ids) {

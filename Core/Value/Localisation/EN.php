@@ -148,6 +148,7 @@ return [
     'globalSending' => 'Sending...',
     'globalMore' => 'More...',
     'globalSequence' => 'Sequence',
+    'globalSearch' => 'Search',
 
     'globalUploadImage' => 'Upload image(s)',
     'globalUploadMedia' => 'Upload file(s)',

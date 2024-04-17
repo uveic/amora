@@ -10,6 +10,7 @@ class HtmlHomepageResponseData extends HtmlResponseDataAbstract
     public function __construct(
         Request $request,
         ?Pagination $pagination = null,
+        bool $isPublicPage = false,
         public readonly ?PageContent $pageContent = null,
         public readonly array $homeArticles = [],
         public readonly array $blogArticles = [],
@@ -18,6 +19,7 @@ class HtmlHomepageResponseData extends HtmlResponseDataAbstract
         parent::__construct(
             request: $request,
             pagination: $pagination,
+            isPublicPage: $isPublicPage,
         );
     }
 }

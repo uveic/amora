@@ -73,6 +73,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)
                     ->getValue('formLoginAction'),
+                isPublicPage: true,
             ),
         );
     }
@@ -100,6 +101,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)
                     ->getValue('authenticationForgotPassword'),
+                isPublicPage: true,
             ),
         );
     }
@@ -142,6 +144,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)->getValue('navSignUp'),
+                isPublicPage: true,
             ),
         );
     }
@@ -203,6 +206,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 pageTitle: $localisationUtil->getValue('navChangePassword'),
                 verificationHash: $user->getValidationHash(),
                 passwordUserId: $user->id,
+                isPublicPage: true,
             ),
         );
     }
@@ -240,6 +244,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 pageTitle: $localisationUtil->getValue('navCreatePassword'),
                 verificationHash: $user->getValidationHash(),
                 passwordUserId: $user->id,
+                isPublicPage: true,
             ),
         );
     }
@@ -272,6 +277,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)->getValue('navSignUp'),
+                isPublicPage: true,
             ),
         );
     }
@@ -319,6 +325,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 pageDescription: $album->buildDescription(),
                 siteImagePath: $album->mainMedia->getPathWithNameMedium(),
                 album: $album,
+                isPublicPage: true,
             ),
         );
     }
