@@ -4,7 +4,13 @@ import {Global} from "./module/localisation-000.js";
 import {Uploader} from "./module/Uploader-000.js";
 import {appAddEventListenerAction} from "./app/back-000.js";
 
-let globalTags = [];
+window.data = {
+  tags: [],
+  mediaCache: [],
+  mediaCacheRight: [],
+  mediaCacheLeft: [],
+}
+
 const mediaCache = [];
 const mediaCacheRight = [];
 const mediaCacheLeft = [];
@@ -1216,7 +1222,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       history.pushState("", document.title, articleBackofficePath);
       document.querySelector('input[name="articleId"]').value = articleId;
 
-      document.querySelectorAll('#side-options').forEach(i => i.classList.add('null'));
+      document.querySelectorAll('.side-nav-wrapper').forEach(i => i.classList.add('null'));
       document.querySelectorAll('.article-save-button').forEach(b => {
         b.value = Global.get('globalUpdate');
       });
@@ -1508,16 +1514,12 @@ document.querySelectorAll('a.article-settings').forEach(el => {
     pathContent.querySelector('img').classList.remove('null');
     pathContent.querySelectorAll('div').forEach(di => pathContent.removeChild(di));
 
-    const sideNav = document.getElementById('side-options');
-    sideNav.classList.remove('null');
-    sideNav.classList.add('side-options-open');
-
-    if (!globalTags.length) {
+    if (!window.data.tags.length) {
       const searchResultEl = document.querySelector('#search-results-tags');
       Request.get('/back/tag')
         .then(response => {
-          globalTags = response.tags;
-          globalTags.forEach(tag => {
+          window.data.tags = response.tags;
+          window.data.tags.forEach(tag => {
             let newTag = document.createElement('span');
             newTag.className = 'result-item';
             newTag.dataset.tagId = tag.id;
@@ -1547,16 +1549,6 @@ document.querySelectorAll('a.article-settings').forEach(el => {
     } else {
       pathContainer.querySelector('img').classList.add('null');
     }
-  });
-});
-
-document.querySelectorAll('a.close-button').forEach(el => {
-  el.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    const sideNav = document.getElementById('side-options');
-    sideNav.classList.add('null');
-    sideNav.classList.remove('side-options-open');
   });
 });
 

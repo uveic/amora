@@ -97,24 +97,24 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 1.6rem;
   line-height: 3rem;
   margin: 0.67em 0;
 }
 
 h1.small {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   line-height: 2rem;
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   line-height: 2rem;
   margin: 0.83rem 0;
 }
 
 h3 {
-  font-size: 1.17rem;
+  font-size: 1.1rem;
   line-height: 1.8rem;
   margin: 1em 0;
 }
@@ -419,10 +419,6 @@ blockquote *:last-child {
   right: 30px;
   font-size: 1.5rem;
 }
-
-.text-right {
-  text-align: right;
-}
 /* Register/Login style ends here */
 
 /* Article styles starts here */
@@ -444,8 +440,6 @@ article img {
 }
 
 article > h1 {
-  margin: 0;
-  padding: 0 1rem;
   font-size: 1.5rem;
   font-family: var(--font-title);
   font-weight: bold;
@@ -824,6 +818,8 @@ button.is-link.is-light,
 .display-block {display: block !important;}
 .word-break {word-wrap: anywhere;}
 .one-line {white-space: nowrap;}
+.text-right {text-align: right;}
+.width-auto {width: auto;}
 
 .null {display: none !important;}
 .hidden {visibility: hidden;}

@@ -9,7 +9,7 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\UrlBuilderUtil;
-use Amora\App\Value\Language;
+use BackedEnum;
 
 final class ArticleHtmlGenerator
 {
@@ -21,7 +21,7 @@ final class ArticleHtmlGenerator
 
         $typeIdGetParam = $responseData->request->getGetParam('atId');
         if (!empty($typeIdGetParam)) {
-            /** @var \BackedEnum $articleType */
+            /** @var BackedEnum $articleType */
             foreach (ArticleType::getAll() as $articleType) {
                 if ((int)$typeIdGetParam === $articleType->value) {
                     return $articleType;
@@ -47,7 +47,7 @@ final class ArticleHtmlGenerator
         $output[] = '        <label for="article-status-dd-checkbox" class="label">' . $responseData->getLocalValue('globalStatus') . ':</label>';
         $output[] = '        <ul>';
 
-        /** @var \BackedEnum $status */
+        /** @var BackedEnum $status */
         foreach (ArticleStatus::getAll() as $status) {
             $output[] = '          <li><a data-checked="' . ($status === $articleStatus ? '1' : '0') .
                 '" data-value="' . $status->value .
@@ -78,7 +78,7 @@ final class ArticleHtmlGenerator
         $output[] = '        <label for="article-status-dd-checkbox" class="label">' . $responseData->getLocalValue('globalLanguage') . ':</label>';
         $output[] = '        <ul>';
 
-        /** @var \BackedEnum $language */
+        /** @var BackedEnum $language */
         foreach (Core::getAllLanguages() as $language) {
             $output[] = '          <li><a data-checked="' . ($language === $articleLanguage ? '1' : '0') .
                 '" data-value="' . $language->value .
@@ -94,12 +94,6 @@ final class ArticleHtmlGenerator
         $output[] = '      </div>';
 
         return implode(PHP_EOL, $output) . PHP_EOL;
-    }
-
-    public static function generateSettingsButtonHtml(
-        HtmlResponseDataAdmin $responseData,
-    ): string {
-        return '<a href="#" class="article-settings"><img src="/img/svg/gear.svg" class="img-svg img-svg-25" alt="' . $responseData->getLocalValue('globalSettings') . '"></a>';
     }
 
     public static function generateArticleRowHtml(

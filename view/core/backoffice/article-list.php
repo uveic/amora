@@ -10,8 +10,8 @@ $this->layout('base', ['responseData' => $responseData,]);
 
 ?>
   <main>
-<?=$this->insert('partials/articles/header', ['responseData' => $responseData])?>
-<?=$this->insert('partials/articles/filter', ['responseData' => $responseData])?>
+<?=$this->insert('partials/article/header', ['responseData' => $responseData])?>
+<?=$this->insert('partials/article/filter', ['responseData' => $responseData])?>
     <div class="backoffice-wrapper">
       <div class="table">
         <div class="table-row header">

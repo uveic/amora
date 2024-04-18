@@ -30,12 +30,12 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
 ?>
 <main>
   <div id="feedback" class="feedback null"></div>
-  <section class="page-header">
+  <div class="page-header">
     <h3><?=$title . $languageIcon?></h3>
     <div class="links">
       <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="20" height="20" alt="Volver"></a>
     </div>
-  </section>
+  </div>
   <form id="form-page-content" action="#" class="page-content-wrapper">
     <input name="contentId" type="hidden" value="<?=$pageContent?->id?>">
 
@@ -46,7 +46,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     <h2 class="editor-subtitle page-content-subtitle <?=$pageContent?->subtitleHtml ? '' : ' editor-placeholder'?> <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->subtitleHtml ?: $responseData->getLocalValue('editorSubtitlePlaceholder')?></h2>
 
     <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>"><?=$responseData->getLocalValue('navAdminContent')?></div>
-    <div class="editor-content medium-editor-content m-t-05 <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>" contenteditable="true">
+    <div class="editor-content medium-editor-content <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>" contenteditable="true">
       <?=$pageContent?->contentHtml . PHP_EOL?>
     </div>
 
@@ -65,8 +65,8 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
       </div>
     </div>
 
-    <div class="control m-t-2">
-      <input type="submit" class="button is-success m-b-3" value="<?=$submitButtonValue?>">
+    <div class="control m-t-2 text-right">
+      <input type="submit" class="button is-success width-auto m-b-3 m-r-1" value="<?=$submitButtonValue?>">
     </div>
   </form>
 </main>

@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Tag;
+use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -37,11 +38,10 @@ if ($article) {
 }
 
 ?>
-<div id="side-options" class="side-options null">
-  <div class="side-options-header">
-    <h2><?=$responseData->getLocalValue('navAdminArticleOptions')?></h2>
-    <a href="#" class="close-button"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
-  </div>
+<div class="side-nav-wrapper">
+  <a href="#" class="select-media-action" data-type-id="<?=MediaType::Image->value?>" data-event-listener-action="insertImageInArticle">
+    <img class="img-svg img-svg-30" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
+  </a>
 <?=ArticleHtmlGenerator::generateArticleLanguageDropdownSelectHtml($responseData)?>
 <?=ArticleHtmlGenerator::generateArticleStatusDropdownSelectHtml($responseData)?>
   <div>
