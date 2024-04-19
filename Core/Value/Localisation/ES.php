@@ -30,7 +30,7 @@ return [
     'editorSubtitlePlaceholder' => 'Subtítulo...',
     'editorDisableControls' => 'Desactivar controles',
     'editorEnableControls' => 'Activar controles',
-    'editorMainImage' => 'Imagen destacada',
+    'editorMainImage' => 'Imagen',
     'editorMainImageActionTitle' => 'Selecciona imagen destacada',
 
     'authenticationActionHomeLink' => 'Ir a la página de entrada',

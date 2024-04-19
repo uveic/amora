@@ -26,7 +26,15 @@ enum AppPageContentType: int
             PageContentType::Homepage, PageContentType::BlogBottom => match ($section) {
                 PageContentSection::Subtitle, PageContentSection::MainImage => false,
                 default => true,
-            }
+            },
+            default => true,
+        };
+    }
+
+    public static function getTitleVariableName(self|PageContentType $type): string {
+        return match($type) {
+            PageContentType::Homepage => 'pageContentEditTitleHomepage',
+            PageContentType::BlogBottom => 'pageContentEditTitleBlogBottom',
         };
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
@@ -10,13 +11,14 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 $closeLink = UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage);
 
-$homepageLinks = [];
-$partialContentLinks = [];
+$groupOfLinks = [];
 
-/** @var Language $language */
-foreach (Core::getAllLanguages() as $language) {
-    $homepageLinks[] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, PageContentType::Homepage, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
-    $partialContentLinks[] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, PageContentType::BlogBottom, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
+/** @var AppPageContentType|PageContentType $item */
+foreach (AppPageContentType::getAll() as $item) {
+    /** @var Language $language */
+    foreach (Core::getAllLanguages() as $language) {
+        $groupOfLinks[AppPageContentType::getTitleVariableName($item)][] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, $item, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
+    }
 }
 
 $this->layout('base', ['responseData' => $responseData]);
@@ -33,25 +35,11 @@ $this->layout('base', ['responseData' => $responseData]);
   <div class="backoffice-wrapper">
     <div>
       <div class="dashboard-cards-wrapper m-t-2">
-<?php if (count($homepageLinks) > 1) { ?>
+<?php foreach ($groupOfLinks as $titleVariableName => $links) { ?>
         <div>
-          <span><?=$responseData->getLocalValue('pageContentEditTitleHomepage')?>:</span>
-          <span><?=implode('', $homepageLinks)?></span>
+          <span><?=$responseData->getLocalValue($titleVariableName)?>:</span>
+          <span><?=implode('', $links)?></span>
         </div>
-<?php } else { ?>
-        <a href="<?=UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, contentType: PageContentType::Homepage, contentTypeLanguage: $responseData->siteLanguage)?>">
-          <span class="text"><?=$responseData->getLocalValue('pageContentEditTitleHomepage')?></span>
-        </a>
-<?php } ?>
-<?php if (count($partialContentLinks) > 1) { ?>
-        <div>
-          <span><?=$responseData->getLocalValue('pageContentEditTitleBlogBottom')?>:</span>
-          <span><?=implode('', $partialContentLinks)?></span>
-        </div>
-<?php } else { ?>
-        <a href="<?=UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, contentType: PageContentType::BlogBottom, contentTypeLanguage: $responseData->siteLanguage)?>">
-          <span class="text"><?=$responseData->getLocalValue('pageContentEditTitleBlogBottom')?></span>
-        </a>
 <?php } ?>
       </div>
   </div>

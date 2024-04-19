@@ -15,37 +15,26 @@ function addEventListenerAction(media, mediaId, eventListenerAction, targetConta
   if (eventListenerAction === 'displayNextImagePopup') {
     media.addEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
-    media.removeEventListener('click', articleSelectMainImage);
     media.removeEventListener('click', handleGenericMainMediaClick);
     media.removeEventListener('click', albumSectionAddMedia);
   } else if (eventListenerAction === 'insertImageInArticle') {
     media.removeEventListener('click', displayNextImagePopup);
     media.addEventListener('click', insertImageInArticle);
-    media.removeEventListener('click', articleSelectMainImage);
-    media.removeEventListener('click', handleGenericMainMediaClick);
-    media.removeEventListener('click', albumSectionAddMedia);
-  } else if (eventListenerAction === 'articleSelectMainImage') {
-    media.removeEventListener('click', displayNextImagePopup);
-    media.removeEventListener('click', insertImageInArticle);
-    media.addEventListener('click', articleSelectMainImage);
     media.removeEventListener('click', handleGenericMainMediaClick);
     media.removeEventListener('click', albumSectionAddMedia);
   } else if (eventListenerAction === 'handleGenericMainMediaClick') {
     media.removeEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
-    media.removeEventListener('click', articleSelectMainImage);
     media.addEventListener('click', handleGenericMainMediaClick);
     media.removeEventListener('click', albumSectionAddMedia);
   } else if (eventListenerAction === 'albumSectionAddMedia') {
     media.removeEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
-    media.removeEventListener('click', articleSelectMainImage);
     media.removeEventListener('click', handleGenericMainMediaClick);
     media.addEventListener('click', albumSectionAddMedia);
   } else {
     media.removeEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
-    media.removeEventListener('click', articleSelectMainImage);
     media.removeEventListener('click', handleGenericMainMediaClick);
     media.removeEventListener('click', albumSectionAddMedia);
 
@@ -514,28 +503,6 @@ function insertImageInArticle(e) {
 
   imageCaption.scrollIntoView({behavior: 'smooth', block: 'start'});
   imageCaption.focus();
-}
-
-function articleSelectMainImage(e) {
-  const imageContainer = document.querySelector('.article-main-image-container');
-  const targetImg = imageContainer.querySelector('img.article-main-image');
-  const mediaId = e.currentTarget.mediaId;
-  const sourceImgEl = document.querySelector('img[data-media-id="' + mediaId + '"]');
-
-  if (targetImg) {
-    targetImg.src = sourceImgEl.src;
-    targetImg.alt = sourceImgEl.alt;
-    targetImg.title = sourceImgEl.title;
-    targetImg.dataset.mediaId = sourceImgEl.dataset.mediaId;
-    targetImg.classList.add('article-main-image');
-  } else {
-    sourceImgEl.classList.add('article-main-image');
-    imageContainer.appendChild(sourceImgEl);
-  }
-
-  document.querySelector('.select-media-action span').textContent = Global.get('globalModify');
-  document.querySelector('.select-media-modal').classList.add('null');
-  document.querySelector('.article-main-image-wrapper').scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
 function albumSectionAddMedia(e) {
@@ -1834,7 +1801,7 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
     const titleHtml = f.querySelector('.editor-title').innerHTML.trim();
     const subtitleHtml = f.querySelector('.editor-subtitle').innerHTML.trim();
     const contentHtml = f.querySelector('.editor-content').innerHTML.trim();
-    const mainImageEl = f.querySelector('.article-main-image');
+    const mainImageEl = f.querySelector('.media-item');
 
     const payload = JSON.stringify({
       titleHtml: titleHtml.length ? (titleHtml === Global.get('editorTitlePlaceholder') ? null : titleHtml)

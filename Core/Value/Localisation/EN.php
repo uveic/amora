@@ -30,7 +30,7 @@ return [
     'editorSubtitlePlaceholder' => 'Subtitle...',
     'editorDisableControls' => 'Disable controls',
     'editorEnableControls' => 'Enable controls',
-    'editorMainImage' => 'Main image',
+    'editorMainImage' => 'Image',
     'editorMainImageActionTitle' => 'Select main image',
 
     'authenticationActionHomeLink' => 'Go back to log in page',

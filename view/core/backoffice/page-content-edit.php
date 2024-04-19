@@ -1,7 +1,6 @@
 <?php
 
 use Amora\App\Value\AppPageContentType;
-use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\PageContentSection;
@@ -50,17 +49,22 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
       <?=$pageContent?->contentHtml . PHP_EOL?>
     </div>
 
-    <div class="field<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::MainImage) ? '' : ' null'?>">
+    <div class="field m-l-1 m-r-1 m-b-2<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::MainImage) ? '' : ' null'?>">
       <p class="label m-b-05"><?=$responseData->getLocalValue('editorMainImage')?>:</p>
-      <div class="control article-main-image-wrapper">
-        <div class="article-main-image-container article-main-image-container-full">
+      <div class="control">
+        <div id="page-content-main-image-container">
 <?php if ($pageContent?->mainImage) { ?>
-          <img class="article-main-image" data-media-id="<?=$pageContent->mainImage->id?>" src="<?=$pageContent->mainImage->getPathWithNameMedium()?>" alt="<?=$pageContent->mainImage->buildAltText()?>">
+          <img class="media-item" data-media-id="<?=$pageContent->mainImage->id?>" src="<?=$pageContent->mainImage->getPathWithNameMedium()?>" alt="<?=$pageContent->mainImage->buildAltText()?>">
 <?php } ?>
-          <a href="#" class="article-main-image-button article-main-image-button-absolute select-media-action" data-event-listener-action="articleSelectMainImage">
-            <img class="img-svg img-svg-30" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalSelectImage')?>" title="<?=$responseData->getLocalValue('globalSelectImage')?>">
-            <span><?= $pageContent?->mainImage ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('globalSelectImage') ?></span>
-          </a>
+          <div class="main-image-button-container">
+            <a href="#" class="main-image-button main-image-button-red generic-media-delete-js<?=$pageContent?->mainImage ? '' : ' null'?>">
+              <img class="img-svg" src="/img/svg/trash-white.svg" alt="<?=$responseData->getLocalValue('globalRemoveImage')?>" title="<?=$responseData->getLocalValue('globalRemoveImage')?>">
+            </a>
+            <a href="#" class="main-image-button select-media-action" data-event-listener-action="handleGenericMainMediaClick" data-target-container-id="page-content-main-image-container">
+              <img class="img-svg" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalSelectImage')?>" title="<?=$responseData->getLocalValue('globalSelectImage')?>">
+              <span><?= $pageContent?->mainImage ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('globalSelectImage') ?></span>
+            </a>
+          </div>
         </div>
       </div>
     </div>

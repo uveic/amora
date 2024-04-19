@@ -440,6 +440,8 @@ article img {
 }
 
 article > h1 {
+  margin: 0;
+  padding: 1rem;
   font-size: 1.5rem;
   font-family: var(--font-title);
   font-weight: bold;

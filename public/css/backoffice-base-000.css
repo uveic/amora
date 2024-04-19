@@ -287,7 +287,8 @@
 /* Status ends here */
 
 /* Editor starts here */
-.editor-title {
+.editor-title,
+.editor-subtitle {
   margin-bottom: 0;
   color: var(--color-input-text);
   background-color: var(--color-input-bg);
@@ -337,6 +338,17 @@ h2.page-content-subtitle {
   color: var(--color-light-3);
   font-size: 0.8rem;
   padding: 0 1rem;
+}
+
+#page-content-main-image-container {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  background-color: var(--color-light-0);
+}
+
+#page-content-main-image-container .media-item {
+  width: 100%;
 }
 
 .article-save-button {
