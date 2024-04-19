@@ -85,7 +85,7 @@ return [
     'formLoginAction' => 'Entrar',
     'formPasswordResetAction' => 'Cambiar contraseña',
     'formPasswordCreateAction' => 'Crear contraseña',
-    'formArticlePath' => 'URL del artículo',
+    'formArticlePath' => 'URL',
     'formArticlePreviousPaths' => 'URLs anteriores',
     'formTimezone' => 'Zona horaria',
 

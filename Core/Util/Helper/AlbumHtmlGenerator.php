@@ -42,7 +42,7 @@ final class AlbumHtmlGenerator
             $statusClassname = $item->getClass();
             $icon = $item->getIcon();
             $statusName = $localisationUtil->getValue('articleStatus' . $item->name);
-            $output[] = $indentation . '    <li><a data-checked="' . ($albumStatus === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option album-status-dd-option ' . $statusClassname . '" href="#">' . $icon . $statusName . '</a></li>';
+            $output[] = $indentation . '    <li><a data-checked="' . ($albumStatus === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option album-status-dd-option ' . $statusClassname . '" href="#" data-dropdown-identifier="album-status">' . $icon . $statusName . '</a></li>';
         }
 
         $icon = $albumStatus->getIcon();

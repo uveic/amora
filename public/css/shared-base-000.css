@@ -214,6 +214,8 @@ blockquote *:last-child {
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  width: auto;
+  flex-grow: 0;
 }
 
 .dropdown-menu-option {
@@ -226,39 +228,58 @@ blockquote *:last-child {
   z-index: 298;
 }
 
+.dropdown-menu-option-light {
+  background-color: var(--color-bg);
+  color: var(--color-text) !important;
+}
+
 .dropdown-container {
   position: relative;
   flex-grow: 0 !important;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 0.2rem 1rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.dropdown-menu:checked ~ div > ul {
+.dropdown-container > label {
+  flex-grow: 0;
+  width: auto;
+}
+
+.dropdown-menu:checked + div > ul {
   display: block !important;
 }
 
-.dropdown-menu ~ div > ul {
+.dropdown-menu + div > ul {
   display: none;
   list-style: none;
   position: absolute;
   right: 0;
-  top: 23px;
+  top: 20px;
   padding: 0;
   z-index: 298;
 }
 
-.dropdown-menu ~ div > ul.up {
+.dropdown-menu + div > ul.up {
   bottom: 22px;
   top: revert;
 }
 
-.dropdown-menu ~ div > ul a {
-  color: var(--color-bg);
+.dropdown-menu + div > ul a {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
+  align-items: center;
 }
 
-.dropdown-menu ~ div > ul a:hover {
+.dropdown-menu + div > ul a:hover {
   opacity: 0.97;
+}
+
+.dropdown-background-light-color {
+  color: var(--color-text);
 }
 /* Dropdown ends here */
 
@@ -832,6 +853,14 @@ button.is-link.is-light,
   white-space: nowrap;
   text-overflow: ellipsis;
   scrollbar-width: none;
+}
+
+.two-columns {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
 svg,

@@ -85,7 +85,7 @@ return [
     'formLoginAction' => 'Entrar',
     'formPasswordResetAction' => 'Cambiar contrasinal',
     'formPasswordCreateAction' => 'Crear contrasinal',
-    'formArticlePath' => 'Enderezo do artigo',
+    'formArticlePath' => 'Enderezo',
     'formArticlePreviousPaths' => 'Enderezos anteriores',
     'formTimezone' => 'Zona horaria',
 

@@ -85,7 +85,7 @@ return [
     'formLoginAction' => 'Log in',
     'formPasswordResetAction' => 'Change password',
     'formPasswordCreateAction' => 'Create password',
-    'formArticlePath' => 'Article path',
+    'formArticlePath' => 'Path',
     'formArticlePreviousPaths' => 'Previous paths',
     'formTimezone' => 'Timezone',
 

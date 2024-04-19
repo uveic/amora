@@ -51,16 +51,16 @@ final class ArticleHtmlGenerator
         foreach (ArticleStatus::getAll() as $status) {
             $output[] = '          <li><a data-checked="' . ($status === $articleStatus ? '1' : '0') .
                 '" data-value="' . $status->value .
-                '" class="dropdown-menu-option article-status-dd-option ' .
-                ($status === ArticleStatus::Published ? 'feedback-success' : 'background-light-text-color') .
-                '" href="#">' . $responseData->getLocalValue('articleStatus' . $status->name) .
+                '" class="dropdown-menu-option dropdown-menu-option-light article-status-dd-option ' .
+                ($status === ArticleStatus::Published ? 'feedback-success' : 'dropdown-background-light-color') .
+                '" href="#" data-dropdown-identifier="article-status">' . $responseData->getLocalValue('articleStatus' . $status->name) .
                 '</a></li>';
         }
 
         $output[] = '        </ul>';
-        $output[] = '        <label id="article-status-dd-label" for="article-status-dd-checkbox" class="dropdown-menu-label ' . ($isPublished ? 'feedback-success' : 'background-light-text-color') . '">';
+        $output[] = '        <label id="article-status-dd-label" for="article-status-dd-checkbox" class="dropdown-menu-label ' . ($isPublished ? 'feedback-success' : 'dropdown-background-light-color') . '">';
         $output[] = '          <span>' . $articleStatusName . '</span>';
-        $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Change">';
+        $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
         $output[] = '        </label>';
         $output[] = '      </div>';
 
@@ -75,21 +75,21 @@ final class ArticleHtmlGenerator
         $output = [];
         $output[] = '      <input type="checkbox" id="article-lang-dd-checkbox" class="dropdown-menu">';
         $output[] = '      <div class="dropdown-container article-lang-container">';
-        $output[] = '        <label for="article-status-dd-checkbox" class="label">' . $responseData->getLocalValue('globalLanguage') . ':</label>';
+        $output[] = '        <label for="article-lang-dd-checkbox" class="label">' . $responseData->getLocalValue('globalLanguage') . ':</label>';
         $output[] = '        <ul>';
 
         /** @var BackedEnum $language */
         foreach (Core::getAllLanguages() as $language) {
             $output[] = '          <li><a data-checked="' . ($language === $articleLanguage ? '1' : '0') .
                 '" data-value="' . $language->value .
-                '" class="dropdown-menu-option article-lang-dd-option background-light-text-color"' .
-                ' href="#">' . $language->getIconFlag('m-r-05') . $language->name . '</a></li>';
+                '" class="dropdown-menu-option article-lang-dd-option dropdown-menu-option-light dropdown-background-light-color"' .
+                ' href="#" data-dropdown-identifier="article-lang">' . $language->getIconFlag('m-r-05') . $language->name . '</a></li>';
         }
 
         $output[] = '        </ul>';
-        $output[] = '        <label id="article-lang-dd-label" for="article-lang-dd-checkbox" class="dropdown-menu-label background-light-text-color">';
+        $output[] = '        <label id="article-lang-dd-label" for="article-lang-dd-checkbox" class="dropdown-menu-label dropdown-background-light-color">';
         $output[] = '          <span>' . $articleLanguage->getIconFlag('m-r-05') . $articleLanguage->name . '</span>';
-        $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Change">';
+        $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
         $output[] = '        </label>';
         $output[] = '      </div>';
 

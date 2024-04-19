@@ -962,17 +962,20 @@ async function deleteImage(e, mediaId) {
     });
 }
 
-function handleDropdownOptionClick(elementOption, dropDownIdentifier) {
+function handleDropdownOptionClick(event) {
+  event.preventDefault();
+  const elementOption = event.currentTarget;
+  const dropDownIdentifier = elementOption.dataset.dropdownIdentifier;
   const elementLabel = document.querySelector('#' + dropDownIdentifier + '-dd-label');
   const elementCheckbox = document.querySelector('#' + dropDownIdentifier + '-dd-checkbox');
   const optionClassName = dropDownIdentifier + '-dd-option';
 
   if (elementOption.dataset.value === '1') {
     elementLabel.classList.add('feedback-success');
-    elementLabel.classList.remove('background-light-text-color');
+    elementLabel.classList.remove('dropdown-background-light-color');
   } else {
     elementLabel.classList.remove('feedback-success');
-    elementLabel.classList.add('background-light-text-color');
+    elementLabel.classList.add('dropdown-background-light-color');
   }
 
   elementLabel.querySelector('span').innerHTML = elementOption.innerHTML;
@@ -1185,21 +1188,16 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       history.pushState("", document.title, articleBackofficePath);
       document.querySelector('input[name="articleId"]').value = articleId;
 
-      document.querySelectorAll('.side-nav-wrapper').forEach(i => i.classList.add('null'));
       document.querySelectorAll('.article-save-button').forEach(b => {
         b.value = Global.get('globalUpdate');
       });
-      document.querySelectorAll('.article-preview').forEach(b => {
-        b.href = articlePublicPath;
-        b.classList.remove('null');
-      });
-      document.querySelectorAll('.article-path-value').forEach(i => {
+      document.querySelectorAll('.editor-article-path').forEach(i => {
         i.textContent = articlePublicPath.trim().replace(/^\//, "");
       });
     }
 
     function getTitleContent() {
-      const titleEl = document.querySelector('.articleTitle');
+      const titleEl = document.querySelector('.page-content-title');
       if (titleEl && titleEl.textContent.trim().length) {
         return titleEl.textContent.trim();
       }
@@ -1277,11 +1275,6 @@ document.querySelectorAll('.article-save-button').forEach(el => {
         : null;
     }
 
-    function getPath() {
-      const pathEl = document.querySelector('div.article-path-value');
-      return pathEl && pathEl.textContent.trim().length ? pathEl.textContent.trim() : null;
-    }
-
     function getStatusId() {
       const status = document.querySelector('.article-status-dd-option[data-checked="1"]');
       return Number.parseInt(status.dataset.value);
@@ -1305,7 +1298,6 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       siteLanguageIsoCode: document.documentElement.lang ?? articleLanguageIsoCode,
       articleLanguageIsoCode: articleLanguageIsoCode,
       title: articleTitle,
-      path: getPath(),
       contentHtml: content.contentHtml,
       typeId: getArticleTypeId(),
       statusId: getStatusId(),
@@ -1445,133 +1437,8 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
   });
 });
 
-document.querySelectorAll('.article-status-dd-option').forEach(op => {
-  op.addEventListener('click', (e) => {
-    e.preventDefault();
-    handleDropdownOptionClick(op, 'article-status');
-  });
-});
-
-document.querySelectorAll('.user-status-dd-option').forEach(op => {
-  op.addEventListener('click', (e) => {
-    e.preventDefault();
-    handleDropdownOptionClick(op, 'user-status');
-  });
-});
-
-document.querySelectorAll('.article-lang-dd-option').forEach(op => {
-  op.addEventListener('click', (e) => {
-    e.preventDefault();
-    handleDropdownOptionClick(op, 'article-lang');
-  });
-});
-
-document.querySelectorAll('a.article-settings').forEach(el => {
-  el.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    document.querySelectorAll('input[name="tags"]').forEach(i => i.value = '');
-
-    const pathContainer = document.querySelector('.article-edit-previous-path-container');
-    const pathContent = pathContainer.querySelector('.article-edit-previous-path-content');
-    pathContent.querySelector('img').classList.remove('null');
-    pathContent.querySelectorAll('div').forEach(di => pathContent.removeChild(di));
-
-    if (!window.data.tags.length) {
-      const searchResultEl = document.querySelector('#search-results-tags');
-      Request.get('/back/tag')
-        .then(response => {
-          window.data.tags = response.tags;
-          window.data.tags.forEach(tag => {
-            let newTag = document.createElement('span');
-            newTag.className = 'result-item';
-            newTag.dataset.tagId = tag.id;
-            newTag.dataset.tagName = tag.name;
-            newTag.textContent = tag.name;
-            newTag.addEventListener('click', () => handleTagSearchResultClick(tag.id, tag.name, tag.name, null));
-            searchResultEl.appendChild(newTag);
-          });
-        });
-    }
-
-    const articleId = document.querySelector('input[name="articleId"]').value;
-    if (articleId) {
-      Request.get('/back/article/' + articleId + '/previous-path')
-        .then(response => {
-          response.paths.forEach(p => {
-            const newPathEl = document.createElement('div');
-            newPathEl.dataset.pathId = p.id;
-            newPathEl.innerHTML = '<span>' + p.path + '</span><span>' +
-              Global.formatDate(new Date(p.createdAt), false) + '</span>';
-            newPathEl.className = 'article-edit-previous-path';
-            pathContainer.appendChild(newPathEl);
-          });
-
-          pathContainer.querySelector('img').classList.add('null');
-        });
-    } else {
-      pathContainer.querySelector('img').classList.add('null');
-    }
-  });
-});
-
-document.querySelectorAll('input[name="tags"]').forEach(el => {
-  const searchResultEl = document.querySelector('#search-results-tags');
-
-  el.addEventListener('keyup', (e) => {
-    e.preventDefault();
-
-    searchResultEl.classList.remove('null');
-
-    if (e.keyCode === 37 || e.keyCode === 39) { // left/right arrows
-      return;
-    }
-
-    const allResults = document.querySelectorAll('.search-results > .result-item');
-
-    let count = allResults.length;
-    const inputText = e.target.value.trim();
-    const cleanInput = Util.cleanString(inputText);
-    allResults.forEach(r => {
-      if (r.dataset.new) {
-        r.parentNode.removeChild(r);
-        count--;
-        return;
-      }
-
-      if (Util.cleanString(r.textContent).includes(cleanInput)) {
-        r.classList.remove('null');
-      } else {
-        count--;
-        r.classList.add('null');
-      }
-    });
-
-    if (!count) {
-      let newTag = document.createElement('span');
-      newTag.className = 'result-item';
-      newTag.dataset.tagName = inputText;
-      newTag.dataset.new = '1';
-      newTag.innerHTML = '<span class="new">New</span>' + inputText;
-      newTag.addEventListener('click', () => {
-        handleTagSearchResultClick(null, inputText, newTag.innerHTML, newTag);
-      });
-      searchResultEl.appendChild(newTag);
-    }
-  });
-
-  el.addEventListener('focus', () => searchResultEl.classList.remove('null'));
-});
-
-document.querySelectorAll('a.search-results-close').forEach(el => {
-  el.addEventListener('click', (e) => {
-    e.preventDefault();
-    document.querySelector('#search-results-tags').classList.add('null');
-  });
-});
-
-document.querySelectorAll('.tag-result-selected-delete').forEach(i => {
-  i.addEventListener('click', (e) => handleRemoveArticleTag(e));
+document.querySelectorAll('.dropdown-menu-option').forEach(op => {
+  op.addEventListener('click', handleDropdownOptionClick);
 });
 
 document.querySelectorAll('.filter-close').forEach(a => {
@@ -1939,7 +1806,7 @@ document.querySelectorAll('.album-status-dd-option').forEach(op => {
 
     Request.put('/back/album/' + albumId + '/status/' + statusId, '')
       .then((response) => {
-        handleDropdownOptionClick(op, 'album-status');
+        handleDropdownOptionClick(e);
 
         document.querySelector('.form-public-link .value').innerHTML = response.publicLinkHtml;
       })

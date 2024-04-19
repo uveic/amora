@@ -77,7 +77,6 @@ final class DateUtil
      * @param bool $includePrefixAndOrSuffix
      * @param bool $includeSeconds
      * @return string
-     * @throws Exception
      */
     public static function getElapsedTimeString(
         Language $language,
@@ -88,7 +87,7 @@ final class DateUtil
         bool $includeSeconds = false,
     ): string {
         if (!isset($to)) {
-            $to = new DateTimeImmutable(timezone: $from->getTimezone());
+            $to = self::convertStringToDateTimeImmutable('now', timezone: $from->getTimezone());
         }
         $diff = (array)$to->diff($from);
 

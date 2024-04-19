@@ -23,7 +23,6 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
   <div class="page-header">
     <div></div>
     <div class="links">
-      <a href="#" class="article-settings"><img src="/img/svg/gear.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalSettings')?>"></a>
       <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="20" height="20" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
     </div>
   </div>
