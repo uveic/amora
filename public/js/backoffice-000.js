@@ -11,10 +11,6 @@ window.data = {
   mediaCacheLeft: [],
 }
 
-const mediaCache = [];
-const mediaCacheRight = [];
-const mediaCacheLeft = [];
-
 function addEventListenerAction(media, mediaId, eventListenerAction, targetContainerId) {
   if (eventListenerAction === 'displayNextImagePopup') {
     media.addEventListener('click', displayNextImagePopup);
@@ -337,13 +333,13 @@ function displayModalImage(image) {
 }
 
 function preloadMedia(mediaId, direction) {
-  const mediaIdToPreload = direction === 'DESC' ? mediaCacheRight[mediaId] : mediaCacheLeft[mediaId];
+  const mediaIdToPreload = direction === 'DESC' ? window.data.mediaCacheRight[mediaId] : window.data.mediaCacheLeft[mediaId];
 
   if (!mediaIdToPreload) {
     return;
   }
 
-  const mediaObj = mediaCache[mediaIdToPreload];
+  const mediaObj = window.data.mediaCache[mediaIdToPreload];
   if (!mediaObj) {
     return;
   }
@@ -356,17 +352,17 @@ function updateMediaCache(medias, direction) {
   let previousId = null;
 
   medias.forEach(item => {
-    if (!mediaCache[item.id]) {
-      mediaCache[item.id] = item;
+    if (!window.data.mediaCache[item.id]) {
+      window.data.mediaCache[item.id] = item;
     }
 
     if (previousId) {
       if (direction === 'ASC') {
-        mediaCacheLeft[previousId] = item.id;
-        mediaCacheRight[item.id] = previousId;
+        window.data.mediaCacheLeft[previousId] = item.id;
+        window.data.mediaCacheRight[item.id] = previousId;
       } else if (direction === 'DESC') {
-        mediaCacheLeft[item.id] = previousId;
-        mediaCacheRight[previousId] = item.id;
+        window.data.mediaCacheLeft[item.id] = previousId;
+        window.data.mediaCacheRight[previousId] = item.id;
       }
     }
 
@@ -378,7 +374,7 @@ async function modalRetrieveMediaAndAddToCache(mediaId, direction) {
   if (direction === 'DESC' || direction === 'ASC') {
     const fourthNextMediaId = getFourthNextMediaId(mediaId, direction);
     if (fourthNextMediaId) {
-      return mediaCache[mediaId];
+      return window.data.mediaCache[mediaId];
     }
   }
 
@@ -394,24 +390,24 @@ async function modalRetrieveMediaAndAddToCache(mediaId, direction) {
 }
 
 function getFourthNextMediaId(mediaId, direction) {
-  const nextMediaId = direction === 'DESC' ? mediaCacheRight[mediaId] : mediaCacheLeft[mediaId];
+  const nextMediaId = direction === 'DESC' ? window.data.mediaCacheRight[mediaId] : window.data.mediaCacheLeft[mediaId];
 
   const secondNextMediaId = nextMediaId ?
-    (direction === 'DESC' ? mediaCacheRight[nextMediaId] : mediaCacheLeft[nextMediaId])
+    (direction === 'DESC' ? window.data.mediaCacheRight[nextMediaId] : window.data.mediaCacheLeft[nextMediaId])
     : null;
 
   const thirdNextMediaId = secondNextMediaId ?
-    (direction === 'DESC' ? mediaCacheRight[secondNextMediaId] : mediaCacheLeft[secondNextMediaId])
+    (direction === 'DESC' ? window.data.mediaCacheRight[secondNextMediaId] : window.data.mediaCacheLeft[secondNextMediaId])
     : null;
 
   return thirdNextMediaId ?
-    (direction === 'DESC' ? mediaCacheRight[thirdNextMediaId] : mediaCacheLeft[thirdNextMediaId])
+    (direction === 'DESC' ? window.data.mediaCacheRight[thirdNextMediaId] : window.data.mediaCacheLeft[thirdNextMediaId])
     : null;
 }
 
 async function modalGetMedia(mediaId, direction) {
-  if (mediaCache[mediaId]) {
-    return mediaCache[mediaId];
+  if (window.data.mediaCache[mediaId]) {
+    return window.data.mediaCache[mediaId];
   }
 
   const typeId = document.querySelector('.media-load-more-js').dataset.typeId;
@@ -425,14 +421,14 @@ async function modalGetMedia(mediaId, direction) {
 
 async function modalGetNextMedia(currentMediaId, direction) {
   let nextMediaId = null;
-  if (direction === 'DESC' && mediaCacheRight[currentMediaId]) {
-    nextMediaId = mediaCacheRight[currentMediaId];
-  } else if (direction === 'ASC' && mediaCacheLeft[currentMediaId]) {
-    nextMediaId = mediaCacheLeft[currentMediaId];
+  if (direction === 'DESC' && window.data.mediaCacheRight[currentMediaId]) {
+    nextMediaId = window.data.mediaCacheRight[currentMediaId];
+  } else if (direction === 'ASC' && window.data.mediaCacheLeft[currentMediaId]) {
+    nextMediaId = window.data.mediaCacheLeft[currentMediaId];
   }
 
-  if (nextMediaId && mediaCache[nextMediaId]) {
-    return mediaCache[nextMediaId];
+  if (nextMediaId && window.data.mediaCache[nextMediaId]) {
+    return window.data.mediaCache[nextMediaId];
   }
 
   return modalRetrieveMediaAndAddToCache(currentMediaId, direction)
