@@ -212,22 +212,20 @@ readonly class ArticleService
     }
 
     public function getAvailablePathForArticle(
-        ?string $path = null,
         ?string $articleTitle = null,
         ?Article $existingArticle = null,
         ?ArticleStatus $articleStatus = null,
     ): string {
         $articleId = $existingArticle?->id;
-        $path = $path ? strtolower(StringUtil::cleanString($path)) : null;
+        $path = $existingArticle?->path;
+        $articleStatus = $articleStatus ?? $existingArticle?->status;
 
-        if (!$path && !$articleTitle || !$path && $articleStatus === ArticleStatus::Unlisted) {
+        if ($articleStatus === ArticleStatus::Unlisted) {
             $path = strtolower(StringUtil::generateRandomString(64));
-        } else if (!$path && $articleTitle) {
+        } elseif ($articleTitle) {
             $path = strtolower(StringUtil::cleanString($articleTitle));
-        } else {
-            $path = $path === $existingArticle->path && $articleTitle
-                ? strtolower(StringUtil::cleanString($articleTitle))
-                : $path;
+        } elseif (!$path) {
+            $path = strtolower(StringUtil::generateRandomString(64));
         }
 
         $count = 0;

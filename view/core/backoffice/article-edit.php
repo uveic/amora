@@ -27,7 +27,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     </div>
   </div>
 
-  <div class="main-wrapper">
+  <article class="main-wrapper">
     <div class="main-inner">
       <input name="articleId" type="hidden" value="<?=$article ? $article->id : ''?>">
       <input name="articleTypeId" type="hidden" value="<?=$articleType->value?>">
@@ -39,5 +39,5 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
       </div>
     </div>
 <?=$this->insert('partials/article/settings', ['responseData' => $responseData]);?>
-  </div>
+  </article>
 </main>

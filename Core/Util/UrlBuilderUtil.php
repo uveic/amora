@@ -25,7 +25,8 @@ class UrlBuilderUtil
 
     const BACKOFFICE_ARTICLES = '/backoffice/articles';
     const BACKOFFICE_ARTICLE = '/backoffice/articles/%d';
-    const BACKOFFICE_NEW_ARTICLE = '/backoffice/articles/new';
+    const BACKOFFICE_ARTICLE_NEW = '/backoffice/articles/new';
+    const BACKOFFICE_ARTICLE_PREVIEW = '/backoffice/articles/%d/preview';
 
     const BACKOFFICE_ALBUM_LIST = '/backoffice/albums';
     const BACKOFFICE_ALBUM_VIEW = '/backoffice/albums/%d';
@@ -126,8 +127,13 @@ class UrlBuilderUtil
         ArticleType $articleType,
     ): string {
         return self::buildBaseUrl($language)
-            . self::BACKOFFICE_NEW_ARTICLE
+            . self::BACKOFFICE_ARTICLE_NEW
             . '?atId=' . $articleType->value;
+    }
+
+    public static function buildBackofficeArticlePreviewUrl(Language $language, int $articleId): string
+    {
+        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_ARTICLE_PREVIEW, $articleId);
     }
 
     public static function buildBackofficeContentListUrl(Language $language): string

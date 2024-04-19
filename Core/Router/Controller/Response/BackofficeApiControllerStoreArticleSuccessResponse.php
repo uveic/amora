@@ -10,6 +10,7 @@ class BackofficeApiControllerStoreArticleSuccessResponse extends Response
         bool $success,
         ?int $articleId = null,
         ?string $articleBackofficePath = null,
+        ?string $articleBackofficePathPreview = null,
         ?string $articlePublicPath = null,
         ?string $errorMessage = null
     ) {
@@ -25,6 +26,10 @@ class BackofficeApiControllerStoreArticleSuccessResponse extends Response
         $responseData['articleBackofficePath'] = is_null($articleBackofficePath)
             ? null
             : $articleBackofficePath;
+
+        $responseData['articleBackofficePathPreview'] = is_null($articleBackofficePathPreview)
+            ? null
+            : $articleBackofficePathPreview;
 
         $responseData['articlePublicPath'] = is_null($articlePublicPath)
             ? null

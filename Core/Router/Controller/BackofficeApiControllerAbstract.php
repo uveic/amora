@@ -30,8 +30,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateArticleFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDestroyArticleSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDestroyArticleFailureResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetPreviousPathsForArticleFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreTagSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreTagFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetTagsSuccessResponse.php';
@@ -149,7 +147,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param int $typeId
      * @param string|null $title
      * @param string $contentHtml
-     * @param string|null $path
      * @param int|null $mainImageId
      * @param string|null $publishOn
      * @param array $sections
@@ -164,7 +161,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         int $typeId,
         ?string $title,
         string $contentHtml,
-        ?string $path,
         ?int $mainImageId,
         ?string $publishOn,
         array $sections,
@@ -183,7 +179,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param int $typeId
      * @param string|null $title
      * @param string $contentHtml
-     * @param string|null $path
      * @param int|null $mainImageId
      * @param string|null $publishOn
      * @param array $mediaIds
@@ -200,7 +195,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         int $typeId,
         ?string $title,
         string $contentHtml,
-        ?string $path,
         ?int $mainImageId,
         ?string $publishOn,
         array $mediaIds,
@@ -218,19 +212,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function destroyArticle(int $articleId, Request $request): Response;
-
-    /**
-     * Endpoint: /back/article/{articleId}/previous-path
-     * Method: GET
-     *
-     * @param int $articleId
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function getPreviousPathsForArticle(
-        int $articleId,
-        Request $request
-    ): Response;
 
     /**
      * Endpoint: /back/tag
@@ -763,7 +744,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             $contentHtml = $bodyParams['contentHtml'] ?? null;
         }
 
-        $path = $bodyParams['path'] ?? null;
         $mainImageId = $bodyParams['mainImageId'] ?? null;
         $publishOn = $bodyParams['publishOn'] ?? null;
         $sections = null;
@@ -796,7 +776,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $typeId,
                 $title,
                 $contentHtml,
-                $path,
                 $mainImageId,
                 $publishOn,
                 $sections,
@@ -898,7 +877,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             $contentHtml = $bodyParams['contentHtml'] ?? null;
         }
 
-        $path = $bodyParams['path'] ?? null;
         $mainImageId = $bodyParams['mainImageId'] ?? null;
         $publishOn = $bodyParams['publishOn'] ?? null;
         $mediaIds = null;
@@ -942,7 +920,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $typeId,
                 $title,
                 $contentHtml,
-                $path,
                 $mainImageId,
                 $publishOn,
                 $mediaIds,
@@ -1004,57 +981,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in BackofficeApiControllerAbstract - Method: destroyArticle()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
-
-    private function validateAndCallGetPreviousPathsForArticle(Request $request): Response
-    {
-        $pathParts = $request->pathWithoutLanguage;
-        $pathParams = $this->getPathParams(
-            ['back', 'article', '{articleId}', 'previous-path'],
-            $pathParts
-        );
-        $errors = [];
-
-        $articleId = null;
-        if (!isset($pathParams['articleId'])) {
-            $errors[] = [
-                'field' => 'articleId',
-                'message' => 'required'
-            ];
-        } else {
-            if (!is_numeric($pathParams['articleId'])) {
-                $errors[] = [
-                    'field' => 'articleId',
-                    'message' => 'must be an integer'
-                ];
-            } else {
-                $articleId = intval($pathParams['articleId']);
-            }
-        }
-
-        if ($errors) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->getPreviousPathsForArticle(
-                $articleId,
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: getPreviousPathsForArticle()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -1955,16 +1881,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallDestroyArticle($request);
-        }
-
-        if ($method === 'GET' &&
-            $pathParams = $this->pathParamsMatcher(
-                ['back', 'article', '{articleId}', 'previous-path'],
-                $pathParts,
-                ['fixed', 'fixed', 'int', 'fixed']
-            )
-        ) {
-            return $this->validateAndCallGetPreviousPathsForArticle($request);
         }
 
         if ($method === 'POST' &&

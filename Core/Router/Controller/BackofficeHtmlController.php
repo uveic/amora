@@ -6,6 +6,7 @@ use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
+use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
@@ -409,6 +410,41 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                     $localisationUtil->getValue('globalArticle'),
                 article: $article,
                 articleSections: $articleSections,
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/articles/{articleId}/preview
+     * Method: GET
+     *
+     * @param int $articleId
+     * @param Request $request
+     * @return Response
+     */
+    protected function getArticlePreviewPage(int $articleId, Request $request): Response
+    {
+        $article = $this->articleService->getArticleForId($articleId);
+        if (!$article) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        $siteImage = $article->mainImageId
+            ? $this->mediaService->getMediaForId($article->mainImageId)
+            : null;
+
+        return Response::createHtmlResponse(
+            template: 'app/frontend/public/home-article',
+            responseData: new HtmlResponseData(
+                request: $request,
+                pageTitle: $article->title,
+                pageDescription: $article->getContentExcerpt(),
+                siteImagePath: $siteImage?->getPathWithNameLarge(),
+                article: $article,
+                postBottomContent: $this->articleService->getPageContent(
+                    type: PageContentType::BlogBottom,
+                    language: $request->siteLanguage,
+                ),
             ),
         );
     }

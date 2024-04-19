@@ -350,7 +350,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int $typeId
      * @param string|null $title
      * @param string $contentHtml
-     * @param string|null $path
      * @param int|null $mainImageId
      * @param string|null $publishOn
      * @param array $sections
@@ -365,7 +364,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         int $typeId,
         ?string $title,
         string $contentHtml,
-        ?string $path,
         ?int $mainImageId,
         ?string $publishOn,
         array $sections,
@@ -402,12 +400,11 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $title = StringUtil::sanitiseText($title);
         $contentHtml = StringUtil::sanitiseHtml(html_entity_decode($contentHtml));
-        $path = StringUtil::sanitiseText($path);
 
         $now = new DateTimeImmutable();
         $articleLanguage = Language::from(strtoupper($articleLanguageIsoCode));
         $status = ArticleStatus::from($statusId);
-        $path = $path ?: $this->articleService->getAvailablePathForArticle(
+        $path = $this->articleService->getAvailablePathForArticle(
             articleTitle: $title,
             articleStatus: $status,
         );
@@ -450,6 +447,10 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             success: (bool)$newArticle,
             articleId: $newArticle->id,
             articleBackofficePath: UrlBuilderUtil::buildBackofficeArticleUrl($siteLanguage, $newArticle->id),
+            articleBackofficePathPreview: UrlBuilderUtil::buildBackofficeArticlePreviewUrl(
+                language: $siteLanguage,
+                articleId: $newArticle->id,
+            ),
             articlePublicPath: UrlBuilderUtil::buildPublicArticlePath($newArticle->path, $siteLanguage),
         );
     }
@@ -465,7 +466,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int $typeId
      * @param string|null $title
      * @param string $contentHtml
-     * @param string|null $path
      * @param int|null $mainImageId
      * @param string|null $publishOn
      * @param array $mediaIds
@@ -482,7 +482,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         int $typeId,
         ?string $title,
         string $contentHtml,
-        ?string $path,
         ?int $mainImageId,
         ?string $publishOn,
         array $mediaIds,
@@ -521,7 +520,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $existingArticle = $this->articleService->getArticleForId(
             id: $articleId,
         );
-        if (empty($existingArticle)) {
+
+        if (!$existingArticle) {
             return new BackofficeApiControllerUpdateArticleSuccessResponse(
                 success: false,
                 errorMessage: 'Article not found',
@@ -531,9 +531,12 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $title = StringUtil::sanitiseText($title);
         $contentHtml = html_entity_decode($contentHtml);
         $contentHtml = StringUtil::sanitiseHtml($contentHtml);
-        $path = StringUtil::sanitiseText($path);
 
-        $path = $this->articleService->getAvailablePathForArticle($path, $title, $existingArticle);
+        $path = $this->articleService->getAvailablePathForArticle(
+            articleTitle: $title,
+            existingArticle: $existingArticle,
+        );
+
         if ($path !== $existingArticle->path) {
             $this->articleService->storeArticlePath(
                 new ArticlePath(
@@ -546,7 +549,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $now = new DateTimeImmutable();
-        $publishOnMySql = $publishOn
+        $publishOn = $publishOn
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
             : ($existingArticle->publishOn ?? $now);
 
@@ -562,7 +565,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 type: $type,
                 createdAt: $existingArticle->createdAt,
                 updatedAt: $now,
-                publishOn: $publishOnMySql,
+                publishOn: $publishOn,
                 title: $title ?? $existingArticle->title,
                 contentHtml: $contentHtml ?? $existingArticle->contentHtml,
                 mainImageId: $mainImageId ?? $existingArticle->mainImage?->id,
@@ -576,14 +579,19 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             userAgent: $request->userAgent,
         );
 
+        $siteLanguage = Language::from(strtoupper($siteLanguageIsoCode));
         return new BackofficeApiControllerUpdateArticleSuccessResponse(
             success: $res,
             articleId: $res ? $articleId : null,
             articleBackofficePath: UrlBuilderUtil::buildBackofficeArticleUrl(
-                language: Language::from(strtoupper($siteLanguageIsoCode)),
+                language: $siteLanguage,
                 articleId: $articleId,
             ),
-            articlePublicPath: $res ? '/' . $path : null,
+            articleBackofficePathPreview: UrlBuilderUtil::buildBackofficeArticlePreviewUrl(
+                language: $siteLanguage,
+                articleId: $articleId,
+            ),
+            articlePublicPath: UrlBuilderUtil::buildPublicArticlePath($path, $siteLanguage),
         );
     }
 
@@ -623,39 +631,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         return new BackofficeApiControllerDestroyArticleSuccessResponse($deleteRes);
-    }
-
-    /**
-     * Endpoint: /back/article/{articleId}/previous-path
-     * Method: GET
-     *
-     * @param int $articleId
-     * @param Request $request
-     * @return Response
-     */
-    protected function getPreviousPathsForArticle(
-        int $articleId,
-        Request $request
-    ): Response {
-        $paths = $this->articleService->filterArticlePathsBy(
-            articleIds: [$articleId],
-            queryOptions: new QueryOptions(
-                orderBy: [
-                    new QueryOrderBy('created_at', QueryOrderDirection::DESC),
-                ],
-            ),
-        );
-
-        $output = [];
-        /** @var ArticlePath $path */
-        foreach ($paths as $path) {
-            $output[] = $path->asPublicArray();
-        }
-
-        return new BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse(
-            success: true,
-            paths: $output,
-        );
     }
 
     /**

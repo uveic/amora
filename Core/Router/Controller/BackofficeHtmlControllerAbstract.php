@@ -94,6 +94,16 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
     abstract protected function getEditArticlePage(int $articleId, Request $request): Response;
 
     /**
+     * Endpoint: /backoffice/articles/{articleId}/preview
+     * Method: GET
+     *
+     * @param int $articleId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getArticlePreviewPage(int $articleId, Request $request): Response;
+
+    /**
      * Endpoint: /backoffice/albums
      * Method: GET
      *
@@ -484,6 +494,57 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in BackofficeHtmlControllerAbstract - Method: getEditArticlePage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetArticlePreviewPage(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['backoffice', 'articles', '{articleId}', 'preview'],
+            $pathParts
+        );
+        $errors = [];
+
+        $articleId = null;
+        if (!isset($pathParams['articleId'])) {
+            $errors[] = [
+                'field' => 'articleId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['articleId'])) {
+                $errors[] = [
+                    'field' => 'articleId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $articleId = intval($pathParams['articleId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getArticlePreviewPage(
+                $articleId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getArticlePreviewPage()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -1026,6 +1087,16 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetEditArticlePage($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['backoffice', 'articles', '{articleId}', 'preview'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetArticlePreviewPage($request);
         }
 
         if ($method === 'GET' &&

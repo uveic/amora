@@ -541,10 +541,6 @@
                   "description": "Article content",
                   "type": "string"
                 },
-                "path": {
-                  "description": "Article path",
-                  "type": "string"
-                },
                 "mainImageId": {
                   "description": "Article main image Id",
                   "type": "integer"
@@ -646,6 +642,10 @@
                 "articleBackofficePath": {
                   "type": "string",
                   "description": "Article backoffice path"
+                },
+                "articleBackofficePathPreview": {
+                  "type": "string",
+                  "description": "Article backoffice path preview"
                 },
                 "articlePublicPath": {
                   "type": "string",
@@ -749,10 +749,6 @@
                 },
                 "contentHtml": {
                   "description": "Article content",
-                  "type": "string"
-                },
-                "path": {
-                  "description": "Article path",
                   "type": "string"
                 },
                 "mainImageId": {
@@ -866,6 +862,10 @@
                   "type": "string",
                   "description": "Article backoffice path"
                 },
+                "articleBackofficePathPreview": {
+                  "type": "string",
+                  "description": "Article backoffice path preview"
+                },
                 "articlePublicPath": {
                   "type": "string",
                   "description": "Article public path"
@@ -954,109 +954,6 @@
               },
               "required": [
                 "success"
-              ]
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "success"
-              ]
-            }
-          }
-        }
-      }
-    },
-    "/back/article/{articleId}/previous-path": {
-      "get": {
-        "tags": [],
-        "description": "Get previous paths for article ID",
-        "operationId": "getPreviousPathsForArticle",
-        "parameters": [
-          {
-            "name": "articleId",
-            "in": "path",
-            "description": "Article ID",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    true,
-                    false
-                  ]
-                },
-                "paths": {
-                  "type": "object",
-                  "description": "Article paths",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "description": "Article path ID"
-                    },
-                    "path": {
-                      "type": "string",
-                      "description": "Article path"
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "description": "Created at - ISO format. Example: 2022-01-01T00:25:00+00:00"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "path",
-                    "createdAt"
-                  ]
-                },
-                "errorMessage": {
-                  "type": "string",
-                  "description": "Error message"
-                }
-              },
-              "required": [
-                "success",
-                "paths"
               ]
             }
           },

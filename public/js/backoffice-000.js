@@ -5,7 +5,6 @@ import {Uploader} from "./module/Uploader-000.js";
 import {appAddEventListenerAction} from "./app/back-000.js";
 
 window.data = {
-  tags: [],
   mediaCache: [],
   mediaCacheRight: [],
   mediaCacheLeft: [],
@@ -482,14 +481,19 @@ function insertImageInArticle(e) {
   const existingImage = document.querySelector('img[data-media-id="' + mediaId + '"]');
 
   const newImage = new Image();
-  newImage.className = 'article-image';
-  newImage.src = existingImage.dataset.pathMedium;
+  newImage.className = 'image-item';
+  newImage.src = existingImage.dataset.pathLarge;
   newImage.dataset.mediaId = existingImage.dataset.mediaId;
   newImage.alt = existingImage.alt;
+  newImage.srcset = existingImage.srcset;
+  newImage.sizes = existingImage.sizes;
   newImage.title = existingImage.title;
+  newImage.width = existingImage.width;
+  newImage.height = existingImage.height;
+  newImage.loading = 'lazy';
 
   const imageCaption = document.createElement('p');
-  imageCaption.className = 'article-image-caption';
+  imageCaption.className = 'image-caption';
   imageCaption.innerHTML = '<br>';
 
   container.appendChild(newImage);
@@ -947,9 +951,10 @@ function displayImageFromApiCall(container, images, eventListenerAction, targetC
   });
 }
 
-async function deleteImage(e, mediaId) {
+function deleteImage(e) {
   e.preventDefault();
 
+  const mediaId = e.currentTarget.dataset.mediaId;
   const delRes = window.confirm(Global.get('feedbackDeleteImageConfirmation'));
   if (!delRes) {
     return;
@@ -984,70 +989,6 @@ function handleDropdownOptionClick(event) {
   document.querySelectorAll('.' + optionClassName).forEach(o => {
     o.dataset.checked = o.dataset.value === elementOption.dataset.value ? '1' : '0';
   });
-}
-
-function handleRemoveArticleTag(event) {
-  event.target.parentNode.parentNode.removeChild(event.target.parentNode);
-
-  const allTags = document.querySelectorAll('#tags-selected span');
-  if (!allTags.length) {
-    document.querySelector('#tags-selected').classList.add('null');
-  }
-}
-
-function handleTagSearchResultClick(tagId, tagName, tagInnerHtml, tagElement) {
-  const tags = document.querySelector('#tags-selected');
-  tags.classList.remove('null');
-  const allResults = document.querySelectorAll('.search-results > .result-item');
-
-  function generateNewTagHtml(id, name, html) {
-    let imgClose = new Image();
-    imgClose.className = 'img-svg m-l-05';
-    imgClose.title = Global.get('globalRemove');
-    imgClose.alt = Global.get('globalRemove');
-    imgClose.src = '/img/svg/x.svg';
-    imgClose.addEventListener('click', (e) => handleRemoveArticleTag(e));
-
-    let newTag = document.createElement('span');
-    newTag.className = 'result-selected';
-    newTag.dataset.tagId = id;
-    newTag.dataset.tagName = name;
-    newTag.innerHTML = html;
-    newTag.appendChild(imgClose);
-    tags.appendChild(newTag);
-  }
-
-  document.querySelector('#search-results-tags').classList.add('null');
-  document.querySelector('input[name="tags"]').value = '';
-  allResults.forEach(r => r.classList.remove('null'));
-  tagId = Number.parseInt(tagId);
-
-  if (tagId) {
-    let existingTag = [];
-    document.querySelectorAll('#tags-selected > .result-selected')
-      .forEach(s => {
-        if (tagId === Number.parseInt(s.dataset.tagId)) {
-          s.classList.add('highlight-effect');
-          setTimeout(() => s.classList.remove('highlight-effect'), 2000);
-        }
-        existingTag.push(Number.parseInt(s.dataset.tagId));
-      });
-
-    if (existingTag.includes(tagId)) {
-      return;
-    }
-
-    generateNewTagHtml(tagId, tagName, tagInnerHtml);
-    return;
-  }
-
-  Request.post('/back/tag', JSON.stringify({name: tagName}))
-    .then(res => {
-      if (tagElement) {
-        tagElement.parentNode.removeChild(tagElement);
-      }
-      generateNewTagHtml(res.id, tagName, tagInnerHtml);
-    });
 }
 
 function handleAlbumMediaDragEnter(ev) {
@@ -1184,16 +1125,17 @@ document.querySelectorAll('.article-save-button').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
 
-    function afterApiCall(articleId, articlePublicPath, articleBackofficePath) {
-      history.pushState("", document.title, articleBackofficePath);
-      document.querySelector('input[name="articleId"]').value = articleId;
+    function afterApiCall(response) {
+      history.pushState("", document.title, response.articleBackofficePath);
+      document.querySelector('input[name="articleId"]').value = response.articleId;
 
       document.querySelectorAll('.article-save-button').forEach(b => {
         b.value = Global.get('globalUpdate');
       });
-      document.querySelectorAll('.editor-article-path').forEach(i => {
-        i.textContent = articlePublicPath.trim().replace(/^\//, "");
-      });
+      const articlePreviewEl = document.querySelector('.editor-article-preview');
+      articlePreviewEl.parentElement.classList.remove('null');
+      articlePreviewEl.querySelector('a').href = response.articleBackofficePathPreview;
+      articlePreviewEl.parentElement.querySelector('.editor-article-path').textContent = response.articlePublicPath;
     }
 
     function getTitleContent() {
@@ -1205,58 +1147,39 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       return null;
     }
 
-    function getTags() {
-      let tags = [];
-      document.querySelectorAll('#tags-selected > .result-selected')
-        .forEach(t => {
-          tags.push({
-            id: t.dataset.tagId ? Number.parseInt(t.dataset.tagId) : null,
-            name: t.dataset.tagName
-          });
-        });
-
-      return tags;
-    }
-
     function getContentHtmlAndSections() {
-      const contentContainer = document.querySelector('.medium-editor-content');
-      const imageIds = [];
+      const htmlContainer = document.querySelector('.medium-editor-content');
+      const mediaIds = [];
 
-      contentContainer.childNodes.forEach(node => {
-        let currentNode = node;
+      htmlContainer.childNodes.forEach(currentNode => {
         if (currentNode.nodeName === 'DIV') {
           const newParagraph = document.createElement('p');
-          newParagraph.innerHTML = node.innerHTML;
-          contentContainer.insertBefore(newParagraph, node);
-          contentContainer.removeChild(node);
+          newParagraph.innerHTML = currentNode.innerHTML;
+          htmlContainer.insertBefore(newParagraph, currentNode);
+          htmlContainer.removeChild(currentNode);
           currentNode = newParagraph;
         }
 
         if (currentNode.nodeName === 'IMG' && currentNode.dataset.mediaId) {
-          imageIds.push(Number.parseInt(currentNode.dataset.mediaId));
+          mediaIds.push(Number.parseInt(currentNode.dataset.mediaId));
         }
 
         if (currentNode.nodeName === '#text') {
           if (currentNode.textContent.trim().length) {
             const newParagraph = document.createElement('p');
             newParagraph.textContent = currentNode.textContent;
-            contentContainer.insertBefore(newParagraph, node);
+            htmlContainer.insertBefore(newParagraph, currentNode);
           }
 
-          contentContainer.removeChild(node);
+          htmlContainer.removeChild(currentNode);
         }
       });
 
-      const firstImageElement = contentContainer.querySelector('.article-image');
-      const firstImageId = firstImageElement && firstImageElement.dataset.mediaId ?
-        Number.parseInt(firstImageElement.dataset.mediaId)
-        : null;
-
       return {
         sections: [],
-        contentHtml: contentContainer.innerHTML.trim().length ? contentContainer.innerHTML.trim() : null,
-        mainImageId: firstImageId,
-        mediaIds: imageIds,
+        contentHtml: htmlContainer.innerHTML.trim().length ? htmlContainer.innerHTML.trim() : null,
+        mainMediaId: mediaIds[0] ?? null,
+        mediaIds: mediaIds,
       };
     }
 
@@ -1301,10 +1224,9 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       contentHtml: content.contentHtml,
       typeId: getArticleTypeId(),
       statusId: getStatusId(),
-      mainImageId: content.mainImageId,
+      mainImageId: content.mainMediaId,
       mediaIds: content.mediaIds,
       sections: content.sections,
-      tags: getTags(),
       publishOn: getPublishOnDateIsoString(),
     });
 
@@ -1312,19 +1234,16 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     const url = '/back/article';
     if (articleIdEl && articleIdEl.value) {
       Request.put(url + '/' + articleIdEl.value, payload, Global.get('globalUpdated'))
-        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath));
+        .then((res) => afterApiCall(res));
     } else {
       Request.post(url, payload, Global.get('globalSaved'))
-        .then((res) => afterApiCall(res.articleId, res.articlePublicPath, res.articleBackofficePath));
+        .then((res) => afterApiCall(res));
     }
   });
 });
 
 document.querySelectorAll('.image-delete').forEach(imgEl => {
-  imgEl.addEventListener('click', e => {
-    const mediaId = imgEl.dataset.mediaId;
-    deleteImage(e, mediaId).then();
-  });
+  imgEl.addEventListener('click', deleteImage);
 });
 
 document.querySelectorAll('input#images').forEach(im => {

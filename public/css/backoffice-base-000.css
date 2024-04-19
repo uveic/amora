@@ -361,6 +361,8 @@ h2.page-content-subtitle {
   gap: 1rem;
   align-items: flex-start;
   position: relative;
+  max-width: revert;
+  margin: revert;
 }
 
 .main-inner {
@@ -1353,7 +1355,7 @@ h2.page-content-subtitle {
   background-color: var(--color-light-2);
 }
 
-.album-section-media-container .album-section-image-delete {
+.album-section-media-container .img-svg {
   cursor: pointer;
 }
 

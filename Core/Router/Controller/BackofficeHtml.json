@@ -175,6 +175,31 @@
         }
       }
     },
+    "/backoffice/articles/{articleId}/preview": {
+      "get": {
+        "tags": [],
+        "summary": "Return HTML to render the page",
+        "description": "",
+        "operationId": "getArticlePreviewPage",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "description": "Article ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "/backoffice/albums": {
       "get": {
         "tags": [],

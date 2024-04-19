@@ -402,10 +402,6 @@ blockquote *:last-child {
 #feedback-banner > p {
   color: var(--color-failure);
 }
-
-.highlight-effect {
-  background-color: var(--color-success) !important;
-}
 /* Feedback style ends here */
 
 /* Register/Login style starts here */
@@ -524,11 +520,18 @@ article > ul {
   padding: 0;
 }
 
-article > img {
+article > img,
+article .image-item {
   position: relative;
   margin-top: 1rem;
   width: 100%;
   height: auto;
+}
+
+article .image-caption {
+  margin-top: 0.21rem;
+  color: var(--color-light-4);
+  font-size: 0.8rem;
 }
 
 .article-section-image-caption {
