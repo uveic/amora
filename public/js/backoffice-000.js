@@ -975,14 +975,14 @@ function handleDropdownOptionClick(event) {
   const elementCheckbox = document.querySelector('#' + dropDownIdentifier + '-dd-checkbox');
   const optionClassName = dropDownIdentifier + '-dd-option';
 
-  if (elementOption.dataset.value === '1') {
-    elementLabel.classList.add('feedback-success');
-    elementLabel.classList.remove('dropdown-background-light-color');
-  } else {
-    elementLabel.classList.remove('feedback-success');
-    elementLabel.classList.add('dropdown-background-light-color');
-  }
+  elementLabel.classList.forEach(cl => {
+    if (cl.startsWith('status-')) {
+      elementLabel.classList.remove(cl);
+    }
+  });
 
+  const newClassName = Array.from(elementOption.classList).filter(cl => cl.startsWith('status-') === true)[0] ?? '';
+  elementLabel.classList.add(newClassName);
   elementLabel.querySelector('span').innerHTML = elementOption.innerHTML;
   elementCheckbox.checked = false;
 

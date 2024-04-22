@@ -410,7 +410,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
         $publishOn = $publishOn
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
-            : (ArticleStatus::isPublic($status) ? $now : null);
+            : ($status->isPublic() ? $now : null);
 
         $newArticle = $this->articleService->createNewArticle(
             article: new Article(

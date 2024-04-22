@@ -21,11 +21,21 @@ enum ArticleStatus: int
         ];
     }
 
-    public static function isPublic(self $item): bool
+    public function isPublic(): bool
     {
-        return match ($item) {
+        return match ($this) {
             self::Published, self::Private, self::Unlisted => true,
             default => false,
+        };
+    }
+
+    public function getClass(): string
+    {
+        return match ($this) {
+            self::Published => 'status-published',
+            self::Private, self::Unlisted => 'status-private',
+            self::Deleted => 'status-deleted',
+            self::Draft => 'status-draft',
         };
     }
 }
