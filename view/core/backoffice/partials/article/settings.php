@@ -60,14 +60,13 @@ $articlePublicUrl = $article ? UrlBuilderUtil::buildPublicArticlePath($article?-
 <?=ArticleHtmlGenerator::generateArticleStatusDropdownSelectHtml($responseData)?>
   </div>
   <div>
-    <label for="publishOn" class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
+    <label class="label"><?=$responseData->getLocalValue('globalPublishOn')?>:</label>
     <div class="control two-columns m-t-025">
       <label for="publishOnDate" class="label null">Date:</label>
       <input class="input flex-grow-4" id="publishOnDate" name="publishOnDate" type="date" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnDate?>" required>
       <label for="publishOnTime" class="label null">Time:</label>
       <input class="input publish-on-time" id="publishOnTime" name="publishOnTime" type="time" placeholder="<?=$responseData->getLocalValue('globalDateFormat')?>" value="<?=$publishOnTime?>" required>
     </div>
-    <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
   </div>
   <div>
     <button class="article-save-button button is-success" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>

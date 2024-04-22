@@ -272,25 +272,25 @@
 .status-draft,
 .status-draft:hover {
   background-color: var(--color-text-light);
-  color: var(--color-bg);
+  color: var(--color-bg) !important;
 }
 
 .status-deleted,
 .status-deleted:hover {
   background-color: var(--color-failure);
-  color: var(--color-bg);
+  color: var(--color-bg) !important;
 }
 
 .status-published,
 .status-published:hover {
   background-color: var(--color-success);
-  color: var(--color-bg);
+  color: var(--color-bg) !important;
 }
 
 .status-private,
 .status-private:hover {
   background-color: var(--color-cuaternary);
-  color: var(--color-bg);
+  color: var(--color-bg) !important;
 }
 /* Status ends here */
 

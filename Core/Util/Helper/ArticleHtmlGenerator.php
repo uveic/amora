@@ -80,12 +80,12 @@ final class ArticleHtmlGenerator
         foreach (Core::getAllLanguages() as $language) {
             $output[] = '          <li><a data-checked="' . ($language === $articleLanguage ? '1' : '0') .
                 '" data-value="' . $language->value .
-                '" class="dropdown-menu-option article-lang-dd-option dropdown-background-light-color"' .
+                '" class="dropdown-menu-option article-lang-dd-option"' .
                 ' href="#" data-dropdown-identifier="article-lang">' . $language->getIconFlag('m-r-05') . $language->name . '</a></li>';
         }
 
         $output[] = '        </ul>';
-        $output[] = '        <label id="article-lang-dd-label" for="article-lang-dd-checkbox" class="dropdown-menu-label dropdown-background-light-color">';
+        $output[] = '        <label id="article-lang-dd-label" for="article-lang-dd-checkbox" class="dropdown-menu-label">';
         $output[] = '          <span>' . $articleLanguage->getIconFlag('m-r-05') . $articleLanguage->name . '</span>';
         $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
         $output[] = '        </label>';

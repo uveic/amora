@@ -206,7 +206,7 @@ blockquote *:last-child {
 
 .dropdown-menu-label {
   font-weight: normal;
-  color: var(--color-bg);
+  color: var(--color-text);
   padding: 0.5rem 1rem;
   border: none;
   cursor: pointer;
@@ -267,17 +267,11 @@ blockquote *:last-child {
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
+  color: var(--color-text);
 }
 
 .dropdown-menu + div > ul a:hover {
   opacity: 0.97;
-}
-
-.dropdown-background-light-color,
-.dropdown-background-light-color:active,
-.dropdown-background-light-color:visited,
-.dropdown-background-light-color:focus,
-.dropdown-background-light-color:hover {
   color: var(--color-text);
 }
 /* Dropdown ends here */
