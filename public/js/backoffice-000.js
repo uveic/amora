@@ -1123,7 +1123,7 @@ document.querySelectorAll('.image-next-action, .image-previous-action, .image-ra
   });
 });
 
-document.querySelectorAll('.article-save-button').forEach(el => {
+document.querySelectorAll('.article-save-js').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
 
@@ -1131,7 +1131,7 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       history.pushState("", document.title, response.articleBackofficePath);
       document.querySelector('input[name="articleId"]').value = response.articleId;
 
-      document.querySelectorAll('.article-save-button').forEach(b => {
+      document.querySelectorAll('.article-save-js').forEach(b => {
         b.value = Global.get('globalUpdate');
       });
       const articlePreviewEl = document.querySelector('.editor-article-preview');
@@ -1147,42 +1147,6 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       }
 
       return null;
-    }
-
-    function getContentHtmlAndSections() {
-      const htmlContainer = document.querySelector('.medium-editor-content');
-      const mediaIds = [];
-
-      htmlContainer.childNodes.forEach(currentNode => {
-        if (currentNode.nodeName === 'DIV') {
-          const newParagraph = document.createElement('p');
-          newParagraph.innerHTML = currentNode.innerHTML;
-          htmlContainer.insertBefore(newParagraph, currentNode);
-          htmlContainer.removeChild(currentNode);
-          currentNode = newParagraph;
-        }
-
-        if (currentNode.nodeName === 'IMG' && currentNode.dataset.mediaId) {
-          mediaIds.push(Number.parseInt(currentNode.dataset.mediaId));
-        }
-
-        if (currentNode.nodeName === '#text') {
-          if (currentNode.textContent.trim().length) {
-            const newParagraph = document.createElement('p');
-            newParagraph.textContent = currentNode.textContent;
-            htmlContainer.insertBefore(newParagraph, currentNode);
-          }
-
-          htmlContainer.removeChild(currentNode);
-        }
-      });
-
-      return {
-        sections: [],
-        contentHtml: htmlContainer.innerHTML.trim().length ? htmlContainer.innerHTML.trim() : null,
-        mainMediaId: mediaIds[0] ?? null,
-        mediaIds: mediaIds,
-      };
     }
 
     function getPublishOnDateIsoString() {
@@ -1210,25 +1174,26 @@ document.querySelectorAll('.article-save-button').forEach(el => {
       return language.dataset.value;
     }
 
-    const articleTitle = getTitleContent();
-    const articleLanguageIsoCode = getLanguageIsoCode();
-    const content = getContentHtmlAndSections();
+    const htmlContainer = document.querySelector('.medium-editor-content');
+    const mediaIds = Array.from(htmlContainer.querySelectorAll('img[data-media-id]'))
+      .map(({dataset}) => Number.parseInt(dataset.mediaId));
+    const contentHtml = Util.getAndCleanHtmlFromElement(htmlContainer);
 
-    if (!content.contentHtml) {
+    if (!contentHtml) {
       Util.notifyError(new Error(Global.get('feedbackSaving')));
       return;
     }
 
     const payload = JSON.stringify({
-      siteLanguageIsoCode: document.documentElement.lang ?? articleLanguageIsoCode,
-      articleLanguageIsoCode: articleLanguageIsoCode,
-      title: articleTitle,
-      contentHtml: content.contentHtml,
+      siteLanguageIsoCode: document.documentElement.lang ?? 'EN',
+      articleLanguageIsoCode: getLanguageIsoCode(),
+      title: getTitleContent(),
+      contentHtml: contentHtml,
       typeId: getArticleTypeId(),
       statusId: getStatusId(),
-      mainImageId: content.mainMediaId,
-      mediaIds: content.mediaIds,
-      sections: content.sections,
+      mainImageId: mediaIds[0] ?? null,
+      mediaIds: mediaIds,
+      sections: [],
       publishOn: getPublishOnDateIsoString(),
     });
 
@@ -1243,6 +1208,24 @@ document.querySelectorAll('.article-save-button').forEach(el => {
     }
   });
 });
+
+// ToDo
+// document.querySelectorAll('.editor-content').forEach(ec => {
+//   ec.addEventListener('paste', e => {
+//     e.preventDefault();
+//
+//     const clipboardData = e.clipboardData || window.clipboardData;
+//     const pastedData = clipboardData.getData('text');
+//
+//     const cleanData = Util.cleanHtml(pastedData);
+//
+//     const selection = window.getSelection();
+//     if (!selection.rangeCount) return;
+//     selection.deleteFromDocument();
+//     selection.getRangeAt(0).insertNode(document.createTextNode(cleanData));
+//     selection.collapseToEnd();
+//   });
+// });
 
 document.querySelectorAll('.image-delete').forEach(imgEl => {
   imgEl.addEventListener('click', deleteImage);

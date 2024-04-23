@@ -89,66 +89,41 @@ class UtilClass {
     this.editors.push(containerClassName);
   }
 
-  getAndCleanHtmlFromElement(element, addParagraph = false) {
-    function cleanHtml(html) {
-      if (!html || html === '-') {
-        return '';
-      }
-
-      html = html.trim().replace(/^\s+|\s+$/gm, '');
-
-      while (html.length && html.slice(-4) === '<br>') {
-        html = html.slice(0, -4).trim();
-      }
-
-      return html;
-    }
-
+  getAndCleanHtmlFromElement(element) {
     if (!element) {
-      return null;
+      return '';
     }
 
-    function cleanElement(parentElement, childElement) {
-      if (childElement.nodeName === '#text' && !childElement.textContent.trim().length) {
-        return;
+    element.childNodes.forEach(currentNode => {
+      const parentNode = currentNode.parentNode;
+
+      if (currentNode.nodeName === 'BR') {
+        parentNode.removeChild(currentNode);
       }
 
-      if (childElement.nodeName === 'DIV') {
+      if (currentNode.nodeName === 'DIV') {
         const newParagraph = document.createElement('p');
-        newParagraph.innerHTML = childElement.innerHTML;
-        parentElement.insertBefore(newParagraph, childElement);
-        parentElement.removeChild(childElement);
-        childElement = newParagraph;
+        newParagraph.innerHTML = currentNode.innerHTML;
+        parentNode.insertBefore(newParagraph, currentNode);
+        parentNode.removeChild(currentNode);
+        currentNode = newParagraph;
       }
 
-      if (addParagraph) {
-        if (childElement.nodeName === '#text') {
-          if (childElement.textContent.trim().length) {
-            const newParagraph = document.createElement('p');
-            newParagraph.textContent = childElement.textContent;
-            parentElement.insertBefore(newParagraph, childElement);
-          }
-
-          parentElement.removeChild(childElement);
+      if (currentNode.nodeName === '#text' && parentNode && parentNode.nodeName !== 'P') {
+        if (currentNode.textContent.trim().length) {
+          const newParagraph = document.createElement('p');
+          newParagraph.textContent = currentNode.textContent;
+          parentNode.insertBefore(newParagraph, currentNode);
         }
+
+        parentNode.removeChild(currentNode);
       }
 
-      const html = childElement.innerHTML ?? childElement.textContent;
-      const currentHtml = cleanHtml(html);
-
-      if (childElement.nodeName === 'BR') {
-        childElement.parentNode.removeChild(childElement);
-      } else if (!currentHtml.length) {
-        parentElement.removeChild(childElement);
-      }
-    }
-
-    element.childNodes.forEach(childElement => {
-      cleanElement(element, childElement);
-      childElement.childNodes.forEach(anotherChild => cleanElement(childElement, anotherChild));
+      this.getAndCleanHtmlFromElement(currentNode);
     });
 
-    return element.innerHTML.trim().length ? element.innerHTML.trim() : null;
+    const content = element.innerHTML ? element.innerHTML.trim() : element.textContent.trim();
+    return content.trim().length ? content.trim() : null
   }
 
   createLoadingAnimation() {
@@ -239,7 +214,6 @@ class UtilClass {
     navigator.clipboard.writeText(href)
       .then(() => {
         this.notifyUser(Global.get('feedbackCopyLinkSuccess'));
-        console.log('here');
       })
       .catch(error => this.notifyError(error, Global.get('feedbackCopyLinkError')));
   }

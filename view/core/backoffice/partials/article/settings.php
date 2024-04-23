@@ -43,7 +43,7 @@ $articlePreviewUrl = $article ? UrlBuilderUtil::buildBackofficeArticlePreviewUrl
 
 $articlePublicUrl = $article ? UrlBuilderUtil::buildPublicArticlePath($article?->path, $article->language) : '';
 $articlePublicUrlHtml = $articlePublicUrl && $article?->status->isPublic() ?
-    '<a target="_blank" href="' . $articlePublicUrl . '">' . $articlePublicUrl . '</a>'
+    '<a href="' . $articlePublicUrl . '">' . $articlePublicUrl . '</a>'
     : $articlePublicUrl;
 
 ?>
@@ -51,7 +51,7 @@ $articlePublicUrlHtml = $articlePublicUrl && $article?->status->isPublic() ?
   <div class="<?=$article ? '' : 'null'?>">
     <div class="label"><?=$responseData->getLocalValue('formArticlePath')?>:</div>
     <div class="editor-article-path"><?=$articlePublicUrlHtml?></div>
-    <div class="editor-article-preview m-t-1"><a target="_blank" href="<?=$articlePreviewUrl?>"><?=$responseData->getLocalValue('globalPreview')?></a></div>
+    <div class="editor-article-preview m-t-1"><a href="<?=$articlePreviewUrl?>"><?=$responseData->getLocalValue('globalPreview')?></a></div>
   </div>
   <a href="#" class="select-media-action" data-type-id="<?=MediaType::Image->value?>" data-event-listener-action="insertImageInArticle">
     <img class="img-svg img-svg-30" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
@@ -72,7 +72,7 @@ $articlePublicUrlHtml = $articlePublicUrl && $article?->status->isPublic() ?
     </div>
   </div>
   <div>
-    <button class="article-save-button button is-success" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
+    <button class="article-save-js button is-success" value="<?=$responseData->getLocalValue('globalSave')?>"><?=$responseData->getLocalValue('globalSave')?></button>
     <div class="editor-article-info"><?=$createdAtContent?></div>
   </div>
 </div>

@@ -453,7 +453,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 articleId: $newArticle->id,
             ),
             articlePublicUrlHtml: $newArticle->status->isPublic() ?
-                '<a target="_blank" href="' . $articlePublicUrl . '">' . $articlePublicUrl . '</a>'
+                '<a href="' . $articlePublicUrl . '">' . $articlePublicUrl . '</a>'
                 : $articlePublicUrl,
         );
     }
@@ -597,7 +597,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 articleId: $articleId,
             ),
             articlePublicUrlHtml: $status->isPublic() ?
-                '<a target="_blank" href="' . $articlePublicUrl . '">' . $articlePublicUrl . '</a>'
+                '<a href="' . $articlePublicUrl . '">' . $articlePublicUrl . '</a>'
                 : $articlePublicUrl,
         );
     }

@@ -445,7 +445,6 @@ article {
 
 article img {
   width: 100%;
-  max-width: 100%;
   height: auto;
 }
 
@@ -515,16 +514,14 @@ article > ul {
 
 article > img,
 article .image-item {
-  position: relative;
-  margin-top: 1rem;
-  width: 100%;
-  height: auto;
+  margin-top: 2rem;
 }
 
 article .image-caption {
-  margin-top: 0.21rem;
+  margin: 0 0 1rem 0;
   color: var(--color-light-4);
   font-size: 0.8rem;
+  padding: 0.2rem 1rem;
 }
 
 .article-section-image-caption {
