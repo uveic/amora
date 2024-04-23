@@ -4,7 +4,6 @@ use Amora\App\Value\AppPageContentType;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\PageContentSection;
-use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAdmin $responseData */
 $pageContent = $responseData->pageContent;
@@ -16,12 +15,10 @@ $languageIcon = count(Core::getAllLanguages()) === 1
 $submitButtonValue = $pageContent
     ? $responseData->getLocalValue('globalUpdate')
     : $responseData->getLocalValue('globalSend');
-$closeLink = $responseData->pageContent
-    ? AppPageContentType::buildRedirectUrl(
-        type: $responseData->pageContent->type,
-        language: $responseData->siteLanguage,
-    )
-    : UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage);
+$closeLink = AppPageContentType::buildRedirectUrl(
+    type: $pageContent?->type,
+    language: $responseData->siteLanguage,
+);
 
 $this->layout('base', ['responseData' => $responseData]);
 
@@ -39,10 +36,10 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     <input name="contentId" type="hidden" value="<?=$pageContent?->id?>">
 
     <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalTitle')?></div>
-    <h1 class="editor-title page-content-title <?=$pageContent?->titleHtml ? '' : ' editor-placeholder'?><?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->titleHtml ?: $responseData->getLocalValue('editorTitlePlaceholder')?></h1>
+    <h1 class="editor-title<?=$pageContent?->titleHtml ? '' : ' editor-placeholder'?><?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->titleHtml ?: $responseData->getLocalValue('editorTitlePlaceholder')?></h1>
 
     <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalSubtitle')?></div>
-    <h2 class="editor-subtitle page-content-subtitle <?=$pageContent?->subtitleHtml ? '' : ' editor-placeholder'?> <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->subtitleHtml ?: $responseData->getLocalValue('editorSubtitlePlaceholder')?></h2>
+    <h2 class="editor-subtitle<?=$pageContent?->subtitleHtml ? '' : ' editor-placeholder'?> <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->subtitleHtml ?: $responseData->getLocalValue('editorSubtitlePlaceholder')?></h2>
 
     <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>"><?=$responseData->getLocalValue('navAdminContent')?></div>
     <div class="editor-content medium-editor-content <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>" contenteditable="true">

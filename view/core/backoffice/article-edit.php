@@ -32,7 +32,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
       <input name="articleId" type="hidden" value="<?=$article ? $article->id : ''?>">
       <input name="articleTypeId" type="hidden" value="<?=$articleType->value?>">
       <div class="page-content-before"><?=$responseData->getLocalValue('globalTitle')?></div>
-      <h1 class="editor-title page-content-title<?=$article?->title ? '' : ' editor-placeholder'?>" contenteditable="true"><?=$article?->title ?: $responseData->getLocalValue('editorTitlePlaceholder')?></h1>
+      <h1 class="editor-title<?=$article?->title ? '' : ' editor-placeholder'?>" contenteditable="true"><?=$article?->title ?: $responseData->getLocalValue('editorTitlePlaceholder')?></h1>
       <div class="page-content-before"><?=$responseData->getLocalValue('navAdminContent')?></div>
       <div class="editor-content medium-editor-content" contenteditable="true">
         <?=$article?->contentHtml . PHP_EOL?>

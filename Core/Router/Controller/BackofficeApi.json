@@ -647,9 +647,9 @@
                   "type": "string",
                   "description": "Article backoffice path preview"
                 },
-                "articlePublicPath": {
+                "articlePublicUrlHtml": {
                   "type": "string",
-                  "description": "Article public path"
+                  "description": "Article public URL HTML"
                 },
                 "errorMessage": {
                   "type": "string",
@@ -866,9 +866,9 @@
                   "type": "string",
                   "description": "Article backoffice path preview"
                 },
-                "articlePublicPath": {
+                "articlePublicUrlHtml": {
                   "type": "string",
-                  "description": "Article public path"
+                  "description": "Article public URL HTML"
                 },
                 "errorMessage": {
                   "type": "string",

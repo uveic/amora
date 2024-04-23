@@ -15,7 +15,7 @@ enum AppPageContentType: int
         );
     }
 
-    public static function buildRedirectUrl(self|PageContentType $type, Language $language): string
+    public static function buildRedirectUrl(self|PageContentType|null $type, Language $language): string
     {
         return PageContentType::buildRedirectUrl($type, $language);
     }

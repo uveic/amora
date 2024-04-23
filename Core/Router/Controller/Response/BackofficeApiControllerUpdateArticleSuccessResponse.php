@@ -11,7 +11,7 @@ class BackofficeApiControllerUpdateArticleSuccessResponse extends Response
         ?int $articleId = null,
         ?string $articleBackofficePath = null,
         ?string $articleBackofficePathPreview = null,
-        ?string $articlePublicPath = null,
+        ?string $articlePublicUrlHtml = null,
         ?string $errorMessage = null
     ) {
         // Required parameters
@@ -31,9 +31,9 @@ class BackofficeApiControllerUpdateArticleSuccessResponse extends Response
             ? null
             : $articleBackofficePathPreview;
 
-        $responseData['articlePublicPath'] = is_null($articlePublicPath)
+        $responseData['articlePublicUrlHtml'] = is_null($articlePublicUrlHtml)
             ? null
-            : $articlePublicPath;
+            : $articlePublicUrlHtml;
 
         $responseData['errorMessage'] = is_null($errorMessage)
             ? null

@@ -41,13 +41,16 @@ $articlePreviewUrl = $article ? UrlBuilderUtil::buildBackofficeArticlePreviewUrl
 )
 : '#';
 
-$articlePublicUrl = $article ? UrlBuilderUtil::buildPublicArticlePath($article?->path, $responseData->siteLanguage) : '';
+$articlePublicUrl = $article ? UrlBuilderUtil::buildPublicArticlePath($article?->path, $article->language) : '';
+$articlePublicUrlHtml = $articlePublicUrl && $article?->status->isPublic() ?
+    '<a target="_blank" href="' . $articlePublicUrl . '">' . $articlePublicUrl . '</a>'
+    : $articlePublicUrl;
 
 ?>
 <div class="side-nav-wrapper">
   <div class="<?=$article ? '' : 'null'?>">
     <div class="label"><?=$responseData->getLocalValue('formArticlePath')?>:</div>
-    <div class="editor-article-path"><?=$articlePublicUrl?></div>
+    <div class="editor-article-path"><?=$articlePublicUrlHtml?></div>
     <div class="editor-article-preview m-t-1"><a target="_blank" href="<?=$articlePreviewUrl?>"><?=$responseData->getLocalValue('globalPreview')?></a></div>
   </div>
   <a href="#" class="select-media-action" data-type-id="<?=MediaType::Image->value?>" data-event-listener-action="insertImageInArticle">

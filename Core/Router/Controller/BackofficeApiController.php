@@ -443,6 +443,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $siteLanguage = Language::from(strtoupper($siteLanguageIsoCode));
+        $articlePublicUrl = UrlBuilderUtil::buildPublicArticlePath($newArticle->path, $articleLanguage);
         return new BackofficeApiControllerStoreArticleSuccessResponse(
             success: (bool)$newArticle,
             articleId: $newArticle->id,
@@ -451,7 +452,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 language: $siteLanguage,
                 articleId: $newArticle->id,
             ),
-            articlePublicPath: UrlBuilderUtil::buildPublicArticlePath($newArticle->path, $siteLanguage),
+            articlePublicUrlHtml: $newArticle->status->isPublic() ?
+                '<a target="_blank" href="' . $articlePublicUrl . '">' . $articlePublicUrl . '</a>'
+                : $articlePublicUrl,
         );
     }
 
@@ -532,9 +535,11 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $contentHtml = html_entity_decode($contentHtml);
         $contentHtml = StringUtil::sanitiseHtml($contentHtml);
 
+        $status = $statusId ? ArticleStatus::from($statusId) : $existingArticle->status;
         $path = $this->articleService->getAvailablePathForArticle(
             articleTitle: $title,
             existingArticle: $existingArticle,
+            articleStatus: $status,
         );
 
         if ($path !== $existingArticle->path) {
@@ -555,7 +560,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $articleLanguage = Language::from(strtoupper($articleLanguageIsoCode));
         $type = $typeId ? ArticleType::from($typeId) : $existingArticle->type;
-        $status = $statusId ? ArticleStatus::from($statusId) : $existingArticle->status;
         $res = $this->articleService->workflowUpdateArticle(
             article: new Article(
                 id: $articleId,
@@ -580,6 +584,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         $siteLanguage = Language::from(strtoupper($siteLanguageIsoCode));
+        $articlePublicUrl = UrlBuilderUtil::buildPublicArticlePath($path, $articleLanguage);
         return new BackofficeApiControllerUpdateArticleSuccessResponse(
             success: $res,
             articleId: $res ? $articleId : null,
@@ -591,7 +596,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 language: $siteLanguage,
                 articleId: $articleId,
             ),
-            articlePublicPath: UrlBuilderUtil::buildPublicArticlePath($path, $siteLanguage),
+            articlePublicUrlHtml: $status->isPublic() ?
+                '<a target="_blank" href="' . $articlePublicUrl . '">' . $articlePublicUrl . '</a>'
+                : $articlePublicUrl,
         );
     }
 

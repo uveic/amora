@@ -24,7 +24,7 @@ return [
     'navAdminArticles' => 'Páxinas',
     'navAdminBlogPosts' => 'Entradas blog',
     'navAdminArticleOptions' => 'Configuración',
-    'navAdminPageContentEdit' => 'Contido',
+    'navAdminPageContentEdit' => 'Textos',
 
     'editorTitlePlaceholder' => 'Título...',
     'editorSubtitlePlaceholder' => 'Subtítulo...',

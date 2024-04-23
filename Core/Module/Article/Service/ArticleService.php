@@ -218,7 +218,6 @@ readonly class ArticleService
     ): string {
         $articleId = $existingArticle?->id;
         $path = $existingArticle?->path;
-        $articleStatus = $articleStatus ?? $existingArticle?->status;
 
         if ($articleStatus === ArticleStatus::Unlisted) {
             $path = strtolower(StringUtil::generateRandomString(64));

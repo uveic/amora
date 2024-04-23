@@ -26,12 +26,12 @@ enum PageContentType: int
         ];
     }
 
-    public static function buildRedirectUrl(self|AppPageContentType $type, Language $language): string
+    public static function buildRedirectUrl(self|AppPageContentType|null $type, Language $language): string
     {
-        if ($type === self::BlogBottom) {
-            return UrlBuilderUtil::buildBackofficeDashboardUrl($language);
-        }
-
-        return UrlBuilderUtil::buildBaseUrl($language);
+        return match ($type) {
+            self::BlogBottom => UrlBuilderUtil::buildBackofficeDashboardUrl($language),
+            self::Homepage => UrlBuilderUtil::buildBaseUrl($language),
+            default => UrlBuilderUtil::buildBackofficeContentListUrl($language),
+        };
     }
 }

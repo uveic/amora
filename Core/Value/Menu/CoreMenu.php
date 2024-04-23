@@ -31,7 +31,7 @@ final class CoreMenu
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeContentListUrl($language),
                         text: $localisationUtil->getValue('navAdminPageContentEdit'),
-                        icon: '<img class="img-svg" width="20" height="20" src="/img/svg/house-line-white.svg" alt="' . $localisationUtil->getValue('navAdminPageContentEdit') . '">',
+                        icon: '<img class="img-svg" width="20" height="20" src="/img/svg/article-white.svg" alt="' . $localisationUtil->getValue('navAdminPageContentEdit') . '">',
                         sequence: 2000,
                     ),
                     new MenuItem(
@@ -55,13 +55,13 @@ final class CoreMenu
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeArticleListUrl($language, ArticleType::Page),
                         text: $localisationUtil->getValue('navAdminArticles'),
-                        icon: ArticleType::getIcon(item: ArticleType::Page, white: true, alt: $localisationUtil->getValue('navAdminArticles')),
+                        icon: '<img class="img-svg" width="20" height="20" src="/img/svg/article-white.svg" alt="' . $localisationUtil->getValue('navAdminBlogPosts') . '">',
                         sequence: 2040,
                     ),
                     new MenuItem(
                         path: UrlBuilderUtil::buildBackofficeArticleListUrl($language, ArticleType::Blog),
                         text: $localisationUtil->getValue('navAdminBlogPosts'),
-                        icon: ArticleType::getIcon(item: ArticleType::Blog, white: true, alt: $localisationUtil->getValue('navAdminBlogPosts')),
+                        icon: '<img class="img-svg" width="20" height="20" src="/img/svg/article-white.svg" alt="' . $localisationUtil->getValue('navAdminBlogPosts') . '">',
                         sequence: 2050,
                     ),
                     new MenuItem(
