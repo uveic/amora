@@ -49,7 +49,6 @@ $count = 0;
     </div>
 <?php if (count($responseData->files) >= 50) { ?>
     <a href="#" class="media-load-more media-load-more-js" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
-      <img src="/img/svg/plus.svg" class="img-svg m-r-05 img-svg-30" title="<?=$responseData->getLocalValue('globalMore')?>" alt="<?=$responseData->getLocalValue('globalMore')?>">
       <span><?=$responseData->getLocalValue('globalMore')?></span>
     </a>
 <?php } ?>

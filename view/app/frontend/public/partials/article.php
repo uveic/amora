@@ -22,7 +22,7 @@ $icon = ArticleHtmlGenerator::generateArticlePublishedIconHtml(
 ?>
   <article>
 <?php if ($article->title) {
-        echo '    <h1>' . $icon . $article->title . '</h1>' . PHP_EOL;
+        echo '    <h1 class="article-title">' . $icon . $article->title . '</h1>' . PHP_EOL;
     }
 
     if ($article->type === ArticleType::Blog) {

@@ -58,7 +58,9 @@
   --input-height: 2.5em;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: border-box;
   outline: none;
 }
@@ -83,7 +85,11 @@ body {
   background-color: var(--color-bg);
 }
 
-a, a:hover, a:visited, a:active, a:focus {
+a,
+a:hover,
+a:visited,
+a:active,
+a:focus {
   color: var(--color-link);
   text-decoration: none;
 }
@@ -92,7 +98,9 @@ a:hover {
   color: var(--color-link-hover);
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--font-title);
 }
 
@@ -119,7 +127,7 @@ h3 {
   margin: 1em 0;
 }
 
-p > svg {
+p>svg {
   width: 20px;
   height: auto;
   vertical-align: middle;
@@ -139,7 +147,7 @@ blockquote {
   position: relative;
 }
 
-blockquote::before{
+blockquote::before {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   content: "\201C";
   font-size: 4em;
@@ -148,7 +156,7 @@ blockquote::before{
   top: 0;
 }
 
-blockquote::after{
+blockquote::after {
   content: '';
 }
 
@@ -238,16 +246,16 @@ blockquote *:last-child {
   align-items: center;
 }
 
-.dropdown-container > label {
+.dropdown-container>label {
   flex-grow: 0;
   width: auto;
 }
 
-.dropdown-menu:checked + div > ul {
+.dropdown-menu:checked+div>ul {
   display: block !important;
 }
 
-.dropdown-menu + div > ul {
+.dropdown-menu+div>ul {
   display: none;
   list-style: none;
   position: absolute;
@@ -257,12 +265,12 @@ blockquote *:last-child {
   z-index: 298;
 }
 
-.dropdown-menu + div > ul.up {
+.dropdown-menu+div>ul.up {
   bottom: 22px;
   top: revert;
 }
 
-.dropdown-menu + div > ul a {
+.dropdown-menu+div>ul a {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
@@ -270,7 +278,7 @@ blockquote *:last-child {
   color: var(--color-text);
 }
 
-.dropdown-menu + div > ul a:hover {
+.dropdown-menu+div>ul a:hover {
   opacity: 0.97;
   color: var(--color-text);
 }
@@ -283,7 +291,7 @@ blockquote *:last-child {
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(0,0,0,.95);
+  background-color: rgba(0, 0, 0, .95);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -392,7 +400,7 @@ blockquote *:last-child {
   font-size: 0.9rem;
 }
 
-#feedback-banner > p {
+#feedback-banner>p {
   color: var(--color-failure);
 }
 /* Feedback style ends here */
@@ -448,7 +456,7 @@ article img {
   height: auto;
 }
 
-article > h1 {
+article>h1 {
   margin: 0;
   padding: 1rem;
   font-size: 1.5rem;
@@ -458,7 +466,7 @@ article > h1 {
   color: var(--color-text);
 }
 
-article > h2 {
+article>h2 {
   margin: 0;
   padding: 1rem;
   font-size: 1.2rem;
@@ -466,13 +474,17 @@ article > h2 {
   line-height: 1.4rem;
 }
 
-article > p {
+article>p {
   margin: 0;
   padding: 0.6rem 1rem;
 }
 
-article > ul {
+article>ul {
   padding: 0 1rem 0 3rem;
+}
+
+.article-title {
+  padding-bottom: 0;
 }
 
 .article-blog-info {
@@ -512,7 +524,7 @@ article > ul {
   padding: 0;
 }
 
-article > img,
+article>img,
 article .image-item {
   margin-top: 2rem;
 }
@@ -533,7 +545,7 @@ article .image-caption {
   outline: 0;
 }
 
-article > ol {
+article>ol {
   padding-left: 4rem;
   padding-right: 1rem;
 }
@@ -620,11 +632,11 @@ a.link-title:focus {
   padding: 0.25rem 0;
 }
 
-.block-title > h2 {
+.block-title>h2 {
   margin: 0;
 }
 
-.dropdown-menu ~ div > ul a:hover {
+.dropdown-menu~div>ul a:hover {
   text-decoration: underline;
 }
 
@@ -681,7 +693,11 @@ label:not(:last-child) {
   float: right;
 }
 
-input, textarea, select, button, .button {
+input,
+textarea,
+select,
+button,
+.button {
   width: 100%;
   border: 1px solid var(--color-input-border);
   padding: calc(1rem - 1px) 1rem;
@@ -735,13 +751,20 @@ button.is-link.is-light,
   color: #2160c4;
 }
 
-.is-success, .is-success:active, .is-success:visited, .is-success:hover, .is-success:focus {
+.is-success,
+.is-success:active,
+.is-success:visited,
+.is-success:hover,
+.is-success:focus {
   background-color: var(--color-success);
   color: var(--color-link-success);
   border: 1px solid var(--color-success);
 }
 
-.is-success-light, .is-success-light:active, .is-success-light:visited, .is-success-light:focus {
+.is-success-light,
+.is-success-light:active,
+.is-success-light:visited,
+.is-success-light:focus {
   background-color: var(--color-success-light);
   color: var(--color-link-success);
   border: 1px solid var(--color-success-light);
@@ -752,13 +775,20 @@ button.is-link.is-light,
   border: 1px solid var(--color-bg);
 }
 
-.is-standard, .is-standard:active, .is-standard:visited, .is-standard:hover, .is-standard:focus {
+.is-standard,
+.is-standard:active,
+.is-standard:visited,
+.is-standard:hover,
+.is-standard:focus {
   background-color: var(--color-link);
   color: var(--color-link-success);
   border: 1px solid var(--color-link);
 }
 
-.is-secondary, .is-secondary:active, .is-secondary:visited, .is-secondary:focus {
+.is-secondary,
+.is-secondary:active,
+.is-secondary:visited,
+.is-secondary:focus {
   background-color: var(--color-primary-700);
   color: var(--color-link-success);
   border: 1px solid var(--color-primary-700);
@@ -944,10 +974,15 @@ svg,
 .loader {
   width: 60px;
   aspect-ratio: 4;
-  background: radial-gradient(circle closest-side,var(--color-bg) 90%,#0000) 0/calc(100%/3) 100% no-repeat;
+  background: radial-gradient(circle closest-side, var(--color-bg) 90%, #0000) 0/calc(100%/3) 100% no-repeat;
   animation: loader2 1s steps(3) infinite;
 }
-@keyframes loader2 {to{background-position: 150%}}
+
+@keyframes loader2 {
+  to {
+    background-position: 150%
+  }
+}
 
 .loader-container progress {
   width: 80%;
@@ -962,8 +997,7 @@ svg,
   width: 40%;
   height: 10px;
   background:
-      linear-gradient(var(--color-bg-dark) 0 0) left/20px 20px no-repeat
-      var(--color-bg);
+    linear-gradient(var(--color-bg-dark) 0 0) left/20px 20px no-repeat var(--color-bg);
   animation: loader3 1s infinite linear;
   top: 0;
   bottom: 0;
@@ -972,8 +1006,11 @@ svg,
   margin: auto;
   z-index: 99;
 }
+
 @keyframes loader3 {
-  50% {background-position: right }
+  50% {
+    background-position: right
+  }
 }
 
 .loader-spinner {
@@ -985,7 +1022,12 @@ svg,
   border-right-color: var(--color-primary-700);
   animation: loader4 1s infinite linear;
 }
-@keyframes loader4 {to{transform: rotate(1turn)}}
+
+@keyframes loader4 {
+  to {
+    transform: rotate(1turn)
+  }
+}
 
 .narrow-width {
   margin: 0 auto;
@@ -1050,7 +1092,7 @@ svg,
   max-width: var(--content-max-width);
 }
 
-.home-tag > h1 {
+.home-tag>h1 {
   margin: 1rem 1rem 0;
 }
 

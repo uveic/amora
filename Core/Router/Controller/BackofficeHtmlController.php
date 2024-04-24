@@ -434,7 +434,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             : null;
 
         return Response::createHtmlResponse(
-            template: 'app/frontend/public/home-article',
+            template: 'app/frontend/public/article-view',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $article->title,
