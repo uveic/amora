@@ -233,7 +233,7 @@ final class DateUtil
             return new DateTimeZone($timezone);
         } catch (Throwable) {
             Core::getDefaultLogger()->logError('Error converting string to DateTimeZone: ' . $timezone);
-            return new DateTimeZone(Core::getDefaultTimezone());
+            return self::convertStringToDateTimeZone(Core::getDefaultTimezone());
         }
     }
 
@@ -394,6 +394,9 @@ final class DateUtil
         return new DateTimeImmutable();
     }
 
+    /**
+     * @throws Exception
+     */
     public static function convertSecondsToDateInterval(int $seconds): DateInterval
     {
         $minutes = 0;
