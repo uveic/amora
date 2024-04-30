@@ -79,16 +79,21 @@ final class DateUtil
      * @return string
      */
     public static function getElapsedTimeString(
-        Language $language,
         DateTimeImmutable|DateTime $from,
         DateTimeImmutable|DateTime|null $to = null,
         bool $full = false,
         bool $includePrefixAndOrSuffix = false,
         bool $includeSeconds = false,
+        Language $language = Language::English,
     ): string {
         if (!isset($to)) {
-            $to = self::convertStringToDateTimeImmutable('now', timezone: $from->getTimezone());
+            try {
+                $to = new DateTimeImmutable(timezone: $from->getTimezone());
+            } catch (Throwable) {
+                $to = new DateTimeImmutable();
+            }
         }
+
         $diff = (array)$to->diff($from);
 
         switch ($language->value) {

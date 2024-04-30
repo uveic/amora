@@ -41,9 +41,9 @@ final class MailerHtmlGenerator
 
         $secondsToSend = $mailerItem->processedAt
             ? DateUtil::getElapsedTimeString(
-                language: $responseData->siteLanguage,
                 from: $mailerItem->createdAt,
                 to: $mailerItem->processedAt,
+                language: $responseData->siteLanguage,
             )
             : '-';
 

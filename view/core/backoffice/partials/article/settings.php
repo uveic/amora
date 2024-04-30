@@ -21,9 +21,9 @@ $createdAtContent = '';
 if ($article) {
     $createdAtContent = $responseData->getLocalValue('globalCreated') . ' ' .
         DateUtil::getElapsedTimeString(
-            language: $responseData->siteLanguage,
             from: $article->createdAt,
             includePrefixAndOrSuffix: true,
+            language: $responseData->siteLanguage,
         ) . ' ('
         . DateUtil::formatDate(
             date: $article->createdAt,
