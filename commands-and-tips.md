@@ -58,6 +58,8 @@ Search forward   => press `/`, type the search pattern and press `Enter`
 
 Search backwards => press `?`, type the search pattern and press `Enter`
 
+`dd` => Delete line.
+
 ## Ubuntu / Linux
 Reboot: `sudo shutdown -r`
 

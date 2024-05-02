@@ -10,7 +10,7 @@ use Amora\Core\Value\QueryOrderDirection;
 
 $this->layout('base', ['responseData' => $responseData]);
 
-$count = 0;
+$displayLoadMore = count($responseData->files) >= 50;
 
 ?>
   <div id="feedback" class="feedback null"></div>
@@ -47,9 +47,7 @@ $count = 0;
       </a>
 <?php } ?>
     </div>
-<?php if (count($responseData->files) >= 50) { ?>
-    <a href="#" class="media-load-more media-load-more-js" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
+    <a href="#" class="media-load-more media-load-more-js<?=$displayLoadMore ? '' : ' null'?>" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
       <span><?=$responseData->getLocalValue('globalMore')?></span>
     </a>
-<?php } ?>
   </main>
