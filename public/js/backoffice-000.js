@@ -321,6 +321,10 @@ function displayModalImage(image) {
 }
 
 function preloadMedia(mediaId, direction) {
+  if (!mediaId) {
+    return;
+  }
+
   const mediaIdToPreload = direction === 'DESC' ? window.data.mediaCacheRight[mediaId] : window.data.mediaCacheLeft[mediaId];
 
   if (!mediaIdToPreload) {
@@ -421,6 +425,10 @@ async function modalGetNextMedia(currentMediaId, direction) {
 
   return modalRetrieveMediaAndAddToCache(currentMediaId, direction)
     .then(mediaObj => {
+      if (!mediaObj) {
+        return null;
+      }
+
       const newMedia = new Image();
       newMedia.src = mediaObj.fullPathMedium;
 
@@ -450,7 +458,7 @@ function displayNextImagePopup(e) {
     modalGetNextMedia(mediaId, direction)
       .then(mediaObj => {
         displayModalImage(mediaObj);
-        preloadMedia(mediaObj.id, direction);
+        preloadMedia(mediaObj ? mediaObj.id : null, direction);
       }).then(() => {
       if (direction === 'DESC' || direction === 'ASC') {
         modalRetrieveMediaAndAddToCache(mediaId, direction)
@@ -1572,6 +1580,7 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
     const titleHtml = f.querySelector('.editor-title').innerHTML.trim();
     const subtitleHtml = f.querySelector('.editor-subtitle').innerHTML.trim();
     const contentHtml = f.querySelector('.editor-content').innerHTML.trim();
+    const actionUrl = f.querySelector('input[name="actionUrl"]').value.trim();
     const mainImageEl = f.querySelector('.media-item');
 
     const payload = JSON.stringify({
@@ -1582,6 +1591,7 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
       contentHtml: contentHtml,
       mainImageId: mainImageEl && mainImageEl.dataset.mediaId ? Number.parseInt(mainImageEl.dataset.mediaId)
         : null,
+      actionUrl: actionUrl.length ? actionUrl : null,
     });
 
     Request.put('/back/content/' + contentId, payload)

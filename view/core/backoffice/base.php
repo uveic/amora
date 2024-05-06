@@ -5,11 +5,20 @@ use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
-$menuItems = AppMenu::getAdmin(
-    language: $responseData->siteLanguage,
-    username: $responseData->request->session->user->getNameOrEmail(),
-    includeUserDashboardLink: false,
-);
+$navBarArguments = [
+    'responseData' => $responseData,
+    'menuItems' => AppMenu::getAdmin(
+        language: $responseData->siteLanguage,
+        username: $responseData->request->session->user->getNameOrEmail(),
+        includeUserDashboardLink: false,
+    ),
+    'siteLogoHtml' => $responseData->buildSiteLogoHtml(
+        siteLanguage: $responseData->siteLanguage,
+        siteContent: $responseData->siteContent ?? null,
+        includeSubtitle: true,
+        indentation: '    ',
+    ),
+];
 
 ?>
 <!DOCTYPE html>
@@ -31,7 +40,7 @@ $menuItems = AppMenu::getAdmin(
   <link href="/css/backoffice-base-000.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<?=$this->insert('partials/navbar', ['responseData' => $responseData, 'menuItems' => $menuItems])?>
+<?=$this->insert('partials/navbar', $navBarArguments)?>
 <?=$this->section('content')?>
 <?=$this->insert('partials/footer')?>
 </body>

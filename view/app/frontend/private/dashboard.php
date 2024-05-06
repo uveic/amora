@@ -6,12 +6,21 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
-$menuItems = AppMenu::getCustomer(
-    language: $responseData->siteLanguage,
-    username: $responseData->request->session->user->getNameOrEmail(),
-    includeAdminLink: $responseData->request->session?->isAdmin() ?? false,
-    whiteIcon: true,
-);
+$navBarArguments = [
+    'responseData' => $responseData,
+    'menuItems' => AppMenu::getCustomer(
+        language: $responseData->siteLanguage,
+        username: $responseData->request->session->user->getNameOrEmail(),
+        includeAdminLink: $responseData->request->session?->isAdmin() ?? false,
+        whiteIcon: true,
+    ),
+    'siteLogoHtml' => $responseData->buildSiteLogoHtml(
+        siteLanguage: $responseData->siteLanguage,
+        siteContent: $responseData->siteContent ?? null,
+        includeSubtitle: true,
+        indentation: '    ',
+    ),
+];
 
 ?>
 <!DOCTYPE html>
@@ -30,7 +39,7 @@ $menuItems = AppMenu::getCustomer(
   <link href="/css/shared-base-000.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<?=$this->insert('../../../core/backoffice/partials/navbar', ['responseData' => $responseData, 'menuItems' => $menuItems])?>
+<?=$this->insert('../../../core/backoffice/partials/navbar', $navBarArguments)?>
   <main>
     <section>
       <div id="feedback" class="feedback null"></div>

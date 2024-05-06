@@ -39,10 +39,8 @@ $count = 0;
         </figure>
 <?php } ?>
       </div>
-<?php if ($count) { ?>
-      <a href="#" class="media-load-more media-load-more-js" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
+      <a href="#" class="media-load-more media-load-more-js<?=$count >= 50 ? '' : ' null'?>" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
         <span><?=$responseData->getLocalValue('globalMore')?></span>
       </a>
-<?php } ?>
     </div>
   </main>

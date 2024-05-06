@@ -5,17 +5,26 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 
 /** @var HtmlResponseData $responseData */
 
-$menuItems = $responseData->request->session->isAdmin()
-    ? AppMenu::getAdmin(
-        language: $responseData->siteLanguage,
-        username: $responseData->request->session->user->getNameOrEmail(),
-        includeUserDashboardLink: false,
-    )
-    : AppMenu::getCustomer(
-        language: $responseData->siteLanguage,
-        username: $responseData->request->session->user->getNameOrEmail(),
-        whiteIcon: true,
-    );
+$navBarArguments = [
+    'responseData' => $responseData,
+    'menuItems' => $responseData->request->session->isAdmin()
+        ? AppMenu::getAdmin(
+            language: $responseData->siteLanguage,
+            username: $responseData->request->session->user->getNameOrEmail(),
+            includeUserDashboardLink: false,
+        )
+        : AppMenu::getCustomer(
+            language: $responseData->siteLanguage,
+            username: $responseData->request->session->user->getNameOrEmail(),
+            whiteIcon: true,
+        ),
+    'siteLogoHtml' => $responseData->buildSiteLogoHtml(
+        siteLanguage: $responseData->siteLanguage,
+        siteContent: $responseData->siteContent ?? null,
+        includeSubtitle: true,
+        indentation: '    ',
+    ),
+];
 
 ?>
 <!DOCTYPE html>

@@ -10,14 +10,12 @@ if (!isset($menuItems)) {
     die;
 }
 
-$isAdmin = $responseData->request->session?->isAdmin() ?? false;
+if (!isset($siteLogoHtml)) {
+    echo 'You forgot to pass the variable $siteLogoHtml to the template builder. Aborting...';
+    die;
+}
 
-$siteLogoHtml = $responseData->buildSiteLogoHtml(
-    siteLanguage: $responseData->siteLanguage,
-    homeContent: property_exists($responseData, 'homeContent') ? $responseData->homeContent : null,
-    includeSubtitle: true,
-    indentation: '    ',
-);
+$isAdmin = $responseData->request->session?->isAdmin() ?? false;
 
 $userRegisteredMoreThan24HoursAgo = $responseData->minutesSinceUserRegistration() > 24 * 60;
 if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
@@ -68,7 +66,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
 <?php
     /** @var MenuItem $child */
     foreach ($menuItem->children as $child) {
-        echo '              <li><a class="' . ($menuItem->class ?? '') . '" href="' . $child->path . '">' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
+        echo '              <li><a class="' . ($child->class ?? '') . '" href="' . $child->path . '">' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
     }
 ?>
               </ul>

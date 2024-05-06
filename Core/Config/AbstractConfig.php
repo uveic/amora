@@ -58,11 +58,13 @@ abstract class AbstractConfig {
         public readonly string $appName,
         public readonly Env $env,
         public readonly string $salt,
+        public readonly array $allowedUrlsForSrcScript,
 
         public readonly bool $isLoggingEnabled,
         public readonly bool $isAnalyticsEnabled,
         public readonly bool $isRegistrationEnabled,
         public readonly bool $isInvitationEnabled,
+        public readonly bool $isSearchEnabled,
 
         public readonly string $siteAdminEmail,
         public readonly string $siteAdminName,
