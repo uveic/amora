@@ -23,6 +23,7 @@ class PageContent
         public readonly ?string $subtitleHtml,
         public readonly string $contentHtml,
         public readonly ?Media $mainImage,
+        public readonly ?string $actionUrl,
     ) {}
 
     public static function fromArray(array $data): self
@@ -42,6 +43,7 @@ class PageContent
             subtitleHtml:  $data['page_content_subtitle_html'] ?? null,
             contentHtml:  $data['page_content_html'],
             mainImage: isset($data['media_id']) ? Media::fromArray($data) : null,
+            actionUrl: $data['page_content_action_url'] ?? null,
         );
     }
 
@@ -58,6 +60,7 @@ class PageContent
             'subtitle_html' => $this->subtitleHtml,
             'content_html' => $this->contentHtml,
             'main_image_id' => $this->mainImage?->id,
+            'action_url' => $this->actionUrl,
         ];
     }
 
@@ -77,6 +80,7 @@ class PageContent
             subtitleHtml: null,
             contentHtml: '',
             mainImage: null,
+            actionUrl: null,
         );
     }
 }

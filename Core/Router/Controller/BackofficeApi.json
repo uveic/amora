@@ -1181,6 +1181,10 @@
                 "mainImageId": {
                   "description": "Main image ID",
                   "type": "integer"
+                },
+                "actionUrl": {
+                  "description": "Action URL",
+                  "type": "string"
                 }
               },
               "required": [

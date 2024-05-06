@@ -174,9 +174,13 @@
   display: block;
 }
 
+.mobile-nav ~ .mobile-nav-label {
+  transition: rotate 0.25s ease;
+}
+
 .mobile-nav:checked ~ .mobile-nav-label {
-  transform: rotate(90deg);
-  transition: all 0.25s ease;
+  rotate: 90deg;
+  transition: rotate 0.25s ease;
 }
 
 .nav-dropdown-menu-wrapper {

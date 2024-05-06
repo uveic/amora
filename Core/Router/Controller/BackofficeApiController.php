@@ -17,7 +17,6 @@ use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDeleteAlbumSectionMediaSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetPreviousPathsForArticleSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetSessionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
@@ -706,6 +705,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string|null $subtitleHtml
      * @param string $contentHtml
      * @param int|null $mainImageId
+     * @param string|null $actionUrl
      * @param Request $request
      * @return Response
      */
@@ -715,6 +715,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $subtitleHtml,
         string $contentHtml,
         ?int $mainImageId,
+        ?string $actionUrl,
         Request $request
     ): Response {
         $existingPageContent = $this->articleService->getPageContentForId($contentId);
@@ -761,6 +762,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             subtitleHtml: $subtitleHtml,
             contentHtml: $contentHtml,
             mainImage: $existingImage,
+            actionUrl: $actionUrl,
         );
 
         $resUpdate = $this->articleService->updatePageContent($pageContent);

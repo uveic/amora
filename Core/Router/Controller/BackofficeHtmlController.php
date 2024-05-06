@@ -110,7 +110,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         );
 
         return Response::createHtmlResponse(
-            template: 'core/backoffice/dashboard',
+            template: 'app/backoffice/dashboard',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdministrator'),

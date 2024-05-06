@@ -242,6 +242,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string|null $subtitleHtml
      * @param string $contentHtml
      * @param int|null $mainImageId
+     * @param string|null $actionUrl
      * @param Request $request
      * @return Response
      */
@@ -251,6 +252,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?string $subtitleHtml,
         string $contentHtml,
         ?int $mainImageId,
+        ?string $actionUrl,
         Request $request
     ): Response;
 
@@ -1115,6 +1117,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         $mainImageId = $bodyParams['mainImageId'] ?? null;
+        $actionUrl = $bodyParams['actionUrl'] ?? null;
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -1133,6 +1136,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $subtitleHtml,
                 $contentHtml,
                 $mainImageId,
+                $actionUrl,
                 $request
             );
         } catch (Throwable $t) {

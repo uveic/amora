@@ -2,6 +2,8 @@
 
 namespace Amora\App\Value;
 
+use Amora\App\Util\AppUrlBuilderUtil;
+use Amora\Core\Entity\Util\MenuItem;
 use Amora\Core\Value\CoreMenu;
 
 final class AppMenu
@@ -56,20 +58,22 @@ final class AppMenu
 
     public static function getPublic(
         Language $language,
+        bool $isAdmin = false,
     ): array {
-        $appMenu = [];
+        $output = [];
 
-        $output = array_merge(
+        if ($isAdmin) {
+            $output[] = new MenuItem(
+                path: AppUrlBuilderUtil::buildBackofficeDashboardUrl($language),
+                text: 'Admin',
+            );
+        }
+
+        return array_merge(
+            $output,
             CoreMenu::getPublic(
                 language: $language,
             ),
-            $appMenu,
         );
-
-        usort($output, function($a, $b) {
-            return $a->sequence - $b->sequence;
-        });
-
-        return $output;
     }
 }

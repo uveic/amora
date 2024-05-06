@@ -44,6 +44,10 @@ class Response
     ) {
         $nonce = $nonce ? " 'nonce-" . $nonce . "'" : '';
 
+        $allowedUrls = implode(' ', array_merge(["'self'"], Core::getConfig()->allowedUrlsForSrcScript ?? []));
+        $connectSrc = 'connect-src ' . $allowedUrls . ';';
+        $scriptSrc = 'script-src ' . $allowedUrls . $nonce . ';';
+
         $insecureRequests = '';
         if (Core::isRunningInLiveEnv()) {
             $headers[] = 'Strict-Transport-Security: max-age=31536000';
@@ -57,7 +61,7 @@ class Response
                 $httpStatus->value,
                 "Content-Type: $contentType->value",
                 "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate",
-                "Content-Security-Policy: default-src 'self'; script-src 'self'$nonce;" . $insecureRequests,
+                "Content-Security-Policy: default-src 'self'; $connectSrc $scriptSrc" . $insecureRequests,
                 "X-Content-Type-Options: nosniff",
                 "Referrer-Policy: strict-origin-when-cross-origin",
                 "X-Frame-Options: SAMEORIGIN",

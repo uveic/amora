@@ -23,8 +23,8 @@ enum AppPageContentType: int
     public static function displayContent(self|PageContentType $type, PageContentSection $section): bool
     {
         return match ($type) {
-            PageContentType::Homepage, PageContentType::BlogBottom => match ($section) {
-                PageContentSection::Subtitle, PageContentSection::MainImage => false,
+            PageContentType::BlogBottom => match ($section) {
+                PageContentSection::Subtitle, PageContentSection::MainImage, PageContentSection::ActionUrl => false,
                 default => true,
             },
             default => true,

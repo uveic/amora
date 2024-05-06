@@ -72,7 +72,7 @@ abstract class HtmlResponseDataAbstract
     public function buildSiteLogoHtml(
         Language $siteLanguage,
         ?string $siteName = null,
-        PageContent $homeContent = null,
+        PageContent $siteContent = null,
         bool $includeSubtitle = false,
         string $indentation = '',
         int $logoWidth = 45,
@@ -96,10 +96,10 @@ abstract class HtmlResponseDataAbstract
             $output[] = $indentation . '    <img src="' . $imageUrl . '" alt="Logo"' . $widthAndHeight . '>';
         }
 
-        $output[] = $indentation . '    ' . ($homeContent?->titleHtml ?: '<span>' . $siteName . '</span>');
+        $output[] = $indentation . '    ' . ($siteContent?->titleHtml ?: '<span>' . $siteName . '</span>');
         $output[] = $indentation . '  </a>';
-        if ($includeSubtitle && $homeContent?->subtitleHtml) {
-            $output[] = $indentation . '  <span class="logo-subtitle">' . $homeContent?->subtitleHtml . '</span>' ?: '';
+        if ($includeSubtitle && $siteContent?->subtitleHtml) {
+            $output[] = $indentation . '  <span class="logo-subtitle">' . $siteContent?->subtitleHtml . '</span>' ?: '';
         }
         $output[] = $indentation . '</div>';
 
