@@ -46,6 +46,14 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
       <?=$pageContent?->contentHtml . PHP_EOL?>
     </div>
 
+    <div class="field m-l-1 m-r-1<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::ActionUrl) ? '' : ' null'?>">
+      <label for="actionUrl" class="label"><?=$responseData->getLocalValue('pageContentEditAction')?>:</label>
+      <div class="control">
+        <input id="actionUrl" name="actionUrl" type="url" placeholder="" minlength="0" maxlength="255" value="<?=$pageContent?->actionUrl?>">
+        <p class="help"><span class="is-danger"></span><span><?=$responseData->getLocalValue('pageContentEditActionHelp')?></span></p>
+      </div>
+    </div>
+
     <div class="field m-l-1 m-r-1 m-b-2<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::MainImage) ? '' : ' null'?>">
       <p class="label m-b-05"><?=$responseData->getLocalValue('editorMainImage')?>:</p>
       <div class="control">

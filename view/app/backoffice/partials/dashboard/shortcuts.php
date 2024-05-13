@@ -1,37 +1,30 @@
 <?php
 
+use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
-use Amora\Core\Module\Article\Value\ArticleType;
-use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAbstract $responseData */
 
-$homepageLinks = [];
-$partialContentLinks = [];
+$groupOfLinks = [];
 
-/** @var Language $language */
-foreach (Core::getAllLanguages() as $language) {
-    $homepageLinks[] = '<a class="m-l-05" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, PageContentType::Homepage, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
-    $partialContentLinks[] = '<a class="m-l-05" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, PageContentType::BlogBottom, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
+foreach (AppPageContentType::getActive() as $item) {
+    /** @var Language $language */
+    foreach (Core::getAllLanguages() as $language) {
+        $groupOfLinks[AppPageContentType::getTitleVariableName($item)][] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, $item, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
+    }
 }
 ?>
         <div class="dashboard-count">
-          <h3 class="no-margin"><?=$responseData->getLocalValue('dashboardShortcuts')?></h3>
+          <h3 class="no-margin"><?=$responseData->getLocalValue('navAdminPageContentEdit')?></h3>
           <div class="dashboard-cards-wrapper">
+<?php foreach ($groupOfLinks as $titleVariableName => $links) { ?>
             <div>
-              <span><?=$responseData->getLocalValue('pageContentEditTitleHomepage')?>:</span>
-              <span><?=implode('', $homepageLinks)?></span>
+              <span><?=$responseData->getLocalValue($titleVariableName)?>:</span>
+              <span><?=implode('', $links)?></span>
             </div>
-            <div>
-              <span><?=$responseData->getLocalValue('pageContentEditTitleBlogBottom')?>:</span>
-              <span><?=implode('', $partialContentLinks)?></span>
-            </div>
-            <a href="<?=UrlBuilderUtil::buildBackofficeArticleNewUrl($responseData->siteLanguage, ArticleType::Blog)?>">
-              <img class="img-svg img-svg-20" width="20" height="20" src="/img/svg/article.svg" alt="<?=$responseData->getLocalValue('navAdminBlogPosts')?>">
-              <?=$responseData->getLocalValue('dashboardNewBlogPost')?>
-            </a>
+<?php } ?>
           </div>
         </div>

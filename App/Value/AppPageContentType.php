@@ -15,6 +15,14 @@ enum AppPageContentType: int
         );
     }
 
+    public static function getActive(): array
+    {
+        return [
+            PageContentType::Homepage,
+            PageContentType::BlogBottom,
+        ];
+    }
+
     public static function buildRedirectUrl(self|PageContentType|null $type, Language $language): string
     {
         return PageContentType::buildRedirectUrl($type, $language);
@@ -24,8 +32,12 @@ enum AppPageContentType: int
     {
         return match ($type) {
             PageContentType::BlogBottom => match ($section) {
-                PageContentSection::Subtitle, PageContentSection::MainImage, PageContentSection::ActionUrl => false,
-                default => true,
+                PageContentSection::Content => true,
+                default => false,
+            },
+            PageContentType::Homepage => match($section) {
+                PageContentSection::Title, PageContentSection::Content => true,
+                default => false,
             },
             default => true,
         };

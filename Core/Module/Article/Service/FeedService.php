@@ -131,7 +131,7 @@ readonly class FeedService
             $output[] = '<item>';
             $output[] = '<title>' . $title . '</title>';
             $output[] = '<link>' . $feedItem->fullPath . '</link>';
-            $output[] = '<guid>' . $feedItem->uniqueIdentifier . '</guid>';
+            $output[] = '<guid isPermaLink="false">' . $feedItem->uniqueIdentifier . '</guid>';
             if ($feedItem->user) {
                 $output[] = '<author>' . $feedItem->user->email . ' (' . $feedItem->user->name . ')</author>';
             }

@@ -2,8 +2,6 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Media;
-use Amora\Core\Module\Article\Value\MediaType;
-use Amora\Core\Util\DateUtil;
 use Amora\Core\Value\QueryOrderDirection;
 
 /** @var HtmlResponseDataAdmin $responseData */
@@ -33,18 +31,10 @@ $displayLoadMore = count($responseData->files) >= 50;
 <?php
     /** @var Media $media */
     foreach ($responseData->files as $media) {
-        $dateString = DateUtil::formatDate(
-            date: $media->createdAt,
-            lang: $responseData->siteLanguage,
-            includeTime: true,
-        );
 ?>
-      <a href="<?=$media->getPathWithNameMedium()?>" target="_blank" class="media-item" data-media-id="<?=$media->id?>">
-        <span class="media-id">#<?=$media->id?></span>
-        <?=MediaType::getIcon($media->type, 'img-svg-40 m-r-05')?>
-        <span class="media-name"><?=$media->buildAltText() ?: $media->filenameOriginal?></span>
-        <span class="media-info"><?=sprintf($responseData->getLocalValue('mediaUploadedBy'), $media->user ? $media->user->name : '???', $dateString)?>.</span>
-      </a>
+      <div class="file-container">
+        <?=$media->asHtml()?>
+      </div>
 <?php } ?>
     </div>
     <a href="#" class="media-load-more media-load-more-js<?=$displayLoadMore ? '' : ' null'?>" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">

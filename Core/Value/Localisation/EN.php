@@ -184,8 +184,9 @@ return [
     'pageContentEditTitle' => 'Edit content',
     'pageContentEditTitleHomepage' => 'Homepage',
     'pageContentEditTitleBlogBottom' => 'Text that follows a blog post',
+    'pageContentEditAction' => 'Action Link',
+    'pageContentEditActionHelp' => 'An action button will be displayed if a link is provided.',
 
-    'mediaUploadedBy' => 'Uploaded by %s on %s',
     'mediaSelectImageForArticle' => 'Select image to add to article',
 
     'userRoleAdmin' => 'Admin',

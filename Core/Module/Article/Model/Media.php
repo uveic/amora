@@ -107,6 +107,7 @@ class Media
             'userName' => $this->user?->getNameOrEmail(),
             'sizes' => $this->buildSizes(),
             'srcset' => $this->buildSrcset(),
+            'asHtml' => $this->asHtml(),
         ];
     }
 
@@ -232,7 +233,29 @@ class Media
 
     public function asHtml(
         ImageSize $size = ImageSize::XSmall,
-        string $className = 'image-item',
+        string $className = 'media-item',
+        bool $lazyLoading = true,
+        string $sizes = '',
+        ?string $title = null,
+        ?string $alt = null,
+    ): string {
+        if ($this->type === MediaType::Image) {
+            return $this->imageAsHtml(
+                size: $size,
+                className: $className,
+                lazyLoading: $lazyLoading,
+                sizes: $sizes,
+                title: $title,
+                alt: $alt,
+            );
+        }
+
+        return $this->fileAsHtml();
+    }
+
+    private function imageAsHtml(
+        ImageSize $size = ImageSize::XSmall,
+        string $className = 'media-item',
         bool $lazyLoading = true,
         string $sizes = '',
         ?string $title = null,
@@ -274,6 +297,34 @@ class Media
         }
 
         return '<img ' . implode(' ', $output) . '>';
+    }
+
+    private function fileAsHtml(): string
+    {
+        $dateString = DateUtil::formatDateShort(
+            date: $this->createdAt,
+        );
+
+        $output = [
+            '<a href="' . $this->getPathWithNameOriginal() . '" target="_blank" class="media-item" data-media-id="' . $this->id . '">',
+            '<div class="media-header">',
+            $this->type->getIcon('img-svg-30'),
+            '<span class="media-name">' . $this->filenameOriginal . '</span>',
+            '</div>',
+            '<span class="media-info">',
+            '<span class="media-id">#' . $this->id . '</span>',
+        ];
+
+        if ($this->user?->getNameOrEmail()) {
+            $output[] = '<span class="media-icon"><img class="img-svg" width="20" height="20" src="/img/svg/user.svg" alt="User" title="User">' . $this->user?->getNameOrEmail() . '</span>';
+        }
+
+        $output[] = '<span class="media-icon"><img class="img-svg" width="20" height="20" src="/img/svg/calendar-blank.svg" alt="Date">' . $dateString . '</span>';
+
+        $output[] = '</span>';
+        $output[] = '</a>';
+
+        return implode(PHP_EOL, $output);
     }
 
     private function buildDirPath(): string

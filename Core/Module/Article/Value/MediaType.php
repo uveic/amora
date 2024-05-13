@@ -25,16 +25,18 @@ enum MediaType: int
         return match($rawFileType) {
             'image/jpeg', 'image/gif', 'image/png', 'image/webp' => self::Image,
             'application/pdf' => self::PDF,
+            'text/csv' => self::CSV,
             default => self::Unknown,
         };
     }
 
-    public static function getIcon(self $item, string $class = ''): string
+    public function getIcon(string $class = ''): string
     {
         $class = $class ? ' ' . $class : '';
-        return match($item) {
+        return match($this) {
             self::Image => '<img class="img-svg' . $class . '" width="20" height="20" src="/img/svg/image.svg" alt="Img">',
             self::PDF => '<img src="/img/svg/file-pdf.svg" class="img-svg' . $class . '" width="20" height="20" alt="PDF">',
+            self::CSV => '<img src="/img/svg/file-csv.svg" class="img-svg' . $class . '" width="20" height="20" alt="CSV">',
             default => '<img src="/img/svg/files.svg" class="img-svg' . $class . '" width="20" height="20" alt="File">',
         };
     }

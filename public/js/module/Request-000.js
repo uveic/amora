@@ -89,11 +89,6 @@ class RequestClass {
     const headers = {'Content-Type': 'application/json'};
     return this.request(url, stringPayload, 'DELETE', headers, successMessage);
   }
-
-  postImage(url, formData, successMessage = null) {
-    const headers = {};
-    return this.request(url, formData, 'POST', headers, successMessage);
-  }
 }
 
 export const Request = new RequestClass();
