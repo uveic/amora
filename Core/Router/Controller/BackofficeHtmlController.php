@@ -699,7 +699,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         return Response::createHtmlResponse(
-            template: 'app/backoffice/page-content-list',
+            template: 'core/backoffice/page-content-list',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('pageContentEditTitle'),
