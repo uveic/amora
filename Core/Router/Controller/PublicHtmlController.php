@@ -7,7 +7,6 @@ use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Album\Service\AlbumService;
-use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\FeedService;
 use Amora\Core\Module\Article\Value\ArticleType;
@@ -204,9 +203,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navChangePassword'),
+                isPublicPage: true,
                 verificationHash: $user->getValidationHash(),
                 passwordUserId: $user->id,
-                isPublicPage: true,
             ),
         );
     }
@@ -242,9 +241,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navCreatePassword'),
+                isPublicPage: true,
                 verificationHash: $user->getValidationHash(),
                 passwordUserId: $user->id,
-                isPublicPage: true,
             ),
         );
     }
@@ -324,8 +323,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 pageTitle: $album->titleHtml,
                 pageDescription: $album->buildDescription(),
                 siteImagePath: $album->mainMedia->getPathWithNameMedium(),
-                album: $album,
                 isPublicPage: true,
+                album: $album,
             ),
         );
     }

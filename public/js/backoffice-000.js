@@ -8,6 +8,7 @@ window.data = {
   mediaCache: [],
   mediaCacheRight: [],
   mediaCacheLeft: [],
+  mediaQueryQty: 50,
 }
 
 function addEventListenerAction(media, mediaId, eventListenerAction, targetContainerId) {
@@ -63,7 +64,7 @@ function handleGenericSelectMainMediaClick(e) {
   modal.querySelector('.add-image-wrapper').classList.remove('null');
   modal.classList.remove('null');
 
-  const qty = 50;
+  const qty = window.data.mediaQueryQty;
   const existingImages = imagesContainer.querySelectorAll('.image-item');
   existingImages.forEach(img => {
     addEventListenerAction(img, img.dataset.mediaId, eventListenerAction, targetContainerId);
@@ -931,6 +932,8 @@ function updateAlbumSectionSequences(sourceSequence, targetSequence) {
 }
 
 function displayImageFromApiCall(container, images, eventListenerAction, targetContainerId) {
+  let count = 0;
+
   images.forEach(image => {
     const existingImage = container.querySelector('img[data-media-id="' + image.id + '"]');
     if (existingImage) {
@@ -956,7 +959,15 @@ function displayImageFromApiCall(container, images, eventListenerAction, targetC
 
     figureContainer.appendChild(imageEl);
     container.appendChild(figureContainer);
+    count++;
   });
+
+  if (count >= window.data.mediaQueryQty) {
+    const loadMoreButton = container.parentElement.querySelector('.media-load-more');
+    if (loadMoreButton) {
+      loadMoreButton.classList.remove('null');
+    }
+  }
 }
 
 function deleteImage(e) {
@@ -1464,7 +1475,7 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
     lm.disabled = true;
     const lastImageEl = document.querySelector('#images-list .image-container:last-child .image-item');
     const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.mediaId) : null;
-    const qty = 50;
+    const qty = window.data.mediaQueryQty;
     const typeId = lm.dataset.typeId ? Number.parseInt(lm.dataset.typeId) : '';
     const direction = lm.dataset.direccion ?? '';
     const eventListenerAction = lm.dataset.eventListenerAction;

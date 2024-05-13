@@ -64,21 +64,25 @@ class UrlBuilderUtil
     const PUBLIC_RSS = '/rss';
     const PUBLIC_JSON_FEED = '/json-feed';
 
-    public static function buildBaseUrl(Language $siteLanguage): string
+    public static function buildBaseUrl(Language $siteLanguage, bool $includeHiddenToken = false): string
     {
-        $baseUrl = Core::getConfig()->baseUrl;
+        $config = Core::getConfig();
+        $baseUrl = $config->baseUrl;
 
-        return trim($baseUrl, ' /')
-            . (count(Core::getAllLanguages()) > 1
+        return trim($baseUrl, ' /') .
+            (count(Core::getAllLanguages()) > 1
                 ? '/' . strtolower($siteLanguage->value)
                 : ''
-            );
+            ) . ($includeHiddenToken && $config->hiddenSiteToken ? '?ht=' . $config->hiddenSiteToken : '');
     }
 
-    public static function buildBaseUrlWithoutLanguage(): string
+    public static function buildBaseUrlWithoutLanguage(bool $includeHiddenToken = false): string
     {
-        $baseUrl = Core::getConfig()->baseUrl;
-        return trim($baseUrl, ' /');
+        $config = Core::getConfig();
+        $baseUrl = $config->baseUrl;
+
+        return trim($baseUrl, ' /') .
+            ($includeHiddenToken && $config->hiddenSiteToken ? '?ht=' . $config->hiddenSiteToken : '');
     }
 
     public static function buildMediaBaseUrl(): string
