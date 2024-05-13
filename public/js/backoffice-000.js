@@ -65,7 +65,7 @@ function handleGenericSelectMainMediaClick(e) {
   modal.classList.remove('null');
 
   const qty = window.data.mediaQueryQty;
-  const existingImages = imagesContainer.querySelectorAll('.image-item');
+  const existingImages = imagesContainer.querySelectorAll('.media-item');
   existingImages.forEach(img => {
     addEventListenerAction(img, img.dataset.mediaId, eventListenerAction, targetContainerId);
   });
@@ -168,7 +168,7 @@ function addMediaToModalContainer(existingModalContainer, mediaId) {
   newImage.title = existingMedia.title;
   newImage.dataset.mediaId = mediaId;
   newImage.dataset.pathMedium = existingMedia.src;
-  newImage.className = 'image-item media-dynamically-added';
+  newImage.className = 'media-item media-dynamically-added';
   figureContainer.appendChild(newImage);
 
   if (existingModalContainer.firstChild) {
@@ -216,7 +216,7 @@ function displayModalImage(image) {
   imageInfoNext.classList.remove('hidden');
 
   // Hide/display image nav buttons
-  const firstImageEl = document.querySelector('#images-list .image-item');
+  const firstImageEl = document.querySelector('#images-list .media-item');
   const firstImageId = firstImageEl ? Number.parseInt(firstImageEl.dataset.mediaId) : null;
 
   if (firstImageId === image.id) {
@@ -490,7 +490,7 @@ function insertImageInArticle(e) {
   const existingImage = document.querySelector('img[data-media-id="' + mediaId + '"]');
 
   const newImage = new Image();
-  newImage.className = 'image-item';
+  newImage.className = 'media-item';
   newImage.src = existingImage.dataset.pathLarge;
   newImage.dataset.mediaId = existingImage.dataset.mediaId;
   newImage.alt = existingImage.alt;
@@ -953,7 +953,7 @@ function displayImageFromApiCall(container, images, eventListenerAction, targetC
     imageEl.title = alt;
     imageEl.dataset.mediaId = image.id;
     imageEl.dataset.pathMedium = image.pathMedium;
-    imageEl.className = 'image-item';
+    imageEl.className = 'media-item';
     imageEl.loading = 'lazy';
     addEventListenerAction(imageEl, image.id, eventListenerAction, targetContainerId);
 
@@ -981,7 +981,7 @@ function deleteImage(e) {
 
   Request.delete('/api/file/' + mediaId)
     .then(() => {
-      document.querySelector(".image-item[data-media-id='" + mediaId + "']").parentElement.classList.add('null');
+      document.querySelector(".media-item[data-media-id='" + mediaId + "']").parentElement.classList.add('null');
       document.querySelector('.modal-media').classList.add('null');
     });
 }
@@ -1119,7 +1119,7 @@ function handleAlbumMediaDrop(ev) {
     });
 }
 
-document.querySelectorAll('.image-item').forEach(im => {
+document.querySelectorAll('.media-item').forEach(im => {
   im.mediaId = im.dataset.mediaId;
   im.addEventListener('click', displayNextImagePopup);
 });
@@ -1261,7 +1261,7 @@ document.querySelectorAll('input#images').forEach(im => {
       container,
       (response) => {
         if (response && response.file.id) {
-          const newMediaEl = container.querySelector('.image-item[data-media-id="' + response.file.id + '"]');
+          const newMediaEl = container.querySelector('.media-item[data-media-id="' + response.file.id + '"]');
           newMediaEl.addEventListener('click', displayNextImagePopup);
           newMediaEl.mediaId = response.file.id;
         }
@@ -1277,43 +1277,17 @@ document.querySelectorAll('input#media').forEach(im => {
 
     const container = document.querySelector('#media-container');
 
-    for (const file in im.files) {
-      let newMediaContainer = document.createElement('a');
-      newMediaContainer.href = '#';
-      newMediaContainer.className = 'media-item';
-      newMediaContainer.target = '_blank';
-      container.insertBefore(newMediaContainer, container.firstChild);
-
-      Uploader.uploadFile(
-        file,
-        newMediaContainer,
-        '',
-        (response) => {
-          if (response && response.file.id) {
-            newMediaContainer.dataset.mediaId = response.file.id;
-            newMediaContainer.href = response.file.path;
-
-            const mediaId = document.createElement('span');
-            mediaId.textContent = '#' + response.file.id;
-            mediaId.className = 'media-id';
-            const mediaName = document.createElement('span');
-            mediaName.textContent = response.file.caption;
-            mediaName.className = 'media-name';
-            const mediaInfo = document.createElement('span');
-            mediaInfo.className = 'media-info';
-            mediaInfo.textContent = Global.get('globalUploadedOn') + ' ' +
-              Global.formatDate(new Date(response.file.createdAt), true, true, true, true, true) +
-              ' ' + Global.get('globalBy') + ' ' + response.file.userName + '.';
-
-            newMediaContainer.appendChild(mediaId);
-            newMediaContainer.innerHTML += '<img src="/img/svg/file-pdf.svg" class="img-svg img-svg-40 m-r-05" alt="PDF">';
-            newMediaContainer.appendChild(mediaName);
-            newMediaContainer.appendChild(mediaInfo);
-          }
-        },
-        () => container.removeChild(newMediaContainer),
-      );
-    }
+    Uploader.uploadFilesAsync(
+      im.files,
+      container,
+      (response) => {
+        if (response && response.file.id) {
+          const newFileContainer = container.querySelector('.media-item[data-media-id="' + response.file.id + '"]');
+          newFileContainer.mediaId = response.file.id;
+        }
+      },
+    )
+      .catch(error => Util.notifyError(error));
   });
 });
 
@@ -1473,7 +1447,7 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
     e.preventDefault();
 
     lm.disabled = true;
-    const lastImageEl = document.querySelector('#images-list .image-container:last-child .image-item');
+    const lastImageEl = document.querySelector('#images-list .image-container:last-child .media-item');
     const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.mediaId) : null;
     const qty = window.data.mediaQueryQty;
     const typeId = lm.dataset.typeId ? Number.parseInt(lm.dataset.typeId) : '';
@@ -1759,7 +1733,6 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
       .then(response => {
         container.insertAdjacentHTML('beforeend', response.html);
         const sectionContainer = container.querySelector('.album-section-item[data-album-section-id="' + response.newSectionId + '"]');
-        sectionContainer.querySelector('.select-media-action').addEventListener('click', handleGenericSelectMainMediaClick);
         sectionContainer.querySelector('.select-media-action').addEventListener('click', handleGenericSelectMainMediaClick);
         sectionContainer.querySelector('.album-section-edit-js').addEventListener('click', editAlbumSection);
         sectionContainer.querySelector('.album-section-save-js').addEventListener('click', updateAlbumSection);

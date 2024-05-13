@@ -184,8 +184,9 @@ return [
     'pageContentEditTitle' => 'Editar contenido',
     'pageContentEditTitleHomepage' => 'Portada',
     'pageContentEditTitleBlogBottom' => 'Texto que se muestra después de un post del blog',
+    'pageContentEditAction' => 'Enlace',
+    'pageContentEditActionHelp' => 'Se mostrará un botón invitando a visitar la dirección web proporcionada.',
 
-    'mediaUploadedBy' => 'Subido por %s el %s',
     'mediaSelectImageForArticle' => 'Selecciona una imagen para añadir al artículo',
 
     'userRoleAdmin' => 'Administrador/a',

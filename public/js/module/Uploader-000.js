@@ -1,4 +1,3 @@
-import {Request} from './Request-000.js';
 import {Global} from './localisation-000.js';
 import {Util} from "./Util-000.js";
 
@@ -15,21 +14,17 @@ class UploaderClass {
     return loaderContainer;
   }
 
-  async uploadMedia (
+  async uploadFile (
     media,
     apiUploadEndpoint = '/api/file',
     formData = new FormData(),
   ) {
-    if (!/\.(jpe?g|png|gif|webp)$/i.test(media.name)) {
-      return new Promise((resolve, reject) => reject(new Error(media.name + ' is not an image')));
-    }
-
     return new Promise((resolve, reject) => {
-      const figureContainer = document.querySelector('#img' + Util.cleanString(media.name));
+      const itemContainer = document.querySelector('#item' + Util.cleanString(media.name));
       const progressBarContainer = UploaderClass.buildProgressElement();
       const progressEl = progressBarContainer.querySelector('progress');
-      figureContainer.appendChild(progressBarContainer);
-      figureContainer.removeChild(figureContainer.querySelector('.loader-container'));
+      itemContainer.appendChild(progressBarContainer);
+      itemContainer.removeChild(itemContainer.querySelector('.loader-container'));
 
       formData.delete('files[]');
       formData.append('files[]', media);
@@ -48,8 +43,8 @@ class UploaderClass {
         progressEl.value = progressValue;
 
         if (progressValue >= 95) {
-          figureContainer.removeChild(progressBarContainer);
-          figureContainer.appendChild(Util.buildImageLoadingElement());
+          itemContainer.removeChild(progressBarContainer);
+          itemContainer.appendChild(Util.buildImageLoadingElement());
         }
       });
 
@@ -63,15 +58,15 @@ class UploaderClass {
     mediaContainer,
     then = () => {},
     catchError = () => {},
-    imageClassName = 'image-item',
+    imageClassName = 'media-item',
     apiUploadEndpoint = '/api/file',
     formData = new FormData(),
   ) {
     for (const media of Array.from(files)) {
       const loaderEl = Util.buildImageLoadingElement();
       const figureContainer = document.createElement('figure');
-      figureContainer.className = 'image-container media-uploading';
-      figureContainer.id = 'img' + Util.cleanString(media.name);
+      figureContainer.className = 'image-container';
+      figureContainer.id = 'item' + Util.cleanString(media.name);
 
       figureContainer.appendChild(loaderEl);
 
@@ -85,13 +80,17 @@ class UploaderClass {
 
     for (const media of Array.from(files)) {
       try {
-        await this.uploadMedia(media, apiUploadEndpoint, formData)
+        if (!/\.(jpe?g|png|gif|webp)$/i.test(media.name)) {
+          return new Promise((resolve, reject) => reject(new Error(media.name + ' is not an image')));
+        }
+
+        await this.uploadFile(media, apiUploadEndpoint, formData)
           .then(json => {
             if (!json.success || !json.file) {
               throw new Error(json.errorMessage ?? Global.get('genericError'));
             }
 
-            const figureContainer = document.querySelector('#img' + Util.cleanString(json.file.sourceName));
+            const figureContainer = document.querySelector('#item' + Util.cleanString(json.file.sourceName));
 
             const media = new Image();
             media.className = imageClassName;
@@ -104,131 +103,77 @@ class UploaderClass {
 
             figureContainer.appendChild(media);
             figureContainer.removeChild(figureContainer.querySelector('.loader-container'));
-            figureContainer.classList.remove('media-uploading');
             figureContainer.removeAttribute('id');
 
             then(json);
           })
           .catch(error => {
-            const figureContainer = document.querySelector('#img' + Util.cleanString(media.name));
+            const figureContainer = document.querySelector('#item' + Util.cleanString(media.name));
             if (figureContainer) {
               mediaContainer.removeChild(figureContainer);
             }
 
             Util.notifyError(error);
+            catchError(error);
           });
       } catch (error) {
         Util.notifyError(error);
+        catchError(error);
       }
     }
   }
 
-  // Deprecated
-  async uploadImage(
-    file,
-    imageContainer,
+  async uploadFilesAsync(
+    files,
+    mediaContainer,
     then = () => {},
     catchError = () => {},
-    imageClassName = 'image-item',
     apiUploadEndpoint = '/api/file',
     formData = new FormData(),
   ) {
-    if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-      Util.notifyError(new Error(file.name + ' is not an image'));
-      return;
+    for (const file of Array.from(files)) {
+      const loaderEl = Util.buildImageLoadingElement();
+      const fileContainer = document.createElement('div');
+      fileContainer.className = 'file-container';
+      fileContainer.id = 'item' + Util.cleanString(file.name);
+      fileContainer.appendChild(loaderEl);
+
+      mediaContainer.appendChild(fileContainer);
+      if (mediaContainer.firstChild) {
+        mediaContainer.insertBefore(fileContainer, mediaContainer.firstChild);
+      } else {
+        mediaContainer.appendChild(fileContainer);
+      }
     }
 
-    formData.append('files[]', file);
+    for (const file of Array.from(files)) {
+      try {
+        await this.uploadFile(file, apiUploadEndpoint, formData)
+          .then(json => {
+            if (!json.success || !json.file) {
+              throw new Error(json.errorMessage ?? Global.get('genericError'));
+            }
 
-    const reader = new FileReader();
-    reader.addEventListener('load', function () {
-      let image = new Image();
-      image.className = 'opacity' + (imageClassName ? ' ' + imageClassName : '');
-      // image.src = String(reader.result);
+            const fileContainer = document.querySelector('#item' + Util.cleanString(json.file.sourceName));
+            fileContainer.removeChild(fileContainer.querySelector('.loader-container'));
+            fileContainer.innerHTML = json.file.asHtml;
 
-      const imgLoading = Util.buildImageLoadingElement();
-      const figureContainer = document.createElement('figure');
-      figureContainer.className = 'image-container';
+            then(json);
+          })
+          .catch(error => {
+            const fileContainer = document.querySelector('#file' + Util.cleanString(file.name));
+            if (fileContainer) {
+              mediaContainer.removeChild(fileContainer);
+            }
 
-      figureContainer.appendChild(image);
-      figureContainer.appendChild(imgLoading);
-
-      imageContainer.appendChild(figureContainer);
-      imageContainer.firstChild
-        ? imageContainer.insertBefore(figureContainer, imageContainer.firstChild)
-        : imageContainer.appendChild(figureContainer);
-
-      Request.postImage(apiUploadEndpoint, formData)
-        .then(response => {
-          if (!response.success || !response.file) {
-            throw new Error(response.errorMessage ?? Global.get('genericError'));
-          }
-
-          image.classList.remove('opacity');
-          image.src = response.file.pathSmall;
-          image.sizes = response.file.sizes;
-          image.srcset = response.file.srcset;
-          image.dataset.mediaId = response.file.id;
-          image.dataset.pathMedium = response.file.pathMedium;
-          image.alt = response.file.caption ?? response.file.name;
-          figureContainer.removeChild(imgLoading);
-
-          then(response);
-        })
-        .catch((error) => {
-          try {
-            imageContainer.removeChild(figureContainer);
-          } catch {}
-
-          Util.notifyError(error);
-          catchError();
-        });
-    })
-
-    reader.readAsDataURL(file);
-  };
-
-  uploadFile(
-    file,
-    container,
-    fileClassName,
-    then = () => {},
-    catchError = () => {},
-    apiUploadEndpoint = '/api/file',
-    formData = new FormData(),
-  ) {
-    formData.append('files[]', file);
-
-    const reader = new FileReader();
-    reader.addEventListener('load', function () {
-      let fileNameSpan = document.createElement('span');
-      fileNameSpan.textContent = file.name;
-      const imgLoading = Util.buildImageLoadingElement();
-
-      container.appendChild(fileNameSpan);
-      container.appendChild(imgLoading);
-
-      Request.postImage(apiUploadEndpoint, formData)
-        .then(data => {
-          if (!data.success) {
-            throw new Error(data.errorMessage ?? Global.get('genericError'));
-          }
-
-          container.removeChild(fileNameSpan);
-          container.removeChild(imgLoading);
-
-          then(data);
-        })
-        .catch((error) => {
-          container.removeChild(fileNameSpan);
-          container.removeChild(imgLoading);
-
-          Util.notifyError(error);
-          catchError();
-        });
-    });
-
-    reader.readAsDataURL(file);
+            Util.notifyError(error);
+            catchError(error);
+          });
+      } catch (error) {
+        Util.notifyError(error);
+        catchError(error);
+      }
+    }
   }
 }
 

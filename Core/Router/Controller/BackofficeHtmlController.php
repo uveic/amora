@@ -487,7 +487,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getMediaPage(Request $request): Response
     {
         $files = $this->mediaService->filterMediaBy(
-            typeIds: [MediaType::PDF->value, MediaType::Unknown->value],
+            typeIds: [
+                MediaType::PDF->value,
+                MediaType::CSV->value,
+                MediaType::Unknown->value,
+            ],
             statusIds: [MediaStatus::Active->value],
             queryOptions: new QueryOptions(
                 pagination: new Response\Pagination(itemsPerPage: 50),
