@@ -1562,18 +1562,20 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
     e.preventDefault();
 
     const contentId = Number.parseInt(f.querySelector('input[name="contentId"]').value);
-    const titleHtml = f.querySelector('.editor-title').innerHTML.trim();
-    const subtitleHtml = f.querySelector('.editor-subtitle').innerHTML.trim();
-    const contentHtml = f.querySelector('.editor-content').innerHTML.trim();
+    const titleElement = f.querySelector('.editor-title');
+    const titleContent = titleElement.innerHTML.trim();
+    const subtitleElement = f.querySelector('.editor-subtitle');
+    const subtitleContent = subtitleElement.innerHTML.trim();
+    const contentHtml = f.querySelector('.editor-content');
     const actionUrl = f.querySelector('input[name="actionUrl"]').value.trim();
     const mainImageEl = f.querySelector('.media-item');
 
     const payload = JSON.stringify({
-      titleHtml: titleHtml.length ? (titleHtml === Global.get('editorTitlePlaceholder') ? null : titleHtml)
-        : null,
-      subtitleHtml: subtitleHtml.length ? (subtitleHtml === Global.get('editorSubtitlePlaceholder') ? null : subtitleHtml)
-        : null,
-      contentHtml: contentHtml,
+      titleHtml: titleContent === Global.get('editorTitlePlaceholder') ? null
+        : Util.getAndCleanHtmlFromElement(titleElement),
+      subtitleHtml: subtitleContent === Global.get('editorSubtitlePlaceholder') ? null
+        : Util.getAndCleanHtmlFromElement(subtitleElement),
+      contentHtml: Util.getAndCleanHtmlFromElement(contentHtml),
       mainImageId: mainImageEl && mainImageEl.dataset.mediaId ? Number.parseInt(mainImageEl.dataset.mediaId)
         : null,
       actionUrl: actionUrl.length ? actionUrl : null,
