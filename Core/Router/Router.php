@@ -105,6 +105,15 @@ class Router
      */
     private function route(Request $request): Response
     {
+        if ($this->displayEmptyPage($request)) {
+            return Response::createHtmlResponse(
+                template: 'core/frontend/public/hidden',
+                responseData: new HtmlResponseData(
+                    request: $request,
+                ),
+            );
+        }
+
         $this->analyticsService->logEvent($request);
         $action = $request->getAction();
 
@@ -253,5 +262,22 @@ class Router
         }
 
         return false;
+    }
+
+    private function displayEmptyPage(Request $request): bool {
+        if ($request->session?->isAdmin()) {
+            return false;
+        }
+
+        $token = Core::getConfig()->hiddenSiteToken;
+        if (!$token) {
+            return false;
+        }
+
+        if ($request->getGetParam('ht') === $token) {
+            return false;
+        }
+
+        return true;
     }
 }

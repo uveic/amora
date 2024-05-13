@@ -38,9 +38,9 @@ if (isset($responseData->article)) {
   <meta name="twitter:title" content="<?=$responseData->getPageTitle()?>">
   <meta name="twitter:description" content="<?=$responseData->getPageDescription()?>">
   <meta name="twitter:image" content="<?=$responseData->siteImagePath?>">
-  <?php if ($responseData->themeColourHex) { ?>
-    <meta name="theme-color" content="<?=$responseData->themeColourHex?>>"/>
-  <?php } ?>
+<?php if ($responseData->themeColourHex) { ?>
+  <meta name="theme-color" content="<?=$responseData->themeColourHex?>>"/>
+<?php } ?>
   <title><?=$responseData->getPageTitle()?></title>
   <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/img/favicon/android-chrome-512x512.png">

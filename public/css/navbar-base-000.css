@@ -37,15 +37,6 @@
   max-height: 45px;
 }
 
-.logo-on-top,
-.logo-on-top:hover,
-.logo-on-top:active,
-.logo-on-top:visited,
-.logo-on-top:focus {
-  flex-flow: column nowrap;
-  justify-content: center;
-}
-
 .logo.white {
   background: var(--color-bg);
   color: var(--color-text);
@@ -54,6 +45,8 @@
 .logo-wrapper {
   display: flex;
   flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .content-onboarding {

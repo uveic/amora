@@ -27,7 +27,7 @@ use Amora\Core\Value\QueryOrderDirection;
         </div>
       </div>
       <div id="images-list" class="null"></div>
-      <a href="#" class="media-load-more media-load-more-js" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>">
+      <a href="#" class="media-load-more media-load-more-js null" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>">
         <span><?=$responseData->getLocalValue('globalMore')?></span>
       </a>
     </div>

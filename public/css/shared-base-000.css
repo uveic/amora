@@ -2,6 +2,7 @@
   --color-bg: #fcfcfc;
   --color-bg-dark: #212529;
   --color-text: #212529;
+  --color-text-white: #fcfcfc;
   --color-text-light: #5d7079;
   --color-text-hover: #1c1c1c;
   --color-text-editor: #212529;
@@ -1126,6 +1127,15 @@ svg,
   background-color: #2ed06e;
 }
 /* Homepage style ends here */
+
+.logo-on-top,
+.logo-on-top:hover,
+.logo-on-top:active,
+.logo-on-top:visited,
+.logo-on-top:focus {
+  flex-flow: column nowrap;
+  justify-content: center;
+}
 
 @media screen and (min-width: 800px) {
   .account-content {

@@ -58,6 +58,7 @@ abstract class AbstractConfig {
         public readonly string $appName,
         public readonly Env $env,
         public readonly string $salt,
+        public readonly ?string $hiddenSiteToken,
         public readonly array $allowedUrlsForSrcScript,
 
         public readonly bool $isLoggingEnabled,
