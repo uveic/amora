@@ -22,6 +22,7 @@
     "ext-curl": "*",
     "ext-libxml": "*",
     "voku/anti-xss": "^4.1",
-    "jaybizzle/crawler-detect": "^1.2"
+    "jaybizzle/crawler-detect": "^1.2",
+    "aws/aws-sdk-php": "^3.306"
   }
 }

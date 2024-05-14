@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Article;
 
 use Amora\App\Module\Article\App\ImageResizeApp;
+use Amora\App\Module\Article\App\S3UploaderApp;
 use Amora\Core\Core;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Module\Album\AlbumCore;
@@ -201,6 +202,23 @@ class ArticleCore extends Core
                     logger: self::getArticleLogger(),
                     mediaService: self::getMediaService(),
                     imageService: self::getImageService(),
+                );
+            },
+        );
+    }
+
+    public static function getS3UploaderApp(): S3UploaderApp
+    {
+        return self::getInstance(
+            className: 'S3UploaderApp',
+            factory: function () {
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
+                require_once self::getPathRoot() . '/Core/App/LockManager.php';
+                require_once self::getPathRoot() . '/Core/App/App.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/App/S3UploaderApp.php';
+
+                return new S3UploaderApp(
+                    logger: self::getArticleLogger(),
                 );
             },
         );
