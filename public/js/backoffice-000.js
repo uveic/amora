@@ -932,8 +932,6 @@ function updateAlbumSectionSequences(sourceSequence, targetSequence) {
 }
 
 function displayImageFromApiCall(container, images, eventListenerAction, targetContainerId) {
-  let count = 0;
-
   images.forEach(image => {
     const existingImage = container.querySelector('img[data-media-id="' + image.id + '"]');
     if (existingImage) {
@@ -959,10 +957,9 @@ function displayImageFromApiCall(container, images, eventListenerAction, targetC
 
     figureContainer.appendChild(imageEl);
     container.appendChild(figureContainer);
-    count++;
   });
 
-  if (count >= window.data.mediaQueryQty) {
+  if (images.length >= window.data.mediaQueryQty) {
     const loadMoreButton = container.parentElement.querySelector('.media-load-more');
     if (loadMoreButton) {
       loadMoreButton.classList.remove('null');
