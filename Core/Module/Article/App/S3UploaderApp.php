@@ -3,16 +3,17 @@
 namespace Amora\App\Module\Article\App;
 
 use Amora\Core\App\App;
+use Amora\Core\Config\S3Config;
 use Amora\Core\Entity\Response\Feedback;
+use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
-use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\Logger;
-use Amora\Core\Value\QueryOrderDirection;
+use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 
 class S3UploaderApp extends App
@@ -20,6 +21,7 @@ class S3UploaderApp extends App
     public function __construct(
         Logger $logger,
         private readonly MediaService $mediaService,
+        private readonly S3Config $s3Config,
     ) {
         parent::__construct(
             logger: $logger,
@@ -31,10 +33,6 @@ class S3UploaderApp extends App
 
     public function run(): void
     {
-        $this->listBucket();
-
-        exit;
-
         $this->execute(function () {
             $timeBefore = microtime(true);
 
@@ -44,7 +42,8 @@ class S3UploaderApp extends App
                 typeIds: [MediaType::Image->value],
                 statusIds: [MediaStatus::Active->value],
                 queryOptions: new QueryOptions(
-                    orderBy: [new QueryOrderBy('id', QueryOrderDirection::ASC)],
+                    pagination: new Pagination(itemsPerPage: 1),
+                    orderRandomly: true,
                 ),
             );
 
@@ -77,12 +76,8 @@ class S3UploaderApp extends App
     private function processMedia(Media $existingMedia): bool
     {
         $this->logger->logInfo('Processing media ID: ' . $existingMedia->id);
+        $this->logger->logInfo('Processing media (medium): ' . $existingMedia->getDirWithNameMedium());
 
-        return true;
-    }
-
-    private function listBucket(): void
-    {
         /**
          * List your Amazon S3 buckets.
          *
@@ -90,17 +85,42 @@ class S3UploaderApp extends App
          * https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html
          */
 
-        $s3Client = new S3Client(
-            [
-                'profile' => 'default',
-                'region' => 'us-west-2',
-                'version' => '2006-03-01'
-            ],
-        );
+//        putenv("AWS_ACCESS_KEY_ID={$this->s3Config->accessKey}");
+//        putenv("AWS_SECRET_ACCESS_KEY={$this->s3Config->accessSecret}");
+//
+//        echo 'AWS_ACCESS_KEY_ID: ' . getenv('AWS_ACCESS_KEY_ID') . PHP_EOL;
+//        echo 'AWS_SECRET_ACCESS_KEY: ' . getenv('AWS_SECRET_ACCESS_KEY') . PHP_EOL;
 
-        $buckets = $s3Client->listBuckets();
-        foreach ($buckets['Buckets'] as $bucket) {
-            echo $bucket['Name'] . PHP_EOL;
+
+        try {
+            $s3Client = new S3Client(
+                [
+                    'profile' => 'default',
+                    'region' => 'fra1',
+                    'endpoint' => $this->s3Config->originEndpoint,
+                    'use_path_style_endpoint' => false, // Configures to use subdomain/virtual calling format.
+                    'credentials' => [
+                        'key' => $this->s3Config->accessKey,
+                        'secret' => $this->s3Config->accessSecret,
+                    ],
+                ],
+            );
+
+            $res = $s3Client->putObject(
+                [
+                    'Bucket' => $this->s3Config->buckedName,
+                    'Key' => $this->s3Config->projectFolderName . '/' . $existingMedia->getPathWithNameMedium(true),
+                    'Body' => fopen($existingMedia->getDirWithNameMedium(), 'r'),
+                    'ACL' => 'public-read',
+                ]
+            );
+
+            $this->log('Uploaded: ' . $res['ObjectURL']);
+        } catch (S3Exception $e) {
+            $this->log("There was an error uploading the file" . PHP_EOL . PHP_EOL . $e->getMessage(), true);
+            return false;
         }
+
+        return true;
     }
 }

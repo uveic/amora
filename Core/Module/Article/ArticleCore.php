@@ -212,6 +212,11 @@ class ArticleCore extends Core
         return self::getInstance(
             className: 'S3UploaderApp',
             factory: function () {
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/ImageSize.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
                 require_once self::getPathRoot() . '/Core/App/LockManager.php';
                 require_once self::getPathRoot() . '/Core/App/App.php';
@@ -219,6 +224,8 @@ class ArticleCore extends Core
 
                 return new S3UploaderApp(
                     logger: self::getArticleLogger(),
+                    mediaService: ArticleCore::getMediaService(),
+                    s3Config: Core::getConfig()->s3Config,
                 );
             },
         );
