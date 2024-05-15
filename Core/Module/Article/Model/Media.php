@@ -160,15 +160,23 @@ class Media
             : $this->getDirWithNameLarge();
     }
 
-    public function getPathWithNameOriginal(): string
+    public function getPathWithNameOriginal(bool $isForS3 = false): string
     {
+        if ($isForS3) {
+            return $this->filenameOriginal;
+        }
+
         return $this->buildPath() . $this->filenameOriginal;
     }
 
-    public function getPathWithNameXSmall(): string
+    public function getPathWithNameXSmall(bool $isForS3 = false): string
     {
         if ($this->type !== MediaType::Image) {
             return $this->getPathWithNameOriginal();
+        }
+
+        if ($isForS3) {
+            return $this->filenameXSmall;
         }
 
         return $this->filenameXSmall
@@ -176,10 +184,14 @@ class Media
             : $this->getPathWithNameSmall();
     }
 
-    public function getPathWithNameSmall(): string
+    public function getPathWithNameSmall(bool $isForS3 = false): string
     {
         if ($this->type !== MediaType::Image) {
             return $this->getPathWithNameOriginal();
+        }
+
+        if ($isForS3) {
+            return $this->filenameSmall;
         }
 
         return $this->filenameSmall
@@ -187,10 +199,14 @@ class Media
             : $this->getPathWithNameMedium();
     }
 
-    public function getPathWithNameMedium(): string
+    public function getPathWithNameMedium(bool $isForS3 = false): string
     {
         if ($this->type !== MediaType::Image) {
             return $this->getPathWithNameOriginal();
+        }
+
+        if ($isForS3) {
+            return $this->filenameMedium;
         }
 
         return $this->filenameMedium
@@ -198,10 +214,14 @@ class Media
             : $this->getPathWithNameOriginal();
     }
 
-    public function getPathWithNameLarge(): string
+    public function getPathWithNameLarge(bool $isForS3 = false): string
     {
         if ($this->type !== MediaType::Image) {
             return $this->getPathWithNameOriginal();
+        }
+
+        if ($isForS3) {
+            return $this->filenameLarge;
         }
 
         return $this->filenameLarge
@@ -209,10 +229,14 @@ class Media
             : $this->getPathWithNameMedium();
     }
 
-    public function getPathWithNameXLarge(): string
+    public function getPathWithNameXLarge(bool $isForS3 = false): string
     {
         if ($this->type !== MediaType::Image) {
             return $this->getPathWithNameOriginal();
+        }
+
+        if ($isForS3) {
+            return $this->filenameXLarge;
         }
 
         return $this->filenameXLarge
@@ -340,6 +364,7 @@ class Media
         $partialPath = $this->path
             ? (trim($this->path, '/ ') . '/')
             : '';
+
         return Core::getConfig()->mediaBaseUrl . '/' . $partialPath;
     }
 

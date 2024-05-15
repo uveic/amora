@@ -53,6 +53,17 @@ final readonly class Mailer {
     ) {}
 }
 
+final readonly class S3Config {
+    public function __construct(
+        public string $buckedName,
+        public string $projectFolderName,
+        public string $accessKey,
+        public string $accessSecret,
+        public string $originEndpoint,
+        public ?string $cdnEndpoint = null,
+    ) {}
+}
+
 abstract class AbstractConfig {
     public function __construct(
         public readonly string $appName,
@@ -92,6 +103,7 @@ abstract class AbstractConfig {
         public readonly Database $mailerDb,
 
         public readonly Mailer $mailer,
+        public readonly ?S3Config $s3Config = null,
     ) {}
 
     abstract public static function get(): AbstractConfig;
