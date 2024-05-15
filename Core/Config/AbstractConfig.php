@@ -56,6 +56,7 @@ final readonly class Mailer {
 final readonly class S3Config {
     public function __construct(
         public string $buckedName,
+        public string $regionName,
         public string $projectFolderName,
         public string $accessKey,
         public string $accessSecret,

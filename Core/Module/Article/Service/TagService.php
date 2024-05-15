@@ -6,11 +6,11 @@ use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\DataLayer\TagDataLayer;
 use Amora\Core\Module\Article\Model\Tag;
 
-class TagService
+readonly class TagService
 {
     public function __construct(
-        private readonly Logger $logger,
-        private readonly TagDataLayer $tagDataLayer
+        private Logger $logger,
+        private TagDataLayer $tagDataLayer
     ) {}
 
     public function getTagForId(int $id): ?Tag
