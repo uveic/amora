@@ -3,10 +3,12 @@
 namespace Amora\Core\Module\Article;
 
 use Amora\App\Module\Article\App\ImageResizeApp;
+use Amora\App\Module\Article\App\MediaRemoveApp;
 use Amora\App\Module\Article\App\S3UploaderApp;
 use Amora\Core\Core;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Module\Album\AlbumCore;
+use Amora\Core\Module\Article\Service\S3Service;
 use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\DataLayer\ArticleDataLayer;
 use Amora\Core\Module\Article\DataLayer\TagDataLayer;
@@ -207,6 +209,46 @@ class ArticleCore extends Core
         );
     }
 
+    public static function getMediaRemoveApp(): MediaRemoveApp
+    {
+        return self::getInstance(
+            className: 'MediaRemoveApp',
+            factory: function () {
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/Album/Value/AlbumStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
+                require_once self::getPathRoot() . '/Core/App/LockManager.php';
+                require_once self::getPathRoot() . '/Core/App/App.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/App/MediaRemoveApp.php';
+
+                return new MediaRemoveApp(
+                    logger: self::getArticleLogger(),
+                    mediaDataLayer: self::getMediaDataLayer(),
+                    articleDataLayer: self::getArticleDataLayer(),
+                );
+            },
+        );
+    }
+
+    public static function getS3Service(): S3Service
+    {
+        return self::getInstance(
+            className: 'S3Service',
+            factory: function () {
+                require_once self::getPathRoot() . '/Core/Module/Article/Service/S3Service.php';
+                return new S3Service(
+                    logger: self::getArticleLogger(),
+                    s3Config: Core::getConfig()->s3Config,
+                );
+            },
+        );
+    }
+
     public static function getS3UploaderApp(): S3UploaderApp
     {
         return self::getInstance(
@@ -224,8 +266,8 @@ class ArticleCore extends Core
 
                 return new S3UploaderApp(
                     logger: self::getArticleLogger(),
-                    mediaService: ArticleCore::getMediaService(),
-                    s3Config: Core::getConfig()->s3Config,
+                    mediaService: self::getMediaService(),
+                    s3Service: self::getS3Service(),
                 );
             },
         );

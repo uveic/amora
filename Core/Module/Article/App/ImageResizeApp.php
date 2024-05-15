@@ -37,7 +37,7 @@ class ImageResizeApp extends App
         $this->execute(function () {
             $timeBefore = microtime(true);
 
-            $this->logger->logInfo('Getting media...');
+            $this->log('Getting media...');
 
             $entries = $this->mediaService->filterMediaBy(
                 typeIds: [MediaType::Image->value],
@@ -75,10 +75,10 @@ class ImageResizeApp extends App
 
     private function processImage(Media $existingMedia): bool
     {
-        $this->logger->logInfo('Processing media ID: ' . $existingMedia->id);
+        $this->log('Processing media ID: ' . $existingMedia->id);
 
         if ($existingMedia->widthOriginal) {
-            $this->logger->logInfo('Skipping...');
+            $this->log('Skipping...');
             return true;
         }
 
@@ -156,7 +156,7 @@ class ImageResizeApp extends App
             ),
         );
 
-        $this->logger->logInfo('Media updated. ID: ' . $existingMedia->id);
+        $this->log('Media updated. ID: ' . $existingMedia->id);
 
         return true;
     }

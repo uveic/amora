@@ -372,15 +372,21 @@ class Media
     {
         $output = [
             $this->getPathWithNameXSmall() . ' ' . ImageSize::XSmall->value . 'w',
-            $this->getPathWithNameSmall() . ' ' . ImageSize::Small->value . 'w',
-            $this->getPathWithNameMedium() . ' ' . ImageSize::Medium->value . 'w',
         ];
 
-        if ($this->filenameLarge) {
+        if ($this->widthOriginal >= ImageSize::Small) {
+            $output[] = $this->getPathWithNameSmall() . ' ' . ImageSize::Small->value . 'w';
+        }
+
+        if ($this->widthOriginal >= ImageSize::Medium) {
+            $output[] = $this->getPathWithNameMedium() . ' ' . ImageSize::Medium->value . 'w';
+        }
+
+        if ($this->widthOriginal >= ImageSize::Large) {
             $output[] = $this->getPathWithNameLarge() . ' ' . ImageSize::Large->value . 'w';
         }
 
-        if ($this->filenameXLarge) {
+        if ($this->widthOriginal >= ImageSize::XLarge) {
             $output[] = $this->getPathWithNameXLarge() . ' ' . ImageSize::XLarge->value . 'w';
         }
 
