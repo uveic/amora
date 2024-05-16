@@ -37,45 +37,56 @@ class S3UploaderApp extends App
         $this->execute(function () {
             $timeBefore = microtime(true);
 
-            $this->log('Getting media...');
-
-            $entries = $this->mediaService->filterMediaBy(
-                typeIds: [MediaType::Image->value],
-                statusIds: [MediaStatus::Active->value],
-                isUploadedToS3: false,
-                queryOptions: new QueryOptions(
-                    orderBy: [new QueryOrderBy('id', QueryOrderDirection::ASC)],
-                    pagination: new Pagination(itemsPerPage: 5),
-                ),
-            );
-
-            /** @var Media $entry */
-            foreach ($entries as $entry) {
-                $res = ArticleCore::getDb()->withTransaction(
-                    function () use ($entry) {
-                        return $this->processMedia($entry);
-                    }
-                );
-
-                if (!$res->isSuccess) {
-                    $this->log(
-                        'Error processing media (ID: ' . $entry->id . '). Aborting... => ' . $res->message,
-                        true,
-                    );
-                    return;
-                }
-            }
+            $totalEntries = $this->retrieveAndUploadMedia();
 
             $timeAfter = microtime(true);
             $diffMicroseconds = $timeAfter - $timeBefore;
-            $totalEntries = count($entries);
             $averageTime = $totalEntries ? round($diffMicroseconds / $totalEntries, 3) : 0;
+            $this->log($totalEntries . ' images uploaded. Average time per image: ' . $averageTime . ' seconds.');
 
-            $this->log($totalEntries . ' images processed. Average time per image: ' . $averageTime . ' seconds.');
+
         });
     }
 
-    private function processMedia(Media $existingMedia): Feedback
+    private function retrieveAndUploadMedia(): int
+    {
+        $this->log('Getting media...');
+
+        $entries = $this->mediaService->filterMediaBy(
+            typeIds: [MediaType::Image->value],
+            statusIds: [MediaStatus::Active->value],
+            isUploadedToS3: false,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('id', QueryOrderDirection::ASC)],
+                pagination: new Pagination(itemsPerPage: 5),
+            ),
+        );
+
+        $count = 0;
+
+        /** @var Media $entry */
+        foreach ($entries as $entry) {
+            $res = ArticleCore::getDb()->withTransaction(
+                function () use ($entry) {
+                    return $this->uploadMedia($entry);
+                }
+            );
+
+            if (!$res->isSuccess) {
+                $this->log(
+                    'Error processing media (ID: ' . $entry->id . '). Aborting... => ' . $res->message,
+                    true,
+                );
+                return $count;
+            }
+
+            $count++;
+        }
+
+        return $count;
+    }
+
+    private function uploadMedia(Media $existingMedia): Feedback
     {
         $this->log('Processing media ID: ' . $existingMedia->id);
 
