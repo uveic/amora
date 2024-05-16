@@ -32,6 +32,7 @@ class Media
         public readonly DateTimeImmutable $updatedAt,
         public readonly ?DateTimeImmutable $uploadedToS3At,
         public readonly ?DateTimeImmutable $deletedLocallyAt,
+        public readonly ?ImageExif $exif,
     ) {}
 
     public static function fromArray(array $data): self
@@ -60,6 +61,7 @@ class Media
             deletedLocallyAt: $data['media_deleted_locally_at'] ?
                 DateUtil::convertStringToDateTimeImmutable($data['media_deleted_locally_at'])
                 : null,
+            exif: isset($data['media_exif_media_id']) ? ImageExif::fromArray($data) : null,
         );
     }
 

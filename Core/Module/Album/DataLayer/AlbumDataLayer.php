@@ -115,6 +115,15 @@ class AlbumDataLayer
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
             'm.deleted_locally_at AS media_deleted_locally_at',
 
+            'me.media_id AS media_exif_media_id',
+            'me.width AS media_exif_width',
+            'me.height AS media_exif_height',
+            'me.size_bytes AS media_exif_size_bytes',
+            'me.camera_model AS media_exif_camera_model',
+            'me.taken_at AS media_exif_taken_at',
+            'me.exposure_time AS media_exif_exposure_time',
+            'me.iso AS media_exif_iso',
+
             'als.id AS album_slug_id',
             'als.album_id AS album_slug_album_id',
             'als.created_at AS album_slug_created_at',
@@ -124,6 +133,7 @@ class AlbumDataLayer
         $joins = ' FROM ' . self::ALBUM_TABLE . ' AS a';
         $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = a.user_id';
         $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = a.main_media_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
         $joins .= ' INNER JOIN ' . self::ALBUM_SLUG_TABLE . ' AS als ON als.id = a.slug_id';
 
         $where = ' WHERE 1';
@@ -254,10 +264,20 @@ class AlbumDataLayer
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
             'm.deleted_locally_at AS media_deleted_locally_at',
+
+            'me.media_id AS media_exif_media_id',
+            'me.width AS media_exif_width',
+            'me.height AS media_exif_height',
+            'me.size_bytes AS media_exif_size_bytes',
+            'me.camera_model AS media_exif_camera_model',
+            'me.taken_at AS media_exif_taken_at',
+            'me.exposure_time AS media_exif_exposure_time',
+            'me.iso AS media_exif_iso',
         ];
 
         $joins = ' FROM ' . self::ALBUM_SECTION_TABLE . ' AS `as`';
         $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = `as`.main_media_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
 
         $where = ' WHERE 1';
 
@@ -354,10 +374,20 @@ class AlbumDataLayer
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
             'm.deleted_locally_at AS media_deleted_locally_at',
+
+            'me.media_id AS media_exif_media_id',
+            'me.width AS media_exif_width',
+            'me.height AS media_exif_height',
+            'me.size_bytes AS media_exif_size_bytes',
+            'me.camera_model AS media_exif_camera_model',
+            'me.taken_at AS media_exif_taken_at',
+            'me.exposure_time AS media_exif_exposure_time',
+            'me.iso AS media_exif_iso',
         ];
 
         $joins = ' FROM ' . self::ALBUM_SECTION_MEDIA_TABLE . ' AS `asm`';
         $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = asm.media_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
 
         $where = ' WHERE 1';
 

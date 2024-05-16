@@ -130,12 +130,21 @@ class ArticleDataLayer
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
             'm.deleted_locally_at AS media_deleted_locally_at',
+
+            'me.media_id AS media_exif_media_id',
+            'me.width AS media_exif_width',
+            'me.height AS media_exif_height',
+            'me.size_bytes AS media_exif_size_bytes',
+            'me.camera_model AS media_exif_camera_model',
+            'me.taken_at AS media_exif_taken_at',
+            'me.exposure_time AS media_exif_exposure_time',
+            'me.iso AS media_exif_iso',
         ];
 
         $joins = ' FROM ' . self::ARTICLE_TABLE . ' AS a';
         $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = a.user_id';
-        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE
-            . ' AS m ON m.id = a.main_image_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = a.main_image_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
 
         $where = ' WHERE 1';
 
@@ -326,12 +335,21 @@ class ArticleDataLayer
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
             'm.deleted_locally_at AS media_deleted_locally_at',
+
+            'me.media_id AS media_exif_media_id',
+            'me.width AS media_exif_width',
+            'me.height AS media_exif_height',
+            'me.size_bytes AS media_exif_size_bytes',
+            'me.camera_model AS media_exif_camera_model',
+            'me.taken_at AS media_exif_taken_at',
+            'me.exposure_time AS media_exif_exposure_time',
+            'me.iso AS media_exif_iso',
         ];
 
         $joins = ' FROM ' . self::CONTENT_TABLE . ' AS c';
         $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = c.user_id';
-        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE
-            . ' AS m ON m.id = c.main_image_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = c.main_image_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
 
         $where = ' WHERE 1';
 
@@ -396,10 +414,20 @@ class ArticleDataLayer
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
             'm.deleted_locally_at AS media_deleted_locally_at',
+
+            'me.media_id AS media_exif_media_id',
+            'me.width AS media_exif_width',
+            'me.height AS media_exif_height',
+            'me.size_bytes AS media_exif_size_bytes',
+            'me.camera_model AS media_exif_camera_model',
+            'me.taken_at AS media_exif_taken_at',
+            'me.exposure_time AS media_exif_exposure_time',
+            'me.iso AS media_exif_iso',
         ];
 
         $joins = ' FROM ' . self::ARTICLE_MEDIA_TABLE . ' AS am';
         $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = am.media_id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
 
         $where = ' WHERE 1';
 
