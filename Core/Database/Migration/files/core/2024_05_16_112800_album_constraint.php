@@ -19,4 +19,17 @@ return "
     UPDATE `core_media` SET filename_source = '-' WHERE filename_source IS NULL;
 
     ALTER TABLE `core_media` MODIFY COLUMN `filename_source` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL;
+
+    CREATE TABLE `core_media_exif` (
+        `media_id` int(10) unsigned NOT NULL,
+        `width` int(10) NULL DEFAULT NULL,
+        `height` int(10) NULL DEFAULT NULL,
+        `size_bytes` int(10) NULL DEFAULT NULL,
+        `camera_model` varchar(50) NULL DEFAULT NULL,
+        `taken_at` timestamp NULL DEFAULT NULL,
+        `exposure_time` varchar(10) NULL DEFAULT NULL,
+        `iso` varchar(10) NULL DEFAULT NULL,
+        PRIMARY KEY (`media_id`),
+        CONSTRAINT `core_media_exif_media_id_fk` FOREIGN KEY (`media_id`) REFERENCES `core_media` (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ";

@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
-use Amora\Core\Module\Article\Entity\ImageExif;
+use Amora\Core\Module\Article\Model\ImageExif;
 use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\ImageSize;
@@ -58,6 +58,7 @@ readonly class ImageService
             updatedAt: $now,
             uploadedToS3At: null,
             deletedLocallyAt: null,
+            exif: $this->getExifData($rawFile->getPathWithName()),
         );
     }
 
@@ -87,13 +88,12 @@ readonly class ImageService
             width: isset($exif['COMPUTED']['Width']) ? (int)$exif['COMPUTED']['Width'] : null,
             height: isset($exif['COMPUTED']['Height']) ? (int)$exif['COMPUTED']['Height'] : null,
             sizeBytes: isset($exif['FileSize']) ? (int)$exif['FileSize'] : null,
-            cameraModel: $exif['Model'] ?? null,
-            date: $date ? DateTimeImmutable::createFromFormat('Y:m:d H:i:s', $date) : null,
-            exposureTime: $exif['ExposureTime'] ?? null,
-            ISO: isset($exif['ISOSpeedRatings'])
-                ? (is_array($exif['ISOSpeedRatings']) ? $exif['ISOSpeedRatings'][0] : $exif['ISOSpeedRatings'])
+            cameraModel: isset($exif['Model']) ? substr($exif['Model'], 0, 50) : null,
+            takenAt: $date ? DateTimeImmutable::createFromFormat('Y:m:d H:i:s', $date) : null,
+            exposureTime: isset($exif['ExposureTime']) ? substr($exif['ExposureTime'], 0, 10) : null,
+            iso: isset($exif['ISOSpeedRatings'])
+                ? (is_array($exif['ISOSpeedRatings']) ? substr($exif['ISOSpeedRatings'][0], 0, 10) : substr($exif['ISOSpeedRatings'], 0, 10))
                 : null,
-            rawDataJson: json_encode($exif),
         );
     }
 

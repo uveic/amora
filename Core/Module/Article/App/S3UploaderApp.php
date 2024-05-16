@@ -9,6 +9,7 @@ use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Service\ImageService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Service\S3Service;
 use Amora\Core\Module\Article\Value\MediaStatus;
@@ -26,6 +27,7 @@ class S3UploaderApp extends App
     public function __construct(
         Logger $logger,
         private readonly MediaService $mediaService,
+        private readonly ImageService $imageService,
     ) {
         parent::__construct(
             logger: $logger,
@@ -148,7 +150,7 @@ class S3UploaderApp extends App
 
         /** @var Media $entry */
         foreach ($entries as $entry) {
-            $res =  $this->deleteMedia($entry);
+            $res = $this->deleteMedia($entry);
 
             if (!$res->isSuccess) {
                 $this->log(
@@ -167,6 +169,8 @@ class S3UploaderApp extends App
     private function deleteMedia(Media $media): Feedback
     {
         $this->log('Deleting media ID: ' . $media->id);
+
+        $this->updateExif($media);
 
         $filenames = $this->getMediaFilenames($media);
 
@@ -222,5 +226,17 @@ class S3UploaderApp extends App
         }
 
         return $filenames;
+    }
+
+    private function updateExif(Media $media): void
+    {
+        if ($media->exif) {
+            return;
+        }
+
+        $this->log('Storing EXIF data. Media ID: ' . $media->id);
+
+        $exif = $this->imageService->getExifData($media->getDirWithNameOriginal());
+        $this->mediaService->storeMediaExif($media->id, $exif);
     }
 }

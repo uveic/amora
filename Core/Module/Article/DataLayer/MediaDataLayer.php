@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Module\Article\Model\ImageExif;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Model\MediaDestroyed;
 use Amora\Core\Module\Article\Value\MediaStatus;
@@ -22,6 +23,7 @@ class MediaDataLayer
     const MEDIA_TYPE_TABLE = 'core_media_type';
     const MEDIA_STATUS_TABLE = 'core_media_status';
     const MEDIA_DESTROYED_TABLE = 'core_media_destroyed';
+    const MEDIA_EXIF_TABLE = 'core_media_exif';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -75,6 +77,15 @@ class MediaDataLayer
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
             'm.deleted_locally_at AS media_deleted_locally_at',
 
+            'me.media_id AS media_exif_media_id',
+            'me.width AS media_exif_width',
+            'me.height AS media_exif_height',
+            'me.size_bytes AS media_exif_size_bytes',
+            'me.camera_model AS media_exif_camera_model',
+            'me.taken_at AS media_exif_taken_at',
+            'me.exposure_time AS media_exif_exposure_time',
+            'me.iso AS media_exif_iso',
+
             'u.status_id AS user_status_id',
             'u.language_iso_code AS user_language_iso_code',
             'u.role_id AS user_role_id',
@@ -90,6 +101,7 @@ class MediaDataLayer
         ];
 
         $joins = ' FROM ' . self::MEDIA_TABLE . ' AS m';
+        $joins .= ' LEFT JOIN ' . self::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
         $joins .= ' LEFT JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = m.user_id';
         $where = ' WHERE 1';
 
@@ -154,7 +166,21 @@ class MediaDataLayer
 
         $data->id = (int)$resInsert;
 
+        $this->storeMediaExif($data->id, $data->exif);
+
         return $data;
+    }
+
+    public function storeMediaExif(int $mediaId, ?ImageExif $exif): void
+    {
+        if (!$exif || $exif->isEmpty()) {
+            return;
+        }
+
+        $this->db->insert(
+            self::MEDIA_EXIF_TABLE,
+            array_merge(['media_id' => $mediaId], $exif->asArray()),
+        );
     }
 
     public function storeMediaDestroyed(MediaDestroyed $data): MediaDestroyed
@@ -233,6 +259,11 @@ class MediaDataLayer
 
     public function destroyMedia(int $id): bool
     {
+        $this->db->delete(
+            tableName: self::MEDIA_EXIF_TABLE,
+            where: ['media_id' => $id],
+        );
+
         return $this->db->delete(
             tableName: self::MEDIA_TABLE,
             where: ['id' => $id],

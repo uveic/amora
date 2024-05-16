@@ -9,6 +9,7 @@ use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Model\Article;
+use Amora\Core\Module\Article\Model\ImageExif;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Model\MediaDestroyed;
 use Amora\Core\Module\Article\Value\ArticleStatus;
@@ -37,6 +38,11 @@ readonly class MediaService
     public function storeMedia(Media $item): Media
     {
         return $this->mediaDataLayer->storeMedia($item);
+    }
+
+    public function storeMediaExif(int $mediaId, ?ImageExif $exif): void
+    {
+        $this->mediaDataLayer->storeMediaExif($mediaId, $exif);
     }
 
     public function updateMedia(Media $item): bool
@@ -224,10 +230,8 @@ readonly class MediaService
                 $fileOutput['appearsOn'] = $appearsOn;
 
                 if ($includeExifData && $file->type === MediaType::Image) {
-                    $exif = $this->imageService->getExifData($file->getDirWithNameOriginal());
-
-                    if ($exif) {
-                        $fileOutput['exif'] = $exif->asArray();
+                    if ($file->exif) {
+                        $fileOutput['exif'] = $file->exif->asPublicArray();
                     }
                 }
             }
@@ -336,6 +340,7 @@ readonly class MediaService
             updatedAt: $now,
             uploadedToS3At: null,
             deletedLocallyAt: null,
+            exif: null,
         );
     }
 

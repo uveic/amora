@@ -132,7 +132,7 @@ class ArticleCore extends Core
         return self::getInstance(
             className: 'ImageService',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Module/Article/Entity/ImageExif.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/ImageExif.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ImageSize.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/ImageService.php';
                 return new ImageService(
@@ -268,6 +268,7 @@ class ArticleCore extends Core
                 return new S3UploaderApp(
                     logger: self::getArticleLogger(),
                     mediaService: self::getMediaService(),
+                    imageService: self::getImageService(),
                 );
             },
         );
