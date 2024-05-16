@@ -2,6 +2,7 @@
 
 namespace Amora\Core\App;
 
+use Amora\Core\Core;
 use Amora\Core\Util\Logger;
 use Amora\Core\Util\StringUtil;
 
@@ -23,7 +24,7 @@ class LockManager
     ) {
         $this->logger = $logger;
 
-        $cleanLockName = str_replace(' ', '_', StringUtil::cleanString($lockName));
+        $cleanLockName = str_replace(' ', '_', StringUtil::cleanString(Core::getConfig()->appName . '-' . $lockName));
 
         if (empty($cleanLockName)) {
             $this->logger->logError('Lock Manager - Log identifier not valid');
