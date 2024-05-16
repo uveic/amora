@@ -44,6 +44,16 @@ readonly class MediaService
         return $this->mediaDataLayer->updateMedia($item);
     }
 
+    public function updateMediaFields(
+        int $mediaId,
+        ?DateTimeImmutable $uploadedToS3At = null,
+    ): bool {
+        return $this->mediaDataLayer->updateMediaFields(
+            mediaId: $mediaId,
+            uploadedToS3At: $uploadedToS3At,
+        );
+    }
+
     public function storeMediaDestroyed(MediaDestroyed $item): MediaDestroyed
     {
         return $this->mediaDataLayer->storeMediaDestroyed($item);
@@ -65,6 +75,7 @@ readonly class MediaService
         array $typeIds = [],
         array $statusIds = [],
         ?int $fromId = null,
+        ?bool $isUploadedToS3 = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->mediaDataLayer->filterMediaBy(
@@ -73,6 +84,7 @@ readonly class MediaService
             typeIds: $typeIds,
             statusIds: $statusIds,
             fromId: $fromId,
+            isUploadedToS3: $isUploadedToS3,
             queryOptions: $queryOptions,
         );
     }
