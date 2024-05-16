@@ -19,4 +19,15 @@ enum ImageSize: int {
             self::XLarge => self::Large,
         };
     }
+
+    public function getFilenameIdentifier(): string
+    {
+        return match ($this) {
+            self::XSmall => 'xs',
+            self::Small => 's',
+            self::Medium => 'm',
+            self::Large => 'l',
+            self::XLarge => 'xl',
+        };
+    }
 }

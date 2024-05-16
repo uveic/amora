@@ -82,7 +82,7 @@ class MediaRemoveApp extends App
                     m.width_original AS media_width_original,
                     m.height_original AS media_height_original,
                     m.path AS media_path,
-                    m.filename_original AS media_filename_original,
+                    m.filename AS media_filename,
                     m.filename_extra_small AS media_filename_extra_small,
                     m.filename_small AS media_filename_small,
                     m.filename_medium AS media_filename_medium,
@@ -92,6 +92,7 @@ class MediaRemoveApp extends App
                     m.filename_source AS media_filename_source,
                     m.created_at AS media_created_at,
                     m.updated_at AS media_updated_at,
+                    m.uploaded_to_s3_at AS media_uploaded_to_s3_at,
 
                     u.status_id AS user_status_id,
                     u.language_iso_code AS user_language_iso_code,

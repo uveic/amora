@@ -3,10 +3,12 @@
 namespace Amora\App\Module\Article\App;
 
 use Amora\Core\App\App;
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\ArticleCore;
+use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Model\MediaDestroyed;
 use Amora\Core\Module\Article\Service\ImageService;
@@ -82,8 +84,14 @@ class ImageResizeApp extends App
             return true;
         }
 
+        $rawFile = $this->mediaAsRawFile($existingMedia);
+        if (!$rawFile) {
+            $this->log('Error getting raw file. Skipping...', true);
+            return false;
+        }
+
         $resizedMedia = $this->imageService->resizeRawImage(
-            rawFile: $existingMedia->asRawFile(),
+            rawFile: $rawFile,
             user: $existingMedia->user,
             captionHtml: $existingMedia->captionHtml,
         );
@@ -96,16 +104,17 @@ class ImageResizeApp extends App
             widthOriginal: $resizedMedia->widthOriginal,
             heightOriginal: $resizedMedia->heightOriginal,
             path: $resizedMedia->path,
-            filenameOriginal: $existingMedia->filenameOriginal,
+            filename: $existingMedia->filename,
+            filenameSource: $existingMedia->filenameSource,
             filenameXLarge: $resizedMedia->filenameXLarge,
             filenameLarge: $resizedMedia->filenameLarge,
             filenameMedium: $resizedMedia->filenameMedium,
             filenameSmall: $resizedMedia->filenameSmall,
             filenameXSmall: $resizedMedia->filenameXSmall,
             captionHtml: $existingMedia->captionHtml,
-            filenameSource: $existingMedia->filenameSource,
             createdAt: $existingMedia->createdAt,
             updatedAt: $resizedMedia->updatedAt,
+            uploadedToS3At: $resizedMedia->uploadedToS3At,
         );
 
         $this->mediaService->updateMedia($updatedMedia);
@@ -159,5 +168,25 @@ class ImageResizeApp extends App
         $this->log('Media updated. ID: ' . $existingMedia->id);
 
         return true;
+    }
+
+    private function mediaAsRawFile(Media $media): ?RawFile
+    {
+        if (!str_contains($media->filename, '.')) {
+            return null;
+        }
+
+        $parts = explode('.', $media->filename);
+        $extension = strtolower(trim($parts[count($parts) - 1]));
+        $baseNameWithoutExtension = trim($parts[count($parts) - 2]);
+
+        return new RawFile(
+            originalName: $media->filename,
+            baseNameWithoutExtension: $baseNameWithoutExtension,
+            extension: $extension,
+            basePath: rtrim(Core::getConfig()->mediaBaseDir, ' /'),
+            extraPath: $media->path ?? '',
+            mediaType: MediaType::Image,
+        );
     }
 }

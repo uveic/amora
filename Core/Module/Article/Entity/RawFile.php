@@ -8,13 +8,19 @@ readonly class RawFile
 {
     public function __construct(
         public string $originalName,
-        public string $name,
+        public string $baseNameWithoutExtension,
+        public string $extension,
         public string $basePath,
         public string $extraPath,
         public MediaType $mediaType,
         public ?int $sizeBytes = null,
         public ?int $error = null,
     ) {}
+
+    public function getName(): string
+    {
+        return $this->baseNameWithoutExtension . '.' . $this->extension;
+    }
 
     public function getPath(): string
     {
@@ -23,6 +29,6 @@ readonly class RawFile
 
     public function getPathWithName(): string
     {
-        return $this->getPath() . '/' . $this->name;
+        return $this->getPath() . '/' . $this->getName();
     }
 }

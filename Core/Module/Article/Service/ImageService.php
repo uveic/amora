@@ -11,7 +11,6 @@ use Amora\Core\Module\User\Model\User;
 use DateTimeImmutable;
 use GdImage;
 use Amora\Core\Util\Logger;
-use Amora\Core\Util\StringUtil;
 use Throwable;
 
 readonly class ImageService
@@ -26,11 +25,15 @@ readonly class ImageService
         ?string $captionHtml = null,
         bool $keepSameImageFormat = false,
     ): Media {
-        $imageXSmall = $this->resizeImage($rawFile, ImageSize::XSmall, $keepSameImageFormat);
-        $imageSmall = $this->resizeImage($rawFile, ImageSize::Small, $keepSameImageFormat);
-        $imageMedium = $this->resizeImage($rawFile, ImageSize::Medium, $keepSameImageFormat);
-        $imageLarge = $this->resizeImage($rawFile, ImageSize::Large, $keepSameImageFormat);
-        $imageXLarge = $this->resizeImage($rawFile, ImageSize::XLarge, $keepSameImageFormat);
+        $phpNativeImageType = $keepSameImageFormat
+            ? exif_imagetype($rawFile->getPathWithName())
+            : IMAGETYPE_WEBP;
+
+        $imageXSmall = $this->resizeImage($rawFile, ImageSize::XSmall, $phpNativeImageType);
+        $imageSmall = $this->resizeImage($rawFile, ImageSize::Small, $phpNativeImageType);
+        $imageMedium = $this->resizeImage($rawFile, ImageSize::Medium, $phpNativeImageType);
+        $imageLarge = $this->resizeImage($rawFile, ImageSize::Large, $phpNativeImageType);
+        $imageXLarge = $this->resizeImage($rawFile, ImageSize::XLarge, $phpNativeImageType);
 
         list($widthOriginal, $heightOriginal) = @getimagesize($rawFile->getPathWithName());
         $now = new DateTimeImmutable();
@@ -43,16 +46,17 @@ readonly class ImageService
             widthOriginal: $widthOriginal,
             heightOriginal: $heightOriginal,
             path: $rawFile->extraPath,
-            filenameOriginal: $rawFile->name,
-            filenameXLarge: $imageXLarge?->name,
-            filenameLarge: $imageLarge?->name,
-            filenameMedium: $imageMedium?->name,
-            filenameSmall: $imageSmall?->name,
-            filenameXSmall: $imageXSmall?->name,
-            captionHtml: $captionHtml,
+            filename: $rawFile->baseNameWithoutExtension . $this->getExtension($phpNativeImageType),
             filenameSource: $rawFile->originalName,
+            filenameXLarge: $imageXLarge,
+            filenameLarge: $imageLarge,
+            filenameMedium: $imageMedium,
+            filenameSmall: $imageSmall,
+            filenameXSmall: $imageXSmall,
+            captionHtml: $captionHtml,
             createdAt: $now,
             updatedAt: $now,
+            uploadedToS3At: null,
         );
     }
 
@@ -92,11 +96,11 @@ readonly class ImageService
         );
     }
 
-    public function resizeImage(
+    private function resizeImage(
         RawFile $image,
         ImageSize $newSize,
-        bool $keepSameImageFormat = false,
-    ): ?RawFile {
+        int $phpNativeImageType,
+    ): ?string {
         list($originalWidth, $originalHeight) = @getimagesize($image->getPathWithName());
 
         if (!$originalWidth || !$originalHeight) {
@@ -141,59 +145,40 @@ readonly class ImageService
             return null;
         }
 
-        if ($keepSameImageFormat) {
-            $phpNativeImageType = exif_imagetype($image->getPathWithName());
-            $newFilename = $this->generateImageName($phpNativeImageType);
-            $outputFullPath = $image->getPath() . '/'  . $newFilename;
+        $newFilename = $this->generateImageName(
+            baseNameWithoutExtension: $image->baseNameWithoutExtension,
+            phpNativeImageType: $phpNativeImageType,
+            size: $newSize,
+        );
 
-            $this->detectImageTypeAndResize(
-                $sourceImage,
-                $phpNativeImageType,
-                $image->getPathWithName(),
-                $outputFullPath,
-                $newWidth,
-                $newHeight,
-                $originalWidth,
-                $originalHeight,
-            );
-        } else {
-            $newFilename = $this->generateImageName(IMAGETYPE_WEBP);
-            $outputFullPath = $image->getPath() . '/'  . $newFilename;
+        $outputFullPath = $image->getPath() . '/'  . $newFilename;
 
-            $this->resizeWebpImage(
-                $sourceImage,
-                $image->getPathWithName(),
-                $outputFullPath,
-                $newWidth,
-                $newHeight,
-                $originalWidth,
-                $originalHeight,
-            );
-        }
+        $this->detectImageTypeAndResize(
+            $sourceImage,
+            $phpNativeImageType,
+            $image->getPathWithName(),
+            $outputFullPath,
+            $newWidth,
+            $newHeight,
+            $originalWidth,
+            $originalHeight,
+        );
 
         if (!file_exists($outputFullPath)) {
-            return $image;
+            $this->logger->logError('Error resizing image: ' . $image->getPathWithName());
+            return null;
         }
 
-        return new RawFile(
-            originalName: $newFilename,
-            name: $newFilename,
-            basePath: $image->basePath,
-            extraPath: $image->extraPath,
-            mediaType: $image->mediaType,
-        );
+        return $newFilename;
     }
 
-    public function generateImageName(int $phpNativeImageType): string
-    {
-        $extension = match($phpNativeImageType) {
-            IMAGETYPE_JPEG => '.jpg',
-            IMAGETYPE_WEBP => '.webp',
-            IMAGETYPE_PNG => '.png',
-            default => image_type_to_extension($phpNativeImageType),
-        };
-
-        return date('YmdHis') . StringUtil::generateRandomString(16) . $extension;
+    private function generateImageName(
+        string $baseNameWithoutExtension,
+        int $phpNativeImageType,
+        ImageSize $size,
+    ): string {
+        $extension = $this->getExtension($phpNativeImageType);
+        return $size->getFilenameIdentifier() . $baseNameWithoutExtension . $extension;
     }
 
     private function getImageFromSourcePath(RawFile $sourceImage): GdImage|null|false
@@ -448,6 +433,16 @@ readonly class ImageService
             3 => imagerotate($image, 180, 0),
             6 => imagerotate($image, -90, 0),
             default => $image,
+        };
+    }
+
+    public function getExtension(int $phpNativeImageType): string
+    {
+        return match($phpNativeImageType) {
+            IMAGETYPE_JPEG => '.jpg',
+            IMAGETYPE_WEBP => '.webp',
+            IMAGETYPE_PNG => '.png',
+            default => image_type_to_extension($phpNativeImageType),
         };
     }
 }
