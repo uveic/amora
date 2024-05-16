@@ -46,7 +46,7 @@ readonly class ImageService
             widthOriginal: $widthOriginal,
             heightOriginal: $heightOriginal,
             path: $rawFile->extraPath,
-            filename: $rawFile->baseNameWithoutExtension . $this->getExtension($phpNativeImageType),
+            filename: $rawFile->getName(),
             filenameSource: $rawFile->originalName,
             filenameXLarge: $imageXLarge,
             filenameLarge: $imageLarge,
@@ -145,11 +145,8 @@ readonly class ImageService
             return null;
         }
 
-        $newFilename = $this->generateImageName(
-            baseNameWithoutExtension: $image->baseNameWithoutExtension,
-            phpNativeImageType: $phpNativeImageType,
-            size: $newSize,
-        );
+        $extension = $this->getExtension($phpNativeImageType);
+        $newFilename = $newSize->getFilenameIdentifier() . $image->baseNameWithoutExtension . '.' .  $extension;
 
         $outputFullPath = $image->getPath() . '/'  . $newFilename;
 
@@ -170,15 +167,6 @@ readonly class ImageService
         }
 
         return $newFilename;
-    }
-
-    private function generateImageName(
-        string $baseNameWithoutExtension,
-        int $phpNativeImageType,
-        ImageSize $size,
-    ): string {
-        $extension = $this->getExtension($phpNativeImageType);
-        return $size->getFilenameIdentifier() . $baseNameWithoutExtension . $extension;
     }
 
     private function getImageFromSourcePath(RawFile $sourceImage): GdImage|null|false
@@ -439,9 +427,9 @@ readonly class ImageService
     public function getExtension(int $phpNativeImageType): string
     {
         return match($phpNativeImageType) {
-            IMAGETYPE_JPEG => '.jpg',
-            IMAGETYPE_WEBP => '.webp',
-            IMAGETYPE_PNG => '.png',
+            IMAGETYPE_JPEG => 'jpg',
+            IMAGETYPE_WEBP => 'webp',
+            IMAGETYPE_PNG => 'png',
             default => image_type_to_extension($phpNativeImageType),
         };
     }
