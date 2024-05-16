@@ -115,6 +115,7 @@ class ImageResizeApp extends App
             createdAt: $existingMedia->createdAt,
             updatedAt: $resizedMedia->updatedAt,
             uploadedToS3At: $resizedMedia->uploadedToS3At,
+            deletedLocallyAt: $resizedMedia->deletedLocallyAt,
         );
 
         $this->mediaService->updateMedia($updatedMedia);

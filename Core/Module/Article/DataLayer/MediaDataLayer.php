@@ -39,7 +39,9 @@ class MediaDataLayer
         array $typeIds = [],
         array $statusIds = [],
         ?int $fromId = null,
+        ?DateTimeImmutable $uploadedToS3Before = null,
         ?bool $isUploadedToS3 = null,
+        ?bool $isDeletedLocally = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -71,6 +73,7 @@ class MediaDataLayer
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
+            'm.deleted_locally_at AS media_deleted_locally_at',
 
             'u.status_id AS user_status_id',
             'u.language_iso_code AS user_language_iso_code',
@@ -114,8 +117,17 @@ class MediaDataLayer
             $params[':fromId'] = $fromId;
         }
 
+        if ($uploadedToS3Before) {
+            $where .= ' AND m.uploaded_to_s3_at <= :uploadedToS3Before';
+            $params[':uploadedToS3Before'] = $uploadedToS3Before->format(DateUtil::MYSQL_DATETIME_FORMAT);
+        }
+
         if (isset($isUploadedToS3)) {
             $where .= ' AND m.uploaded_to_s3_at ' . ($isUploadedToS3 ? ' IS NOT NULL' : ' IS NULL');
+        }
+
+        if (isset($isDeletedLocally)) {
+            $where .= ' AND m.deleted_locally_at ' . ($isDeletedLocally ? ' IS NOT NULL' : ' IS NULL');
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
@@ -187,6 +199,7 @@ class MediaDataLayer
     public function updateMediaFields(
         int $mediaId,
         ?DateTimeImmutable $uploadedToS3At = null,
+        ?DateTimeImmutable $deletedLocallyAt = null,
     ): bool {
         $params = [];
         $fields = [];
@@ -194,6 +207,11 @@ class MediaDataLayer
         if ($uploadedToS3At) {
             $fields[] = 'uploaded_to_s3_at = :uploadedToS3At';
             $params[':uploadedToS3At'] = $uploadedToS3At->format(DateUtil::MYSQL_DATETIME_FORMAT);
+        }
+
+        if ($deletedLocallyAt) {
+            $fields[] = 'deleted_locally_at = :deletedLocallyAt';
+            $params[':deletedLocallyAt'] = $deletedLocallyAt->format(DateUtil::MYSQL_DATETIME_FORMAT);
         }
 
         if (!$params) {

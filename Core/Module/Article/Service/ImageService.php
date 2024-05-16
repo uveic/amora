@@ -57,6 +57,7 @@ readonly class ImageService
             createdAt: $now,
             updatedAt: $now,
             uploadedToS3At: null,
+            deletedLocallyAt: null,
         );
     }
 

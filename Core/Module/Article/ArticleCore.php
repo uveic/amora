@@ -268,7 +268,6 @@ class ArticleCore extends Core
                 return new S3UploaderApp(
                     logger: self::getArticleLogger(),
                     mediaService: self::getMediaService(),
-                    s3Service: self::getS3Service(),
                 );
             },
         );
