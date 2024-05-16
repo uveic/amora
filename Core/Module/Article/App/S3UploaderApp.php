@@ -19,6 +19,7 @@ use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Logger;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
+use Throwable;
 
 class S3UploaderApp extends App
 {
@@ -132,6 +133,8 @@ class S3UploaderApp extends App
             $this->log("Media uploaded. ID: $media->id");
         }
 
+        $this->updateExif($media);
+
         return new Feedback(true);
     }
 
@@ -240,9 +243,13 @@ class S3UploaderApp extends App
             return;
         }
 
-        $this->log('Storing EXIF data. Media ID: ' . $media->id);
+        try {
+            $this->log('Storing EXIF data. Media ID: ' . $media->id);
 
-        $exif = $this->imageService->getExifData($media->getDirWithNameOriginal());
-        $this->mediaService->storeMediaExif($media->id, $exif);
+            $exif = $this->imageService->getExifData($media->getDirWithNameOriginal());
+            $this->mediaService->storeMediaExif($media->id, $exif);
+        } catch (Throwable $t) {
+            $this->log('Error updating EXIF. Media ID: ' . $media->id);
+        }
     }
 }
