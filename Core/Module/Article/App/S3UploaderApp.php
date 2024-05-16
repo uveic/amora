@@ -31,10 +31,6 @@ class S3UploaderApp extends App
 
     public function run(): void
     {
-//        $media = $this->mediaService->getMediaForId(147);
-//        $this->s3Service->delete($media);
-//        exit;
-
         $this->execute(function () {
             $timeBefore = microtime(true);
 

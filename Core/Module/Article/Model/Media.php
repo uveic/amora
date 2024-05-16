@@ -3,7 +3,6 @@
 namespace Amora\Core\Module\Article\Model;
 
 use Amora\Core\Core;
-use Amora\Core\Module\Article\Entity\RawFile;
 use Amora\Core\Module\Article\Value\ImageSize;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
@@ -22,16 +21,17 @@ class Media
         public readonly ?int $widthOriginal,
         public readonly ?int $heightOriginal,
         public readonly ?string $path,
-        public readonly string $filenameOriginal,
+        public readonly string $filename,
+        public readonly string $filenameSource,
         public readonly ?string $filenameXLarge,
         public readonly ?string $filenameLarge,
         public readonly ?string $filenameMedium,
         public readonly ?string $filenameSmall,
         public readonly ?string $filenameXSmall,
         public readonly ?string $captionHtml,
-        public readonly ?string $filenameSource,
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt,
+        public readonly ?DateTimeImmutable $uploadedToS3At,
     ) {}
 
     public static function fromArray(array $data): self
@@ -44,16 +44,19 @@ class Media
             widthOriginal: isset($data['media_width_original']) ? (int)$data['media_width_original'] : null,
             heightOriginal: isset($data['media_height_original']) ? (int)$data['media_height_original'] : null,
             path: $data['media_path'] ?? null,
-            filenameOriginal: $data['media_filename_original'],
+            filename: $data['media_filename'],
+            filenameSource: $data['media_filename_source'],
             filenameXLarge: $data['media_filename_extra_large'] ?? null,
             filenameLarge: $data['media_filename_large'] ?? null,
             filenameMedium: $data['media_filename_medium'] ?? null,
             filenameSmall: $data['media_filename_small'] ?? null,
             filenameXSmall: $data['media_filename_extra_small'] ?? null,
             captionHtml: $data['media_caption_html'] ?? null,
-            filenameSource: $data['media_filename_source'] ?? null,
             createdAt: DateUtil::convertStringToDateTimeImmutable($data['media_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($data['media_updated_at']),
+            uploadedToS3At: $data['media_uploaded_to_s3_at'] ?
+                DateUtil::convertStringToDateTimeImmutable($data['media_uploaded_to_s3_at'])
+                : null,
         );
     }
 
@@ -68,7 +71,7 @@ class Media
             'width_original' => $this->widthOriginal,
             'height_original' => $this->heightOriginal,
             'path' => $this->path,
-            'filename_original' => $this->filenameOriginal,
+            'filename' => $this->filename,
             'filename_extra_small' => $this->filenameXSmall,
             'filename_small' => $this->filenameSmall,
             'filename_medium' => $this->filenameMedium,
@@ -98,9 +101,7 @@ class Media
             'fullPathOriginal' => $baseUrl . $this->getPathWithNameOriginal(),
             'caption' => $this->buildAltText(),
             'captionHtml' => $this->captionHtml,
-            'name' => $this->type === MediaType::Image
-                ? $this->filenameMedium
-                : $this->filenameOriginal,
+            'name' => $this->filename,
             'sourceName' => $this->filenameSource,
             'createdAt' => $this->createdAt->format('c'),
             'userId' => $this->user?->id,
@@ -122,7 +123,7 @@ class Media
 
     public function getDirWithNameOriginal(): string
     {
-        return $this->buildDirPath() . $this->filenameOriginal;
+        return $this->buildDirPath() . $this->filename;
     }
 
     public function getDirWithNameXSmall(): string
@@ -163,10 +164,10 @@ class Media
     public function getPathWithNameOriginal(bool $isForS3 = false): string
     {
         if ($isForS3) {
-            return $this->filenameOriginal;
+            return $this->filename;
         }
 
-        return $this->buildPath() . $this->filenameOriginal;
+        return $this->buildPath() . $this->filename;
     }
 
     public function getPathWithNameXSmall(bool $isForS3 = false): string
@@ -242,17 +243,6 @@ class Media
         return $this->filenameXLarge
             ? $this->buildPath() . $this->filenameXLarge
             : $this->getPathWithNameLarge();
-    }
-
-    public function asRawFile(): RawFile
-    {
-        return new RawFile(
-            originalName: $this->filenameOriginal,
-            name: $this->filenameOriginal,
-            basePath: rtrim(Core::getConfig()->mediaBaseDir, ' /'),
-            extraPath: $this->path ?? '',
-            mediaType: MediaType::Image,
-        );
     }
 
     public function asHtml(
@@ -333,7 +323,7 @@ class Media
             '<a href="' . $this->getPathWithNameOriginal() . '" target="_blank" class="media-item" data-media-id="' . $this->id . '">',
             '<div class="media-header">',
             $this->type->getIcon('img-svg-30'),
-            '<span class="media-name">' . $this->filenameOriginal . '</span>',
+            '<span class="media-name">' . $this->filenameSource . '</span>',
             '</div>',
             '<span class="media-info">',
             '<span class="media-id">#' . $this->id . '</span>',

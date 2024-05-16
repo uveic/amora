@@ -102,7 +102,7 @@ class AlbumDataLayer
             'm.width_original AS media_width_original',
             'm.height_original AS media_height_original',
             'm.path AS media_path',
-            'm.filename_original AS media_filename_original',
+            'm.filename AS media_filename',
             'm.filename_extra_small AS media_filename_extra_small',
             'm.filename_small AS media_filename_small',
             'm.filename_medium AS media_filename_medium',
@@ -112,6 +112,7 @@ class AlbumDataLayer
             'm.filename_source AS media_filename_source',
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
+            'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
 
             'als.id AS album_slug_id',
             'als.album_id AS album_slug_album_id',
@@ -240,7 +241,7 @@ class AlbumDataLayer
             'm.width_original AS media_width_original',
             'm.height_original AS media_height_original',
             'm.path AS media_path',
-            'm.filename_original AS media_filename_original',
+            'm.filename AS media_filename',
             'm.filename_extra_small AS media_filename_extra_small',
             'm.filename_small AS media_filename_small',
             'm.filename_medium AS media_filename_medium',
@@ -250,6 +251,7 @@ class AlbumDataLayer
             'm.filename_source AS media_filename_source',
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
+            'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
         ];
 
         $joins = ' FROM ' . self::ALBUM_SECTION_TABLE . ' AS `as`';
@@ -338,7 +340,7 @@ class AlbumDataLayer
             'm.width_original AS media_width_original',
             'm.height_original AS media_height_original',
             'm.path AS media_path',
-            'm.filename_original AS media_filename_original',
+            'm.filename AS media_filename',
             'm.filename_extra_small AS media_filename_extra_small',
             'm.filename_small AS media_filename_small',
             'm.filename_medium AS media_filename_medium',
@@ -348,6 +350,7 @@ class AlbumDataLayer
             'm.filename_source AS media_filename_source',
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
+            'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
         ];
 
         $joins = ' FROM ' . self::ALBUM_SECTION_MEDIA_TABLE . ' AS `asm`';

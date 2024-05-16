@@ -306,22 +306,18 @@ readonly class MediaService
             widthOriginal: null,
             heightOriginal: null,
             path: $rawFile->extraPath,
-            filenameOriginal: $rawFile->name,
+            filename: $rawFile->getName(),
+            filenameSource: $rawFile->originalName,
             filenameXLarge: null,
             filenameLarge: null,
             filenameMedium: null,
             filenameSmall: null,
             filenameXSmall: null,
             captionHtml: null,
-            filenameSource: $rawFile->originalName,
             createdAt: $now,
             updatedAt: $now,
+            uploadedToS3At: null,
         );
-    }
-
-    private function generateFilename(string $extension): string
-    {
-        return date('YmdHis') . StringUtil::generateRandomString(16) . '.' . $extension;
     }
 
     public function validateAndProcessRawFile(array $rawFiles): ?RawFile
@@ -344,20 +340,20 @@ readonly class MediaService
 
         $mediaType = MediaType::getTypeFromRawFileType($rawFiles['files']['type'][0]);
         $rawName = $rawFiles['files']['name'][0];
+        $baseNameWithoutExtension = StringUtil::generateRandomString(32);
 
         if ($mediaType === MediaType::Image) {
             $phpNativeImageType = exif_imagetype($rawPathWithName);
-            $newName = $this->imageService->generateImageName($phpNativeImageType);
+            $extension = $this->imageService->getExtension($phpNativeImageType);
         } else {
             $extension = $this->getFileExtension($rawName);
             $rawNameWithoutExtension = trim(str_replace($extension, '', $rawName), '. ');
-
-            $newName = StringUtil::cleanString($rawNameWithoutExtension) . '-' . $this->generateFilename($extension);
+            $baseNameWithoutExtension = StringUtil::cleanString($rawNameWithoutExtension) . '-' . $baseNameWithoutExtension;
         }
 
         $basePath = rtrim($this->mediaBaseDir, ' /');
         $extraPath = $this->getOrGenerateMediaFolder($basePath);
-        $targetPath = $basePath . '/' . $extraPath . '/' . $newName;
+        $targetPath = $basePath . '/' . $extraPath . '/' . $baseNameWithoutExtension . '.' . $extension;
 
         $res = @rename($rawPathWithName, $targetPath);
         if (!$res) {
@@ -374,7 +370,8 @@ readonly class MediaService
 
         return new RawFile(
             originalName: $rawName,
-            name: $newName,
+            baseNameWithoutExtension: $baseNameWithoutExtension,
+            extension: $extension,
             basePath: $basePath,
             extraPath: $extraPath,
             mediaType: $mediaType,
@@ -383,7 +380,7 @@ readonly class MediaService
         );
     }
 
-    public function getFileExtension(string $filename): string
+    private function getFileExtension(string $filename): string
     {
         if (!str_contains($filename, '.')) {
             return '';
