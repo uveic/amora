@@ -44,9 +44,18 @@ class Response
     ) {
         $nonce = $nonce ? " 'nonce-" . $nonce . "'" : '';
 
+        $allowedDomains = ["'self'"];
+        if (Core::getConfig()->s3Config) {
+            $allowedDomains[] = parse_url(Core::getConfig()->s3Config->originEndpoint, PHP_URL_HOST);
+            if (Core::getConfig()->s3Config->cdnEndpoint) {
+                $allowedDomains[] = parse_url(Core::getConfig()->s3Config->cdnEndpoint, PHP_URL_HOST);
+            }
+        }
+
         $allowedUrls = implode(' ', array_merge(["'self'"], Core::getConfig()->allowedUrlsForSrcScript ?? []));
         $connectSrc = 'connect-src ' . $allowedUrls . ';';
         $scriptSrc = 'script-src ' . $allowedUrls . $nonce . ';';
+        $defaultSrc = 'default-src ' . implode(' ', $allowedDomains) . ';';
 
         $insecureRequests = '';
         if (Core::isRunningInLiveEnv()) {
@@ -61,7 +70,7 @@ class Response
                 $httpStatus->value,
                 "Content-Type: $contentType->value",
                 "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate",
-                "Content-Security-Policy: default-src 'self'; $connectSrc $scriptSrc" . $insecureRequests,
+                "Content-Security-Policy: $defaultSrc $connectSrc $scriptSrc" . $insecureRequests,
                 "X-Content-Type-Options: nosniff",
                 "Referrer-Policy: strict-origin-when-cross-origin",
                 "X-Frame-Options: SAMEORIGIN",

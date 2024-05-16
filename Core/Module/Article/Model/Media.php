@@ -325,14 +325,18 @@ class Media
     {
         $config = Core::getConfig();
         return $this->uploadedToS3At && $config->s3Config ?
-            ($config->s3Config->originEndpoint . '/')
+            ($config->s3Config->originEndpoint . '/' . $config->s3Config->projectFolderName . '/')
             : ($config->mediaBaseUrl . '/' . $this->path . '/');
     }
 
     private function buildSrcset(): string
     {
+        $xSmallPath = $this->widthOriginal <= ImageSize::XSmall->value ?
+            $this->getPathWithNameOriginal() . ' ' . $this->widthOriginal . 'w'
+            : $this->getPathWithNameXSmall() . ' ' . ImageSize::XSmall->value . 'w';
+
         $output = [
-            $this->getPathWithNameXSmall() . ' ' . ImageSize::XSmall->value . 'w',
+            $xSmallPath,
         ];
 
         if ($this->filenameSmall) {
@@ -349,6 +353,10 @@ class Media
 
         if ($this->filenameXLarge) {
             $output[] = $this->getPathWithNameXLarge() . ' ' . ImageSize::XLarge->value . 'w';
+        }
+
+        if ($this->widthOriginal < ImageSize::XLarge->value && $this->widthOriginal > ImageSize::XSmall) {
+            $output[] = $this->getPathWithNameOriginal() . ' ' . $this->widthOriginal . 'w';
         }
 
         return implode(', ', $output);

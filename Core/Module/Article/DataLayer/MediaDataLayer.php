@@ -12,6 +12,7 @@ use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Value\QueryOrderDirection;
+use DateTimeImmutable;
 
 class MediaDataLayer
 {
@@ -38,6 +39,7 @@ class MediaDataLayer
         array $typeIds = [],
         array $statusIds = [],
         ?int $fromId = null,
+        ?bool $isUploadedToS3 = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -112,6 +114,10 @@ class MediaDataLayer
             $params[':fromId'] = $fromId;
         }
 
+        if (isset($isUploadedToS3)) {
+            $where .= ' AND m.uploaded_to_s3_at ' . ($isUploadedToS3 ? ' IS NOT NULL' : ' IS NULL');
+        }
+
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
 
         $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
@@ -176,6 +182,35 @@ class MediaDataLayer
             id: $media->id,
             data: $media->asArray(),
         );
+    }
+
+    public function updateMediaFields(
+        int $mediaId,
+        ?DateTimeImmutable $uploadedToS3At = null,
+    ): bool {
+        $params = [];
+        $fields = [];
+
+        if ($uploadedToS3At) {
+            $fields[] = 'uploaded_to_s3_at = :uploadedToS3At';
+            $params[':uploadedToS3At'] = $uploadedToS3At->format(DateUtil::MYSQL_DATETIME_FORMAT);
+        }
+
+        if (!$params) {
+            return true;
+        }
+
+        $params[':mediaId'] = $mediaId;
+        $params[':updatedAt'] = DateUtil::getCurrentDateForMySql();
+        $fields[] = 'updated_at = :updatedAt';
+
+        $sql = '
+            UPDATE ' . self::MEDIA_TABLE . '
+            SET ' . implode(',', $fields) . '
+            WHERE id = :mediaId
+        ';
+
+        return $this->db->execute($sql, $params);
     }
 
     public function destroyMedia(int $id): bool

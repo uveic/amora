@@ -6,6 +6,7 @@ use Amora\Core\App\App;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\MediaService;
@@ -13,6 +14,8 @@ use Amora\Core\Module\Article\Service\S3Service;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\Logger;
+use Amora\Core\Value\QueryOrderDirection;
+use DateTimeImmutable;
 
 class S3UploaderApp extends App
 {
@@ -37,12 +40,12 @@ class S3UploaderApp extends App
             $this->log('Getting media...');
 
             $entries = $this->mediaService->filterMediaBy(
-                ids: [147],
                 typeIds: [MediaType::Image->value],
                 statusIds: [MediaStatus::Active->value],
+                isUploadedToS3: false,
                 queryOptions: new QueryOptions(
-                    pagination: new Pagination(itemsPerPage: 1),
-                    orderRandomly: true,
+                    orderBy: [new QueryOrderBy('id', QueryOrderDirection::ASC)],
+                    pagination: new Pagination(itemsPerPage: 5),
                 ),
             );
 
@@ -50,15 +53,16 @@ class S3UploaderApp extends App
             foreach ($entries as $entry) {
                 $res = ArticleCore::getDb()->withTransaction(
                     function () use ($entry) {
-                        $res = $this->processMedia($entry);
-
-                        return new Feedback($res);
+                        return $this->processMedia($entry);
                     }
                 );
 
                 if (!$res->isSuccess) {
-                    $this->log('Something went wrong. Aborting...', true);
-                    exit;
+                    $this->log(
+                        'Error processing media (ID: ' . $entry->id . '). Aborting... => ' . $res->message,
+                        true,
+                    );
+                    return;
                 }
             }
 
@@ -71,23 +75,54 @@ class S3UploaderApp extends App
         });
     }
 
-    private function processMedia(Media $existingMedia): bool
+    private function processMedia(Media $existingMedia): Feedback
     {
         $this->log('Processing media ID: ' . $existingMedia->id);
 
-        $res = $this->s3Service->put(
-            filename: $existingMedia->filenameMedium,
-            fullPathAndFilename: $existingMedia->getDirWithNameMedium(),
+        $filenames = [
+            $existingMedia->filename => $existingMedia->getDirWithNameOriginal(),
+        ];
+
+        if ($existingMedia->filenameXSmall) {
+            $filenames[$existingMedia->filenameXSmall] = $existingMedia->getDirWithNameXSmall();
+        }
+
+        if ($existingMedia->filenameSmall) {
+            $filenames[$existingMedia->filenameSmall] = $existingMedia->getDirWithNameSmall();
+        }
+
+        if ($existingMedia->filenameMedium) {
+            $filenames[$existingMedia->filenameMedium] = $existingMedia->getDirWithNameMedium();
+        }
+
+        if ($existingMedia->filenameLarge) {
+            $filenames[$existingMedia->filenameLarge] = $existingMedia->getDirWithNameLarge();
+        }
+
+        if ($existingMedia->filenameXLarge) {
+            $filenames[$existingMedia->filenameXLarge] = $existingMedia->getDirWithNameXLarge();
+        }
+
+        foreach ($filenames as $filename => $pathWithName) {
+            $res = $this->s3Service->put(
+                filename: $filename,
+                fullPathAndFilename: $pathWithName,
+            );
+
+            if (!$res->isSuccess) {
+                return $res;
+            }
+        }
+
+        $res = $this->mediaService->updateMediaFields(
+            mediaId: $existingMedia->id,
+            uploadedToS3At: new DateTimeImmutable(),
         );
 
         if ($res) {
-            $this->log("Media ($existingMedia->id) uploaded: " . $res);
-
-            $this->mediaService->updateMedia(
-
-            );
+            $this->log("Media ($existingMedia->id) uploaded.");
         }
 
-        return (bool)$res;
+        return new Feedback(true);
     }
 }

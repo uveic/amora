@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Article\Service;
 
 use Amora\Core\Config\S3Config;
+use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Util\Logger;
 use Aws\S3\S3Client;
@@ -20,28 +21,40 @@ readonly class S3Service
             [
                 'profile' => 'default',
                 'region' => $this->s3Config->regionName,
-                'endpoint' => $this->s3Config->originEndpoint,
+                'endpoint' => $this->s3Config->apiEndpoint,
                 'use_path_style_endpoint' => false,
             ],
         );
     }
 
-    public function put(string $filename, string $fullPathAndFilename): ?string
+    public function put(string $filename, string $fullPathAndFilename): Feedback
     {
         try {
+            if (!file_exists($fullPathAndFilename)) {
+                return new Feedback(
+                    isSuccess: false,
+                    message: 'File not found: ' . $fullPathAndFilename,
+                );
+            }
+
             $res = $this->s3Client->putObject(
                 [
-                    'Bucket' => $this->s3Config->buckedName,
+                    'Bucket' => $this->s3Config->bucketName,
                     'Key' => $this->s3Config->projectFolderName . '/' . $filename,
                     'Body' => fopen($fullPathAndFilename, 'r'),
                     'ACL' => 'public-read',
                 ],
             );
 
-            return $res['ObjectURL'] ?? null;
+            return new Feedback(
+                isSuccess: (bool)$res['ObjectURL'],
+                response: $res['ObjectURL'] ?? null,
+            );
         } catch (Throwable $e) {
-            $this->logger->logError('Error uploading file to S3: ' . $e->getMessage());
-            return null;
+            return new Feedback(
+                isSuccess: false,
+                message: $e->getMessage(),
+            );
         }
     }
 
@@ -50,7 +63,7 @@ readonly class S3Service
         try {
             $res = $this->s3Client->deleteObject(
                 [
-                    'Bucket' => $this->s3Config->buckedName,
+                    'Bucket' => $this->s3Config->bucketName,
                     'Key' => $this->s3Config->projectFolderName . '/' . $filename,
                 ]
             );
