@@ -136,7 +136,7 @@ readonly class MediaService
             }
         }
 
-        return true;
+        return $this->mediaDataLayer->destroyMedia($media->id);
     }
 
     public function workflowGetFiles(
