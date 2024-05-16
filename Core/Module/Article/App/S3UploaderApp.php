@@ -3,6 +3,7 @@
 namespace Amora\App\Module\Article\App;
 
 use Amora\Core\App\App;
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
@@ -40,6 +41,11 @@ class S3UploaderApp extends App
     public function run(): void
     {
         $this->execute(function () {
+            if (!Core::getConfig()->s3Config) {
+                $this->log('S3 configuration is missing. Aborting...');
+                return;
+            }
+
             $timeBefore = microtime(true);
 
             $totalEntries = $this->retrieveAndUploadMedia();

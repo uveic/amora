@@ -4,7 +4,6 @@ namespace Amora\Core\Module\Article\Service;
 
 use Amora\Core\Config\S3Config;
 use Amora\Core\Entity\Response\Feedback;
-use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Util\Logger;
 use Aws\S3\S3Client;
 use Throwable;
