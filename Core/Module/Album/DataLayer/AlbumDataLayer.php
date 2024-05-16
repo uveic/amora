@@ -113,6 +113,7 @@ class AlbumDataLayer
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
+            'm.deleted_locally_at AS media_deleted_locally_at',
 
             'als.id AS album_slug_id',
             'als.album_id AS album_slug_album_id',
@@ -252,6 +253,7 @@ class AlbumDataLayer
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
+            'm.deleted_locally_at AS media_deleted_locally_at',
         ];
 
         $joins = ' FROM ' . self::ALBUM_SECTION_TABLE . ' AS `as`';
@@ -351,6 +353,7 @@ class AlbumDataLayer
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
+            'm.deleted_locally_at AS media_deleted_locally_at',
         ];
 
         $joins = ' FROM ' . self::ALBUM_SECTION_MEDIA_TABLE . ' AS `asm`';

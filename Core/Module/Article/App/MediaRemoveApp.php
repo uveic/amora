@@ -93,6 +93,7 @@ class MediaRemoveApp extends App
                     m.created_at AS media_created_at,
                     m.updated_at AS media_updated_at,
                     m.uploaded_to_s3_at AS media_uploaded_to_s3_at,
+                    m.deleted_locally_at AS media_deleted_locally_at,
 
                     u.status_id AS user_status_id,
                     u.language_iso_code AS user_language_iso_code,

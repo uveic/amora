@@ -31,6 +31,7 @@ class Media
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt,
         public readonly ?DateTimeImmutable $uploadedToS3At,
+        public readonly ?DateTimeImmutable $deletedLocallyAt,
     ) {}
 
     public static function fromArray(array $data): self
@@ -56,6 +57,9 @@ class Media
             uploadedToS3At: $data['media_uploaded_to_s3_at'] ?
                 DateUtil::convertStringToDateTimeImmutable($data['media_uploaded_to_s3_at'])
                 : null,
+            deletedLocallyAt: $data['media_deleted_locally_at'] ?
+                DateUtil::convertStringToDateTimeImmutable($data['media_deleted_locally_at'])
+                : null,
         );
     }
 
@@ -80,6 +84,8 @@ class Media
             'filename_source' => $this->filenameSource,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'updated_at' => $this->updatedAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'uploaded_to_s3_at' => $this->uploadedToS3At?->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            'deleted_locally_at' => $this->deletedLocallyAt?->format(DateUtil::MYSQL_DATETIME_FORMAT),
         ];
     }
 

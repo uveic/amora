@@ -47,10 +47,12 @@ readonly class MediaService
     public function updateMediaFields(
         int $mediaId,
         ?DateTimeImmutable $uploadedToS3At = null,
+        ?DateTimeImmutable $deletedLocallyAt = null,
     ): bool {
         return $this->mediaDataLayer->updateMediaFields(
             mediaId: $mediaId,
             uploadedToS3At: $uploadedToS3At,
+            deletedLocallyAt: $deletedLocallyAt,
         );
     }
 
@@ -75,7 +77,9 @@ readonly class MediaService
         array $typeIds = [],
         array $statusIds = [],
         ?int $fromId = null,
+        ?DateTimeImmutable $uploadedToS3Before = null,
         ?bool $isUploadedToS3 = null,
+        ?bool $isDeletedLocally = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->mediaDataLayer->filterMediaBy(
@@ -84,7 +88,9 @@ readonly class MediaService
             typeIds: $typeIds,
             statusIds: $statusIds,
             fromId: $fromId,
+            uploadedToS3Before: $uploadedToS3Before,
             isUploadedToS3: $isUploadedToS3,
+            isDeletedLocally: $isDeletedLocally,
             queryOptions: $queryOptions,
         );
     }
@@ -329,6 +335,7 @@ readonly class MediaService
             createdAt: $now,
             updatedAt: $now,
             uploadedToS3At: null,
+            deletedLocallyAt: null,
         );
     }
 

@@ -13,16 +13,19 @@ use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Service\S3Service;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
+use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Logger;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 
 class S3UploaderApp extends App
 {
+    const MEDIA_BATCH = 200;
+    const DAYS_BEFORE_DELETING_MEDIA_LOCALLY = 2;
+
     public function __construct(
         Logger $logger,
         private readonly MediaService $mediaService,
-        private readonly S3Service $s3Service,
     ) {
         parent::__construct(
             logger: $logger,
@@ -44,13 +47,20 @@ class S3UploaderApp extends App
             $averageTime = $totalEntries ? round($diffMicroseconds / $totalEntries, 3) : 0;
             $this->log($totalEntries . ' images uploaded. Average time per image: ' . $averageTime . ' seconds.');
 
+            $timeBefore = microtime(true);
 
+            $totalEntries = $this->retrieveAndDeleteMedia();
+
+            $timeAfter = microtime(true);
+            $diffMicroseconds = $timeAfter - $timeBefore;
+            $averageTime = $totalEntries ? round($diffMicroseconds / $totalEntries, 3) : 0;
+            $this->log($totalEntries . ' images deleted. Average time per image: ' . $averageTime . ' seconds.');
         });
     }
 
     private function retrieveAndUploadMedia(): int
     {
-        $this->log('Getting media...');
+        $this->log('Getting media to upload...');
 
         $entries = $this->mediaService->filterMediaBy(
             typeIds: [MediaType::Image->value],
@@ -58,23 +68,25 @@ class S3UploaderApp extends App
             isUploadedToS3: false,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('id', QueryOrderDirection::ASC)],
-                pagination: new Pagination(itemsPerPage: 5),
+                pagination: new Pagination(itemsPerPage: self::MEDIA_BATCH),
             ),
         );
 
+        if (!$entries) {
+            return 0;
+        }
+
         $count = 0;
+
+        $s3Service = ArticleCore::getS3Service();
 
         /** @var Media $entry */
         foreach ($entries as $entry) {
-            $res = ArticleCore::getDb()->withTransaction(
-                function () use ($entry) {
-                    return $this->uploadMedia($entry);
-                }
-            );
+            $res = $this->uploadMedia($entry, $s3Service);
 
             if (!$res->isSuccess) {
                 $this->log(
-                    'Error processing media (ID: ' . $entry->id . '). Aborting... => ' . $res->message,
+                    'Error uploading media (ID: ' . $entry->id . '). Aborting... => ' . $res->message,
                     true,
                 );
                 return $count;
@@ -86,36 +98,14 @@ class S3UploaderApp extends App
         return $count;
     }
 
-    private function uploadMedia(Media $existingMedia): Feedback
+    private function uploadMedia(Media $media, S3Service $s3Service): Feedback
     {
-        $this->log('Processing media ID: ' . $existingMedia->id);
+        $this->log('Uploading media ID: ' . $media->id);
 
-        $filenames = [
-            $existingMedia->filename => $existingMedia->getDirWithNameOriginal(),
-        ];
-
-        if ($existingMedia->filenameXSmall) {
-            $filenames[$existingMedia->filenameXSmall] = $existingMedia->getDirWithNameXSmall();
-        }
-
-        if ($existingMedia->filenameSmall) {
-            $filenames[$existingMedia->filenameSmall] = $existingMedia->getDirWithNameSmall();
-        }
-
-        if ($existingMedia->filenameMedium) {
-            $filenames[$existingMedia->filenameMedium] = $existingMedia->getDirWithNameMedium();
-        }
-
-        if ($existingMedia->filenameLarge) {
-            $filenames[$existingMedia->filenameLarge] = $existingMedia->getDirWithNameLarge();
-        }
-
-        if ($existingMedia->filenameXLarge) {
-            $filenames[$existingMedia->filenameXLarge] = $existingMedia->getDirWithNameXLarge();
-        }
+        $filenames = $this->getMediaFilenames($media);
 
         foreach ($filenames as $filename => $pathWithName) {
-            $res = $this->s3Service->put(
+            $res = $s3Service->put(
                 filename: $filename,
                 fullPathAndFilename: $pathWithName,
             );
@@ -126,14 +116,111 @@ class S3UploaderApp extends App
         }
 
         $res = $this->mediaService->updateMediaFields(
-            mediaId: $existingMedia->id,
+            mediaId: $media->id,
             uploadedToS3At: new DateTimeImmutable(),
         );
 
         if ($res) {
-            $this->log("Media ($existingMedia->id) uploaded.");
+            $this->log("Media uploaded. ID: $media->id");
         }
 
         return new Feedback(true);
+    }
+
+    private function retrieveAndDeleteMedia(): int
+    {
+        $this->log('Getting media to delete...');
+
+        $beforeDate = DateUtil::convertStringToDateTimeImmutable(
+            '-' . self::DAYS_BEFORE_DELETING_MEDIA_LOCALLY . ' days'
+        );
+
+        $entries = $this->mediaService->filterMediaBy(
+            uploadedToS3Before: $beforeDate,
+            isDeletedLocally: false,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('id', QueryOrderDirection::ASC)],
+                pagination: new Pagination(itemsPerPage: self::MEDIA_BATCH),
+            ),
+        );
+
+        $count = 0;
+
+        /** @var Media $entry */
+        foreach ($entries as $entry) {
+            $res =  $this->deleteMedia($entry);
+
+            if (!$res->isSuccess) {
+                $this->log(
+                    'Error deleting media (ID: ' . $entry->id . '). Aborting... => ' . $res->message,
+                    true,
+                );
+                return $count;
+            }
+
+            $count++;
+        }
+
+        return $count;
+    }
+
+    private function deleteMedia(Media $media): Feedback
+    {
+        $this->log('Deleting media ID: ' . $media->id);
+
+        $filenames = $this->getMediaFilenames($media);
+
+        foreach ($filenames as $pathWithName) {
+            if (file_exists($pathWithName)) {
+                $res = unlink($pathWithName);
+
+                if (!$res) {
+                    return new Feedback(
+                        isSuccess: false,
+                        message: 'Error deleting media: ' . $pathWithName,
+                    );
+                }
+            }
+        }
+
+        $res = $this->mediaService->updateMediaFields(
+            mediaId: $media->id,
+            deletedLocallyAt: new DateTimeImmutable(),
+        );
+
+        if ($res) {
+            $this->log("Media deleted. ID: $media->id");
+        }
+
+        return new Feedback(true);
+    }
+
+    private function getMediaFilenames(Media $media): array
+    {
+        $filenames = [
+            $media->filename => $media->getDirWithNameOriginal(),
+        ];
+
+        if ($media->filenameXSmall) {
+            $filenames[$media->filenameXSmall] = $media->getDirWithNameXSmall();
+        }
+
+        if ($media->filenameSmall) {
+            $filenames[$media->filenameSmall] = $media->getDirWithNameSmall();
+        }
+
+        if ($media->filenameMedium) {
+            $filenames[$media->filenameMedium] = $media->getDirWithNameMedium();
+        }
+
+        if ($media->filenameLarge) {
+            $filenames[$media->filenameLarge] = $media->getDirWithNameLarge();
+        }
+
+        if ($media->filenameXLarge) {
+            $filenames[$media->filenameXLarge] = $media->getDirWithNameXLarge();
+        }
+
+        return $filenames;
     }
 }

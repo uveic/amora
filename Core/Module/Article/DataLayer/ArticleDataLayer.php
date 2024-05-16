@@ -129,6 +129,7 @@ class ArticleDataLayer
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
+            'm.deleted_locally_at AS media_deleted_locally_at',
         ];
 
         $joins = ' FROM ' . self::ARTICLE_TABLE . ' AS a';
@@ -324,6 +325,7 @@ class ArticleDataLayer
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
+            'm.deleted_locally_at AS media_deleted_locally_at',
         ];
 
         $joins = ' FROM ' . self::CONTENT_TABLE . ' AS c';
@@ -393,6 +395,7 @@ class ArticleDataLayer
             'm.created_at AS media_created_at',
             'm.updated_at AS media_updated_at',
             'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
+            'm.deleted_locally_at AS media_deleted_locally_at',
         ];
 
         $joins = ' FROM ' . self::ARTICLE_MEDIA_TABLE . ' AS am';
