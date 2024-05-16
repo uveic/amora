@@ -208,6 +208,8 @@ function displayModalImage(image) {
   imageElement.src = image.pathLarge;
   imageElement.alt = alt;
   imageElement.title = alt;
+  imageElement.width = image.width;
+  imageElement.height = image.height;
   imageElement.dataset.mediaId = image.id;
   imageElement.classList.remove('hidden');
   imageWrapper.classList.remove('filter-opacity');
@@ -943,14 +945,14 @@ function displayImageFromApiCall(container, images, eventListenerAction, targetC
     figureContainer.className = 'image-container';
 
     const imageEl = new Image();
-    imageEl.src = image.pathSmall;
+    imageEl.src = image.pathXSmall;
     imageEl.sizes = image.sizes;
     imageEl.srcset = image.srcset;
     const alt = image.caption ?? image.name;
     imageEl.alt = alt;
     imageEl.title = alt;
     imageEl.dataset.mediaId = image.id;
-    imageEl.dataset.pathMedium = image.pathMedium;
+    imageEl.dataset.pathLarge = image.pathLarge;
     imageEl.className = 'media-item';
     imageEl.loading = 'lazy';
     addEventListenerAction(imageEl, image.id, eventListenerAction, targetContainerId);
