@@ -103,6 +103,8 @@ class Media
             'fullPathMedium' => $this->getPathWithNameMedium(),
             'pathLarge' => $this->getPathWithNameLarge(),
             'fullPathLarge' => $this->getPathWithNameLarge(),
+            'pathOriginal' => $this->getPathWithNameOriginal(),
+            'fullPathOriginal' => $this->getPathWithNameOriginal(),
             'caption' => $this->buildAltText(),
             'captionHtml' => $this->captionHtml,
             'name' => $this->filename,
