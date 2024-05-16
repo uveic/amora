@@ -4,11 +4,12 @@ namespace Amora\App\Module\Article\App;
 
 use Amora\Core\App\App;
 use Amora\Core\Entity\Response\Feedback;
+use Amora\Core\Module\Album\Datalayer\AlbumDataLayer;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;
-use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
@@ -19,8 +20,9 @@ class MediaRemoveApp extends App
 {
     public function __construct(
         Logger $logger,
-        private readonly MediaDataLayer $mediaDataLayer,
+        private readonly MediaService $mediaService,
         private readonly ArticleDataLayer $articleDataLayer,
+        private readonly AlbumDataLayer $albumDataLayer,
     ) {
         parent::__construct(
             logger: $logger,
@@ -37,15 +39,17 @@ class MediaRemoveApp extends App
 
             $this->deleteArticleHistory();
             $this->deleteDeletedArticles();
+            $this->deleteDeletedAlbums();
 
-            $this->logger->logInfo('Getting media...');
+            $this->log('Getting media...');
             $entries = $this->getMedia();
 
             /** @var Media $entry */
             foreach ($entries as $entry) {
-                $res = ArticleCore::getDb()->withTransaction(
+                $res = $this->articleDataLayer->getDb()->withTransaction(
                     function () use ($entry) {
-                        $res = $this->deleteMedia($entry);
+                        $this->log('Deleting media ID: ' . $entry->id);
+                        $res = $this->mediaService->destroyMedia($entry);
 
                         return new Feedback($res);
                     }
@@ -53,7 +57,7 @@ class MediaRemoveApp extends App
 
                 if (!$res->isSuccess) {
                     $this->log('Something went wrong. Aborting...', true);
-                    exit;
+                    return;
                 }
             }
 
@@ -62,14 +66,13 @@ class MediaRemoveApp extends App
             $totalEntries = count($entries);
             $averageTime = $totalEntries ? round($diffMicroseconds / $totalEntries, 3) : 0;
 
-            $this->log($totalEntries . ' images processed.');
-            $this->log('Average entry process time: ' . $averageTime . ' seconds.');
+            $this->log($totalEntries . ' images processed. Average time per image: ' . $averageTime . ' seconds.');
         });
     }
 
     private function getMedia(): array
     {
-        $entries = $this->mediaDataLayer->getDb()->fetchAll(
+        $entries = ArticleCore::getDb()->fetchAll(
             '
                 SELECT
                     m.id AS media_id,
@@ -137,72 +140,187 @@ class MediaRemoveApp extends App
         return $output;
     }
 
-    private function deleteMedia(Media $existingMedia): bool
-    {
-        $this->logger->logInfo('Processing media ID: ' . $existingMedia->id);
-
-        return true;
-    }
-
     private function deleteArticleHistory(): void
     {
-        $this->log('Deleting article history...');
+        $res = $this->articleDataLayer->getDb()->withTransaction(
+            function () {
+                $twoMonthsAgo = DateUtil::convertStringToDateTimeImmutable('-2 months');
+                $this->log('Deleting article history created before ' . $twoMonthsAgo->format('Y-m-d H:i') . '...');
 
-        $twoMonthsAgo = DateUtil::convertStringToDateTimeImmutable('-2 months');
+                $this->articleDataLayer->getDb()->execute(
+                    '
+                        DELETE FROM ' . ArticleDataLayer::ARTICLE_HISTORY_TABLE . '
+                        WHERE created_at <= :twoMonthsAgo
+                    ',
+                    [
+                        ':twoMonthsAgo' => $twoMonthsAgo->format(DateUtil::MYSQL_DATETIME_FORMAT),
+                    ],
+                );
 
-        $this->articleDataLayer->getDb()->execute(
-            '
-                DELETE FROM ' . ArticleDataLayer::ARTICLE_HISTORY_TABLE . '
-                WHERE created_at <= :twoMonthsAgo
-            ',
-            [
-                ':twoMonthsAgo' => $twoMonthsAgo->format(DateUtil::MYSQL_DATETIME_FORMAT),
-            ],
+                return new Feedback(true);
+            }
         );
+
+        if (!$res->isSuccess) {
+            $this->log("Error deleting articles' history. Aborting... " . $res->message);
+        }
     }
 
     private function deleteDeletedArticles(): void
     {
-        $this->log('Deleting deleted articles...');
+        $res = $this->articleDataLayer->getDb()->withTransaction(
+            function () {
+                $twoMonthsAgo = DateUtil::convertStringToDateTimeImmutable('-2 months');
+                $this->log(
+                    'Deleting articles with deleted status last updated before ' .
+                    $twoMonthsAgo->format('Y-m-d H:i') . '...'
+                );
 
-        $twoMonthsAgo = DateUtil::convertStringToDateTimeImmutable('-2 months');
+                $articles = $this->articleDataLayer->getDb()->fetchAll(
+                    '
+                        SELECT id
+                        FROM ' . ArticleDataLayer::ARTICLE_TABLE . '
+                        WHERE updated_at <= :twoMonthsAgo
+                            AND status_id = :articleDeletedStatus
+                    ',
+                    [
+                        ':twoMonthsAgo' => $twoMonthsAgo->format(DateUtil::MYSQL_DATETIME_FORMAT),
+                        ':articleDeletedStatus' => ArticleStatus::Deleted->value,
+                    ],
+                );
 
-        $this->articleDataLayer->getDb()->execute(
-            '
-                DELETE ah FROM ' . ArticleDataLayer::ARTICLE_HISTORY_TABLE . ' AS ah
-                    INNER JOIN ' . ArticleDataLayer::ARTICLE_TABLE . ' AS a ON a.id = ah.article_id 
-                WHERE a.updated_at <= :twoMonthsAgo
-                    AND a.status_id = :articleDeletedStatus
-            ',
-            [
-                ':twoMonthsAgo' => $twoMonthsAgo->format(DateUtil::MYSQL_DATETIME_FORMAT),
-                ':articleDeletedStatus' => ArticleStatus::Deleted->value,
-            ],
+                if (!$articles) {
+                    return new Feedback(true);
+                }
+
+                $articleIds = array_column($articles, 'id');
+                $this->log('Deleting article IDs: ' . implode(', ', $articleIds));
+
+                $this->articleDataLayer->getDb()->execute(
+                    '
+                        DELETE FROM ' . ArticleDataLayer::ARTICLE_HISTORY_TABLE . '
+                        WHERE article_id IN (' . implode(', ', $articleIds) . ')
+                    ',
+                );
+
+                $this->articleDataLayer->getDb()->execute(
+                    '
+                        DELETE FROM ' . ArticleDataLayer::ARTICLE_MEDIA_TABLE . '
+                        WHERE article_id IN (' . implode(', ', $articleIds) . ')
+                    ',
+                );
+
+                $this->articleDataLayer->getDb()->execute(
+                    '
+                        DELETE FROM ' . ArticleDataLayer::ARTICLE_PATH_TABLE . '
+                        WHERE article_id IN (' . implode(', ', $articleIds) . ')
+                    ',
+                );
+
+                $this->articleDataLayer->getDb()->execute(
+                    '
+                        DELETE arsi FROM ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE . ' AS arsi
+                            INNER JOIN ' . ArticleDataLayer::ARTICLE_SECTION_TABLE . ' AS ars ON ars.id = arsi.article_section_id
+                        WHERE ars.article_id IN (' . implode(', ', $articleIds) . ')
+                    ',
+                );
+
+                $this->articleDataLayer->getDb()->execute(
+                    '
+                        DELETE FROM ' . ArticleDataLayer::ARTICLE_SECTION_TABLE . '
+                        WHERE article_id IN (' . implode(', ', $articleIds) . ')
+                    ',
+                );
+
+                $this->articleDataLayer->getDb()->execute(
+                    '
+                        DELETE FROM ' . ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE . '
+                        WHERE article_id IN (' . implode(', ', $articleIds) . ')
+                    ',
+                );
+
+                $this->articleDataLayer->getDb()->execute(
+                    '
+                        DELETE FROM ' . ArticleDataLayer::ARTICLE_TABLE . '
+                        WHERE id IN (' . implode(', ', $articleIds) . ')
+                    ',
+                );
+
+                return new Feedback(true);
+            }
         );
 
-        $this->articleDataLayer->getDb()->execute(
-            '
-                DELETE am FROM ' . ArticleDataLayer::ARTICLE_MEDIA_TABLE . ' AS am
-                    INNER JOIN ' . ArticleDataLayer::ARTICLE_TABLE . ' AS a ON a.id = am.article_id 
-                WHERE a.updated_at <= :twoMonthsAgo
-                    AND a.status_id = :articleDeletedStatus
-            ',
-            [
-                ':twoMonthsAgo' => $twoMonthsAgo->format(DateUtil::MYSQL_DATETIME_FORMAT),
-                ':articleDeletedStatus' => ArticleStatus::Deleted->value,
-            ],
+        if (!$res->isSuccess) {
+            $this->log("Error deleting articles. Aborting... " . $res->message);
+        }
+    }
+
+    private function deleteDeletedAlbums(): void
+    {
+        $res = $this->albumDataLayer->getDb()->withTransaction(
+            function () {
+                $twoMonthsAgo = DateUtil::convertStringToDateTimeImmutable('-2 months');
+                $this->log(
+                    'Deleting albums with deleted status last updated before ' .
+                    $twoMonthsAgo->format('Y-m-d H:i') . '...'
+                );
+
+                $albums = $this->albumDataLayer->getDb()->fetchAll(
+                    '
+                        SELECT id
+                        FROM ' . AlbumDataLayer::ALBUM_TABLE . '
+                        WHERE updated_at <= :twoMonthsAgo
+                            AND status_id = :albumDeletedStatus
+                    ',
+                    [
+                        ':twoMonthsAgo' => $twoMonthsAgo->format(DateUtil::MYSQL_DATETIME_FORMAT),
+                        ':albumDeletedStatus' => AlbumStatus::Deleted->value,
+                    ],
+                );
+
+                if (!$albums) {
+                    return new Feedback(true);
+                }
+
+                $albumIds = array_column($albums, 'id');
+                $this->log('Deleting album IDs: ' . implode(', ', $albumIds));
+
+                $this->albumDataLayer->getDb()->execute(
+                    '
+                        DELETE alsm FROM ' . AlbumDataLayer::ALBUM_SECTION_MEDIA_TABLE . ' AS alsm
+                            INNER JOIN ' . AlbumDataLayer::ALBUM_SECTION_TABLE . ' AS als ON als.id = alsm.album_section_id
+                        WHERE als.album_id IN (' . implode(', ', $albumIds) . ')
+                    ',
+                );
+
+                $this->albumDataLayer->getDb()->execute(
+                    '
+                        DELETE FROM ' . AlbumDataLayer::ALBUM_SECTION_TABLE . '
+                        WHERE album_id IN (' . implode(', ', $albumIds) . ')
+                    ',
+                );
+
+                $this->albumDataLayer->getDb()->execute(
+                    '
+                        DELETE als, al FROM ' . AlbumDataLayer::ALBUM_SLUG_TABLE . ' AS als
+                            INNER JOIN ' . AlbumDataLayer::ALBUM_TABLE . ' AS al ON al.id = als.album_id
+                        WHERE al.id IN (' . implode(', ', $albumIds) . ')
+                    ',
+                );
+
+                $this->albumDataLayer->getDb()->execute(
+                    '
+                        DELETE FROM ' . AlbumDataLayer::ALBUM_TABLE . '
+                        WHERE id IN (' . implode(', ', $albumIds) . ')
+                    ',
+                );
+
+                return new Feedback(true);
+            }
         );
 
-        $this->articleDataLayer->getDb()->execute(
-            '
-                DELETE FROM ' . ArticleDataLayer::ARTICLE_TABLE . '
-                WHERE updated_at <= :twoMonthsAgo
-                    AND status_id = :articleDeletedStatus
-            ',
-            [
-                ':twoMonthsAgo' => $twoMonthsAgo->format(DateUtil::MYSQL_DATETIME_FORMAT),
-                ':articleDeletedStatus' => ArticleStatus::Deleted->value,
-            ],
-        );
+        if (!$res->isSuccess) {
+            $this->log("Error deleting albums. Aborting... " . $res->message);
+        }
     }
 }

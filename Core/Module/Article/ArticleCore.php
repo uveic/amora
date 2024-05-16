@@ -228,8 +228,9 @@ class ArticleCore extends Core
 
                 return new MediaRemoveApp(
                     logger: self::getArticleLogger(),
-                    mediaDataLayer: self::getMediaDataLayer(),
+                    mediaService: self::getMediaService(),
                     articleDataLayer: self::getArticleDataLayer(),
+                    albumDataLayer: AlbumCore::getAlbumDataLayer(),
                 );
             },
         );
