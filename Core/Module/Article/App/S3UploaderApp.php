@@ -22,7 +22,7 @@ use DateTimeImmutable;
 class S3UploaderApp extends App
 {
     const MEDIA_BATCH = 200;
-    const DAYS_BEFORE_DELETING_MEDIA_LOCALLY = 2;
+    const DAYS_BEFORE_DELETING_MEDIA_LOCALLY = 30;
 
     public function __construct(
         Logger $logger,
