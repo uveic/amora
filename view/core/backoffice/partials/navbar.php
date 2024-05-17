@@ -1,5 +1,6 @@
 <?php
 
+use Amora\Core\Core;
 use Amora\Core\Entity\Util\MenuItem;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 
@@ -16,6 +17,7 @@ if (!isset($siteLogoHtml)) {
 }
 
 $isAdmin = $responseData->request->session?->isAdmin() ?? false;
+$isSearchEnabled = Core::getConfig()->isSearchEnabled;
 
 $userRegisteredMoreThan24HoursAgo = $responseData->minutesSinceUserRegistration() > 24 * 60;
 if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
@@ -24,9 +26,12 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
     <p><?=sprintf($responseData->getLocalValue('authenticationVerifyEmailBannerContent'), $responseData->request->session->user->email, $responseData->request->session->user->id)?></p>
   </div>
 <?php } ?>
+<?php if ($isSearchEnabled) { ?>
   <div class="search-fullscreen-shadow null"></div>
-  <header class="header-container">
+<?php } ?>
+  <header id="site-top" class="header-container">
 <?=$siteLogoHtml?>
+<?php if ($isSearchEnabled) { ?>
     <form action="#" method="post" id="form-search" class="form-search null">
       <div class="form-search-wrapper">
         <div class="search-result-loading null"><div class="loader-spinner"></div></div>
@@ -43,6 +48,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
       </div>
       <div class="search-result-container null"></div>
     </form>
+<?php } ?>
     <div class="header-right">
       <input type="checkbox" id="mobile-nav" class="mobile-nav">
       <nav class="header-navbar">
@@ -61,7 +67,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
             <div class="nav-dropdown-menu-wrapper">
               <label for="nav-dropdown-toggle-<?=$i?>" class="null">Menu</label>
               <input type="checkbox" id="nav-dropdown-toggle-<?=$i?>" class="nav-dropdown-toggle">
-              <label for="nav-dropdown-toggle-<?=$i++?>" class="nav-dropdown-item nav-dropdown-toggle-label"><?=$this->e($menuItem->text) . ' ' . $menuItem->icon?></label>
+              <label for="nav-dropdown-toggle-<?=$i++?>" class="nav-dropdown-item nav-dropdown-toggle-label"><?=$menuItem->text . ' ' . $menuItem->icon?></label>
               <ul class="nav-dropdown-menu">
 <?php
     /** @var MenuItem $child */
@@ -72,10 +78,12 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
               </ul>
             </div>
           </li>
-<?php } ?>
+            <?php } ?>
         </ul>
       </nav>
       <label for="mobile-nav" class="mobile-nav-label"><span class="null">Menu</span><span></span></label>
+<?php if ($isSearchEnabled) { ?>
       <img class="img-svg img-svg-30 search-action-js" width="30" height="30" src="/img/svg/magnifying-glass-bold-white.svg" alt="<?=$responseData->getLocalValue('globalSearch')?>">
+<?php } ?>
     </div>
   </header>

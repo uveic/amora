@@ -325,4 +325,8 @@ class MediaRemoveApp extends App
             $this->log("Error deleting albums. Aborting... " . $res->message);
         }
     }
+
+    // ToDo
+    private function deleteDestroyedMedia(): void
+    {}
 }

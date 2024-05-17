@@ -1133,7 +1133,9 @@ svg,
 .logo-on-top:active,
 .logo-on-top:visited,
 .logo-on-top:focus {
+  display: flex;
   flex-flow: column nowrap;
+  align-items: center;
   justify-content: center;
 }
 
