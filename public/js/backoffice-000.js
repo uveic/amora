@@ -204,6 +204,15 @@ function displayModalImage(image) {
     return;
   }
 
+  const imageLoaded = () => {
+    imageElement.classList.remove('hidden');
+    imageWrapper.classList.remove('filter-opacity');
+    loaderContainer.classList.add('null');
+    imageInfoData.classList.remove('hidden');
+    imageInfoNext.classList.remove('hidden');
+    imageWrapper.scrollIntoView({behavior: 'smooth', block: 'start'});
+  };
+
   const alt = image.caption ?? image.name;
   imageElement.src = image.pathLarge;
   imageElement.alt = alt;
@@ -211,11 +220,7 @@ function displayModalImage(image) {
   imageElement.width = image.width;
   imageElement.height = image.height;
   imageElement.dataset.mediaId = image.id;
-  imageElement.classList.remove('hidden');
-  imageWrapper.classList.remove('filter-opacity');
-  loaderContainer.classList.add('null');
-  imageInfoData.classList.remove('hidden');
-  imageInfoNext.classList.remove('hidden');
+  imageElement.addEventListener('load', imageLoaded);
 
   // Hide/display image nav buttons
   const firstImageEl = document.querySelector('#images-list .media-item');
