@@ -39,7 +39,7 @@ if (isset($responseData->article)) {
   <meta name="twitter:description" content="<?=$responseData->getPageDescription()?>">
   <meta name="twitter:image" content="<?=$responseData->siteImagePath?>">
 <?php if ($responseData->themeColourHex) { ?>
-  <meta name="theme-color" content="<?=$responseData->themeColourHex?>>"/>
+  <meta name="theme-color" content="<?=$responseData->themeColourHex?>"/>
 <?php } ?>
   <title><?=$responseData->getPageTitle()?></title>
   <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
