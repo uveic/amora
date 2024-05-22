@@ -439,7 +439,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 request: $request,
                 pageTitle: $article->title,
                 pageDescription: $article->getContentExcerpt(),
-                siteImagePath: $siteImage?->getPathWithNameLarge(),
+                siteImageUrl: $siteImage?->getPathWithNameLarge(),
                 article: $article,
                 postBottomContent: $this->articleService->getPageContent(
                     type: PageContentType::BlogBottom,

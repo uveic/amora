@@ -28,7 +28,7 @@ if (isset($responseData->article)) {
   <meta property="og:site_name" content="<?=$responseData->siteName?>">
   <meta property="og:title" content="<?=$responseData->getPageTitle()?>">
   <meta property="og:description" content="<?=$responseData->getPageDescription()?>">
-  <meta property="og:image" content="<?=$responseData->siteImagePath?>">
+  <meta property="og:image" content="<?=$responseData->siteImageUrl?>">
   <meta property="og:url" content="<?=$responseData->siteUrl?>">
   <meta property="og:type" content="website">
   <meta property="og:updated_time" content="<?=$responseData->lastUpdatedTimestamp?>">
@@ -37,7 +37,7 @@ if (isset($responseData->article)) {
   <meta property="twitter:url" content="<?=$responseData->siteUrl?>">
   <meta name="twitter:title" content="<?=$responseData->getPageTitle()?>">
   <meta name="twitter:description" content="<?=$responseData->getPageDescription()?>">
-  <meta name="twitter:image" content="<?=$responseData->siteImagePath?>">
+  <meta name="twitter:image" content="<?=$responseData->siteImageUrl?>">
 <?php if ($responseData->themeColourHex) { ?>
   <meta name="theme-color" content="<?=$responseData->themeColourHex?>"/>
 <?php } ?>

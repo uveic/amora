@@ -198,7 +198,7 @@ class UtilClass {
         resultMediaContainer.className = 'search-result-media';
 
         const resultMedia = new Image();
-        resultMedia.src = results[i].media.fullPathXSmall;
+        resultMedia.src = results[i].media.pathXSmall;
 
         resultMediaContainer.appendChild(resultMedia);
         resultItem.appendChild(resultMediaContainer);

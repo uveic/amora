@@ -55,10 +55,10 @@ class Media
             captionHtml: $data['media_caption_html'] ?? null,
             createdAt: DateUtil::convertStringToDateTimeImmutable($data['media_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($data['media_updated_at']),
-            uploadedToS3At: $data['media_uploaded_to_s3_at'] ?
+            uploadedToS3At: isset($data['media_uploaded_to_s3_at']) ?
                 DateUtil::convertStringToDateTimeImmutable($data['media_uploaded_to_s3_at'])
                 : null,
-            deletedLocallyAt: $data['media_deleted_locally_at'] ?
+            deletedLocallyAt: isset($data['media_deleted_locally_at']) ?
                 DateUtil::convertStringToDateTimeImmutable($data['media_deleted_locally_at'])
                 : null,
             exif: isset($data['media_exif_media_id']) ? ImageExif::fromArray($data) : null,
@@ -96,15 +96,11 @@ class Media
         return [
             'id' => $this->id,
             'pathXSmall' => $this->getPathWithNameXSmall(),
-            'fullPathXSmall' => $this->getPathWithNameXSmall(),
             'pathSmall' => $this->getPathWithNameSmall(),
-            'fullPathSmall' => $this->getPathWithNameSmall(),
             'pathMedium' => $this->getPathWithNameMedium(),
-            'fullPathMedium' => $this->getPathWithNameMedium(),
             'pathLarge' => $this->getPathWithNameLarge(),
-            'fullPathLarge' => $this->getPathWithNameLarge(),
+            'pathXLarge' => $this->getPathWithNameXLarge(),
             'pathOriginal' => $this->getPathWithNameOriginal(),
-            'fullPathOriginal' => $this->getPathWithNameOriginal(),
             'caption' => $this->buildAltText(),
             'captionHtml' => $this->captionHtml,
             'name' => $this->filename,

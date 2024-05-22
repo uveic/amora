@@ -231,7 +231,7 @@ class Router
                 request: $request,
                 pageTitle: $article->title,
                 pageDescription: $article->getContentExcerpt(),
-                siteImagePath: $siteImageUrl,
+                siteImageUrl: $siteImageUrl,
                 article: $article,
                 previousBlogPost: $article->publishOn
                     ? $articleService->getPreviousBlogPost(

@@ -101,17 +101,19 @@ function handleGenericMainMediaClick(e) {
   const sourceImg = document.querySelector('img[data-media-id="' + mediaId + '"]');
 
   if (targetImg) {
-    targetImg.src = sourceImg.dataset.pathMedium;
+    targetImg.src = sourceImg.dataset.pathLarge;
     targetImg.alt = sourceImg.alt;
     targetImg.title = sourceImg.title;
     targetImg.dataset.mediaId = sourceImg.dataset.mediaId;
+    targetImg.srcset = sourceImg.srcset;
     targetImg.className = 'media-item';
   } else {
     const newImage = new Image();
-    newImage.src = sourceImg.dataset.pathMedium;
+    newImage.src = sourceImg.dataset.pathLarge;
     newImage.alt = sourceImg.alt;
     newImage.title = sourceImg.title;
     newImage.dataset.mediaId = sourceImg.dataset.mediaId;
+    newImage.srcset = sourceImg.srcset;
     newImage.className = 'media-item';
     mediaContainer.appendChild(newImage);
   }
@@ -167,7 +169,7 @@ function addMediaToModalContainer(existingModalContainer, mediaId) {
   newImage.alt = existingMedia.alt;
   newImage.title = existingMedia.title;
   newImage.dataset.mediaId = mediaId;
-  newImage.dataset.pathMedium = existingMedia.src;
+  newImage.dataset.pathLarge = existingMedia.src;
   newImage.className = 'media-item media-dynamically-added';
   figureContainer.appendChild(newImage);
 
@@ -270,7 +272,7 @@ function displayModalImage(image) {
   if (image.exif && image.exif.width) {
     pixels += '<img src="/img/svg/frame-corners-white.svg" class="img-svg" alt="Size (pixels)">' +
       image.exif.width + ' x ' + image.exif.height +
-      '<a href="' + image.fullPathOriginal + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>';
+      '<a href="' + image.pathOriginal + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>';
   }
 
   modalContainer.querySelector('.image-number').textContent = '#' + image.id;
@@ -283,8 +285,8 @@ function displayModalImage(image) {
     '<div class="image-path">' +
     '<img src="/img/svg/link-white.svg" class="img-svg" alt="Link">' +
     '<span class="ellipsis">' + image.pathLarge + '</span>' +
-    '<a href="' + image.fullPathLarge + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>' +
-    '<a href="' + image.fullPathLarge + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg" alt="Copy link"></a>' +
+    '<a href="' + image.pathLarge + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>' +
+    '<a href="' + image.pathLarge + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg" alt="Copy link"></a>' +
     '</div>' +
     (takenAt ? '<div>' + takenAt + '</div>' : '') +
     (camera ? '<div>' + camera + '</div>' : '') +
@@ -293,7 +295,7 @@ function displayModalImage(image) {
     (size ? '<div>' + size + '</div>' : '');
 
   modalContainer.querySelector('.image-meta .copy-link')
-    .addEventListener('click', e => Util.handleCopyLink(e, image.fullPathMedium));
+    .addEventListener('click', e => Util.handleCopyLink(e, image.pathLarge));
 
   const imageDeleteEl = modalContainer.querySelector('.image-delete');
   imageDeleteEl.dataset.mediaId = image.id;
@@ -345,7 +347,7 @@ function preloadMedia(mediaId, direction) {
   }
 
   const imgTemp = new Image();
-  imgTemp.src = mediaObj.fullPathLarge;
+  imgTemp.src = mediaObj.pathLarge;
 }
 
 function updateMediaCache(medias, direction) {
@@ -438,7 +440,7 @@ async function modalGetNextMedia(currentMediaId, direction) {
       }
 
       const newMedia = new Image();
-      newMedia.src = mediaObj.fullPathMedium;
+      newMedia.src = mediaObj.pathLarge;
 
       return new Promise((resolve, reject) => {
         newMedia.onload = () => resolve(mediaObj);

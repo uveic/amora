@@ -322,7 +322,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                 request: $request,
                 pageTitle: $album->titleHtml,
                 pageDescription: $album->buildDescription(),
-                siteImagePath: $album->mainMedia->getPathWithNameMedium(),
+                siteImageUrl: $album->mainMedia->getPathWithNameMedium(),
                 isPublicPage: true,
                 album: $album,
             ),

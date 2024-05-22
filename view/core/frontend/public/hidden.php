@@ -18,7 +18,7 @@ $baseUrl = parse_url(UrlBuilderUtil::buildBaseUrlWithoutLanguage(), PHP_URL_HOST
   <meta property="og:site_name" content="<?=$responseData->siteName?>">
   <meta property="og:title" content="<?=$responseData->getPageTitle()?>">
   <meta property="og:description" content="<?=$responseData->getPageDescription()?>">
-  <meta property="og:image" content="<?=$responseData->siteImagePath?>">
+  <meta property="og:image" content="<?=$responseData->siteImageUrl?>">
   <meta property="og:url" content="<?=$responseData->siteUrl?>">
   <meta property="og:type" content="website">
   <meta property="og:updated_time" content="<?=$responseData->lastUpdatedTimestamp?>">

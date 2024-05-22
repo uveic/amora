@@ -13,7 +13,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         Request $request,
         ?string $pageTitle = null,
         ?string $pageDescription = null,
-        ?string $siteImagePath = null,
+        ?string $siteImageUrl = null,
         ?Pagination $pagination = null,
         bool $isPublicPage = false,
         public readonly ?Article $article = null,
@@ -32,7 +32,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
             pagination: $pagination,
             pageTitle: $pageTitle,
             pageDescription: $pageDescription,
-            siteImagePath: $siteImagePath,
+            siteImageUrl: $siteImageUrl,
             isPublicPage: $isPublicPage,
         );
     }

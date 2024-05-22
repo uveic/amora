@@ -18,7 +18,7 @@ abstract class HtmlResponseDataAbstract
     public readonly string $sitePath;
     public readonly Language $siteLanguage;
     public readonly string $siteName;
-    public ?string $siteImagePath;
+    public readonly ?string $siteImageUrl;
     public readonly int $lastUpdatedTimestamp;
     public readonly string $nonce;
     public readonly string $themeColourHex;
@@ -28,7 +28,7 @@ abstract class HtmlResponseDataAbstract
         public readonly ?Pagination $pagination = null,
         protected ?string $pageTitle = null,
         protected ?string $pageDescription = null,
-        ?string $siteImagePath = null,
+        ?string $siteImageUrl = null,
         ?int $lastUpdatedTimestamp = null,
         public readonly string $logoClass = '',
         public readonly string $menuClass = '',
@@ -36,18 +36,14 @@ abstract class HtmlResponseDataAbstract
     ) {
         $this->localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
-        $baseUrl = Core::getConfig()->baseUrl;
-        $siteImageUrl = Core::getConfig()->siteImageUrl;
-
-        $this->baseUrl = empty($baseUrl) ? '' : $baseUrl;
+        $this->baseUrl = Core::getConfig()->baseUrl ?: '';
         $this->sitePath = $this->request->path ?: '/';
         $this->siteUrl = trim($this->baseUrl, ' /') . '/' . ltrim($this->sitePath, ' /');
         $this->siteLanguage = $request->siteLanguage;
         $this->siteName = $this->localisationUtil->getValue('siteName');
         $this->themeColourHex = Core::getConfig()->themeColourHex;
 
-        $imagePath = parse_url($siteImagePath ?? ($siteImageUrl ?? ''), PHP_URL_PATH);
-        $this->siteImagePath = $imagePath ? UrlBuilderUtil::buildBaseUrlWithoutLanguage() . $imagePath : '';
+        $this->siteImageUrl = $siteImageUrl ?? Core::getConfig()->siteImageUrl ?: null;
         $this->lastUpdatedTimestamp = $lastUpdatedTimestamp ?? time();
 
         $this->pageTitle = isset($pageTitle) && $pageTitle

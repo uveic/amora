@@ -98,7 +98,7 @@ class UploaderClass {
             media.sizes = json.file.sizes;
             media.srcset = json.file.srcset;
             media.dataset.mediaId = json.file.id;
-            media.dataset.pathMedium = json.file.pathMedium;
+            media.dataset.pathLarge = json.file.pathLarge;
             media.alt = json.file.caption ?? json.file.name;
 
             figureContainer.appendChild(media);
