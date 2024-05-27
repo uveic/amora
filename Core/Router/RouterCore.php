@@ -32,6 +32,7 @@ class RouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Entity/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Entity/FeedItem.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/ImageExif.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/AlbumHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
