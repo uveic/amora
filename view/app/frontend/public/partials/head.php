@@ -25,6 +25,7 @@ if (isset($responseData->article)) {
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="<?=$responseData->getPageDescription()?>">
+  <meta property="og:locale" content="<?=$responseData->siteLanguage->getLocale()?>">
   <meta property="og:site_name" content="<?=$responseData->siteName?>">
   <meta property="og:title" content="<?=$responseData->getPageTitle()?>">
   <meta property="og:description" content="<?=$responseData->getPageDescription()?>">

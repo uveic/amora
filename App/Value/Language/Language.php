@@ -34,4 +34,13 @@ enum Language: string
             self::Spanish => '<img class="img-svg' . $class . '" width="20" height="20" src="/img/svg/flags/ES.svg" alt="' . self::Spanish->name . '">',
         };
     }
+
+    public function getLocale(): string
+    {
+        return match ($this) {
+            self::English => 'en_GB',
+            self::Galego => 'gl_ES',
+            self::Spanish => 'es_ES',
+        };
+    }
 }
