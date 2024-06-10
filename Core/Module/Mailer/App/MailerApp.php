@@ -63,6 +63,7 @@ class MailerApp extends App
             subject: $item->subject,
             content: $item->contentHtml,
             overwriteFromName: $item->senderName,
+            replyToEmail: $item->replyToEmailAddress,
         );
         $this->logger->logDebug($contentData);
 

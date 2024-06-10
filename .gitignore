@@ -4,7 +4,7 @@
 *.iml
 
 #
-App/Config/AppConfig.php
+App/Config
 vendor
 public/uploads
 public/blogovic

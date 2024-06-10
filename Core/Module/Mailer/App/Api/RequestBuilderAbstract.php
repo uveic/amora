@@ -10,8 +10,6 @@ abstract class RequestBuilderAbstract
         public readonly Logger $logger,
         public readonly string $fromEmail,
         public readonly string $fromName,
-        public readonly ?string $replyToEmail = null,
-        public readonly ?string $replyToName = null,
     ) {}
 
     abstract public function buildMailRequest(
@@ -20,5 +18,7 @@ abstract class RequestBuilderAbstract
         string $content,
         string $contentType = 'text/html',
         ?string $overwriteFromName = null,
+        ?string $replyToEmail = null,
+        ?string $replyToName = null,
     ): string;
 }

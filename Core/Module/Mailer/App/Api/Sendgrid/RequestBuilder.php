@@ -12,15 +12,11 @@ class RequestBuilder extends RequestBuilderAbstract
         Logger $logger,
         string $fromEmail,
         string $fromName,
-        ?string $replyToEmail = null,
-        ?string $replyToName = null
     ) {
         parent::__construct(
             logger: $logger,
             fromEmail: $fromEmail,
             fromName: $fromName,
-            replyToEmail: $replyToEmail,
-            replyToName: $replyToName,
         );
     }
 
@@ -30,6 +26,8 @@ class RequestBuilder extends RequestBuilderAbstract
         string $content,
         string $contentType = 'text/html',
         ?string $overwriteFromName = null,
+        ?string $replyToEmail = null,
+        ?string $replyToName = null,
     ): string {
         if (empty($emailReceivers)) {
             $this->logger->logError('Empty email receivers when sending a Sendgrid email');
@@ -69,13 +67,13 @@ class RequestBuilder extends RequestBuilderAbstract
             ],
         ];
 
-        if ($this->replyToEmail) {
+        if ($replyToEmail) {
             $replyToData = [
-                'email' => $this->replyToEmail
+                'email' => $replyToEmail
             ];
 
-            if ($this->replyToName) {
-                $replyToData['name'] = $this->replyToName;
+            if ($replyToName) {
+                $replyToData['name'] = $replyToName;
             }
 
             $contentData['reply_to'] = $replyToData;

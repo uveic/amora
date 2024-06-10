@@ -57,7 +57,7 @@ final class MigrationDbApp
             case 'migrate':
                 $tables = $this->db->getTables();
                 if (!in_array(self::MIGRATION_TABLE_NAME, $tables)) {
-                    $this->createDbFromScratch();
+                    $this->createMigrationTable();
                 }
 
                 $this->executeFiles();
@@ -134,7 +134,13 @@ final class MigrationDbApp
     private function createDbFromScratch(): void
     {
         $this->clearExistingDB();
+        $this->createMigrationTable();
 
+        $this->printOutput('Done. Fresh database installed.');
+    }
+
+    private function createMigrationTable(): void
+    {
         $sql = "
             DROP TABLE IF EXISTS " . self::MIGRATION_TABLE_NAME . ";
             CREATE TABLE " . self::MIGRATION_TABLE_NAME . " (
@@ -147,7 +153,7 @@ final class MigrationDbApp
 
         $this->db->execute($sql);
 
-        $this->printOutput('Done. Fresh database installed.');
+        $this->printOutput('Migration table created.');
     }
 
     private function clearExistingDB(): void

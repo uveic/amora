@@ -40,7 +40,6 @@ class MailerCore extends Core
 
                 return new MailerDataLayer($db);
             },
-            isSingleton: true,
         );
     }
 
@@ -60,7 +59,6 @@ class MailerCore extends Core
                     sendMailSynchronously: Core::getConfig()->mailer->sendEmailSynchronously,
                 );
             },
-            isSingleton: true,
         );
     }
 
@@ -78,11 +76,8 @@ class MailerCore extends Core
                     logger: $logger,
                     fromEmail: $mailerConfig->from->email,
                     fromName: $mailerConfig->from->name,
-                    replyToEmail: $mailerConfig->replyTo->email,
-                    replyToName: $mailerConfig->replyTo->name,
                 );
             },
-            isSingleton: true,
         );
     }
 
