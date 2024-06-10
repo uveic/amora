@@ -222,6 +222,32 @@ class AnalyticsProcessorApp extends App
             return false;
         }
 
+        $startsWith = [
+            'wp-content/',
+            'wp-admin/',
+            'wp-includes/',
+            '.well-known/',
+        ];
+
+        foreach ($startsWith as $value) {
+            if (str_starts_with($item, $value)) {
+                return true;
+            }
+        }
+
+        $endsWith = [
+            '.php',
+            '.txt',
+            '.css',
+            '.js',
+        ];
+
+        foreach ($endsWith as $value) {
+            if (str_ends_with($item, $value)) {
+                return true;
+            }
+        }
+
         return $this->botPath[$item] ?? false;
     }
 
