@@ -1,8 +1,8 @@
-import {Util} from './module/Util-000.js';
-import {Request} from './module/Request-000.js';
-import {Global} from "./module/localisation-000.js";
-import {Uploader} from "./module/Uploader-000.js";
-import {appAddEventListenerAction} from "./app/back-000.js";
+import {Util} from './module/Util.js?v=000';
+import {Request} from './module/Request.js?v=000';
+import {Global} from "./module/localisation.js?v=000";
+import {Uploader} from "./module/Uploader.js?v=000";
+import {appAddEventListenerAction} from "./app/back.js?v=000";
 
 window.data = {
   mediaCache: [],

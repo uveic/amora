@@ -35,8 +35,8 @@ $navBarArguments = [
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <link rel="manifest" href="/manifest.json">
-  <link href="/css/navbar-base-000.css" rel="stylesheet" type="text/css">
-  <link href="/css/shared-base-000.css" rel="stylesheet" type="text/css">
+  <link href="/css/navbar-base.css?v=000" rel="stylesheet" type="text/css">
+  <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
 </head>
 <body>
 <?=$this->insert('../../../core/backoffice/partials/navbar', $navBarArguments)?>

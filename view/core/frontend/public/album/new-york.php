@@ -22,7 +22,7 @@ $localisationUtil = Core::getLocalisationUtil($album->language);
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
 <?=$this->insert('../../../../app/frontend/public/partials/head', ['responseData' => $responseData])?>
-  <link href="/css/album/new-york-000.css" rel="stylesheet" type="text/css">
+  <link href="/css/album/new-york.css?v=000" rel="stylesheet" type="text/css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2210 0 100 100%22><text y=%22.90em%22 font-size=%2290%22>🚆</text></svg>">
 </head>
 <body>
@@ -54,7 +54,7 @@ $localisationUtil = Core::getLocalisationUtil($album->language);
     }
 ?>
   </main>
-  <script type="module" src="/js/album/new-york-000.js"></script>
+  <script type="module" src="/js/album/new-york.js?v=000"></script>
 </body>
 
 </html>

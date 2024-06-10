@@ -1,6 +1,6 @@
-import {Request} from "./module/Request-000.js";
-import {Global} from "./module/localisation-000.js";
-import {Util} from "./module/Util-000.js";
+import {Request} from "./module/Request.js?v=000";
+import {Global} from "./module/localisation.js?v=000";
+import {Util} from "./module/Util.js?v=000";
 
 function handleSearchKeyDownEvent(event) {
   const searchContainer = document.querySelector('#form-search');

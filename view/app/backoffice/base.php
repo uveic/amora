@@ -35,9 +35,9 @@ $navBarArguments = [
   <link rel="manifest" href="/manifest.json">
   <link href="/css/editor/medium-editor.min.css" rel="stylesheet">
   <link href="/css/editor/custom-theme.css" rel="stylesheet">
-  <link href="/css/navbar-base-000.css" rel="stylesheet" type="text/css">
-  <link href="/css/shared-base-000.css" rel="stylesheet" type="text/css">
-  <link href="/css/backoffice-base-000.css" rel="stylesheet" type="text/css">
+  <link href="/css/navbar-base.css?v=000" rel="stylesheet" type="text/css">
+  <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
+  <link href="/css/backoffice-base.css?v=000" rel="stylesheet" type="text/css">
 </head>
 <body>
 <?=$this->insert('../../core/backoffice/partials/navbar', $navBarArguments)?>

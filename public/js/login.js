@@ -1,5 +1,5 @@
-import {Request} from './module/Request-000.js';
-import {Global} from './module/localisation-000.js';
+import {Request} from './module/Request.js?v=000';
+import {Global} from './module/localisation.js?v=000';
 
 const formLogin = document.querySelector('form#form-login');
 const loginFailureFeedback = document.querySelector('#login-failure-message');
