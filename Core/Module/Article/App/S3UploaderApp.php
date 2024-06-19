@@ -248,7 +248,7 @@ class S3UploaderApp extends App
 
             $exif = $this->imageService->getExifData($media->getDirWithNameOriginal());
             $this->mediaService->storeMediaExif($media->id, $exif);
-        } catch (Throwable $t) {
+        } catch (Throwable) {
             $this->log('Error updating EXIF. Media ID: ' . $media->id);
         }
     }

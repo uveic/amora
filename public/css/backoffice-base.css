@@ -278,25 +278,31 @@
 .status-draft,
 .status-draft:hover {
   background-color: var(--color-text-light);
-  color: var(--color-bg) !important;
+  color: var(--color-text-white) !important;
 }
 
 .status-deleted,
 .status-deleted:hover {
   background-color: var(--color-failure);
-  color: var(--color-bg) !important;
+  color: var(--color-text-white) !important;
 }
 
 .status-published,
 .status-published:hover {
   background-color: var(--color-success);
-  color: var(--color-bg) !important;
+  color: var(--color-text-white) !important;
 }
 
 .status-private,
 .status-private:hover {
   background-color: var(--color-cuaternary);
-  color: var(--color-bg) !important;
+  color: var(--color-text-white) !important;
+}
+
+.status-warning,
+.status-warning:hover {
+  background-color: var(--color-warning);
+  color: var(--color-text-white) !important;
 }
 /* Status ends here */
 
@@ -1596,6 +1602,26 @@
 
 .search-result-container {
   top: 82px;
+}
+
+.mail-receiver-container {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mail-receiver-content {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.mail-receiver-name {
+  font-weight: 550;
+}
+
+.mail-receiver-email {
+  font-size: 0.9rem;
 }
 
 .width-100 { width: 100%; }

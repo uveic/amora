@@ -14,9 +14,8 @@ abstract class ApiClientAbstract
         $this->logger = $logger;
     }
 
-    abstract public function post(
+    abstract public function sendEmail(
         string $logPrefix,
-        string $partialApiUrl,
         string $jsonData
     ): ApiResponse;
 
@@ -36,7 +35,7 @@ abstract class ApiClientAbstract
         string $data,
         array $requestHeaders,
     ): ApiResponse {
-        $this->logger->logInfo($logPrefix . 'Calling API...');
+        $this->logger->logInfo($logPrefix . 'Calling API (' . $url . ')...');
 
         set_time_limit(self::TIMEOUT_SECONDS);
         $ch = curl_init();

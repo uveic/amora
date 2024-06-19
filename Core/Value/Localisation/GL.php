@@ -244,6 +244,7 @@ return [
     'mailerListTitle' => 'Rexistro de correos enviados',
     'mailerListNoError' => 'Enviado',
     'mailerListError' => 'Erro: non enviado',
+    'mailerListNotSent' => 'Non enviado',
     'mailerTemplateAccountVerification' => 'Verificar correo electrónico',
     'mailerTemplatePasswordCreation' => 'Crear contrasinal',
     'mailerTemplatePasswordReset' => 'Restablecer contrasinal',

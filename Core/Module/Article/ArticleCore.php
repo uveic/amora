@@ -81,6 +81,7 @@ class ArticleCore extends Core
         return self::getInstance(
             className: 'MediaDataLayer',
             factory: function () {
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/ImageExif.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ImageSize.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
@@ -112,6 +113,7 @@ class ArticleCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Article/Entity/RawFile.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/ImageExif.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ImageSize.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/MediaService.php';
@@ -193,6 +195,7 @@ class ArticleCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/ImageExif.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ImageSize.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/MediaDestroyed.php';
@@ -259,6 +262,7 @@ class ArticleCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
+                require_once self::getPathRoot() . '/Core/Module/Article/Model/ImageExif.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ImageSize.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
                 require_once self::getPathRoot() . '/Core/App/LockManager.php';

@@ -5,7 +5,7 @@ namespace Amora\Core\Router;
 use Amora\App\Router\AppRouterCore;
 use Amora\Core\Module\Album\AlbumCore;
 use Amora\Core\Module\Analytics\AnalyticsCore;
-use Amora\Core\Module\mailer\MailerCore;
+use Amora\Core\Module\Mailer\MailerCore;
 use Exception;
 use Amora\Core\Core;
 use Amora\Core\Util\Logger;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Amora\Core\Module\Mailer\App\Api\Sendgrid;
+namespace Amora\Core\Module\Mailer\App\Api\Brevo;
 
 use Throwable;
 use Amora\Core\Util\Logger;
@@ -27,14 +27,14 @@ class ApiClient extends ApiClientAbstract
         string $jsonData
     ): ApiResponse {
         $requestHeaders = [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->apiKey
+            'content-type: application/json',
+            'api-key: ' . $this->apiKey,
         ];
 
         try {
             $res = $this->apiPostCall(
                 $logPrefix,
-                $this->baseApiUrl . '/mail/send',
+                $this->baseApiUrl,
                 $jsonData,
                 $requestHeaders
             );

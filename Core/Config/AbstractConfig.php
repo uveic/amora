@@ -28,27 +28,34 @@ final readonly class DatabaseBackup {
     ) {}
 }
 
-final readonly class MailerSendGrid
+final readonly class MailerAuthentication
 {
     public function __construct(
-        public string $apiKey = '',
-        public string $baseApiUrl = 'https://api.sendgrid.com/v3',
+        public string $apiKey,
+        public string $baseApiUrl,
     ) {}
 }
 
 final readonly class Email
 {
     public function __construct(
-        public string $email = '',
-        public string $name = '',
+        public string $email,
+        public string $name,
     ) {}
+}
+
+enum MailerClient
+{
+    case SendGrid;
+    case Brevo;
 }
 
 final readonly class Mailer {
     public function __construct(
+        public MailerClient $client,
         public Email $from,
         public Email $replyTo,
-        public MailerSendGrid $sendGrid,
+        public MailerAuthentication $mailerAuthentication,
         public bool $sendEmailSynchronously = false,
     ) {}
 }

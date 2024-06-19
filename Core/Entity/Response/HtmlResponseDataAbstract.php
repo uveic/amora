@@ -92,7 +92,7 @@ abstract class HtmlResponseDataAbstract
             $output[] = $indentation . '    <img src="' . $imageUrl . '" alt="Logo"' . $widthAndHeight . '>';
         }
 
-        $output[] = $indentation . '    ' . ($siteContent?->titleHtml ?: '<span>' . $siteName . '</span>');
+        $output[] = $indentation . '    ' . ($siteContent?->titleHtml ?: '<span class="logo-title">' . $siteName . '</span>');
         $output[] = $indentation . '  </a>';
         if ($includeSubtitle && $siteContent?->subtitleHtml) {
             $output[] = $indentation . '  <span class="logo-subtitle">' . $siteContent?->subtitleHtml . '</span>' ?: '';

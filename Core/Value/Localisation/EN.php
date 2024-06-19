@@ -244,6 +244,7 @@ return [
     'mailerListTitle' => 'Sent Emails Log',
     'mailerListNoError' => 'Sent',
     'mailerListError' => 'Error',
+    'mailerListNotSent' => 'Not sent',
     'mailerTemplateAccountVerification' => 'Account Verification',
     'mailerTemplatePasswordCreation' => 'Password Creation',
     'mailerTemplatePasswordReset' => 'Password Reset',

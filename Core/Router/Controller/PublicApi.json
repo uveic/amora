@@ -129,29 +129,6 @@
         }
       }
     },
-    "/papi/email": {
-      "get": {
-        "tags": [],
-        "summary": "Trigger cron job to send emails",
-        "description": "",
-        "operationId": "triggerEmailSenderJob",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [true]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/papi/login": {
       "post": {
         "tags": [],

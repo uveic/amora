@@ -13,14 +13,12 @@ use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
-use Amora\Core\Module\mailer\MailerCore;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\PublicApiControllerGetBlogPostsSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerGetSearchResultsSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerLogCspErrorsSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerTriggerEmailSenderJobSuccessResponse;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Value\QueryOrderDirection;
@@ -134,20 +132,6 @@ final class PublicApiController extends PublicApiControllerAbstract
         }
 
         return new PublicApiControllerLogCspErrorsSuccessResponse();
-    }
-
-    /**
-     * Endpoint: /papi/email
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     */
-    protected function triggerEmailSenderJob(Request $request): Response
-    {
-        MailerCore::getMailerApp(isPersistent: false)->run();
-
-        return new PublicApiControllerTriggerEmailSenderJobSuccessResponse();
     }
 
     /**
