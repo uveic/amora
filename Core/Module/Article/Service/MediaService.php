@@ -26,6 +26,9 @@ use Throwable;
 
 readonly class MediaService
 {
+    const FILE_PERMISSIONS = 0755;
+    const FOLDER_PERMISSIONS = 0755;
+
     public function __construct(
         private Logger $logger,
         private ArticleService $articleService,
@@ -387,7 +390,7 @@ readonly class MediaService
             return null;
         }
 
-        $resP = chmod($targetPath, 0644);
+        $resP = chmod($targetPath, self::FILE_PERMISSIONS);
         if (!$resP) {
             $this->logger->logError('Error updating file permissions: ' . $rawPathWithName);
         }
@@ -439,7 +442,7 @@ readonly class MediaService
             $count++;
         } while(!is_dir($fullPath));
 
-        chmod($fullPath, 0755);
+        chmod($fullPath, self::FOLDER_PERMISSIONS);
 
         return $mediaExtraPath;
     }

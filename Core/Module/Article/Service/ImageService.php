@@ -167,6 +167,11 @@ readonly class ImageService
             return null;
         }
 
+        $resP = chmod($outputFullPath, MediaService::FILE_PERMISSIONS);
+        if (!$resP) {
+            $this->logger->logError('Error updating permissions: ' . $outputFullPath);
+        }
+
         return $newFilename;
     }
 
