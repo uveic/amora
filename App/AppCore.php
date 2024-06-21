@@ -8,6 +8,6 @@ class AppCore extends Core
 {
     public static function initiateApp(): void
     {
-        require_once self::getPathRoot() . '/App/Value/Menu/AppMenu.php';
+        require_once self::getPathRoot() . '/App/Value/AppMenu.php';
     }
 }

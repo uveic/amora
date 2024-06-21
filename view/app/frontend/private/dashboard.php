@@ -12,7 +12,6 @@ $navBarArguments = [
         language: $responseData->siteLanguage,
         username: $responseData->request->session->user->getNameOrEmail(),
         includeAdminLink: $responseData->request->session?->isAdmin() ?? false,
-        whiteIcon: true,
     ),
     'siteLogoHtml' => $responseData->buildSiteLogoHtml(
         siteLanguage: $responseData->siteLanguage,

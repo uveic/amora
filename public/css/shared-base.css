@@ -4,7 +4,7 @@
   --color-text: #212529;
   --color-text-white: #fcfcfc;
   --color-text-light: #5d7079;
-  --color-text-hover: #1c1c1c;
+  --color-text-hover: #f0f0f0;
   --color-text-editor: #212529;
   --color-text-grey: #808080;
 
@@ -252,6 +252,14 @@ blockquote *:last-child {
   width: auto;
 }
 
+.dropdown-container>label,
+.dropdown-container>label span {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .dropdown-menu:checked+div>ul {
   display: block !important;
 }
@@ -276,6 +284,7 @@ blockquote *:last-child {
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
+  gap: 0.5rem;
   color: var(--color-text);
 }
 
@@ -896,6 +905,8 @@ svg,
   height: auto;
   vertical-align: middle;
   margin: 0;
+  fill: var(--color-text);
+  stroke: var(--color-text);
 }
 
 .img-svg-15 {

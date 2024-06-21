@@ -43,7 +43,7 @@ class AnalyticsCore extends Core
             className: 'AnalyticsService',
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Value/AggregateBy.php';
-                require_once self::getPathRoot() . '/Core/Value/Country/Country.php';
+                require_once self::getPathRoot() . '/Core/Value/Country.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/ReportViewCount.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/PageViewCount.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/PageView.php';

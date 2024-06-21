@@ -35,7 +35,6 @@ final class AppMenu
         Language $language,
         string $username = null,
         bool $includeAdminLink = false,
-        bool $whiteIcon = false,
     ): array {
         $appMenu = [];
 
@@ -44,7 +43,6 @@ final class AppMenu
                 language: $language,
                 username: $username,
                 includeAdminLink: $includeAdminLink,
-                whiteIcon: $whiteIcon,
             ),
             $appMenu,
         );

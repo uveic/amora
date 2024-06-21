@@ -2,10 +2,9 @@
 
 namespace Amora\App\Router;
 
-use Amora\Core\Core;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
-use Amora\Core\Entity\Response\HtmlResponseData;
+use Amora\Core\Util\UrlBuilderUtil;
 
 final class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstract
 {
@@ -33,14 +32,8 @@ final class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstr
      */
     protected function getAppDashboardHtml(Request $request): Response
     {
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-
-        return Response::createHtmlResponse(
-            template: 'app/frontend/private/dashboard',
-            responseData: new HtmlResponseData(
-                request: $request,
-                pageTitle: $localisationUtil->getValue('navDashboard'),
-            ),
+        return Response::createRedirectResponse(
+            url: UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguage),
         );
     }
 }

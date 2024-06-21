@@ -6,7 +6,7 @@ use Amora\Core\Core;
 
 require_once Core::getPathRoot() . '/Core/Module/Article/DataLayer/ArticleDataLayer.php';
 require_once Core::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
-require_once Core::getPathRoot() . '/App/Value/Mailer/AppMailerTemplate.php';
+require_once Core::getPathRoot() . '/App/Value/AppMailerTemplate.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/PageContentType.php';
 require_once Core::getPathRoot() . '/App/Value/AppPageContentType.php';
 

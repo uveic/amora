@@ -16,7 +16,6 @@ $navBarArguments = [
         : AppMenu::getCustomer(
             language: $responseData->siteLanguage,
             username: $responseData->request->session->user->getNameOrEmail(),
-            whiteIcon: true,
         ),
     'siteLogoHtml' => $responseData->buildSiteLogoHtml(
         siteLanguage: $responseData->siteLanguage,

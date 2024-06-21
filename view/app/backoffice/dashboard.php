@@ -7,12 +7,10 @@ use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 $this->layout('base', ['responseData' => $responseData])
 ?>
   <main>
-    <section>
-      <div id="feedback" class="feedback null"></div>
-      <div class="backoffice-wrapper">
+    <div id="feedback" class="feedback null"></div>
+    <div class="backoffice-wrapper">
 <?=$this->insert('partials/dashboard/links', ['responseData' => $responseData])?>
 <?=$this->insert('partials/dashboard/analytics', ['responseData' => $responseData])?>
 <?=$this->insert('partials/dashboard/shortcuts', ['responseData' => $responseData])?>
-      </div>
-    </section>
+    </div>
   </main>

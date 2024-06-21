@@ -53,10 +53,11 @@ class Core
         require_once self::$pathToRoot . '/Core/Util/UrlBuilderUtil.php';
 
         require_once self::$pathToRoot . '/Core/Module/Article/Value/ArticleType.php';
-        require_once self::$pathToRoot . '/Core/Value/Menu/CoreMenu.php';
+        require_once self::$pathToRoot . '/Core/Value/CoreMenu.php';
+        require_once self::$pathToRoot . '/Core/Value/CoreIcons.php';
         require_once self::$pathToRoot . '/Core/Module/DataLayerTrait.php';
 
-        require_once self::$pathToRoot . '/App/Value/Language/Language.php';
+        require_once self::$pathToRoot . '/App/Value/Language.php';
 
         require_once self::$pathToRoot . '/App/AppCore.php';
         require_once self::$pathToRoot . '/Core/Module/User/UserCore.php';

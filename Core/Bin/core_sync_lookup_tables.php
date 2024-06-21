@@ -19,10 +19,10 @@ try {
 }
 
 $CORE_LOOKUP_TABLE_FILE_PATH = realpath(
-    Core::getPathRoot() . '/Core/Value/LookupTables/LookupTables.php'
+    Core::getPathRoot() . '/Core/Value/LookupTables.php'
 );
 $APP_LOOKUP_TABLE_FILE_PATH = realpath(
-    Core::getPathRoot() . '/App/Value/LookupTables/LookupTables.php'
+    Core::getPathRoot() . '/App/Value/LookupTables.php'
 );
 
 if (!file_exists($CORE_LOOKUP_TABLE_FILE_PATH)) {
