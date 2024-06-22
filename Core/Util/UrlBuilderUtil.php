@@ -64,6 +64,8 @@ class UrlBuilderUtil
     const PUBLIC_RSS = '/rss';
     const PUBLIC_JSON_FEED = '/json-feed';
 
+    const PUBLIC_API_LOGIN = '/papi/login';
+
     public static function buildBaseUrl(Language $siteLanguage, bool $includeHiddenToken = false): string
     {
         $config = Core::getConfig();

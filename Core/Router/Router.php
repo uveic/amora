@@ -265,6 +265,14 @@ class Router
     }
 
     private function displayEmptyPage(Request $request): bool {
+        $path = '/' . $request->path;
+
+        if ($path === UrlBuilderUtil::PUBLIC_HTML_LOGIN ||
+            $path === UrlBuilderUtil::PUBLIC_API_LOGIN
+        ) {
+            return false;
+        }
+
         if ($request->session?->isAdmin()) {
             return false;
         }
