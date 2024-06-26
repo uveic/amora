@@ -70,6 +70,7 @@ abstract class HtmlResponseDataAbstract
         ?string $siteName = null,
         PageContent $siteContent = null,
         bool $includeSubtitle = false,
+        bool $includeSiteName = false,
         string $indentation = '',
         int $logoWidth = 45,
         int $logoHeight = 45,
@@ -90,9 +91,14 @@ abstract class HtmlResponseDataAbstract
             $widthAndHeight = ' width="' . $logoWidth . '"';
             $widthAndHeight .= ' height="' . $logoHeight . '"';
             $output[] = $indentation . '    <img src="' . $imageUrl . '" alt="Logo"' . $widthAndHeight . '>';
+        } else {
+            $includeSiteName = true;
         }
 
-        $output[] = $indentation . '    ' . ($siteContent?->titleHtml ?: '<span class="logo-title">' . $siteName . '</span>');
+        if ($includeSiteName) {
+            $output[] = $indentation . '    ' . ($siteContent?->titleHtml ?: '<span class="logo-title">' . $siteName . '</span>');
+        }
+
         $output[] = $indentation . '  </a>';
         if ($includeSubtitle && $siteContent?->subtitleHtml) {
             $output[] = $indentation . '  <span class="logo-subtitle">' . $siteContent?->subtitleHtml . '</span>' ?: '';

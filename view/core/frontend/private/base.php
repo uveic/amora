@@ -11,7 +11,7 @@ $navBarArguments = [
         ? AppMenu::getAdmin(
             language: $responseData->siteLanguage,
             username: $responseData->request->session->user->getNameOrEmail(),
-            includeUserDashboardLink: false,
+            includeUserDashboardLink: $responseData->request->session?->isAdmin() ?? false,
         )
         : AppMenu::getCustomer(
             language: $responseData->siteLanguage,
