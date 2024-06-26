@@ -64,6 +64,10 @@
   gap: 1rem;
 }
 
+.gap-025 {
+  gap: 0.25rem;
+}
+
 .flex-end {
   flex-grow: 1;
   justify-content: flex-end;
@@ -145,6 +149,20 @@
   justify-content: flex-start;
   padding: 1rem 0.5rem;
   width: 100%;
+}
+
+.backoffice-child-container {
+  flex-basis: 100%;
+  background-color: white;
+  border: 1px solid var(--color-light-2);
+  padding: 0.5rem;
+  position: relative;
+}
+
+.backoffice-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
 }
 
 .dashboard-count {
@@ -264,6 +282,43 @@
 
 .dashboard-title-small {
   font-size: 1rem;
+}
+
+.dashboard-block-wrapper {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.dashboard-block-title,
+.dashboard-block-title:visited,
+.dashboard-block-title:active,
+.dashboard-block-title:focus,
+.dashboard-block-title:hover {
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.dashboard-block-wrapper > a {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--color-link);
+  padding: 1rem;
+  background-color: var(--color-light-0);
+  min-width: 150px;
+  flex-grow: 1;
+  gap: 0.5rem;
+}
+
+.dashboard-block-wrapper span.value {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1;
 }
 /* Dashboard end */
 
@@ -1713,6 +1768,12 @@
   }
 
   .backoffice-wrapper {
+    padding: 1rem;
+  }
+
+  .backoffice-child-container {
+    flex-basis: 40%;
+    flex-grow: 1;
     padding: 1rem;
   }
 
