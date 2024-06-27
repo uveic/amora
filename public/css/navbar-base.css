@@ -440,6 +440,16 @@
 .search-action-js {
   cursor: pointer;
 }
+
+.search-icon svg {
+  width: 30px;
+  max-width: revert;
+  max-height: revert;
+}
+
+.search-icon-input svg {
+  fill: var(--color-primary-800);
+}
 /* Search ends here */
 
 @media screen and (min-width: 800px) {

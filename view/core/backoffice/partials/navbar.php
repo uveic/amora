@@ -3,6 +3,7 @@
 use Amora\Core\Core;
 use Amora\Core\Entity\Util\MenuItem;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -40,7 +41,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
         <input id="searchFromPublicPage" name="searchFromPublicPage" type="hidden" value="0">
 <?php } ?>
         <div class="form-search-input-wrapper">
-          <img class="img-svg img-svg-30 search-action-js" width="30" height="30" src="/img/svg/magnifying-glass-bold-dark-blue.svg" alt="<?=$responseData->getLocalValue('globalSearch')?>">
+          <span class="search-action-js search-icon search-icon-input"><?=CoreIcons::MAGNIFYING_GLASS?></span>
           <input id="search" name="search" class="header-search" type="search" placeholder="<?=$responseData->getLocalValue('globalSearch')?>..." value="">
         </div>
         <input type="submit" value="Go" class="null">
@@ -82,8 +83,8 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
         </ul>
       </nav>
       <label for="mobile-nav" class="mobile-nav-label"><span class="null">Menu</span><span></span></label>
-<?php if ($isSearchEnabled) { ?>
-      <img class="img-svg img-svg-30 search-action-js" width="30" height="30" src="/img/svg/magnifying-glass-bold-white.svg" alt="<?=$responseData->getLocalValue('globalSearch')?>">
-<?php } ?>
+<?php if ($isSearchEnabled) {
+    echo '      <span class="search-action-js search-icon">' . CoreIcons::MAGNIFYING_GLASS . '</span>' . PHP_EOL;
+} ?>
     </div>
   </header>
