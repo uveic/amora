@@ -9,6 +9,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 $user = $responseData->request->session->user;
 
 $timezones = DateTimeZone::listIdentifiers();
+$languages = Core::getAllLanguages();
 
 ?>
       <h1 class="m-t-0"><?=$responseData->getLocalValue('formYourAccount')?></h1>
@@ -32,27 +33,27 @@ $timezones = DateTimeZone::listIdentifiers();
             <p class="warning m-t-3 m-b-3"><?=sprintf($responseData->getLocalValue('formEmailUpdateWarning'), '<i>' . $user->changeEmailAddressTo . '</i>')?></p>
 <?php } ?>
           </div>
-          <div class="field">
+          <div class="field<?=count($languages) > 1 ? '' :  ' null'?>">
             <label for="languageIsoCode" class="label"><?=$responseData->getLocalValue('globalLanguage')?>:</label>
             <div class="control">
               <select name="languageIsoCode" id="languageIsoCode">
 <?php
-    /** @var \BackedEnum $language */
-    foreach (Core::getAllLanguages() as $language) {
-        echo '                <option value="' . $language->value . '"' . ($user->language === $language ? ' selected="selected"' : '') . '>' . $language->name . '</option>';
+    /** @var BackedEnum $language */
+    foreach ($languages as $language) {
+        echo '                <option value="' . $language->value . '"' . ($user->language === $language ? ' selected="selected"' : '') . '>' . $language->getName() . '</option>' . PHP_EOL;
     }
 ?>
               </select>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
           </div>
-          <div class="field">
+          <div class="field null">
             <label for="timezone" class="label"><?=$responseData->getLocalValue('formTimezone')?>:</label>
             <div class="control">
               <select name="timezone" id="timezone">
-<?php foreach ($timezones as $timezone) { ?>
-                <option value="<?=$timezone?>" <?=$user->timezone->getName() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
-<?php } ?>
+                  <?php foreach ($timezones as $timezone) { ?>
+                    <option value="<?=$timezone?>" <?=$user->timezone->getName() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
+                  <?php } ?>
               </select>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
@@ -64,16 +65,6 @@ $timezones = DateTimeZone::listIdentifiers();
         <div class="field">
           <div class="control">
             <a href="<?=UrlBuilderUtil::buildAuthorisedAccountPasswordUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navChangePassword')?></a>
-          </div>
-        </div>
-        <div class="field">
-          <div class="control">
-            <a href="<?=UrlBuilderUtil::buildAuthorisedAccountDownloadUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navDownloadAccountData')?></a>
-          </div>
-        </div>
-        <div class="field m-b-6">
-          <div class="control">
-            <a class="is-danger" href="<?=UrlBuilderUtil::buildAuthorisedAccountDeleteUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navDeleteAccount')?></a>
           </div>
         </div>
       </div>
