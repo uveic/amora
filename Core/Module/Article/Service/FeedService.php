@@ -5,7 +5,6 @@ namespace Amora\Core\Module\Article\Service;
 use Amora\App\Router\AppRouter;
 use Amora\Core\Core;
 use Amora\Core\Module\Article\Entity\FeedItem;
-use Amora\Core\Util\Logger;
 use Amora\Core\Module\Article\Model\Tag;
 use Amora\Core\Util\LocalisationUtil;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -14,14 +13,11 @@ use DateTimeZone;
 
 readonly class FeedService
 {
-    public function __construct(
-        private Logger $logger,
-    ) {}
+    public function __construct()
+    {}
 
     public function buildSitemap(array $feedItems): string
     {
-        $this->logger->logInfo('Building sitemap...');
-
         $xml = array_merge(
             [
                 '<?xml version="1.0" encoding="UTF-8"?>',
@@ -35,8 +31,6 @@ readonly class FeedService
             ]
         );
 
-        $this->logger->logInfo('Building sitemap done.');
-
         return implode('', $xml);
     }
 
@@ -44,8 +38,6 @@ readonly class FeedService
         LocalisationUtil $localisationUtil,
         array $feedItems,
     ): string {
-        $this->logger->logInfo('Building RSS...');
-
         $lastBuildDate = $this->getBuildDate($feedItems);
 
         $xml = array_merge(
@@ -66,8 +58,6 @@ readonly class FeedService
             ]
         );
 
-        $this->logger->logInfo('Building RSS done.');
-
         return implode('', $xml);
     }
 
@@ -75,12 +65,8 @@ readonly class FeedService
         LocalisationUtil $localisationUtil,
         array $feedItems,
     ): string {
-        $this->logger->logInfo('Building JSON Feed...');
-
         $output = $this->buildJsonFeedHeader($localisationUtil);
         $output['items'] = $this->buildJsonFeedContent($feedItems);
-
-        $this->logger->logInfo('Building JSON Feed done.');
 
         return json_encode($output);
     }
