@@ -10,7 +10,7 @@ $navBarArguments = [
     'menuItems' => AppMenu::getAdmin(
         language: $responseData->siteLanguage,
         username: $responseData->request->session->user->getNameOrEmail(),
-        includeUserDashboardLink: $responseData->request->session?->isAdmin() ?? false,
+        includeUserDashboardLink: false,
     ),
     'siteLogoHtml' => $responseData->buildSiteLogoHtml(
         siteLanguage: $responseData->siteLanguage,

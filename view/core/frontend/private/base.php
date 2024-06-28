@@ -11,7 +11,7 @@ $navBarArguments = [
         ? AppMenu::getAdmin(
             language: $responseData->siteLanguage,
             username: $responseData->request->session->user->getNameOrEmail(),
-            includeUserDashboardLink: $responseData->request->session?->isAdmin() ?? false,
+            includeUserDashboardLink: false,
         )
         : AppMenu::getCustomer(
             language: $responseData->siteLanguage,
@@ -42,7 +42,7 @@ $navBarArguments = [
   <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
 </head>
 <body>
-<?=$this->insert('../../backoffice/partials/navbar', ['responseData' => $responseData, 'menuItems' => $menuItems])?>
+<?=$this->insert('../../backoffice/partials/navbar', $navBarArguments)?>
 <?=$this->section('content')?>
 <?=$this->insert('partials/footer')?>
 </body>
