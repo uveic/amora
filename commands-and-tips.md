@@ -8,7 +8,7 @@ List all installed modules: `php -m`
 
 Path to `php.ini`: `/etc/php/8.2/fpm/php.ini`
 
-Important settings in `php.ini`: `display_errors = off`, `error_reporting = E_ALL`, `upload_max_filesize=32M`, `post_max_size=32M`, `max_execution_time = 300`
+Important settings in `php.ini`: `display_errors = off`, `error_reporting = E_ALL`, `upload_max_filesize=32M`, `post_max_size=32M`, `max_execution_time = 300`, `zend.multibyte = On`
 
 Error/access logs (setup in nginx config file in `/etc/nginx/sites-available/site-name.conf`):
 
