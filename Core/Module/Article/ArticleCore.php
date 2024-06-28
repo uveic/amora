@@ -180,9 +180,7 @@ class ArticleCore extends Core
             className: 'FeedService',
             factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/FeedService.php';
-                return new FeedService(
-                    logger: self::getArticleLogger(),
-                );
+                return new FeedService();
             },
         );
     }
