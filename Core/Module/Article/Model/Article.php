@@ -2,7 +2,6 @@
 
 namespace Amora\Core\Module\Article\Model;
 
-use Amora\Core\Core;
 use Amora\Core\Entity\Response\SearchResult;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\Article\Value\ArticleStatus;
