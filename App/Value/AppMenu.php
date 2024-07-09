@@ -11,7 +11,7 @@ final class AppMenu
     public static function getAdmin(
         Language $language,
         ?string $username = null,
-        bool $includeUserDashboardLink = true,
+        bool $includeAuthorisedDashboardLink = true,
     ): array {
         $appMenu = [];
 
@@ -19,7 +19,7 @@ final class AppMenu
             CoreMenu::getAdmin(
                 language: $language,
                 username: $username,
-                includeUserDashboardLink: $includeUserDashboardLink,
+                includeAuthorisedDashboardLink: $includeAuthorisedDashboardLink,
             ),
             $appMenu,
         );

@@ -14,7 +14,7 @@ final class CoreMenu
     public static function getAdmin(
         Language $language,
         string $username = null,
-        bool $includeUserDashboardLink = false,
+        bool $includeAuthorisedDashboardLink = false,
     ): array {
         $localisationUtil = Core::getLocalisationUtil($language);
 
@@ -104,10 +104,10 @@ final class CoreMenu
             ),
         ];
 
-        if ($includeUserDashboardLink) {
+        if ($includeAuthorisedDashboardLink) {
             $output[] = new MenuItem(
                 path: UrlBuilderUtil::buildAppDashboardUrl($language),
-                text: $localisationUtil->getValue('navDashboard'),
+                text: $localisationUtil->getValue('navAuthorisedDashboard'),
                 sequence: 0,
             );
         }
@@ -133,7 +133,7 @@ final class CoreMenu
 
         $output[] = new MenuItem(
             path: UrlBuilderUtil::buildAppDashboardUrl($language),
-            text: $localisationUtil->getValue('navDashboard')
+            text: $localisationUtil->getValue('navAuthorisedDashboard')
         );
         $output[] = new MenuItem(
             text: $username ?? $localisationUtil->getValue('navAccount'),

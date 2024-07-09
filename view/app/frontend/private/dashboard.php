@@ -43,7 +43,7 @@ $navBarArguments = [
     <section>
       <div id="feedback" class="feedback null"></div>
       <div class="m-r-1 m-l-1">
-        <h1><?=$responseData->getLocalValue('navDashboard')?></h1>
+        <h1><?=$responseData->getLocalValue('navAuthorisedDashboard')?></h1>
       </div
       <div>
 
