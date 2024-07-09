@@ -22,7 +22,7 @@
   display: flex;
   flex-flow: row wrap;
   width: 100%;
-  padding: 1rem;
+  padding: 1rem 0.5rem;
   align-items: center;
   gap: 1rem;
 }
@@ -76,9 +76,19 @@
 .number {
   font-family: monospace;
   font-size: 1rem;
-  display: inline-block;
   color: var(--color-text-light);
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.25rem;
 }
+
+.number svg {
+  fill: var(--color-text-light);
+  stroke: var(--color-text-light);
+  width: 25px;
+  max-width: revert;
+}
+
 /* Table ends here */
 /* Activity starts here */
 .back-right-wrapper,
@@ -631,6 +641,12 @@
   gap: 1rem;
 }
 
+.filter-links svg {
+  width: 25px;
+  max-width: revert;
+  max-height: revert;
+}
+
 .filter-form-wrapper {
   display: flex;
   flex-flow: row wrap;
@@ -672,6 +688,13 @@
   flex-flow: row wrap;
   gap: 1rem;
   align-items: center;
+}
+
+.filter-by>.items span {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 0.25rem;
 }
 /* Page header ends here */
 
@@ -1756,6 +1779,10 @@
     margin-top: 0;
     width: 50%;
   }
+
+  .table-row {
+    padding: 1rem;
+  }
 }
 
 @media screen and (min-width: 1000px) {
@@ -1819,5 +1846,9 @@
   .album-section-item-media-wrapper {
     margin-top: 0;
     width: 50%;
+  }
+
+  .table-row {
+    padding: 1rem;
   }
 }

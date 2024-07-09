@@ -286,6 +286,7 @@ blockquote *:last-child {
   align-items: center;
   gap: 0.5rem;
   color: var(--color-text);
+  white-space: nowrap;
 }
 
 .dropdown-menu+div>ul a:hover {
