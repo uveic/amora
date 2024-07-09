@@ -16,6 +16,7 @@ $navBarArguments = [
         : AppMenu::getCustomer(
             language: $responseData->siteLanguage,
             username: $responseData->request->session->user->getNameOrEmail(),
+            includeAdminLink: $responseData->request->session->isAdmin() ?? false,
         ),
     'siteLogoHtml' => $responseData->buildSiteLogoHtml(
         siteLanguage: $responseData->siteLanguage,
@@ -32,8 +33,8 @@ $navBarArguments = [
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="<?=$this->e($responseData->getPageDescription())?>">
-  <title><?=$this->e($responseData->getPageTitle())?></title>
+  <meta name="description" content="<?=$responseData->getPageDescription()?>">
+  <title><?=$responseData->getPageTitle()?></title>
   <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">

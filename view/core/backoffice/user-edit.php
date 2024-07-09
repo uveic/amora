@@ -1,5 +1,6 @@
 <?php
 
+use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\User\Value\UserRole;
@@ -77,11 +78,11 @@ if ($responseData->user) {
           <div class="control">
             <select id="languageIsoCode" name="languageIsoCode">
 <?php
-    /** @var \BackedEnum $language */
+    /** @var Language $language */
     foreach (Core::getAllLanguages() as $language) {
           $selected = $language === $defaultLanguage;
 ?>
-              <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$language->value?>"><?=$language->name?></option>
+              <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$language->value?>"><?=$language->getName()?></option>
 <?php } ?>
             </select>
           </div>
@@ -92,13 +93,12 @@ if ($responseData->user) {
           <div class="control">
             <select id="roleId" name="roleId">
 <?php
-/** @var \BackedEnum $role */
-foreach (UserRole::getAll() as $role) {
+    foreach (UserRole::getAll() as $role) {
         $selected = $role === $responseData->user?->role;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>
 <?php
-  }
+    }
 ?>
             </select>
           </div>
@@ -123,7 +123,7 @@ foreach (UserRole::getAll() as $role) {
           <div class="control">
             <select name="userStatusId" id="userStatusId">
 <?php
-    /** @var \BackedEnum $role */
+    /** @var UserStatus $role */
     foreach (UserStatus::getAll() as $status) {
         $selected = $status === $responseData->user?->status;
 ?>

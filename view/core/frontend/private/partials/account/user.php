@@ -51,9 +51,9 @@ $languages = Core::getAllLanguages();
             <label for="timezone" class="label"><?=$responseData->getLocalValue('formTimezone')?>:</label>
             <div class="control">
               <select name="timezone" id="timezone">
-                  <?php foreach ($timezones as $timezone) { ?>
-                    <option value="<?=$timezone?>" <?=$user->timezone->getName() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
-                  <?php } ?>
+<?php foreach ($timezones as $timezone) { ?>
+                <option value="<?=$timezone?>" <?=$user->timezone->getName() === $timezone ? ' selected="selected"' : ''?>><?=$timezone?></option>
+<?php } ?>
               </select>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
