@@ -1,6 +1,6 @@
 <?php
 
-namespace Amora\App\Value\Mailer;
+namespace Amora\App\Value;
 
 use Amora\Core\Module\Mailer\Value\MailerTemplate;
 

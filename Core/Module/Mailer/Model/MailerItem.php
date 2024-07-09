@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Module\Mailer\Model;
 
-use Amora\App\Value\Mailer\AppMailerTemplate;
+use Amora\App\Value\AppMailerTemplate;
 use Amora\Core\Module\Mailer\Value\MailerTemplate;
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;

@@ -59,7 +59,7 @@ trait DataLayerTrait {
             }
 
             if (empty($orderByParts)) {
-                return '  ORDER BY  ' . array_values($orderByMapping)[0] . ' DESC';
+                return '  ORDER BY  ' . array_values($orderByMapping)[0] . ' ASC';
             }
 
             return ' ORDER BY ' . implode(', ', $orderByParts);
