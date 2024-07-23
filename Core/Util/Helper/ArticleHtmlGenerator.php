@@ -5,6 +5,8 @@ namespace Amora\Core\Util\Helper;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Article;
+use Amora\Core\Module\Article\Model\ArticleSection;
+use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
@@ -170,5 +172,38 @@ final class ArticleHtmlGenerator
         return $article->isPublished()
             ? ''
             : '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/lock.svg" alt="Lock">';
+    }
+
+    public static function generateArticlePublicContentHtml(
+        array $articleSections,
+        string $indentation = '',
+    ): string {
+        $output = [];
+
+        /** @var ArticleSection $section */
+        foreach ($articleSections as $section) {
+            $output[] = $indentation .
+                match ($section->type) {
+                    ArticleSectionType::Image => self::generateMediaHtml($section),
+                    ArticleSectionType::TextParagraph => '<p>' . $section->contentHtml . '</p>',
+                    default => $section->contentHtml,
+                };
+        }
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
+    }
+
+    private static function generateMediaHtml(ArticleSection $section): string
+    {
+        $html = $section->media->asHtml(
+            sizes: '(min-width: 860px) 800px, calc(92.59vw + 22px)',
+        );
+
+        $captionHtml = '';
+        if ($section->mediaCaption) {
+            $captionHtml = '<div class="article-section-image-caption">' . $section->mediaCaption . '</div>';
+        }
+
+        return $html . $captionHtml;
     }
 }

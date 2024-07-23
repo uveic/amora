@@ -4,11 +4,13 @@ namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Entity\Response\Feedback;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Database\MySqlDb;
@@ -301,7 +303,6 @@ class ArticleDataLayer
             'c.subtitle_html AS page_content_subtitle_html',
             'c.content_html AS page_content_html',
             'c.main_image_id',
-            'c.action_url AS page_content_action_url',
 
             'u.id AS user_id',
             'u.status_id AS user_status_id',
@@ -571,47 +572,82 @@ class ArticleDataLayer
         ?int $articleSectionId = null,
         ?int $articleId = null,
         ?int $sectionTypeId = null,
+        ?QueryOptions $queryOptions = null,
     ): array {
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
+        }
+
+        $orderByMapping = [
+            'id' => 'aSec.id',
+            'sequence' => 'aSec.`sequence`',
+        ];
+
         $params = [];
-        $sql = '
-            SELECT
-                aSec.id,
-                aSec.article_id,
-                aSec.article_section_type_id,
-                aSec.content_html,
-                aSec.sequence,
-                aSecI.media_id,
-                aSecI.caption AS media_caption,
-                aSec.created_at,
-                aSec.updated_at
-            FROM ' . self::ARTICLE_SECTION_TABLE . ' AS aSec
-                LEFT JOIN ' . self::ARTICLE_SECTION_IMAGE_TABLE . ' AS aSecI
-                    ON aSec.id = aSecI.article_section_id
-            WHERE 1
-        ';
+        $baseSql = 'SELECT ';
+        $fields = [
+            'aSec.id AS article_section_id',
+            'aSec.article_id AS article_section_article_id',
+            'aSec.article_section_type_id AS article_section_type_id',
+            'aSec.content_html AS article_section_content_html',
+            'aSec.sequence AS article_section_sequence',
+            'aSecI.media_id AS article_section_media_id',
+            'aSec.created_at AS article_section_created_at',
+            'aSec.updated_at AS article_section_updated_at',
 
-        if (isset($articleSectionId)) {
-            $sql .= ' AND aSec.id = :articleSectionId';
-            $params[':articleSectionId'] = $articleSectionId;
+            'aSecI.caption AS article_section_media_caption',
+
+            'm.id AS media_id',
+            'm.user_id AS media_user_id',
+            'm.type_id AS media_type_id',
+            'm.status_id AS media_status_id',
+            'm.width_original AS media_width_original',
+            'm.height_original AS media_height_original',
+            'm.width_original AS media_width_original',
+            'm.height_original AS media_height_original',
+            'm.path AS media_path',
+            'm.filename AS media_filename',
+            'm.filename_extra_small AS media_filename_extra_small',
+            'm.filename_small AS media_filename_small',
+            'm.filename_medium AS media_filename_medium',
+            'm.filename_large AS media_filename_large',
+            'm.filename_extra_large AS media_filename_extra_large',
+            'm.caption_html AS media_caption_html',
+            'm.filename_source AS media_filename_source',
+            'm.created_at AS media_created_at',
+            'm.updated_at AS media_updated_at',
+            'm.uploaded_to_s3_at AS media_uploaded_to_s3_at',
+            'm.deleted_locally_at AS media_deleted_locally_at',
+        ];
+
+        $joins = ' FROM ' . self::ARTICLE_SECTION_TABLE . ' AS aSec';
+        $joins .= ' LEFT JOIN ' . self::ARTICLE_SECTION_IMAGE_TABLE . ' AS aSecI ON aSecI.article_section_id = aSec.id';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = aSecI.media_id';
+        $where = ' WHERE 1';
+
+        if ($articleSectionId) {
+            $where .= $this->generateWhereSqlCodeForIds($params, [$articleSectionId], 'eSec.id', 'articleSectionId');
         }
 
-        if (isset($articleId)) {
-            $sql .= ' AND aSec.article_id = :articleId';
-            $params[':articleId'] = $articleId;
+        if ($articleId) {
+            $where .= $this->generateWhereSqlCodeForIds($params, [$articleId], 'aSec.article_id', 'articleId');
         }
 
-        if (isset($sectionTypeId)) {
-            $sql .= ' AND aSec.article_section_type_id = :articleSectionTypeId';
-            $params[':articleSectionTypeId'] = $sectionTypeId;
+        if ($sectionTypeId) {
+            $where .= $this->generateWhereSqlCodeForIds($params, [$sectionTypeId], 'aSec.article_section_type_id', 'articleSectionTypeId');
         }
 
-        $sql .= ' ORDER BY aSec.`sequence` ASC, aSec.id DESC';
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
 
         $res = $this->db->fetchAll($sql, $params);
 
         $output = [];
         foreach ($res as $item) {
-            $output[] = ArticleSection::fromArray($item);
+            $output[] = ArticleSection::fromArray(
+                data: $item,
+            );
         }
 
         return $output;
@@ -619,7 +655,12 @@ class ArticleDataLayer
 
     public function getSectionsForArticleId(int $articleId): array
     {
-        return $this->getArticleSections(null, $articleId);
+        return $this->getArticleSections(
+            articleId: $articleId,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('sequence', QueryOrderDirection::ASC)],
+            ),
+        );
     }
 
     public function createArticleSection(ArticleSection $articleSection): ?ArticleSection

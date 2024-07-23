@@ -224,6 +224,7 @@ class Router
             : null;
         $siteImageUrl = $img?->getPathWithNameMedium();
         $isAdmin = $request->session && $request->session->isAdmin();
+        $articleSections = $articleService->getSectionsForArticleId($article->id);
 
         return Response::createHtmlResponse(
             template: 'app/frontend/public/article-view',
@@ -233,6 +234,7 @@ class Router
                 pageDescription: $article->getContentExcerpt(),
                 siteImageUrl: $siteImageUrl,
                 article: $article,
+                articleSections: $articleSections,
                 previousBlogPost: $article->publishOn
                     ? $articleService->getPreviousBlogPost(
                         publishedBefore: $article->publishOn,

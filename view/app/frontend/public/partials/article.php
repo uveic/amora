@@ -19,6 +19,9 @@ $postBottomContent = $article->type === ArticleType::Blog
 $icon = ArticleHtmlGenerator::generateArticlePublishedIconHtml(
     article: $article,
 );
+
+// ToDo: Replace for $article->contentHtml
+// ArticleHtmlGenerator::generateArticlePublicContentHtml(articleSections: $responseData->articleSections, indentation: '    ')
 ?>
   <article>
 <?php if ($article->title) {
