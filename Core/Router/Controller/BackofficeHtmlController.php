@@ -462,7 +462,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             typeIds: [MediaType::Image->value],
             statusIds: [MediaStatus::Active->value],
             queryOptions: new QueryOptions(
-                pagination: new Response\Pagination(itemsPerPage: 50),
+                orderBy: [new QueryOrderBy('id', QueryOrderDirection::DESC)],
+                pagination: new Response\Pagination(itemsPerPage: 100),
             ),
         );
 

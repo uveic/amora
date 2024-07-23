@@ -8,7 +8,7 @@ window.data = {
   mediaCache: [],
   mediaCacheRight: [],
   mediaCacheLeft: [],
-  mediaQueryQty: 50,
+  mediaQueryQty: 100,
 }
 
 function addEventListenerAction(media, mediaId, eventListenerAction, targetContainerId) {
@@ -1401,7 +1401,7 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
     const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.mediaId) : null;
     const qty = window.data.mediaQueryQty;
     const typeId = lm.dataset.typeId ? Number.parseInt(lm.dataset.typeId) : '';
-    const direction = lm.dataset.direccion ?? '';
+    const direction = lm.dataset.direction ?? '';
     const eventListenerAction = lm.dataset.eventListenerAction;
     const targetContainerId = lm.dataset.targetContainerId ?? null;
     const loader = Util.buildImageLoadingElement('loader-container-100');
