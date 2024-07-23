@@ -34,7 +34,6 @@ readonly class ArticleService
         private Logger $logger,
         private ArticleDataLayer $articleDataLayer,
         private TagDataLayer $tagDataLayer,
-        private MediaService $mediaService,
     ) {}
 
     public function getArticleForId(
@@ -252,13 +251,14 @@ readonly class ArticleService
     public function workflowUpdateArticle(
         Article $article,
         array $mediaIds,
+        array $media,
         array $sections,
         array $tags,
         ?string $userIp,
         ?string $userAgent,
     ): bool {
         $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
-            function () use ($article, $mediaIds, $sections, $tags, $userIp, $userAgent) {
+            function () use ($article, $media, $mediaIds, $sections, $tags, $userIp, $userAgent) {
                 $resUpdate = $this->articleDataLayer->updateArticle($article);
 
                 if (empty($resUpdate)) {
@@ -274,6 +274,7 @@ readonly class ArticleService
                 $resSections = $this->updateCreateOrDeleteArticleSections(
                     articleId: $article->id,
                     sections: $sections,
+                    media: $media,
                 );
 
                 if (empty($resSections)) {
@@ -333,7 +334,7 @@ readonly class ArticleService
         }
     }
 
-    private function updateCreateOrDeleteArticleSections(int $articleId, array $sections): bool
+    private function updateCreateOrDeleteArticleSections(int $articleId, array $sections, array $media): bool
     {
         $existingSections = $this->articleDataLayer->getSectionsForArticleId($articleId);
         $articleSectionsById = [];
@@ -343,20 +344,9 @@ readonly class ArticleService
         }
 
         $mediaById = [];
-        $mediaIds = [];
-        foreach ($sections as $section) {
-            if (!isset($section['mediaId'])) {
-                continue;
-            }
-
-            $mediaIds[] = (int)$section['mediaId'];
-        }
-
-        if ($mediaIds) {
-            $existingMedia = $this->mediaService->filterMediaBy(ids: $mediaIds);
-
+        if ($media) {
             /** @var Media $existingMediaItem */
-            foreach ($existingMedia as $existingMediaItem) {
+            foreach ($media as $existingMediaItem) {
                 $mediaById[$existingMediaItem->id] = $existingMediaItem;
             }
         }
@@ -486,12 +476,13 @@ readonly class ArticleService
     public function createNewArticle(
         Article $article,
         array $sections,
+        array $media,
         array $tags,
         ?string $userIp,
         ?string $userAgent,
     ): ?Article {
         $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
-            function () use ($article, $sections, $tags, $userIp, $userAgent) {
+            function () use ($article, $sections, $media, $tags, $userIp, $userAgent) {
                 $article = $this->articleDataLayer->storeArticle(
                     article: $article,
                     userIp: $userIp,
@@ -509,6 +500,7 @@ readonly class ArticleService
                 $resSections = $this->updateCreateOrDeleteArticleSections(
                     articleId: $article->id,
                     sections: $sections,
+                    media: $media,
                 );
 
                 $resTags = $this->addOrRemoveTagsToArticle($article->id, $tags);

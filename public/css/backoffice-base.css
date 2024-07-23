@@ -1789,6 +1789,10 @@
     align-items: center;
   }
 
+  .modal-media .modal-inner {
+    height: auto;
+  }
+
   .image-wrapper {
     flex-flow: row nowrap;
   }

@@ -351,6 +351,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string $contentHtml
      * @param int|null $mainImageId
      * @param string|null $publishOn
+     * @param array|null $mediaIds
      * @param array $sections
      * @param array|null $tags
      * @param Request $request
@@ -365,6 +366,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         string $contentHtml,
         ?int $mainImageId,
         ?string $publishOn,
+        ?array $mediaIds,
         array $sections,
         ?array $tags,
         Request $request
@@ -410,6 +412,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $publishOn = $publishOn
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
             : ($status->isPublic() ? $now : null);
+        $existingMedia = $this->mediaService->filterMediaBy(ids: $mediaIds);
 
         $newArticle = $this->articleService->createNewArticle(
             article: new Article(
@@ -429,6 +432,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 tags: [],
             ),
             sections: $sections,
+            media: $existingMedia,
             tags: $tags ?? [],
             userIp: $request->sourceIp,
             userAgent: $request->userAgent,
@@ -559,6 +563,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $articleLanguage = Language::from(strtoupper($articleLanguageIsoCode));
         $type = $typeId ? ArticleType::from($typeId) : $existingArticle->type;
+        $existingMedia = $this->mediaService->filterMediaBy(ids: $mediaIds);
         $res = $this->articleService->workflowUpdateArticle(
             article: new Article(
                 id: $articleId,
@@ -576,6 +581,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 path: $path
             ),
             mediaIds: $mediaIds,
+            media: $existingMedia,
             sections: $sections,
             tags: $tags ?? [],
             userIp: $request->sourceIp,
