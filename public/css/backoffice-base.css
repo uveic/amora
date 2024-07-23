@@ -773,7 +773,7 @@
 
 /* Media upload style starts here */
 .content-images {
-  padding: 1rem 0.5rem 4rem;
+  padding: 1rem 0 4rem;
   min-height: 50vh;
 }
 
