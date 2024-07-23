@@ -182,7 +182,6 @@ function addMediaToModalContainer(existingModalContainer, mediaId) {
 
 function displayModalImage(image) {
   const modalContainer = document.querySelector('.modal-media');
-  const modalClose = modalContainer.querySelector('.modal-close-button');
   const imageWrapper = modalContainer.querySelector('.image-wrapper');
   let imageElement = modalContainer.querySelector('.image-main img');
   const imageInfoData = modalContainer.querySelector('.image-info-data');
@@ -197,7 +196,6 @@ function displayModalImage(image) {
   if (!image) {
     document.querySelectorAll('.image-next-action').forEach(i => i.classList.add('hidden'));
     imageWrapper.classList.remove('null');
-    modalClose.classList.remove('null');
     imageWrapper.classList.remove('filter-opacity');
     imageInfoData.classList.remove('null');
     imageInfoNext.classList.remove('null');
@@ -236,63 +234,9 @@ function displayModalImage(image) {
 
   document.querySelectorAll('.image-next-action').forEach(i => i.classList.remove('hidden'));
 
-  let takenAt = '';
-  if (image.exif && image.exif.date) {
-    takenAt += '<img src="/img/svg/calendar-white.svg" class="img-svg" alt="Taken on">' +
-      Global.formatDate(new Date(image.exif.date), true, true, true, true, true);
-  }
-
-  let camera = '';
-  if (image.exif && image.exif.cameraModel) {
-    camera += '<img src="/img/svg/camera-white.svg" class="img-svg" alt="EXIF">' +
-      image.exif.cameraModel;
-  }
-
-  let aperture = '';
-  if (image.exif && (image.exif.exposureTime || image.exif.ISO)) {
-    let exposure = '';
-    exposure += image.exif.exposureTime ?? '';
-    if (image.exif.ISO) {
-      if (exposure.length) {
-        exposure += ' - ';
-      }
-      exposure += 'ISO: ' + image.exif.ISO;
-    }
-    aperture += '<img src="/img/svg/aperture-white.svg" class="img-svg" alt="Exposure time & ISO">' +
-      exposure;
-  }
-
-  let size = '';
-  if (image.exif && image.exif.sizeBytes) {
-    size += '<img src="/img/svg/hard-drives-white.svg" class="img-svg" alt="Size (Mb)">' +
-      (image.exif.sizeBytes / 1000000).toFixed(3) + ' Mb';
-  }
-
-  let pixels = '';
-  if (image.exif && image.exif.width) {
-    pixels += '<img src="/img/svg/frame-corners-white.svg" class="img-svg" alt="Size (pixels)">' +
-      image.exif.width + ' x ' + image.exif.height +
-      '<a href="' + image.pathOriginal + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>';
-  }
-
   modalContainer.querySelector('.image-number').textContent = '#' + image.id;
   modalContainer.querySelector('.image-caption').textContent = image.caption;
-  modalContainer.querySelector('.image-meta').innerHTML =
-    '<div><img src="/img/svg/upload-simple-white.svg" class="img-svg" alt="Upload">' +
-    Global.formatDate(new Date(image.createdAt), true, true, true, true, true) +
-    '</div>' +
-    (image.userName ? '<div><img src="/img/svg/user-white.svg" class="img-svg" alt="User">' + image.userName + '</div>' : '') +
-    '<div class="image-path">' +
-    '<img src="/img/svg/link-white.svg" class="img-svg" alt="Link">' +
-    '<span class="ellipsis">' + image.pathLarge + '</span>' +
-    '<a href="' + image.pathLarge + '" target="_blank"><img src="/img/svg/arrow-square-out-white.svg" class="img-svg" alt="Open image"></a>' +
-    '<a href="' + image.pathLarge + '" class="copy-link"><img src="/img/svg/copy-simple-white.svg" class="img-svg" alt="Copy link"></a>' +
-    '</div>' +
-    (takenAt ? '<div>' + takenAt + '</div>' : '') +
-    (camera ? '<div>' + camera + '</div>' : '') +
-    (aperture ? '<div>' + aperture + '</div>' : '') +
-    (pixels ? '<div>' + pixels + '</div>' : '') +
-    (size ? '<div>' + size + '</div>' : '');
+  modalContainer.querySelector('.image-meta').innerHTML = image.exifHtml;
 
   modalContainer.querySelector('.image-meta .copy-link')
     .addEventListener('click', e => Util.handleCopyLink(e, image.pathLarge));
@@ -327,7 +271,6 @@ function displayModalImage(image) {
   imageInfoNext.classList.remove('null');
 
   imageWrapper.classList.remove('null');
-  modalClose.classList.remove('null');
 }
 
 function preloadMedia(mediaId, direction) {
@@ -1434,7 +1377,8 @@ document.addEventListener('keydown', e => {
   } else if (e.key === 'Escape') {
     document.querySelectorAll('.modal-wrapper').forEach(m => {
       if (!m.classList.contains('null')) {
-        m.querySelector('a.modal-close-button').click();
+        m.querySelectorAll('a.modal-close-button').forEach(b => b.click());
+        m.querySelectorAll('a.modal-media-close-button').forEach(b => b.click());
       }
     });
   } else if (e.key.toLowerCase() === 'r') {
@@ -1596,6 +1540,13 @@ document.querySelectorAll('.modal-close-button').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
     el.parentElement.parentElement.classList.add('null');
+  });
+});
+
+document.querySelectorAll('.modal-media-close-button').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector('.modal-media').classList.add('null');
   });
 });
 

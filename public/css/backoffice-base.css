@@ -876,6 +876,16 @@
   background-color: #f2f2f2;
 }
 
+.modal-media {
+  align-items: flex-start;
+}
+
+.modal-media .modal-inner {
+  max-width: revert;
+  max-height: revert;
+  height: 100vh;
+}
+
 .image-wrapper {
   display: flex;
   flex-flow: row wrap;
@@ -886,8 +896,6 @@
 }
 
 .image-wrapper .image-number {
-  margin-right: 2rem;
-  padding-bottom: 1rem;
   font-size: 0.8rem;
   font-family: monospace;
   color: var(--color-light-4);
@@ -924,13 +932,38 @@
   position: relative;
 }
 
+.image-wrapper .image-summary {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+
+.image-wrapper .image-summary svg {
+  fill: var(--color-text-white);
+  stroke: var(--color-text-white);
+  max-width: revert;
+  max-height: revert;
+  width: 20px;
+}
+
 .image-wrapper .image-info-data {
-  padding: 1rem;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5rem;
+  padding: 1rem 0.5rem;
+}
+
+.image-wrapper .image-info-data svg {
+  fill: var(--color-text-white);
+  stroke: var(--color-text-white);
+  flex-shrink: 0;
 }
 
 .image-wrapper .image-info .image-caption {
   word-wrap: anywhere;
-  padding-bottom: 2rem;
 }
 
 .image-wrapper .image-next-wrapper {
@@ -938,7 +971,7 @@
   flex-flow: row wrap;
   gap: 1rem;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 1rem 0.5rem;
 }
 
 .image-wrapper .image-next-wrapper a {
@@ -955,6 +988,11 @@
   align-items: center;
   gap: 0.5rem;
   color: var(--color-failure);
+}
+
+.image-wrapper .image-delete svg {
+  fill: var(--color-failure);
+  stroke: var(--color-failure);
 }
 
 .image-wrapper .image-meta {
@@ -990,7 +1028,6 @@
 }
 
 .image-wrapper .image-appears-on {
-  margin: 1rem 0 3rem;
   display: flex;
   flex-flow: column nowrap;
   gap: 0.4rem;
@@ -1748,8 +1785,28 @@
     max-width: var(--content-max-width);
   }
 
+  .modal-media {
+    align-items: center;
+  }
+
   .image-wrapper {
     flex-flow: row nowrap;
+  }
+
+  .image-wrapper .image-info-data {
+    padding: 1rem;
+  }
+
+  .image-wrapper .image-summary {
+    padding: 1rem;
+  }
+
+  .image-wrapper .image-summary svg {
+    width: 25px;
+  }
+
+  .image-wrapper .image-next-wrapper {
+    padding: 1rem;
   }
 
   .content-images {

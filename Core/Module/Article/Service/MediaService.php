@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Service;
 
+use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\Util\QueryOrderBy;
@@ -167,6 +168,7 @@ readonly class MediaService
     }
 
     public function workflowGetFiles(
+        Language $language,
         QueryOrderDirection $direction,
         int $qty,
         ?MediaType $mediaType = null,
@@ -234,7 +236,10 @@ readonly class MediaService
 
                 if ($includeExifData && $file->type === MediaType::Image) {
                     if ($file->exif) {
-                        $fileOutput['exif'] = $file->exif->asPublicArray();
+                        $fileOutput['exifHtml'] = $file->exif->asHtml(
+                            language: $language,
+                            media: $file,
+                        );
                     }
                 }
             }

@@ -67,6 +67,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         $mediaType = isset($typeId) && MediaType::tryFrom($typeId) ? MediaType::from($typeId) : null;
 
         $output = $this->mediaService->workflowGetFiles(
+            language: $request->siteLanguage,
             direction: $direction,
             qty: $qty,
             mediaType: $mediaType,
@@ -173,6 +174,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         $mediaType = isset($typeId) && MediaType::tryFrom($typeId) ? MediaType::from($typeId) : null;
 
         $output = $this->mediaService->workflowGetFiles(
+            language: $request->siteLanguage,
             direction: $direction,
             qty: $qty,
             mediaType: $mediaType,
