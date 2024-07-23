@@ -773,10 +773,8 @@
 
 /* Media upload style starts here */
 .content-images {
-  background-color: var(--color-text);
-  color: var(--color-bg);
   padding: 1rem 0.5rem 4rem;
-  min-height: 100vh;
+  min-height: 50vh;
 }
 
 .add-image-wrapper {
