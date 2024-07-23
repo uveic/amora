@@ -34,6 +34,7 @@ readonly class ArticleService
         private Logger $logger,
         private ArticleDataLayer $articleDataLayer,
         private TagDataLayer $tagDataLayer,
+        private MediaService $mediaService,
     ) {}
 
     public function getArticleForId(
@@ -341,6 +342,25 @@ readonly class ArticleService
             $articleSectionsById[$existingSection->id] = $existingSection;
         }
 
+        $mediaById = [];
+        $mediaIds = [];
+        foreach ($sections as $section) {
+            if (!isset($section['mediaId'])) {
+                continue;
+            }
+
+            $mediaIds[] = (int)$section['mediaId'];
+        }
+
+        if ($mediaIds) {
+            $existingMedia = $this->mediaService->filterMediaBy(ids: $mediaIds);
+
+            /** @var Media $existingMediaItem */
+            foreach ($existingMedia as $existingMediaItem) {
+                $mediaById[$existingMediaItem->id] = $existingMediaItem;
+            }
+        }
+
         $now = new DateTimeImmutable();
         $newSections = [];
         foreach ($sections as $section) {
@@ -356,19 +376,20 @@ readonly class ArticleService
             $mediaCaption = isset($section['imageCaptionHtml'])
                 ? StringUtil::sanitiseHtml($section['imageCaptionHtml'])
                 : null;
+            $mediaForSection = isset($section['mediaId']) ? ($mediaById[$section['mediaId']] ?? null) : null;
 
             $newSections[] = new ArticleSection(
                 id: $newSectionId,
                 articleId: $articleId,
-                articleSectionType: $sectionType,
+                type: $sectionType,
                 contentHtml: $contentHtml,
                 sequence: isset($section['sequence']) ? (int)$section['sequence'] : null,
-                mediaId: isset($section['imageId']) ? (int)$section['imageId'] : null,
                 mediaCaption: $mediaCaption,
                 createdAt: $newSectionId && isset($articleSectionsById[$newSectionId])
                     ? $articleSectionsById[$newSectionId]->updatedAt
                     : $now,
                 updatedAt: $now,
+                media: $mediaForSection,
             );
         }
 
