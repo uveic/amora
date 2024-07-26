@@ -34,7 +34,6 @@ class UrlBuilderUtil
     const BACKOFFICE_ALBUM_NEW = '/backoffice/albums/new';
 
     const BACKOFFICE_CONTENT = '/backoffice/content';
-    const BACKOFFICE_CONTENT_EDIT = '/backoffice/content/%d';
     const BACKOFFICE_CONTENT_TYPE_EDIT = '/backoffice/content-type/%d/language/%s';
 
     const BACKOFFICE_EMAILS = '/backoffice/emails';
@@ -147,12 +146,7 @@ class UrlBuilderUtil
         return self::buildBaseUrl($language) . self::BACKOFFICE_CONTENT;
     }
 
-    public static function buildBackofficeContentEditUrl(Language $language, int $contentId): string
-    {
-        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_CONTENT_EDIT, $contentId);
-    }
-
-    public static function buildBackofficeContentTypeEditUrl(
+    public static function buildBackofficeContentEditUrl(
         Language $language,
         PageContentType|AppPageContentType $contentType,
         Language $contentTypeLanguage,

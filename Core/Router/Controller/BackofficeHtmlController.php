@@ -709,33 +709,6 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     }
 
     /**
-     * Endpoint: /backoffice/content/{id}
-     * Method: GET
-     *
-     * @param int $id
-     * @param Request $request
-     * @return Response
-     */
-    protected function getBackofficeContentEdit(int $id, Request $request): Response
-    {
-        $pageContent = $this->articleService->getPageContentForId($id);
-
-        if (!$pageContent) {
-            return Response::createNotFoundResponse($request);
-        }
-
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        return Response::createHtmlResponse(
-            template: 'core/backoffice/page-content-edit',
-            responseData: new HtmlResponseDataAdmin(
-                request: $request,
-                pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $pageContent->type->name),
-                pageContent: $pageContent,
-            ),
-        );
-    }
-
-    /**
      * Endpoint: /backoffice/content-type/{typeId}
      * Method: GET
      *

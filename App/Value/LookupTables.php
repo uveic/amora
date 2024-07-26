@@ -10,7 +10,6 @@ require_once Core::getPathRoot() . '/App/Value/AppMailerTemplate.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/PageContentType.php';
 require_once Core::getPathRoot() . '/App/Value/AppPageContentType.php';
 
-use Amora\App\Value\Mailer\AppMailerTemplate;
 use Amora\Core\Entity\Util\LookupTableSettings;
 use Amora\Core\Module\Article\ArticleCore;
 use Amora\Core\Module\Article\Datalayer\ArticleDataLayer;

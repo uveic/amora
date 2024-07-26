@@ -198,16 +198,6 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
     abstract protected function getBackofficeContentList(Request $request): Response;
 
     /**
-     * Endpoint: /backoffice/content/{id}
-     * Method: GET
-     *
-     * @param int $id
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function getBackofficeContentEdit(int $id, Request $request): Response;
-
-    /**
      * Endpoint: /backoffice/content-type/{typeId}/language/{languageIsoCode}
      * Method: GET
      *
@@ -858,57 +848,6 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallGetBackofficeContentEdit(Request $request): Response
-    {
-        $pathParts = $request->pathWithoutLanguage;
-        $pathParams = $this->getPathParams(
-            ['backoffice', 'content', '{id}'],
-            $pathParts
-        );
-        $errors = [];
-
-        $id = null;
-        if (!isset($pathParams['id'])) {
-            $errors[] = [
-                'field' => 'id',
-                'message' => 'required'
-            ];
-        } else {
-            if (!is_numeric($pathParams['id'])) {
-                $errors[] = [
-                    'field' => 'id',
-                    'message' => 'must be an integer'
-                ];
-            } else {
-                $id = intval($pathParams['id']);
-            }
-        }
-
-        if ($errors) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->getBackofficeContentEdit(
-                $id,
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getBackofficeContentEdit()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
-
     private function validateAndCallGetBackofficeContentForTypeEdit(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
@@ -1177,16 +1116,6 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetBackofficeContentList($request);
-        }
-
-        if ($method === 'GET' &&
-            $pathParams = $this->pathParamsMatcher(
-                ['backoffice', 'content', '{id}'],
-                $pathParts,
-                ['fixed', 'fixed', 'int']
-            )
-        ) {
-            return $this->validateAndCallGetBackofficeContentEdit($request);
         }
 
         if ($method === 'GET' &&

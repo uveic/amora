@@ -410,31 +410,6 @@
         }
       }
     },
-    "/backoffice/content/{id}": {
-      "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the backoffice page to edit a content",
-        "description": "",
-        "operationId": "getBackofficeContentEdit",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Page content ID",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Return HTML",
-            "schema": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
     "/backoffice/content-type/{typeId}/language/{languageIsoCode}": {
       "get": {
         "tags": [],

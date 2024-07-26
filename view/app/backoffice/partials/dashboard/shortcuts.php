@@ -13,7 +13,7 @@ $groupOfLinks = [];
 foreach (AppPageContentType::getActive() as $item) {
     /** @var Language $language */
     foreach (Core::getAllLanguages() as $language) {
-        $groupOfLinks[AppPageContentType::getTitleVariableName($item)][] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentTypeEditUrl($responseData->siteLanguage, $item, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
+        $groupOfLinks[AppPageContentType::getTitleVariableName($item)][] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentEditUrl($responseData->siteLanguage, $item, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
     }
 }
 ?>
