@@ -79,7 +79,7 @@ final class ArticleHtmlGenerator
         $output[] = '        <ul>';
 
         /** @var BackedEnum $language */
-        foreach (Core::getAllLanguages() as $language) {
+        foreach (Core::getEnabledSiteLanguages() as $language) {
             $output[] = '          <li><a data-checked="' . ($language === $articleLanguage ? '1' : '0') .
                 '" data-value="' . $language->value .
                 '" class="dropdown-menu-option article-lang-dd-option"' .

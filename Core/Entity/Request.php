@@ -103,9 +103,15 @@ final class Request
 
         $arrayPath = explode('/', $this->path);
         if (!empty($arrayPath[0]) && strlen($arrayPath[0]) === 2) {
+            $enabledLanguages = Core::getEnabledSiteLanguages();
             $uppercaseLanguage = strtoupper($arrayPath[0]);
+
             if (Language::tryFrom($uppercaseLanguage)) {
-                unset($arrayPath[0]);
+                $language = Language::from($uppercaseLanguage);
+
+                if (in_array($language, $enabledLanguages)) {
+                    unset($arrayPath[0]);
+                }
             }
         }
 
@@ -116,15 +122,21 @@ final class Request
 
     private function calculateSiteLanguage(): Language
     {
+        $enabledLanguages = Core::getEnabledSiteLanguages();
+
         $arrayPath = explode('/', $this->path);
         if (!empty($arrayPath[0]) && strlen($arrayPath[0]) === 2) {
             $uppercaseLanguage = strtoupper($arrayPath[0]);
             if (Language::tryFrom($uppercaseLanguage)) {
-                return Language::from(strtoupper($uppercaseLanguage));
+                $language = Language::from($uppercaseLanguage);
+
+                if (in_array($language, $enabledLanguages)) {
+                    return $language;
+                }
             }
         }
 
-        if (count(Core::getAllLanguages()) == 1) {
+        if (count($enabledLanguages) == 1) {
             return Core::getDefaultLanguage();
         }
 

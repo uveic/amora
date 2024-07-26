@@ -17,6 +17,11 @@ enum Language: string
         ];
     }
 
+    public static function getActive(): array
+    {
+        return self::getAll();
+    }
+
     public function getName(): string
     {
         return match ($this) {

@@ -36,7 +36,7 @@ $filterClass = $albumStatus || $albumLanguage ? '' : ' null';
               <option<?php echo $albumLanguage ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
     /** @var BackedEnum $language */
-    foreach (Core::getAllLanguages() as $language) {
+    foreach (Core::getEnabledSiteLanguages() as $language) {
         $selected = $language === $albumLanguage;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$language->value?>"><?=$language->name?></option>

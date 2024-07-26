@@ -110,9 +110,9 @@ class Core
         return self::$config->defaultSiteLanguage;
     }
 
-    public static function getAllLanguages(): array
+    public static function getEnabledSiteLanguages(): array
     {
-        return self::$config->allSiteLanguages;
+        return self::$config->enabledSiteLanguages;
     }
 
     public static function isRunningInLiveEnv(): bool

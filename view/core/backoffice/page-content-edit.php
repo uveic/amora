@@ -9,7 +9,7 @@ use Amora\Core\Module\Article\Value\PageContentSection;
 $pageContent = $responseData->pageContent;
 
 $title = $responseData->getLocalValue('pageContentEditTitle' . $pageContent->type->name);
-$languageIcon = count(Core::getAllLanguages()) === 1
+$languageIcon = count(Core::getEnabledSiteLanguages()) === 1
     ? ''
     : $pageContent->language->getIconFlag('m-l-1');
 $submitButtonValue = $pageContent

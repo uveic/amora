@@ -9,7 +9,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 $user = $responseData->request->session->user;
 
 $timezones = DateTimeZone::listIdentifiers();
-$languages = Core::getAllLanguages();
+$languages = Core::getEnabledSiteLanguages();
 
 ?>
       <h1 class="m-t-0"><?=$responseData->getLocalValue('formYourAccount')?></h1>

@@ -71,7 +71,7 @@ class UrlBuilderUtil
         $baseUrl = $config->baseUrl;
 
         return trim($baseUrl, ' /') .
-            (count(Core::getAllLanguages()) > 1
+            (count(Core::getEnabledSiteLanguages()) > 1
                 ? '/' . strtolower($siteLanguage->value)
                 : ''
             ) . ($includeHiddenToken && $config->hiddenSiteToken ? '?ht=' . $config->hiddenSiteToken : '');
@@ -325,7 +325,7 @@ class UrlBuilderUtil
         string $path,
         ?Language $language = null,
     ): string {
-        return (empty($language) || count(Core::getAllLanguages()) === 1
+        return (empty($language) || count(Core::getEnabledSiteLanguages()) === 1
                 ? self::buildBaseUrlWithoutLanguage()
                 : self::buildBaseUrl($language)
             )
@@ -336,7 +336,7 @@ class UrlBuilderUtil
         string $slug,
         ?Language $language = null,
     ): string {
-        return (empty($language) || count(Core::getAllLanguages()) === 1
+        return (empty($language) || count(Core::getEnabledSiteLanguages()) === 1
                 ? self::buildBaseUrlWithoutLanguage()
                 : self::buildBaseUrl($language)
             )

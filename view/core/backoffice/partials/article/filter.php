@@ -54,7 +54,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
               <option<?php echo $articleLanguage ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
     /** @var \BackedEnum $language */
-    foreach (Core::getAllLanguages() as $language) {
+    foreach (Core::getEnabledSiteLanguages() as $language) {
         $selected = $language === $articleLanguage;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$language->value?>"><?=$language->name?></option>

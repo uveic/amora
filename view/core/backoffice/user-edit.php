@@ -79,7 +79,7 @@ if ($responseData->user) {
             <select id="languageIsoCode" name="languageIsoCode">
 <?php
     /** @var Language $language */
-    foreach (Core::getAllLanguages() as $language) {
+    foreach (Core::getEnabledSiteLanguages() as $language) {
           $selected = $language === $defaultLanguage;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$language->value?>"><?=$language->getName()?></option>
