@@ -157,7 +157,10 @@ final class Request
             $lang = strtoupper($lang);
 
             if (Language::tryFrom($lang)) {
-                return Language::from($lang);
+                $language = Language::from($lang);
+                if (in_array($language, $enabledLanguages)) {
+                    return $language;
+                }
             }
         }
 

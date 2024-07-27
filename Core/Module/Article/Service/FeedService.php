@@ -143,7 +143,9 @@ readonly class FeedService
         foreach ($feedItems as $feedItem) {
             $output[] = '<url>';
             $output[] = '<loc>' . $feedItem->fullPath . '</loc>';
-            $output[] = '<lastmod>' . $feedItem->updatedAt->format('Y-m-d') . '</lastmod>';
+            if ($feedItem->updatedAt) {
+                $output[] = '<lastmod>' . $feedItem->updatedAt->format('Y-m-d') . '</lastmod>';
+            }
             $output[] = '</url>';
         }
 
