@@ -28,7 +28,7 @@
 }
 
 .table-row.header {
-  background-color: var(--color-primary);
+  background-color: var(--color-primary) !important;
   border-bottom: 0 solid var(--color-primary);
   color: var(--color-bg);
   font-weight: bold;

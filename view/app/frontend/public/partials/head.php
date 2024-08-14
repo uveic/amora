@@ -1,5 +1,7 @@
 <?php
 
+use Amora\App\Value\Language;
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlHomepageResponseData;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
@@ -20,6 +22,13 @@ if (isset($responseData->article)) {
         : '  <link rel="canonical" href="' . $articleUrl . '">' . PHP_EOL;
 }
 
+$baseUrlWithLanguage = UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage);
+$baseUrlWithoutLanguage = UrlBuilderUtil::buildBaseUrlWithoutLanguage();
+
+if (!$canonical && ($responseData->siteUrl === $baseUrlWithoutLanguage || $responseData->siteUrl === $baseUrlWithLanguage)) {
+    $canonical = '<link rel="canonical" href="' . UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage) . '">' . PHP_EOL;
+}
+
 ?>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -33,12 +42,6 @@ if (isset($responseData->article)) {
   <meta property="og:url" content="<?=$responseData->siteUrl?>">
   <meta property="og:type" content="website">
   <meta property="og:updated_time" content="<?=$responseData->lastUpdatedTimestamp?>">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="twitter:domain" content="<?=$responseData->getSiteDomain()?>">
-  <meta property="twitter:url" content="<?=$responseData->siteUrl?>">
-  <meta name="twitter:title" content="<?=$responseData->getPageTitle()?>">
-  <meta name="twitter:description" content="<?=$responseData->getPageDescription()?>">
-  <meta name="twitter:image" content="<?=$responseData->siteImageUrl?>">
 <?php if ($responseData->themeColourHex) { ?>
   <meta name="theme-color" content="<?=$responseData->themeColourHex?>"/>
 <?php } ?>
@@ -53,5 +56,18 @@ if (isset($responseData->article)) {
   <link rel="manifest" href="/manifest.json">
   <link rel="alternate" type="application/rss+xml" title="<?=$responseData->siteName?>" href="<?=UrlBuilderUtil::buildPublicRssUrl()?>">
   <link rel="alternate" type="application/feed+json" title="<?=$responseData->siteName?>" href="<?=UrlBuilderUtil::buildPublicJsonFeedUrl()?>">
-  <link rel="alternate" href="<?=$responseData->siteUrl?>" hreflang="x-default">
-<?=$canonical?>
+<?php
+    if ($responseData->siteUrl === $baseUrlWithoutLanguage || $responseData->siteUrl === $baseUrlWithLanguage) {
+
+        echo '  <link rel="alternate" href="' . $baseUrlWithoutLanguage . '" hreflang="x-default">' . PHP_EOL;
+
+        /** @var Language $enabledSiteLanguage */
+        foreach (Core::getEnabledSiteLanguages() as $enabledSiteLanguage) {
+            echo '  <link rel="alternate" href="' . UrlBuilderUtil::buildBaseUrl($enabledSiteLanguage) . '" hreflang="' . strtolower($enabledSiteLanguage->value) . '">' . PHP_EOL;
+        }
+    }
+
+    if ($canonical) {
+        echo '  ' . $canonical;
+    }
+?>

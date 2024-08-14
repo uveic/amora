@@ -66,7 +66,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
             </div>
             <div class="card-info-item">
               <span class="title"><?=$responseData->getLocalValue('globalLanguage')?>:</span>
-              <span class="value one-line"><?=$album->language->getIconFlag('m-r-05') . $album->language->getName()?></span>
+              <span class="value text-one-line"><?=$album->language->getIconFlag('m-r-05') . $album->language->getName()?></span>
             </div>
             <div class="card-info-item form-public-link">
               <span class="title"><?=$responseData->getLocalValue('albumFormPublicLinkTitle')?>:</span>
@@ -105,7 +105,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
         </section>
         <a href="#" class="album-add-section-js button button-media-add" data-album-id="<?=$album->id?>">
           <img src="/img/svg/image.svg" class="img-svg img-svg-25 m-r-05" width="25" height="25" alt="<?=$responseData->getLocalValue('albumAddSection')?>">
-          <span class="one-line"><?=$responseData->getLocalValue('albumAddSection')?></span>
+          <span class="text-one-line"><?=$responseData->getLocalValue('albumAddSection')?></span>
         </a>
       </div>
     </div>

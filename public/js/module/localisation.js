@@ -235,7 +235,7 @@ class GlobalClass {
 
     if (this.locale === 'es') {
       const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
-        'agosto', 'septiembre', 'octubre', 'noviembre', 'dieciembre'];
+        'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
       const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 
       return (includeWeedDay ? days[dateObj.getDay()] + ', ' : '')

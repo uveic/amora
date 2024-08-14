@@ -887,7 +887,7 @@ button.is-link.is-light,
 .width-100 {width: 100% !important;}
 .display-block {display: block !important;}
 .word-break {word-wrap: anywhere;}
-.one-line {white-space: nowrap;}
+.text-one-line {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .text-right {text-align: right;}
 .width-auto {width: auto;}
 .uppercase {text-transform: uppercase;}
@@ -922,6 +922,8 @@ svg,
   margin: 0;
   fill: var(--color-text);
   stroke: var(--color-text);
+  flex-shrink: 0;
+  flex-grow: 0;
 }
 
 .img-svg-15 {

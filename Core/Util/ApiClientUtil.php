@@ -20,8 +20,6 @@ readonly class ApiResponse
 
 class ApiClientUtil
 {
-    const TIMEOUT_SECONDS = 60;
-
     public static function post(
         string $url,
         string $data,
@@ -29,6 +27,8 @@ class ApiClientUtil
         ?Logger $logger = null,
         ?string $logPrefix = null,
         string $userAgent = 'Amora',
+        int $timeoutSeconds = 30,
+        bool $includeResponseHeaders = true,
     ): ApiResponse {
         return self::apiCall(
             method: Method::POST,
@@ -38,6 +38,8 @@ class ApiClientUtil
             userAgent: $userAgent,
             logger: $logger,
             logPrefix: $logPrefix,
+            timeoutSeconds: $timeoutSeconds,
+            includeResponseHeaders: $includeResponseHeaders,
         );
     }
 
@@ -46,8 +48,10 @@ class ApiClientUtil
         ?string $data = null,
         array $headers = [],
         ?Logger $logger = null,
-        ?string $logPrefix = null,
+        string $logPrefix = '',
         string $userAgent = 'Amora',
+        int $timeoutSeconds = 30,
+        bool $includeResponseHeaders = true,
     ): ApiResponse {
         return self::apiCall(
             method: Method::GET,
@@ -57,6 +61,8 @@ class ApiClientUtil
             userAgent: $userAgent,
             logger: $logger,
             logPrefix: $logPrefix,
+            timeoutSeconds: $timeoutSeconds,
+            includeResponseHeaders: $includeResponseHeaders,
         );
     }
 
@@ -68,15 +74,19 @@ class ApiClientUtil
         string $userAgent = 'Amora',
         ?Logger $logger = null,
         string $logPrefix = '',
+        int $timeoutSeconds = 30,
+        bool $includeResponseHeaders = true,
     ): ApiResponse {
         $logger?->logInfo($logPrefix . 'Calling API...');
-
-        set_time_limit(self::TIMEOUT_SECONDS);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method->value);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeoutSeconds);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+        curl_setopt($ch, CURLOPT_HEADER, $includeResponseHeaders);
 
         if ($userAgent) {
             curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
@@ -89,9 +99,6 @@ class ApiClientUtil
         if ($requestHeaders) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
         }
-
-        curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT_SECONDS);
-        curl_setopt($ch, CURLOPT_HEADER, true);
 
         $response = curl_exec($ch);
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

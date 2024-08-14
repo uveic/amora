@@ -318,7 +318,7 @@ final class DateUtil
     {
         $months = match($lang->value) {
             'ES' => ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
-                'septiembre', 'octubre', 'noviembre', 'dieciembre'],
+                'septiembre', 'octubre', 'noviembre', 'diciembre'],
             'GL' => ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo',
                 'agosto', 'setembro', 'outubro', 'novembro', 'decembro'],
             default => ['January', 'February', 'March', 'April', 'May', 'June', 'July',
