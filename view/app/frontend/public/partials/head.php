@@ -43,8 +43,9 @@ if (!$canonical && ($responseData->siteUrl === $baseUrlWithoutLanguage || $respo
   <meta property="og:type" content="website">
   <meta property="og:updated_time" content="<?=$responseData->lastUpdatedTimestamp?>">
 <?php if ($responseData->themeColourHex) { ?>
-  <meta name="theme-color" content="<?=$responseData->themeColourHex?>"/>
+  <meta name="theme-color" content="<?=$responseData->themeColourHex?>">
 <?php } ?>
+  <meta name="thumbnail" content="<?=$responseData->siteImageUrl?>">
   <title><?=$responseData->getPageTitle()?></title>
   <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/img/favicon/android-chrome-512x512.png">
