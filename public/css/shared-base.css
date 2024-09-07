@@ -250,6 +250,7 @@ blockquote *:last-child {
 .dropdown-container>label {
   flex-grow: 0;
   width: auto;
+  border-radius: var(--border-radius);
 }
 
 .dropdown-container>label,
@@ -323,6 +324,7 @@ blockquote *:last-child {
   min-width: 50%;
   background-color: var(--color-bg);
   overflow: auto;
+  border-radius: var(--border-radius);
 }
 
 .modal-inner-top {
@@ -887,7 +889,7 @@ button.is-link.is-light,
 .width-100 {width: 100% !important;}
 .display-block {display: block !important;}
 .word-break {word-wrap: anywhere;}
-.text-one-line {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.text-one-line {white-space: nowrap; overflow: auto; text-overflow: ellipsis;}
 .text-right {text-align: right;}
 .width-auto {width: auto;}
 .uppercase {text-transform: uppercase;}

@@ -3,6 +3,7 @@ import {Request} from './module/Request.js?v=000';
 import {Global} from "./module/localisation.js?v=000";
 import {Uploader} from "./module/Uploader.js?v=000";
 import {appAddEventListenerAction} from "./app/back.js?v=000";
+import {handleDropdownOptionClick} from "./shared.js?v=000";
 
 window.data = {
   mediaCache: [],
@@ -935,32 +936,6 @@ function deleteImage(e) {
     });
 }
 
-function handleDropdownOptionClick(event) {
-  event.preventDefault();
-  const elementOption = event.currentTarget;
-  const dropDownIdentifier = elementOption.dataset.dropdownIdentifier;
-  const elementLabel = document.querySelector('#' + dropDownIdentifier + '-dd-label');
-  const elementCheckbox = document.querySelector('#' + dropDownIdentifier + '-dd-checkbox');
-  const optionClassName = dropDownIdentifier + '-dd-option';
-
-  elementLabel.classList.forEach(cl => {
-    if (cl.startsWith('status-')) {
-      elementLabel.classList.remove(cl);
-    }
-  });
-
-  const newClassName = Array.from(elementOption.classList).filter(cl => cl.startsWith('status-') === true)[0] ?? null;
-  if (newClassName) {
-    elementLabel.classList.add(newClassName);
-  }
-  elementLabel.querySelector('span').innerHTML = elementOption.innerHTML;
-  elementCheckbox.checked = false;
-
-  document.querySelectorAll('.' + optionClassName).forEach(o => {
-    o.dataset.checked = o.dataset.value === elementOption.dataset.value ? '1' : '0';
-  });
-}
-
 function handleAlbumMediaDragEnter(ev) {
   ev.preventDefault();
 }
@@ -1283,24 +1258,6 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
   });
 });
 
-document.querySelectorAll('.dropdown-menu-option').forEach(op => {
-  op.addEventListener('click', handleDropdownOptionClick);
-});
-
-document.querySelectorAll('.filter-close').forEach(a => {
-  a.addEventListener('click', (e) => {
-    e.preventDefault();
-    document.querySelector('.filter-container').classList.add('null');
-  });
-});
-
-document.querySelectorAll('.filter-open').forEach(a => {
-  a.addEventListener('click', (e) => {
-    e.preventDefault();
-    document.querySelector('.filter-container').classList.remove('null');
-  });
-});
-
 document.querySelectorAll('.filter-refresh').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
@@ -1534,24 +1491,6 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
     Request.put('/back/content/' + contentId, payload)
       .then((response) => window.location = response.redirect);
   });
-});
-
-document.querySelectorAll('.modal-close-button').forEach(el => {
-  el.addEventListener('click', e => {
-    e.preventDefault();
-    el.parentElement.parentElement.classList.add('null');
-  });
-});
-
-document.querySelectorAll('.modal-media-close-button').forEach(el => {
-  el.addEventListener('click', e => {
-    e.preventDefault();
-    document.querySelector('.modal-media').classList.add('null');
-  });
-});
-
-document.querySelectorAll('.copy-link').forEach(a => {
-  a.addEventListener('click', e => Util.handleCopyLink(e, a.href));
 });
 
 document.querySelectorAll('.article-add-section-video').forEach(bu => {
@@ -1818,4 +1757,4 @@ document.querySelectorAll('.generic-media-delete-js').forEach(b => {
   b.addEventListener('click', handleGenericMediaDeleteClick);
 });
 
-export {handleDropdownOptionClick, handleGenericMediaDeleteClick};
+export {handleGenericMediaDeleteClick};

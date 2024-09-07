@@ -36,6 +36,16 @@
   padding-bottom: 0.5em;
 }
 
+.table-row:first-of-type {
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+
+.table-row:last-of-type {
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+}
+
 .table-row.header svg {
   fill: var(--color-text-white);
   stroke: var(--color-text-white);
@@ -167,6 +177,7 @@
   border: 1px solid var(--color-light-2);
   padding: 0.5rem;
   position: relative;
+  border-radius: var(--border-radius);
 }
 
 .backoffice-title {
@@ -184,6 +195,7 @@
   align-self: stretch;
   flex-grow: 1;
   border: 1px solid var(--color-light-2);
+  border-radius: var(--border-radius);
   background-color: var(--color-light-0);
   padding: 1rem;
 }
@@ -318,6 +330,7 @@
   justify-content: center;
   align-items: center;
   border: 1px solid var(--color-link);
+  border-radius: var(--border-radius);
   padding: 1rem;
   background-color: var(--color-light-0);
   min-width: 150px;
@@ -678,6 +691,7 @@
   align-items: center;
   padding: 0.75rem 1rem;
   border: 1px solid var(--color-light-3);
+  border-radius: var(--border-radius);
   margin: 1rem 0;
   background-color: var(--color-light-1);
   width: 100%;

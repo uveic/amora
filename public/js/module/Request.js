@@ -28,17 +28,17 @@ class RequestClass {
 
   request(
     url,
-    stringPayload,
+    stringPayload = null,
     method = 'POST',
-    headers,
-    successMessage = null
+    successMessage = null,
+    headers = {'Content-Type': 'application/json'},
   ) {
     return fetch(
       url,
       {
         method: method,
         headers: headers,
-        body: stringPayload
+        body: stringPayload ?? null,
       }
     ).then((response) => {
       if (!response.ok) {
@@ -71,23 +71,19 @@ class RequestClass {
   }
 
   get(url, successMessage = null) {
-    const headers = {'Content-Type': 'application/json'};
-    return this.request(url, null, 'GET', headers, successMessage);
+    return this.request(url, null, 'GET', successMessage);
   }
 
-  post(url, stringPayload, successMessage = null) {
-    const headers = {'Content-Type': 'application/json'};
-    return this.request(url, stringPayload, 'POST', headers, successMessage);
+  post(url, stringPayload = null, successMessage = null) {
+    return this.request(url, stringPayload, 'POST', successMessage);
   }
 
-  put(url, stringPayload, successMessage = null) {
-    const headers = {'Content-Type': 'application/json'};
-    return this.request(url, stringPayload, 'PUT', headers, successMessage);
+  put(url, stringPayload = null, successMessage = null) {
+    return this.request(url, stringPayload, 'PUT', successMessage);
   }
 
   delete(url, stringPayload = null, successMessage = null) {
-    const headers = {'Content-Type': 'application/json'};
-    return this.request(url, stringPayload, 'DELETE', headers, successMessage);
+    return this.request(url, stringPayload, 'DELETE', successMessage);
   }
 }
 
