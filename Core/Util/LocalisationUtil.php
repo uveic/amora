@@ -42,22 +42,24 @@ final class LocalisationUtil
 
     private function loadValues(Language $language): array {
         $coreFilePath = Core::getPathRoot() . '/Core/Value/Localisation/' . $language->value . '.php';
-
         if (!file_exists($coreFilePath)) {
-            $this->logger->logError('Localisation file not found: ' . $coreFilePath);
-            $coreValues = [];
-        } else {
-            $coreValues = require $coreFilePath;
+            $coreFilePath = Core::getPathRoot() . '/Core/Value/Localisation/' . Core::getDefaultLanguage()->value . '.php';
+            if (!file_exists($coreFilePath)) {
+                $this->logger->logError('Localisation file not found: ' . $coreFilePath);
+                $coreFilePath = null;
+            }
         }
 
         $appFilePath = Core::getPathRoot() . '/App/Value/Localisation/' . $language->value . '.php';
-
         if (!file_exists($appFilePath)) {
-            $this->logger->logError('Localisation file not found: ' . $appFilePath);
-            $appValues = [];
-        } else {
-            $appValues = require $appFilePath;
+            if (!file_exists($coreFilePath)) {
+                $this->logger->logError('Localisation file not found: ' . $appFilePath);
+                $appFilePath = null;
+            }
         }
+
+        $coreValues = $coreFilePath ? require $coreFilePath : [];
+        $appValues = $appFilePath ? require $appFilePath : [];
 
         return array_merge($coreValues, $appValues);
     }

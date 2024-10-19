@@ -80,6 +80,8 @@ abstract class AbstractConfig {
         public readonly string $salt,
         public readonly ?string $hiddenSiteToken,
         public readonly array $allowedUrlsForSrcScript,
+        public readonly array $allowedCorsDomains,
+        public readonly bool $allowImgSrcData,
 
         public readonly bool $isLoggingEnabled,
         public readonly bool $isAnalyticsEnabled,

@@ -45,7 +45,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
           <input id="search" name="search" class="header-search" type="search" placeholder="<?=$responseData->getLocalValue('globalSearch')?>..." value="">
         </div>
         <input type="submit" value="Go" class="null">
-        <img class="img-svg img-svg-30 search-close-js" width="30" height="30" src="/img/svg/x.svg" alt="Close">
+        <span class="search-close-js"><?=CoreIcons::CLOSE?></span>
       </div>
       <div class="search-result-container null"></div>
     </form>

@@ -56,11 +56,17 @@ class Response
         $connectSrc = 'connect-src ' . $allowedUrls . ';';
         $scriptSrc = 'script-src ' . $allowedUrls . $nonce . ';';
         $defaultSrc = 'default-src ' . implode(' ', $allowedDomains) . ';';
+        $imgSrc = Core::getConfig()->allowImgSrcData ? 'img-src ' . $allowedUrls . ' data:;' : '';
 
         $insecureRequests = '';
         if (Core::isRunningInLiveEnv()) {
             $headers[] = 'Strict-Transport-Security: max-age=31536000';
             $insecureRequests = ' upgrade-insecure-requests';
+        }
+
+        if (Core::getConfig()->allowedCorsDomains) {
+            $headers[] = 'Access-Control-Allow-Origin: ' . implode(', ', Core::getConfig()->allowedCorsDomains);
+            $headers[] = 'Access-Control-Allow-Headers: Content-Type';
         }
 
         // To log content security policy errors:
@@ -70,7 +76,7 @@ class Response
                 $httpStatus->value,
                 "Content-Type: $contentType->value",
                 "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate",
-                "Content-Security-Policy: $defaultSrc $connectSrc $scriptSrc" . $insecureRequests,
+                "Content-Security-Policy: $defaultSrc $connectSrc $scriptSrc $imgSrc" . $insecureRequests,
                 "X-Content-Type-Options: nosniff",
                 "Referrer-Policy: strict-origin-when-cross-origin",
                 "X-Frame-Options: SAMEORIGIN",
@@ -159,6 +165,15 @@ class Response
             localPath: $localPath,
             fileName: $fileName,
             contentType: ContentType::CSV,
+        );
+    }
+
+    public static function createTextDownloadResponse(string $localPath, string $fileName): Response
+    {
+        return self::createDownloadResponse(
+            localPath: $localPath,
+            fileName: $fileName,
+            contentType: ContentType::PLAIN,
         );
     }
 
