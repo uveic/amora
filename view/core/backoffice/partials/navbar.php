@@ -30,7 +30,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
 <?php if ($isSearchEnabled) { ?>
   <div class="search-fullscreen-shadow null"></div>
 <?php } ?>
-  <header id="site-top" class="header-container">
+  <header id="site-top" class="header-container<?=$responseData->isPublicPage ? '' : ' header-backoffice'?>">
 <?=$siteLogoHtml?>
 <?php if ($isSearchEnabled) { ?>
     <form action="#" method="post" id="form-search" class="form-search null">

@@ -85,8 +85,10 @@ class UploaderClass {
       const itemContainer = document.querySelector('#item' + Util.cleanString(media.name));
       const progressBarContainer = UploaderClass.buildProgressElement();
       const progressEl = progressBarContainer.querySelector('progress');
-      itemContainer.appendChild(progressBarContainer);
-      itemContainer.removeChild(itemContainer.querySelector('.loader-container'));
+      if (itemContainer) {
+        itemContainer.appendChild(progressBarContainer);
+        itemContainer.removeChild(itemContainer.querySelector('.loader-container'));
+      }
 
       formData.delete('files[]');
       formData.append('files[]', media);
@@ -105,8 +107,10 @@ class UploaderClass {
         progressEl.value = progressValue;
 
         if (progressValue >= 95) {
-          itemContainer.removeChild(progressBarContainer);
-          itemContainer.appendChild(Util.buildImageLoadingElement());
+          if (itemContainer) {
+            itemContainer.removeChild(progressBarContainer);
+            itemContainer.appendChild(Util.buildImageLoadingElement());
+          }
         }
       });
 

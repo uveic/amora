@@ -22,6 +22,9 @@ $baseUrl = parse_url(UrlBuilderUtil::buildBaseUrlWithoutLanguage(), PHP_URL_HOST
   <meta property="og:url" content="<?=$responseData->siteUrl?>">
   <meta property="og:type" content="website">
   <meta property="og:updated_time" content="<?=$responseData->lastUpdatedTimestamp?>">
+<?php if ($responseData->themeColourHex) { ?>
+  <meta name="theme-color" content="<?=$responseData->themeColourHex?>"/>
+<?php } ?>
   <title><?=$responseData->getPageTitle()?></title>
   <link href="/css/hidden.css?v=000" rel="stylesheet" type="text/css">
 </head>
