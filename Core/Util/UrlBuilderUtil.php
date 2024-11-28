@@ -86,6 +86,15 @@ class UrlBuilderUtil
             ($includeHiddenToken && $config->hiddenSiteToken ? '?ht=' . $config->hiddenSiteToken : '');
     }
 
+    public static function buildPublicHomeUrlWithHash(Language $language, string $hash): string
+    {
+        $config = Core::getConfig();
+
+        return self::buildBaseUrl($language) .
+            ($config->hiddenSiteToken ? '?ht=' . $config->hiddenSiteToken : '') .
+            '#' . $hash;
+    }
+
     public static function buildMediaBaseUrl(): string
     {
         $baseUrl = Core::getConfig()->baseUrl;

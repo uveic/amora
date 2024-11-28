@@ -131,7 +131,7 @@ class UserDataLayer
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function updateUser(User $user, int $userId): User
+    public function updateUser(User $user, int $userId): ?User
     {
         $userArray = $user->asArray();
         unset($userArray['created_at']);
@@ -140,13 +140,14 @@ class UserDataLayer
 
         if (empty($res)) {
             $this->logger->logError('Error updating user. User ID: ' . $userId);
+            return null;
         }
 
         $user->id = $userId;
         return $user;
     }
 
-    public function createNewUser(User $user): User
+    public function createNewUser(User $user): ?User
     {
         $resUser = $this->db->insert(self::USER_TABLE, $user->asArray());
 

@@ -53,6 +53,7 @@ class UserCore extends Core
             factory: function () use ($logger, $userDataLayer, $sessionService, $userMailService) {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
+                require_once self::getPathRoot() . '/App/Value/AppUserRole.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserVerification.php';
@@ -91,10 +92,10 @@ class UserCore extends Core
             factory: function () use ($dataLayer) {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
+                require_once self::getPathRoot() . '/App/Value/AppUserRole.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/Session.php';
                 require_once self::getPathRoot() . '/Core/Entity/Util/UserAgentInfo.php';
                 require_once self::getPathRoot() . '/Core/Util/UserAgentParserUtil.php';
-                require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Service/SessionService.php';
                 return new SessionService($dataLayer);
             },

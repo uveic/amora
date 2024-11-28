@@ -302,6 +302,7 @@ class ArticleDataLayer
             'c.title_html AS page_content_title_html',
             'c.subtitle_html AS page_content_subtitle_html',
             'c.content_html AS page_content_html',
+            'c.action_url AS page_content_action_url',
             'c.main_image_id',
 
             'u.id AS user_id',

@@ -54,7 +54,7 @@ return [
     'authenticationUserRegistrationDisabled' => 'The user registration functionality is not enabled. Please, contact the site administrator.',
     'authenticationPasswordTooShort' => 'The password is too short. Please, fix it and try it again.',
     'authenticationPasswordsDoNotMatch' => 'The passwords do not match. Please, fix it and try it again.',
-    'authenticationRegistrationErrorExistingEmail' => 'There is another account with the same email address. Please, log in to your account <a href="%s">here</a>.',
+    'authenticationRegistrationErrorExistingEmail' => 'There is another account with the same email address. Please, log in to your account.',
     'authenticationPassNotValid' => 'Current password not valid.',
 
     'authenticationPasswordResetSubtitle' => 'Change your password',

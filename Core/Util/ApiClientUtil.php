@@ -25,7 +25,7 @@ class ApiClientUtil
         string $data,
         array $headers = [],
         ?Logger $logger = null,
-        ?string $logPrefix = null,
+        string $logPrefix = '',
         string $userAgent = 'Amora',
         int $timeoutSeconds = 30,
         bool $includeResponseHeaders = true,

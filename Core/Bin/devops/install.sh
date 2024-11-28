@@ -1,5 +1,6 @@
 #! /bin/bash
 
+set -euo pipefail
 MYDIR="$(dirname "$(which "$0")")"
 
 echo "Restoring database..."

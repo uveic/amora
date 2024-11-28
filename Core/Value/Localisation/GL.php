@@ -54,7 +54,7 @@ return [
     'authenticationUserRegistrationDisabled' => 'O rexistro de usuarios non está habilitado. Ponte en contacto co administrador do sitio web.',
     'authenticationPasswordTooShort' => 'O contrasinal é demasiado curto. Cámbiao e inténtao outra vez.',
     'authenticationPasswordsDoNotMatch' => 'Os contrasinais non coinciden. Corríxeo e inténtao outra vez.',
-    'authenticationRegistrationErrorExistingEmail' => 'Xa hai outra conta co mesmo email. Por favor, identifícate <a href="%s">aquí</a>.',
+    'authenticationRegistrationErrorExistingEmail' => 'Xa hai outra conta co mesmo email. Por favor, identifícate.',
     'authenticationPassNotValid' => 'O contrasinal actual non é válido.',
 
     'authenticationPasswordResetSubtitle' => 'Cambia o contrasinal',

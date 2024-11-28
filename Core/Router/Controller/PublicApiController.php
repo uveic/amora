@@ -268,10 +268,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                 return new PublicApiControllerUserRegistrationSuccessResponse(
                     success: false,
                     redirect: null,
-                    errorMessage: sprintf(
-                        $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
-                        UrlBuilderUtil::buildPublicLoginUrl($language)
-                    ),
+                    errorMessage: $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
                 );
             }
 

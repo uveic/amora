@@ -2,9 +2,11 @@
 
 namespace Amora\Core\Module\User\Service;
 
+use Amora\App\Value\AppUserRole;
 use Amora\Core\Core;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
+use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\LocalisationUtil;
 use DateTime;
@@ -390,6 +392,7 @@ class UserService
         ?string $newPassword = null,
         ?string $repeatPassword = null,
         ?UserStatus $userStatus = null,
+        UserRole|AppUserRole|null $userRole = null,
     ): Feedback {
         $name = StringUtil::sanitiseText($name);
         $email = StringUtil::sanitiseText($email);
@@ -420,7 +423,7 @@ class UserService
                 language: $languageIsoCode
                     ? Language::from(strtoupper($languageIsoCode))
                     : $existingUser->language,
-                role: $existingUser->role,
+                role: $userRole ?? $existingUser->role,
                 journeyStatus: $existingUser->journeyStatus,
                 createdAt: $existingUser->createdAt,
                 updatedAt: new DateTimeImmutable(),

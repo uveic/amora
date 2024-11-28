@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+set -euo pipefail
+
 REMOTE_DATABASE_NAME="remote_db_name"
 REMOTE_HOST="user@server.url.or.ip"
 REMOTE_FILEPATH="/path/to/backup/folder/in/remote/server/"

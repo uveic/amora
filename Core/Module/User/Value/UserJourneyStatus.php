@@ -14,12 +14,4 @@ enum UserJourneyStatus: int
             self::Registration,
         ];
     }
-
-    public static function getInitialUserJourneyStatusFromRole(UserRole $role): self
-    {
-        return match ($role) {
-            UserRole::Admin,
-            UserRole::User => self::PendingPasswordCreation,
-        };
-    }
 }

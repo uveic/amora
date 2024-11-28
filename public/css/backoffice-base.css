@@ -7,6 +7,78 @@
   max-width: revert;
 }
 
+.header-backoffice {
+  background-color: var(--color-primary-900);
+}
+
+.search-icon svg {
+  fill: var(--color-primary);
+  stroke: var(--color-primary);
+}
+
+.header-backoffice .search-icon svg {
+  fill: var(--color-text-white);
+  stroke: var(--color-text-white);
+}
+
+.header-backoffice .search-icon-input svg {
+  fill: var(--color-primary-800);
+  stroke: var(--color-primary-800);
+}
+
+.header-backoffice .logo,
+.header-backoffice .logo:hover,
+.header-backoffice .logo:active,
+.header-backoffice .logo:visited,
+.header-backoffice .logo:focus {
+  background-color: transparent;
+}
+
+.mobile-nav-label span,
+.mobile-nav-label span::before,
+.mobile-nav-label span::after {
+  background-color: var(--color-primary);
+}
+
+.header-backoffice .mobile-nav-label span,
+.header-backoffice .mobile-nav-label span::before,
+.header-backoffice .mobile-nav-label span::after {
+  background-color: var(--color-bg-light);
+}
+
+.header-backoffice .nav-dropdown-item,
+.header-backoffice .nav-dropdown-item:visited,
+.header-backoffice .nav-dropdown-item:hover,
+.header-backoffice .nav-dropdown-item:active,
+.header-backoffice .nav-dropdown-item:focus {
+  background-color: var(--color-primary-900);
+  color: var(--color-text-white);
+  border-radius: 0;
+}
+
+.header-backoffice .nav-dropdown-item:hover {
+  background-color: var(--color-primary-800);
+}
+
+.header-backoffice .nav-dropdown-menu svg,
+.header-backoffice .nav-dropdown-item svg {
+  stroke: var(--color-text-white);
+  fill: var(--color-text-white);
+}
+
+.header-backoffice .nav-dropdown-menu a,
+.header-backoffice .nav-dropdown-menu a:active,
+.header-backoffice .nav-dropdown-menu a:hover,
+.header-backoffice .nav-dropdown-menu a:focus,
+.header-backoffice .nav-dropdown-menu a:visited {
+  background-color: var(--color-primary-900);
+  color: var(--color-text-white);
+}
+
+.header-backoffice .nav-dropdown-menu a:hover {
+  background-color: var(--color-primary-800);
+}
+
 /* Table starts here */
 .table {
   width: 100%;
@@ -36,6 +108,7 @@
   padding-bottom: 0.5em;
 }
 
+.table-row.header,
 .table-row:first-of-type {
   border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
@@ -324,7 +397,21 @@
   font-size: 1.1rem;
 }
 
-.dashboard-block-wrapper > a {
+.dashboard-block-title-small,
+.dashboard-block-title-small:visited,
+.dashboard-block-title-small:active,
+.dashboard-block-title-small:focus,
+.dashboard-block-title-small:hover {
+  color: var(--color-link);
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.dashboard-block-title-small:hover {
+  color: var(--color-link-hover);
+}
+
+.dashboard-block-wrapper > * {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
@@ -627,6 +714,7 @@
 
 .filter-container {
   border: 1px solid var(--color-light-2);
+  border-radius: var(--border-radius);
   padding: 0;
   margin: 1rem;
   position: relative;
@@ -637,7 +725,7 @@
   flex-flow: row wrap;
   justify-content: space-between;
   background-color: var(--color-light-2);
-  padding: 0.5rem 1rem 0.25rem;
+  padding: 0.25rem 0.5rem;
   margin: 0;
   border-bottom: 1px solid var(--color-light-3);
 }
@@ -655,7 +743,7 @@
 }
 
 .filter-links svg {
-  width: 25px;
+  width: 20px;
   max-width: revert;
   max-height: revert;
 }
@@ -709,6 +797,11 @@
   flex-flow: row nowrap;
   align-items: center;
   gap: 0.25rem;
+}
+
+.filter-close,
+.filter-open {
+  cursor: pointer;
 }
 /* Page header ends here */
 
@@ -787,8 +880,10 @@
 
 /* Media upload style starts here */
 .content-images {
-  padding: 1rem 0 4rem;
-  min-height: 50vh;
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  padding: 1rem 0.5rem 4rem;
+  min-height: 100vh;
 }
 
 .add-image-wrapper {
@@ -910,6 +1005,8 @@
 }
 
 .image-wrapper .image-number {
+  margin-right: 2rem;
+  padding-bottom: 1rem;
   font-size: 0.8rem;
   font-family: monospace;
   color: var(--color-light-4);
@@ -1042,6 +1139,7 @@
 }
 
 .image-wrapper .image-appears-on {
+  margin: 1rem 0 3rem;
   display: flex;
   flex-flow: column nowrap;
   gap: 0.4rem;

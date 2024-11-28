@@ -144,7 +144,7 @@ final class DbBackupApp extends App
                 timezone: $utcTz
             );
 
-            if ((int)$fileDate->format('G') === 4 && $fileDate > $twoMonthsAgo) {
+            if ((int)$fileDate->format('G') === 4 && $fileDate < $twoMonthsAgo) {
                 continue;
             }
 

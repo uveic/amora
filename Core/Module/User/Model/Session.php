@@ -62,6 +62,10 @@ class Session
             return false;
         }
 
+        if (!$this->user->isEnabled()) {
+            return false;
+        }
+
         $twoHoursFromNow = time() + 60 * 60 * 2;
         return $this->validUntil->getTimestamp() > $twoHoursFromNow;
     }

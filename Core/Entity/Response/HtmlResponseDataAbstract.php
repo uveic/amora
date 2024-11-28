@@ -38,7 +38,7 @@ abstract class HtmlResponseDataAbstract
 
         $this->baseUrl = Core::getConfig()->baseUrl ?: '';
         $this->sitePath = $this->request->path ?: '/';
-        $this->siteUrl = trim($this->baseUrl . '/' . ltrim($this->sitePath, ' /'), ' /');
+        $this->siteUrl = trim($this->baseUrl, ' /') . '/' . ltrim($this->sitePath, ' /');
         $this->siteLanguage = $request->siteLanguage;
         $this->siteName = $this->localisationUtil->getValue('siteName');
         $this->themeColourHex = Core::getConfig()->themeColourHex;
@@ -75,22 +75,27 @@ abstract class HtmlResponseDataAbstract
         int $logoWidth = 45,
         int $logoHeight = 45,
         ?string $className = null,
+        ?string $href = null,
     ): string {
         $imageUrl = Core::getConfig()->logoImageUrl;
         if (empty($siteName)) {
             $siteName = $this->siteName;
         }
 
+        if (!$href) {
+            $href = UrlBuilderUtil::buildBaseUrl($siteLanguage);
+        }
+
         $output = [];
 
         $output[] = $indentation . '<div class="logo-wrapper">';
 
-        $output[] = $indentation . '  <a class="logo' . ($className ? ' ' . $className : '') . '" href="' . UrlBuilderUtil::buildBaseUrl($siteLanguage) . '">';
+        $output[] = $indentation . '  <a class="logo' . ($className ? ' ' . $className : '') . '" href="' . $href . '">';
 
         if ($imageUrl) {
             $widthAndHeight = ' width="' . $logoWidth . '"';
             $widthAndHeight .= ' height="' . $logoHeight . '"';
-            $output[] = $indentation . '    <img src="' . $imageUrl . '" alt="Logo"' . $widthAndHeight . '>';
+            $output[] = $indentation . '    <img src="' . $imageUrl . '" alt="' . ('Logo ' . $siteName) . '"' . $widthAndHeight . '>';
         } else {
             $includeSiteName = true;
         }

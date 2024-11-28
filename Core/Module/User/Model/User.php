@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\User\Model;
 
+use Amora\App\Value\AppUserRole;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\DateUtil;
@@ -16,7 +17,7 @@ class User
         public ?int $id,
         public readonly UserStatus $status,
         public readonly Language $language,
-        public readonly UserRole $role,
+        public readonly UserRole|AppUserRole $role,
         public readonly UserJourneyStatus $journeyStatus,
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt,
@@ -30,11 +31,15 @@ class User
 
     public static function fromArray(array $user): User
     {
+        $userRole = UserRole::tryFrom($user['user_role_id'])
+            ? UserRole::from($user['user_role_id'])
+            : AppUserRole::from($user['user_role_id']);
+
         return new User(
             id: (int)$user['user_id'],
             status: UserStatus::from($user['user_status_id']),
             language: Language::from($user['user_language_iso_code']),
-            role: UserRole::from($user['user_role_id']),
+            role: $userRole,
             journeyStatus: UserJourneyStatus::from($user['user_journey_id']),
             createdAt: DateUtil::convertStringToDateTimeImmutable($user['user_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($user['user_updated_at']),

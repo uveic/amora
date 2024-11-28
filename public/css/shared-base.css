@@ -890,6 +890,7 @@ button.is-link.is-light,
 .display-block {display: block !important;}
 .word-break {word-wrap: anywhere;}
 .text-one-line {white-space: nowrap; overflow: auto; text-overflow: ellipsis;}
+.icon-one-line {display: flex;flex-flow: row nowrap;gap: 0.25rem;align-items: center;}
 .text-right {text-align: right;}
 .width-auto {width: auto;}
 .uppercase {text-transform: uppercase;}

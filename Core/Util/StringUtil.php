@@ -15,7 +15,8 @@ final class StringUtil
     public static function cleanString(
         string $text,
         string $charsToBeRemoved = '',
-        string $replaceWith = '-'
+        string $replaceWith = '-',
+        bool $keepSpaces = false,
     ): string {
         if (!empty($charsToBeRemoved)) {
             foreach (str_split($charsToBeRemoved) as $item) {
@@ -47,7 +48,13 @@ final class StringUtil
         $text = preg_replace(array_keys($utf8), array_values($utf8), $text);
 
         $text = preg_replace('/[^A-Za-z0-9\s-]+/', $replaceWith, $text);
-        $text = preg_replace('/\s+/', $replaceWith, $text);
+
+        if ($keepSpaces) {
+            $text = preg_replace('/\s+/', ' ', $text);
+        } else {
+            $text = preg_replace('/\s+/', $replaceWith, $text);
+        }
+
         $text = preg_replace('/' . $replaceWith . '+/', $replaceWith, $text);
 
         return trim($text, ' ' . $replaceWith);
@@ -301,7 +308,7 @@ final class StringUtil
             return $str;
         }
 
-        $url = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([^\s\.]+[^\s]*)+[^,.\s])@';
+        $url = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([^\s.]+[^\s]*)+[^,.\s])@';
         return preg_replace($url, '<a href="http$2://$4" title="$0">$0</a>', $str);
     }
 

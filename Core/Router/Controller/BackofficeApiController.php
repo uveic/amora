@@ -4,6 +4,7 @@ namespace Amora\Core\Router;
 
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
+use Amora\App\Value\AppUserRole;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Album\Model\AlbumSection;
@@ -158,16 +159,18 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         if (!empty($existingUser)) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
                 success: false,
-                errorMessage: sprintf(
-                    $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
-                    UrlBuilderUtil::buildPublicLoginUrl($request->siteLanguage)
-                ),
+                errorMessage: $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
             );
         }
 
-        $userRole = $roleId
-            ? UserRole::from($roleId)
-            : UserRole::User;
+        if ($roleId) {
+            $userRole = UserRole::tryFrom($roleId)
+                ? UserRole::from($roleId)
+                : (AppUserRole::tryFrom($roleId) ? AppUserRole::from($roleId) : UserRole::User);
+        } else {
+            $userRole = UserRole::User;
+        }
+
         $timezone = $timezone
             ? DateUtil::convertStringToDateTimeZone($timezone)
             : $request->session->user->timezone;
@@ -180,7 +183,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                     status: $isEnabled ? UserStatus::Enabled : UserStatus::Disabled,
                     language: $language,
                     role: $userRole,
-                    journeyStatus: UserJourneyStatus::getInitialUserJourneyStatusFromRole($userRole),
+                    journeyStatus: UserJourneyStatus::PendingPasswordCreation,
                     createdAt: $now,
                     updatedAt: $now,
                     email: $email,
@@ -287,6 +290,14 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
+        if ($roleId) {
+            $userRole = UserRole::tryFrom($roleId)
+                ? UserRole::from($roleId)
+                : (AppUserRole::tryFrom($roleId) ? AppUserRole::from($roleId) : UserRole::User);
+        } else {
+            $userRole = $existingUser->role;
+        }
+
         $updateRes = $this->userService->workflowUpdateUser(
             existingUser: $existingUser,
             name: $name,
@@ -298,6 +309,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             newPassword: $newPassword,
             repeatPassword: $repeatPassword,
             userStatus: $userStatusId ? UserStatus::from($userStatusId) : null,
+            userRole: $userRole,
         );
 
         if (!$updateRes->isSuccess) {
