@@ -130,8 +130,8 @@ final class DbBackupApp extends App
         $this->log('Deleting outdated backup files...');
 
         $utcTz = new DateTimeZone('UTC');
-        $oneDayAgo = DateUtil::convertStringToDateTimeImmutable(date: 'now', timezone: $utcTz);
-        $oneDayAgo->setTimestamp(strtotime("-1 days"));
+        $twoDaysAgo = DateUtil::convertStringToDateTimeImmutable(date: 'now', timezone: $utcTz);
+        $twoDaysAgo->setTimestamp(strtotime("-2 days"));
         $twoMonthsAgo = DateUtil::convertStringToDateTimeImmutable(date: 'now', timezone: $utcTz);
         $twoMonthsAgo->setTimestamp(strtotime("-2 months"));
 
@@ -148,10 +148,12 @@ final class DbBackupApp extends App
                 continue;
             }
 
-            if ($fileDate < $oneDayAgo) {
-                $this->log('Deleting file: ' . $file);
-                unlink($this->backupFolderPath . $file);
+            if ($fileDate < $twoDaysAgo) {
+                continue;
             }
+
+            $this->log('Deleting file: ' . $file);
+            unlink($this->backupFolderPath . $file);
         }
 
         $this->log('Deleting outdated backup files done');
@@ -172,18 +174,21 @@ final class DbBackupApp extends App
             return [];
         }
 
-        // Check if files are in this format 'backup_DdName_YYYY-mm-dd_HHhMMm.sql.gz'
+        // Check file format: backup_DbName_YYYY-mm-dd_HHhMMm.sql.gz
         $regex = "/backup_{$this->db->name}_\d{4}-\d{2}-\d{2}_\d{2}h\d{2}m.sql.gz/";
         $files = scandir($this->backupFolderPath);
 
-        foreach ($files as $key => $file) {
+        $output = [];
+        foreach ($files as $file) {
             if (preg_match($regex, $file) === 0) {
-                unset($files[$key]);
+                continue;
             }
+
+            $output[] = $file;
         }
 
-        sort($files);
+        sort($output);
 
-        return $files;
+        return $output;
     }
 }
