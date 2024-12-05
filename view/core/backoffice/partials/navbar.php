@@ -18,7 +18,7 @@ if (!isset($siteLogoHtml)) {
 }
 
 $isAdmin = $responseData->request->session?->isAdmin() ?? false;
-$isSearchEnabled = Core::getConfig()->isSearchEnabled;
+$isSearchEnabled = $isSearchEnabled ?? Core::getConfig()->isSearchEnabled;
 
 $userRegisteredMoreThan24HoursAgo = $responseData->minutesSinceUserRegistration() > 24 * 60;
 if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>

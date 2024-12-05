@@ -22,7 +22,7 @@ final class MigrationDbApp
         private readonly string $pathToMigrationFiles,
     ) {}
 
-    public function run($args)
+    public function run($args): void
     {
         $action = (empty($args[1])) ? 'empty' : trim($args[1]);
 
@@ -73,7 +73,7 @@ final class MigrationDbApp
         }
     }
 
-    private function printHelp()
+    private function printHelp(): void
     {
         $this->printOutput();
         $this->printOutput('Available commands: ');
@@ -163,13 +163,11 @@ final class MigrationDbApp
         $tables = $this->db->getTables();
 
         if ($tables) {
-            $i = 0;
             $this->db->execute('SET foreign_key_checks = 0');
 
             foreach ($tables as $value) {
                 $this->printOutput('Removing ' . $value . '...');
                 $this->db->execute('DROP TABLE IF EXISTS '. $value . ';');
-                $i++;
             }
         }
 
@@ -283,7 +281,7 @@ final class MigrationDbApp
             '
                 SELECT `filename`
                 FROM ' . self::MIGRATION_TABLE_NAME . '
-                ORDER BY id ASC
+                ORDER BY id
             '
         );
 

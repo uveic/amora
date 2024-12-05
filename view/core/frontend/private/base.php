@@ -24,6 +24,7 @@ $navBarArguments = [
         includeSubtitle: true,
         indentation: '    ',
     ),
+    'isSearchEnabled' => false,
 ];
 
 ?>
