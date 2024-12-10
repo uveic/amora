@@ -130,10 +130,8 @@ final class DbBackupApp extends App
         $this->log('Deleting outdated backup files...');
 
         $utcTz = new DateTimeZone('UTC');
-        $twoDaysAgo = DateUtil::convertStringToDateTimeImmutable(date: 'now', timezone: $utcTz);
-        $twoDaysAgo->setTimestamp(strtotime("-2 days"));
-        $twoMonthsAgo = DateUtil::convertStringToDateTimeImmutable(date: 'now', timezone: $utcTz);
-        $twoMonthsAgo->setTimestamp(strtotime("-2 months"));
+        $twoDaysAgo = DateUtil::convertStringToDateTimeImmutable(date: '-2 days', timezone: $utcTz);
+        $twoMonthsAgo = DateUtil::convertStringToDateTimeImmutable(date: '-2 months', timezone: $utcTz);
 
         $files = $this->getBackupFiles();
         foreach ($files as $file) {
@@ -144,16 +142,29 @@ final class DbBackupApp extends App
                 timezone: $utcTz
             );
 
-            if ((int)$fileDate->format('G') === 4 && $fileDate < $twoMonthsAgo) {
+            if ($fileDate < $twoMonthsAgo) {
+                $res = $this->deleteFile($file);
+                if (!$res) {
+                    $this->log('Aborting... Error deleting file: ' . $file, true);
+                    return false;
+                }
+
                 continue;
             }
 
-            if ($fileDate < $twoDaysAgo) {
+            if ((int)$fileDate->format('G') === 4) {
                 continue;
             }
 
-            $this->log('Deleting file: ' . $file);
-            unlink($this->backupFolderPath . $file);
+            if ($fileDate > $twoDaysAgo) {
+                continue;
+            }
+
+            $res = $this->deleteFile($file);
+            if (!$res) {
+                $this->log('Aborting... Error deleting file: ' . $file, true);
+                return false;
+            }
         }
 
         $this->log('Deleting outdated backup files done');
@@ -165,6 +176,12 @@ final class DbBackupApp extends App
     {
         $files = $this->getBackupFiles();
         return $files ? $files[count($files) - 1] : '';
+    }
+
+    private function deleteFile(string $filename): bool
+    {
+        $this->log('Deleting file: ' . $filename);
+        return unlink($this->backupFolderPath . $filename);
     }
 
     private function getBackupFiles(): array
