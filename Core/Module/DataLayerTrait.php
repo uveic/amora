@@ -11,7 +11,7 @@ trait DataLayerTrait {
         array &$params,
         array $ids,
         string $dbColumnName,
-        string $keyName = null,
+        ?string $keyName = null,
         bool $notIn = false,
     ): string {
         $keyName = $keyName ?? (StringUtil::generateRandomString(6) . 'Id');

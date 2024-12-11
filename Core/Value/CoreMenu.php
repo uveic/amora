@@ -13,7 +13,7 @@ final class CoreMenu
 {
     public static function getAdmin(
         Language $language,
-        string $username = null,
+        ?string $username = null,
         bool $includeAuthorisedDashboardLink = false,
     ): array {
         $localisationUtil = Core::getLocalisationUtil($language);
@@ -117,7 +117,7 @@ final class CoreMenu
 
     public static function getCustomer(
         Language $language,
-        string $username = null,
+        ?string $username = null,
         bool $includeAdminLink = false,
     ): array {
         $localisationUtil = Core::getLocalisationUtil($language);

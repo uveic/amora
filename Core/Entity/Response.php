@@ -222,7 +222,7 @@ class Response
 
     public static function createNotFoundResponse(
         Request $request,
-        HtmlResponseDataAbstract $responseData = null,
+        ?HtmlResponseDataAbstract $responseData = null,
     ): Response {
         return Response::createHtmlResponse(
             template: 'app/frontend/public/404',
