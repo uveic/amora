@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 use Amora\Core\Module\Article\Value\MediaType;
+use Amora\Core\Value\CoreIcons;
 use Amora\Core\Value\QueryOrderDirection;
 
 /** @var HtmlResponseDataAbstract $responseData */
@@ -13,9 +14,7 @@ use Amora\Core\Value\QueryOrderDirection;
     </div>
 
     <div class="add-image-wrapper">
-      <a href="#" class="modal-close-button">
-        <img src="/img/svg/x-white.svg" class="img-svg img-svg-30 no-margin" alt="<?=$responseData->getLocalValue('globalClose')?>">
-      </a>
+      <span class="modal-close-button"><?=CoreIcons::CLOSE?></span>
       <div class="add-image-header">
         <h2 class="m-t-0 m-b-0"><?=$responseData->getLocalValue('globalSelectImage')?></h2>
         <div>

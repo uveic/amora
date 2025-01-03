@@ -8,6 +8,7 @@ use Amora\Core\Value\CoreIcons;
 ?>
   <div class="modal-media modal-wrapper null">
     <div class="modal-inner modal-bg-dark">
+      <span class="modal-close-button"><?=CoreIcons::CLOSE?></span>
       <div class="image-wrapper null">
         <div class="loader-media"></div>
         <div class="image-main">

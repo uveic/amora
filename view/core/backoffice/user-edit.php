@@ -1,9 +1,9 @@
 <?php
 
+use Amora\App\Value\AppUserRole;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
-use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\DateUtil;
 
@@ -93,7 +93,7 @@ if ($responseData->user) {
           <div class="control">
             <select id="roleId" name="roleId">
 <?php
-    foreach (UserRole::getAll() as $role) {
+    foreach (AppUserRole::getAll() as $role) {
         $selected = $role === $responseData->user?->role;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>

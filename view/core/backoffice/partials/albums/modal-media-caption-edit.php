@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -9,9 +10,7 @@ $album = $responseData->album;
 ?>
 <div class="album-media-caption-edit-modal-js modal-wrapper null">
   <div class="modal-inner modal-padding modal-inner-no-min-width">
-    <a href="#" class="modal-close-button">
-      <img src="/img/svg/x.svg" class="img-svg img-svg-30" width="30" height="30" alt="<?=$responseData->getLocalValue('globalClose')?>">
-    </a>
+    <span class="modal-close-button"><?=CoreIcons::CLOSE?></span>
 
     <div class="modal-header-container">
       <div class="modal-header-icon">
