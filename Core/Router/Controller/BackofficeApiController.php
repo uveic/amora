@@ -719,8 +719,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Method: PUT
      *
      * @param int $contentId
-     * @param string|null $titleHtml
-     * @param string|null $subtitleHtml
+     * @param string|null $title
+     * @param string|null $subtitle
      * @param string|null $contentHtml
      * @param int|null $mainImageId
      * @param string|null $actionUrl
@@ -729,8 +729,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     protected function updatePageContent(
         int $contentId,
-        ?string $titleHtml,
-        ?string $subtitleHtml,
+        ?string $title,
+        ?string $subtitle,
         ?string $contentHtml,
         ?int $mainImageId,
         ?string $actionUrl,
@@ -745,17 +745,9 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $titleHtml = StringUtil::sanitiseHtml($titleHtml);
-        $subtitleHtml = StringUtil::sanitiseHtml($subtitleHtml);
+        $title = StringUtil::sanitiseText($title);
+        $subtitle = StringUtil::sanitiseText($subtitle);
         $contentHtml = StringUtil::sanitiseHtml($contentHtml);
-
-        if ($titleHtml) {
-            $titleHtml = nl2br($titleHtml);
-        }
-
-        if ($subtitleHtml) {
-            $subtitleHtml = nl2br($subtitleHtml);
-        }
 
         $existingImage = null;
         if ($mainImageId) {
@@ -776,8 +768,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             type: $existingPageContent->type,
             createdAt: $existingPageContent->createdAt,
             updatedAt: new DateTimeImmutable(),
-            titleHtml: $titleHtml,
-            subtitleHtml: $subtitleHtml,
+            title: $title,
+            subtitle: $subtitle,
             contentHtml: $contentHtml,
             mainImage: $existingImage,
             actionUrl: $actionUrl,

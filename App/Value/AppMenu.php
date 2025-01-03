@@ -33,7 +33,7 @@ final class AppMenu
 
     public static function getCustomer(
         Language $language,
-        string $username = null,
+        ?string $username = null,
         bool $includeAdminLink = false,
     ): array {
         $appMenu = [];

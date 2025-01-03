@@ -11,8 +11,8 @@ $editLink = $pageContent && $responseData->request->session?->isAdmin()
     : '';
 ?>
   <article class="home-main">
-<?php if ($pageContent?->titleHtml) { ?>
-    <h1><?=$pageContent->titleHtml?></h1>
+<?php if ($pageContent?->title) { ?>
+    <h1><?=$pageContent->title?></h1>
 <?php } ?>
     <?=$pageContent?->contentHtml?>
     <?=$editLink?>
