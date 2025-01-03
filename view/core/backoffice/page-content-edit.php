@@ -35,6 +35,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
   </div>
   <form id="form-page-content" action="#" class="page-content-wrapper">
     <input name="contentId" type="hidden" value="<?=$pageContent?->id?>">
+    <input id="trixEditorContentHtml" name="pageContentContentHtml" type="hidden" value="<?=$pageContent?->contentHtml?>">
 
     <label for="pageContentTitle" class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalTitle')?></label>
     <input id="pageContentTitle" name="pageContentTitle" type="text" maxlength="255" class="editor-title<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>" value="<?=$pageContent?->title?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" />
@@ -43,9 +44,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     <input id="pageContentSubtitle" name="pageContentSubtitle" type="text" maxlength="255" class="editor-subtitle<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" value="<?=$pageContent?->subtitle?>" placeholder="<?=$responseData->getLocalValue('editorSubtitlePlaceholder')?>"/>
 
     <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>"><?=$responseData->getLocalValue('navAdminContent')?></div>
-    <div class="editor-content medium-editor-content <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>" contenteditable="true">
-      <?=$pageContent?->contentHtml . PHP_EOL?>
-    </div>
+    <trix-editor input="trixEditorContentHtml" class="editor-content trix-editor-content <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>"></trix-editor>
 
     <div class="field m-l-1 m-r-1<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::ActionUrl) ? '' : ' null'?>">
       <label for="actionUrl" class="label"><?=$responseData->getLocalValue('pageContentEditAction')?>:</label>

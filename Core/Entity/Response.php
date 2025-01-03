@@ -57,6 +57,7 @@ class Response
         $scriptSrc = 'script-src ' . $allowedUrls . $nonce . ';';
         $defaultSrc = 'default-src ' . implode(' ', $allowedDomains) . ';';
         $imgSrc = Core::getConfig()->allowImgSrcData ? 'img-src ' . $allowedUrls . ' data:;' : '';
+        $styleSrc = "style-src 'self' 'unsafe-inline';";
 
         $insecureRequests = '';
         if (Core::isRunningInLiveEnv()) {
@@ -76,7 +77,7 @@ class Response
                 $httpStatus->value,
                 "Content-Type: $contentType->value",
                 "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate",
-                "Content-Security-Policy: $defaultSrc $connectSrc $scriptSrc $imgSrc" . $insecureRequests,
+                "Content-Security-Policy: $defaultSrc $connectSrc $scriptSrc $imgSrc $styleSrc" . $insecureRequests,
                 "X-Content-Type-Options: nosniff",
                 "Referrer-Policy: strict-origin-when-cross-origin",
                 "X-Frame-Options: SAMEORIGIN",

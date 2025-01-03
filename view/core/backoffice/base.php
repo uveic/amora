@@ -36,11 +36,11 @@ $navBarArguments = [
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <link rel="manifest" href="/manifest.json">
-  <link href="/css/editor/medium-editor.min.css" rel="stylesheet">
-  <link href="/css/editor/custom-theme.css" rel="stylesheet">
+  <link href="/css/editor/trix.css?v=000" rel="stylesheet" type="text/css">
   <link href="/css/navbar-base.css?v=000" rel="stylesheet" type="text/css">
   <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
   <link href="/css/backoffice-base.css?v=000" rel="stylesheet" type="text/css">
+  <script src="/js/lib/trix.umd.min.js?v=2.0.8" type="text/javascript" nonce="<?=$responseData->nonce?>"></script>
 </head>
 <body>
 <?=$this->insert('partials/navbar', $navBarArguments)?>

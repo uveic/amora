@@ -1429,14 +1429,14 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
     const contentId = Number.parseInt(f.querySelector('input[name="contentId"]').value);
     const titleContent = f.querySelector('input[name="pageContentTitle"]').value.trim();
     const subtitleContent = f.querySelector('input[name="pageContentSubtitle"]').value.trim();
-    const contentHtml = f.querySelector('.editor-content');
+    const contentHtml = f.querySelector('input[name="pageContentContentHtml"]').value.trim();
     const actionUrl = f.querySelector('input[name="actionUrl"]').value.trim();
     const mainImageEl = f.querySelector('.media-item');
 
     const payload = JSON.stringify({
       title: titleContent.length ? titleContent : null,
       subtitle: subtitleContent.length ? subtitleContent : null,
-      contentHtml: Util.getAndCleanHtmlFromElement(contentHtml),
+      contentHtml: contentHtml.length ? contentHtml : null,
       mainImageId: mainImageEl && mainImageEl.dataset.mediaId ? Number.parseInt(mainImageEl.dataset.mediaId)
         : null,
       actionUrl: actionUrl.length ? actionUrl : null,
