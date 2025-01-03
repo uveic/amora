@@ -410,4 +410,17 @@ final class StringUtil
 
         return $fulltextParts ? implode(' ', $fulltextParts) : $searchQuery;
     }
+
+    public static function convertToUtf8(string|array|null $d): string
+    {
+        if (is_array($d)) {
+            foreach ($d as $k => $v) {
+                $d[$k] = self::convertToUtf8($v);
+            }
+        } else if (is_string ($d)) {
+            return @utf8_encode($d);
+        }
+
+        return $d;
+    }
 }

@@ -101,14 +101,29 @@ final class PublicApiController extends PublicApiControllerAbstract
         Request $request
     ): Response {
         try {
-            $this->logger->logError(
-                'AJAX Logger' .
-                ' - Error message: ' . $errorMessage .
-                ' - Endpoint: ' . $method . ' ' . $endpoint .
-                ' - Payload: ' . $payload .
-                ' - Page URL: ' . $pageUrl .
-                ' - User agent: ' . $userAgent
-            );
+            $logMessage = 'AJAX Logger';
+
+            if ($errorMessage) {
+                $logMessage .= ' - Error message: ' . $errorMessage;
+            }
+
+            if ($method || $endpoint) {
+                $logMessage .= ' - Endpoint: ' . $method . ' ' . $endpoint;
+            }
+
+            if ($payload) {
+                $logMessage .= ' - Payload: ' . $payload;
+            }
+
+            if ($pageUrl) {
+                $logMessage .= ' - Page URL: ' . $pageUrl;
+            }
+
+            if ($userAgent) {
+                $logMessage .= ' - User agent: ' . $userAgent;
+            }
+
+            $this->logger->logError($logMessage);
         } catch (Throwable) {
             // Ignore and move on
         }

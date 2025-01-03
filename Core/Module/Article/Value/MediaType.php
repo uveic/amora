@@ -2,11 +2,14 @@
 
 namespace Amora\Core\Module\Article\Value;
 
+use Amora\Core\Value\CoreIcons;
+
 enum MediaType: int
 {
     case PDF = 1;
     case Image = 2;
     case CSV = 3;
+    case TXT = 4;
 
     case Unknown = 1000;
 
@@ -26,18 +29,19 @@ enum MediaType: int
             'image/jpeg', 'image/gif', 'image/png', 'image/webp' => self::Image,
             'application/pdf' => self::PDF,
             'text/csv' => self::CSV,
+            'text/plain', 'text/plain;charset=UTF-8' => self::TXT,
             default => self::Unknown,
         };
     }
 
-    public function getIcon(string $class = ''): string
+    public function getIcon(): string
     {
-        $class = $class ? ' ' . $class : '';
         return match($this) {
-            self::Image => '<img class="img-svg' . $class . '" width="20" height="20" src="/img/svg/image.svg" alt="Img">',
-            self::PDF => '<img src="/img/svg/file-pdf.svg" class="img-svg' . $class . '" width="20" height="20" alt="PDF">',
-            self::CSV => '<img src="/img/svg/file-csv.svg" class="img-svg' . $class . '" width="20" height="20" alt="CSV">',
-            default => '<img src="/img/svg/files.svg" class="img-svg' . $class . '" width="20" height="20" alt="File">',
+            self::Image => CoreIcons::IMAGE,
+            self::PDF => CoreIcons::FILE_PDF,
+            self::CSV => CoreIcons::FILE_CSV,
+            self::TXT => CoreIcons::FILE_TXT,
+            default => CoreIcons::FILES,
         };
     }
 }
