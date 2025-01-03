@@ -493,10 +493,14 @@
   margin: 0 0 2rem 0;
   color: var(--color-input-text);
   background-color: var(--color-input-bg);
+  border-top: none;
+  border-left: none;
+  border-right: none;
   border-bottom: 1px solid var(--color-input-border);
   padding: 0.5rem 1rem;
   font-size: 1.6rem;
   line-height: 3rem;
+  font-weight: 700;
 }
 
 .editor-content {
@@ -548,11 +552,6 @@
   margin: 0 0 1.5rem;
 }
 
-.medium-editor-placeholder,
-.editor-placeholder {
-  color: var(--color-light-3);
-}
-
 .editor-content p:first-child {
   margin-top: 0;
 }
@@ -570,6 +569,7 @@
 .page-content-before {
   color: var(--color-light-3);
   font-size: 0.8rem;
+  font-weight: 400;
   padding: 0 1rem;
 }
 

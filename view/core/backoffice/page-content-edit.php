@@ -4,6 +4,7 @@ use Amora\App\Value\AppPageContentType;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\PageContentSection;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 $pageContent = $responseData->pageContent;
@@ -29,17 +30,17 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
   <div class="page-header">
     <h3><?=$title . $languageIcon?></h3>
     <div class="links">
-      <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="20" height="20" alt="Volver"></a>
+      <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
     </div>
   </div>
   <form id="form-page-content" action="#" class="page-content-wrapper">
     <input name="contentId" type="hidden" value="<?=$pageContent?->id?>">
 
-    <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalTitle')?></div>
-    <h1 class="editor-title<?=$pageContent?->titleHtml ? '' : ' editor-placeholder'?><?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->titleHtml ?: $responseData->getLocalValue('editorTitlePlaceholder')?></h1>
+    <label for="pageContentTitle" class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalTitle')?></label>
+    <input id="pageContentTitle" name="pageContentTitle" type="text" maxlength="255" class="editor-title<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>" value="<?=$pageContent?->title?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" />
 
-    <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalSubtitle')?></div>
-    <h2 class="editor-subtitle<?=$pageContent?->subtitleHtml ? '' : ' editor-placeholder'?> <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" contenteditable="true"><?=$pageContent?->subtitleHtml ?: $responseData->getLocalValue('editorSubtitlePlaceholder')?></h2>
+    <label for="pageContentSubtitle" class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalSubtitle')?></label>
+    <input id="pageContentSubtitle" name="pageContentSubtitle" type="text" maxlength="255" class="editor-subtitle<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" value="<?=$pageContent?->subtitle?>" placeholder="<?=$responseData->getLocalValue('editorSubtitlePlaceholder')?>"/>
 
     <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>"><?=$responseData->getLocalValue('navAdminContent')?></div>
     <div class="editor-content medium-editor-content <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>" contenteditable="true">
@@ -62,11 +63,9 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
           <img class="media-item" data-media-id="<?=$pageContent->mainImage->id?>" src="<?=$pageContent->mainImage->getPathWithNameMedium()?>" alt="<?=$pageContent->mainImage->buildAltText()?>">
 <?php } ?>
           <div class="main-image-button-container">
-            <a href="#" class="main-image-button main-image-button-red generic-media-delete-js<?=$pageContent?->mainImage ? '' : ' null'?>">
-              <img class="img-svg" src="/img/svg/trash-white.svg" alt="<?=$responseData->getLocalValue('globalRemoveImage')?>" title="<?=$responseData->getLocalValue('globalRemoveImage')?>">
-            </a>
+            <a href="#" class="main-image-button main-image-button-red generic-media-delete-js<?=$pageContent?->mainImage ? '' : ' null'?>"><?=CoreIcons::TRASH?></a>
             <a href="#" class="main-image-button select-media-action" data-event-listener-action="handleGenericMainMediaClick" data-target-container-id="page-content-main-image-container">
-              <img class="img-svg" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalSelectImage')?>" title="<?=$responseData->getLocalValue('globalSelectImage')?>">
+              <?=CoreIcons::IMAGE?>
               <span><?= $pageContent?->mainImage ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('globalSelectImage') ?></span>
             </a>
           </div>

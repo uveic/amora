@@ -68,7 +68,7 @@ abstract class HtmlResponseDataAbstract
     public function buildSiteLogoHtml(
         Language $siteLanguage,
         ?string $siteName = null,
-        PageContent $siteContent = null,
+        ?PageContent $siteContent = null,
         bool $includeSubtitle = false,
         bool $includeSiteName = false,
         string $indentation = '',

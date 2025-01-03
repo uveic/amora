@@ -1407,48 +1407,6 @@ document.querySelectorAll('input[name="select-media-action-upload"]').forEach(im
   });
 });
 
-document.querySelectorAll('.editor-title').forEach(t => {
-  t.addEventListener('focus', () => {
-    const content = t.textContent.trim();
-
-    t.classList.remove('editor-placeholder');
-
-    if (content === Global.get('editorTitlePlaceholder')) {
-      t.innerHTML = '';
-    }
-  });
-
-  t.addEventListener('blur', () => {
-    const content = t.textContent.trim();
-
-    if (!content.length) {
-      t.innerHTML = Global.get('editorTitlePlaceholder');
-      t.classList.add('editor-placeholder');
-    }
-  });
-});
-
-document.querySelectorAll('.editor-subtitle').forEach(t => {
-  t.addEventListener('focus', () => {
-    const content = t.textContent.trim();
-
-    t.classList.remove('editor-placeholder');
-
-    if (content === Global.get('editorSubtitlePlaceholder')) {
-      t.innerHTML = '';
-    }
-  });
-
-  t.addEventListener('blur', () => {
-    const content = t.textContent.trim();
-
-    if (!content.length) {
-      t.innerHTML = Global.get('editorSubtitlePlaceholder');
-      t.classList.add('editor-placeholder');
-    }
-  });
-});
-
 if (document.querySelector('.medium-editor-content')) {
   Util.createMediumEditor('medium-editor-content');
 
@@ -1469,19 +1427,15 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
     e.preventDefault();
 
     const contentId = Number.parseInt(f.querySelector('input[name="contentId"]').value);
-    const titleElement = f.querySelector('.editor-title');
-    const titleContent = titleElement.innerHTML.trim();
-    const subtitleElement = f.querySelector('.editor-subtitle');
-    const subtitleContent = subtitleElement.innerHTML.trim();
+    const titleContent = f.querySelector('input[name="pageContentTitle"]').value.trim();
+    const subtitleContent = f.querySelector('input[name="pageContentSubtitle"]').value.trim();
     const contentHtml = f.querySelector('.editor-content');
     const actionUrl = f.querySelector('input[name="actionUrl"]').value.trim();
     const mainImageEl = f.querySelector('.media-item');
 
     const payload = JSON.stringify({
-      titleHtml: titleContent === Global.get('editorTitlePlaceholder') ? null
-        : Util.getAndCleanHtmlFromElement(titleElement),
-      subtitleHtml: subtitleContent === Global.get('editorSubtitlePlaceholder') ? null
-        : Util.getAndCleanHtmlFromElement(subtitleElement),
+      title: titleContent.length ? titleContent : null,
+      subtitle: subtitleContent.length ? subtitleContent : null,
       contentHtml: Util.getAndCleanHtmlFromElement(contentHtml),
       mainImageId: mainImageEl && mainImageEl.dataset.mediaId ? Number.parseInt(mainImageEl.dataset.mediaId)
         : null,

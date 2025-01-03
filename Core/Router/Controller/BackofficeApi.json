@@ -1163,7 +1163,6 @@
           {
             "name": "contentId",
             "in": "path",
-            "description": "Page content ID",
             "required": true,
             "type": "integer"
           },
@@ -1174,24 +1173,19 @@
             "required": true,
             "schema": {
               "properties": {
-                "titleHtml": {
-                  "description": "Content title",
+                "title": {
                   "type": "string"
                 },
-                "subtitleHtml": {
-                  "description": "Content subtitle",
+                "subtitle": {
                   "type": "string"
                 },
                 "contentHtml": {
-                  "description": "Content",
                   "type": "string"
                 },
                 "mainImageId": {
-                  "description": "Main image ID",
                   "type": "integer"
                 },
                 "actionUrl": {
-                  "description": "Action URL",
                   "type": "string"
                 }
               }
@@ -1206,7 +1200,6 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
@@ -1217,8 +1210,7 @@
                   "description": "Redirect URL (if any)"
                 },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message"
+                  "type": "string"
                 }
               },
               "required": [
