@@ -1194,10 +1194,7 @@
                   "description": "Action URL",
                   "type": "string"
                 }
-              },
-              "required": [
-                "contentHtml"
-              ]
+              }
             }
           }
         ],

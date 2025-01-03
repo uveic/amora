@@ -242,7 +242,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param int $contentId
      * @param string|null $titleHtml
      * @param string|null $subtitleHtml
-     * @param string $contentHtml
+     * @param string|null $contentHtml
      * @param int|null $mainImageId
      * @param string|null $actionUrl
      * @param Request $request
@@ -252,7 +252,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         int $contentId,
         ?string $titleHtml,
         ?string $subtitleHtml,
-        string $contentHtml,
+        ?string $contentHtml,
         ?int $mainImageId,
         ?string $actionUrl,
         Request $request
@@ -1110,16 +1110,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         $titleHtml = $bodyParams['titleHtml'] ?? null;
         $subtitleHtml = $bodyParams['subtitleHtml'] ?? null;
-        $contentHtml = null;
-        if (!isset($bodyParams['contentHtml'])) {
-            $errors[] = [
-                'field' => 'contentHtml',
-                'message' => 'required'
-            ];
-        } else {
-            $contentHtml = $bodyParams['contentHtml'] ?? null;
-        }
-
+        $contentHtml = $bodyParams['contentHtml'] ?? null;
         $mainImageId = $bodyParams['mainImageId'] ?? null;
         $actionUrl = $bodyParams['actionUrl'] ?? null;
 

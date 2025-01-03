@@ -54,10 +54,12 @@ final class CsvWriterUtil
     }
 
     private static function writeLine($handle, array $data): bool {
-        if (false === fputcsv($handle, array_values($data))) {
-            return false;
-        }
+        $res = fputcsv(
+            stream: $handle,
+            fields: array_values($data),
+            escape: "\\",
+        );
 
-        return true;
+        return !(false === $res);
     }
 }

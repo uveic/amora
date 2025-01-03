@@ -8,6 +8,6 @@ readonly class QueryOrderBy
 {
     public function __construct(
         public string $field,
-        public QueryOrderDirection $direction,
+        public QueryOrderDirection $direction = QueryOrderDirection::ASC,
     ) {}
 }

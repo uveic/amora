@@ -21,7 +21,7 @@ class PageContent
         public readonly DateTimeImmutable $updatedAt,
         public readonly ?string $titleHtml,
         public readonly ?string $subtitleHtml,
-        public readonly string $contentHtml,
+        public readonly ?string $contentHtml,
         public readonly ?Media $mainImage,
         public readonly ?string $actionUrl,
     ) {}
@@ -40,8 +40,8 @@ class PageContent
             createdAt: DateUtil::convertStringToDateTimeImmutable($data['page_content_created_at']),
             updatedAt: DateUtil::convertStringToDateTimeImmutable($data['page_content_updated_at']),
             titleHtml: $data['page_content_title_html'] ?? null,
-            subtitleHtml:  $data['page_content_subtitle_html'] ?? null,
-            contentHtml:  $data['page_content_html'],
+            subtitleHtml: $data['page_content_subtitle_html'] ?? null,
+            contentHtml: $data['page_content_html'] ?? null,
             mainImage: isset($data['media_id']) ? Media::fromArray($data) : null,
             actionUrl: $data['page_content_action_url'] ?? null,
         );
@@ -78,7 +78,7 @@ class PageContent
             updatedAt: new DateTimeImmutable(),
             titleHtml: null,
             subtitleHtml: null,
-            contentHtml: '',
+            contentHtml: null,
             mainImage: null,
             actionUrl: null,
         );

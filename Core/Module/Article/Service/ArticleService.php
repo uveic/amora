@@ -64,9 +64,15 @@ readonly class ArticleService
         );
     }
 
-    public function getPageContentForTypeId(PageContentType $type): ?PageContent
-    {
-        $res = $this->filterPageContentBy(typeIds: [$type->value]);
+    public function getPageContentForTypeIdAndLanguage(
+        PageContentType|AppPageContentType $type,
+        Language $language
+    ): ?PageContent {
+        $res = $this->filterPageContentBy(
+            languageIsoCodes: [$language->value],
+            typeIds: [$type->value]
+        );
+
         return $res[0] ?? null;
     }
 

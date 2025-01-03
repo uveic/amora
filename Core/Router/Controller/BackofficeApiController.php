@@ -721,7 +721,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param int $contentId
      * @param string|null $titleHtml
      * @param string|null $subtitleHtml
-     * @param string $contentHtml
+     * @param string|null $contentHtml
      * @param int|null $mainImageId
      * @param string|null $actionUrl
      * @param Request $request
@@ -731,7 +731,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         int $contentId,
         ?string $titleHtml,
         ?string $subtitleHtml,
-        string $contentHtml,
+        ?string $contentHtml,
         ?int $mainImageId,
         ?string $actionUrl,
         Request $request

@@ -31,6 +31,7 @@ class RequestClass {
     stringPayload = null,
     method = 'POST',
     successMessage = null,
+    logError = false,
     headers = {'Content-Type': 'application/json'},
   ) {
     return fetch(
@@ -64,26 +65,29 @@ class RequestClass {
       return Promise.resolve(json);
     }).catch(error => {
       Util.notifyError(error);
-      this.logError(error.message, url, method, stringPayload).then();
+
+      if (logError) {
+        this.logError(error.message, url, method, stringPayload).then();
+      }
 
       return Promise.reject(error);
     });
   }
 
-  get(url, successMessage = null) {
-    return this.request(url, null, 'GET', successMessage);
+  get(url, successMessage = null, logError = false) {
+    return this.request(url, null, 'GET', successMessage, logError);
   }
 
-  post(url, stringPayload = null, successMessage = null) {
-    return this.request(url, stringPayload, 'POST', successMessage);
+  post(url, stringPayload = null, successMessage = null, logError = false) {
+    return this.request(url, stringPayload, 'POST', successMessage, logError);
   }
 
-  put(url, stringPayload = null, successMessage = null) {
-    return this.request(url, stringPayload, 'PUT', successMessage);
+  put(url, stringPayload = null, successMessage = null, logError = false) {
+    return this.request(url, stringPayload, 'PUT', successMessage, logError);
   }
 
-  delete(url, stringPayload = null, successMessage = null) {
-    return this.request(url, stringPayload, 'DELETE', successMessage);
+  delete(url, stringPayload = null, successMessage = null, logError = false) {
+    return this.request(url, stringPayload, 'DELETE', successMessage, logError);
   }
 }
 
