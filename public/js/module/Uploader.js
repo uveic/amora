@@ -93,14 +93,14 @@ class UploaderClass {
       formData.delete('files[]');
       formData.append('files[]', media);
 
-      let xhr = new XMLHttpRequest()
-      xhr.onload = () => {
+      const xhr = new XMLHttpRequest();
+      xhr.addEventListener('load', () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
           resolve(JSON.parse(xhr.response));
         } else {
           reject(new Error(xhr.statusText));
         }
-      }
+      });
 
       xhr.upload.addEventListener('progress', (e) => {
         const progressValue = Math.round((e.loaded / e.total) * 100);
@@ -166,6 +166,33 @@ class UploaderClass {
         catchError(error);
       }
     }
+  }
+
+  trixEditorUploadFile (
+    attachment,
+    apiUploadEndpoint = '/api/file',
+    formData = new FormData(),
+  ) {
+    formData.delete('files[]');
+    formData.append('files[]', attachment.file);
+
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', () => {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const json = JSON.parse(xhr.response);
+        attachment.setAttributes({
+          url: json.file.pathLarge,
+        });
+      }
+    });
+
+    xhr.upload.addEventListener('progress', (e) => {
+      const progressValue = Math.round((e.loaded / e.total) * 100);
+      attachment.setUploadProgress(progressValue);
+    });
+
+    xhr.open('POST', apiUploadEndpoint);
+    xhr.send(formData);
   }
 }
 

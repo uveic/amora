@@ -35,7 +35,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
   </div>
   <form id="form-page-content" action="#" class="page-content-wrapper">
     <input name="contentId" type="hidden" value="<?=$pageContent?->id?>">
-    <input id="trixEditorContentHtml" name="pageContentContentHtml" type="hidden" value="<?=$pageContent?->contentHtml?>">
+    <input id="trixEditorContentHtml" name="pageContentContentHtml" type="hidden" value='<?=$pageContent?->contentHtml?>'>
 
     <label for="pageContentTitle" class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalTitle')?></label>
     <input id="pageContentTitle" name="pageContentTitle" type="text" maxlength="255" class="editor-title<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>" value="<?=$pageContent?->title?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" />
