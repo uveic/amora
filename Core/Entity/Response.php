@@ -56,7 +56,7 @@ class Response
         $connectSrc = 'connect-src ' . $allowedUrls . ';';
         $scriptSrc = 'script-src ' . $allowedUrls . $nonce . ';';
         $defaultSrc = 'default-src ' . implode(' ', $allowedDomains) . ';';
-        $imgSrc = Core::getConfig()->allowImgSrcData ? 'img-src ' . $allowedUrls . ' data:;' : '';
+        $imgSrc = Core::getConfig()->allowImgSrcData ? 'img-src ' . $allowedUrls . ' data: blob:;' : '';
         $styleSrc = "style-src 'self' 'unsafe-inline';";
 
         $insecureRequests = '';
