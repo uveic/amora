@@ -9,6 +9,7 @@ use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 final class UserHtmlGenerator
 {
@@ -40,7 +41,7 @@ final class UserHtmlGenerator
         $output[] = $indentation . '  <div class="table-item">';
         $output[] = $indentation . '    <span class="light-text-color font-0-9">#' . $user->id . '</span>';
         $output[] = $indentation . '    ' . $userTitleHtml;
-        $output[] = $indentation . '    <span><img class="img-svg m-r-05" width="20" height="20" src="/img/svg/envelope-simple.svg" alt="E-mail">' . $user->email . '</span>';
+        $output[] = $indentation . '    <span>' . CoreIcons::ENVELOPE_SIMPLE . $user->email . '</span>';
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '  <div class="table-item flex-no-grow">';
         $output[] = $indentation . '    <span class="article-status ' . $statusClassname . '">' . $responseData->getLocalValue('userStatus' . $user->status->name) . '</span>';
@@ -53,7 +54,7 @@ final class UserHtmlGenerator
             $output[] = $indentation . '    <span class="article-status ' . $journeyClassname . '">' .  $responseData->getLocalValue('userJourney' . $user->journeyStatus->name) . '</span>';
         }
         $output[] = $indentation . '    <span class="' . ($user->role === UserRole::Admin ? 'is-highlighted' : '') .'">' .  $responseData->getLocalValue('userRole' . $user->role->name) . '</span>';
-        $output[] = $indentation . '    <div><img class="img-svg m-r-05" src="/img/svg/calendar-check.svg" alt="Recibido" width="20" height="20">' .  $userDate . '</div>';
+        $output[] = $indentation . '    <div>' . CoreIcons::CALENDAR_CHECK .  $userDate . '</div>';
 
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '</div>';

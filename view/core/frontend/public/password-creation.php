@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseData $responseData */
 
@@ -22,9 +23,7 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
 <main class="main-split-screen">
   <div id="register-left"></div>
   <div id="register-right">
-    <a id="register-close" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>">
-      <img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>">
-    </a>
+    <a id="register-close" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
     <form method="POST" id="form-password-reset">
       <input class="input" type="hidden" id="userId" name="userId" value="<?=$responseData->passwordUserId?>">
       <input class="input" type="hidden" id="verificationHash" name="verificationHash" value="<?=$responseData->verificationHash?>">

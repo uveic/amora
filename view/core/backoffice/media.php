@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Value\CoreIcons;
 use Amora\Core\Value\QueryOrderDirection;
 
 /** @var HtmlResponseDataAdmin $responseData */
@@ -21,7 +22,7 @@ $displayLoadMore = count($responseData->files) >= 50;
         <div id="upload-media-control">
           <input class="null" type="file" id="media" name="media" multiple="" accept="*">
           <label for="media" class="input-file-label button-dark">
-            <img class="img-svg img-svg-25 m-r-05" width="20" height="20" src="/img/svg/files.svg" alt="<?=$responseData->getLocalValue('navAdminMedia')?>'">
+            <?=CoreIcons::FILES?>
             <span><?=$responseData->getLocalValue('globalUploadMedia')?></span>
           </label>
         </div>

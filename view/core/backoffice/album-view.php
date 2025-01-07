@@ -7,6 +7,7 @@ use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -43,11 +44,11 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
   <main>
     <div id="feedback" class="feedback null"></div>
     <section class="page-header">
-      <h3><img src="/img/svg/images.svg" class="img-svg img-svg-25 m-r-05" width="25" height="25" alt="Edición"><?=$album->titleHtml?></h3>
+      <h3><?=CoreIcons::IMAGES . $album->titleHtml?></h3>
       <div class="links">
         <span class="value"><a href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a></span>
         <span class="number">#<?=$album->id?></span>
-        <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="30" height="30" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
+        <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
       </div>
     </section>
     <div class="form-content-container">
@@ -104,7 +105,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
 }?>
         </section>
         <a href="#" class="album-add-section-js button button-media-add" data-album-id="<?=$album->id?>">
-          <img src="/img/svg/image.svg" class="img-svg img-svg-25 m-r-05" width="25" height="25" alt="<?=$responseData->getLocalValue('albumAddSection')?>">
+          <?=CoreIcons::IMAGE?>
           <span class="text-one-line"><?=$responseData->getLocalValue('albumAddSection')?></span>
         </a>
       </div>

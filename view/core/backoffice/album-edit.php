@@ -4,6 +4,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Album\Value\Template;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -28,9 +29,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     <div id="feedback" class="feedback null"></div>
     <section class="page-header">
       <h3><?=$pageTitle?></h3>
-      <div class="links">
-        <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="20" height="20" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
-      </div>
+      <div class="links"><?=CoreIcons::CLOSE?></div>
     </section>
       <div class="backoffice-wrapper">
         <form action="#" method="post" id="form-album-edit" class="form-two-columns-wrapper">
@@ -80,7 +79,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
 <?php } ?>
                   <div class="main-image-button-container">
                     <a href="#" class="main-image-button select-media-action" data-event-listener-action="handleGenericMainMediaClick" data-target-container-id="album-main-media-container">
-                      <img class="img-svg" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
+                      <?=CoreIcons::IMAGE?>
                       <span><?= $album?->mainMedia ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('editorMainImageActionTitle') ?></span>
                     </a>
                   </div>
