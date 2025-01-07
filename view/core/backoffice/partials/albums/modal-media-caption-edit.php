@@ -28,7 +28,7 @@ $album = $responseData->album;
 
       <div class="form-two-columns-wrapper">
         <div class="album-media-edit-container"></div>
-        <div class="editor-content medium-editor-content media-caption-html"></div>
+        <div class="media-caption-html" contenteditable="true"></div>
       </div>
 
       <div class="control m-t-1">

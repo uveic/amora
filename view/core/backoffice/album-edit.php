@@ -35,6 +35,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
         <form action="#" method="post" id="form-album-edit" class="form-two-columns-wrapper">
           <div>
             <input id="albumId" name="albumId" type="hidden" value="<?=$album?->id?>">
+            <input id="trixEditorContentHtml" name="albumContentHtml" type="hidden" value='<?=$album?->contentHtml?>'>
             <div class="field">
               <label for="albumTitle" class="label"><?=$responseData->getLocalValue('globalTitle')?>:</label>
               <div class="control">
@@ -50,7 +51,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
             <div class="field m-b-2">
               <p class="label no-margin"><?=$responseData->getLocalValue('albumFormContent')?>:</p>
               <div class="control">
-                <div class="editor-content medium-editor-content album-content-html"><?=StringUtil::nl2p($albumContent)?></div>
+<?php $this->insert('../shared/trix-editor', ['responseData' => $responseData]); ?>
               </div>
             </div>
             <div class="field">
@@ -97,4 +98,3 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
         </form>
       </div>
   </main>
-  <script src="/js/lib/medium-editor.min.js"></script>

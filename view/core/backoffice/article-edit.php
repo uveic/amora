@@ -32,12 +32,11 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     <div class="main-inner">
       <input name="articleId" type="hidden" value="<?=$article ? $article->id : ''?>">
       <input name="articleTypeId" type="hidden" value="<?=$articleType->value?>">
-      <div class="page-content-before"><?=$responseData->getLocalValue('globalTitle')?></div>
-      <h1 class="editor-title<?=$article?->title ? '' : ' editor-placeholder'?>" contenteditable="true"><?=$article?->title ?: $responseData->getLocalValue('editorTitlePlaceholder')?></h1>
+      <input id="trixEditorContentHtml" name="articleContentHtml" type="hidden" value='<?=$article?->contentHtml?>'>
+      <label for="articleTitle" class="page-content-before"><?=$responseData->getLocalValue('globalTitle')?></label>
+      <input id="articleTitle" name="articleTitle" maxlength="255" class="editor-title" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" value="<?=$article?->title?>">
       <div class="page-content-before"><?=$responseData->getLocalValue('navAdminContent')?></div>
-      <div class="editor-content medium-editor-content" contenteditable="true">
-        <?=$article?->contentHtml . PHP_EOL?>
-      </div>
+<?php $this->insert('../shared/trix-editor', ['responseData' => $responseData]); ?>
     </div>
 <?=$this->insert('partials/article/settings', ['responseData' => $responseData]);?>
   </article>
