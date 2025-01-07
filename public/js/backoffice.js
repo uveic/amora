@@ -1653,13 +1653,4 @@ document.querySelectorAll('.generic-media-delete-js').forEach(b => {
   b.addEventListener('click', handleGenericMediaDeleteClick);
 });
 
-document.querySelectorAll('trix-editor').forEach(te => {
-  te.addEventListener('trix-attachment-add', e => {
-    if (e.attachment.file) {
-      Uploader.trixEditorUploadFile(e.attachment);
-    }
-  });
-});
-
-
 export {handleGenericMediaDeleteClick};

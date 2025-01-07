@@ -167,33 +167,6 @@ class UploaderClass {
       }
     }
   }
-
-  trixEditorUploadFile (
-    attachment,
-    apiUploadEndpoint = '/api/file',
-    formData = new FormData(),
-  ) {
-    formData.delete('files[]');
-    formData.append('files[]', attachment.file);
-
-    let xhr = new XMLHttpRequest();
-    xhr.addEventListener('load', () => {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        const json = JSON.parse(xhr.response);
-        attachment.setAttributes({
-          url: json.file.pathLarge,
-        });
-      }
-    });
-
-    xhr.upload.addEventListener('progress', (e) => {
-      const progressValue = Math.round((e.loaded / e.total) * 100);
-      attachment.setUploadProgress(progressValue);
-    });
-
-    xhr.open('POST', apiUploadEndpoint);
-    xhr.send(formData);
-  }
 }
 
 export const Uploader = new UploaderClass();
