@@ -9,6 +9,7 @@ use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 use Amora\Core\Value\Country;
 
 /** @var HtmlResponseDataAnalytics $responseData */
@@ -149,7 +150,7 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
           </h2>
           <a href="#" class="analytics-controls-event-type analytics-controls-option">
             <span><?=$eventType?></span>
-            <img src="/img/svg/caret-down.svg" class="img-svg img-svg-25" alt="Select">
+            <?=CoreIcons::CARET_DOWN?>
           </a>
           <div class="analytics-controls-event-type-options analytics-controls-options null">
             <a href="<?=$eventTypeAllUrl?>"><?=$responseData->getLocalValue('analyticsEventTypeAll')?></a>
@@ -185,28 +186,22 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
 ?>
           <div class="one-line-flex">
             <?=implode('', $output)?>
-            <img class="img-svg analytics-close-js" width="20" height="20" src="/img/svg/x.svg" alt="<?=$responseData->getLocalValue('globalClose')?>">
+            <?=CoreIcons::CLOSE?>
           </div>
 <?php } ?>
         </div>
         <div class="analytics-controls-wrapper">
           <div class="analytics-controls" data-period="<?=$report->period->value?>" data-date="<?=$report->from->format('Y-m-d')?>">
-            <a href="#" class="analytics-controls-previous">
-              <img src="/img/svg/caret-left.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalPrevious')?>">
-            </a>
+            <a href="#" class="analytics-controls-previous"><?=CoreIcons::CARET_LEFT?></a>
 <?php if ($isNextDisabled) { ?>
-            <p class="analytics-controls-next no-margin">
-              <img src="/img/svg/caret-right.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalNext')?>">
-            </p>
+            <p class="analytics-controls-next no-margin"><?=CoreIcons::CARET_RIGHT?></p>
 <?php } else { ?>
-            <a href="#" class="analytics-controls-next">
-              <img src="/img/svg/caret-right.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalNext')?>">
-            </a>
+            <a href="#" class="analytics-controls-next"><?=CoreIcons::CARET_RIGHT?></a>
 <?php } ?>
           </div>
           <a href="#" class="analytics-controls-more analytics-controls-option">
             <span><?=$dateRange?></span>
-            <img src="/img/svg/caret-down.svg" class="img-svg img-svg-25" alt="Select">
+            <?=CoreIcons::CARET_DOWN?>
           </a>
           <div class="analytics-controls-more-options analytics-controls-options null">
             <a href="<?=$todayUrl?>"><?=$responseData->getLocalValue('analyticsToday')?></a>
@@ -241,7 +236,7 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
       <div class="item">
         <div class="one-line-flex">
           <a href="/<?=$name?>">/<?=$name?></a>
-          <img src="/img/svg/funnel.svg" data-url="<?=$name?>" class="img-svg img-svg-15 analytics-page-js" alt="Filter" width="15" height="15">
+          <span class="analytics-page-js"><?=CoreIcons::FUNNEL?></span>
         </div>
         <span class="no-break"><?=$value->count?></span>
       </div>

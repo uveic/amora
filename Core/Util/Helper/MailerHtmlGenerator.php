@@ -5,6 +5,7 @@ namespace Amora\Core\Util\Helper;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Value\CoreIcons;
 
 final class MailerHtmlGenerator
 {
@@ -15,13 +16,13 @@ final class MailerHtmlGenerator
     ): string {
         $statusContent = $mailerItem->processedAt
             ? ($mailerItem->hasError
-                ? '<span class="article-status status-deleted"><img class="img-svg m-r-025" width="20" height="20" src="/img/svg/warning-circle-white.svg" alt="OK">' . $responseData->getLocalValue('mailerListError') . '</span>'
-                : '<span class="article-status status-published"><img class="img-svg m-r-025" width="20" height="20" src="/img/svg/check-white.svg" alt="Rejected">' . $responseData->getLocalValue('mailerListNoError') . '</span>'
+                ? '<span class="article-status status-deleted">' . CoreIcons::WARNING_CIRCLE . $responseData->getLocalValue('mailerListError') . '</span>'
+                : '<span class="article-status status-published">' . CoreIcons::CHECK . $responseData->getLocalValue('mailerListNoError') . '</span>'
             )
-            : '<span class="article-status status-warning"><img class="img-svg m-r-025" width="20" height="20" src="/img/svg/warning-circle-white.svg" alt="Not sent">' . $responseData->getLocalValue('mailerListNotSent') . '</span>';
+            : '<span class="article-status status-warning">' . CoreIcons::WARNING_CIRCLE . $responseData->getLocalValue('mailerListNotSent') . '</span>';
 
         $templateContent = '<span class="article-status status-draft">'
-            . '<img class="img-svg m-r-05" src="/img/svg/file-dashed-white.svg" alt="Receiver" width="20" height="20">'
+            . CoreIcons::FILE_DASHED
             . $responseData->getLocalValue('mailerTemplate' . $mailerItem->template->name)
             . '</span>';
 
@@ -29,7 +30,7 @@ final class MailerHtmlGenerator
             : DateUtil::formatDateShort($mailerItem->createdAt);
 
         $receiverHtml = '<div class="mail-receiver-container">'
-            . '<img class="img-svg img-svg-30" src="/img/svg/at.svg" alt="Receiver" width="30" height="30">'
+            . CoreIcons::AT
             . '<div class="mail-receiver-content">'
             . '<span class="mail-receiver-name">' . $mailerItem->receiverName . '</span>'
             . '<span class="mail-receiver-email">' . $mailerItem->receiverEmailAddress . '</span>'
@@ -54,13 +55,13 @@ final class MailerHtmlGenerator
         $output[] = $indentation . '  <div class="table-item">';
         $output[] = $indentation . '    <span class="light-text-color font-0-9">#' . $mailerItem->id . '</span>';
         $output[] = $indentation . '    ' . $receiverHtml;
-        $output[] = $indentation . '    <span><img class="img-svg m-r-05" src="/img/svg/envelope-simple.svg" alt="Subject" width="20" height="20">' . $mailerItem->subject .'</span>';
+        $output[] = $indentation . '    <span>' . CoreIcons::ENVELOPE_SIMPLE . $mailerItem->subject .'</span>';
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '  <div class="table-item flex-end">';
         $output[] = $indentation . '    ' . $templateContent;
         $output[] = $indentation . '    ' . $statusContent;
         $output[] = $indentation . '    ' . $secondsToSendHtml;
-        $output[] = $indentation . '    <div><img class="img-svg m-r-05" src="/img/svg/calendar-check.svg" alt="Recibido" width="20" height="20">' .  $sentAtString . '</div>';
+        $output[] = $indentation . '    <div>' . CoreIcons::CALENDAR_CHECK .  $sentAtString . '</div>';
 
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '</div>';

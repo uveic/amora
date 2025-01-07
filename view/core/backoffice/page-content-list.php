@@ -6,6 +6,7 @@ use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -27,7 +28,7 @@ $this->layout('base', ['responseData' => $responseData]);
       <section class="page-header">
         <h3><?=$responseData->getLocalValue('pageContentEditTitle')?></h3>
         <div class="links">
-          <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="20" height="20" alt="Volver"></a>
+          <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
         </div>
       </section>
 

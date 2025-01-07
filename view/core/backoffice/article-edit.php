@@ -4,6 +4,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 $article = $responseData->article;
@@ -23,7 +24,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
   <div class="page-header">
     <div></div>
     <div class="links">
-      <a href="<?=$closeLink?>"><img src="/img/svg/x.svg" class="img-svg img-svg-30" width="20" height="20" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
+      <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
     </div>
   </div>
 

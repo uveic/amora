@@ -14,7 +14,7 @@ $album = $responseData->album;
 
     <div class="modal-header-container">
       <div class="modal-header-icon">
-        <img class="img-svg img-svg-30" src="/img/svg/image.svg" width="30" height="30" alt="Album">
+        <?=CoreIcons::IMAGE?>
       </div>
       <div class="modal-header-content">
         <div class="modal-header-title"><?=$album->titleHtml?></div>

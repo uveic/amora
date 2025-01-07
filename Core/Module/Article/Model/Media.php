@@ -8,6 +8,7 @@ use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Value\CoreIcons;
 use DateTimeImmutable;
 
 class Media
@@ -308,10 +309,10 @@ class Media
         ];
 
         if ($this->user?->getNameOrEmail()) {
-            $output[] = '<span class="media-icon"><img class="img-svg" width="20" height="20" src="/img/svg/user.svg" alt="User" title="User">' . $this->user?->getNameOrEmail() . '</span>';
+            $output[] = '<span class="media-icon">' . CoreIcons::USER . $this->user?->getNameOrEmail() . '</span>';
         }
 
-        $output[] = '<span class="media-icon"><img class="img-svg" width="20" height="20" src="/img/svg/calendar-blank.svg" alt="Date">' . $dateString . '</span>';
+        $output[] = '<span class="media-icon">' . CoreIcons::CALENDAR_BLANK . $dateString . '</span>';
 
         $output[] = '</span>';
         $output[] = '</a>';

@@ -13,6 +13,7 @@ use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\LocalisationUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 final class AlbumHtmlGenerator
 {
@@ -50,7 +51,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '  </ul>';
         $output[] = $indentation . '  <label id="album-status-dd-label" for="album-status-dd-checkbox" data-status-id="' . $albumStatus->value . '" class="dropdown-menu-label ' . $selectedStatusClassname . '">';
         $output[] = $indentation . '    <span>' . $icon . $localisationUtil->getValue('articleStatus' . $albumStatus->name) . '</span>';
-        $output[] = $indentation . '    <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Change">';
+        $output[] = $indentation . '    ' . CoreIcons::CARET_DOWN;
         $output[] = $indentation . '  </label>';
         $output[] = $indentation . '</div>';
 
@@ -73,7 +74,7 @@ final class AlbumHtmlGenerator
         );
 
         $albumPublicLinkHtml = $album->status->isPublished()
-            ? '<a href="' . $albumPublicUrl . '"><img src="/img/svg/arrow-square-out.svg" class="img-svg m-l-05" alt="Public link" width="20" height="20"></a>'
+            ? '<a href="' . $albumPublicUrl . '">' . CoreIcons::ARROW_SQUARE_OUT . '</a>'
             : '';
 
         $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
@@ -129,10 +130,10 @@ final class AlbumHtmlGenerator
 
         $output[] = $indentation . '      <div class="main-image-button-container null">';
         $output[] = $indentation . '        <a href="#" class="main-image-button main-image-button-red generic-media-delete-js' . ($section->mainMedia ? '' : ' null') . '" data-media-id="' . $section->mainMedia?->id . '" data-event-listener-action="handleGenericMediaDeleteClick" data-target-container-id="album-section-main-media-' . $section->id . '">';
-        $output[] = $indentation . '          <img class="img-svg" src="/img/svg/trash-white.svg" alt="' . $localisationUtil->getValue('globalRemoveImage') . '" title="' . $localisationUtil->getValue('globalRemoveImage') . '">';
+        $output[] = $indentation . '          ' . CoreIcons::TRASH;
         $output[] = $indentation . '        </a>';
         $output[] = $indentation . '        <a href="#" class="main-image-button select-media-action" data-section-id="' . $section->id . '" data-media-id="' . $section->mainMedia?->id . '" data-event-listener-action="handleGenericMainMediaClick" data-target-container-id="album-section-main-media-' . $section->id . '">';
-        $output[] = $indentation . '          <img class="img-svg" src="/img/svg/image.svg" alt="' . $localisationUtil->getValue('globalSelectImage') . '" title="' . $localisationUtil->getValue('globalSelectImage') . '">';
+        $output[] = $indentation . '          ' . CoreIcons::IMAGE;
         $output[] = $indentation . '          <span>' . ($section->mainMedia ? $localisationUtil->getValue('globalModify') : $localisationUtil->getValue('globalSelectImage')) . '</span>';
         $output[] = $indentation . '        </a>';
         $output[] = $indentation . '      </div>';
@@ -161,11 +162,11 @@ final class AlbumHtmlGenerator
 
         /** @var AlbumSectionMedia $sectionMedia */
         foreach ($section->media as $sectionMedia) {
-            $output[] = self::generateAlbumSectionMediaHtml($sectionMedia, $localisationUtil, $indentation . '      ', $lazyLoading);
+            $output[] = self::generateAlbumSectionMediaHtml($sectionMedia, $indentation . '      ', $lazyLoading);
         }
 
         $output[] = $indentation . '      <a href="#" class="button select-media-action button-media-add" data-type-id="' . MediaType::Image->value . '" data-target-container-id="album-section-item-media-' . $section->id .'" data-event-listener-action="albumSectionAddMedia">';
-        $output[] = $indentation . '        <img class="img-svg img-svg-30" width="30" height="30" src="/img/svg/image.svg" alt="Image">';
+        $output[] = $indentation . '        ' . CoreIcons::IMAGE;
         $output[] = $indentation . '        <span>' . $localisationUtil->getValue('globalAdd') . '</span>';
         $output[] = $indentation . '      </a>';
         $output[] = $indentation . '    </div>';
@@ -178,7 +179,6 @@ final class AlbumHtmlGenerator
 
     public static function generateAlbumSectionMediaHtml(
         AlbumSectionMedia $albumSectionMedia,
-        LocalisationUtil $localisationUtil,
         string $indentation = '',
         bool $lazyLoading = false,
     ): string {
@@ -191,7 +191,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    <img id="album-section-media-' . $albumSectionMedia->id . '" src="' . $albumSectionMedia->media->getPathWithNameSmall() . '" class="media-item" alt="' . $titleAlt . '" title="' . $titleAlt . '"' . $lazyLoadingString . ' data-media-id="' . $albumSectionMedia->media->id . '" data-sequence="' . $albumSectionMedia->sequence . '" data-album-section-media-id=' . $albumSectionMedia->id . ' draggable="true">';
         $output[] = $indentation . '    <div class="album-section-media-options">';
         $output[] = $indentation . '      <div class="media-caption album-section-media-caption-js" data-media-id="' . $albumSectionMedia->media->id . '" data-album-section-id="' . $albumSectionMedia->albumSectionId . '" data-album-section-media-id="' . $albumSectionMedia->id . '">' . ($albumSectionMedia->captionHtml ?: '-') . '</div>';
-        $output[] = $indentation . '      <img class="img-svg album-section-media-delete-js" src="/img/svg/trash-white.svg" alt="' . $localisationUtil->getValue('globalRemoveImage') . '" title="' . $localisationUtil->getValue('globalRemoveImage') . '" data-album-section-media-id="' . $albumSectionMedia->id . '" data-media-id="' . $albumSectionMedia->media->id . '" data-event-listener-action="albumSectionDeleteMedia" data-target-container-id="album-section-item-media-' . $albumSectionMedia->albumSectionId . '">';
+        $output[] = $indentation . '      <span class="album-section-media-delete-js" data-album-section-media-id="' . $albumSectionMedia->id . '" data-media-id="' . $albumSectionMedia->media->id . '" data-event-listener-action="albumSectionDeleteMedia" data-target-container-id="album-section-item-media-' . $albumSectionMedia->albumSectionId . '">' . CoreIcons::TRASH . '</span>';
         $output[] = $indentation . '    </div>';
         $output[] = $indentation . '  </figure>';
         $output[] = $indentation . '</div>';
@@ -336,13 +336,13 @@ final class AlbumHtmlGenerator
 
         $output[] = $indentation . (
             $section->contentHtml
-                ? '          <a href="#" class="js-media-read-more" data-section-id="' . $section->id . '">' . $localisationUtil->getValue('albumPublicReadMore') . '<img src="/img/svg/article-white.svg" alt="Ler máis" width="20" height="20"></a>'
+                ? '          <a href="#" class="js-media-read-more" data-section-id="' . $section->id . '">' . $localisationUtil->getValue('albumPublicReadMore') . CoreIcons::ARTICLE . '</a>'
                 : '<span></span>'
             );
 
         $output[] = $indentation . (
             count($section->media) > 1
-                ? '          <a href="#" class="js-media-view">' . $localisationUtil->getValue('albumPublicMorePictures') . '<img src="/img/svg/arrow-right-white.svg" alt="Ver as fotos" width="20" height="20"></a>'
+                ? '          <a href="#" class="js-media-view">' . $localisationUtil->getValue('albumPublicMorePictures') . CoreIcons::ARROW_RIGHT . '</a>'
                 : '<span></span>'
             );
 
@@ -351,7 +351,7 @@ final class AlbumHtmlGenerator
 
         $output[] = $indentation . '      <div class="media-info">';
         $output[] = $indentation . '        <div class="media-info-inner">';
-        $output[] = $indentation . '          <img src="/img/svg/article-white.svg" class="js-media-read-more js-media-read-more-icon null" alt="Ler máis" width="20" height="20" data-section-id="' . $section->id . '">';
+        $output[] = $indentation . '          <span class="js-media-read-more js-media-read-more-icon null" data-section-id="' . $section->id . '">' . CoreIcons::ARTICLE . '</span>';
         $output[] = $indentation . '          <div><span class="media-sequence">1</span> ' . $localisationUtil->getValue('globalOf') . ' ' . $maxMediaSequence . '</div>';
         $output[] = $indentation . '        </div>';
         $output[] = $indentation . '        <div class="media-caption-html">' . $mediaCaptionForFirstMedia . '</div>';
@@ -364,7 +364,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    </div>';
 
         $output[] = $indentation . '    <div class="media-text-panel null" id="media-text-panel-' . $section->id . '">';
-        $output[] = $indentation . '      <a class="media-panel-close" href="#"><img src="/img/svg/x-white.svg" alt="Close" width="20" height="20"></a>';
+        $output[] = $indentation . '      <a class="media-panel-close" href="#">' . CoreIcons::CLOSE . '</a>';
         $output[] = $indentation . '      <div class="media-panel-content">';
 
         if ($section->mainMedia) {
@@ -381,15 +381,12 @@ final class AlbumHtmlGenerator
     }
 
     public static function generateAlbumTemplateNewYorkModalSectionsHtml(
-        LocalisationUtil $localisationUtil,
         Album $album,
         string $indentation = '',
     ): string {
         $output = [];
         $output[] = $indentation . '<div class="album-new-york-sections-modal-js modal-wrapper">';
-        $output[] = $indentation . '  <a href="#" class="modal-close-button">';
-        $output[] = $indentation . '    <img src="/img/svg/x-white.svg" class="img-svg" width="20" height="20" alt="' . $localisationUtil->getValue('globalClose') . '">';
-        $output[] = $indentation . '  </a>';
+        $output[] = $indentation . '  <a href="#" class="modal-close-button">' . CoreIcons::CLOSE . '  </a>';
 
         $output[] = $indentation . '  <div class="album-modal-header">';
         $output[] = $indentation . '    <h1 class="album-modal-title">' . $album->titleHtml . '</h1>';

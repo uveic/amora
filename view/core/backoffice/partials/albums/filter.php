@@ -4,6 +4,7 @@ use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Album\Value\AlbumStatus;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -23,8 +24,8 @@ $filterClass = $albumStatus || $albumLanguage ? '' : ' null';
       <div class="filter-header">
         <h3><?=$responseData->getLocalValue('formFilterTitle')?></h3>
         <div class="filter-links">
-          <a href="#" class="filter-refresh"><img src="/img/svg/arrow-counter-clockwise.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('formFilterClean')?>"></a>
-          <a href="#" class="filter-close"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
+          <a href="#" class="filter-refresh"><?=CoreIcons::ARROW_COUNTER_CLOCKWISE?></a>
+          <a href="#" class="filter-close"><?=CoreIcons::CLOSE?></a>
         </div>
       </div>
       <div class="filter-form-wrapper">

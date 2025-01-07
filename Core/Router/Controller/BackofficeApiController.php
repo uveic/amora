@@ -1087,7 +1087,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             success: (bool)$newAlbumMedia,
             html: AlbumHtmlGenerator::generateAlbumSectionMediaHtml(
                 albumSectionMedia: $newAlbumMedia,
-                localisationUtil: Core::getLocalisationUtil($request->siteLanguage),
             ),
         );
     }

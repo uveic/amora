@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -11,6 +12,6 @@ $closeUrl = UrlBuilderUtil::buildBackofficeUserListUrl($responseData->siteLangua
     <section class="page-header">
       <h3><?=($responseData->user ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></h3>
       <div class="links">
-        <a href="<?=$closeUrl?>"><img src="/img/svg/x.svg" class="img-svg img-svg-25" alt="<?=$responseData->getLocalValue('globalClose')?>"></a>
+        <a href="<?=$closeUrl?>"><?=CoreIcons::CLOSE?></a>
       </div>
     </section>

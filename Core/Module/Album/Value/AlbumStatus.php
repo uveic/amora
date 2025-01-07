@@ -2,6 +2,8 @@
 
 namespace Amora\Core\Module\Album\Value;
 
+use Amora\Core\Value\CoreIcons;
+
 enum AlbumStatus: int
 {
     case Published = 1;
@@ -40,11 +42,10 @@ enum AlbumStatus: int
     public function getIcon(): string
     {
         return match ($this) {
-            self::Published => '<img draggable="false" class="img-svg m-r-025" width="20" height="20" src="/img/svg/checks-white.svg" alt="OK">',
-            self::Deleted => '<img draggable="false" class="img-svg m-r-025" width="20" height="20" src="/img/svg/file-x-white.svg" alt="Trash">',
-            self::Draft => '<img draggable="false" class="img-svg m-r-025" width="20" height="20" src="/img/svg/file-image-white.svg" alt="Processing">',
-            self::Private => '<img draggable="false" class="img-svg m-r-025" width="20" height="20" src="/img/svg/check-white.svg" alt="Private">',
-            self::Unlisted => '<img draggable="false" class="img-svg m-r-025" width="20" height="20" src="/img/svg/check-white.svg" alt="Unlisted">',
+            self::Published => CoreIcons::CHECKS,
+            self::Deleted => CoreIcons::FILE_X,
+            self::Draft => CoreIcons::FILE_IMAGE,
+            self::Private, self::Unlisted => CoreIcons::CHECK,
         };
     }
 

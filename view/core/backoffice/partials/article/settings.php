@@ -6,6 +6,7 @@ use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 $article = $responseData->article;
@@ -53,9 +54,7 @@ $articlePublicUrlHtml = $articlePublicUrl && $article?->status->isPublic() ?
     <div class="editor-article-path"><?=$articlePublicUrlHtml?></div>
     <div class="editor-article-preview m-t-1"><a href="<?=$articlePreviewUrl?>"><?=$responseData->getLocalValue('globalPreview')?></a></div>
   </div>
-  <a href="#" class="select-media-action" data-type-id="<?=MediaType::Image->value?>" data-event-listener-action="insertImageInArticle">
-    <img class="img-svg img-svg-30" src="/img/svg/image.svg" alt="<?=$responseData->getLocalValue('globalAddImage')?>" title="<?=$responseData->getLocalValue('globalAddImage')?>">
-  </a>
+  <a href="#" class="select-media-action" data-type-id="<?=MediaType::Image->value?>" data-event-listener-action="insertImageInArticle"><?=CoreIcons::IMAGE?></a>
   <div>
 <?=ArticleHtmlGenerator::generateArticleLanguageDropdownSelectHtml($responseData)?>
   </div>

@@ -11,6 +11,7 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 use BackedEnum;
 
 final class ArticleHtmlGenerator
@@ -60,7 +61,7 @@ final class ArticleHtmlGenerator
         $output[] = '        </ul>';
         $output[] = '        <label id="article-status-dd-label" for="article-status-dd-checkbox" class="dropdown-menu-label ' . $articleStatus->getClass() . '">';
         $output[] = '          <span>' . $articleStatusName . '</span>';
-        $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down-white.svg" alt="Change">';
+        $output[] = '          ' . CoreIcons::CARET_DOWN;
         $output[] = '        </label>';
         $output[] = '      </div>';
 
@@ -89,7 +90,7 @@ final class ArticleHtmlGenerator
         $output[] = '        </ul>';
         $output[] = '        <label id="article-lang-dd-label" for="article-lang-dd-checkbox" class="dropdown-menu-label">';
         $output[] = '          <span>' . $articleLanguage->getIconFlag('m-r-05') . $articleLanguage->name . '</span>';
-        $output[] = '          <img class="img-svg no-margin" width="20" height="20" src="/img/svg/caret-down.svg" alt="Change">';
+        $output[] = '          ' . CoreIcons::CARET_DOWN;
         $output[] = '        </label>';
         $output[] = '      </div>';
 
@@ -123,7 +124,7 @@ final class ArticleHtmlGenerator
             : '<a href="' . $articleEditUrl . '">' . $responseData->getLocalValue('globalNoTitle') . '</a>';
 
         $articlePublicLinkHtml = $article->status->isPublic()
-            ? '<a href="' . $articlePublicUrl . '"><img src="/img/svg/arrow-square-out.svg" class="img-svg m-l-05" alt="Public link" width="20" height="20"></a>'
+            ? '<a href="' . $articlePublicUrl . '">' . CoreIcons::ARROW_SQUARE_OUT . '</a>'
             : '';
 
         $articleDate = $article->publishOn
@@ -148,14 +149,12 @@ final class ArticleHtmlGenerator
         $output[] = $indentation . '      ' . $articlePublicLinkHtml;
         $output[] = $indentation . '    </div>';
         if ($article->tags) {
-            $output[] = $indentation . '    <div class="article-tags">'
-                . '<img class="img-svg m-r-05" src="/img/svg/tag.svg" alt="Tags" width="20" height="20">' . $article->getTagsAsString()
-                . '</div>';
+            $output[] = $indentation . '    <div class="article-tags">' . CoreIcons::TAG . $article->getTagsAsString() . '</div>';
         }
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '  <div class="table-item flex-no-grow">';
         $output[] = $indentation . '    <span class="article-status ' . $statusClassname . '">' . $responseData->getLocalValue('articleStatus' . $article->status->name) . '</span>';
-        $output[] = $indentation . '    <div><img class="img-svg m-r-05" src="/img/svg/calendar-check.svg" alt="Recibido" width="20" height="20">' .  $articleDate . '</div>';
+        $output[] = $indentation . '    <div>' . CoreIcons::CALENDAR_CHECK .  $articleDate . '</div>';
 
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '</div>';
@@ -166,12 +165,10 @@ final class ArticleHtmlGenerator
     public static function generateArticlePublishedIconHtml(Article $article): string
     {
         if ($article->status === ArticleStatus::Unlisted) {
-            return '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/eye-closed.svg" alt="Unlisted">';
+            return CoreIcons::EYE_CLOSED;
         }
 
-        return $article->isPublished()
-            ? ''
-            : '<img class="img-svg m-r-05" width="20" height="20" src="/img/svg/lock.svg" alt="Lock">';
+        return $article->isPublished() ? '' : CoreIcons::LOCK;
     }
 
     public static function generateArticlePublicContentHtml(
