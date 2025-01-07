@@ -354,12 +354,11 @@ pre {
   top: 0;
   right: 0;
   z-index: 299;
+  cursor: pointer;
 }
 
 .modal-close-button svg {
   width: 25px;
-  max-width: revert;
-  max-height: revert;
 }
 
 .modal-content {
@@ -926,9 +925,7 @@ button.is-link.is-light,
 svg,
 .img-svg {
   display: inline-block;
-  max-width: 20px;
-  max-height: 20px;
-  width: auto;
+  width: 20px;
   height: auto;
   vertical-align: middle;
   margin: 0;
@@ -938,40 +935,13 @@ svg,
   flex-grow: 0;
 }
 
-.img-svg-15 {
-  max-width: 15px;
-  max-height: 15px;
-}
-
-.img-svg-25 {
-  max-width: 25px;
-  max-height: 25px;
-}
-
-.img-svg-30 {
-  max-width: 30px;
-  max-height: 30px;
-}
-
-.img-svg-40 {
-  max-width: 40px;
-  max-height: 40px;
-}
-
-.img-svg-50 {
-  max-width: 50px;
-  max-height: 50px;
-}
-
-.img-svg-70 {
-  max-width: 70px;
-  max-height: 70px;
-}
-
-.img-svg-100 {
-  max-width: 100px;
-  max-height: 100px;
-}
+.img-svg-15 { width: 15px; }
+.img-svg-25 { width: 25px; }
+.img-svg-30 { width: 30px; }
+.img-svg-40 { width: 40px; }
+.img-svg-50 { width: 50px; }
+.img-svg-70 { width: 70px; }
+.img-svg-100 { width: 100px; }
 
 .justify-center {
   position: absolute;

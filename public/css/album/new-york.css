@@ -448,6 +448,11 @@ blockquote::after{
   z-index: 999;
 }
 
+.modal-close-button svg {
+  fill: var(--color-text);
+  stroke: var(--color-text);
+}
+
 .album-sections-wrapper {
   display: flex;
   flex-flow: row wrap;

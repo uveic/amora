@@ -1,9 +1,9 @@
 trix-editor {
   border: 1px solid #bbb;
-  border-radius: 3px;
+  border-radius: var(--border-radius);
   margin: 0;
-  padding: 0.4em 0.6em;
-  min-height: 5em;
+  padding: 1rem;
+  min-height: 250px;
   outline: none; }
 
 trix-toolbar {

@@ -58,37 +58,6 @@ class UtilClass {
     return match && match[7].length === 11 ? match[7] : false;
   }
 
-  createMediumEditor(containerClassName) {
-    if (this.editors.includes(containerClassName)) {
-      return;
-    }
-
-    new MediumEditor(
-      '.' + containerClassName,
-      {
-        autoLink: true,
-        targetBlank: true,
-        anchor: {
-          linkValidation: true,
-          placeholderText: Global.get('editorLinkPlaceholder'),
-          targetCheckbox: true,
-          targetCheckboxText: Global.get('editorLinkOpenBlank'),
-        },
-        placeholder: {
-          text: Global.get('editorParagraphPlaceholder'),
-          hideOnClick: true
-        },
-        paste: {
-          cleanPastedHTML: true,
-          cleanAttrs: ['style', 'dir', 'class', 'title'],
-          cleanTags: ['label', 'meta', 'input']
-        },
-      }
-    );
-
-    this.editors.push(containerClassName);
-  }
-
   getAndCleanHtmlFromElement(element, addParagraph = false) {
     function cleanHtml(html) {
       if (!html || html === '-') {

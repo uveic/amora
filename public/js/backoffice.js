@@ -438,6 +438,8 @@ function displayNextImagePopup(e) {
 }
 
 function insertImageInArticle(e) {
+  alert('ToDo');
+  return;
   const container = document.querySelector('.medium-editor-content');
   const mediaId = e.currentTarget.mediaId;
   const existingImage = document.querySelector('img[data-media-id="' + mediaId + '"]');
@@ -587,8 +589,6 @@ function editAlbumSection(e) {
 
   e.currentTarget.classList.add('null');
   titleEl.focus();
-
-  Util.createMediumEditor('section-content-html-' + albumSectionId);
 
   container.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
@@ -1084,12 +1084,8 @@ document.querySelectorAll('.article-save-js').forEach(el => {
     }
 
     function getTitleContent() {
-      const titleEl = document.querySelector('.editor-title');
-      if (titleEl && titleEl.textContent.trim().length) {
-        return titleEl.textContent.trim();
-      }
-
-      return null;
+      const titleEl = document.querySelector('input[name="articleTitle"]');
+      return titleEl.value.trim().length ? titleEl.value.trim() : null;
     }
 
     function getPublishOnDateIsoString() {
@@ -1117,10 +1113,11 @@ document.querySelectorAll('.article-save-js').forEach(el => {
       return language.dataset.value;
     }
 
-    const htmlContainer = document.querySelector('.medium-editor-content');
-    const mediaIds = Array.from(htmlContainer.querySelectorAll('img[data-media-id]'))
+    const mediaIds = Array.from(document.querySelectorAll('trix-editor img[data-media-id]'))
       .map(({dataset}) => Number.parseInt(dataset.mediaId));
-    const contentHtml = Util.getAndCleanHtmlFromElement(htmlContainer);
+
+    const articleContentHtml = document.querySelector('input[name="articleContentHtml"]').value.trim();
+    const contentHtml = articleContentHtml.length ? articleContentHtml : null;
 
     if (!contentHtml) {
       Util.notifyError(new Error(Global.get('feedbackSaving')));
@@ -1151,24 +1148,6 @@ document.querySelectorAll('.article-save-js').forEach(el => {
     }
   });
 });
-
-// ToDo
-// document.querySelectorAll('.editor-content').forEach(ec => {
-//   ec.addEventListener('paste', e => {
-//     e.preventDefault();
-//
-//     const clipboardData = e.clipboardData || window.clipboardData;
-//     const pastedData = clipboardData.getData('text');
-//
-//     const cleanData = Util.cleanHtml(pastedData);
-//
-//     const selection = window.getSelection();
-//     if (!selection.rangeCount) return;
-//     selection.deleteFromDocument();
-//     selection.getRangeAt(0).insertNode(document.createTextNode(cleanData));
-//     selection.collapseToEnd();
-//   });
-// });
 
 document.querySelectorAll('.image-delete').forEach(imgEl => {
   imgEl.addEventListener('click', deleteImage);
@@ -1407,21 +1386,6 @@ document.querySelectorAll('input[name="select-media-action-upload"]').forEach(im
   });
 });
 
-if (document.querySelector('.medium-editor-content')) {
-  Util.createMediumEditor('medium-editor-content');
-
-  const container = document.querySelector('.medium-editor-content');
-  if (container.textContent.trim().length && container.lastElementChild &&
-    (container.lastElementChild.nodeName !== 'P' ||
-      (container.lastElementChild.nodeName === 'P' && container.lastElementChild.className !== '')
-    )
-  ) {
-    const newParagraph = document.createElement('p');
-    newParagraph.innerHTML = '<br>';
-    container.appendChild(newParagraph);
-  }
-}
-
 document.querySelectorAll('form#form-page-content').forEach(f => {
   f.addEventListener('submit', e => {
     e.preventDefault();
@@ -1527,7 +1491,7 @@ document.querySelectorAll('#form-album-edit').forEach(f => {
       templateId: Number.parseInt(f.querySelector('select[name="albumTemplateId"]').value),
       mainMediaId: mainMediaId,
       titleHtml: f.querySelector('input[name="albumTitle"]').value.trim(),
-      contentHtml: f.querySelector('.medium-editor-content').innerHTML.trim(),
+      contentHtml: f.querySelector('input[name="albumContentHtml"]').value.trim(),
     });
 
     if (albumId) {
@@ -1595,28 +1559,6 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
       .catch(error => {
         Util.notifyError(error);
       }).finally(() => container.removeChild(loadingContainer));
-  });
-});
-
-document.querySelectorAll('#album-add-section-form-js').forEach(f => {
-  f.addEventListener('submit', e => {
-    e.preventDefault();
-
-    const albumId = Number.parseInt(f.querySelector('input[name="albumId"]').value);
-
-    const payload = {
-      mainMediaId: 1,
-      titleHtml: f.querySelector('input[name="albumSectionTitle"]').value.trim(),
-      contentHtml: f.querySelector('.medium-editor-content').innerHTML.trim(),
-    };
-
-    Request.post('/back/album/' + albumId + '/section', JSON.stringify(payload))
-      .then(response => {
-        const modal = document.querySelector('.album-add-section-modal-js');
-        const sectionContainer = document.querySelector('.album-sections-wrapper');
-        sectionContainer.innerHTML += response.html;
-        modal.classList.add('null');
-      });
   });
 });
 

@@ -499,66 +499,8 @@
   border-bottom: 1px solid var(--color-input-border);
   padding: 0.5rem 1rem;
   font-size: 1.6rem;
-  line-height: 3rem;
+  line-height: 1;
   font-weight: 700;
-}
-
-.editor-content {
-  min-height: 250px;
-  margin: 0 0 2rem;
-  font-family: var(--font-title);
-  color: var(--color-input-text);
-  background-color: var(--color-input-bg);
-  border-bottom: 1px solid var(--color-input-border);
-  padding: 1rem 1rem 2rem 1rem;
-  border-radius: var(--border-radius);
-}
-
-.editor-content img {
-  width: 100%;
-  height: auto;
-  margin-top: 2rem;
-}
-
-.editor-content h2 {
-  margin: 0;
-  padding: 1rem 0;
-  font-size: 1.3rem;
-  font-family: var(--font-title);
-  line-height: 2rem;
-
-}
-
-.editor-content h3 {
-  margin: 0;
-  padding: 1rem 0;
-  font-size: 1.1rem;
-  font-family: var(--font-title);
-  line-height: 1.8rem;
-}
-
-.editor-content p {
-  margin: 0;
-  padding: 0.6rem 0;
-}
-
-.editor-content .image-caption {
-  padding: 0.2rem 1rem;
-  color: var(--color-light-4);
-  font-size: 0.8rem;
-  border-left: 1px solid var(--color-light-2);
-  border-right: 1px solid var(--color-light-2);
-  border-bottom: 1px solid var(--color-light-2);
-  min-height: 25px;
-  margin: 0 0 1.5rem;
-}
-
-.editor-content p:first-child {
-  margin-top: 0;
-}
-
-.editor-content p:last-child {
-  margin-bottom: 0;
 }
 
 .page-content-wrapper {
@@ -647,13 +589,6 @@
   padding: 0.5rem;
   gap: 0.5rem;
   border-bottom: 1px solid var(--color-light-2);
-}
-
-.page-header svg {
-  width: 30px;
-  height: 30px;
-  max-width: revert;
-  max-height: revert;
 }
 
 .page-header .header-info {
@@ -896,6 +831,11 @@
   padding: 1rem;
 }
 
+.add-image-wrapper .modal-close-button svg {
+  fill: var(--color-text-white);
+  stroke: var(--color-text-white);
+}
+
 .add-image-header {
   display: flex;
   flex-flow: row wrap;
@@ -1084,6 +1024,11 @@
   gap: 1rem;
   justify-content: space-between;
   padding: 1rem 0.5rem;
+}
+
+.image-wrapper .image-next-wrapper svg {
+  fill: var(--color-text-white);
+  stroke: var(--color-text-white);
 }
 
 .image-wrapper .image-next-wrapper a {
@@ -1681,10 +1626,6 @@
   width: 100%;
   height: 100%;
   background-color: var(--color-light-2);
-}
-
-.album-section-media-container .img-svg {
-  cursor: pointer;
 }
 
 .album-section-media-container .album-section-media-options {
