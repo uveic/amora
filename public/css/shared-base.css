@@ -141,6 +141,7 @@ footer {
   padding: 2rem;
 }
 
+article blockquote,
 blockquote {
   margin: 0 0.5rem;
   font-style: italic;
@@ -161,10 +162,12 @@ blockquote::after {
   content: '';
 }
 
+article blockquote *:first-child,
 blockquote *:first-child {
   margin-top: 0;
 }
 
+article blockquote *:last-child,
 blockquote *:last-child {
   margin-bottom: 0;
 }
@@ -500,7 +503,7 @@ article>h2 {
   line-height: 1.4rem;
 }
 
-article>p {
+article>* {
   margin: 0;
   padding: 0.6rem 1rem;
 }
