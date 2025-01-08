@@ -14,4 +14,12 @@ enum UserStatus: int
             self::Disabled,
         ];
     }
+
+    public function getClassname(): string
+    {
+        return match ($this) {
+            UserStatus::Enabled => 'status-published',
+            UserStatus::Disabled => 'status-deleted',
+        };
+    }
 }

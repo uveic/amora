@@ -226,7 +226,14 @@ class AnalyticsProcessorApp extends App
             'wp-content/',
             'wp-admin/',
             'wp-includes/',
-            '.well-known/',
+            '.well-known',
+            'wp-json',
+            'index.php',
+            'php-cgi',
+            'phpMyAdmin',
+            'phpmyadmin',
+            'mysql',
+            'myadmin',
         ];
 
         foreach ($startsWith as $value) {
@@ -240,6 +247,14 @@ class AnalyticsProcessorApp extends App
             '.txt',
             '.css',
             '.js',
+            '.zip',
+            '.sql',
+            '.exe',
+            '.xml',
+            '.cgi',
+            '.do',
+            '.json',
+            '.bak',
         ];
 
         foreach ($endsWith as $value) {

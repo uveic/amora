@@ -1,6 +1,8 @@
 :root {
   --font-title: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
   --font-paragraph: Nunito Sans,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
+
+  --color-white: #fcfcfc;
 }
 
 .header-container {
@@ -31,6 +33,7 @@
 .header-backoffice .logo:active,
 .header-backoffice .logo:visited,
 .header-backoffice .logo:focus {
+  color: var(--color-white);
   background-color: transparent;
 }
 
@@ -43,7 +46,7 @@
 .header-backoffice .mobile-nav-label span,
 .header-backoffice .mobile-nav-label span::before,
 .header-backoffice .mobile-nav-label span::after {
-  background-color: var(--color-bg-light);
+  background-color: var(--color-white);
 }
 
 .header-backoffice .nav-dropdown-item,
