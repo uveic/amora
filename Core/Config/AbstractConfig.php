@@ -96,6 +96,8 @@ abstract class AbstractConfig {
         public readonly string $phpLocale,
         public readonly Language $defaultSiteLanguage,
         public readonly array $enabledSiteLanguages,
+        public readonly Language $defaultBackofficeLanguage,
+        public readonly array $backofficeLanguages,
 
         public readonly string $baseUrl,
         public readonly string $siteImageUrl,

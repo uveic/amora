@@ -781,7 +781,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             success: $resUpdate,
             redirect: AppPageContentType::buildRedirectUrl(
                 type: $pageContent->type,
-                language: $request->siteLanguage,
+                language: $pageContent->language,
             ),
             errorMessage: $resUpdate ? null : 'Error updating page content',
         );

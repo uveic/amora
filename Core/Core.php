@@ -110,9 +110,19 @@ class Core
         return self::$config->defaultSiteLanguage;
     }
 
+    public static function getDefaultBackofficeLanguage(): Language
+    {
+        return self::$config->defaultBackofficeLanguage;
+    }
+
     public static function getEnabledSiteLanguages(): array
     {
         return self::$config->enabledSiteLanguages;
+    }
+
+    public static function isValidBackofficeLanguage(Language $language): bool
+    {
+        return isset(self::$config->backofficeLanguages[$language->value]);
     }
 
     public static function isRunningInLiveEnv(): bool

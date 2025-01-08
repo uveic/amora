@@ -4,6 +4,7 @@ namespace Amora\Core\Router;
 
 use Amora\App\Router\AppRouter;
 use Amora\App\Router\AppRouterCore;
+use Amora\App\Value\Language;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Value\PageContentType;
@@ -148,6 +149,27 @@ class Router
         );
 
         if (isset($backofficeHtmlControllerActions[$action])) {
+            if (!Core::isValidBackofficeLanguage($request->siteLanguage)) {
+                $arrayPath = explode('/', $request->path);
+                if (!empty($arrayPath[0]) && strlen($arrayPath[0]) === 2) {
+                    $uppercaseLanguage = strtoupper($arrayPath[0]);
+                    if (Language::tryFrom($uppercaseLanguage)) {
+                        array_shift($arrayPath);
+                        return Response::createRedirectResponse(
+                            url: '/' . strtolower(Core::getDefaultBackofficeLanguage()->value) . '/' . implode('/', $arrayPath),
+                        );
+                    } else {
+                        return Response::createRedirectResponse(
+                            url: UrlBuilderUtil::buildBackofficeDashboardUrl(Core::getDefaultBackofficeLanguage()),
+                        );
+                    }
+                }
+
+                return Response::createRedirectResponse(
+                    url: '/' . strtolower(Core::getDefaultBackofficeLanguage()->value) . '/' . trim($request->path, ' /'),
+                );
+            }
+
             $res = AppRouterCore::getAppBackofficeHtmlController()->route($request)
                 ?? RouterCore::getBackofficeHtmlController()->route($request);
 

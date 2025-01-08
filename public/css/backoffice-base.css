@@ -811,6 +811,12 @@
   background-color: var(--color-failure) !important;
   color: var(--color-bg) !important;
   border: 1px solid var(--color-bg) !important;
+  border-radius: var(--border-radius);
+}
+
+.main-image-button-red svg {
+  fill: var(--color-text-white);
+  stroke: var(--color-text-white);
 }
 /* Main image ends here */
 
@@ -1373,42 +1379,6 @@
   flex-grow: 1;
 }
 /* Form two columns ends here */
-
-.main-image-button,
-.main-image-button:hover,
-.main-image-button:visited,
-.main-image-button:focus,
-.main-image-button:active {
-  border: 1px solid var(--color-text);
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
-  font-weight: normal;
-  color: var(--color-text);
-  text-align: center;
-  background-color: var(--color-bg);
-}
-
-.main-image-button-absolute {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-}
-
-.main-image-button-container {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  display: flex;
-  flex-flow: row wrap;
-  gap: 1rem;
-}
-
-.main-image-button-red {
-  background-color: var(--color-failure) !important;
-  color: var(--color-bg) !important;
-  border: 1px solid var(--color-bg) !important;
-}
-
 /* Album starts here */
 .media-caption-html,
 .album-content-html {
