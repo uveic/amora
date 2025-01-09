@@ -221,7 +221,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     {
         $q = StringUtil::sanitiseText($q);
 
-        $users = $this->userService->filterUsersBy(
+        $users = $this->userService->filterUserBy(
             searchText: $q,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy(field: 'name', direction: QueryOrderDirection::ASC)],

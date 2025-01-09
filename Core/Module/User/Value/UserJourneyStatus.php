@@ -14,4 +14,12 @@ enum UserJourneyStatus: int
             self::Registration,
         ];
     }
+
+    public function getClassname(): string
+    {
+        return match ($this) {
+            UserJourneyStatus::Registration => 'status-published',
+            UserJourneyStatus::PendingPasswordCreation => 'status-draft',
+        };
+    }
 }

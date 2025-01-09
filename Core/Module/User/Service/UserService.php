@@ -46,12 +46,12 @@ class UserService
 
                 $resEmail = match ($verificationType) {
                     VerificationType::PasswordCreation =>
-                        $this->userMailService->sendPasswordCreationEmail($resUser),
+                    $this->userMailService->sendPasswordCreationEmail($resUser),
                     VerificationType::EmailAddress =>
-                        $this->userMailService->sendVerificationEmail(
-                            user: $resUser,
-                            emailToVerify: $resUser->email,
-                        ),
+                    $this->userMailService->sendVerificationEmail(
+                        user: $resUser,
+                        emailToVerify: $resUser->email,
+                    ),
                     default => true
                 };
 
@@ -210,11 +210,17 @@ class UserService
         return new Feedback(true);
     }
 
-    public function filterUsersBy(
+    public function filterUserBy(
+        ?bool $includeDisabled = true,
+        ?int $userId = null,
+        ?string $email = null,
         ?string $searchText = null,
         ?QueryOptions $queryOptions = null,
     ): array {
-        return $this->userDataLayer->filterUsersBy(
+        return $this->userDataLayer->filterUserBy(
+            includeDisabled: $includeDisabled,
+            userId: $userId,
+            email: $email,
             searchText: $searchText,
             queryOptions: $queryOptions,
         );

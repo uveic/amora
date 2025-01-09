@@ -255,6 +255,7 @@ class AnalyticsProcessorApp extends App
             '.do',
             '.json',
             '.bak',
+            '.xsd',
         ];
 
         foreach ($endsWith as $value) {

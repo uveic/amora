@@ -138,7 +138,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getUsersAdminPage(Request $request): Response
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        $users = $this->userService->filterUsersBy();
+        $users = $this->userService->filterUserBy();
         return Response::createHtmlResponse(
             template: 'core/backoffice/user-list',
             responseData: new HtmlResponseDataAdmin(

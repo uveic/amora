@@ -40,12 +40,7 @@ final class UserHtmlGenerator
         $output[] = $indentation . '  <div class="table-item flex-no-grow">';
         $output[] = $indentation . '    <span class="article-status ' . $user->status->getClassname() . '">' . $responseData->getLocalValue('userStatus' . $user->status->name) . '</span>';
         if ($user->journeyStatus !== UserJourneyStatus::Registration) {
-            $journeyClassname = match ($user->journeyStatus) {
-                UserJourneyStatus::Registration => 'status-published',
-                UserJourneyStatus::PendingPasswordCreation => 'status-draft',
-            };
-
-            $output[] = $indentation . '    <span class="article-status ' . $journeyClassname . '">' .  $responseData->getLocalValue('userJourney' . $user->journeyStatus->name) . '</span>';
+            $output[] = $indentation . '    <span class="article-status ' . $user->journeyStatus->getClassname() . '">' .  $responseData->getLocalValue('userJourney' . $user->journeyStatus->name) . '</span>';
         }
         $output[] = $indentation . '    <span class="' . ($user->role === UserRole::Admin ? 'is-highlighted' : '') .'">' .  $responseData->getLocalValue('userRole' . $user->role->name) . '</span>';
         $output[] = $indentation . '    <div>' . CoreIcons::CALENDAR_CHECK .  $userDate . '</div>';

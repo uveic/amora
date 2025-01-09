@@ -32,7 +32,7 @@ class UserDataLayer
         private readonly Logger $logger,
     ) {}
 
-    private function getUsers(
+    public function filterUserBy(
         ?bool $includeDisabled = true,
         ?int $userId = null,
         ?string $email = null,
@@ -109,25 +109,23 @@ class UserDataLayer
         return $this->db;
     }
 
-    public function filterUsersBy(
-        ?string $searchText = null,
-        ?QueryOptions $queryOptions = null,
-    ): array {
-        return $this->getUsers(
-            searchText: $searchText,
-            queryOptions: $queryOptions,
-        );
-    }
-
     public function getUserForId(int $id, $includeDisabled = false): ?User
     {
-        $res = $this->getUsers($includeDisabled, $id);
+        $res = $this->filterUserBy(
+            includeDisabled: $includeDisabled,
+            userId: $id,
+        );
+
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getUserForEmail(string $email, $includeDisabled = false): ?User
+    public function getUserForEmail(string $email, bool $includeDisabled = false): ?User
     {
-        $res = $this->getUsers($includeDisabled, null, $email);
+        $res = $this->filterUserBy(
+            includeDisabled: $includeDisabled,
+            email: $email,
+        );
+
         return empty($res[0]) ? null : $res[0];
     }
 

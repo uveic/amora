@@ -76,8 +76,12 @@ abstract class HtmlResponseDataAbstract
         int $logoHeight = 45,
         ?string $className = null,
         ?string $href = null,
+        ?string $imageUrl = null,
     ): string {
-        $imageUrl = Core::getConfig()->logoImageUrl;
+        if (!$imageUrl) {
+            $imageUrl = Core::getConfig()->logoImageUrl;
+        }
+
         if (empty($siteName)) {
             $siteName = $this->siteName;
         }
@@ -101,12 +105,12 @@ abstract class HtmlResponseDataAbstract
         }
 
         if ($includeSiteName) {
-            $output[] = $indentation . '    ' . ($siteContent?->titleHtml ?: '<span class="logo-title">' . $siteName . '</span>');
+            $output[] = $indentation . '    ' . ($siteContent?->title ?: '<span class="logo-title">' . $siteName . '</span>');
         }
 
         $output[] = $indentation . '  </a>';
-        if ($includeSubtitle && $siteContent?->subtitleHtml) {
-            $output[] = $indentation . '  <span class="logo-subtitle">' . $siteContent?->subtitleHtml . '</span>' ?: '';
+        if ($includeSubtitle && $siteContent?->subtitle) {
+            $output[] = $indentation . '  <span class="logo-subtitle">' . $siteContent?->subtitle . '</span>' ?: '';
         }
         $output[] = $indentation . '</div>';
 
