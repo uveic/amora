@@ -221,6 +221,7 @@ class AnalyticsProcessorApp extends App
         if (empty($item)) {
             return false;
         }
+        $item = strtolower($item);
 
         $startsWith = [
             'wp-content/',
@@ -230,7 +231,6 @@ class AnalyticsProcessorApp extends App
             'wp-json',
             'index.php',
             'php-cgi',
-            'phpMyAdmin',
             'phpmyadmin',
             'mysql',
             'myadmin',
@@ -256,6 +256,16 @@ class AnalyticsProcessorApp extends App
             '.json',
             '.bak',
             '.xsd',
+            '.html',
+            '.ts',
+            '.yml',
+            '.yaml',
+            '.py',
+            '.conf',
+            '.log',
+            '.ini',
+            '.rb',
+            '.md',
         ];
 
         foreach ($endsWith as $value) {
