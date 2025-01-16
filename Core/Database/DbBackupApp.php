@@ -142,29 +142,16 @@ final class DbBackupApp extends App
                 timezone: $utcTz
             );
 
-            if ($fileDate < $twoMonthsAgo) {
-                $res = $this->deleteFile($file);
-                if (!$res) {
-                    $this->log('Aborting... Error deleting file: ' . $file, true);
-                    return false;
-                }
-
+            if ((int)$fileDate->format('G') === 4 && $fileDate < $twoMonthsAgo) {
                 continue;
             }
 
-            if ((int)$fileDate->format('G') === 4) {
+            if ($fileDate < $twoDaysAgo) {
                 continue;
             }
 
-            if ($fileDate > $twoDaysAgo) {
-                continue;
-            }
-
-            $res = $this->deleteFile($file);
-            if (!$res) {
-                $this->log('Aborting... Error deleting file: ' . $file, true);
-                return false;
-            }
+            $this->log('Deleting file: ' . $file);
+            unlink($this->backupFolderPath . $file);
         }
 
         $this->log('Deleting outdated backup files done');
@@ -176,12 +163,6 @@ final class DbBackupApp extends App
     {
         $files = $this->getBackupFiles();
         return $files ? $files[count($files) - 1] : '';
-    }
-
-    private function deleteFile(string $filename): bool
-    {
-        $this->log('Deleting file: ' . $filename);
-        return unlink($this->backupFolderPath . $filename);
     }
 
     private function getBackupFiles(): array
