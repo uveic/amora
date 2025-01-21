@@ -41,7 +41,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
         <input id="searchFromPublicPage" name="searchFromPublicPage" type="hidden" value="0">
 <?php } ?>
         <div class="form-search-input-wrapper">
-          <span class="search-action-js search-icon search-icon-input"><?=CoreIcons::MAGNIFYING_GLASS?></span>
+          <span class="search-action-js search-icon-input"><?=CoreIcons::MAGNIFYING_GLASS?></span>
           <input id="search" name="search" class="header-search" type="search" placeholder="<?=$responseData->getLocalValue('globalSearch')?>..." value="">
         </div>
         <input type="submit" value="Go" class="null">

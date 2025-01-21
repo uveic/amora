@@ -1653,4 +1653,4 @@ document.querySelectorAll('.generic-media-delete-js').forEach(b => {
   b.addEventListener('click', handleGenericMediaDeleteClick);
 });
 
-export {handleGenericMediaDeleteClick};
+export {handleGenericMediaDeleteClick, handleGenericSelectMainMediaClick, addMediaToModalContainer};

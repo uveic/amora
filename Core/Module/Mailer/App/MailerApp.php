@@ -53,7 +53,7 @@ class MailerApp extends App
         });
     }
 
-    public function processMailItem(MailerItem $item): bool
+    public function processMailItem(MailerItem $item, bool $updateProcessedAt = false): bool
     {
         $this->log('Building request for email ID: ' . $item->id);
 
@@ -86,7 +86,11 @@ class MailerApp extends App
         $this->logApiResponse($newLogItemId, $apiResponse);
 
         $this->log('Marking email as processed ID: ' . $item->id);
-        $res = $this->dataLayer->markMailAsProcessed($item, $apiResponse->hasError);
+        $res = $this->dataLayer->markMailAsProcessed(
+            mailerItem: $item,
+            hasError: $apiResponse->hasError,
+            updateProcessedAt: $updateProcessedAt,
+        );
 
         if ($res) {
             $this->log('Email sent ID: ' . $item->id);

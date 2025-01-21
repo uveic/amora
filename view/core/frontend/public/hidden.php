@@ -25,6 +25,7 @@ $baseUrl = parse_url(UrlBuilderUtil::buildBaseUrlWithoutLanguage(), PHP_URL_HOST
 <?php if ($responseData->themeColourHex) { ?>
   <meta name="theme-color" content="<?=$responseData->themeColourHex?>"/>
 <?php } ?>
+  <meta name="thumbnail" content="<?=$responseData->siteImageUrl?>">
   <title><?=$responseData->getPageTitle()?></title>
   <link href="/css/hidden.css?v=000" rel="stylesheet" type="text/css">
 </head>

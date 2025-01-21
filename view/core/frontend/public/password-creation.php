@@ -38,7 +38,7 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
               <label for="password" class="null">Password</label>
               <input class="input" id="password" name="password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>" required>
             </p>
-            <p class="help"><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
+            <p class="help"><span class="is-danger"></span><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
           </div>
           <div class="field">
             <p class="control has-icons-left">

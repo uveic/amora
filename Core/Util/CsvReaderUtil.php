@@ -10,6 +10,8 @@ final readonly class CsvReaderUtil
         string $fullPathToFile,
         bool $firstRowAsAsHeader = false,
         bool $cleanData = false,
+        array $expectedHeaders = [],
+        bool $excludeRowsWithEmptyValues = false,
         string $separator = ',',
     ): array {
         $logger = Core::getLogger();
@@ -25,8 +27,8 @@ final readonly class CsvReaderUtil
             return [];
         }
 
+        $foundHeaders = [];
         $headers = [];
-        $count = 0;
         $output = [];
 
         do {
@@ -36,24 +38,34 @@ final readonly class CsvReaderUtil
                 escape: "\\",
             );
 
-            $count++;
-
             if (!$data || self::isEmpty($data)) {
                 continue;
             }
 
-            if ($firstRowAsAsHeader && $count === 1) {
+            if ($firstRowAsAsHeader && !$headers) {
                 foreach ($data as $index => $datum) {
+                    $datum = trim($datum);
                     $header = $cleanData
-                        ? strtolower(trim(StringUtil::cleanString(StringUtil::convertToUtf8($datum))))
+                        ? strtolower(StringUtil::cleanString(StringUtil::convertToUtf8($datum)))
                         : $datum;
 
                     if (strlen($header) > 0) {
+                        $foundHeaders[$header] = $index;
                         $headers[$index] = $header;
                     }
                 }
 
-                continue;
+                if ($expectedHeaders) {
+                    foreach ($expectedHeaders as $expectedHeader) {
+                        if (!isset($foundHeaders[$expectedHeader])) {
+                            $headers = [];
+                            $foundHeaders = [];
+                            continue 2;
+                        }
+                    }
+
+                    continue;
+                }
             }
 
             $row = [];
@@ -66,6 +78,15 @@ final readonly class CsvReaderUtil
                     $row[$headers[$index]] = $text;
                 } else {
                     $row[] = $text;
+                }
+            }
+
+            if ($excludeRowsWithEmptyValues) {
+                foreach ($headers as $header) {
+                    if (empty($row[$header])) {
+                        // It is not a valid row. At least one of the expected headers is empty.
+                        continue 2;
+                    }
                 }
             }
 

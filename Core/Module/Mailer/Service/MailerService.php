@@ -15,12 +15,22 @@ readonly class MailerService
         private bool $sendMailSynchronously,
     ) {}
 
-    public function storeMail(MailerItem $mailerItem): MailerItem
+    public function storeMail(MailerItem $mailerItem): ?MailerItem
     {
         $storedItem = $this->mailerDataLayer->storeMail($mailerItem);
+        if (!$storedItem) {
+            return null;
+        }
 
         if ($this->sendMailSynchronously) {
-            $this->mailerApp->processMailItem($mailerItem);
+            $res = $this->mailerApp->processMailItem(
+                item: $storedItem,
+                updateProcessedAt: true,
+            );
+
+            if (!$res) {
+                return null;
+            }
         }
 
         return $storedItem;

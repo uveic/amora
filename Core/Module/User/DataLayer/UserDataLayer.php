@@ -163,15 +163,16 @@ class UserDataLayer
         return $this->db->delete(self::USER_TABLE, ['id' => $user->id]);
     }
 
-    public function storeUserVerification(UserVerification $data): UserVerification
+    public function storeUserVerification(UserVerification $data): ?UserVerification
     {
         $res = $this->db->insert(self::USER_VERIFICATION_TABLE, $data->asArray());
 
         if (empty($res)) {
             $this->logger->logError('Error inserting user verification data');
+            return null;
         }
 
-        $data->id = (int)$res;
+        $data->id = $res;
 
         return $data;
     }

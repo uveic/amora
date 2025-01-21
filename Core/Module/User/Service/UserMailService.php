@@ -15,11 +15,11 @@ use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 
-class UserMailService
+readonly class UserMailService
 {
     public function __construct(
-        private readonly UserDataLayer $userDataLayer,
-        private readonly MailerService $mailerService,
+        private UserDataLayer $userDataLayer,
+        private MailerService $mailerService,
     ) {}
 
     private function sendEmailAndDisablePreviousVerifications(
@@ -185,7 +185,7 @@ class UserMailService
         return new MailerItem(
             id: null,
             template: MailerTemplate::PasswordReset,
-            replyToEmailAddress: null,
+            replyToEmailAddress: Core::getConfig()->mailer->replyTo->email,
             senderName: null,
             receiverEmailAddress: $user->email,
             receiverName: $user->name,
@@ -221,7 +221,7 @@ class UserMailService
         return new MailerItem(
             id: null,
             template: MailerTemplate::AccountVerification,
-            replyToEmailAddress: null,
+            replyToEmailAddress: Core::getConfig()->mailer->replyTo->email,
             senderName: null,
             receiverEmailAddress: $emailToVerify,
             receiverName: $user->name,
@@ -255,7 +255,7 @@ class UserMailService
         return new MailerItem(
             id: null,
             template: MailerTemplate::AccountVerification,
-            replyToEmailAddress: null,
+            replyToEmailAddress: Core::getConfig()->mailer->replyTo->email,
             senderName: null,
             receiverEmailAddress: $emailToVerify,
             receiverName: $user->name,
@@ -293,7 +293,7 @@ class UserMailService
         return new MailerItem(
             id: null,
             template: MailerTemplate::PasswordCreation,
-            replyToEmailAddress: null,
+            replyToEmailAddress: Core::getConfig()->mailer->replyTo->email,
             senderName: null,
             receiverEmailAddress: $user->email,
             receiverName: $user->name,

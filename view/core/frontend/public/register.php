@@ -43,7 +43,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
             <label for="password" class="null">Name</label>
             <input class="input" id="password" name="password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderCreatePassword')?>" minlength="<?=$this->e(UserService::USER_PASSWORD_MIN_LENGTH)?>">
           </p>
-          <p class="help"><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
+          <p class="help"><span class="is-danger"></span><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
         </div>
         <div id="login-failure-message" class="is-failure m-t-1 null"></div>
         <div id="register-terms" class="field">

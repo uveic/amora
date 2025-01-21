@@ -49,15 +49,16 @@ class MailerCore extends Core
         return self::getInstance(
             className: 'MailerDataLayer',
             factory: function () {
-                $db = self::getDb();
-
                 require_once self::getPathRoot() . '/App/Value/AppMailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerLogItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/DataLayer/MailerDataLayer.php';
 
-                return new MailerDataLayer($db);
+                return new MailerDataLayer(
+                    db: self::getDb(),
+                    logger: self::getLogger(),
+                );
             },
         );
     }
@@ -86,13 +87,12 @@ class MailerCore extends Core
         return self::getInstance(
             className: 'SendGridRequestBuilder',
             factory: function () {
-                $logger = self::getMailerLogger();
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/RequestBuilderAbstract.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/Sendgrid/RequestBuilder.php';
                 return new SendGridRequestBuilder(
-                    logger: $logger,
+                    logger: self::getMailerLogger(),
                     fromEmail: $mailerConfig->from->email,
                     fromName: $mailerConfig->from->name,
                 );
@@ -105,13 +105,12 @@ class MailerCore extends Core
         return self::getInstance(
             className: 'BrevoRequestBuilder',
             factory: function () {
-                $logger = self::getMailerLogger();
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/RequestBuilderAbstract.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/Brevo/RequestBuilder.php';
                 return new BrevoRequestBuilder(
-                    logger: $logger,
+                    logger: self::getMailerLogger(),
                     fromEmail: $mailerConfig->from->email,
                     fromName: $mailerConfig->from->name,
                 );
@@ -147,14 +146,13 @@ class MailerCore extends Core
         return self::getInstance(
             className: 'SendGridApiClient',
             factory: function () {
-                $logger = self::getMailerLogger();
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiClientAbstract.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/Sendgrid/ApiClient.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiResponse.php';
                 return new SendGridApiClient(
-                    logger: $logger,
+                    logger: self::getMailerLogger(),
                     baseApiUrl: $mailerConfig->mailerAuthentication->baseApiUrl,
                     apiKey: $mailerConfig->mailerAuthentication->apiKey,
                 );
@@ -168,14 +166,13 @@ class MailerCore extends Core
         return self::getInstance(
             className: 'BrevoApiClient',
             factory: function () {
-                $logger = self::getMailerLogger();
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiClientAbstract.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/Brevo/ApiClient.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiResponse.php';
                 return new BrevoApiClient(
-                    logger: $logger,
+                    logger: self::getMailerLogger(),
                     baseApiUrl: $mailerConfig->mailerAuthentication->baseApiUrl,
                     apiKey: $mailerConfig->mailerAuthentication->apiKey,
                 );

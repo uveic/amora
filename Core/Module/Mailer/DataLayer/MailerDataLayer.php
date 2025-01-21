@@ -8,6 +8,7 @@ use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Model\MailerLogItem;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\Logger;
 use Amora\Core\Util\StringUtil;
 
 class MailerDataLayer
@@ -19,6 +20,7 @@ class MailerDataLayer
 
     public function __construct(
         private readonly MySqlDb $db,
+        private readonly Logger $logger,
     ) {}
 
     public function filterMailerItemBy(
@@ -134,11 +136,16 @@ class MailerDataLayer
         return $output;
     }
 
-    public function storeMail(MailerItem $mailerItem): MailerItem
+    public function storeMail(MailerItem $mailerItem): ?MailerItem
     {
         $res = $this->db->insert(self::MAILER_QUEUE_TABLE_NAME, $mailerItem->asArray());
 
-        $mailerItem->id = (int)$res;
+        if (!$res) {
+            $this->logger->logError('Error inserting mailer queue item');
+            return null;
+        }
+
+        $mailerItem->id = $res;
         return $mailerItem;
     }
 
@@ -203,11 +210,15 @@ class MailerDataLayer
         return $lockId;
     }
 
-    public function markMailAsProcessed(MailerItem $mailerItem, bool $hasError = false): bool
-    {
+    public function markMailAsProcessed(
+        MailerItem $mailerItem,
+        bool $hasError = false,
+        bool $updateProcessedAt = false,
+    ): bool {
+        $updateProcessedAtSql = $updateProcessedAt ? ' processed_at = :processedAt,' : '';
         $sql = '
             UPDATE ' . self::MAILER_QUEUE_TABLE_NAME . '
-            SET lock_id = NULL,
+            SET lock_id = NULL,' . $updateProcessedAtSql . '
                 has_error = :error
             WHERE id = :id
         ';
@@ -215,6 +226,10 @@ class MailerDataLayer
             ':id' => $mailerItem->id,
             ':error' => empty($hasError) ? 0 : 1
         ];
+
+        if ($updateProcessedAt) {
+            $params[':processedAt'] = DateUtil::getCurrentDateForMySql();
+        }
 
         return $this->db->execute($sql, $params);
     }

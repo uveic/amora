@@ -323,6 +323,7 @@
   align-items: center;
 }
 
+.form-search-input-wrapper svg,
 .form-search-wrapper svg {
   max-width: revert;
   max-height: revert;
