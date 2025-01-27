@@ -418,7 +418,7 @@ final class StringUtil
                 $d[$k] = self::convertToUtf8($v);
             }
         } else if (is_string ($d)) {
-            return @utf8_encode($d);
+            return mb_convert_encoding($d, 'UTF-8', 'ISO-8859-1');
         }
 
         return $d;

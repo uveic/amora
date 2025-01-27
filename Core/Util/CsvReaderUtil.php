@@ -11,7 +11,6 @@ final readonly class CsvReaderUtil
         bool $firstRowAsAsHeader = false,
         bool $cleanData = false,
         array $expectedHeaders = [],
-        bool $excludeRowsWithEmptyValues = false,
         string $separator = ',',
     ): array {
         $logger = Core::getLogger();
@@ -44,15 +43,17 @@ final readonly class CsvReaderUtil
 
             if ($firstRowAsAsHeader && !$headers) {
                 foreach ($data as $index => $datum) {
-                    $datum = trim($datum);
+                    $datum = isset($datum) ? trim($datum) : null;
                     $header = $cleanData
                         ? strtolower(StringUtil::cleanString(StringUtil::convertToUtf8($datum)))
                         : $datum;
 
-                    if (strlen($header) > 0) {
-                        $foundHeaders[$header] = $index;
-                        $headers[$index] = $header;
+                    if (!$header) {
+                        $header = '#' . $index;
                     }
+
+                    $foundHeaders[$header] = $index;
+                    $headers[$index] = $header;
                 }
 
                 if ($expectedHeaders) {
@@ -70,9 +71,8 @@ final readonly class CsvReaderUtil
 
             $row = [];
             foreach ($data as $index => $datum) {
-                $text = $cleanData
-                    ? trim(StringUtil::convertToUtf8($datum))
-                    : $datum;
+                $datum = isset($datum) ? trim($datum) : null;
+                $text = $cleanData ? StringUtil::convertToUtf8($datum) : $datum;
 
                 if ($headers && isset($headers[$index])) {
                     $row[$headers[$index]] = $text;
@@ -81,13 +81,8 @@ final readonly class CsvReaderUtil
                 }
             }
 
-            if ($excludeRowsWithEmptyValues) {
-                foreach ($headers as $header) {
-                    if (empty($row[$header])) {
-                        // It is not a valid row. At least one of the expected headers is empty.
-                        continue 2;
-                    }
-                }
+            if (count($headers) !== count($row)) {
+                continue;
             }
 
             $output[] = $row;
@@ -101,19 +96,19 @@ final readonly class CsvReaderUtil
         return $output;
     }
 
-    private static function isEmpty(array $data): bool
+    private static function isEmpty(?array $data): bool
     {
-        $lenCount = [];
+        if (empty($data)) {
+            return true;
+        }
+
         foreach ($data as $datum) {
-            $len = strlen(trim($datum));
+            $len = empty($datum) ? 0 : strlen(trim($datum));
             if ($len > 0) {
                 return false;
             }
-
-            $lenCount[] = $len;
         }
 
-        $results = array_count_values($lenCount);
-        return isset($results[0]) && count($results) === 1;
+        return true;
     }
 }
