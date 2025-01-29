@@ -1,6 +1,6 @@
 {
   "name": "uveic/amora",
-  "description": "Framework to develop web applications written in PHP 8.2.",
+  "description": "Framework to develop web applications written in PHP 8.3.",
   "authors": [
     {
       "name": "Victor Gonzalez",
@@ -8,7 +8,7 @@
     }
   ],
   "require": {
-    "php": "^8.2",
+    "php": "^8.3",
     "geoip2/geoip2": "^2.0",
     "league/plates": "3.*",
     "ext-json": "*",
@@ -21,7 +21,6 @@
     "ext-exif": "*",
     "ext-curl": "*",
     "ext-libxml": "*",
-    "voku/anti-xss": "^4.1",
     "jaybizzle/crawler-detect": "^1.2",
     "aws/aws-sdk-php": "^3.306"
   }

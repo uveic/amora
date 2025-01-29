@@ -71,15 +71,17 @@ final class StringUtil
 
     public static function sanitiseHtml(?string $html): ?string
     {
-        if (empty($html)) {
-            return $html;
-        }
-
-        if (!self::$antiXss) {
-            self::$antiXss = new AntiXSS();
-        }
-
-        return self::$antiXss->xss_clean($html);
+        return $html;
+        // ToDo: maybe - Removed voku/anti-xss from composer.json
+//        if (empty($html)) {
+//            return $html;
+//        }
+//
+//        if (!self::$antiXss) {
+//            self::$antiXss = new AntiXSS();
+//        }
+//
+//        return self::$antiXss->xss_clean($html);
     }
 
     /**
