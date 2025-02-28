@@ -114,9 +114,9 @@ class MediaRemoveApp extends App
                     AND m.id NOT IN (
                         SELECT main_media_id FROM core_album WHERE status_id NOT IN (:albumDeletedStatusId) AND main_media_id IS NOT NULL
                         UNION
-                        SELECT cas.main_media_id FROM core_album_section AS cas INNER JOIN core_album AS ca ON ca.id = cas.album_id WHERE ca.status_id NOT IN (:albumDeletedStatusId) AND cas.main_media_id IS NOT NULL
+                        SELECT cas.main_media_id FROM core_collection AS cas INNER JOIN core_album AS ca ON ca.id = cas.album_id WHERE ca.status_id NOT IN (:albumDeletedStatusId) AND cas.main_media_id IS NOT NULL
                         UNION
-                        SELECT casm.media_id FROM core_album_section_media AS casm INNER JOIN core_album_section AS cas ON cas.id = casm.album_section_id INNER JOIN core_album AS ca ON ca.id = cas.album_id WHERE ca.status_id NOT IN (:albumDeletedStatusId) AND casm.media_id IS NOT NULL
+                        SELECT casm.media_id FROM core_collection_media AS casm INNER JOIN core_collection AS cas ON cas.id = casm.collection_id INNER JOIN core_album AS ca ON ca.id = cas.album_id WHERE ca.status_id NOT IN (:albumDeletedStatusId) AND casm.media_id IS NOT NULL
                         UNION
                         SELECT main_image_id FROM core_article WHERE status_id NOT IN (:articleDeletedStatusId) AND main_image_id IS NOT NULL
                         UNION
@@ -289,15 +289,15 @@ class MediaRemoveApp extends App
 
                 $this->albumDataLayer->getDb()->execute(
                     '
-                        DELETE alsm FROM ' . AlbumDataLayer::ALBUM_SECTION_MEDIA_TABLE . ' AS alsm
-                            INNER JOIN ' . AlbumDataLayer::ALBUM_SECTION_TABLE . ' AS als ON als.id = alsm.album_section_id
+                        DELETE alsm FROM ' . AlbumDataLayer::COLLECTION_MEDIA_TABLE . ' AS alsm
+                            INNER JOIN ' . AlbumDataLayer::COLLECTION_TABLE . ' AS als ON als.id = alsm.collection_id
                         WHERE als.album_id IN (' . implode(', ', $albumIds) . ')
                     ',
                 );
 
                 $this->albumDataLayer->getDb()->execute(
                     '
-                        DELETE FROM ' . AlbumDataLayer::ALBUM_SECTION_TABLE . '
+                        DELETE FROM ' . AlbumDataLayer::COLLECTION_TABLE . '
                         WHERE album_id IN (' . implode(', ', $albumIds) . ')
                     ',
                 );

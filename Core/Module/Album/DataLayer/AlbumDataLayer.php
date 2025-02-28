@@ -5,8 +5,8 @@ namespace Amora\Core\Module\Album\Datalayer;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Album\Model\Album;
-use Amora\Core\Module\Album\Model\AlbumSection;
-use Amora\Core\Module\Album\Model\AlbumSectionMedia;
+use Amora\Core\Module\Album\Model\Collection;
+use Amora\Core\Module\Album\Model\CollectionMedia;
 use Amora\Core\Module\Album\Model\AlbumSlug;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
@@ -24,8 +24,8 @@ class AlbumDataLayer
     use DataLayerTrait;
 
     const ALBUM_TABLE = 'core_album';
-    const ALBUM_SECTION_TABLE = 'core_album_section';
-    const ALBUM_SECTION_MEDIA_TABLE = 'core_album_section_media';
+    const COLLECTION_TABLE = 'core_collection';
+    const COLLECTION_MEDIA_TABLE = 'core_collection_media';
     const ALBUM_SLUG_TABLE = 'core_album_slug';
 
     const ALBUM_STATUS_TABLE = 'core_album_status';
@@ -50,7 +50,7 @@ class AlbumDataLayer
         array $mediaIds = [],
         ?string $slug = null,
         ?string $searchQuery = null,
-        bool $includeSections = false,
+        bool $includeCollections = false,
         bool $includeMedia = false,
         ?QueryOptions $queryOptions = null,
     ): array {
@@ -157,16 +157,16 @@ class AlbumDataLayer
         if ($mediaIds) {
             $allKeys = [];
             foreach (array_values($mediaIds) as $key => $value) {
-                $currentKey = ':albumSectionMediaId' . $key;
+                $currentKey = ':collectionMediaId' . $key;
                 $allKeys[] = $currentKey;
                 $params[$currentKey] = $value;
             }
 
             $where .= ' AND a.id IN (
-                SELECT `as`.album_id
-                FROM ' . self::ALBUM_SECTION_TABLE . ' AS `as`
-                    INNER JOIN ' . self::ALBUM_SECTION_MEDIA_TABLE . ' AS asm ON asm.album_section_id = `as`.id
-                WHERE asm.media_id IN (' . implode(', ', $allKeys) . ')
+                SELECT co.album_id
+                FROM ' . self::COLLECTION_TABLE . ' AS co
+                    INNER JOIN ' . self::COLLECTION_MEDIA_TABLE . ' AS cm ON cm.collection_id = co.id
+                WHERE cm.media_id IN (' . implode(', ', $allKeys) . ')
             )';
         }
 
@@ -194,8 +194,8 @@ class AlbumDataLayer
         foreach ($res as $item) {
             $output[] = Album::fromArray(
                 data: $item,
-                sections: $includeSections
-                    ? $this->filterAlbumSectionBy(
+                collections: $includeCollections
+                    ? $this->filterCollectionBy(
                         albumIds: [$item['album_id']],
                         includeMedia: $includeMedia,
                         queryOptions: new QueryOptions(
@@ -212,8 +212,8 @@ class AlbumDataLayer
         return $output;
     }
 
-    public function filterAlbumSectionBy(
-        array $albumSectionIds = [],
+    public function filterCollectionBy(
+        array $collectionIds = [],
         array $albumIds = [],
         array $mediaIds = [],
         ?string $searchQuery = null,
@@ -225,8 +225,8 @@ class AlbumDataLayer
         }
 
         $orderByMapping = [
-            'order' => '`as`.sequence',
-            'id' => '`as`.id',
+            'order' => 'co.sequence',
+            'id' => 'co.id',
             'begins_with' => 'begins_with',
             'word_begins_with' => 'word_begins_with',
             'title_contains' => 'title_contains',
@@ -235,15 +235,15 @@ class AlbumDataLayer
         $params = [];
         $baseSql = 'SELECT ';
         $fields = [
-            '`as`.id AS album_section_id',
-            '`as`.album_id AS album_section_album_id',
-            '`as`.main_media_id AS album_section_main_media_id',
-            '`as`.created_at AS album_section_created_at',
-            '`as`.updated_at AS album_section_updated_at',
-            '`as`.title_html AS album_section_title_html',
-            '`as`.subtitle_html AS album_section_subtitle_html',
-            '`as`.content_html AS album_section_content_html',
-            '`as`.`sequence` AS album_section_sequence',
+            'co.id AS collection_id',
+            'co.album_id AS collection_album_id',
+            'co.main_media_id AS collection_main_media_id',
+            'co.created_at AS collection_created_at',
+            'co.updated_at AS collection_updated_at',
+            'co.title_html AS collection_title_html',
+            'co.subtitle_html AS collection_subtitle_html',
+            'co.content_html AS collection_content_html',
+            'co.`sequence` AS collection_sequence',
 
             'm.id AS media_id',
             'm.user_id AS media_user_id',
@@ -275,31 +275,31 @@ class AlbumDataLayer
             'me.iso AS media_exif_iso',
         ];
 
-        $joins = ' FROM ' . self::ALBUM_SECTION_TABLE . ' AS `as`';
-        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = `as`.main_media_id';
+        $joins = ' FROM ' . self::COLLECTION_TABLE . ' AS co';
+        $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = co.main_media_id';
         $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
 
         $where = ' WHERE 1';
 
-        if ($albumSectionIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $albumSectionIds, '`as`.id', 'albumSectionId');
+        if ($collectionIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $collectionIds, 'co.id', 'collectionId');
         }
 
         if ($albumIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $albumIds, '`as`.album_id', 'albumId');
+            $where .= $this->generateWhereSqlCodeForIds($params, $albumIds, 'co.album_id', 'albumId');
         }
 
         if ($mediaIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, '`as`.main_media_id', 'mainMediaId');
+            $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, 'co.main_media_id', 'mainMediaId');
         }
 
         if ($searchQuery) {
             $searchQuery = StringUtil::cleanSearchQuery($searchQuery);
 
-            $where .= " AND (MATCH(`as`.title_html) AGAINST('$searchQuery') OR `as`.title_html LIKE '%$searchQuery%')";
-            $fields[] = "IF (`as`.title_html LIKE '%$searchQuery%', 1, 0) AS title_contains";
-            $fields[] = "IF (`as`.title_html LIKE '$searchQuery%', 1, 0) AS begins_with";
-            $fields[] = "IF (`as`.title_html LIKE '% $searchQuery%', 1, 0) AS word_begins_with";
+            $where .= " AND (MATCH(co.title_html) AGAINST('$searchQuery') OR co.title_html LIKE '%$searchQuery%')";
+            $fields[] = "IF (co.title_html LIKE '%$searchQuery%', 1, 0) AS title_contains";
+            $fields[] = "IF (co.title_html LIKE '$searchQuery%', 1, 0) AS begins_with";
+            $fields[] = "IF (co.title_html LIKE '% $searchQuery%', 1, 0) AS word_begins_with";
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
@@ -310,11 +310,11 @@ class AlbumDataLayer
 
         $output = [];
         foreach ($res as $item) {
-            $output[] = AlbumSection::fromArray(
+            $output[] = Collection::fromArray(
                 data: $item,
                 media: $includeMedia
-                    ? $this->filterAlbumSectionMediaBy(
-                        albumSectionIds: [$item['album_section_id']],
+                    ? $this->filterCollectionMediaBy(
+                        collectionIds: [$item['collection_id']],
                         queryOptions: new QueryOptions(
                             orderBy: [
                                 new QueryOrderBy('order', QueryOrderDirection::ASC),
@@ -329,9 +329,9 @@ class AlbumDataLayer
         return $output;
     }
 
-    public function filterAlbumSectionMediaBy(
-        array $albumSectionMediaIds = [],
-        array $albumSectionIds = [],
+    public function filterCollectionMediaBy(
+        array $collectionMediaIds = [],
+        array $collectionIds = [],
         array $mediaIds = [],
         ?QueryOptions $queryOptions = null,
     ): array {
@@ -340,20 +340,20 @@ class AlbumDataLayer
         }
 
         $orderByMapping = [
-            'order' => 'asm.`sequence`',
-            'id' => 'asm.id',
+            'sequence' => 'cm.`sequence`',
+            'id' => 'cm.id',
         ];
 
         $params = [];
         $baseSql = 'SELECT ';
         $fields = [
-            'asm.id AS album_section_media_id',
-            'asm.album_section_id AS album_section_media_album_section_id',
-            'asm.media_id AS album_section_media_media_id',
-            'asm.created_at AS album_section_media_created_at',
-            'asm.updated_at AS album_section_media_updated_at',
-            'asm.caption_html AS album_section_media_caption_html',
-            'asm.`sequence` AS album_section_media_sequence',
+            'cm.id AS collection_media_id',
+            'cm.collection_id AS collection_media_collection_id',
+            'cm.media_id AS collection_media_media_id',
+            'cm.created_at AS collection_media_created_at',
+            'cm.updated_at AS collection_media_updated_at',
+            'cm.caption_html AS collection_media_caption_html',
+            'cm.`sequence` AS collection_media_sequence',
 
             'm.id AS media_id',
             'm.user_id AS media_user_id',
@@ -385,22 +385,22 @@ class AlbumDataLayer
             'me.iso AS media_exif_iso',
         ];
 
-        $joins = ' FROM ' . self::ALBUM_SECTION_MEDIA_TABLE . ' AS `asm`';
-        $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = asm.media_id';
+        $joins = ' FROM ' . self::COLLECTION_MEDIA_TABLE . ' AS cm';
+        $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = cm.media_id';
         $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
 
         $where = ' WHERE 1';
 
-        if ($albumSectionMediaIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $albumSectionMediaIds, 'asm.id', 'albumSectionMediaId');
+        if ($collectionMediaIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $collectionMediaIds, 'cm.id', 'collectionMediaId');
         }
 
-        if ($albumSectionIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $albumSectionIds, 'asm.album_section_id', 'albumSectionId');
+        if ($collectionIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $collectionIds, 'cm.collection_id', 'collectionId');
         }
 
         if ($mediaIds) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, 'asm.media_id', 'mediaId');
+            $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, 'cm.media_id', 'mediaId');
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
@@ -411,7 +411,7 @@ class AlbumDataLayer
 
         $output = [];
         foreach ($res as $item) {
-            $output[] = AlbumSectionMedia::fromArray($item);
+            $output[] = CollectionMedia::fromArray($item);
         }
 
         return $output;
@@ -487,10 +487,10 @@ class AlbumDataLayer
         );
     }
 
-    public function storeAlbumSection(AlbumSection $item): AlbumSection
+    public function storeCollection(Collection $item): Collection
     {
         $res = $this->db->insert(
-            tableName: self::ALBUM_SECTION_TABLE,
+            tableName: self::COLLECTION_TABLE,
             data: $item->asArray(),
         );
 
@@ -499,19 +499,46 @@ class AlbumDataLayer
         return $item;
     }
 
-    public function updateAlbumSection(AlbumSection $item): bool
+    public function updateCollection(Collection $item): bool
     {
         return $this->db->update(
-            tableName: self::ALBUM_SECTION_TABLE,
+            tableName: self::COLLECTION_TABLE,
             id: $item->id,
             data: $item->asArray(),
         );
     }
 
-    public function storeAlbumSectionMedia(AlbumSectionMedia $item): AlbumSectionMedia
+    public function updateCollectionFields(
+        int $collectionId,
+        int $mainMediaId,
+    ): bool {
+        $params = [];
+        $fields = [];
+
+        $fields[] = 'main_media_id = :mainMediaId';
+        $params[':mainMediaId'] = $mainMediaId;
+
+        if (!$params) {
+            return true;
+        }
+
+        $params[':collectionId'] = $collectionId;
+        $params[':updatedAt'] = DateUtil::getCurrentDateForMySql();
+        $fields[] = 'updated_at = :updatedAt';
+
+        $sql = '
+            UPDATE ' . self::COLLECTION_TABLE . '
+            SET ' . implode(',', $fields) . '
+            WHERE id = :collectionId
+        ';
+
+        return $this->db->execute($sql, $params);
+    }
+
+    public function storeCollectionMedia(CollectionMedia $item): CollectionMedia
     {
         $res = $this->db->insert(
-            tableName: self::ALBUM_SECTION_MEDIA_TABLE,
+            tableName: self::COLLECTION_MEDIA_TABLE,
             data: $item->asArray(),
         );
 
@@ -520,20 +547,20 @@ class AlbumDataLayer
         return $item;
     }
 
-    public function updateAlbumSectionMedia(AlbumSectionMedia $item): bool
+    public function updateCollectionMedia(CollectionMedia $item): bool
     {
         return $this->db->update(
-            tableName: self::ALBUM_SECTION_MEDIA_TABLE,
+            tableName: self::COLLECTION_MEDIA_TABLE,
             id: $item->id,
             data: $item->asArray(),
         );
     }
 
-    public function deleteMediaForAlbumSection(int $albumSectionMediaId): bool
+    public function deleteMediaForCollection(int $collectionMediaId): bool
     {
         return $this->db->delete(
-            tableName: self::ALBUM_SECTION_MEDIA_TABLE,
-            where: ['id' => $albumSectionMediaId],
+            tableName: self::COLLECTION_MEDIA_TABLE,
+            where: ['id' => $collectionMediaId],
         );
     }
 
@@ -589,45 +616,45 @@ class AlbumDataLayer
         return $this->db->execute($sql, $params);
     }
 
-    public function updateMediaSequenceForAlbumSection(
-        AlbumSectionMedia $albumSectionMediaFrom,
-        AlbumSectionMedia $albumSectionMediaTo,
+    public function updateMediaSequenceForCollection(
+        CollectionMedia $collectionMediaFrom,
+        CollectionMedia $collectionMediaTo,
     ): bool {
         $resTrans = $this->db->withTransaction(
-            function () use($albumSectionMediaFrom, $albumSectionMediaTo) {
-                if ($albumSectionMediaFrom->sequence === $albumSectionMediaTo->sequence) {
+            function () use($collectionMediaFrom, $collectionMediaTo) {
+                if ($collectionMediaFrom->sequence === $collectionMediaTo->sequence) {
                     return new Feedback(true);
                 }
 
-                if ($albumSectionMediaFrom->sequence > $albumSectionMediaTo->sequence) {
+                if ($collectionMediaFrom->sequence > $collectionMediaTo->sequence) {
                     $sql = '
-                        UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
+                        UPDATE ' . self::COLLECTION_MEDIA_TABLE . '
                             SET `sequence` = `sequence` + :countDelta
-                        WHERE album_section_id = :albumSectionId
+                        WHERE collection_id = :collectionId
                             AND `sequence` >= :sequenceTo
                             AND `sequence` < :sequenceFrom
                     ';
 
                     $params = [
                         ':countDelta' => 1,
-                        ':sequenceTo' => $albumSectionMediaTo->sequence,
-                        ':sequenceFrom' => $albumSectionMediaFrom->sequence,
-                        ':albumSectionId' => $albumSectionMediaFrom->albumSectionId,
+                        ':sequenceTo' => $collectionMediaTo->sequence,
+                        ':sequenceFrom' => $collectionMediaFrom->sequence,
+                        ':collectionId' => $collectionMediaFrom->collectionId,
                     ];
                 } else {
                     $sql = '
-                        UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
+                        UPDATE ' . self::COLLECTION_MEDIA_TABLE . '
                             SET `sequence` = `sequence` + :countDelta
-                        WHERE album_section_id = :albumSectionId
+                        WHERE collection_id = :collectionId
                             AND `sequence` > :sequenceFrom
                             AND `sequence` <= :sequenceTo
                     ';
 
                     $params = [
                         ':countDelta' => -1,
-                        ':sequenceFrom' => $albumSectionMediaFrom->sequence,
-                        ':sequenceTo' => $albumSectionMediaTo->sequence,
-                        ':albumSectionId' => $albumSectionMediaFrom->albumSectionId,
+                        ':sequenceFrom' => $collectionMediaFrom->sequence,
+                        ':sequenceTo' => $collectionMediaTo->sequence,
+                        ':collectionId' => $collectionMediaFrom->collectionId,
                     ];
                 }
 
@@ -638,14 +665,14 @@ class AlbumDataLayer
                 }
 
                 $sql = '
-                    UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
+                    UPDATE ' . self::COLLECTION_MEDIA_TABLE . '
                         SET `sequence` = :newSequence
-                    WHERE id = :albumSectionMediaId
+                    WHERE id = :collectionMediaId
                 ';
 
                 $params = [
-                    ':newSequence' => $albumSectionMediaTo->sequence,
-                    ':albumSectionMediaId' => $albumSectionMediaFrom->id,
+                    ':newSequence' => $collectionMediaTo->sequence,
+                    ':collectionMediaId' => $collectionMediaFrom->id,
                 ];
 
                 $res = $this->db->execute($sql, $params);
@@ -657,17 +684,17 @@ class AlbumDataLayer
         return $resTrans->isSuccess;
     }
 
-    public function updateSectionSequenceForAlbum(
-        AlbumSection $albumSectionFrom,
-        AlbumSection $albumSectionTo,
+    public function updateCollectionSequenceForAlbum(
+        Collection $collectionFrom,
+        Collection $collectionTo,
     ): bool {
-        if ($albumSectionFrom->sequence === $albumSectionTo->sequence) {
+        if ($collectionFrom->sequence === $collectionTo->sequence) {
             return true;
         }
 
-        if ($albumSectionFrom->sequence > $albumSectionTo->sequence) {
+        if ($collectionFrom->sequence > $collectionTo->sequence) {
             $sql = '
-                UPDATE ' . self::ALBUM_SECTION_TABLE . '
+                UPDATE ' . self::COLLECTION_TABLE . '
                     SET `sequence` = `sequence` + :countDelta
                 WHERE album_id = :albumId
                     AND `sequence` >= :sequenceTo
@@ -676,13 +703,13 @@ class AlbumDataLayer
 
             $params = [
                 ':countDelta' => 1,
-                ':sequenceTo' => $albumSectionTo->sequence,
-                ':sequenceFrom' => $albumSectionFrom->sequence,
-                ':albumId' => $albumSectionFrom->albumId,
+                ':sequenceTo' => $collectionTo->sequence,
+                ':sequenceFrom' => $collectionFrom->sequence,
+                ':albumId' => $collectionFrom->albumId,
             ];
         } else {
             $sql = '
-                UPDATE ' . self::ALBUM_SECTION_TABLE . '
+                UPDATE ' . self::COLLECTION_TABLE . '
                     SET `sequence` = `sequence` + :countDelta
                 WHERE album_id = :albumId
                     AND `sequence` > :sequenceFrom
@@ -691,40 +718,40 @@ class AlbumDataLayer
 
             $params = [
                 ':countDelta' => -1,
-                ':sequenceFrom' => $albumSectionFrom->sequence,
-                ':sequenceTo' => $albumSectionTo->sequence,
-                ':albumId' => $albumSectionFrom->albumId,
+                ':sequenceFrom' => $collectionFrom->sequence,
+                ':sequenceTo' => $collectionTo->sequence,
+                ':albumId' => $collectionFrom->albumId,
             ];
         }
 
         return $this->db->execute($sql, $params);
     }
 
-    public function updateSectionSequenceWhenMediaIsDeletedForAlbum(
-        AlbumSectionMedia $albumSectionMediaDeleted,
+    public function updateCollectionSequenceWhenMediaIsDeletedForAlbum(
+        CollectionMedia $collectionMediaDeleted,
     ): bool {
         $sql = '
-            UPDATE ' . self::ALBUM_SECTION_MEDIA_TABLE . '
+            UPDATE ' . self::COLLECTION_MEDIA_TABLE . '
                 SET `sequence` = `sequence` + :countDelta
-            WHERE album_section_id = :albumSectionId
+            WHERE collection_id = :collectionId
                 AND `sequence` > :sequenceFrom
         ';
 
         $params = [
             ':countDelta' => -1,
-            ':sequenceFrom' => $albumSectionMediaDeleted->sequence,
-            ':albumSectionId' => $albumSectionMediaDeleted->albumSectionId,
+            ':sequenceFrom' => $collectionMediaDeleted->sequence,
+            ':collectionId' => $collectionMediaDeleted->collectionId,
         ];
 
         return $this->db->execute($sql, $params);
     }
 
-    public function getMaxAlbumSectionSequence(int $albumId): ?int
+    public function getMaxCollectionSequence(int $albumId): ?int
     {
         $res = $this->db->fetchColumn(
             '
                 SELECT MAX(`sequence`)
-                FROM ' . self::ALBUM_SECTION_TABLE . '
+                FROM ' . self::COLLECTION_TABLE . '
                 WHERE `album_id` = :albumId
             ',
             [
@@ -735,16 +762,16 @@ class AlbumDataLayer
         return isset($res) ? (int)$res : null;
     }
 
-    public function getMaxAlbumSectionMediaSequence(int $albumSectionId): int
+    public function getMaxCollectionMediaSequence(int $collectionId): int
     {
         return (int)$this->db->fetchColumn(
             '
                 SELECT COALESCE(MAX(`sequence`), 0)
-                FROM ' . self::ALBUM_SECTION_MEDIA_TABLE . '
-                WHERE `album_section_id` = :albumSectionId
+                FROM ' . self::COLLECTION_MEDIA_TABLE . '
+                WHERE `collection_id` = :collectionId
             ',
             [
-                ':albumSectionId' => $albumSectionId,
+                ':collectionId' => $collectionId,
             ]
         );
     }

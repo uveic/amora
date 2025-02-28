@@ -5,6 +5,7 @@ namespace Amora\Core\Module\Article\Datalayer;
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\QueryOrderBy;
+use Amora\Core\Module\Album\Datalayer\AlbumDataLayer;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\DataLayerTrait;
@@ -347,12 +348,23 @@ class ArticleDataLayer
             'me.taken_at AS media_exif_taken_at',
             'me.exposure_time AS media_exif_exposure_time',
             'me.iso AS media_exif_iso',
+
+            'co.id AS collection_id',
+            'co.album_id AS collection_album_id',
+            'co.main_media_id AS collection_main_media_id',
+            'co.created_at AS collection_created_at',
+            'co.updated_at AS collection_updated_at',
+            'co.title_html AS collection_title_html',
+            'co.subtitle_html AS collection_subtitle_html',
+            'co.content_html AS collection_content_html',
+            'co.`sequence` AS collection_sequence',
         ];
 
         $joins = ' FROM ' . self::CONTENT_TABLE . ' AS c';
         $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON u.id = c.user_id';
         $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = c.main_image_id';
         $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
+        $joins .= ' LEFT JOIN ' . AlbumDataLayer::COLLECTION_TABLE . ' AS co ON c.collection_id = co.id';
 
         $where = ' WHERE 1';
 

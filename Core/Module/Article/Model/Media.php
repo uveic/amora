@@ -224,6 +224,15 @@ class Media
             : $this->getPathWithNameLarge();
     }
 
+    public function asHtmlSimple(): string
+    {
+        if ($this->type === MediaType::Image) {
+            return '<img class="media-item" data-media-id="' . $this->id . '" src="' . $this->getPathWithNameMedium() . '" alt="' . $this->buildAltText() . '">';
+        }
+
+        return $this->fileAsHtml();
+    }
+
     public function asHtml(
         ImageSize $size = ImageSize::XSmall,
         string $className = 'media-item',
@@ -301,7 +310,7 @@ class Media
         $output = [
             '<a href="' . $this->getPathWithNameOriginal() . '" target="_blank" class="media-item" data-media-id="' . $this->id . '">',
             '<div class="media-header">',
-            $this->type->getIcon('img-svg-30'),
+            $this->type->getIcon(),
             '<span class="media-name">' . $this->filenameSource . '</span>',
             '</div>',
             '<span class="media-info">',
