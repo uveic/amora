@@ -55,11 +55,16 @@ class Collection
 
     public function buildUniqueSlug(): string
     {
-        return strtolower(
-            StringUtil::cleanString(
-                $this->sequence . '-' . $this->titleHtml . '-' . $this->subtitleHtml
-            )
-        );
+        $text = $this->titleHtml ?: '';
+        if ($this->subtitleHtml) {
+            $text .= $this->subtitleHtml;
+        }
+
+        if (!$text) {
+            $text = StringUtil::generateRandomString(10);
+        }
+
+        return substr(strtolower(StringUtil::cleanString('co' . $this->sequence . $text)), 0, 16);
     }
 
     public static function getEmpty(): self
