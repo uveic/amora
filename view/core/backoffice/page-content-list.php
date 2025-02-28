@@ -16,7 +16,7 @@ $groupOfLinks = [];
 
 /** @var AppPageContentType|PageContentType $item */
 foreach (AppPageContentType::getActive() as $item) {
-    foreach (Language::getActive() as $language) {
+    foreach (Core::getEnabledSiteLanguages() as $language) {
         $groupOfLinks[AppPageContentType::getTitleVariableName($item)][] = '<a class="m-l-1" href="' . UrlBuilderUtil::buildBackofficeContentEditUrl($responseData->siteLanguage, $item, $language) . '">' . $language->getIconFlag('img-svg-25') . '</a>';
     }
 }
