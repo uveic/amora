@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  document.querySelectorAll('.filter-form-wrapper').forEach(ff => {
+  document.querySelectorAll('.form-filter').forEach(ff => {
     ff.addEventListener('submit', e => {
       e.preventDefault();
 
