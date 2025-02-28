@@ -9,7 +9,7 @@ use Amora\Core\Value\QueryOrderDirection;
 
 $this->layout('base', ['responseData' => $responseData]);
 
-$displayLoadMore = count($responseData->files) >= 50;
+$displayLoadMore = count($responseData->media) >= 50;
 
 ?>
   <div id="feedback" class="feedback null"></div>
@@ -31,7 +31,7 @@ $displayLoadMore = count($responseData->files) >= 50;
     <div id="media-container">
 <?php
     /** @var Media $media */
-    foreach ($responseData->files as $media) {
+    foreach ($responseData->media as $media) {
 ?>
       <div class="file-container">
         <?=$media->asHtml()?>

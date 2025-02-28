@@ -473,7 +473,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminImages'),
-                files: $images
+                media: $images
             ),
         );
     }
@@ -505,7 +505,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminMedia'),
-                files: $files
+                media: $files
             ),
         );
     }
