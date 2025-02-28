@@ -4,6 +4,7 @@ use Amora\Core\Module\User\Model\User;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\Helper\UserHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -12,16 +13,14 @@ $this->layout('base', ['responseData' => $responseData,])
 ?>
   <main>
     <section class="page-header">
-      <h3><?=$responseData->getLocalValue('navAdminUsers')?></h3>
+      <span><?=$responseData->getLocalValue('navAdminUsers')?></span>
       <div class="links">
-        <a href="<?=UrlBuilderUtil::buildBackofficeUserNewUrl($responseData->siteLanguage)?>" class="button is-link header-button-new"><?=$responseData->getLocalValue('globalNew')?></a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeUserNewUrl($responseData->siteLanguage)?>"><?=CoreIcons::ADD?></a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
       </div>
     </section>
     <div class="backoffice-wrapper">
       <div class="table">
-        <div class="table-row header">
-           <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalName')?></div>
-        </div>
 <?php
     /** @var User $user */
     foreach ($responseData->users as $user) {

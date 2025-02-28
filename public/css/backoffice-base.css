@@ -701,6 +701,7 @@
   gap: 0.25rem;
 }
 
+.link-add,
 .filter-close,
 .filter-open {
   cursor: pointer;
@@ -789,8 +790,6 @@
 
 /* Media upload style starts here */
 .content-images {
-  background-color: var(--color-black);
-  color: var(--color-white);
   padding: 1rem 0.5rem 4rem;
   min-height: 100vh;
 }

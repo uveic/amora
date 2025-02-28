@@ -4,6 +4,7 @@ use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\ImageSize;
 use Amora\Core\Module\Article\Value\MediaType;
+use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 use Amora\Core\Value\QueryOrderDirection;
 
@@ -18,17 +19,17 @@ $count = 0;
 ?>
   <div id="feedback" class="feedback null"></div>
   <main>
-    <div class="content-images">
-      <div id="upload-media">
-        <h1><?=$responseData->getLocalValue('navAdminImages')?></h1>
-        <div class="upload-media-control">
+    <section class="page-header">
+      <span><?=$responseData->getLocalValue('navAdminImages')?></span>
+      <div class="links">
+        <div>
           <input class="null" type="file" id="images" name="images" multiple="" accept="image/png, image/jpeg, image/webp">
-          <label for="images" class="input-file-label">
-            <?=CoreIcons::IMAGE?>
-            <span><?=$responseData->getLocalValue('globalUploadImage')?></span>
-          </label>
+          <label for="images" class="link-add"><?=CoreIcons::ADD?></label>
         </div>
+        <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
       </div>
+    </section>
+    <div class="content-images">
       <div id="images-list">
 <?php
     /** @var Media $image */

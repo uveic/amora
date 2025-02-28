@@ -11,12 +11,9 @@ $this->layout('base', ['responseData' => $responseData,]);
 ?>
   <main>
 <?=$this->insert('partials/article/header', ['responseData' => $responseData])?>
-<?=$this->insert('partials/article/filter', ['responseData' => $responseData])?>
     <div class="backoffice-wrapper">
+<?=$this->insert('partials/article/filter', ['responseData' => $responseData])?>
       <div class="table">
-        <div class="table-row header">
-          <div class="table-item flex-grow-2"><?=$responseData->getLocalValue('globalTitle')?></div>
-        </div>
 <?php
     /** @var Article $article */
     foreach ($responseData->articles as $article) {

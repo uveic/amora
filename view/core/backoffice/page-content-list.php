@@ -26,7 +26,7 @@ $this->layout('base', ['responseData' => $responseData]);
     <main>
       <div id="feedback" class="feedback null"></div>
       <section class="page-header">
-        <h3><?=$responseData->getLocalValue('pageContentEditTitle')?></h3>
+        <span><?=$responseData->getLocalValue('pageContentEditTitle')?></span>
         <div class="links">
           <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
         </div>
