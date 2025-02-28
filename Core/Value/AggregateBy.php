@@ -13,9 +13,9 @@ enum AggregateBy: string
     case Month = 'month';
     case Year = 'year';
 
-    public static function getInterval(self $item): DateInterval
+    public function getInterval(): DateInterval
     {
-        return match ($item) {
+        return match ($this) {
             AggregateBy::Minute => new DateInterval('P0000-00-00T00:01:00'),
             AggregateBy::Hour => new DateInterval('P0000-00-00T01:00:00'),
             AggregateBy::Day => new DateInterval('P0000-00-01T00:00:00'),

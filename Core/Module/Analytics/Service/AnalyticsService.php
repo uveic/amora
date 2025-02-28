@@ -4,11 +4,11 @@ namespace Amora\Core\Module\Analytics\Service;
 
 use Amora\App\Module\Analytics\Entity\ReportViewCount;
 use Amora\Core\Module\Analytics\Entity\PageView;
-use Amora\Core\Module\Analytics\Value\CountDbColumn;
+use Amora\Core\Module\Analytics\Model\EventValue;
+use Amora\Core\Module\Analytics\Value\Parameter;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Util\DateUtil;
-use Amora\Core\Value\AggregateBy;
 use DateTime;
 use DateTimeImmutable;
 use Throwable;
@@ -35,7 +35,8 @@ readonly class AnalyticsService
                 return;
             }
 
-            $storedEventRaw = $this->analyticsDataLayer->storeEventRaw(
+            $searchQuery = $request->path === self::SEARCH_ENDPOINT ? $request->getGetParam('q') : null;
+            $this->analyticsDataLayer->storeEventRaw(
                 new EventRaw(
                     id: null,
                     userId: $request->session?->user->id,
@@ -46,48 +47,41 @@ readonly class AnalyticsService
                     ip: $request->sourceIp,
                     userAgent: $request->userAgent ? substr($request->userAgent, 0, 255) : null,
                     clientLanguage: $request->clientLanguage ? substr($request->clientLanguage, 0, 255) : null,
+                    searchQuery: $searchQuery ? trim($searchQuery) : null,
                 ),
             );
-
-            if ($request->path === self::SEARCH_ENDPOINT) {
-                $searchQuery = $request->getGetParam('q');
-                if ($searchQuery) {
-                    $this->analyticsDataLayer->storeEventRawSearch(
-                        rawId: $storedEventRaw->id,
-                        searchQuery: $searchQuery,
-                    );
-                }
-            }
-
         } catch (Throwable $t) {
             $this->logger->logError('Error logging event: ' . $t->getMessage());
         }
     }
 
-    public function countPageViews(
+    public function getEventValueForId(Parameter $parameter, int $id): ?EventValue
+    {
+        return $this->analyticsDataLayer->filterEventValueBy(
+            parameter: $parameter,
+            id: $id,
+        );
+    }
+
+    public function getReportViewCount(
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         Period $period,
         ?EventType $eventType = null,
-        ?string $url = null,
-        ?string $device = null,
-        ?string $browser = null,
-        ?string $countryIsoCode = null,
-        ?string $languageIsoCode = null,
-        ?CountDbColumn $columnName = null,
+        ?Parameter $parameter = null,
+        ?int $eventId = null,
+        bool $includeVisitorHash = false,
     ): ReportViewCount {
-        $aggregateBy = Period::getAggregateBy($period);
-        $pageViews = $this->analyticsDataLayer->countPageViews(
+        $aggregateBy = $period->getAggregateBy();
+
+        $pageViews = $this->analyticsDataLayer->calculateCountAggregatedBy(
             from: $from,
             to: $to,
             aggregateBy: $aggregateBy,
             eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
-            columnName: $columnName,
+            parameter: $parameter,
+            eventId: $eventId,
+            includeVisitorHash: $includeVisitorHash,
         );
 
         return $this->completeReportViewCount(
@@ -98,38 +92,28 @@ readonly class AnalyticsService
                 period: $period,
                 pageViews: $pageViews,
                 eventType: $eventType,
-                url: $url,
-                device: $device,
-                browser: $browser,
-                countryIsoCode: $countryIsoCode,
-                languageIsoCode: $languageIsoCode,
+                parameter: $parameter,
             ),
         );
     }
 
-    public function countTop(
-        CountDbColumn $columnName,
+    public function calculateTotalAggregatedBy(
+        Parameter $parameter,
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         ?EventType $eventType = null,
-        ?string $url = null,
-        ?string $device = null,
-        ?string $browser = null,
-        ?string $countryIsoCode = null,
-        ?string $languageIsoCode = null,
+        ?Parameter $parameterQuery = null,
+        ?int $eventId = null,
         int $limit = 25,
     ): array {
-        return $this->analyticsDataLayer->countTop(
-            columnName: $columnName,
+        return $this->analyticsDataLayer->calculateTotalAggregatedBy(
+            parameter: $parameter,
             from: $from,
             to: $to,
             limit: $limit,
             eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
+            parameterQuery: $parameterQuery,
+            eventId: $eventId,
         );
     }
 
@@ -146,7 +130,7 @@ readonly class AnalyticsService
             $total += $pageView->count;
         }
 
-        $interval = AggregateBy::getInterval($report->aggregateBy);
+        $interval = $report->aggregateBy->getInterval();
         $from = DateTime::createFromImmutable($report->from);
 
         do {
@@ -175,11 +159,7 @@ readonly class AnalyticsService
             pageViews: $output,
             total: $total,
             eventType: $report->eventType,
-            url: $report->url,
-            device: $report->device,
-            browser: $report->browser,
-            countryIsoCode: $report->countryIsoCode,
-            languageIsoCode: $report->languageIsoCode,
+            parameter: $report->parameter,
         );
     }
 }

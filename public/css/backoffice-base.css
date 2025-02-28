@@ -1358,11 +1358,7 @@
   color: var(--color-chart-02);
 }
 
-.analytics-page-js,
-.analytics-device-js,
-.analytics-browser-js,
-.analytics-country-js,
-.analytics-language-js,
+.analytics-event-js,
 .analytics-close-js {
   cursor: pointer;
 }
@@ -1791,6 +1787,7 @@
 }
 
 .width-100 { width: 100%; }
+.width-30 { width: 30%; }
 .width-40 { width: 40%; }
 .text-small { font-size: 0.8rem; }
 .m-t-385 { margin-top: 3.85rem !important; }

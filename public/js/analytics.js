@@ -1,11 +1,8 @@
 function buildRedirectUrl(
-  period,
-  newDate,
-  url = null,
-  device = null,
-  browser = null,
-  countryIsoCode = null,
-  languageIsoCode = null,
+  period = null,
+  newDate = null,
+  parameterId = null,
+  eventId = null,
 ) {
   const queryParams = new URLSearchParams(window.location.search);
 
@@ -17,34 +14,16 @@ function buildRedirectUrl(
     queryParams.set('date', newDate);
   }
 
-  if (url === 'NULL') {
-    queryParams.delete('url');
-  } else if (url) {
-    queryParams.set('url', url);
+  if (parameterId === 'NULL') {
+    queryParams.delete('paramId');
+  } else if (parameterId) {
+    queryParams.set('paramId', parameterId);
   }
 
-  if (device === 'NULL') {
-    queryParams.delete('device');
-  } else if (device) {
-    queryParams.set('device', device);
-  }
-
-  if (browser === 'NULL') {
-    queryParams.delete('browser');
-  } else if (browser) {
-    queryParams.set('browser', browser);
-  }
-
-  if (countryIsoCode === 'NULL') {
-    queryParams.delete('countryIsoCode');
-  } else if (countryIsoCode) {
-    queryParams.set('countryIsoCode', countryIsoCode);
-  }
-
-  if (languageIsoCode === 'NULL') {
-    queryParams.delete('languageIsoCode');
-  } else if (languageIsoCode) {
-    queryParams.set('languageIsoCode', languageIsoCode);
+  if (eventId === 'NULL') {
+    queryParams.delete('eventId');
+  } else if (eventId) {
+    queryParams.set('eventId', eventId);
   }
 
   const redirectUrl = window.location.origin + window.location.pathname;
@@ -122,44 +101,14 @@ document.querySelectorAll('a.analytics-controls-event-type').forEach(m => {
   });
 });
 
-document.querySelectorAll('.analytics-page-js').forEach(s => {
+document.querySelectorAll('.analytics-event-js').forEach(s => {
   s.addEventListener('click', (e) => {
     e.preventDefault();
 
-    let url = s.dataset.url;
-    if (!url) {
-      url = 'homepage';
-    }
+    const paramId = s.dataset.parameterId;
+    const eventId = s.dataset.eventId;
 
-    window.location = buildRedirectUrl(null, null, url);
-  });
-});
-
-document.querySelectorAll('.analytics-device-js').forEach(s => {
-  s.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location = buildRedirectUrl(null, null, null, s.textContent);
-  });
-});
-
-document.querySelectorAll('.analytics-browser-js').forEach(s => {
-  s.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location = buildRedirectUrl(null, null, null, null, s.textContent);
-  });
-});
-
-document.querySelectorAll('.analytics-country-js').forEach(s => {
-  s.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location = buildRedirectUrl(null, null, null, null, null, s.dataset.isoCode);
-  });
-});
-
-document.querySelectorAll('.analytics-language-js').forEach(s => {
-  s.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location = buildRedirectUrl(null, null, null, null, null, null, s.textContent);
+    window.location = buildRedirectUrl(null, null, paramId, eventId);
   });
 });
 
@@ -167,6 +116,6 @@ document.querySelectorAll('.analytics-close-js').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
 
-    window.location = buildRedirectUrl(null, null, 'NULL', 'NULL', 'NULL', 'NULL', 'NULL');
+    window.location = buildRedirectUrl(null, null, 'NULL', 'NULL');
   });
 });

@@ -4,6 +4,7 @@ namespace Amora\Core\Entity\Response;
 
 use Amora\App\Module\Analytics\Entity\ReportViewCount;
 use Amora\Core\Entity\Request;
+use Amora\Core\Module\Analytics\Model\EventValue;
 
 class HtmlResponseDataAnalytics extends HtmlResponseDataAbstract
 {
@@ -14,9 +15,9 @@ class HtmlResponseDataAnalytics extends HtmlResponseDataAbstract
         ?Pagination $pagination = null,
         public readonly ?ReportViewCount $reportPageViews = null,
         public readonly ?ReportViewCount $reportVisitors = null,
+        public readonly ?EventValue $parameterEventValue = null,
         public readonly array $visitors = [],
         public readonly array $pages = [],
-        public readonly array $countries = [],
         public readonly array $sources = [],
         public readonly array $devices = [],
         public readonly array $browsers = [],

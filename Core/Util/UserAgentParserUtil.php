@@ -19,9 +19,7 @@ final class UserAgentParserUtil
      * @link https://github.com/donatj/PhpUserAgent
      */
     public static function parse(?string $userAgent): UserAgentInfo {
-        $platform = null;
-        $browser  = null;
-        $version  = null;
+        $platform = '';
 
         if (!$userAgent) {
             return new UserAgentInfo();
@@ -182,9 +180,9 @@ REGEX
         }
 
         return new UserAgentInfo(
-            $platform ?? null,
-            $browser ?? null,
-            $version ?? null
+            $platform ?: null,
+            $browser ?: null,
+            $version ?: null
         );
     }
 

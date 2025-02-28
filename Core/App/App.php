@@ -2,6 +2,7 @@
 
 namespace Amora\Core\App;
 
+use Amora\Core\Core;
 use Throwable;
 use Amora\Core\Util\Logger;
 
@@ -16,9 +17,10 @@ abstract class App
         private readonly int $appFrequencySeconds = 5,
         int $lockMaxTimeSinceLastSyncSeconds = 30,
         private readonly bool $isPersistent = true,
+        private readonly bool $isLoggingEnabled = true,
     ) {
         if (empty($appName)) {
-            $this->logger->logError('Empty App name value when trying to run an App. Aborting...');
+            $this->log('Empty App name. Aborting...', true);
             exit(1);
         }
 
@@ -33,11 +35,10 @@ abstract class App
 
     public function execute(callable $f): void
     {
-        $this->logger->logInfo($this->logPrefix . 'Starting App...');
+        $this->log('Starting App...');
 
         if ($this->lockManager->isRunning()) {
-            $this->logger->logInfo(
-                $this->logPrefix .
+            $this->log(
                 'Still running. Lock will be removed in ' .
                 $this->lockManager->getSecondsToRemoveLock() .
                 ' seconds. Aborting...'
@@ -84,16 +85,20 @@ abstract class App
 
     private function runApp(callable $f): void
     {
-        $this->logger->logInfo($this->logPrefix . 'Running...');
+        $this->log('Running...');
         $f();
 
         $usedMiB = memory_get_usage() / 1024 / 1024;
-        $this->logger->logInfo($this->logPrefix . 'Memory: ' . number_format($usedMiB, 3) . ' MiB');
+        $this->log('Memory: ' . number_format($usedMiB, 3) . ' MiB');
         unset($usedMiB);
     }
 
     protected function log(string $message, bool $isError = false): void
     {
+        if (!Core::isRunningInLiveEnv() && !$this->isLoggingEnabled) {
+            return;
+        }
+
         if ($isError) {
             $this->logger->logError($this->getLogPrefix() . $message);
             return;
