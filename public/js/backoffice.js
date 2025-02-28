@@ -3,7 +3,6 @@ import {Request} from './module/Request.js?v=000';
 import {Global} from "./module/localisation.js?v=000";
 import {Uploader} from "./module/Uploader.js?v=000";
 import {appAddEventListenerAction} from "./app/back.js?v=000";
-import {handleDropdownOptionClick} from "./shared.js?v=000";
 
 window.data = {
   mediaCache: [],
@@ -17,27 +16,27 @@ function addEventListenerAction(media, mediaId, eventListenerAction, targetConta
     media.addEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
     media.removeEventListener('click', handleGenericMainMediaClick);
-    media.removeEventListener('click', albumSectionAddMedia);
+    media.removeEventListener('click', collectionAddMedia);
   } else if (eventListenerAction === 'insertImageInArticle') {
     media.removeEventListener('click', displayNextImagePopup);
     media.addEventListener('click', insertImageInArticle);
     media.removeEventListener('click', handleGenericMainMediaClick);
-    media.removeEventListener('click', albumSectionAddMedia);
+    media.removeEventListener('click', collectionAddMedia);
   } else if (eventListenerAction === 'handleGenericMainMediaClick') {
     media.removeEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
     media.addEventListener('click', handleGenericMainMediaClick);
-    media.removeEventListener('click', albumSectionAddMedia);
-  } else if (eventListenerAction === 'albumSectionAddMedia') {
+    media.removeEventListener('click', collectionAddMedia);
+  } else if (eventListenerAction === 'collectionAddMedia') {
     media.removeEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
     media.removeEventListener('click', handleGenericMainMediaClick);
-    media.addEventListener('click', albumSectionAddMedia);
+    media.addEventListener('click', collectionAddMedia);
   } else {
     media.removeEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
     media.removeEventListener('click', handleGenericMainMediaClick);
-    media.removeEventListener('click', albumSectionAddMedia);
+    media.removeEventListener('click', collectionAddMedia);
 
     appAddEventListenerAction(media, eventListenerAction);
   }
@@ -239,8 +238,10 @@ function displayModalImage(image) {
   modalContainer.querySelector('.image-caption').textContent = image.caption;
   modalContainer.querySelector('.image-meta').innerHTML = image.exifHtml;
 
-  modalContainer.querySelector('.image-meta .copy-link')
-    .addEventListener('click', e => Util.handleCopyLink(e, image.pathLarge));
+  const copyLinkEl = modalContainer.querySelector('.image-meta .copy-link');
+  if (copyLinkEl) {
+    copyLinkEl.addEventListener('click', e => Util.handleCopyLink(e, image.pathLarge));
+  }
 
   const imageDeleteEl = modalContainer.querySelector('.image-delete');
   imageDeleteEl.dataset.mediaId = image.id;
@@ -473,77 +474,127 @@ function insertImageInArticle(e) {
   imageCaption.focus();
 }
 
-function albumSectionAddMedia(e) {
+function collectionAddMedia(e) {
   const mediaId = e.currentTarget.mediaId;
   const targetContainerId = e.currentTarget.targetContainerId;
 
-  const container = document.querySelector('#' + targetContainerId);
-  const albumSectionId = container.dataset.albumSectionId;
-  const actionButton = container.querySelector('.select-media-action');
+  const afterResponse = (response, isMainMedia) => {
+    if (response.collectionId) {
+      container.dataset.collectionId = response.collectionId;
 
-  const loadingContainer = document.createElement('div');
-  loadingContainer.className = 'album-media-loading';
-  const loadingAnimation = Util.createLoadingAnimation();
-  loadingContainer.appendChild(loadingAnimation);
-  container.insertBefore(loadingContainer, actionButton);
+      const collectionMediaContainer = document.querySelector('.collection-item-media');
+      if (collectionMediaContainer) {
+        collectionMediaContainer.dataset.collectionId = response.collectionId;
+      }
+    }
 
-  const payload = {
-    titleHtml: null,
-    contentHtml: null,
-    mediaId: mediaId,
-  };
+    if (response.html) {
+      if (isMainMedia) {
+        const existing = container.querySelector('.media-item');
+        if (existing) {
+          container.removeChild(existing);
+        }
+        container.insertAdjacentHTML('afterbegin', response.html);
+        container.classList.remove('no-image-simple');
+        container.parentElement.querySelector('.collection-main-media-delete-js').classList.remove('null');
+        container.parentElement.querySelector('.button-media-add span').textContent = Global.get('globalModify');
+      } else {
+        const buttonMediaAdd = container.querySelector('.button-media-add');
+        buttonMediaAdd.insertAdjacentHTML('beforebegin', response.html);
+      }
 
-  document.querySelector('.select-media-modal').classList.add('null');
-  container.parentElement.scrollIntoView({behavior: 'smooth', block: 'start'});
-
-  Request.post('/back/album-section/' + albumSectionId + '/media', JSON.stringify(payload))
-    .then(response => {
-      if (response.html) {
-        actionButton.insertAdjacentHTML('beforebegin', response.html);
-        const countEl = container.parentElement.querySelector('.album-section-item-media-header .count');
+      const countEl = container.parentElement.querySelector('.collection-item-media-header .count');
+      if (countEl) {
         countEl.textContent = (Number.parseInt(countEl.textContent) + 1).toString();
+      }
 
-        const deleteMediaEl = container.querySelector('.album-section-media-delete-js[data-media-id="' + mediaId + '"]');
+      const deleteMediaEl = container.querySelector('.collection-media-delete-js[data-media-id="' + mediaId + '"]');
+      if (deleteMediaEl) {
         deleteMediaEl.targetContainerId = targetContainerId;
         deleteMediaEl.mediaId = mediaId;
-        deleteMediaEl.addEventListener('click', albumSectionDeleteMedia);
+        deleteMediaEl.addEventListener('click', collectionDeleteMedia);
+      }
 
-        const editMediaEl = container.querySelector('.album-section-media-caption-js[data-media-id="' + mediaId + '"]');
+      const editMediaEl = container.querySelector('.collection-media-caption-js[data-media-id="' + mediaId + '"]');
+      if (editMediaEl) {
         editMediaEl.mediaId = mediaId;
-        editMediaEl.addEventListener('click', albumSectionEditMediaCaption);
+        editMediaEl.addEventListener('click', collectionEditMediaCaption);
+      }
 
+      if (!isMainMedia) {
         const newMediaEl = container.querySelector('.item-draggable:last-of-type .media-item');
         newMediaEl.addEventListener('dragstart', handleAlbumMediaDragStart);
         newMediaEl.addEventListener('dragleave', handleAlbumMediaDragLeave);
         newMediaEl.addEventListener('dragend', handleAlbumMediaDragEnd);
         newMediaEl.addEventListener('drop', handleAlbumMediaDrop);
-      } else {
-        Util.notifyUser('A imaxe xa fora engadida.');
       }
-    })
-    .catch(error => {
-      container.removeChild(container.querySelector('img[data-media-id="' + mediaId + '"]'));
-      Util.notifyError(error);
-    }).finally(() => container.removeChild(loadingContainer));
+    } else {
+      Util.notifyUser(Global.get('collectionExistingImageWarning'));
+    }
+  }
+
+  const container = document.querySelector('#' + targetContainerId);
+  const collectionId = container.dataset.collectionId;
+  const isMainMedia = Number.parseInt(container.dataset.isMainMedia) === 1;
+
+  const loadingContainer = document.createElement('div');
+  loadingContainer.className = 'album-media-loading';
+  const loadingAnimation = Util.createLoadingAnimation();
+  loadingContainer.appendChild(loadingAnimation);
+  container.insertAdjacentElement('afterbegin', loadingContainer);
+
+  const payload = {
+    titleHtml: null,
+    contentHtml: null,
+    mediaId: mediaId,
+    isMainMedia: isMainMedia,
+  };
+
+  document.querySelector('.select-media-modal').classList.add('null');
+  container.parentElement.scrollIntoView({behavior: 'smooth', block: 'start'});
+
+  if (collectionId) {
+    Request.post('/back/collection/' + collectionId + '/media', JSON.stringify(payload))
+      .then(response => afterResponse(response, isMainMedia))
+      .catch(error => {
+        if (isMainMedia) {
+          container.removeChild(container.querySelector('.media-item'));
+        } else {
+          container.removeChild(container.querySelector('.collection-media-container[data-media-id="' + mediaId + '"]'));
+        }
+        Util.notifyError(error);
+      }).finally(() => container.removeChild(loadingContainer));
+  } else {
+    Request.post('/back/collection/media', JSON.stringify(payload))
+      .then(response => afterResponse(response, isMainMedia))
+      .catch(error => {
+        if (isMainMedia) {
+          container.removeChild(container.querySelector('.media-item'));
+        } else {
+          container.removeChild(container.querySelector('.collection-media-container[data-media-id="' + mediaId + '"]'));
+        }
+        Util.notifyError(error);
+      }).finally(() => container.removeChild(loadingContainer));
+  }
 }
 
-function editAlbumSection(e) {
+function editCollection(e) {
   e.preventDefault();
 
-  const albumSectionId = e.currentTarget.dataset.albumSectionId;
+  const collectionId = e.currentTarget.dataset.collectionId;
 
-  document.querySelectorAll('.album-section-item').forEach(s => {
-    const otherAlbumSectionId = s.dataset.albumSectionId;
-    if (albumSectionId !== otherAlbumSectionId) {
-      makeAlbumSectionNonEditable(otherAlbumSectionId);
+  document.querySelectorAll('.collection-item').forEach(s => {
+    const otherCollectionId = s.dataset.collectionId;
+    if (collectionId !== otherCollectionId) {
+      makeCollectionNonEditable(otherCollectionId);
     }
   });
 
-  const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
-  const titleEl = container.querySelector('.section-title-html');
-  const subtitleEl = container.querySelector('.section-subtitle-html');
-  const contentEl = container.querySelector('.section-content-html');
-  const sequenceEl = container.querySelector('.section-sequence');
+  const container = document.querySelector('.collection-item[data-collection-id="' + collectionId + '"]');
+  const titleEl = container.querySelector('.collection-title-html');
+  const subtitleEl = container.querySelector('.collection-subtitle-html');
+  const contentEl = container.querySelector('.collection-content-html');
+  const sequenceEl = container.querySelector('.collection-sequence');
   const sequenceValue = Number.parseInt(sequenceEl.dataset.before);
 
   if (titleEl.textContent.trim() === '-') {
@@ -558,7 +609,7 @@ function editAlbumSection(e) {
     contentEl.textContent = '';
   }
 
-  container.querySelectorAll('.section-label').forEach(sl => sl.classList.remove('null'));
+  container.querySelectorAll('.collection-label').forEach(sl => sl.classList.remove('null'));
   titleEl.classList.add('m-t-0');
   subtitleEl.classList.add('m-t-0');
   contentEl.classList.add('m-t-0');
@@ -578,7 +629,7 @@ function editAlbumSection(e) {
   }
 
   container.querySelector('.main-image-button-container').classList.remove('null');
-  container.querySelector('.album-section-button-container-js').classList.remove('null');
+  container.querySelector('.collection-button-container-js').classList.remove('null');
   container.querySelector('.main-image-container').classList.remove('null');
   const mainMedia = container.querySelector('.main-image-container .media-item');
   if (mainMedia && !mainMedia.classList.contains('null')) {
@@ -593,25 +644,25 @@ function editAlbumSection(e) {
   container.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
-function updateAlbumSection(e) {
+function updateCollection(e) {
   e.preventDefault();
 
-  const albumSectionId = e.currentTarget.dataset.albumSectionId;
+  const collectionId = e.currentTarget.dataset.collectionId;
 
-  makeAlbumSectionNonEditable(albumSectionId);
+  makeCollectionNonEditable(collectionId);
 
-  const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
+  const container = document.querySelector('.collection-item[data-collection-id="' + collectionId + '"]');
 
-  const titleHtmlEl = container.querySelector('.section-title-html');
+  const titleHtmlEl = container.querySelector('.collection-title-html');
   const titleHtml = titleHtmlEl.textContent.trim();
   titleHtmlEl.dataset.before = titleHtml;
 
-  const subtitleHtmlEl = container.querySelector('.section-subtitle-html');
+  const subtitleHtmlEl = container.querySelector('.collection-subtitle-html');
   const subtitleHtml = subtitleHtmlEl.textContent.trim();
   subtitleHtmlEl.dataset.before = subtitleHtml;
 
-  const contentHtmlEl = container.querySelector('.section-content-html');
-  const contentHtmlBeforeEl = container.querySelector('.section-content-html-before');
+  const contentHtmlEl = container.querySelector('.collection-content-html');
+  const contentHtmlBeforeEl = container.querySelector('.collection-content-html-before');
   const contentHtml = Util.getAndCleanHtmlFromElement(contentHtmlEl);
   contentHtmlBeforeEl.innerHTML = contentHtml ?? '';
 
@@ -621,12 +672,12 @@ function updateAlbumSection(e) {
     : null;
   container.querySelector('.main-image-container').dataset.before = mainMediaId ?? '';
 
-  const sequenceEl = container.querySelector('.section-sequence');
+  const sequenceEl = container.querySelector('.collection-sequence');
   const sequenceRaw = sequenceEl.textContent.trim().replace('#', '');
   const sequence = Number.isNaN(sequenceRaw) ? Number.parseInt(sequenceEl.dataset.before)
     : Number.parseInt(sequenceEl.textContent.trim().replace('#', ''));
 
-  const targetAlbumSectionId = updateAlbumSectionSequences(
+  const targetCollectionId = updateCollectionSequences(
     Number.parseInt(sequenceEl.dataset.before),
     sequence,
   );
@@ -637,10 +688,10 @@ function updateAlbumSection(e) {
     contentHtml: contentHtml,
     mainMediaId: mainMediaId,
     newSequence: sequence,
-    albumSectionIdSequenceTo: targetAlbumSectionId,
+    collectionIdSequenceTo: targetCollectionId,
   };
 
-  Request.put('/back/album-section/' + albumSectionId, JSON.stringify(payload))
+  Request.put('/back/collection/' + collectionId, JSON.stringify(payload))
     .then(() => {
       if (mainMedia && mainMedia.classList.contains('null')) {
         mainMedia.parentElement.removeChild(mainMedia);
@@ -653,14 +704,14 @@ function updateAlbumSection(e) {
   container.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
-function makeAlbumSectionNonEditable(albumSectionId) {
-  const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
-  const titleEl = container.querySelector('.section-title-html');
-  const subtitleEl = container.querySelector('.section-subtitle-html');
-  const contentEl = container.querySelector('.section-content-html');
+function makeCollectionNonEditable(collectionId) {
+  const container = document.querySelector('.collection-item[data-collection-id="' + collectionId + '"]');
+  const titleEl = container.querySelector('.collection-title-html');
+  const subtitleEl = container.querySelector('.collection-subtitle-html');
+  const contentEl = container.querySelector('.collection-content-html');
   const mediaButtonsContainer = container.querySelector('.main-image-button-container');
-  const editButton = container.querySelector('.album-section-edit-js');
-  const sequenceEl = container.querySelector('.section-sequence');
+  const editButton = container.querySelector('.collection-edit-js');
+  const sequenceEl = container.querySelector('.collection-sequence');
 
   if (titleEl.textContent.trim() === '') {
     titleEl.textContent = '-';
@@ -674,7 +725,7 @@ function makeAlbumSectionNonEditable(albumSectionId) {
     contentEl.textContent = '-';
   }
 
-  container.querySelectorAll('.section-label').forEach(sl => sl.classList.add('null'));
+  container.querySelectorAll('.collection-label').forEach(sl => sl.classList.add('null'));
   titleEl.classList.remove('m-t-0');
   subtitleEl.classList.remove('m-t-0');
   contentEl.classList.remove('m-t-0');
@@ -693,21 +744,21 @@ function makeAlbumSectionNonEditable(albumSectionId) {
   }
   mediaButtonsContainer.classList.add('null');
   editButton.classList.remove('null');
-  container.querySelector('.album-section-button-container-js').classList.add('null');
+  container.querySelector('.collection-button-container-js').classList.add('null');
 }
 
-function cancelAlbumSectionEdit(e) {
+function cancelCollectionEdit(e) {
   e.preventDefault();
 
-  const albumSectionId = e.currentTarget.dataset.albumSectionId;
+  const collectionId = e.currentTarget.dataset.collectionId;
 
-  const container = document.querySelector('.album-section-item[data-album-section-id="' + albumSectionId + '"]');
-  const titleHtmlEl = container.querySelector('.section-title-html');
+  const container = document.querySelector('.collection-item[data-collection-id="' + collectionId + '"]');
+  const titleHtmlEl = container.querySelector('.collection-title-html');
   titleHtmlEl.textContent = titleHtmlEl.dataset.before;
-  const subtitleHtmlEl = container.querySelector('.section-subtitle-html');
+  const subtitleHtmlEl = container.querySelector('.collection-subtitle-html');
   subtitleHtmlEl.textContent = subtitleHtmlEl.dataset.before;
-  const contentHtmlEl = container.querySelector('.section-content-html');
-  const contentHtmlBeforeEl = container.querySelector('.section-content-html-before');
+  const contentHtmlEl = container.querySelector('.collection-content-html');
+  const contentHtmlBeforeEl = container.querySelector('.collection-content-html-before');
   contentHtmlEl.innerHTML = contentHtmlBeforeEl.innerHTML;
   container.querySelector('.main-image-container').classList.remove('null');
   container.querySelector('.generic-media-delete-js').classList.remove('null');
@@ -739,14 +790,14 @@ function cancelAlbumSectionEdit(e) {
     }
   }
 
-  const sequenceEl = container.querySelector('.section-sequence');
+  const sequenceEl = container.querySelector('.collection-sequence');
   sequenceEl.textContent = '#' + sequenceEl.dataset.before;
 
-  makeAlbumSectionNonEditable(albumSectionId);
+  makeCollectionNonEditable(collectionId);
   container.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
-function albumSectionDeleteMedia(e) {
+function collectionDeleteMedia(e) {
   e.preventDefault();
 
   const delRes = window.confirm(Global.get('feedbackDeleteGeneric'));
@@ -755,7 +806,7 @@ function albumSectionDeleteMedia(e) {
   }
 
   const mediaId = e.currentTarget.mediaId;
-  const albumSectionMediaId = e.currentTarget.dataset.albumSectionMediaId;
+  const collectionMediaId = e.currentTarget.dataset.collectionMediaId;
   const targetContainerId = e.currentTarget.targetContainerId;
 
   const container = document.querySelector('#' + targetContainerId);
@@ -763,8 +814,10 @@ function albumSectionDeleteMedia(e) {
 
   targetMediaContainer.parentElement.parentElement.classList.add('null');
 
-  const countEl = container.parentElement.querySelector('.album-section-item-media-header .count');
-  countEl.textContent = (Number.parseInt(countEl.textContent) - 1).toString();
+  const countEl = container.parentElement.querySelector('.collection-item-media-header .count');
+  if (countEl) {
+    countEl.textContent = (Number.parseInt(countEl.textContent) - 1).toString();
+  }
 
   const deletedMediaSequence = Number.parseInt(targetMediaContainer.dataset.sequence);
   container.querySelectorAll('.media-item').forEach(mi => {
@@ -774,12 +827,14 @@ function albumSectionDeleteMedia(e) {
     }
   });
 
-  Request.delete('/back/album-section-media/' + albumSectionMediaId)
+  Request.delete('/back/collection-media/' + collectionMediaId)
     .catch(error => {
       targetMediaContainer.parentElement.parentElement.classList.remove('null');
       Util.notifyError(error);
 
-      countEl.textContent = (Number.parseInt(countEl.textContent) + 1).toString();
+      if (countEl) {
+        countEl.textContent = (Number.parseInt(countEl.textContent) + 1).toString();
+      }
 
       container.querySelectorAll('.media-item').forEach(mi => {
         const currentSequence = Number.parseInt(mi.dataset.sequence);
@@ -791,22 +846,50 @@ function albumSectionDeleteMedia(e) {
     });
 }
 
-function albumSectionEditMediaCaption(e) {
+function collectionDeleteMainMedia(e) {
   e.preventDefault();
 
-  const albumSectionMediaId = e.currentTarget.dataset.albumSectionMediaId;
-  const albumSectionId = e.currentTarget.dataset.albumSectionId;
+  const delRes = window.confirm(Global.get('feedbackDeleteGeneric'));
+  if (!delRes) {
+    return;
+  }
+
+  const collectionId = e.currentTarget.dataset.collectionId;
+  const targetContainerId = e.currentTarget.dataset.targetContainerId;
+
+  const targetContainer = document.querySelector('#' + targetContainerId);
+  const targetMediaContainer = targetContainer.querySelector('.media-item');
+  targetMediaContainer.classList.add('null');
+
+  Request.delete('/back/collection/' + collectionId + '/main-media')
+    .then(() => {
+      targetMediaContainer.parentElement.removeChild(targetMediaContainer);
+      targetContainer.classList.add('no-image-simple');
+      targetContainer.parentElement.querySelector('.button-media-add span').textContent = Global.get('globalSelectImage');
+      targetContainer.parentElement.querySelector('.collection-main-media-delete-js').classList.add('null');
+    })
+    .catch(error => {
+      targetMediaContainer.classList.remove('null');
+      Util.notifyError(error);
+    });
+}
+
+function collectionEditMediaCaption(e) {
+  e.preventDefault();
+
+  const collectionMediaId = e.currentTarget.dataset.collectionMediaId;
+  const collectionId = e.currentTarget.dataset.collectionId;
   const mediaId = e.currentTarget.mediaId;
   const modal = document.querySelector('.album-media-caption-edit-modal-js');
   const mediaContainer = modal.querySelector('.album-media-edit-container');
   mediaContainer.querySelectorAll('img').forEach(i => mediaContainer.removeChild(i));
-  modal.querySelector('input[name="albumSectionMediaId"]').value = albumSectionMediaId;
+  modal.querySelector('input[name="collectionMediaId"]').value = collectionMediaId;
   const existingMedia = e.currentTarget.parentElement.parentElement.querySelector('img[data-media-id="' + mediaId + '"]');
-  const sectionContentContainer = document.querySelector(
-    '.album-section-item[data-album-section-id="' + albumSectionId + '"]'
+  const collectionContentContainer = document.querySelector(
+    '.collection-item[data-collection-id="' + collectionId + '"]'
   );
-  const titleText = sectionContentContainer.querySelector('.section-title-html').textContent;
-  const subtitleText = sectionContentContainer.querySelector('.section-sequence').textContent +
+  const titleText = collectionContentContainer.querySelector('.collection-title-html').textContent;
+  const subtitleText = collectionContentContainer.querySelector('.collection-sequence').textContent +
     (titleText === '-' ? '' : (' ' + titleText));
 
   const newMediaEl = new Image();
@@ -823,47 +906,47 @@ function albumSectionEditMediaCaption(e) {
   htmlContainer.focus();
 }
 
-function updateAlbumSectionSequences(sourceSequence, targetSequence) {
+function updateCollectionSequences(sourceSequence, targetSequence) {
   if (sourceSequence === targetSequence) {
     return;
   }
 
-  const container = document.querySelector('.album-sections-wrapper');
-  const sourceSection = container.querySelector('.album-section-item[data-sequence="' + sourceSequence + '"]');
-  let targetSection = container.querySelector('.album-section-item[data-sequence="' + targetSequence + '"]');
-  if (!targetSection) {
+  const container = document.querySelector('.collections-wrapper');
+  const sourceCollection = container.querySelector('.collection-item[data-sequence="' + sourceSequence + '"]');
+  let targetCollection = container.querySelector('.collection-item[data-sequence="' + targetSequence + '"]');
+  if (!targetCollection) {
     let closestSequence = null;
     const sequences = [];
-    container.querySelectorAll('.album-section-item').forEach(asi => sequences.push(Number.parseInt(asi.dataset.sequence)));
+    container.querySelectorAll('.collection-item').forEach(asi => sequences.push(Number.parseInt(asi.dataset.sequence)));
 
-    targetSection = closestSequence ?
-      container.querySelector('.album-section-item[data-sequence="' + closestSequence + '"]')
-      : container.querySelector('.album-section-item:last-of-type');
+    targetCollection = closestSequence ?
+      container.querySelector('.collection-item[data-sequence="' + closestSequence + '"]')
+      : container.querySelector('.collection-item:last-of-type');
 
-    targetSequence = Number.parseInt(targetSection.dataset.sequence);
+    targetSequence = Number.parseInt(targetCollection.dataset.sequence);
   }
 
-  const currentSectionEl = sourceSection.querySelector('.section-sequence');
-  currentSectionEl.textContent = '#' + targetSequence.toString();
-  currentSectionEl.dataset.before = targetSequence.toString();
-  sourceSection.dataset.sequence = targetSequence.toString();
+  const currentCollectionEl = sourceCollection.querySelector('.collection-sequence');
+  currentCollectionEl.textContent = '#' + targetSequence.toString();
+  currentCollectionEl.dataset.before = targetSequence.toString();
+  sourceCollection.dataset.sequence = targetSequence.toString();
 
   let countDelta = 0;
   if (targetSequence < sourceSequence) {
-    container.insertBefore(sourceSection, targetSection);
+    container.insertBefore(sourceCollection, targetCollection);
     countDelta = 1;
   } else {
-    if (targetSection.nextSibling) {
-      container.insertBefore(sourceSection, targetSection.nextSibling);
+    if (targetCollection.nextSibling) {
+      container.insertBefore(sourceCollection, targetCollection.nextSibling);
     } else {
-      container.insertAdjacentElement('beforeend', sourceSection);
+      container.insertAdjacentElement('beforeend', sourceCollection);
     }
 
     countDelta = -1;
   }
 
-  container.querySelectorAll('.album-section-item').forEach(asi => {
-    if (asi.dataset.albumSectionId === sourceSection.dataset.albumSectionId) {
+  container.querySelectorAll('.collection-item').forEach(asi => {
+    if (asi.dataset.collectionId === sourceCollection.dataset.collectionId) {
       return;
     }
 
@@ -873,15 +956,15 @@ function updateAlbumSectionSequences(sourceSequence, targetSequence) {
       (currentSequence <= targetSequence && currentSequence > sourceSequence)
     ) {
       asi.dataset.sequence = (currentSequence + countDelta).toString();
-      const asiSequenceEl = asi.querySelector('.section-sequence');
+      const asiSequenceEl = asi.querySelector('.collection-sequence');
       asiSequenceEl.textContent = '#' + (currentSequence + countDelta).toString();
       asiSequenceEl.dataset.before = (currentSequence + countDelta).toString();
     }
   });
 
-  currentSectionEl.scrollIntoView();
+  currentCollectionEl.scrollIntoView();
 
-  return Number.parseInt(targetSection.dataset.albumSectionId);
+  return Number.parseInt(targetCollection.dataset.collectionId);
 }
 
 function displayImageFromApiCall(container, images, eventListenerAction, targetContainerId) {
@@ -961,9 +1044,9 @@ function handleAlbumMediaDragEnd(ev) {
 }
 
 function handleAlbumMediaDragStart(ev) {
-  const sectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
+  const collectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
 
-  sectionContainer.querySelectorAll('.item-draggable .media-item').forEach(id => {
+  collectionContainer.querySelectorAll('.item-draggable .media-item').forEach(id => {
     id.addEventListener('dragenter', handleAlbumMediaDragEnter);
     id.addEventListener('dragover', handleAlbumMediaDragOver);
   });
@@ -977,7 +1060,7 @@ function handleAlbumMediaDragStart(ev) {
 function handleAlbumMediaDrop(ev) {
   ev.preventDefault();
 
-  const sectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
+  const collectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
   const draggedId = ev.dataTransfer.getData("text/plain");
   const draggedEl = document.getElementById(draggedId);
 
@@ -1010,20 +1093,20 @@ function handleAlbumMediaDrop(ev) {
     countDelta = -1;
   }
 
-  const albumSectionId = sectionContainer.parentElement.parentElement.dataset.albumSectionId;
+  const collectionId = collectionContainer.dataset.collectionId;
   const data = {
     sequenceTo: droppedSequence,
-    albumSectionMediaIdTo: Number.parseInt(ev.currentTarget.dataset.albumSectionMediaId),
+    collectionMediaIdTo: Number.parseInt(ev.currentTarget.dataset.collectionMediaId),
     sequenceFrom: draggedSequence,
-    albumSectionMediaIdFrom: Number.parseInt(draggedEl.dataset.albumSectionMediaId),
+    collectionMediaIdFrom: Number.parseInt(draggedEl.dataset.collectionMediaId),
     countDelta: countDelta,
   };
 
-  Request.put('/back/album-section/' + albumSectionId + '/sequence', JSON.stringify(data))
+  Request.put('/back/collection/' + collectionId + '/sequence', JSON.stringify(data))
     .then(() => {
       draggedEl.dataset.sequence = droppedSequence.toString();
 
-      sectionContainer.querySelectorAll('.item-draggable .media-item').forEach(mi => {
+      collectionContainer.querySelectorAll('.item-draggable .media-item').forEach(mi => {
         if (draggedEl.id === mi.id) {
           return;
         }
@@ -1043,7 +1126,7 @@ function handleAlbumMediaDrop(ev) {
     });
 }
 
-document.querySelectorAll('.media-item').forEach(im => {
+document.querySelectorAll('#images-list .media-item').forEach(im => {
   im.mediaId = im.dataset.mediaId;
   im.addEventListener('click', displayNextImagePopup);
 });
@@ -1521,40 +1604,35 @@ document.querySelectorAll('.album-status-dd-option').forEach(op => {
 
     Request.put('/back/album/' + albumId + '/status/' + statusId, '')
       .then((response) => {
-        handleDropdownOptionClick(e);
-
         document.querySelector('.form-public-link .value').innerHTML = response.publicLinkHtml;
       })
-      .catch((error) => {
-        document.querySelector('#event-status-dd-checkbox').checked = false;
-        Util.notifyError(error);
-      });
+      .catch((error) => Util.notifyError(error));
   });
 });
 
-document.querySelectorAll('.album-add-section-js').forEach(a => {
+document.querySelectorAll('.album-add-collection-js').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
 
-    const container = document.querySelector('.album-sections-wrapper');
+    const container = document.querySelector('.collections-wrapper');
     const albumId = a.dataset.albumId;
 
     const loadingContainer = document.createElement('div');
-    loadingContainer.className = 'album-section-loading';
+    loadingContainer.className = 'collection-loading';
     const loadingAnimation = Util.createLoadingAnimation();
     loadingContainer.appendChild(loadingAnimation);
     container.appendChild(loadingContainer);
 
-    Request.post('/back/album/' + albumId + '/section', '')
+    Request.post('/back/album/' + albumId + '/collection', '')
       .then(response => {
         container.insertAdjacentHTML('beforeend', response.html);
-        const sectionContainer = container.querySelector('.album-section-item[data-album-section-id="' + response.newSectionId + '"]');
-        sectionContainer.querySelector('.select-media-action').addEventListener('click', handleGenericSelectMainMediaClick);
-        sectionContainer.querySelector('.album-section-edit-js').addEventListener('click', editAlbumSection);
-        sectionContainer.querySelector('.album-section-save-js').addEventListener('click', updateAlbumSection);
-        sectionContainer.querySelector('.album-section-cancel-js').addEventListener('click', cancelAlbumSectionEdit);
-        sectionContainer.querySelector('.generic-media-delete-js').addEventListener('click', handleGenericMediaDeleteClick);
-        sectionContainer.scrollIntoView({behavior: 'smooth', block: 'start'});
+        const collectionContainer = container.querySelector('.collection-item[data-collection-id="' + response.newCollectionId + '"]');
+        collectionContainer.querySelector('.select-media-action').addEventListener('click', handleGenericSelectMainMediaClick);
+        collectionContainer.querySelector('.collection-edit-js').addEventListener('click', editCollection);
+        collectionContainer.querySelector('.collection-save-js').addEventListener('click', updateCollection);
+        collectionContainer.querySelector('.collection-cancel-js').addEventListener('click', cancelCollectionEdit);
+        collectionContainer.querySelector('.generic-media-delete-js').addEventListener('click', handleGenericMediaDeleteClick);
+        collectionContainer.scrollIntoView({behavior: 'smooth', block: 'start'});
       })
       .catch(error => {
         Util.notifyError(error);
@@ -1562,30 +1640,30 @@ document.querySelectorAll('.album-add-section-js').forEach(a => {
   });
 });
 
-document.querySelectorAll('.album-section-edit-js').forEach(bu => {
-  bu.addEventListener('click', editAlbumSection);
+document.querySelectorAll('.collection-edit-js').forEach(bu => {
+  bu.addEventListener('click', editCollection);
 });
 
-document.querySelectorAll('.album-section-save-js').forEach(bu => {
-  bu.addEventListener('click', updateAlbumSection);
+document.querySelectorAll('.collection-save-js').forEach(bu => {
+  bu.addEventListener('click', updateCollection);
 });
 
-document.querySelectorAll('.album-section-cancel-js').forEach(bu => {
-  bu.addEventListener('click', cancelAlbumSectionEdit);
+document.querySelectorAll('.collection-cancel-js').forEach(bu => {
+  bu.addEventListener('click', cancelCollectionEdit);
 });
 
-document.querySelectorAll('.album-section-main-media-js').forEach(bu => {
+document.querySelectorAll('.collection-main-media-js').forEach(bu => {
   bu.addEventListener('click', (e) => {
     e.preventDefault();
 
     const mediaId = bu.dataset.mediaId;
-    const sectionId = bu.dataset.sectionId;
+    const collectionId = bu.dataset.collectionId;
 
-    if (mediaId && sectionId) {
+    if (mediaId && collectionId) {
       const existingModalContainer = document.querySelector('#images-list');
-      const sectionMediaContainer = document.querySelector('#album-section-item-media-' + sectionId);
+      const collectionMediaContainer = document.querySelector('#collection-item-media-' + collectionId);
 
-      sectionMediaContainer.querySelectorAll('.album-section-media-container .media-item').forEach(i => {
+      collectionMediaContainer.querySelectorAll('.collection-media-container .media-item').forEach(i => {
         addMediaToModalContainer(existingModalContainer, i.dataset.mediaId);
       });
 
@@ -1602,26 +1680,32 @@ document.querySelectorAll('.generic-media-delete-js').forEach(bu => {
   bu.addEventListener('click', handleGenericMediaDeleteClick);
 });
 
-document.querySelectorAll('.album-section-media-delete-js').forEach(bu => {
+document.querySelectorAll('.collection-media-delete-js').forEach(bu => {
   bu.targetContainerId = bu.dataset.targetContainerId;
   bu.mediaId = bu.dataset.mediaId;
-  bu.addEventListener('click', albumSectionDeleteMedia);
+  bu.addEventListener('click', collectionDeleteMedia);
 });
 
-document.querySelectorAll('.album-section-media-caption-js').forEach(el => {
+document.querySelectorAll('.collection-main-media-delete-js').forEach(bu => {
+  bu.targetContainerId = bu.dataset.targetContainerId;
+  bu.mediaId = bu.dataset.mediaId;
+  bu.addEventListener('click', collectionDeleteMainMedia);
+});
+
+document.querySelectorAll('.collection-media-caption-js').forEach(el => {
   el.mediaId = el.dataset.mediaId;
-  el.addEventListener('click', albumSectionEditMediaCaption);
+  el.addEventListener('click', collectionEditMediaCaption);
 });
 
 document.querySelectorAll('form#album-media-caption-edit-form-js').forEach(f => {
   f.addEventListener('submit', e => {
     e.preventDefault();
 
-    const albumSectionMediaId = Number.parseInt(f.querySelector('input[name="albumSectionMediaId"]').value);
+    const collectionMediaId = Number.parseInt(f.querySelector('input[name="collectionMediaId"]').value);
     const captionHtml = f.querySelector('.media-caption-html').textContent;
 
     const targetCaptionHtmlEl = document.querySelector(
-      '.album-section-media-caption-js[data-album-section-media-id="' + albumSectionMediaId + '"]'
+      '.collection-media-caption-js[data-collection-media-id="' + collectionMediaId + '"]'
     );
     const captionHtmlBefore = targetCaptionHtmlEl.textContent;
 
@@ -1632,7 +1716,7 @@ document.querySelectorAll('form#album-media-caption-edit-form-js').forEach(f => 
       captionHtml: captionHtml,
     });
 
-    Request.put('/back/album-section-media/' + albumSectionMediaId, payload)
+    Request.put('/back/collection-media/' + collectionMediaId, payload)
       .catch(error => {
         targetCaptionHtmlEl.textContent = captionHtmlBefore;
         Util.notifyError(error);

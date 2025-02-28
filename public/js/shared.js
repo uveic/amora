@@ -45,6 +45,29 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  document.querySelectorAll('.filter-form-wrapper').forEach(ff => {
+    ff.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const query = new URLSearchParams();
+
+      ff.querySelectorAll('select').forEach(s => {
+        if (s.dataset.paramName && s.value) {
+          query.append(s.dataset.paramName, s.value);
+        }
+      });
+
+      if (!query.entries()) {
+        document.querySelector('.filter-container').classList.remove('null');
+        return;
+      }
+
+      window.location.href = window.location.origin
+        + window.location.pathname
+        + (query.entries() ? '?' + query.toString() : '');
+    });
+  });
+
   document.querySelectorAll('.modal-open-js').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
