@@ -18,9 +18,10 @@ $pageTitle = match ($articleType) {
 };
 ?>
     <section class="page-header">
-      <h3><?=$pageTitle?></h3>
+      <span><?=$pageTitle?></span>
       <div class="links">
         <a href="#" class="filter-open"><?=CoreIcons::FUNNEL?></a>
-        <a href="<?=UrlBuilderUtil::buildBackofficeArticleNewUrl($responseData->siteLanguage, $articleType)?>" class="button is-link header-button-new"><?=$responseData->getLocalValue('globalNew')?></a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeArticleNewUrl($responseData->siteLanguage, $articleType)?>"><?=CoreIcons::ADD?></a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
       </div>
     </section>

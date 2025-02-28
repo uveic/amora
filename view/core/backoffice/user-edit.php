@@ -6,6 +6,8 @@ use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\DateUtil;
+use Amora\Core\Util\UrlBuilderUtil;
+use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
@@ -40,9 +42,14 @@ if ($responseData->user) {
 ?>
   <section>
     <div id="feedback" class="feedback null"></div>
-<?=$this->insert('partials/users-edit/header', ['responseData' => $responseData])?>
+    <section class="page-header">
+      <span><?=($responseData->user ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></span>
+      <div class="links">
+        <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
+      </div>
+    </section>
     <form action="#" method="post" id="form-user-creation">
-      <div class="content-narrow-width">
+      <div class="content-narrow-width m-t-2">
 <?php if ($responseData->user) { ?>
         <input id="userId" class="input" name="userId" type="hidden" value="<?=$responseData->user->id; ?>">
 <?php } ?>

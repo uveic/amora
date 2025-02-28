@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 use Amora\Core\Value\QueryOrderDirection;
 
@@ -13,32 +14,31 @@ $displayLoadMore = count($responseData->media) >= 50;
 
 ?>
   <div id="feedback" class="feedback null"></div>
-  <main class="backoffice-wrapper">
-    <div class="field m-t-0 m-b-0">
-      <div id="upload-media">
-        <div id="upload-media-info">
-          <h1><?=$responseData->getLocalValue('navAdminMedia')?></h1>
-        </div>
-        <div id="upload-media-control">
+  <main>
+    <section class="page-header">
+      <span><?=$responseData->getLocalValue('navAdminMedia')?></span>
+      <div class="links">
+        <div>
           <input class="null" type="file" id="media" name="media" multiple="" accept="*">
-          <label for="media" class="input-file-label button-dark">
-            <?=CoreIcons::FILES?>
-            <span><?=$responseData->getLocalValue('globalUploadMedia')?></span>
-          </label>
+          <label for="media" class="link-add"><?=CoreIcons::ADD?></label>
         </div>
+        <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
       </div>
-    </div>
-    <div id="media-container">
+    </section>
+
+    <div class="backoffice-wrapper">
+      <div id="media-container">
 <?php
     /** @var Media $media */
     foreach ($responseData->media as $media) {
 ?>
-      <div class="file-container">
-        <?=$media->asHtml()?>
-      </div>
+        <div class="file-container">
+          <?=$media->asHtml()?>
+        </div>
 <?php } ?>
+      </div>
+      <a href="#" class="media-load-more media-load-more-js<?=$displayLoadMore ? '' : ' null'?>" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
+        <span><?=$responseData->getLocalValue('globalMore')?></span>
+      </a>
     </div>
-    <a href="#" class="media-load-more media-load-more-js<?=$displayLoadMore ? '' : ' null'?>" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
-      <span><?=$responseData->getLocalValue('globalMore')?></span>
-    </a>
   </main>
