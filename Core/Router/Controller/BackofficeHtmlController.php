@@ -17,7 +17,7 @@ use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
-use Amora\Core\Module\Analytics\Value\CountDbColumn;
+use Amora\Core\Module\Analytics\Value\Parameter;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Module\Article\Service\ArticleService;
@@ -94,15 +94,15 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $fromToday = DateUtil::convertStringToDateTimeImmutable($now->format('Y-m-d 00:00:00'));
         $toToday = DateUtil::convertStringToDateTimeImmutable($now->format('Y-m-d 23:59:59'));
 
-        $visitorsToday = $this->analyticsService->countTop(
-            columnName: CountDbColumn::Visitor,
+        $visitorsToday = $this->analyticsService->calculateTotalAggregatedBy(
+            parameter: Parameter::VisitorHash,
             from: $fromToday,
             to: $toToday,
             eventType: EventType::Visitor,
             limit: 1000000,
         );
 
-        $reportPageViewsToday = $this->analyticsService->countPageViews(
+        $reportPageViewsToday = $this->analyticsService->getReportViewCount(
             from: $fromToday,
             to: $toToday,
             period: Period::Day,
@@ -517,11 +517,8 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
      * @param string|null $period
      * @param string|null $date
      * @param int|null $eventTypeId
-     * @param string|null $url
-     * @param string|null $device
-     * @param string|null $browser
-     * @param string|null $countryIsoCode
-     * @param string|null $languageIsoCode
+     * @param int|null $paramId
+     * @param int|null $eventId
      * @param int|null $itemsCount
      * @param Request $request
      * @return Response
@@ -530,143 +527,111 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         ?string $period,
         ?string $date,
         ?int $eventTypeId,
-        ?string $url,
-        ?string $device,
-        ?string $browser,
-        ?string $countryIsoCode,
-        ?string $languageIsoCode,
+        ?int $paramId,
+        ?int $eventId,
         ?int $itemsCount,
         Request $request,
     ): Response {
-        $period = $period && Period::tryFrom($period) ? Period::from($period) : Period::Day;
+        $period = Period::getFromString($period);
         if (!$date || !DateUtil::isValidDateISO8601($date . 'T00:00:00Z')) {
             $now = new DateTimeImmutable();
             $date = $now->format('Y-m-d');
         }
 
-        $from = Period::getFrom($period, $date);
-        $to = Period::getTo($period, $from);
+        $from = $period->getFrom($date);
+        $to = $period->getTo($from);
         $limit = $itemsCount ?: 50;
 
         $eventType = $eventTypeId && EventType::tryFrom($eventTypeId)
             ? EventType::from($eventTypeId)
             : null;
 
-        $reportPageViews = $this->analyticsService->countPageViews(
+        $parameter = $paramId && Parameter::tryFrom($paramId)
+            ? Parameter::from($paramId)
+            : null;
+
+        $reportPageViews = $this->analyticsService->getReportViewCount(
             from: $from,
             to: $to,
             period: $period,
             eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
+            parameter: $parameter,
+            eventId: $eventId,
         );
 
-        $reportVisitors = $this->analyticsService->countPageViews(
+        $reportVisitors = $this->analyticsService->getReportViewCount(
             from: $from,
             to: $to,
             period: $period,
             eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
-            columnName: CountDbColumn::Visitor,
+            parameter: $parameter,
+            eventId: $eventId,
+            includeVisitorHash: true,
         );
 
-        $visitorsTotal = $this->analyticsService->countTop(
-            columnName: CountDbColumn::Visitor,
+        $visitorsTotal = $this->analyticsService->calculateTotalAggregatedBy(
+            parameter: Parameter::VisitorHash,
             from: $from,
             to: $to,
             eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
+            parameterQuery: $parameter,
+            eventId: $eventId,
             limit: 1000000,
         );
 
-        $pages = $this->analyticsService->countTop(
-            columnName: CountDbColumn::Page,
+        $pages = $this->analyticsService->calculateTotalAggregatedBy(
+            parameter: Parameter::Url,
             from: $from,
             to: $to,
             eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
+            parameterQuery: $parameter,
+            eventId: $eventId,
             limit: $limit,
         );
 
-        $countries = $this->analyticsService->countTop(
-            columnName: CountDbColumn::Country,
+        $sources = $this->analyticsService->calculateTotalAggregatedBy(
+            parameter: Parameter::Referrer,
             from: $from,
             to: $to,
             eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
+            parameterQuery: $parameter,
+            eventId: $eventId,
             limit: $limit,
         );
 
-        $sources = $this->analyticsService->countTop(
-            columnName: CountDbColumn::Referrer,
+        $devices = $this->analyticsService->calculateTotalAggregatedBy(
+            parameter: Parameter::Platform,
             from: $from,
             to: $to,
             eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
+            parameterQuery: $parameter,
+            eventId: $eventId,
             limit: $limit,
         );
 
-        $devices = $this->analyticsService->countTop(
-            columnName: CountDbColumn::Device,
+        $browsers = $this->analyticsService->calculateTotalAggregatedBy(
+            parameter: Parameter::Browser,
             from: $from,
             to: $to,
             eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
+            parameterQuery: $parameter,
+            eventId: $eventId,
             limit: $limit,
         );
 
-        $browsers = $this->analyticsService->countTop(
-            columnName: CountDbColumn::Browser,
+        $languages = $this->analyticsService->calculateTotalAggregatedBy(
+            parameter: Parameter::Language,
             from: $from,
             to: $to,
             eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
+            parameterQuery: $parameter,
+            eventId: $eventId,
             limit: $limit,
         );
 
-        $languages = $this->analyticsService->countTop(
-            columnName: CountDbColumn::Language,
-            from: $from,
-            to: $to,
-            eventType: $eventType,
-            url: $url,
-            device: $device,
-            browser: $browser,
-            countryIsoCode: $countryIsoCode,
-            languageIsoCode: $languageIsoCode,
-            limit: $limit,
-        );
+        $eventValue = $parameter && $eventId
+            ? $this->analyticsService->getEventValueForId(parameter: $parameter, id: $eventId)
+            : null;
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
@@ -676,9 +641,9 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 pageTitle: $localisationUtil->getValue('navAdminAnalytics'),
                 reportPageViews: $reportPageViews,
                 reportVisitors: $reportVisitors,
+                parameterEventValue: $eventValue,
                 visitors: $visitorsTotal,
                 pages: $pages,
-                countries: $countries,
                 sources: $sources,
                 devices: $devices,
                 browsers: $browsers,

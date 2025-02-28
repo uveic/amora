@@ -6,12 +6,9 @@ use Amora\App\Router\AppRouter;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Throwable;
-use voku\helper\AntiXSS;
 
 final class StringUtil
 {
-    private static ?AntiXSS $antiXss = null;
-
     public static function cleanString(
         string $text,
         string $charsToBeRemoved = '',
@@ -72,7 +69,7 @@ final class StringUtil
     public static function sanitiseHtml(?string $html): ?string
     {
         return $html;
-        // ToDo: maybe - Removed voku/anti-xss from composer.json
+        // ToDo: maybe
 //        if (empty($html)) {
 //            return $html;
 //        }

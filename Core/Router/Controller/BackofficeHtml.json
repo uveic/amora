@@ -328,7 +328,7 @@
           {
             "name": "period",
             "in": "query",
-            "description": "Period. Values: 30d, 7d, day, month, year",
+            "description": "Period. Values: day, month, year",
             "required": false,
             "type": "string"
           },
@@ -346,34 +346,16 @@
             "type": "integer"
           },
           {
-            "name": "url",
+            "name": "paramId",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "integer"
           },
           {
-            "name": "device",
+            "name": "eventId",
             "in": "query",
             "required": false,
-            "type": "string"
-          },
-          {
-            "name": "browser",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "countryIsoCode",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "languageIsoCode",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "itemsCount",

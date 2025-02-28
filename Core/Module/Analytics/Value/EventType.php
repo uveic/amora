@@ -10,8 +10,6 @@ enum EventType: int
     case Api = 5;
     case Crawler = 6;
 
-    case Unknown = 100;
-
     public static function getAll(): array
     {
         return [
@@ -20,7 +18,14 @@ enum EventType: int
             self::Bot,
             self::Api,
             self::Crawler,
-            self::Unknown,
         ];
+    }
+
+    public function deleteAfterProcessing(): bool
+    {
+        return match($this) {
+            self::Visitor, self::Bot, self::Crawler => true,
+            default => false,
+        };
     }
 }

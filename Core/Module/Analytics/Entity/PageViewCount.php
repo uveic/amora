@@ -6,6 +6,7 @@ readonly class PageViewCount
 {
     public function __construct(
         public int $count,
-        public string $name,
+        public int $id,
+        public string $value,
     ) {}
 }

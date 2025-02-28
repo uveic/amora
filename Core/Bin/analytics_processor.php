@@ -29,7 +29,17 @@ if (!Core::isRunningInCli()) {
 }
 
 try {
-    AnalyticsCore::getAnalyticsProcessorApp()->run();
+    $totalEntries = null;
+
+    foreach ($argv as $item) {
+        if (str_starts_with($item, '--total-entries=')) {
+            $param = substr($item, 16, strlen($item) - 16);
+
+            $totalEntries = is_numeric($param) ? (int)$param : null;
+        }
+    }
+
+    AnalyticsCore::getAnalyticsProcessorApp()->run($totalEntries);
 } catch (Throwable $t) {
     $logger->logError(
         'Error running analytics processor App: ' . $t->getMessage() . PHP_EOL . $t->getTraceAsString()

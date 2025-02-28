@@ -8,7 +8,8 @@ use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Analytics\Entity\PageView;
 use Amora\Core\Module\Analytics\Entity\PageViewCount;
-use Amora\Core\Module\Analytics\Value\CountDbColumn;
+use Amora\Core\Module\Analytics\Model\EventValue;
+use Amora\Core\Module\Analytics\Value\Parameter;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Module\Analytics\Model\EventProcessed;
@@ -26,7 +27,14 @@ class AnalyticsDataLayer
     const EVENT_RAW_TABLE = 'event_raw';
     const EVENT_PROCESSED_TABLE = 'event_processed';
     const EVENT_TYPE_TABLE = 'event_type';
-    const EVENT_RAW_SEARCH_TABLE = 'event_raw_search';
+    const EVENT_SEARCH_TABLE = 'event_search';
+
+    const EVENT_VALUE_LANGUAGE_ISO_CODE = 'event_value_language_iso_code';
+    const EVENT_VALUE_REFERRER = 'event_value_referrer';
+    const EVENT_VALUE_URL = 'event_value_url';
+    const EVENT_VALUE_USER_HASH = 'event_value_user_hash';
+    const EVENT_VALUE_USER_AGENT_PLATFORM = 'event_value_user_agent_platform';
+    const EVENT_VALUE_USER_AGENT_BROWSER = 'event_value_user_agent_browser';
 
     const BOT_PATH_TABLE = 'bot_path';
     const BOT_USER_AGENT = 'bot_user_agent';
@@ -47,22 +55,15 @@ class AnalyticsDataLayer
         return $event;
     }
 
-    public function storeEventProcessed(EventProcessed $event): ?EventProcessed
+    public function storeEventProcessed(EventProcessed $event): void
     {
-        $res = $this->db->insert(self::EVENT_PROCESSED_TABLE, $event->asArray());
-
-        if (empty($res)) {
-            return null;
-        }
-
-        $event->id = $res;
-        return $event;
+        $this->db->insert(self::EVENT_PROCESSED_TABLE, $event->asArray());
     }
 
-    public function storeEventRawSearch(int $rawId, string $searchQuery): void
+    public function storeSearch(int $rawId, string $searchQuery): void
     {
         $this->db->insert(
-            self::EVENT_RAW_SEARCH_TABLE,
+            self::EVENT_SEARCH_TABLE,
             [
                 'raw_id' => $rawId,
                 'query' => $searchQuery,
@@ -70,76 +71,67 @@ class AnalyticsDataLayer
         );
     }
 
-    public function countPageViews(
+    public function storeEventValue(EventValue $item, Parameter $parameter): EventValue
+    {
+        $res = $this->db->insert(
+            tableName: $parameter->getValueTableName(),
+            data: $item->asArray(),
+        );
+
+        $item->id = $res;
+
+        return $item;
+    }
+
+    public function calculateCountAggregatedBy(
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         AggregateBy $aggregateBy,
         ?EventType $eventType = null,
-        ?string $url = null,
-        ?string $device = null,
-        ?string $browser = null,
-        ?string $countryIsoCode = null,
-        ?string $languageIsoCode = null,
-        ?CountDbColumn $columnName = null,
+        ?Parameter $parameter = null,
+        ?int $eventId = null,
+        bool $includeVisitorHash = false,
     ): array {
         $dateFormat = DateUtil::getMySqlAggregateFormat($aggregateBy);
 
         $params = [];
 
+        $innerSql = '';
         $whereSql = '';
+
         if ($eventType) {
             $whereSql .= ' AND ep.type_id = :eventTypeId';
             $params[':eventTypeId'] = $eventType->value;
         }
 
-        if (isset($url)) {
-            if ($url === 'homepage') {
-                $whereSql .= ' AND er.url IS NULL';
-            } else {
-                $whereSql .= ' AND er.url = :url';
-                $params[':url'] = $url;
-            }
+        $sqlCount = '*';
+        if ($includeVisitorHash) {
+            $innerSql .= ' INNER JOIN ' . Parameter::VisitorHash->getValueTableName() . ' AS ev ON ev.id = ep.' . Parameter::VisitorHash->getColumnName();
+            $sqlCount = 'DISTINCT ep.' . Parameter::VisitorHash->getColumnName();
         }
 
-        if ($device) {
-            $whereSql .= ' AND ep.user_agent_platform = :userAgentPlatform';
-            $params[':userAgentPlatform'] = $device;
+        if ($eventId && $parameter) {
+            $innerSql .= ' INNER JOIN ' . $parameter->getValueTableName() . ' AS evp ON evp.id = ep.' . $parameter->getColumnName();
+            $whereSql .= ' AND evp.id = :eventId';
+            $params[':eventId'] = $eventId;
         }
-
-        if ($browser) {
-            $whereSql .= ' AND ep.user_agent_browser = :userAgentBrowser';
-            $params[':userAgentBrowser'] = $browser;
-        }
-
-        if ($countryIsoCode) {
-            $whereSql .= ' AND ep.country_iso_code = :countryIsoCode';
-            $params[':countryIsoCode'] = $countryIsoCode;
-        }
-
-        if ($languageIsoCode) {
-            $whereSql .= ' AND ep.language_iso_code = :languageIsoCode';
-            $params[':languageIsoCode'] = $languageIsoCode;
-        }
-
-        $countSql = $columnName
-            ? 'DISTINCT ' . $columnName->value
-            : '*';
 
         $sql = "
             SELECT
-                DATE_FORMAT(er.created_at, $dateFormat) AS date_format,
-                COUNT(" . $countSql . ") AS count
+                DATE_FORMAT(ep.created_at, $dateFormat) AS date_format,
+                COUNT($sqlCount) AS cnt
             FROM " . self::EVENT_PROCESSED_TABLE . " AS ep
-                INNER JOIN " . self::EVENT_RAW_TABLE . " AS er ON er.id = ep.raw_id
+                $innerSql
             WHERE 1
-                AND er.created_at >= :createdAtFrom
-                AND er.created_at <= :createdAtTo
-                " . $whereSql . "
+                AND ep.created_at >= :createdAtFrom
+                AND ep.created_at <= :createdAtTo
+                $whereSql
             GROUP BY
                 date_format
             ORDER BY
                 date_format ASC;
         ";
+
         $params[':createdAtFrom'] = $from->format(DateUtil::MYSQL_DATETIME_FORMAT);
         $params[':createdAtTo'] = $to->format(DateUtil::MYSQL_DATETIME_FORMAT);
 
@@ -148,7 +140,7 @@ class AnalyticsDataLayer
         $reportDataOutput = [];
         foreach ($res as $item) {
             $reportDataOutput[] = new PageView(
-                count: (int)$item['count'],
+                count: (int)$item['cnt'],
                 date: DateUtil::convertPartialDateFormatToFullDate($item['date_format'], $aggregateBy),
             );
         }
@@ -156,70 +148,47 @@ class AnalyticsDataLayer
         return $reportDataOutput;
     }
 
-    public function countTop(
-        CountDbColumn $columnName,
+    public function calculateTotalAggregatedBy(
+        Parameter $parameter,
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         int $limit,
         ?EventType $eventType = null,
-        ?string $url = null,
-        ?string $device = null,
-        ?string $browser = null,
-        ?string $countryIsoCode = null,
-        ?string $languageIsoCode = null,
+        ?Parameter $parameterQuery = null,
+        ?int $eventId = null,
     ): array {
         $params = [];
 
+        $innerSql = '';
         $whereSql = '';
         if ($eventType) {
             $whereSql .= ' AND ep.type_id = :eventTypeId';
             $params[':eventTypeId'] = $eventType->value;
         }
 
-        if (isset($url)) {
-            if ($url === 'homepage') {
-                $whereSql .= ' AND er.url IS NULL';
-            } else {
-                $whereSql .= ' AND er.url = :url';
-                $params[':url'] = $url;
-            }
-        }
-
-        if ($device) {
-            $whereSql .= ' AND ep.user_agent_platform = :userAgentPlatform';
-            $params[':userAgentPlatform'] = $device;
-        }
-
-        if ($browser) {
-            $whereSql .= ' AND ep.user_agent_browser = :userAgentBrowser';
-            $params[':userAgentBrowser'] = $browser;
-        }
-
-        if ($countryIsoCode) {
-            $whereSql .= ' AND ep.country_iso_code = :countryIsoCode';
-            $params[':countryIsoCode'] = $countryIsoCode;
-        }
-
-        if ($languageIsoCode) {
-            $whereSql .= ' AND ep.language_iso_code = :languageIsoCode';
-            $params[':languageIsoCode'] = $languageIsoCode;
+        if ($eventId && $parameterQuery) {
+            $innerSql .= ' INNER JOIN ' . $parameterQuery->getValueTableName() . ' AS evp ON evp.id = ep.' . $parameterQuery->getColumnName();
+            $whereSql .= ' AND evp.id = :eventId';
+            $params[':eventId'] = $eventId;
         }
 
         $sql = "
             SELECT
-                " . $columnName->value . " AS name,
-                COUNT(*) AS count
+                ev.id,
+                ev.value,
+                COUNT(*) AS cnt
             FROM " . self::EVENT_PROCESSED_TABLE . " AS ep
-                INNER JOIN " . self::EVENT_RAW_TABLE . " AS er ON er.id = ep.raw_id
+                LEFT JOIN {$parameter->getValueTableName()} AS ev ON ev.id = ep.{$parameter->getColumnName()}
+                $innerSql
             WHERE 1
-                AND er.created_at >= :createdAtFrom
-                AND er.created_at <= :createdAtTo
-                " . $whereSql . "
+                AND ep.created_at >= :createdAtFrom
+                AND ep.created_at <= :createdAtTo
+                $whereSql
             GROUP BY
-                " . $columnName->value . "
+                ep.{$parameter->getColumnName()}
             ORDER BY
-                count DESC
-            LIMIT " . $limit . ";
+                cnt DESC
+            LIMIT $limit;
         ";
         $params[':createdAtFrom'] = $from->format(DateUtil::MYSQL_DATETIME_FORMAT);
         $params[':createdAtTo'] = $to->format(DateUtil::MYSQL_DATETIME_FORMAT);
@@ -229,15 +198,16 @@ class AnalyticsDataLayer
         $reportDataOutput = [];
         foreach ($res as $item) {
             $reportDataOutput[] = new PageViewCount(
-                count: (int)$item['count'],
-                name: $item['name'] ?? '',
+                count: (int)$item['cnt'],
+                id: (int)$item['id'],
+                value: $item['value'] ?? '',
             );
         }
 
         return $reportDataOutput;
     }
 
-    public function filterEventBy(
+    public function filterEventRawBy(
         array $ids = [],
         ?string $lockId = null,
         ?QueryOptions $queryOptions = null,
@@ -264,12 +234,10 @@ class AnalyticsDataLayer
             'er.client_language AS event_raw_client_language',
             'er.processed_at AS event_raw_processed_at',
             'er.lock_id AS event_raw_lock_id',
-
-            'ers.query AS event_raw_search_query',
+            'er.search_query AS event_raw_search_query',
         ];
 
         $joins = ' FROM ' . self::EVENT_RAW_TABLE . ' AS er';
-        $joins .= ' LEFT JOIN ' . self::EVENT_RAW_SEARCH_TABLE . ' AS ers ON er.id = ers.raw_id';
         $where = ' WHERE 1';
 
         if ($ids) {
@@ -294,9 +262,47 @@ class AnalyticsDataLayer
         return $output;
     }
 
+    public function filterEventValueBy(
+        Parameter $parameter,
+        ?int $id = null,
+        ?string $value = null,
+    ): ?EventValue {
+        $params = [];
+        $baseSql = 'SELECT ';
+        $fields = [
+            'id AS event_value_id',
+            'value AS event_value_value',
+        ];
+
+        $joins = ' FROM ' . $parameter->getValueTableName() . ' AS ev';
+        $where = ' WHERE 1';
+
+        if ($id) {
+            $where .= ' AND id = :eventId';
+            $params[':eventId'] = $id;
+        }
+
+        if ($value) {
+            $where .= ' AND value = :eventValue';
+            $params[':eventValue'] = $value;
+        }
+
+        $orderByAndLimit = ' ORDER BY id DESC';
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
+
+        $res = $this->db->fetchOne($sql, $params);
+
+        if (!$res) {
+            return null;
+        }
+
+        return EventValue::fromArray($res);
+    }
+
     public function getEntriesFromQueue(string $lockId, int $qty = 10000): array
     {
-        return $this->filterEventBy(
+        return $this->filterEventRawBy(
             lockId: $lockId,
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy(field: 'raw_id', direction: QueryOrderDirection::ASC)],
@@ -305,7 +311,7 @@ class AnalyticsDataLayer
         );
     }
 
-    public function getNumberOfLockedEntries(): int
+    public function getLockedEntriesCount(): int
     {
         $sql = '
             SELECT COUNT(*)
@@ -420,5 +426,60 @@ class AnalyticsDataLayer
         }
 
         return $output;
+    }
+
+    public function loadValues(Parameter $parameter): array
+    {
+        $items = $this->db->fetchAll(
+            'SELECT `id`, `value` FROM ' . $parameter->getValueTableName(),
+        );
+
+        $output = [];
+
+        foreach ($items as $item) {
+            $output[$item['value']] = (int)$item['id'];
+        }
+
+        return $output;
+    }
+
+    public function destroyRawEvent(array $rawIds): bool
+    {
+        $params = [];
+        $paramNames = [];
+
+        foreach ($rawIds as $rawId) {
+            if (!is_integer($rawId)) {
+                continue;
+            }
+
+            $paramName = ':rawId' . $rawId;
+            $paramNames[] = $paramName;
+            $params[$paramName] = $rawId;
+        }
+
+        return $this->db->execute(
+            '
+                DELETE FROM ' . self::EVENT_RAW_TABLE . '
+                WHERE id IN (' . implode(', ', $paramNames) . ')
+            ',
+            $params,
+        );
+    }
+
+    public function destroyOldEvents(): bool
+    {
+        $twoYearsAgo = DateUtil::convertStringToDateTimeImmutable('-2 years');
+
+        return $this->db->execute(
+            '
+                DELETE FROM ' . self::EVENT_RAW_TABLE . '
+                WHERE created_at = :createdAtBefore
+                    AND processed_at IS NOT NULL
+            ',
+            [
+                ':createdAtBefore' => $twoYearsAgo->format(DateUtil::MYSQL_DATETIME_FORMAT),
+            ],
+        );
     }
 }

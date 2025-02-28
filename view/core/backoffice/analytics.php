@@ -5,12 +5,12 @@ use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Module\Analytics\Entity\PageViewCount;
 use Amora\Core\Module\Analytics\Value\EventType;
+use Amora\Core\Module\Analytics\Value\Parameter;
 use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
-use Amora\Core\Value\Country;
 
 /** @var HtmlResponseDataAnalytics $responseData */
 
@@ -161,37 +161,24 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
             <a href="<?=$eventTypeCrawlerUrl?>"><?=$responseData->getLocalValue('analyticsEventType' . EventType::Crawler->name)?></a>
           </div>
 <?php
-    if ($report->url || $report->device || $report->browser || $report->countryIsoCode || $report->languageIsoCode) {
-        $output = [];
-        if ($report->url) {
-            $output[] = '<span>/' . $report->url . '</span>';
-        }
+    if ($report->parameter && $responseData->parameterEventValue) {
+        $value = $responseData->parameterEventValue->value;
 
-        if ($report->device) {
-            $output[] = '<span>' . $report->device . '</span>';
-        }
-
-        if ($report->browser) {
-            $output[] = '<span>' . $report->browser . '</span>';
-        }
-
-        if ($report->countryIsoCode) {
-            $output[] = '<span>' . Country::getName($report->countryIsoCode) . '</span>';
-        }
-
-        if ($report->languageIsoCode) {
-            $lang = Language::tryFrom($report->languageIsoCode);
-            $output[] = '<span>' . ($lang ? $lang->getName() : $report->languageIsoCode) . '</span>';
+        if ($report->parameter === Parameter::Url && $value !== '/') {
+            $value = '/' . $responseData->parameterEventValue->value;
+        } elseif ($report->parameter === Parameter::Language) {
+            $lang = Language::tryFrom($responseData->parameterEventValue->value);
+            $value = $lang ? $lang->getName() : $responseData->parameterEventValue->value;
         }
 ?>
           <div class="one-line-flex">
-            <?=implode('', $output)?>
-            <?=CoreIcons::CLOSE?>
+            <span><?=$value?></span>
+            <span class="analytics-close-js"><?=CoreIcons::CLOSE?></span>
           </div>
 <?php } ?>
         </div>
         <div class="analytics-controls-wrapper">
-          <div class="analytics-controls" data-period="<?=$report->period->value?>" data-date="<?=$report->from->format('Y-m-d')?>">
+          <div class="analytics-controls" data-period="<?=$report->period->getName()?>" data-date="<?=$report->from->format('Y-m-d')?>">
             <a href="#" class="analytics-controls-previous"><?=CoreIcons::CARET_LEFT?></a>
 <?php if ($isNextDisabled) { ?>
             <p class="analytics-controls-next no-margin"><?=CoreIcons::CARET_RIGHT?></p>
@@ -218,7 +205,7 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
     /** @var PageViewCount $value */
     foreach ($responseData->sources as $value) { ?>
       <div class="item">
-        <span class="break"><?=$value->name ?: '-'?></span>
+        <span class="break"><?=$value->value ?: '-'?></span>
         <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
@@ -228,63 +215,50 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
 <?php
     /** @var PageViewCount $value */
     foreach ($responseData->pages as $value) {
-        $name = $value->name;
-        if ($name === 'home') {
-            $name = '';
+        $valueString = $value->value;
+        if ($valueString === 'home' || $valueString === '/') {
+            $valueString = '';
         }
 ?>
       <div class="item">
         <div class="one-line-flex">
-          <a href="/<?=$name?>">/<?=$name?></a>
-          <span class="analytics-page-js"><?=CoreIcons::FUNNEL?></span>
+          <a href="/<?=$valueString?>">/<?=$valueString?></a>
+          <span class="analytics-event-js" data-parameter-id="<?=Parameter::Url->value?>" data-event-id="<?=$value->id?>"><?=CoreIcons::FUNNEL?></span>
         </div>
         <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>
-    <div class="analytics-block">
+    <div class="analytics-block width-30">
+      <h2><?=$responseData->getLocalValue('analyticsDevice')?></h2>
+<?php
+    /** @var PageViewCount $value */
+    foreach ($responseData->devices as $value) { ?>
+          <div class="item">
+            <span class="analytics-event-js" data-parameter-id="<?=Parameter::Platform->value?>" data-event-id="<?=$value->id?>"><?=$value->value ?: '-'?></span>
+            <span class="no-break"><?=$value->count?></span>
+          </div>
+<?php } ?>
+    </div>
+    <div class="analytics-block width-30">
       <h2><?=$responseData->getLocalValue('analyticsBrowser')?></h2>
 <?php
     /** @var PageViewCount $value */
     foreach ($responseData->browsers as $value) {
 ?>
       <div class="item">
-        <span class="analytics-browser-js"><?=$value->name ?: '-'?></span>
+        <span class="analytics-event-js" data-parameter-id="<?=Parameter::Browser->value?>" data-event-id="<?=$value->id?>"><?=$value->value ?: '-'?></span>
         <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>
     </div>
-    <div class="analytics-block">
-      <h2><?=$responseData->getLocalValue('analyticsDevice')?></h2>
-<?php
-    /** @var PageViewCount $value */
-    foreach ($responseData->devices as $value) { ?>
-      <div class="item">
-        <span class="analytics-device-js"><?=$value->name ?: '-'?></span>
-        <span class="no-break"><?=$value->count?></span>
-      </div>
-<?php } ?>
-    </div>
-    <div class="analytics-block">
-      <h2><?=$responseData->getLocalValue('analyticsCountry')?></h2>
-<?php
-    /** @var PageViewCount $value */
-    foreach ($responseData->countries as $value) {
-        $name = Country::getName($value->name) ?: '-';
-?>
-      <div class="item">
-        <span class="analytics-country-js" data-iso-code="<?=$value->name?>"><?=$name?></span>
-        <span class="no-break"><?=$value->count?></span>
-      </div>
-<?php } ?>
-    </div>
-    <div class="analytics-block">
+    <div class="analytics-block width-30">
       <h2><?=$responseData->getLocalValue('analyticsLanguage')?></h2>
 <?php
     /** @var PageViewCount $value */
     foreach ($responseData->languages as $value) { ?>
       <div class="item">
-        <span class="analytics-language-js"><?=$value->name ?: '-'?></span>
+        <span class="analytics-event-js" data-parameter-id="<?=Parameter::Language->value?>" data-event-id="<?=$value->id?>"><?=$value->value ?: '-'?></span>
         <span class="no-break"><?=$value->count?></span>
       </div>
 <?php } ?>

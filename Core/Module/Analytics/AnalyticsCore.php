@@ -47,8 +47,9 @@ class AnalyticsCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/ReportViewCount.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/PageViewCount.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/PageView.php';
-                require_once self::getPathRoot() . '/Core/Module/Analytics/Value/CountDbColumn.php';
+                require_once self::getPathRoot() . '/Core/Module/Analytics/Value/Parameter.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Value/Period.php';
+                require_once self::getPathRoot() . '/Core/Module/Analytics/Model/EventValue.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Value/EventType.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Model/EventRaw.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Model/EventProcessed.php';
@@ -70,7 +71,9 @@ class AnalyticsCore extends Core
                 require_once self::getPathRoot() . '/App/Router/AppRouter.php';
                 require_once self::getPathRoot() . '/Core/Entity/Util/UserAgentInfo.php';
                 require_once self::getPathRoot() . '/Core/Util/UserAgentParserUtil.php';
+                require_once self::getPathRoot() . '/Core/Module/Analytics/Model/EventValue.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Value/EventType.php';
+                require_once self::getPathRoot() . '/Core/Module/Analytics/Value/Parameter.php';
                 require_once self::getPathRoot() . '/Core/App/LockManager.php';
                 require_once self::getPathRoot() . '/Core/App/App.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/App/AnalyticsProcessorApp.php';
