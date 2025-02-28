@@ -2,7 +2,6 @@
 
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
-use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 use Amora\Core\Util\UrlBuilderUtil;
 

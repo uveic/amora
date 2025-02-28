@@ -47,6 +47,7 @@ enum AppPageContentType: int
         return match($type) {
             PageContentType::Homepage => 'pageContentEditTitleHomepage',
             PageContentType::BlogBottom => 'pageContentEditTitleBlogBottom',
+            default => 'pageContentEditTitle' . $type->name,
         };
     }
 }

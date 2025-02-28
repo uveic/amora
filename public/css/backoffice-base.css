@@ -469,6 +469,18 @@
   display: none;
 }
 
+.page-content-wrapper .button-media-add {
+  border: 1px solid var(--color-black);
+}
+
+.collection-main-media-delete-js {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--color-white);
+  cursor: pointer;
+}
+
 .article-save-js {
   cursor: pointer;
 }
