@@ -75,7 +75,7 @@ class GlobalClass {
       "editorLinkPlaceholder": "Paste or type a link",
       "editorLinkOpenBlank": "Open in a new window",
 
-      "appGroupPeriodPartialData": "current period: partial data",
+      "collectionExistingImageWarning": "Image previously added",
     },
     "es": {
       "genericError": "Ha ocurrido un error inesperado, por favor inténtalo de nuevo.",
@@ -140,7 +140,7 @@ class GlobalClass {
       "editorLinkPlaceholder": "Pega o escribe un enlace",
       "editorLinkOpenBlank": "Abrir en una ventana nueva",
 
-      "appGroupPeriodPartialData": "período en curso: datos parciales",
+      "collectionExistingImageWarning": "La imagen ya había sido añadida",
     },
     "gl": {
       "genericError": "Algo non foi ben, por favor inténtao de novo.",
@@ -205,7 +205,7 @@ class GlobalClass {
       "editorLinkPlaceholder": "Pega ou escribe unha ligazón",
       "editorLinkOpenBlank": "Abrir nunha nova ventá",
 
-      "appGroupPeriodPartialData": "período en curso: datos parciais",
+      "collectionExistingImageWarning": "A imaxe xa fora engadida.",
     }
   }
 

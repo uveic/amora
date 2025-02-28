@@ -1,8 +1,6 @@
 import {Global} from './localisation.js?v=000';
 
 class UtilClass {
-  editors = [];
-
   getUpdatedAtTime() {
     const now = new Date();
     const prefix = ' ' + Global.get('globalAt') + ' ';
@@ -29,9 +27,24 @@ class UtilClass {
   }
 
   notifyError(errorObj = null, errorMessage = null) {
-    const feedbackDiv = document.querySelector('#feedback');
+    let feedbackDiv = document.querySelector('#feedback');
 
-    if (!feedbackDiv) return;
+    if (!feedbackDiv) {
+      feedbackDiv = document.createElement('div');
+      feedbackDiv.id = 'feedback';
+      feedbackDiv.className = 'feedback null';
+      const main = document.querySelector('main');
+      if (main) {
+        main.insertAdjacentElement('afterbegin', feedbackDiv);
+      } else {
+        const bodyEl = document.querySelector('body');
+        bodyEl.insertAdjacentElement('afterbegin', feedbackDiv);
+      }
+    }
+
+    if (!feedbackDiv) {
+      return;
+    }
 
     feedbackDiv.textContent = errorMessage ?? (errorObj ? errorObj.message : Global.get('genericError'));
     feedbackDiv.classList.remove('feedback-success');
