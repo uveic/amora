@@ -14,7 +14,7 @@ trix-toolbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--color-bg);
+  background: var(--color-white);
   padding: 0 1rem; }
 @media (max-width: 768px) {
   trix-toolbar {

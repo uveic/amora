@@ -24,8 +24,8 @@
 }
 
 :root {
-  --color-bg: #212529;
-  --color-text: #fcfcfc;
+  --color-black: #212529;
+  --color-white: #fcfcfc;
   --color-shadow: rgba(0, 0, 0, 0.15);
 
   --text-panel-width: 420px;
@@ -56,10 +56,10 @@ body {
   line-height: 1.4;
   margin: 0;
   padding: 0;
-  color: var(--color-text);
+  color: var(--color-white);
   width: 100%;
   min-width: 250px;
-  background-color: var(--color-bg);
+  background-color: var(--color-black);
 }
 
 a,
@@ -67,7 +67,7 @@ a:hover,
 a:visited,
 a:active,
 a:focus {
-  color: var(--color-text);
+  color: var(--color-white);
 }
 
 blockquote {
@@ -116,7 +116,7 @@ blockquote::after{
   left: 0;
   width: 100%;
   z-index: 1;
-  background-color: var(--color-bg);
+  background-color: var(--color-black);
 
   height: 100lvh;
   overflow: hidden;
@@ -155,7 +155,7 @@ blockquote::after{
   justify-content: space-between;
   align-items: flex-start;
   height: 100svh;
-  color: var(--color-text);
+  color: var(--color-white);
   gap: 2rem;
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern";
@@ -190,7 +190,7 @@ blockquote::after{
   height: 5px;
   flex-grow: 0;
   border-radius: 1px;
-  background-color: var(--color-text);
+  background-color: var(--color-white);
   box-shadow: var(--text-shadow);
 }
 
@@ -339,7 +339,7 @@ blockquote::after{
 .media-links a:active {
   text-transform: uppercase;
   text-shadow: var(--text-shadow);
-  color: var(--color-text);
+  color: var(--color-white);
   background-color: transparent;
   box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.25);
   font: 900 0.6rem/1 arial, helvetica, sans-serif;
@@ -347,7 +347,7 @@ blockquote::after{
   border-radius: 100px;
   padding: 0.25em 1em;
   text-decoration: none;
-  border: 1px solid var(--color-text);
+  border: 1px solid var(--color-white);
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -387,7 +387,7 @@ blockquote::after{
   width: auto;
   height: auto;
   max-height: 80svh;
-  color: var(--color-text);
+  color: var(--color-white);
   border-radius: 10px;
   background: rgba(51, 51, 51, 0.5);
   box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.25);
@@ -449,11 +449,11 @@ blockquote::after{
 }
 
 .modal-close-button svg {
-  fill: var(--color-text);
-  stroke: var(--color-text);
+  fill: var(--color-white);
+  stroke: var(--color-white);
 }
 
-.album-sections-wrapper {
+.collections-wrapper {
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
@@ -469,7 +469,7 @@ blockquote::after{
   max-width: 200px;
   height: auto;
   border-radius: 10px;
-  border: 1px solid var(--color-bg);
+  border: 1px solid var(--color-black);
   aspect-ratio: 1/1;
   position: relative;
   overflow: hidden;
