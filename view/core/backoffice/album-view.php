@@ -2,7 +2,7 @@
 
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
-use Amora\Core\Module\Album\Model\AlbumSection;
+use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Util\StringUtil;
@@ -87,26 +87,26 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
             </div>
             <div class="card-info-item">
               <span class="title"><?=$responseData->getLocalValue('editorMainImage')?>:</span>
-              <div class="value album-section-main-image-container">
+              <div class="value collection-main-image-container">
                 <img src="<?=$album->mainMedia->getPathWithNameMedium()?>" alt="<?=$album->mainMedia->buildAltText()?>">
               </div>
             </div>
           </div>
         </div>
-        <section class="album-sections-wrapper">
+        <section class="collections-wrapper">
 <?php
-    /** @var AlbumSection $section */
-    foreach ($album->sections as $section) {
-        echo AlbumHtmlGenerator::generateAlbumSectionHtml(
-            section: $section,
+    /** @var Collection $collection */
+    foreach ($album->collections as $collection) {
+        echo AlbumHtmlGenerator::generateCollectionHtml(
+            collection: $collection,
             localisationUtil: $localisationUtil,
             indentation: '          ',
         );
 }?>
         </section>
-        <a href="#" class="album-add-section-js button button-media-add" data-album-id="<?=$album->id?>">
+        <a href="#" class="album-add-collection-js button button-media-add" data-album-id="<?=$album->id?>">
           <?=CoreIcons::IMAGE?>
-          <span class="text-one-line"><?=$responseData->getLocalValue('albumAddSection')?></span>
+          <span class="text-one-line"><?=$responseData->getLocalValue('albumAddCollection')?></span>
         </a>
       </div>
     </div>

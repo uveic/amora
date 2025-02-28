@@ -3,7 +3,10 @@
 use Amora\App\Value\AppPageContentType;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
+use Amora\Core\Module\Album\Model\CollectionMedia;
+use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\Article\Value\PageContentSection;
+use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
@@ -28,7 +31,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
 <main>
   <div id="feedback" class="feedback null"></div>
   <div class="page-header">
-    <h3><?=$title . $languageIcon?></h3>
+    <span><?=$title . $languageIcon?></span>
     <div class="links">
       <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
     </div>
@@ -49,7 +52,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     $this->insert('../shared/trix-editor', ['responseData' => $responseData]);
 } ?>
 
-    <div class="field m-l-1 m-r-1<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::ActionUrl) ? '' : ' null'?>">
+    <div class="field m-l-1 m-r-1 m-t-2 m-b-2<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::ActionUrl) ? '' : ' null'?>">
       <label for="actionUrl" class="label"><?=$responseData->getLocalValue('pageContentEditAction')?>:</label>
       <div class="control">
         <input id="actionUrl" name="actionUrl" type="url" placeholder="" minlength="0" maxlength="255" value="<?=$pageContent?->actionUrl?>">
@@ -66,7 +69,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
 <?php } ?>
           <div class="main-image-button-container">
             <a href="#" class="main-image-button main-image-button-red generic-media-delete-js<?=$pageContent?->mainImage ? '' : ' null'?>"><?=CoreIcons::TRASH?></a>
-            <a href="#" class="main-image-button select-media-action" data-event-listener-action="handleGenericMainMediaClick" data-target-container-id="page-content-main-image-container">
+            <a href="#" class="main-image-button select-media-action button-media-add" data-target-container-id="page-content-main-image-container" data-event-listener-action="collectionAddMedia">
               <?=CoreIcons::IMAGE?>
               <span><?= $pageContent?->mainImage ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('globalSelectImage') ?></span>
             </a>
@@ -74,6 +77,26 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
         </div>
       </div>
     </div>
+
+<?php if ($pageContent->collection) { ?>
+    <div class="field m-l-1 m-r-1 m-t-2 m-b-2">
+      <div class="drop-loading null"><img src="/img/loading.gif" class="img-svg img-svg-40" width="40" height="40" alt="<?=$responseData->getLocalValue('globalSaving')?>"></div>
+      <p class="label m-b-05"><?=$responseData->getLocalValue('navAdminImages')?>:</p>
+      <div id="collection-item-media-<?=$pageContent->collection->id?>" class="collection-item-media" data-collection-id="<?=$pageContent->collection->id?>">
+<?php
+        /** @var CollectionMedia $collectionMedia */
+        foreach ($responseData->media as $collectionMedia) {
+            echo AlbumHtmlGenerator::generateCollectionMediaHtml($collectionMedia, '        ');
+        }
+?>
+        <a href="#" class="button select-media-action button-media-add" data-type-id="<?=MediaType::Image->value?>" data-target-container-id="collection-item-media-<?=$pageContent->collection->id?>" data-event-listener-action="collectionAddMedia">
+          <?=CoreIcons::IMAGE?>
+          <span><?=$responseData->getLocalValue('globalAdd')?></span>
+        </a>
+      </div>
+      <div class="collection-media-edit-info">Arrastrar para (re-)ordenar.</div>
+    </div>
+<?php } ?>
 
     <div class="control m-t-2 text-right">
       <input type="submit" class="button is-success width-auto m-b-3 m-r-1" value="<?=$submitButtonValue?>">

@@ -3,7 +3,7 @@
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Module\Album\Model\Album;
-use Amora\Core\Module\Album\Model\AlbumSection;
+use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 
 /** @var HtmlResponseData $responseData */
@@ -27,26 +27,26 @@ $localisationUtil = Core::getLocalisationUtil($album->language);
 </head>
 <body>
 <?php
-  echo AlbumHtmlGenerator::generateAlbumTemplateNewYorkModalSectionsHtml(
+  echo AlbumHtmlGenerator::generateAlbumTemplateNewYorkModalCollectionsHtml(
         album: $album,
         indentation: '    ',
     ) . PHP_EOL;
 ?>
   <main class="content-main">
 <?php
-    echo AlbumHtmlGenerator::generateAlbumTemplateNewYorkFirstSectionHtml(
-        section: $album->sections[0] ?? null,
+    echo AlbumHtmlGenerator::generateAlbumTemplateNewYorkFirstCollectionHtml(
+        collection: $album->collections[0] ?? null,
         indentation: '    ',
     ) . PHP_EOL;
 
-    /** @var AlbumSection $section */
-    foreach ($album->sections as $key => $section) {
+    /** @var Collection $collection */
+    foreach ($album->collections as $key => $collection) {
         if ($key === 0) {
             continue;
         }
 
-        echo AlbumHtmlGenerator::generateAlbumTemplateNewYorkSectionHtml(
-            section: $section,
+        echo AlbumHtmlGenerator::generateAlbumTemplateNewYorkCollectionHtml(
+            collection: $collection,
             localisationUtil: $localisationUtil,
             indentation: '    ',
         ) . PHP_EOL;
