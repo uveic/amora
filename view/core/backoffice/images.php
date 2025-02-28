@@ -32,7 +32,7 @@ $count = 0;
       <div id="images-list">
 <?php
     /** @var Media $image */
-    foreach ($responseData->files as $image) {
+    foreach ($responseData->media as $image) {
         $count++;
 ?>
         <figure class="image-container">
