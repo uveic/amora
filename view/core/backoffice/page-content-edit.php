@@ -69,7 +69,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
 <?php } ?>
           <div class="main-image-button-container">
             <a href="#" class="main-image-button main-image-button-red generic-media-delete-js<?=$pageContent?->mainImage ? '' : ' null'?>"><?=CoreIcons::TRASH?></a>
-            <a href="#" class="main-image-button select-media-action button-media-add" data-target-container-id="page-content-main-image-container" data-event-listener-action="collectionAddMedia">
+            <a href="#" class="main-image-button select-media-action button-media-add" data-target-container-id="page-content-main-image-container" data-event-listener-action="handleGenericMainMediaClick">
               <?=CoreIcons::IMAGE?>
               <span><?= $pageContent?->mainImage ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('globalSelectImage') ?></span>
             </a>
