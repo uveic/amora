@@ -34,11 +34,11 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
           <a href="#" class="filter-close"><?=CoreIcons::CLOSE?></a>
         </div>
       </div>
-      <div class="filter-form-wrapper">
+      <form action="#" method="post" class="form-filter filter-form-wrapper">
         <div class="field">
           <label for="articleType" class="label"><?=$responseData->getLocalValue('formFilterArticleTypeTitle')?></label>
           <div class="control">
-            <select id="articleType" name="articleType">
+            <select id="articleType" name="articleType" data-param-name="atId">
 <?php
     /** @var \BackedEnum $type */
     foreach (ArticleType::getAll() as $type) {
@@ -51,7 +51,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
         <div class="field">
           <label for="articleLanguageIsoCode" class="label"><?=$responseData->getLocalValue('globalLanguage')?></label>
           <div class="control">
-            <select id="articleLanguageIsoCode" name="articleLanguageIsoCode">
+            <select id="articleLanguageIsoCode" name="articleLanguageIsoCode" data-param-name="lang">
               <option<?php echo $articleLanguage ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
     /** @var \BackedEnum $language */
@@ -66,7 +66,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
         <div class="field">
           <label for="articleStatus" class="label"><?=$responseData->getLocalValue('globalStatus')?></label>
           <div class="control">
-            <select id="articleStatus" name="articleStatus">
+            <select id="articleStatus" name="articleStatus" data-param-name="status">
               <option<?php echo $articleStatus ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
     /** @var \BackedEnum $status */
@@ -78,6 +78,6 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
             </select>
           </div>
         </div>
-        <a href="#" class="filter-article-button" class="button is-link filter-button"><?=$responseData->getLocalValue('formFilterButton')?></a>
-      </div>
+        <input type="submit" class="button is-link filter-button" value="<?=$responseData->getLocalValue('formFilterButton')?>">
+      </form>
     </section>

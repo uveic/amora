@@ -1335,39 +1335,6 @@ document.querySelectorAll('.filter-article-refresh').forEach(a => {
   });
 });
 
-document.querySelectorAll('.filter-article-button').forEach(a => {
-  a.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    const status = document.querySelector('select[name="articleStatus"]').value;
-    const type = document.querySelector('select[name="articleType"]').value;
-    const lang = document.querySelector('select[name="articleLanguageIsoCode"]').value;
-
-    let query = new URLSearchParams();
-
-    if (status.length) {
-      query.append('status', status);
-    }
-
-    if (type.length) {
-      query.append('atId', type);
-    }
-
-    if (lang.length) {
-      query.append('lang', lang);
-    }
-
-    if (!query.entries()) {
-      document.querySelector('.filter-container').classList.remove('null');
-      return;
-    }
-
-    const queryString = query.entries() ? '?' + query.toString() : '';
-
-    window.location.href = window.location.origin + window.location.pathname + queryString;
-  });
-});
-
 document.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
     return;
@@ -1523,34 +1490,6 @@ document.querySelectorAll('.article-add-section-video').forEach(bu => {
       newParagraph.innerHTML = '<br>';
       container.appendChild(newParagraph);
     }
-  });
-});
-
-document.querySelectorAll('.filter-album-button').forEach(a => {
-  a.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    const status = document.querySelector('select[name="albumStatus"]').value;
-    const lang = document.querySelector('select[name="albumLanguageIsoCode"]').value;
-
-    let query = new URLSearchParams();
-
-    if (status.length) {
-      query.append('status', status);
-    }
-
-    if (lang.length) {
-      query.append('lang', lang);
-    }
-
-    if (!query.entries()) {
-      document.querySelector('.filter-container').classList.remove('null');
-      return;
-    }
-
-    const queryString = query.entries() ? '?' + query.toString() : '';
-
-    window.location.href = window.location.origin + window.location.pathname + queryString;
   });
 });
 

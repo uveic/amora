@@ -28,12 +28,12 @@ $filterClass = $albumStatus || $albumLanguage ? '' : ' null';
           <a href="#" class="filter-close"><?=CoreIcons::CLOSE?></a>
         </div>
       </div>
-      <div class="filter-form-wrapper">
+      <form action="#" method="post" class="form-filter filter-form-wrapper">
 
         <div class="field">
           <label for="albumLanguageIsoCode" class="label"><?=$responseData->getLocalValue('globalLanguage')?></label>
           <div class="control">
-            <select id="albumLanguageIsoCode" name="albumLanguageIsoCode">
+            <select id="albumLanguageIsoCode" name="albumLanguageIsoCode" data-param-name="lang">
               <option<?php echo $albumLanguage ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
     /** @var BackedEnum $language */
@@ -48,7 +48,7 @@ $filterClass = $albumStatus || $albumLanguage ? '' : ' null';
         <div class="field">
           <label for="albumStatus" class="label"><?=$responseData->getLocalValue('globalStatus')?></label>
           <div class="control">
-            <select id="albumStatus" name="albumStatus">
+            <select id="albumStatus" name="albumStatus" data-param-name="status">
               <option<?php echo $albumStatus ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
     /** @var BackedEnum $status */
@@ -60,6 +60,7 @@ $filterClass = $albumStatus || $albumLanguage ? '' : ' null';
             </select>
           </div>
         </div>
-        <a href="#" class="filter-album-button button is-link filter-button"><?=$responseData->getLocalValue('formFilterButton')?></a>
-      </div>
+
+        <input type="submit" class="button filter-button" value="<?=$responseData->getLocalValue('formFilterButton')?>">
+      </form>
     </section>
