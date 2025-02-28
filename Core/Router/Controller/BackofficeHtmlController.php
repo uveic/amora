@@ -14,11 +14,12 @@ use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Entity\Util\DashboardCount;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
+use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
-use Amora\Core\Module\Analytics\Value\Parameter;
 use Amora\Core\Module\Analytics\Value\EventType;
+use Amora\Core\Module\Analytics\Value\Parameter;
 use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\MediaService;
@@ -26,6 +27,7 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
+use Amora\Core\Module\Article\Value\PageContentSection;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\Mailer\Service\MailerService;
 use Amora\Core\Module\User\Service\SessionService;
@@ -164,8 +166,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             template: 'core/backoffice/user-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
-                pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
-                    $localisationUtil->getValue('globalUser'),
+                pageTitle: $localisationUtil->getValue('globalNew') . ' ' . $localisationUtil->getValue('globalUser'),
             ),
         );
     }
@@ -190,8 +191,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             template: 'core/backoffice/user-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
-                pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
-                    $localisationUtil->getValue('globalUser'),
+                pageTitle: $localisationUtil->getValue('globalEdit') . ' ' . $localisationUtil->getValue('globalUser'),
                 user: $user,
             ),
         );
@@ -303,7 +303,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     {
         $album = $this->albumService->getAlbumForId(
             id: $albumId,
-            includeSections: true,
+            includeCollections: true,
             includeMedia: true,
         );
 
@@ -379,8 +379,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             template: 'core/backoffice/article-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
-                pageTitle: $localisationUtil->getValue('globalNew') . ' ' .
-                    $localisationUtil->getValue('globalArticle')
+                pageTitle: $localisationUtil->getValue('globalNew') . ' ' . $localisationUtil->getValue('globalArticle'),
             ),
         );
     }
@@ -406,8 +405,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             template: 'core/backoffice/article-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
-                pageTitle: $localisationUtil->getValue('globalEdit') . ' ' .
-                    $localisationUtil->getValue('globalArticle'),
+                pageTitle: $localisationUtil->getValue('globalEdit') . ' ' . $localisationUtil->getValue('globalArticle'),
                 article: $article,
                 articleSections: $articleSections,
             ),
@@ -705,14 +703,50 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             typeIds: [$type->value],
         );
 
-        $pageContent = $pageContentRes[0]
-            ?? $this->articleService->storePageContent(
+        $pageContent = $pageContentRes[0] ?? null;
+        $hasCollection = AppPageContentType::displayContent($type, PageContentSection::Collection);
+
+        if (!$pageContent) {
+            $collection = null;
+            if ($hasCollection) {
+                $collection = $this->albumService->storeCollection(Collection::getEmpty());
+            }
+
+            $pageContent = $this->articleService->storePageContent(
                 PageContent::getEmpty(
                     user: $request->session->user,
                     language: $language,
                     type: $type,
+                    collection: $collection,
                 ),
             );
+        }
+
+        if (!$pageContent->collection && $hasCollection) {
+            $collection = $this->albumService->storeCollection(Collection::getEmpty());
+
+            $pageContent = new PageContent(
+                id: $pageContent->id,
+                user: $pageContent->user,
+                language: $pageContent->language,
+                type: $pageContent->type,
+                createdAt: $pageContent->createdAt,
+                updatedAt: new DateTimeImmutable(),
+                title: $pageContent->title,
+                subtitle: $pageContent->subtitle,
+                contentHtml: $pageContent->contentHtml,
+                mainImage: $pageContent->mainImage,
+                actionUrl: $pageContent->actionUrl,
+                collection: $collection,
+            );
+
+            $this->articleService->updatePageContent($pageContent);
+        }
+
+        $media = [];
+        if ($pageContent->collection) {
+            $media = $this->albumService->filterCollectionMediaBy(collectionIds: [$pageContent->collection->id]);
+        }
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
@@ -720,6 +754,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $pageContent->type->name),
+                media: $media,
                 pageContent: $pageContent,
             ),
         );

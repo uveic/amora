@@ -1527,11 +1527,11 @@
         }
       }
     },
-    "/back/album/{albumId}/section": {
+    "/back/album/{albumId}/collection": {
       "post": {
         "tags": [],
         "description": "Store new album section",
-        "operationId": "storeAlbumSection",
+        "operationId": "storeCollection",
         "parameters": [
           {
             "name": "albumId",
@@ -1577,7 +1577,7 @@
                     false
                   ]
                 },
-                "newSectionId": {
+                "newCollectionId": {
                   "type": "integer"
                 },
                 "html": {
@@ -1595,14 +1595,75 @@
         }
       }
     },
-    "/back/album-section/{albumSectionId}/media": {
+    "/back/collection/media": {
+      "post": {
+        "tags": [],
+        "operationId": "createNewCollectionAndStoreMedia",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "description": "",
+            "required": true,
+            "schema": {
+              "properties": {
+                "mediaId": {
+                  "type": "integer"
+                },
+                "mediaCaptionHtml": {
+                  "type": "string"
+                },
+                "isMainMedia": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "mediaId",
+                "isMainMedia"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "collectionId": {
+                  "type": "integer"
+                },
+                "html": {
+                  "type": "string"
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/collection/{collectionId}/media": {
       "post": {
         "tags": [],
         "description": "Store media for album section",
-        "operationId": "storeMediaForAlbumSection",
+        "operationId": "storeMediaForCollection",
         "parameters": [
           {
-            "name": "albumSectionId",
+            "name": "collectionId",
             "in": "path",
             "description": "Album section ID",
             "required": true,
@@ -1620,10 +1681,14 @@
                 },
                 "captionHtml": {
                   "type": "string"
+                },
+                "isMainMedia": {
+                  "type": "boolean"
                 }
               },
               "required": [
-                "mediaId"
+                "mediaId",
+                "isMainMedia"
               ]
             }
           }
@@ -1657,14 +1722,53 @@
         }
       }
     },
-    "/back/album-section/{albumSectionId}/sequence": {
+    "/back/collection/{collectionId}/main-media": {
+      "delete": {
+        "tags": [],
+        "operationId": "destroyMainMediaForCollection",
+        "parameters": [
+          {
+            "name": "collectionId",
+            "in": "path",
+            "description": "Album section ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Success status",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/collection/{collectionId}/sequence": {
       "put": {
         "tags": [],
         "description": "Update media sequence for album section",
-        "operationId": "updateMediaSequenceForAlbumSection",
+        "operationId": "updateMediaSequenceForCollection",
         "parameters": [
           {
-            "name": "albumSectionId",
+            "name": "collectionId",
             "in": "path",
             "description": "Album section ID",
             "required": true,
@@ -1677,16 +1781,16 @@
             "required": true,
             "schema": {
               "properties": {
-                "albumSectionMediaIdTo": {
+                "collectionMediaIdTo": {
                   "type": "integer"
                 },
-                "albumSectionMediaIdFrom": {
+                "collectionMediaIdFrom": {
                   "type": "integer"
                 }
               },
               "required": [
-                "albumSectionMediaIdTo",
-                "albumSectionMediaIdFrom"
+                "collectionMediaIdTo",
+                "collectionMediaIdFrom"
               ]
             }
           }
@@ -1717,14 +1821,14 @@
         }
       }
     },
-    "/back/album-section/{albumSectionId}": {
+    "/back/collection/{collectionId}": {
       "put": {
         "tags": [],
         "description": "Update album section",
-        "operationId": "updateAlbumSection",
+        "operationId": "updateCollection",
         "parameters": [
           {
-            "name": "albumSectionId",
+            "name": "collectionId",
             "in": "path",
             "description": "Album ID",
             "required": true,
@@ -1749,7 +1853,7 @@
                 "contentHtml": {
                   "type": "string"
                 },
-                "albumSectionIdSequenceTo": {
+                "collectionIdSequenceTo": {
                   "type": "integer"
                 }
               }
@@ -1782,14 +1886,14 @@
         }
       }
     },
-    "/back/album-section-media/{albumSectionMediaId}": {
+    "/back/collection-media/{collectionMediaId}": {
       "put": {
         "tags": [],
         "description": "Update album section media",
-        "operationId": "updateAlbumSectionMedia",
+        "operationId": "updateCollectionMedia",
         "parameters": [
           {
-            "name": "albumSectionMediaId",
+            "name": "collectionMediaId",
             "in": "path",
             "description": "Album section media ID",
             "required": true,
@@ -1840,10 +1944,10 @@
       "delete": {
         "tags": [],
         "description": "Delete media for album section",
-        "operationId": "deleteAlbumSectionMedia",
+        "operationId": "deleteCollectionMedia",
         "parameters": [
           {
-            "name": "albumSectionMediaId",
+            "name": "collectionMediaId",
             "in": "path",
             "description": "Album section media ID",
             "required": true,

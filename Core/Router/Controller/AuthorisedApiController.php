@@ -74,6 +74,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             isAdmin: $request->session->isAdmin(),
             includeAppearsOn: true,
             userId: $request->session->isAdmin() ? null : $request->session->user->id,
+            includeExifData: true,
         );
 
         return new AuthorisedApiControllerGetFilesSuccessResponse(

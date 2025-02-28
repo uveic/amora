@@ -181,7 +181,7 @@ class UrlBuilderUtil
         $baseUrl = self::buildBaseUrl($language) . self::BACKOFFICE_ANALYTICS;
 
         if ($period) {
-            $getParams[] = 'period=' . $period->getName();
+            $getParams[] = 'period=' . $period->value;
         }
 
         if ($date) {

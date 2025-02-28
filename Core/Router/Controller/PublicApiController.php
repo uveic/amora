@@ -6,7 +6,7 @@ use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Album\Model\Album;
-use Amora\Core\Module\Album\Model\AlbumSection;
+use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Model\Article;
@@ -562,7 +562,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             )->asPublicArray($localisationUtil->getValue('navAdminAlbums'));
         }
 
-        $albumSections = $this->albumService->filterAlbumSectionBy(
+        $collections = $this->albumService->filterCollectionBy(
             searchQuery: $q,
             queryOptions: new QueryOptions(
                 orderBy: [
@@ -577,9 +577,9 @@ final class PublicApiController extends PublicApiControllerAbstract
         );
 
         $albumIds = [];
-        /** @var AlbumSection $albumSection */
-        foreach ($albumSections as $albumSection) {
-            $albumIds[] = $albumSection->albumId;
+        /** @var Collection $collection */
+        foreach ($collections as $collection) {
+            $albumIds[] = $collection->albumId;
         }
 
         $totalAlbums = count($albumsOutput);

@@ -181,7 +181,7 @@ return [
     'formFilterClean' => 'Restaurar filtro',
     'formFilterArticleTypeTitle' => 'Tipo',
 
-    'pageContentEditTitle' => 'Editar contido',
+    'pageContentEditTitle' => 'Textos',
     'pageContentEditTitleHomepage' => 'Portada',
     'pageContentEditTitleBlogBottom' => 'Texto despois dun post do blog',
     'pageContentEditAction' => 'Ligazón',
@@ -256,5 +256,5 @@ return [
     'albumFormTemplateTitle' => 'Deseño do álbum',
     'albumPublicReadMore' => 'Ler máis',
     'albumPublicMorePictures' => 'Ver máis fotos',
-    'albumAddSection' => 'Engadir sección',
+    'albumAddCollection' => 'Engadir colección',
 ];

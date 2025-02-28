@@ -40,12 +40,14 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumStatusSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreAlbumSectionSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumSectionSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumSectionMediaSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDeleteAlbumSectionMediaSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreCollectionSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerCreateNewCollectionAndStoreMediaSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreMediaForCollectionSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDestroyMainMediaForCollectionSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateMediaSequenceForCollectionSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateCollectionSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateCollectionMediaSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDeleteCollectionMediaSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -318,7 +320,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     ): Response;
 
     /**
-     * Endpoint: /back/album/{albumId}/section
+     * Endpoint: /back/album/{albumId}/collection
      * Method: POST
      *
      * @param int $albumId
@@ -329,7 +331,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param Request $request
      * @return Response
      */
-    abstract protected function storeAlbumSection(
+    abstract protected function storeCollection(
         int $albumId,
         ?int $mainMediaId,
         ?string $titleHtml,
@@ -339,89 +341,121 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     ): Response;
 
     /**
-     * Endpoint: /back/album-section/{albumSectionId}/media
+     * Endpoint: /back/collection/media
      * Method: POST
      *
-     * @param int $albumSectionId
+     * @param int $mediaId
+     * @param string|null $mediaCaptionHtml
+     * @param bool $isMainMedia
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function createNewCollectionAndStoreMedia(
+        int $mediaId,
+        ?string $mediaCaptionHtml,
+        bool $isMainMedia,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /back/collection/{collectionId}/media
+     * Method: POST
+     *
+     * @param int $collectionId
      * @param int $mediaId
      * @param string|null $captionHtml
+     * @param bool $isMainMedia
      * @param Request $request
      * @return Response
      */
-    abstract protected function storeMediaForAlbumSection(
-        int $albumSectionId,
+    abstract protected function storeMediaForCollection(
+        int $collectionId,
         int $mediaId,
         ?string $captionHtml,
+        bool $isMainMedia,
         Request $request
     ): Response;
 
     /**
-     * Endpoint: /back/album-section/{albumSectionId}/sequence
-     * Method: PUT
+     * Endpoint: /back/collection/{collectionId}/main-media
+     * Method: DELETE
      *
-     * @param int $albumSectionId
-     * @param int $albumSectionMediaIdTo
-     * @param int $albumSectionMediaIdFrom
+     * @param int $collectionId
      * @param Request $request
      * @return Response
      */
-    abstract protected function updateMediaSequenceForAlbumSection(
-        int $albumSectionId,
-        int $albumSectionMediaIdTo,
-        int $albumSectionMediaIdFrom,
+    abstract protected function destroyMainMediaForCollection(
+        int $collectionId,
         Request $request
     ): Response;
 
     /**
-     * Endpoint: /back/album-section/{albumSectionId}
+     * Endpoint: /back/collection/{collectionId}/sequence
      * Method: PUT
      *
-     * @param int $albumSectionId
+     * @param int $collectionId
+     * @param int $collectionMediaIdTo
+     * @param int $collectionMediaIdFrom
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function updateMediaSequenceForCollection(
+        int $collectionId,
+        int $collectionMediaIdTo,
+        int $collectionMediaIdFrom,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /back/collection/{collectionId}
+     * Method: PUT
+     *
+     * @param int $collectionId
      * @param int|null $mainMediaId
      * @param string|null $titleHtml
      * @param string|null $subtitleHtml
      * @param string|null $contentHtml
-     * @param int|null $albumSectionIdSequenceTo
+     * @param int|null $collectionIdSequenceTo
      * @param Request $request
      * @return Response
      */
-    abstract protected function updateAlbumSection(
-        int $albumSectionId,
+    abstract protected function updateCollection(
+        int $collectionId,
         ?int $mainMediaId,
         ?string $titleHtml,
         ?string $subtitleHtml,
         ?string $contentHtml,
-        ?int $albumSectionIdSequenceTo,
+        ?int $collectionIdSequenceTo,
         Request $request
     ): Response;
 
     /**
-     * Endpoint: /back/album-section-media/{albumSectionMediaId}
+     * Endpoint: /back/collection-media/{collectionMediaId}
      * Method: PUT
      *
-     * @param int $albumSectionMediaId
+     * @param int $collectionMediaId
      * @param string|null $captionHtml
      * @param int|null $sequence
      * @param Request $request
      * @return Response
      */
-    abstract protected function updateAlbumSectionMedia(
-        int $albumSectionMediaId,
+    abstract protected function updateCollectionMedia(
+        int $collectionMediaId,
         ?string $captionHtml,
         ?int $sequence,
         Request $request
     ): Response;
 
     /**
-     * Endpoint: /back/album-section-media/{albumSectionMediaId}
+     * Endpoint: /back/collection-media/{collectionMediaId}
      * Method: DELETE
      *
-     * @param int $albumSectionMediaId
+     * @param int $collectionMediaId
      * @param Request $request
      * @return Response
      */
-    abstract protected function deleteAlbumSectionMedia(
-        int $albumSectionMediaId,
+    abstract protected function deleteCollectionMedia(
+        int $collectionMediaId,
         Request $request
     ): Response;
 
@@ -1384,11 +1418,11 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallStoreAlbumSection(Request $request): Response
+    private function validateAndCallStoreCollection(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
-            ['back', 'album', '{albumId}', 'section'],
+            ['back', 'album', '{albumId}', 'collection'],
             $pathParts
         );
         $bodyParams = $request->getBodyPayload();
@@ -1434,7 +1468,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         try {
-            return $this->storeAlbumSection(
+            return $this->storeCollection(
                 $albumId,
                 $mainMediaId,
                 $titleHtml,
@@ -1444,7 +1478,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: storeAlbumSection()' .
+                'Unexpected error in BackofficeApiControllerAbstract - Method: storeCollection()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -1452,30 +1486,91 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallStoreMediaForAlbumSection(Request $request): Response
+    private function validateAndCallCreateNewCollectionAndStoreMedia(Request $request): Response
+    {
+        $bodyParams = $request->getBodyPayload();
+        $errors = [];
+
+        if (!isset($bodyParams)) {
+            $errors[] = [
+                'field' => 'payload',
+                'message' => 'required'
+            ];
+        }
+
+        $mediaId = null;
+        if (!isset($bodyParams['mediaId'])) {
+            $errors[] = [
+                'field' => 'mediaId',
+                'message' => 'required'
+            ];
+        } else {
+            $mediaId = $bodyParams['mediaId'] ?? null;
+        }
+
+        $mediaCaptionHtml = $bodyParams['mediaCaptionHtml'] ?? null;
+        $isMainMedia = null;
+        if (!isset($bodyParams['isMainMedia'])) {
+            $errors[] = [
+                'field' => 'isMainMedia',
+                'message' => 'required'
+            ];
+        } else {
+            $isMainMedia = $bodyParams['isMainMedia'] ?? null;
+        }
+
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->createNewCollectionAndStoreMedia(
+                $mediaId,
+                $mediaCaptionHtml,
+                $isMainMedia,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: createNewCollectionAndStoreMedia()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallStoreMediaForCollection(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
-            ['back', 'album-section', '{albumSectionId}', 'media'],
+            ['back', 'collection', '{collectionId}', 'media'],
             $pathParts
         );
         $bodyParams = $request->getBodyPayload();
         $errors = [];
 
-        $albumSectionId = null;
-        if (!isset($pathParams['albumSectionId'])) {
+        $collectionId = null;
+        if (!isset($pathParams['collectionId'])) {
             $errors[] = [
-                'field' => 'albumSectionId',
+                'field' => 'collectionId',
                 'message' => 'required'
             ];
         } else {
-            if (!is_numeric($pathParams['albumSectionId'])) {
+            if (!is_numeric($pathParams['collectionId'])) {
                 $errors[] = [
-                    'field' => 'albumSectionId',
+                    'field' => 'collectionId',
                     'message' => 'must be an integer'
                 ];
             } else {
-                $albumSectionId = intval($pathParams['albumSectionId']);
+                $collectionId = intval($pathParams['collectionId']);
             }
         }
 
@@ -1497,6 +1592,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         $captionHtml = $bodyParams['captionHtml'] ?? null;
+        $isMainMedia = null;
+        if (!isset($bodyParams['isMainMedia'])) {
+            $errors[] = [
+                'field' => 'isMainMedia',
+                'message' => 'required'
+            ];
+        } else {
+            $isMainMedia = $bodyParams['isMainMedia'] ?? null;
+        }
+
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -1509,15 +1614,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         try {
-            return $this->storeMediaForAlbumSection(
-                $albumSectionId,
+            return $this->storeMediaForCollection(
+                $collectionId,
                 $mediaId,
                 $captionHtml,
+                $isMainMedia,
                 $request
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: storeMediaForAlbumSection()' .
+                'Unexpected error in BackofficeApiControllerAbstract - Method: storeMediaForCollection()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -1525,30 +1631,81 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallUpdateMediaSequenceForAlbumSection(Request $request): Response
+    private function validateAndCallDestroyMainMediaForCollection(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
-            ['back', 'album-section', '{albumSectionId}', 'sequence'],
+            ['back', 'collection', '{collectionId}', 'main-media'],
+            $pathParts
+        );
+        $errors = [];
+
+        $collectionId = null;
+        if (!isset($pathParams['collectionId'])) {
+            $errors[] = [
+                'field' => 'collectionId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['collectionId'])) {
+                $errors[] = [
+                    'field' => 'collectionId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $collectionId = intval($pathParams['collectionId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->destroyMainMediaForCollection(
+                $collectionId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: destroyMainMediaForCollection()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallUpdateMediaSequenceForCollection(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['back', 'collection', '{collectionId}', 'sequence'],
             $pathParts
         );
         $bodyParams = $request->getBodyPayload();
         $errors = [];
 
-        $albumSectionId = null;
-        if (!isset($pathParams['albumSectionId'])) {
+        $collectionId = null;
+        if (!isset($pathParams['collectionId'])) {
             $errors[] = [
-                'field' => 'albumSectionId',
+                'field' => 'collectionId',
                 'message' => 'required'
             ];
         } else {
-            if (!is_numeric($pathParams['albumSectionId'])) {
+            if (!is_numeric($pathParams['collectionId'])) {
                 $errors[] = [
-                    'field' => 'albumSectionId',
+                    'field' => 'collectionId',
                     'message' => 'must be an integer'
                 ];
             } else {
-                $albumSectionId = intval($pathParams['albumSectionId']);
+                $collectionId = intval($pathParams['collectionId']);
             }
         }
 
@@ -1559,24 +1716,24 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
-        $albumSectionMediaIdTo = null;
-        if (!isset($bodyParams['albumSectionMediaIdTo'])) {
+        $collectionMediaIdTo = null;
+        if (!isset($bodyParams['collectionMediaIdTo'])) {
             $errors[] = [
-                'field' => 'albumSectionMediaIdTo',
+                'field' => 'collectionMediaIdTo',
                 'message' => 'required'
             ];
         } else {
-            $albumSectionMediaIdTo = $bodyParams['albumSectionMediaIdTo'] ?? null;
+            $collectionMediaIdTo = $bodyParams['collectionMediaIdTo'] ?? null;
         }
 
-        $albumSectionMediaIdFrom = null;
-        if (!isset($bodyParams['albumSectionMediaIdFrom'])) {
+        $collectionMediaIdFrom = null;
+        if (!isset($bodyParams['collectionMediaIdFrom'])) {
             $errors[] = [
-                'field' => 'albumSectionMediaIdFrom',
+                'field' => 'collectionMediaIdFrom',
                 'message' => 'required'
             ];
         } else {
-            $albumSectionMediaIdFrom = $bodyParams['albumSectionMediaIdFrom'] ?? null;
+            $collectionMediaIdFrom = $bodyParams['collectionMediaIdFrom'] ?? null;
         }
 
 
@@ -1591,15 +1748,15 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         try {
-            return $this->updateMediaSequenceForAlbumSection(
-                $albumSectionId,
-                $albumSectionMediaIdTo,
-                $albumSectionMediaIdFrom,
+            return $this->updateMediaSequenceForCollection(
+                $collectionId,
+                $collectionMediaIdTo,
+                $collectionMediaIdFrom,
                 $request
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: updateMediaSequenceForAlbumSection()' .
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updateMediaSequenceForCollection()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -1607,30 +1764,30 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallUpdateAlbumSection(Request $request): Response
+    private function validateAndCallUpdateCollection(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
-            ['back', 'album-section', '{albumSectionId}'],
+            ['back', 'collection', '{collectionId}'],
             $pathParts
         );
         $bodyParams = $request->getBodyPayload();
         $errors = [];
 
-        $albumSectionId = null;
-        if (!isset($pathParams['albumSectionId'])) {
+        $collectionId = null;
+        if (!isset($pathParams['collectionId'])) {
             $errors[] = [
-                'field' => 'albumSectionId',
+                'field' => 'collectionId',
                 'message' => 'required'
             ];
         } else {
-            if (!is_numeric($pathParams['albumSectionId'])) {
+            if (!is_numeric($pathParams['collectionId'])) {
                 $errors[] = [
-                    'field' => 'albumSectionId',
+                    'field' => 'collectionId',
                     'message' => 'must be an integer'
                 ];
             } else {
-                $albumSectionId = intval($pathParams['albumSectionId']);
+                $collectionId = intval($pathParams['collectionId']);
             }
         }
 
@@ -1645,7 +1802,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         $titleHtml = $bodyParams['titleHtml'] ?? null;
         $subtitleHtml = $bodyParams['subtitleHtml'] ?? null;
         $contentHtml = $bodyParams['contentHtml'] ?? null;
-        $albumSectionIdSequenceTo = $bodyParams['albumSectionIdSequenceTo'] ?? null;
+        $collectionIdSequenceTo = $bodyParams['collectionIdSequenceTo'] ?? null;
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -1658,18 +1815,18 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         try {
-            return $this->updateAlbumSection(
-                $albumSectionId,
+            return $this->updateCollection(
+                $collectionId,
                 $mainMediaId,
                 $titleHtml,
                 $subtitleHtml,
                 $contentHtml,
-                $albumSectionIdSequenceTo,
+                $collectionIdSequenceTo,
                 $request
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: updateAlbumSection()' .
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updateCollection()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -1677,30 +1834,30 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallUpdateAlbumSectionMedia(Request $request): Response
+    private function validateAndCallUpdateCollectionMedia(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
-            ['back', 'album-section-media', '{albumSectionMediaId}'],
+            ['back', 'collection-media', '{collectionMediaId}'],
             $pathParts
         );
         $bodyParams = $request->getBodyPayload();
         $errors = [];
 
-        $albumSectionMediaId = null;
-        if (!isset($pathParams['albumSectionMediaId'])) {
+        $collectionMediaId = null;
+        if (!isset($pathParams['collectionMediaId'])) {
             $errors[] = [
-                'field' => 'albumSectionMediaId',
+                'field' => 'collectionMediaId',
                 'message' => 'required'
             ];
         } else {
-            if (!is_numeric($pathParams['albumSectionMediaId'])) {
+            if (!is_numeric($pathParams['collectionMediaId'])) {
                 $errors[] = [
-                    'field' => 'albumSectionMediaId',
+                    'field' => 'collectionMediaId',
                     'message' => 'must be an integer'
                 ];
             } else {
-                $albumSectionMediaId = intval($pathParams['albumSectionMediaId']);
+                $collectionMediaId = intval($pathParams['collectionMediaId']);
             }
         }
 
@@ -1725,15 +1882,15 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         try {
-            return $this->updateAlbumSectionMedia(
-                $albumSectionMediaId,
+            return $this->updateCollectionMedia(
+                $collectionMediaId,
                 $captionHtml,
                 $sequence,
                 $request
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: updateAlbumSectionMedia()' .
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updateCollectionMedia()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -1741,29 +1898,29 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallDeleteAlbumSectionMedia(Request $request): Response
+    private function validateAndCallDeleteCollectionMedia(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
-            ['back', 'album-section-media', '{albumSectionMediaId}'],
+            ['back', 'collection-media', '{collectionMediaId}'],
             $pathParts
         );
         $errors = [];
 
-        $albumSectionMediaId = null;
-        if (!isset($pathParams['albumSectionMediaId'])) {
+        $collectionMediaId = null;
+        if (!isset($pathParams['collectionMediaId'])) {
             $errors[] = [
-                'field' => 'albumSectionMediaId',
+                'field' => 'collectionMediaId',
                 'message' => 'required'
             ];
         } else {
-            if (!is_numeric($pathParams['albumSectionMediaId'])) {
+            if (!is_numeric($pathParams['collectionMediaId'])) {
                 $errors[] = [
-                    'field' => 'albumSectionMediaId',
+                    'field' => 'collectionMediaId',
                     'message' => 'must be an integer'
                 ];
             } else {
-                $albumSectionMediaId = intval($pathParams['albumSectionMediaId']);
+                $collectionMediaId = intval($pathParams['collectionMediaId']);
             }
         }
 
@@ -1778,13 +1935,13 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
 
         try {
-            return $this->deleteAlbumSectionMedia(
-                $albumSectionMediaId,
+            return $this->deleteCollectionMedia(
+                $collectionMediaId,
                 $request
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: deleteAlbumSectionMedia()' .
+                'Unexpected error in BackofficeApiControllerAbstract - Method: deleteCollectionMedia()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -1944,62 +2101,82 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         if ($method === 'POST' &&
             $pathParams = $this->pathParamsMatcher(
-                ['back', 'album', '{albumId}', 'section'],
+                ['back', 'album', '{albumId}', 'collection'],
                 $pathParts,
                 ['fixed', 'fixed', 'int', 'fixed']
             )
         ) {
-            return $this->validateAndCallStoreAlbumSection($request);
+            return $this->validateAndCallStoreCollection($request);
+        }
+
+        if ($method === 'POST' &&
+            $this->pathParamsMatcher(
+                ['back', 'collection', 'media'],
+                $pathParts,
+                ['fixed', 'fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallCreateNewCollectionAndStoreMedia($request);
         }
 
         if ($method === 'POST' &&
             $pathParams = $this->pathParamsMatcher(
-                ['back', 'album-section', '{albumSectionId}', 'media'],
+                ['back', 'collection', '{collectionId}', 'media'],
                 $pathParts,
                 ['fixed', 'fixed', 'int', 'fixed']
             )
         ) {
-            return $this->validateAndCallStoreMediaForAlbumSection($request);
-        }
-
-        if ($method === 'PUT' &&
-            $pathParams = $this->pathParamsMatcher(
-                ['back', 'album-section', '{albumSectionId}', 'sequence'],
-                $pathParts,
-                ['fixed', 'fixed', 'int', 'fixed']
-            )
-        ) {
-            return $this->validateAndCallUpdateMediaSequenceForAlbumSection($request);
-        }
-
-        if ($method === 'PUT' &&
-            $pathParams = $this->pathParamsMatcher(
-                ['back', 'album-section', '{albumSectionId}'],
-                $pathParts,
-                ['fixed', 'fixed', 'int']
-            )
-        ) {
-            return $this->validateAndCallUpdateAlbumSection($request);
-        }
-
-        if ($method === 'PUT' &&
-            $pathParams = $this->pathParamsMatcher(
-                ['back', 'album-section-media', '{albumSectionMediaId}'],
-                $pathParts,
-                ['fixed', 'fixed', 'int']
-            )
-        ) {
-            return $this->validateAndCallUpdateAlbumSectionMedia($request);
+            return $this->validateAndCallStoreMediaForCollection($request);
         }
 
         if ($method === 'DELETE' &&
             $pathParams = $this->pathParamsMatcher(
-                ['back', 'album-section-media', '{albumSectionMediaId}'],
+                ['back', 'collection', '{collectionId}', 'main-media'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallDestroyMainMediaForCollection($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'collection', '{collectionId}', 'sequence'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallUpdateMediaSequenceForCollection($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'collection', '{collectionId}'],
                 $pathParts,
                 ['fixed', 'fixed', 'int']
             )
         ) {
-            return $this->validateAndCallDeleteAlbumSectionMedia($request);
+            return $this->validateAndCallUpdateCollection($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'collection-media', '{collectionMediaId}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallUpdateCollectionMedia($request);
+        }
+
+        if ($method === 'DELETE' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'collection-media', '{collectionMediaId}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallDeleteCollectionMedia($request);
         }
 
         return null;

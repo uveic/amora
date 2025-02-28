@@ -293,7 +293,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     {
         $album = $this->albumService->getAlbumForSlug(
             slug: $albumSlug,
-            includeSections: true,
+            includeCollections: true,
             includeMedia: true,
         );
 
