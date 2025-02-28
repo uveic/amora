@@ -86,14 +86,14 @@ readonly class FeedService
         $siteDescription = $localisationUtil->getValue('siteDescription');
 
         $output = [
-            '<title>' . $siteTitle . '</title>',
+            '<title>' . htmlspecialchars($siteTitle) . '</title>',
             '<link>' . $baseUrl . '</link>',
-            '<description>' . $siteDescription . '</description>',
+            '<description>' . htmlspecialchars($siteDescription) . '</description>',
             '<language>' . strtolower($localisationUtil->language->value) . '</language>',
             '<pubDate>' . $lastPubDate->format('r') . '</pubDate>',
             '<lastBuildDate>' . $lastBuildDate->format('r') . '</lastBuildDate>',
             '<docs>https://blogs.law.harvard.edu/tech/rss</docs>',
-            '<generator>' . $siteTitle . '</generator>',
+            '<generator>' . htmlspecialchars($siteTitle) . '</generator>',
             '<atom:link href="' . UrlBuilderUtil::buildPublicRssUrl() . '" rel="self" type="application/rss+xml" />',
         ];
 

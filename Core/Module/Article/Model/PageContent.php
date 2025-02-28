@@ -4,6 +4,7 @@ namespace Amora\App\Module\Form\Entity;
 
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
+use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\User\Model\User;
@@ -24,6 +25,7 @@ class PageContent
         public readonly ?string $contentHtml,
         public readonly ?Media $mainImage,
         public readonly ?string $actionUrl,
+        public readonly ?Collection $collection,
     ) {}
 
     public static function fromArray(array $data): self
@@ -44,6 +46,7 @@ class PageContent
             contentHtml: $data['page_content_html'] ?? null,
             mainImage: isset($data['media_id']) ? Media::fromArray($data) : null,
             actionUrl: $data['page_content_action_url'] ?? null,
+            collection: isset($data['collection_id']) ? Collection::fromArray($data) : null,
         );
     }
 
@@ -61,6 +64,7 @@ class PageContent
             'content_html' => $this->contentHtml,
             'main_image_id' => $this->mainImage?->id,
             'action_url' => $this->actionUrl,
+            'collection_id' => $this->collection?->id,
         ];
     }
 
@@ -68,6 +72,7 @@ class PageContent
         User $user,
         Language $language,
         AppPageContentType|PageContentType $type,
+        ?Collection $collection,
     ): self {
         return new self(
             id: null,
@@ -81,6 +86,7 @@ class PageContent
             contentHtml: null,
             mainImage: null,
             actionUrl: null,
+            collection: $collection,
         );
     }
 }

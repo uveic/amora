@@ -27,10 +27,10 @@ class Album
         public readonly DateTimeImmutable $updatedAt,
         public readonly ?string $titleHtml,
         public readonly ?string $contentHtml,
-        public readonly array $sections = [],
+        public readonly array $collections = [],
     ) {}
 
-    public static function fromArray(array $data, array $sections = []): self
+    public static function fromArray(array $data, array $collections = []): self
     {
         return new self(
             id: isset($data['album_id']) ? (int)$data['album_id'] : null,
@@ -44,7 +44,7 @@ class Album
             updatedAt: DateUtil::convertStringToDateTimeImmutable($data['album_updated_at']),
             titleHtml: $data['album_title_html'] ?? null,
             contentHtml: $data['album_content_html'],
-            sections: $sections,
+            collections: $collections,
         );
     }
 

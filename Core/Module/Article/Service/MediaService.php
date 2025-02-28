@@ -235,12 +235,10 @@ readonly class MediaService
                 $fileOutput['appearsOn'] = $appearsOn;
 
                 if ($includeExifData && $file->type === MediaType::Image) {
-                    if ($file->exif) {
-                        $fileOutput['exifHtml'] = $file->exif->asHtml(
-                            language: $language,
-                            media: $file,
-                        );
-                    }
+                    $fileOutput['exifHtml'] = $file->exif?->asHtml(
+                        language: $language,
+                        media: $file,
+                    ) ?? '<div></div>';
                 }
             }
 

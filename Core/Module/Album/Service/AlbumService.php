@@ -7,8 +7,8 @@ use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\Album\Datalayer\AlbumDataLayer;
 use Amora\Core\Module\Album\Model\Album;
-use Amora\Core\Module\Album\Model\AlbumSection;
-use Amora\Core\Module\Album\Model\AlbumSectionMedia;
+use Amora\Core\Module\Album\Model\Collection;
+use Amora\Core\Module\Album\Model\CollectionMedia;
 use Amora\Core\Module\Album\Model\AlbumSlug;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
@@ -26,44 +26,44 @@ readonly class AlbumService
     public function getAlbumForId(
         int $id,
         ?Language $language = null,
-        bool $includeSections = false,
+        bool $includeCollections = false,
         bool $includeMedia = false,
     ): ?Album {
         $res = $this->filterAlbumBy(
             albumIds: [$id],
             languageIsoCodes: $language ? [$language->value] : [],
-            includeSections: $includeSections,
+            includeCollections: $includeCollections,
             includeMedia: $includeMedia,
         );
 
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getAlbumSectionForId(
-        int $albumSectionId,
+    public function getCollectionForId(
+        int $collectionId,
         bool $includeMedia = false,
-    ): ?AlbumSection {
-        $res = $this->filterAlbumSectionBy(
-            albumSectionIds: [$albumSectionId],
+    ): ?Collection {
+        $res = $this->filterCollectionBy(
+            collectionIds: [$collectionId],
             includeMedia: $includeMedia,
         );
 
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getAlbumSectionMediaForId(int $albumSectionMediaId): ?AlbumSectionMedia
+    public function getCollectionMediaForId(int $collectionMediaId): ?CollectionMedia
     {
-        $res = $this->filterAlbumSectionMediaBy(
-            albumSectionMediaIds: [$albumSectionMediaId],
+        $res = $this->filterCollectionMediaBy(
+            collectionMediaIds: [$collectionMediaId],
         );
 
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getAlbumSectionMediaForIds(int $albumSectionId, int $mediaId): ?AlbumSectionMedia
+    public function getCollectionMediaForMediaIds(int $collectionId, int $mediaId): ?CollectionMedia
     {
-        $res = $this->filterAlbumSectionMediaBy(
-            albumSectionIds: [$albumSectionId],
+        $res = $this->filterCollectionMediaBy(
+            collectionIds: [$collectionId],
             mediaIds: [$mediaId],
         );
 
@@ -72,12 +72,12 @@ readonly class AlbumService
 
     public function getAlbumForSlug(
         string $slug,
-        bool $includeSections = false,
+        bool $includeCollections = false,
         bool $includeMedia = false,
     ): ?Album {
         $res = $this->filterAlbumBy(
             slug: $slug,
-            includeSections: $includeSections,
+            includeCollections: $includeCollections,
             includeMedia: $includeMedia,
         );
 
@@ -92,7 +92,7 @@ readonly class AlbumService
         array $mediaIds = [],
         ?string $slug = null,
         ?string $searchQuery = null,
-        bool $includeSections = false,
+        bool $includeCollections = false,
         bool $includeMedia = false,
         ?QueryOptions $queryOptions = null,
     ): array {
@@ -104,22 +104,22 @@ readonly class AlbumService
             mediaIds: $mediaIds,
             slug: $slug,
             searchQuery: $searchQuery,
-            includeSections: $includeSections,
+            includeCollections: $includeCollections,
             includeMedia: $includeMedia,
             queryOptions: $queryOptions,
         );
     }
 
-    public function filterAlbumSectionBy(
-        array $albumSectionIds = [],
+    public function filterCollectionBy(
+        array $collectionIds = [],
         array $albumIds = [],
         array $mediaIds = [],
         ?string $searchQuery = null,
         bool $includeMedia = false,
         ?QueryOptions $queryOptions = null,
     ): array {
-        return $this->albumDataLayer->filterAlbumSectionBy(
-            albumSectionIds: $albumSectionIds,
+        return $this->albumDataLayer->filterCollectionBy(
+            collectionIds: $collectionIds,
             albumIds: $albumIds,
             mediaIds: $mediaIds,
             searchQuery: $searchQuery,
@@ -128,15 +128,15 @@ readonly class AlbumService
         );
     }
 
-    public function filterAlbumSectionMediaBy(
-        array $albumSectionMediaIds = [],
-        array $albumSectionIds = [],
+    public function filterCollectionMediaBy(
+        array $collectionMediaIds = [],
+        array $collectionIds = [],
         array $mediaIds = [],
         ?QueryOptions $queryOptions = null,
     ): array {
-        return $this->albumDataLayer->filterAlbumSectionMediaBy(
-            albumSectionMediaIds: $albumSectionMediaIds,
-            albumSectionIds: $albumSectionIds,
+        return $this->albumDataLayer->filterCollectionMediaBy(
+            collectionMediaIds: $collectionMediaIds,
+            collectionIds: $collectionIds,
             mediaIds: $mediaIds,
             queryOptions: $queryOptions,
         );
@@ -313,23 +313,28 @@ readonly class AlbumService
         );
     }
 
-    public function updateMediaSequenceForAlbumSection(
-        AlbumSectionMedia $albumSectionMediaFrom,
-        AlbumSectionMedia $albumSectionMediaTo,
+    public function updateMediaSequenceForCollection(
+        CollectionMedia $collectionMediaFrom,
+        CollectionMedia $collectionMediaTo,
     ): bool {
-        return $this->albumDataLayer->updateMediaSequenceForAlbumSection(
-            albumSectionMediaFrom: $albumSectionMediaFrom,
-            albumSectionMediaTo:  $albumSectionMediaTo,
+        return $this->albumDataLayer->updateMediaSequenceForCollection(
+            collectionMediaFrom: $collectionMediaFrom,
+            collectionMediaTo:  $collectionMediaTo,
         );
     }
 
-    public function workflowStoreAlbumSection(
+    public function storeCollection(Collection $collection): Collection
+    {
+        return $this->albumDataLayer->storeCollection($collection);
+    }
+
+    public function workflowStoreCollection(
         Album $album,
         ?Media $mainMedia,
         ?string $titleHtml,
         ?string $subtitleHtml,
         ?string $contentHtml,
-    ): AlbumSection {
+    ): Collection {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
             function () use (
                 $album,
@@ -338,11 +343,11 @@ readonly class AlbumService
                 $subtitleHtml,
                 $contentHtml,
             ) {
-                $sequence = $this->albumDataLayer->getMaxAlbumSectionSequence($album->id);
+                $sequence = $this->albumDataLayer->getMaxCollectionSequence($album->id);
 
                 $now = new DateTimeImmutable();
-                $resStore = $this->albumDataLayer->storeAlbumSection(
-                    new AlbumSection(
+                $resStore = $this->albumDataLayer->storeCollection(
+                    new Collection(
                         id: null,
                         albumId: $album->id,
                         mainMedia: $mainMedia,
@@ -365,18 +370,31 @@ readonly class AlbumService
         return $resTransaction->response;
     }
 
-    public function workflowUpdateAlbumSection(
-        AlbumSection $albumSectionFrom,
-        ?AlbumSection $albumSectionTo,
-        AlbumSection $updated,
+    public function updateCollection(Collection $item): bool
+    {
+        return $this->albumDataLayer->updateCollection($item);
+    }
+
+    public function setMainMediaIdForCollection(int $collectionId, int $mainMediaId): bool
+    {
+        return $this->albumDataLayer->updateCollectionFields(
+            collectionId: $collectionId,
+            mainMediaId: $mainMediaId,
+        );
+    }
+
+    public function workflowUpdateCollection(
+        Collection  $collectionFrom,
+        ?Collection $collectionTo,
+        Collection  $updated,
     ): bool {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
-            function () use ($albumSectionFrom, $albumSectionTo, $updated)
+            function () use ($collectionFrom, $collectionTo, $updated)
             {
-                if ($albumSectionTo && $albumSectionFrom->sequence !== $albumSectionTo->sequence) {
-                    $resSequence = $this->albumDataLayer->updateSectionSequenceForAlbum(
-                        albumSectionFrom: $albumSectionFrom,
-                        albumSectionTo: $albumSectionTo,
+                if ($collectionTo && $collectionFrom->sequence !== $collectionTo->sequence) {
+                    $resSequence = $this->albumDataLayer->updateCollectionSequenceForAlbum(
+                        collectionFrom: $collectionFrom,
+                        collectionTo: $collectionTo,
                     );
 
                     if (!$resSequence) {
@@ -384,7 +402,7 @@ readonly class AlbumService
                     }
                 }
 
-                $res = $this->albumDataLayer->updateAlbumSection($updated);
+                $res = $this->albumDataLayer->updateCollection($updated);
 
                 return new Feedback($res);
             }
@@ -393,19 +411,19 @@ readonly class AlbumService
         return $resTransaction->isSuccess;
     }
 
-    public function updateAlbumSectionMedia(AlbumSectionMedia $item): bool
+    public function updateCollectionMedia(CollectionMedia $item): bool
     {
-        return $this->albumDataLayer->updateAlbumSectionMedia($item);
+        return $this->albumDataLayer->updateCollectionMedia($item);
     }
 
-    public function workflowDeleteMediaForAlbumSection(AlbumSectionMedia $albumSectionMedia): bool
+    public function workflowDeleteMediaForCollection(CollectionMedia $collectionMedia): bool
     {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
-            function () use ($albumSectionMedia)
+            function () use ($collectionMedia)
             {
-                $this->albumDataLayer->updateSectionSequenceWhenMediaIsDeletedForAlbum($albumSectionMedia);
+                $this->albumDataLayer->updateCollectionSequenceWhenMediaIsDeletedForAlbum($collectionMedia);
 
-                $res = $this->albumDataLayer->deleteMediaForAlbumSection($albumSectionMedia->id);
+                $res = $this->albumDataLayer->deleteMediaForCollection($collectionMedia->id);
 
                 return new Feedback(
                     isSuccess: $res,
@@ -416,40 +434,79 @@ readonly class AlbumService
         return $resTransaction->isSuccess;
     }
 
-    public function workflowStoreMediaForAlbumSection(
-        AlbumSection $albumSection,
+    public function workflowCreateCollectionAndStoreMedia(
         Media $media,
-        ?string $captionHtml,
-    ): AlbumSectionMedia {
+        bool $isMainMedia,
+        ?string $titleHtml = null,
+        ?string $subtitleHtml = null,
+        ?string $contentHtml = null,
+        ?string $mediaCaptionHtml = null,
+    ): array {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
             function () use (
-                $albumSection,
                 $media,
-                $captionHtml,
+                $isMainMedia,
+                $titleHtml,
+                $subtitleHtml,
+                $contentHtml,
+                $mediaCaptionHtml,
             ) {
-                $sequence = $this->albumDataLayer->getMaxAlbumSectionMediaSequence($albumSection->id);
-
                 $now = new DateTimeImmutable();
-                $resStore = $this->albumDataLayer->storeAlbumSectionMedia(
-                    new AlbumSectionMedia(
+                $newCollection = $this->storeCollection(
+                    new Collection(
                         id: null,
-                        albumSectionId: $albumSection->id,
-                        media: $media,
-                        captionHtml: $captionHtml,
+                        albumId: null,
+                        mainMedia: $isMainMedia ? $media : null,
+                        titleHtml: null,
+                        subtitleHtml: $subtitleHtml,
+                        contentHtml: $contentHtml,
                         createdAt: $now,
                         updatedAt: $now,
-                        sequence: $sequence + 1,
+                        sequence: 0,
                     ),
                 );
 
+                $newCollectionMedia = null;
+                if (!$isMainMedia) {
+                    $newCollectionMedia = $this->storeMediaForCollection(
+                        collection: $newCollection,
+                        media: $media,
+                        captionHtml: $mediaCaptionHtml,
+                    );
+                }
+
                 return new Feedback(
                     isSuccess: true,
-                    response: $resStore,
+                    response: [
+                        'collection' => $newCollection,
+                        'collectionMedia' => $newCollectionMedia,
+                    ],
                 );
             }
         );
 
         return $resTransaction->response;
+    }
+
+    public function storeMediaForCollection(
+        Collection $collection,
+        Media $media,
+        ?string $captionHtml,
+    ): CollectionMedia {
+        $sequence = $this->albumDataLayer->getMaxCollectionMediaSequence($collection->id);
+
+        $now = new DateTimeImmutable();
+        return $this->albumDataLayer->storeCollectionMedia(
+            new CollectionMedia(
+                id: null,
+                collectionId: $collection->id,
+                media: $media,
+                captionHtml: $captionHtml,
+                createdAt: $now,
+                updatedAt: $now,
+                sequence: $sequence + 1,
+            ),
+        );
     }
 
     public function getTotalAlbums(): int {
