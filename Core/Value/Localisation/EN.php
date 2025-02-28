@@ -181,7 +181,7 @@ return [
     'formFilterClean' => 'Reset filter',
     'formFilterArticleTypeTitle' => 'Type',
 
-    'pageContentEditTitle' => 'Edit content',
+    'pageContentEditTitle' => 'Copy',
     'pageContentEditTitleHomepage' => 'Homepage',
     'pageContentEditTitleBlogBottom' => 'Text that follows a blog post',
     'pageContentEditAction' => 'Action Link',
@@ -256,5 +256,5 @@ return [
     'albumFormTemplateTitle' => 'Album template',
     'albumPublicReadMore' => 'Read more',
     'albumPublicMorePictures' => 'More Pictures',
-    'albumAddSection' => 'Add section',
+    'albumAddCollection' => 'Add Collection',
 ];

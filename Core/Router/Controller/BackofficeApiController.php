@@ -7,8 +7,8 @@ use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\AppUserRole;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
-use Amora\Core\Module\Album\Model\AlbumSection;
-use Amora\Core\Module\Album\Model\AlbumSectionMedia;
+use Amora\Core\Module\Album\Model\Collection;
+use Amora\Core\Module\Album\Model\CollectionMedia;
 use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
@@ -17,16 +17,18 @@ use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerDeleteAlbumSectionMediaSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerCreateNewCollectionAndstoreMediaSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerDeleteCollectionMediaSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyMainMediaForCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetSessionSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSectionMediaSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSectionSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreCollectionSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreMediaForCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumStatusSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateCollectionMediaSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateCollectionSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateMediaSequenceForCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSuccessResponse;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -773,6 +775,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             contentHtml: $contentHtml,
             mainImage: $existingImage,
             actionUrl: $actionUrl,
+            collection: $existingPageContent->collection,
         );
 
         $resUpdate = $this->articleService->updatePageContent($pageContent);
@@ -972,7 +975,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     }
 
     /**
-     * Endpoint: /back/album/{albumId}/section
+     * Endpoint: /back/album/{albumId}/collection
      * Method: POST
      *
      * @param int $albumId
@@ -983,7 +986,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param Request $request
      * @return Response
      */
-    protected function storeAlbumSection(
+    protected function storeCollection(
         int $albumId,
         ?int $mainMediaId,
         ?string $titleHtml,
@@ -1013,7 +1016,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $contentHtml = StringUtil::sanitiseHtml($contentHtml);
         $titleHtml = StringUtil::sanitiseHtml($titleHtml);
 
-        $newAlbumSection = $this->albumService->workflowStoreAlbumSection(
+        $newCollection = $this->albumService->workflowStoreCollection(
             album: $album,
             mainMedia: $mainMedia,
             titleHtml: $titleHtml,
@@ -1022,164 +1025,278 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         );
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        return new BackofficeApiControllerStoreAlbumSectionSuccessResponse(
+        return new BackofficeApiControllerStoreCollectionSuccessResponse(
             success: true,
-            newSectionId: $newAlbumSection->id,
-            html: AlbumHtmlGenerator::generateAlbumSectionHtml(
-                section: $newAlbumSection,
+            newCollectionId: $newCollection->id,
+            html: AlbumHtmlGenerator::generateCollectionHtml(
+                collection: $newCollection,
                 localisationUtil: $localisationUtil,
             ),
         );
     }
 
     /**
-     * Endpoint: /back/album-section/{albumSectionId}/media
+     * Endpoint: /back/collection/media
      * Method: POST
      *
-     * @param int $albumSectionId
      * @param int $mediaId
-     * @param string|null $captionHtml
+     * @param string|null $mediaCaptionHtml
+     * @param bool $isMainMedia
      * @param Request $request
      * @return Response
      */
-    protected function storeMediaForAlbumSection(
-        int $albumSectionId,
+    protected function createNewCollectionAndStoreMedia(
         int $mediaId,
-        ?string $captionHtml,
+        ?string $mediaCaptionHtml,
+        bool $isMainMedia,
         Request $request
     ): Response {
-        $albumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
-        if (!$albumSection) {
-            return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(
-                success: false,
-                errorMessage: 'Album section ID not found',
-            );
-        }
-
         $media = $this->mediaService->getMediaForId($mediaId);
         if (!$media) {
-            return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(
+            return new BackofficeApiControllerCreateNewCollectionAndstoreMediaSuccessResponse(
                 success: false,
                 errorMessage: 'Media ID not found',
             );
         }
 
-        $existingMedia = $this->albumService->getAlbumSectionMediaForIds(
-            albumSectionId: $albumSectionId,
+        $res = $this->albumService->workflowCreateCollectionAndStoreMedia(
+            media: $media,
+            isMainMedia: $isMainMedia,
+            mediaCaptionHtml: $mediaCaptionHtml,
+        );
+
+        /** @var Collection $newCollection */
+        $newCollection = $res['collection'] ?? null;
+        /** @var CollectionMedia $newCollectionMedia */
+        $newCollectionMedia = $res['collectionMedia'] ?? null;
+
+        if (!$newCollection) {
+            return new BackofficeApiControllerCreateNewCollectionAndstoreMediaSuccessResponse(
+                success: false,
+                errorMessage: 'Error storing media',
+            );
+        }
+
+        return new BackofficeApiControllerCreateNewCollectionAndstoreMediaSuccessResponse(
+            success: (bool)$newCollection,
+            collectionId: $newCollection->id,
+            html: $isMainMedia ? $newCollection->mainMedia->asHtmlSimple()
+                : AlbumHtmlGenerator::generateCollectionMediaHtml(
+                    collectionMedia: $newCollectionMedia,
+                ),
+        );
+    }
+
+    /**
+     * Endpoint: /back/collection/{collectionId}/media
+     * Method: POST
+     *
+     * @param int $collectionId
+     * @param int $mediaId
+     * @param string|null $captionHtml
+     * @param bool $isMainMedia
+     * @param Request $request
+     * @return Response
+     */
+    protected function storeMediaForCollection(
+        int $collectionId,
+        int $mediaId,
+        ?string $captionHtml,
+        bool $isMainMedia,
+        Request $request
+    ): Response {
+        $existingCollection = $this->albumService->getCollectionForId($collectionId);
+        if (!$existingCollection) {
+            return new BackofficeApiControllerStoreMediaForCollectionSuccessResponse(
+                success: false,
+                errorMessage: 'Collection ID not found',
+            );
+        }
+
+        $media = $this->mediaService->getMediaForId($mediaId);
+        if (!$media) {
+            return new BackofficeApiControllerStoreMediaForCollectionSuccessResponse(
+                success: false,
+                errorMessage: 'Media ID not found',
+            );
+        }
+
+        if ($isMainMedia) {
+            $res = $this->albumService->updateCollection(
+                new Collection(
+                    id: $existingCollection->id,
+                    albumId: $existingCollection->albumId,
+                    mainMedia: $media,
+                    titleHtml: $existingCollection->titleHtml,
+                    subtitleHtml: $existingCollection->subtitleHtml,
+                    contentHtml: $existingCollection->contentHtml,
+                    createdAt: $existingCollection->createdAt,
+                    updatedAt: new DateTimeImmutable(),
+                    sequence: $existingCollection->sequence,
+                ),
+            );
+
+            return new BackofficeApiControllerStoreMediaForCollectionSuccessResponse(
+                success: $res,
+                html: $media->asHtmlSimple(),
+            );
+        }
+
+        $existingMedia = $this->albumService->getCollectionMediaForMediaIds(
+            collectionId: $collectionId,
             mediaId: $mediaId,
         );
 
         if ($existingMedia) {
-            return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(
+            return new BackofficeApiControllerStoreMediaForCollectionSuccessResponse(
                 success: true,
             );
         }
 
         $captionHtml = StringUtil::sanitiseHtml($captionHtml);
 
-        $newAlbumMedia = $this->albumService->workflowStoreMediaForAlbumSection(
-            albumSection: $albumSection,
+        $newCollectionMedia = $this->albumService->storeMediaForCollection(
+            collection: $existingCollection,
             media: $media,
             captionHtml: $captionHtml,
         );
 
-        return new BackofficeApiControllerStoreMediaForAlbumSectionSuccessResponse(
-            success: (bool)$newAlbumMedia,
-            html: AlbumHtmlGenerator::generateAlbumSectionMediaHtml(
-                albumSectionMedia: $newAlbumMedia,
+        return new BackofficeApiControllerStoreMediaForCollectionSuccessResponse(
+            success: (bool)$newCollectionMedia,
+            html: AlbumHtmlGenerator::generateCollectionMediaHtml(
+                collectionMedia: $newCollectionMedia,
             ),
         );
     }
 
     /**
-     * Endpoint: /back/album-section/{albumSectionId}/sequence
-     * Method: PUT
+     * Endpoint: /back/collection/{collectionId}/main-media
+     * Method: DELETE
      *
-     * @param int $albumSectionId
-     * @param int $albumSectionMediaIdTo
-     * @param int $albumSectionMediaIdFrom
+     * @param int $collectionId
      * @param Request $request
      * @return Response
      */
-    protected function updateMediaSequenceForAlbumSection(
-        int $albumSectionId,
-        int $albumSectionMediaIdTo,
-        int $albumSectionMediaIdFrom,
+    protected function destroyMainMediaForCollection(
+        int $collectionId,
         Request $request
     ): Response {
-        $albumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
-        if (!$albumSection) {
-            return new BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse(
+        $existingCollection = $this->albumService->getCollectionForId($collectionId);
+        if (!$existingCollection) {
+            return new BackofficeApiControllerDestroyMainMediaForCollectionSuccessResponse(
                 success: false,
-                errorMessage: 'Album section ID not found',
+                errorMessage: 'Collection ID not found',
             );
         }
 
-        $albumSectionMedias = $this->albumService->filterAlbumSectionMediaBy(
-            albumSectionMediaIds: [$albumSectionMediaIdTo, $albumSectionMediaIdFrom],
+        $res = $this->albumService->updateCollection(
+            new Collection(
+                id: $existingCollection->id,
+                albumId: $existingCollection->albumId,
+                mainMedia: null,
+                titleHtml: $existingCollection->titleHtml,
+                subtitleHtml: $existingCollection->subtitleHtml,
+                contentHtml: $existingCollection->contentHtml,
+                createdAt: $existingCollection->createdAt,
+                updatedAt: new DateTimeImmutable(),
+                sequence: $existingCollection->sequence,
+            ),
         );
 
-        if (count($albumSectionMedias) !== 2) {
-            return new BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse(
-                success: false,
-                errorMessage: 'Album section media IDs mismatch',
-            );
-        }
-
-        $albumSectionMediaTo = $albumSectionMedias[0]->id === $albumSectionMediaIdTo
-            ? $albumSectionMedias[0]
-            : $albumSectionMedias[1];
-
-        $albumSectionMediaFrom = $albumSectionMedias[0]->id === $albumSectionMediaIdFrom
-            ? $albumSectionMedias[0]
-            : $albumSectionMedias[1];
-
-        $res = $this->albumService->updateMediaSequenceForAlbumSection(
-            albumSectionMediaFrom: $albumSectionMediaFrom,
-            albumSectionMediaTo: $albumSectionMediaTo,
-        );
-
-        return new BackofficeApiControllerUpdateMediaSequenceForAlbumSectionSuccessResponse(
+        return new BackofficeApiControllerDestroyMainMediaForCollectionSuccessResponse(
             success: $res,
         );
     }
 
     /**
-     * Endpoint: /back/album-section/{albumSectionId}
+     * Endpoint: /back/collection/{collectionId}/sequence
      * Method: PUT
      *
-     * @param int $albumSectionId
+     * @param int $collectionId
+     * @param int $collectionMediaIdTo
+     * @param int $collectionMediaIdFrom
+     * @param Request $request
+     * @return Response
+     */
+    protected function updateMediaSequenceForCollection(
+        int $collectionId,
+        int $collectionMediaIdTo,
+        int $collectionMediaIdFrom,
+        Request $request
+    ): Response {
+        $collection = $this->albumService->getCollectionForId($collectionId);
+        if (!$collection) {
+            return new BackofficeApiControllerUpdateMediaSequenceForCollectionSuccessResponse(
+                success: false,
+                errorMessage: 'Collection ID not found',
+            );
+        }
+
+        $collectionMedias = $this->albumService->filterCollectionMediaBy(
+            collectionMediaIds: [$collectionMediaIdTo, $collectionMediaIdFrom],
+        );
+
+        if (count($collectionMedias) !== 2) {
+            return new BackofficeApiControllerUpdateMediaSequenceForCollectionSuccessResponse(
+                success: false,
+                errorMessage: 'Collection media IDs mismatch',
+            );
+        }
+
+        $collectionMediaTo = $collectionMedias[0]->id === $collectionMediaIdTo
+            ? $collectionMedias[0]
+            : $collectionMedias[1];
+
+        $collectionMediaFrom = $collectionMedias[0]->id === $collectionMediaIdFrom
+            ? $collectionMedias[0]
+            : $collectionMedias[1];
+
+        $res = $this->albumService->updateMediaSequenceForCollection(
+            collectionMediaFrom: $collectionMediaFrom,
+            collectionMediaTo: $collectionMediaTo,
+        );
+
+        return new BackofficeApiControllerUpdateMediaSequenceForCollectionSuccessResponse(
+            success: $res,
+        );
+    }
+
+    /**
+     * Endpoint: /back/collection/{collectionId}
+     * Method: PUT
+     *
+     * @param int $collectionId
      * @param int|null $mainMediaId
      * @param string|null $titleHtml
      * @param string|null $subtitleHtml
      * @param string|null $contentHtml
-     * @param int|null $albumSectionIdSequenceTo
+     * @param int|null $collectionIdSequenceTo
      * @param Request $request
      * @return Response
      */
-    protected function updateAlbumSection(
-        int $albumSectionId,
+    protected function updateCollection(
+        int $collectionId,
         ?int $mainMediaId,
         ?string $titleHtml,
         ?string $subtitleHtml,
         ?string $contentHtml,
-        ?int $albumSectionIdSequenceTo,
+        ?int $collectionIdSequenceTo,
         Request $request
     ): Response {
-        $existingAlbumSection = $this->albumService->getAlbumSectionForId($albumSectionId);
-        if (!$existingAlbumSection) {
-            return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
+        $existingCollection = $this->albumService->getCollectionForId($collectionId);
+        if (!$existingCollection) {
+            return new BackofficeApiControllerUpdateCollectionSuccessResponse(
                 success: false,
-                errorMessage: 'Album section ID not found',
+                errorMessage: 'Collection ID not found',
             );
         }
 
-        $existingAlbumSectionTo = $albumSectionIdSequenceTo
-            ? $this->albumService->getAlbumSectionForId($albumSectionIdSequenceTo)
+        $existingCollectionTo = $collectionIdSequenceTo
+            ? $this->albumService->getCollectionForId($collectionIdSequenceTo)
             : null;
 
-        if ($albumSectionIdSequenceTo && !$existingAlbumSectionTo) {
-            return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
+        if ($collectionIdSequenceTo && !$existingCollectionTo) {
+            return new BackofficeApiControllerUpdateCollectionSuccessResponse(
                 success: false,
                 errorMessage: 'Album section ID not found',
             );
@@ -1190,7 +1307,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             : null;
 
         if ($mainMediaId && !$media) {
-            return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
+            return new BackofficeApiControllerUpdateCollectionSuccessResponse(
                 success: false,
                 errorMessage: 'Media ID not found',
             );
@@ -1199,48 +1316,48 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $contentHtml = StringUtil::sanitiseHtml($contentHtml);
         $titleHtml = StringUtil::sanitiseHtml($titleHtml);
 
-        $res = $this->albumService->workflowUpdateAlbumSection(
-            albumSectionFrom: $existingAlbumSection,
-            albumSectionTo: $existingAlbumSectionTo,
-            updated: new AlbumSection(
-                id: $existingAlbumSection->id,
-                albumId: $existingAlbumSection->albumId,
+        $res = $this->albumService->workflowUpdateCollection(
+            collectionFrom: $existingCollection,
+            collectionTo: $existingCollectionTo,
+            updated: new Collection(
+                id: $existingCollection->id,
+                albumId: $existingCollection->albumId,
                 mainMedia: $media,
                 titleHtml: $titleHtml,
                 subtitleHtml: $subtitleHtml,
                 contentHtml: $contentHtml,
-                createdAt: $existingAlbumSection->createdAt,
+                createdAt: $existingCollection->createdAt,
                 updatedAt: new DateTimeImmutable(),
-                sequence: $existingAlbumSectionTo
-                    ? $existingAlbumSectionTo->sequence
-                    : $existingAlbumSection->sequence,
+                sequence: $existingCollectionTo
+                    ? $existingCollectionTo->sequence
+                    : $existingCollection->sequence,
             ),
         );
 
-        return new BackofficeApiControllerUpdateAlbumSectionSuccessResponse(
+        return new BackofficeApiControllerUpdateCollectionSuccessResponse(
             success: $res,
         );
     }
 
     /**
-     * Endpoint: /back/album-section-media/{albumSectionMediaId}
+     * Endpoint: /back/collection-media/{collectionMediaId}
      * Method: PUT
      *
-     * @param int $albumSectionMediaId
+     * @param int $collectionMediaId
      * @param string|null $captionHtml
      * @param int|null $sequence
      * @param Request $request
      * @return Response
      */
-    protected function updateAlbumSectionMedia(
-        int $albumSectionMediaId,
+    protected function updateCollectionMedia(
+        int $collectionMediaId,
         ?string $captionHtml,
         ?int $sequence,
         Request $request
     ): Response {
-        $existingAlbumSectionMedia = $this->albumService->getAlbumSectionMediaForId($albumSectionMediaId);
-        if (!$existingAlbumSectionMedia) {
-            return new BackofficeApiControllerUpdateAlbumSectionMediaSuccessResponse(
+        $existingCollectionMedia = $this->albumService->getCollectionMediaForId($collectionMediaId);
+        if (!$existingCollectionMedia) {
+            return new BackofficeApiControllerUpdateCollectionMediaSuccessResponse(
                 success: false,
                 errorMessage: 'Album section media ID not found',
             );
@@ -1248,46 +1365,46 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $captionHtml = StringUtil::sanitiseHtml($captionHtml);
 
-        $this->albumService->updateAlbumSectionMedia(
-            new AlbumSectionMedia(
-                id: $existingAlbumSectionMedia->id,
-                albumSectionId: $existingAlbumSectionMedia->albumSectionId,
-                media: $existingAlbumSectionMedia->media,
+        $this->albumService->updateCollectionMedia(
+            new CollectionMedia(
+                id: $existingCollectionMedia->id,
+                collectionId: $existingCollectionMedia->collectionId,
+                media: $existingCollectionMedia->media,
                 captionHtml: $captionHtml,
-                createdAt: $existingAlbumSectionMedia->createdAt,
+                createdAt: $existingCollectionMedia->createdAt,
                 updatedAt: new DateTimeImmutable(),
-                sequence: $sequence ?? $existingAlbumSectionMedia->sequence,
+                sequence: $sequence ?? $existingCollectionMedia->sequence,
             ),
         );
 
-        return new BackofficeApiControllerUpdateAlbumSectionMediaSuccessResponse(
+        return new BackofficeApiControllerUpdateCollectionMediaSuccessResponse(
             success: true,
         );
     }
 
     /**
-     * Endpoint: /back/album-section-media/{albumSectionMediaId}
+     * Endpoint: /back/collection-media/{collectionMediaId}
      * Method: DELETE
      *
-     * @param int $albumSectionMediaId
+     * @param int $collectionMediaId
      * @param Request $request
      * @return Response
      */
-    protected function deleteAlbumSectionMedia(
-        int $albumSectionMediaId,
+    protected function deleteCollectionMedia(
+        int $collectionMediaId,
         Request $request
     ): Response {
-        $existingAlbumSectionMedia = $this->albumService->getAlbumSectionMediaForId($albumSectionMediaId);
-        if (!$existingAlbumSectionMedia) {
-            return new BackofficeApiControllerDeleteAlbumSectionMediaSuccessResponse(
+        $existingCollectionMedia = $this->albumService->getCollectionMediaForId($collectionMediaId);
+        if (!$existingCollectionMedia) {
+            return new BackofficeApiControllerDeleteCollectionMediaSuccessResponse(
                 success: false,
                 errorMessage: 'Not found',
             );
         }
 
-        $res = $this->albumService->workflowDeleteMediaForAlbumSection($existingAlbumSectionMedia);
+        $res = $this->albumService->workflowDeleteMediaForCollection($existingCollectionMedia);
 
-        return new BackofficeApiControllerDeleteAlbumSectionMediaSuccessResponse(
+        return new BackofficeApiControllerDeleteCollectionMediaSuccessResponse(
             success: $res,
         );
     }
