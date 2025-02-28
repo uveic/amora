@@ -55,6 +55,7 @@ final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
             responseData: new HtmlHomepageResponseData(
                 request: $request,
                 pagination: $pagination,
+                isPublicPage: true,
                 pageContent: $pageContent,
                 homeArticles: [],
                 blogArticles: $blogArticles,

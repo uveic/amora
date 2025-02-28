@@ -1180,7 +1180,7 @@ document.querySelectorAll('input#media').forEach(im => {
 
     const container = document.querySelector('#media-container');
 
-    Uploader.uploadFilesAsync(
+    Uploader.uploadMediaAsync(
       im.files,
       container,
       (response) => {

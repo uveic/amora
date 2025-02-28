@@ -40,7 +40,7 @@ $navBarArguments = [
   <link href="/css/navbar-base.css?v=000" rel="stylesheet" type="text/css">
   <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
   <link href="/css/backoffice-base.css?v=000" rel="stylesheet" type="text/css">
-  <script src="/js/lib/trix.umd.min.js?v=2.0.8" type="text/javascript" nonce="<?=$responseData->nonce?>"></script>
+  <script src="/js/lib/trix.umd.min.js?v=2.0.8" type="text/javascript"></script>
 </head>
 <body>
 <?=$this->insert('partials/navbar', $navBarArguments)?>
