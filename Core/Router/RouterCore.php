@@ -28,7 +28,7 @@ class RouterCore extends Core
         return self::getInstance(
             className: 'PublicHtmlController',
             factory: function () {
-                require_once self::getPathRoot() . '/Core/Entity/Response/HtmlHomepageResponseData.php';
+                require_once self::getPathRoot() . '/App/Entity/AppHtmlHomepageResponseData.php';
                 require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Entity/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Entity/FeedItem.php';

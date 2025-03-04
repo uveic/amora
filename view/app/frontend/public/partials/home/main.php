@@ -1,9 +1,9 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlHomepageResponseData;
+use Amora\Core\Entity\Response\AppHtmlHomepageResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlHomepageResponseData $responseData */
+/** @var AppHtmlHomepageResponseData $responseData */
 
 $pageContent = $responseData->pageContent;
 $editLink = $pageContent && $responseData->request->session?->isAdmin()

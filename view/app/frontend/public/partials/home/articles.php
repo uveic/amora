@@ -1,10 +1,10 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlHomepageResponseData;
+use Amora\Core\Entity\Response\AppHtmlHomepageResponseData;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlHomepageResponseData $responseData */
+/** @var AppHtmlHomepageResponseData $responseData */
 
 if ($responseData->request->session && $responseData->request->session->isAdmin()) {
   return;

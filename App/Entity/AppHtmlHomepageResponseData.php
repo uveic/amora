@@ -5,7 +5,7 @@ namespace Amora\Core\Entity\Response;
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Entity\Request;
 
-class HtmlHomepageResponseData extends HtmlResponseDataAbstract
+class AppHtmlHomepageResponseData extends HtmlResponseDataAbstract
 {
     public function __construct(
         Request $request,

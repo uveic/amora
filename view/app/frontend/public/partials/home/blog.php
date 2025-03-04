@@ -1,13 +1,13 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlHomepageResponseData;
+use Amora\Core\Entity\Response\AppHtmlHomepageResponseData;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 
-/** @var HtmlHomepageResponseData $responseData */
+/** @var AppHtmlHomepageResponseData $responseData */
 
 $isAdmin = $responseData->request->session && $responseData->request->session->isAdmin();
 

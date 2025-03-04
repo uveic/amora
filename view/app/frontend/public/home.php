@@ -1,8 +1,8 @@
 <?php
 
-use Amora\Core\Entity\Response\HtmlHomepageResponseData;
+use Amora\Core\Entity\Response\AppHtmlHomepageResponseData;
 
-/** @var HtmlHomepageResponseData $responseData */
+/** @var AppHtmlHomepageResponseData $responseData */
 
 $feedbackHtml = '';
 if ($responseData->feedback) {

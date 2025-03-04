@@ -2,12 +2,12 @@
 
 use Amora\App\Value\Language;
 use Amora\Core\Core;
-use Amora\Core\Entity\Response\HtmlHomepageResponseData;
+use Amora\Core\Entity\Response\AppHtmlHomepageResponseData;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlResponseData|HtmlHomepageResponseData|HtmlResponseDataAdmin $responseData */
+/** @var HtmlResponseData|AppHtmlHomepageResponseData|HtmlResponseDataAdmin $responseData */
 
 $canonical = '';
 
