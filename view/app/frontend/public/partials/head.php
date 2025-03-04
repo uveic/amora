@@ -2,7 +2,7 @@
 
 use Amora\App\Value\Language;
 use Amora\Core\Core;
-use Amora\Core\Entity\Response\AppHtmlHomepageResponseData;
+use Amora\App\Entity\AppHtmlHomepageResponseData;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\UrlBuilderUtil;

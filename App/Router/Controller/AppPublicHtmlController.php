@@ -5,7 +5,7 @@ namespace Amora\App\Router;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\Response\Feedback;
-use Amora\Core\Entity\Response\AppHtmlHomepageResponseData;
+use Amora\App\Entity\AppHtmlHomepageResponseData;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Article\Service\ArticleService;

@@ -1,9 +1,12 @@
 <?php
 
-namespace Amora\Core\Entity\Response;
+namespace Amora\App\Entity;
 
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Entity\Request;
+use Amora\Core\Entity\Response\Feedback;
+use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
+use Amora\Core\Entity\Response\Pagination;
 
 class AppHtmlHomepageResponseData extends HtmlResponseDataAbstract
 {
