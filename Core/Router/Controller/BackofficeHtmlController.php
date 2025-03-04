@@ -698,21 +698,28 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             : PageContentType::from($typeId);
 
         $language = Language::from($languageIsoCode);
-        $pageContentRes = $this->articleService->filterPageContentBy(
-            languageIsoCodes: [$language->value],
+        $pageContentAll = $this->articleService->filterPageContentBy(
             typeIds: [$type->value],
         );
 
-        $pageContent = $pageContentRes[0] ?? null;
+        $pageContentForLanguage = null;
         $hasCollection = AppPageContentType::displayContent($type, PageContentSection::Collection);
 
-        if (!$pageContent) {
+        /** @var PageContent $item */
+        foreach ($pageContentAll as $item) {
+            if ($item->language === $language) {
+                $pageContentForLanguage = $item;
+                break;
+            }
+        }
+
+        if (!$pageContentForLanguage) {
             $collection = null;
             if ($hasCollection) {
                 $collection = $this->albumService->storeCollection(Collection::getEmpty());
             }
 
-            $pageContent = $this->articleService->storePageContent(
+            $pageContentForLanguage = $this->articleService->storePageContent(
                 PageContent::getEmpty(
                     user: $request->session->user,
                     language: $language,
@@ -722,30 +729,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             );
         }
 
-        if (!$pageContent->collection && $hasCollection) {
-            $collection = $this->albumService->storeCollection(Collection::getEmpty());
-
-            $pageContent = new PageContent(
-                id: $pageContent->id,
-                user: $pageContent->user,
-                language: $pageContent->language,
-                type: $pageContent->type,
-                createdAt: $pageContent->createdAt,
-                updatedAt: new DateTimeImmutable(),
-                title: $pageContent->title,
-                subtitle: $pageContent->subtitle,
-                contentHtml: $pageContent->contentHtml,
-                mainImage: $pageContent->mainImage,
-                actionUrl: $pageContent->actionUrl,
-                collection: $collection,
-            );
-
-            $this->articleService->updatePageContent($pageContent);
-        }
-
         $media = [];
-        if ($pageContent->collection) {
-            $media = $this->albumService->filterCollectionMediaBy(collectionIds: [$pageContent->collection->id]);
+        if ($pageContentForLanguage->collection) {
+            $media = $this->albumService->filterCollectionMediaBy(
+                collectionIds: [$pageContentForLanguage->collection->id],
+            );
         }
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
@@ -753,9 +741,10 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             template: 'core/backoffice/page-content-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
-                pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $pageContent->type->name),
+                pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $pageContentForLanguage->type->name),
                 media: $media,
-                pageContent: $pageContent,
+                pageContentAll: $pageContentAll,
+                pageContent: $pageContentForLanguage,
             ),
         );
     }

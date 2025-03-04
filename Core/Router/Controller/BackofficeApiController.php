@@ -14,6 +14,7 @@ use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Service\MediaService;
+use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
@@ -720,73 +721,75 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * Endpoint: /back/content/{contentId}
      * Method: PUT
      *
-     * @param int $contentId
-     * @param string|null $title
-     * @param string|null $subtitle
-     * @param string|null $contentHtml
+     * @param int $contentTypeId
+     * @param array $contentItems
+     * @param string $languageIsoCode
      * @param int|null $mainImageId
-     * @param string|null $actionUrl
+     * @param int|null $collectionId
      * @param Request $request
      * @return Response
      */
     protected function updatePageContent(
-        int $contentId,
-        ?string $title,
-        ?string $subtitle,
-        ?string $contentHtml,
+        int $contentTypeId,
+        array $contentItems,
+        string $languageIsoCode,
         ?int $mainImageId,
-        ?string $actionUrl,
+        ?int $collectionId,
         Request $request
     ): Response {
-        $existingPageContent = $this->articleService->getPageContentForId($contentId);
-        if (!$existingPageContent) {
+        if (!Language::tryFrom($languageIsoCode)) {
             return new BackofficeApiControllerUpdatePageContentSuccessResponse(
                 success: false,
                 redirect: null,
-                errorMessage: 'Page content ID not found',
+                errorMessage: 'Language ISO code not valid',
             );
         }
 
-        $title = StringUtil::sanitiseText($title);
-        $subtitle = StringUtil::sanitiseText($subtitle);
-        $contentHtml = StringUtil::sanitiseHtml($contentHtml);
-
-        $existingImage = null;
-        if ($mainImageId) {
-            $existingImage = $this->mediaService->getMediaForId($mainImageId);
-            if (!$existingImage) {
-                return new BackofficeApiControllerUpdatePageContentSuccessResponse(
-                    success: false,
-                    redirect: null,
-                    errorMessage: 'Main image ID not found',
-                );
-            }
+        if (!AppPageContentType::tryFrom($contentTypeId) && !PageContentType::tryFrom($contentTypeId)) {
+            return new BackofficeApiControllerUpdatePageContentSuccessResponse(
+                success: false,
+                redirect: null,
+                errorMessage: 'Content type ID ID not valid',
+            );
         }
 
-        $pageContent = new PageContent(
-            id: $existingPageContent->id,
+        $contentType = AppPageContentType::tryFrom($contentTypeId)
+            ? AppPageContentType::from($contentTypeId)
+            : PageContentType::from($contentTypeId);
+
+        $mainImage = $mainImageId ? $this->mediaService->getMediaForId($mainImageId) : null;
+        if (!$mainImage && $mainImageId) {
+            return new BackofficeApiControllerUpdatePageContentSuccessResponse(
+                success: false,
+                redirect: null,
+                errorMessage: 'Main image ID not found',
+            );
+        }
+
+        $collection = $collectionId ? $this->albumService->getCollectionForId($collectionId) : null;
+        if (!$collection && $collectionId) {
+            return new BackofficeApiControllerUpdatePageContentSuccessResponse(
+                success: false,
+                redirect: null,
+                errorMessage: 'Collection ID not found',
+            );
+        }
+
+        $res = $this->articleService->workflowUpdatePageContent(
             user: $request->session->user,
-            language: $existingPageContent->language,
-            type: $existingPageContent->type,
-            createdAt: $existingPageContent->createdAt,
-            updatedAt: new DateTimeImmutable(),
-            title: $title,
-            subtitle: $subtitle,
-            contentHtml: $contentHtml,
-            mainImage: $existingImage,
-            actionUrl: $actionUrl,
-            collection: $existingPageContent->collection,
+            contentType: $contentType,
+            contentItems: $contentItems,
+            collection: $collection,
+            mainImage: $mainImage,
         );
 
-        $resUpdate = $this->articleService->updatePageContent($pageContent);
-
         return new BackofficeApiControllerUpdatePageContentSuccessResponse(
-            success: $resUpdate,
-            redirect: AppPageContentType::buildRedirectUrl(
-                type: $pageContent->type,
-                language: $pageContent->language,
-            ),
-            errorMessage: $resUpdate ? null : 'Error updating page content',
+            success: $res->isSuccess,
+            redirect: $res->isSuccess ? AppPageContentType::buildRedirectUrl(
+                type: $contentType,
+                language: Language::from($languageIsoCode),
+            ) : null,
+            errorMessage: $res->isSuccess ? null : $res->message,
         );
     }
 

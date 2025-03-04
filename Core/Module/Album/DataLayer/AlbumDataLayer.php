@@ -342,6 +342,7 @@ class AlbumDataLayer
         $orderByMapping = [
             'sequence' => 'cm.`sequence`',
             'id' => 'cm.id',
+            'collection_id' => 'cm.collection_id',
         ];
 
         $params = [];

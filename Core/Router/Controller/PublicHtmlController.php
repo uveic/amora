@@ -3,10 +3,13 @@
 namespace Amora\Core\Router;
 
 use Amora\App\Router\AppPublicHtmlController;
+use Amora\App\Util\AppUrlBuilderUtil;
+use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Album\Service\AlbumService;
+use Amora\Core\Module\Article\Entity\FeedItem;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\FeedService;
 use Amora\Core\Module\Article\Value\ArticleType;
@@ -14,6 +17,7 @@ use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
 use Amora\Core\Util\UrlBuilderUtil;
+use DateTimeImmutable;
 
 final class PublicHtmlController extends PublicHtmlControllerAbstract
 {
@@ -385,8 +389,33 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     protected function getSitemap(Request $request): Response
     {
         $feedItems = $this->articleService->getFeedItemsForArticles();
+
+        $now = new DateTimeImmutable();
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        $langItems = [];
+
+        /** @var Language $enabledSiteLanguage */
+        foreach (Core::getEnabledSiteLanguages() as $enabledSiteLanguage) {
+            $url = AppUrlBuilderUtil::buildPublicHomepageUrl(language: $enabledSiteLanguage);
+
+            $langItems[] = new FeedItem(
+                uniqueIdentifier: md5($url),
+                fullPath: $url,
+                title: $localisationUtil->getValue('siteName'),
+                contentHtml: '',
+                publishedOn: $now,
+                language: $enabledSiteLanguage,
+                user: null,
+                media: null,
+                updatedAt: null,
+            );
+        }
+
         $xml = $this->feedService->buildSitemap(
-            feedItems: $feedItems,
+            feedItems: array_merge(
+                $feedItems,
+                $langItems,
+            )
         );
 
         return Response::createSuccessXmlResponse($xml);

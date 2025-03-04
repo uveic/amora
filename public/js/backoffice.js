@@ -439,9 +439,7 @@ function displayNextImagePopup(e) {
 }
 
 function insertImageInArticle(e) {
-  alert('ToDo');
-  return;
-  const container = document.querySelector('.medium-editor-content');
+  const container = document.querySelector('.trix-editor-content');
   const mediaId = e.currentTarget.mediaId;
   const existingImage = document.querySelector('img[data-media-id="' + mediaId + '"]');
 
@@ -456,22 +454,11 @@ function insertImageInArticle(e) {
   newImage.width = existingImage.width;
   newImage.height = existingImage.height;
   newImage.loading = 'lazy';
-
-  const imageCaption = document.createElement('p');
-  imageCaption.className = 'image-caption';
-  imageCaption.innerHTML = '<br>';
-
   container.appendChild(newImage);
-  container.appendChild(imageCaption);
-
-  const newParagraph = document.createElement('p');
-  newParagraph.innerHTML = '<br>';
-  container.appendChild(newParagraph);
 
   document.querySelector('.select-media-modal').classList.add('null');
 
-  imageCaption.scrollIntoView({behavior: 'smooth', block: 'start'});
-  imageCaption.focus();
+  newImage.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
 function collectionAddMedia(e) {
@@ -1440,24 +1427,69 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
   f.addEventListener('submit', e => {
     e.preventDefault();
 
-    const contentId = Number.parseInt(f.querySelector('input[name="contentId"]').value);
-    const titleContent = f.querySelector('input[name="pageContentTitle"]').value.trim();
-    const subtitleContent = f.querySelector('input[name="pageContentSubtitle"]').value.trim();
-    const contentHtml = f.querySelector('input[name="pageContentContentHtml"]').value.trim();
-    const actionUrl = f.querySelector('input[name="actionUrl"]').value.trim();
-    const mainImageEl = f.querySelector('.media-item');
+    const loader = document.querySelector('.loading-modal');
+    loader.classList.remove('null');
 
-    const payload = JSON.stringify({
-      title: titleContent.length ? titleContent : null,
-      subtitle: subtitleContent.length ? subtitleContent : null,
-      contentHtml: contentHtml.length ? contentHtml : null,
-      mainImageId: mainImageEl && mainImageEl.dataset.mediaId ? Number.parseInt(mainImageEl.dataset.mediaId)
-        : null,
-      actionUrl: actionUrl.length ? actionUrl : null,
+    const container = document.querySelector('.content-language-wrapper');
+
+    const contentTypeId = Number.parseInt(container.dataset.pageContentTypeId);
+    const mainImageEl = f.querySelector('.media-item');
+    const collectionEl = f.querySelector('.collection-item-media');
+    const languageIsoCode = f.querySelector('input[name="languageIsoCode"]').value;
+
+    const items = [];
+
+    container.querySelectorAll('.content-language-item').forEach(li => {
+      const contentId = li.querySelector('.page-content-id').value;
+      const titleContent = li.querySelector('.page-content-title').value.trim();
+      const subtitleContent = li.querySelector('.page-content-subtitle').value.trim();
+      const contentHtml = li.querySelector('.page-content-content-html').value.trim();
+      const actionUrl = li.querySelector('.page-content-action-url').value.trim();
+
+      items.push({
+        id: contentId.length ? Number.parseInt(contentId) : null,
+        languageIsoCode: li.dataset.languageIsoCode,
+        title: titleContent.length ? titleContent : null,
+        subtitle: subtitleContent.length ? subtitleContent : null,
+        contentHtml: contentHtml.length ? contentHtml : null,
+        actionUrl: actionUrl.length ? actionUrl : null,
+      });
     });
 
-    Request.put('/back/content/' + contentId, payload)
-      .then((response) => window.location = response.redirect);
+    const payload = {
+      contentItems: items,
+      collectionId: collectionEl && collectionEl.dataset.collectionId ? Number.parseInt(collectionEl.dataset.collectionId) : null,
+      mainImageId: mainImageEl && mainImageEl.dataset.mediaId ? Number.parseInt(mainImageEl.dataset.mediaId) : null,
+      languageIsoCode: languageIsoCode,
+    };
+
+    Request.put('/back/content/' + contentTypeId, JSON.stringify(payload))
+      .then((response) => window.location = response.redirect)
+      .finally(() => loader.classList.add('null'));
+  });
+});
+
+document.querySelectorAll('.page-content-flag-item').forEach(fi => {
+  fi.addEventListener('click', e => {
+    e.preventDefault();
+
+    const isoCode = fi.dataset.languageIsoCode;
+
+    document.querySelectorAll('.page-content-flag-item').forEach(cfi => {
+      if (cfi.dataset.languageIsoCode === isoCode) {
+        cfi.classList.add('flag-active');
+      } else {
+        cfi.classList.remove('flag-active');
+      }
+    });
+
+    document.querySelectorAll('.content-language-item').forEach(cli => {
+      if (cli.dataset.languageIsoCode === isoCode) {
+        cli.classList.add('content-language-active');
+      } else {
+        cli.classList.remove('content-language-active');
+      }
+    });
   });
 });
 

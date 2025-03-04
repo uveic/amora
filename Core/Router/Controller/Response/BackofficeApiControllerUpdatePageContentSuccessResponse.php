@@ -8,14 +8,17 @@ class BackofficeApiControllerUpdatePageContentSuccessResponse extends Response
 {
     public function __construct(
         bool $success,
-        string $redirect,
+        ?string $redirect = null,
         ?string $errorMessage = null
     ) {
         // Required parameters
         $responseData = [
             'success' => $success,
-            'redirect' => $redirect,
         ];
+
+        $responseData['redirect'] = is_null($redirect)
+            ? null
+            : $redirect;
 
         $responseData['errorMessage'] = is_null($errorMessage)
             ? null

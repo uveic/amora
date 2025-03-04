@@ -1154,14 +1154,14 @@
         }
       }
     },
-    "/back/content/{contentId}": {
+    "/back/content/{contentTypeId}": {
       "put": {
         "tags": [],
         "description": "Update existing page content",
         "operationId": "updatePageContent",
         "parameters": [
           {
-            "name": "contentId",
+            "name": "contentTypeId",
             "in": "path",
             "required": true,
             "type": "integer"
@@ -1173,22 +1173,49 @@
             "required": true,
             "schema": {
               "properties": {
-                "title": {
-                  "type": "string"
+                "contentItems": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "languageIsoCode": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "subtitle": {
+                        "type": "string"
+                      },
+                      "contentHtml": {
+                        "type": "string"
+                      },
+                      "actionUrl": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "languageIsoCode"
+                    ]
+                  }
                 },
-                "subtitle": {
-                  "type": "string"
-                },
-                "contentHtml": {
+                "languageIsoCode": {
                   "type": "string"
                 },
                 "mainImageId": {
                   "type": "integer"
                 },
-                "actionUrl": {
-                  "type": "string"
+                "collectionId": {
+                  "type": "integer"
                 }
-              }
+              },
+              "required": [
+                "contentItems",
+                "languageIsoCode"
+              ]
             }
           }
         ],
@@ -1214,8 +1241,7 @@
                 }
               },
               "required": [
-                "success",
-                "redirect"
+                "success"
               ]
             }
           },

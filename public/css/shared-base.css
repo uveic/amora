@@ -481,6 +481,10 @@ article {
   margin: 2rem auto;
 }
 
+article figure {
+  margin: 0;
+}
+
 article img {
   width: 100%;
   height: auto;
@@ -559,6 +563,7 @@ article .image-item {
   margin-top: 2rem;
 }
 
+article figcaption,
 article .image-caption {
   margin: 0 0 1rem 0;
   color: var(--color-light-4);
@@ -1045,7 +1050,7 @@ svg,
   width: 40%;
   height: 10px;
   background:
-    linear-gradient(var(--color-black) 0 0) left/20px 20px no-repeat var(--color-white);
+      linear-gradient(var(--color-black) 0 0) left/20px 20px no-repeat var(--color-white);
   animation: loader3 1s infinite linear;
   top: 0;
   bottom: 0;
@@ -1074,6 +1079,38 @@ svg,
 @keyframes loader4 {
   to {
     transform: rotate(1turn)
+  }
+}
+
+.loading-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-primary);
+  opacity: 0.75;
+  z-index: 9999;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.loading-modal .loader {
+  width: 40%;
+  height: 10px;
+  background: linear-gradient(var(--color-black) 0 0) left/20px 20px no-repeat var(--color-white);
+  animation: loaderProgressBar 0.75s infinite linear;
+  border-radius: 2px;
+}
+
+@keyframes loaderProgressBar {
+  50% {
+    background-position: right
   }
 }
 

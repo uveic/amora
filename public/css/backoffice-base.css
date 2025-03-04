@@ -205,9 +205,7 @@
   align-items: flex-start;
   align-self: stretch;
   flex-grow: 1;
-  border: 1px solid var(--color-light-2);
-  border-radius: var(--border-radius);
-  background-color: var(--color-light-0);
+  border: 1px solid var(--color-black);
   padding: 1rem;
 }
 
@@ -441,6 +439,10 @@
   font-weight: 700;
 }
 
+.editor-content figure {
+  margin: 0;
+}
+
 .page-content-wrapper {
   max-width: var(--content-max-width-narrow);
   margin: 2rem auto;
@@ -470,6 +472,62 @@
 }
 
 #page-content-main-image-container .button-media-add {
+  border: 1px solid var(--color-black);
+}
+
+.content-language-wrapper {
+  position: relative;
+}
+
+.content-language-item {
+  display: none;
+}
+
+.content-language-active {
+  display: block;
+}
+
+.content-flag-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-bottom: 2rem;
+}
+
+.content-flag-wrapper .img-svg {
+  width: 30px;
+}
+
+.content-flag-wrapper .page-content-flag-item {
+  border-bottom: 3px solid transparent;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.content-flag-wrapper .page-content-flag-item:hover,
+.content-flag-wrapper .flag-active {
+  border-bottom: 3px solid var(--color-black);
+}
+
+.content-flag-wrapper .page-content-flag-item:hover {
+  background-color: var(--color-primary-050);
+}
+
+.page-content-container {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+}
+
+.page-content-container a {
+  display: inline-block;
+  border: 1px dashed var(--color-primary-100);
+  padding: 0.25rem 0.5rem;
+}
+
+.page-content-container a:hover {
   border: 1px solid var(--color-black);
 }
 

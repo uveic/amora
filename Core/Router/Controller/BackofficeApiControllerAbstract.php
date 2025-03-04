@@ -238,25 +238,23 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     abstract protected function getTags(?string $name, Request $request): Response;
 
     /**
-     * Endpoint: /back/content/{contentId}
+     * Endpoint: /back/content/{contentTypeId}
      * Method: PUT
      *
-     * @param int $contentId
-     * @param string|null $title
-     * @param string|null $subtitle
-     * @param string|null $contentHtml
+     * @param int $contentTypeId
+     * @param array $contentItems
+     * @param string $languageIsoCode
      * @param int|null $mainImageId
-     * @param string|null $actionUrl
+     * @param int|null $collectionId
      * @param Request $request
      * @return Response
      */
     abstract protected function updatePageContent(
-        int $contentId,
-        ?string $title,
-        ?string $subtitle,
-        ?string $contentHtml,
+        int $contentTypeId,
+        array $contentItems,
+        string $languageIsoCode,
         ?int $mainImageId,
-        ?string $actionUrl,
+        ?int $collectionId,
         Request $request
     ): Response;
 
@@ -1112,26 +1110,26 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     {
         $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
-            ['back', 'content', '{contentId}'],
+            ['back', 'content', '{contentTypeId}'],
             $pathParts
         );
         $bodyParams = $request->getBodyPayload();
         $errors = [];
 
-        $contentId = null;
-        if (!isset($pathParams['contentId'])) {
+        $contentTypeId = null;
+        if (!isset($pathParams['contentTypeId'])) {
             $errors[] = [
-                'field' => 'contentId',
+                'field' => 'contentTypeId',
                 'message' => 'required'
             ];
         } else {
-            if (!is_numeric($pathParams['contentId'])) {
+            if (!is_numeric($pathParams['contentTypeId'])) {
                 $errors[] = [
-                    'field' => 'contentId',
+                    'field' => 'contentTypeId',
                     'message' => 'must be an integer'
                 ];
             } else {
-                $contentId = intval($pathParams['contentId']);
+                $contentTypeId = intval($pathParams['contentTypeId']);
             }
         }
 
@@ -1142,11 +1140,28 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             ];
         }
 
-        $title = $bodyParams['title'] ?? null;
-        $subtitle = $bodyParams['subtitle'] ?? null;
-        $contentHtml = $bodyParams['contentHtml'] ?? null;
+        $contentItems = null;
+        if (!isset($bodyParams['contentItems'])) {
+            $errors[] = [
+                'field' => 'contentItems',
+                'message' => 'required'
+            ];
+        } else {
+            $contentItems = $bodyParams['contentItems'] ?? null;
+        }
+
+        $languageIsoCode = null;
+        if (!isset($bodyParams['languageIsoCode'])) {
+            $errors[] = [
+                'field' => 'languageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
+        }
+
         $mainImageId = $bodyParams['mainImageId'] ?? null;
-        $actionUrl = $bodyParams['actionUrl'] ?? null;
+        $collectionId = $bodyParams['collectionId'] ?? null;
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -1160,12 +1175,11 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         try {
             return $this->updatePageContent(
-                $contentId,
-                $title,
-                $subtitle,
-                $contentHtml,
+                $contentTypeId,
+                $contentItems,
+                $languageIsoCode,
                 $mainImageId,
-                $actionUrl,
+                $collectionId,
                 $request
             );
         } catch (Throwable $t) {
@@ -2061,7 +2075,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         if ($method === 'PUT' &&
             $pathParams = $this->pathParamsMatcher(
-                ['back', 'content', '{contentId}'],
+                ['back', 'content', '{contentTypeId}'],
                 $pathParts,
                 ['fixed', 'fixed', 'int']
             )

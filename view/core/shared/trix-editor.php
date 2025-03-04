@@ -2,6 +2,8 @@
 
 use Amora\Core\Value\CoreIcons;
 
+$inputIdentifier = $trixEditorInputIdentifier ?? 'trixEditorContentHtml';
+
 ?>
     <trix-toolbar id="trixEditorToolbar">
       <div class="trix-button-row">
@@ -38,4 +40,4 @@ use Amora\Core\Value\CoreIcons;
         </div>
       </div>
     </trix-toolbar>
-    <trix-editor toolbar="trixEditorToolbar" input="trixEditorContentHtml" class="editor-content trix-editor-content"></trix-editor>
+    <trix-editor toolbar="trixEditorToolbar" input="<?=$inputIdentifier?>" class="editor-content trix-editor-content"></trix-editor>

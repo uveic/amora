@@ -35,7 +35,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
         <form action="#" method="post" id="form-album-edit" class="form-two-columns-wrapper">
           <div>
             <input id="albumId" name="albumId" type="hidden" value="<?=$album?->id?>">
-            <input id="trixEditorContentHtml" name="albumContentHtml" type="hidden" value='<?=$album?->contentHtml?>'>
+            <input id="trixEditorContentHtml" name="albumContentHtml" type="hidden" value="<?=htmlspecialchars($album?->contentHtml ?? '')?>">
             <div class="field">
               <label for="albumTitle" class="label"><?=$responseData->getLocalValue('globalTitle')?>:</label>
               <div class="control">

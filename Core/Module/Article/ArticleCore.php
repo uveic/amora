@@ -39,6 +39,7 @@ class ArticleCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
+                require_once self::getPathRoot() . '/Core/Module/Album/DataLayer/AlbumDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/DataLayer/ArticleDataLayer.php';
                 return new ArticleDataLayer(
                     db: self::getDb(),

@@ -7,10 +7,12 @@ use Amora\App\Router\AppRouter;
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\Feedback;
+use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Module\Article\Entity\FeedItem;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\PageContentType;
+use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
@@ -51,29 +53,11 @@ readonly class ArticleService
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getPageContentForId(int $id): ?PageContent
-    {
-        $res = $this->filterPageContentBy(ids: [$id]);
-        return $res[0] ?? null;
-    }
-
     public function getMediaForArticleId(int $articleId): array
     {
         return $this->articleDataLayer->filterArticleMediaBy(
             articleIds: [$articleId],
         );
-    }
-
-    public function getPageContentForTypeIdAndLanguage(
-        PageContentType|AppPageContentType $type,
-        Language $language
-    ): ?PageContent {
-        $res = $this->filterPageContentBy(
-            languageIsoCodes: [$language->value],
-            typeIds: [$type->value]
-        );
-
-        return $res[0] ?? null;
     }
 
     public function getArticleForPath(string $path, bool $includePublishedAtInTheFuture = true): ?Article
@@ -539,10 +523,10 @@ readonly class ArticleService
             return false;
         }
 
-        if ($section->mediaId) {
+        if ($section->media) {
             $resImage = $this->articleDataLayer->createArticleSectionImage(
                 articleSectionId: $section->id,
-                imageId: $section->mediaId,
+                imageId: $section->media->id,
                 imageCaption: $section->mediaCaption,
             );
 
@@ -562,10 +546,10 @@ readonly class ArticleService
             return false;
         }
 
-        if ($section->mediaId) {
+        if ($section->media) {
             $resImage = $this->articleDataLayer->updateArticleSectionImage(
                 articleSectionId: $section->id,
-                imageId: $section->mediaId,
+                imageId: $section->media->id,
                 imageCaption: $section->mediaCaption,
             );
 
@@ -606,35 +590,94 @@ readonly class ArticleService
             : null;
     }
 
-    public function updatePageContent(PageContent $pageContent): bool
-    {
-        $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
-            function () use ($pageContent) {
-                $resUpdate = $this->articleDataLayer->updatePageContent($pageContent);
+    public function workflowUpdatePageContent(
+        User $user,
+        PageContentType|AppPageContentType $contentType,
+        array $contentItems,
+        ?Collection $collection,
+        ?Media $mainImage,
+    ): Feedback {
+        return $this->articleDataLayer->getDb()->withTransaction(
+            function () use ($user, $contentType, $contentItems, $collection, $mainImage) {
+                $existingPageContent = $this->filterPageContentBy(
+                    typeIds: [$contentType->value],
+                );
 
-                if (empty($resUpdate)) {
-                    $this->logger->logError(
-                        'Error updating page content. Page content ID: ' . $pageContent->id
+                if (!$existingPageContent) {
+                    return new Feedback(
+                        isSuccess: false,
+                        message: 'Page content ID not found',
                     );
-
-                    return new Feedback(false);
                 }
 
-                $resHistory = $this->articleDataLayer->storePageContentHistory($pageContent);
+                $existingPageContentById = [];
+                $existingPageContentByIsoCode = [];
 
-                if (empty($resHistory)) {
-                    $this->logger->logError(
-                        'Error inserting article history. Page content ID: ' . $pageContent->id
+                /** @var PageContent $item */
+                foreach ($existingPageContent as $item) {
+                    $existingPageContentById[$item->id] = $item;
+                    $existingPageContentByIsoCode[$item->language->value] = $item;
+                }
+
+                foreach ($contentItems as $contentItem) {
+                    $languageIsoCode = $contentItem['languageIsoCode'] ?? null;
+
+                    if (!$languageIsoCode || !Language::tryFrom($languageIsoCode)) {
+                        continue;
+                    }
+
+                    $id = isset($contentItem['id']) ? (int)$contentItem['id'] : null;
+                    $title = StringUtil::sanitiseText($contentItem['title'] ?? null);
+                    $subtitle = StringUtil::sanitiseText($contentItem['subtitle'] ?? null);
+                    $contentHtml = StringUtil::sanitiseHtml($contentItem['contentHtml'] ?? null);
+                    $actionUrl = StringUtil::sanitiseText($contentItem['actionUrl'] ?? null);
+
+                    if (!$id && isset($existingPageContentByIsoCode[$languageIsoCode])) {
+                        $id = $existingPageContentByIsoCode[$languageIsoCode]->id;
+                    }
+
+                    $now = new DateTimeImmutable();
+                    $existingPageContent = $id ? ($existingPageContentById[$id] ?? null) : null;
+
+                    $pageContent = new PageContent(
+                        id: $id,
+                        user: $user,
+                        language: Language::from($languageIsoCode),
+                        type: $contentType,
+                        createdAt: $existingPageContent?->createdAt ?? $now,
+                        updatedAt: $now,
+                        title: $title,
+                        subtitle: $subtitle,
+                        contentHtml: $contentHtml,
+                        mainImage: $mainImage,
+                        actionUrl: $actionUrl,
+                        collection: $collection,
                     );
 
-                    return new Feedback(false);
+                    $resUpdate = $id
+                        ? $this->articleDataLayer->updatePageContent($pageContent)
+                        : $this->articleDataLayer->storePageContent($pageContent);
+
+                    if (!$resUpdate) {
+                        return new Feedback(
+                            isSuccess: false,
+                            message: 'Error updating page content',
+                        );
+                    }
+
+                    $resHistory = $this->articleDataLayer->storePageContentHistory($pageContent);
+
+                    if (empty($resHistory)) {
+                        return new Feedback(
+                            isSuccess: false,
+                            message: 'Error inserting article history. Page content ID: ' . $pageContent->id,
+                        );
+                    }
                 }
 
                 return new Feedback(true);
             }
         );
-
-        return $resTransaction->isSuccess;
     }
 
     public function getFeedItemsForArticles(

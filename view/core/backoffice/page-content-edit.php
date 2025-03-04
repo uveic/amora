@@ -1,95 +1,127 @@
 <?php
 
+use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
+use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Album\Model\CollectionMedia;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\Article\Value\PageContentSection;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
+use Amora\Core\Util\StringUtil;
+use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
-$pageContent = $responseData->pageContent;
+$mainPageContent = $responseData->pageContent;
 
-$title = $responseData->getLocalValue('pageContentEditTitle' . $pageContent->type->name);
-$languageIcon = count(Core::getEnabledSiteLanguages()) === 1
-    ? ''
-    : $pageContent->language->getIconFlag('m-l-1');
-$submitButtonValue = $pageContent
+$pageContentByLanguageIsoCode = [];
+/** @var PageContent $item */
+foreach ($responseData->pageContentAll as $item) {
+    $pageContentByLanguageIsoCode[$item->language->value] = $item;
+}
+
+$title = $responseData->getLocalValue('pageContentEditTitle' . $mainPageContent->type->name);
+$submitButtonValue = $mainPageContent
     ? $responseData->getLocalValue('globalUpdate')
     : $responseData->getLocalValue('globalSend');
-$closeLink = AppPageContentType::buildRedirectUrl(
-    type: $pageContent?->type,
+$publicLink = AppPageContentType::buildRedirectUrl(
+    type: $mainPageContent?->type,
     language: $responseData->siteLanguage,
 );
+$closeLink = UrlBuilderUtil::buildBackofficeContentListUrl($responseData->siteLanguage);
 
 $this->layout('base', ['responseData' => $responseData]);
 
 $this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
 ?>
 <main>
+  <div class="loading-modal null"><div class="loader"></div></div>
   <div id="feedback" class="feedback null"></div>
   <div class="page-header">
-    <span><?=$title . $languageIcon?></span>
+    <span><?=$title?></span>
     <div class="links">
+      <a href="<?=$publicLink?>"><?=CoreIcons::ARROW_SQUARE_OUT?></a>
       <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
     </div>
   </div>
   <form id="form-page-content" action="#" class="page-content-wrapper">
-    <input name="contentId" type="hidden" value="<?=$pageContent?->id?>">
-    <input id="trixEditorContentHtml" name="pageContentContentHtml" type="hidden" value='<?=$pageContent?->contentHtml?>'>
-
-    <label for="pageContentTitle" class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalTitle')?></label>
-    <input id="pageContentTitle" name="pageContentTitle" type="text" maxlength="255" class="editor-title<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Title) ? '' : ' null'?>" value="<?=$pageContent?->title?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" />
-
-    <label for="pageContentSubtitle" class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalSubtitle')?></label>
-    <input id="pageContentSubtitle" name="pageContentSubtitle" type="text" maxlength="255" class="editor-subtitle<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" value="<?=$pageContent?->subtitle?>" placeholder="<?=$responseData->getLocalValue('editorSubtitlePlaceholder')?>"/>
-
-<?php if (AppPageContentType::displayContent($pageContent->type, PageContentSection::Content)) { ?>
-    <div class="page-content-before <?=AppPageContentType::displayContent($pageContent->type, PageContentSection::Content) ? '' : ' null'?>"><?=$responseData->getLocalValue('navAdminContent')?></div>
+    <input type="hidden" name="languageIsoCode" value="<?=$mainPageContent->language->value?>">
+    <div class="content-flag-wrapper">
 <?php
-    $this->insert('../shared/trix-editor', ['responseData' => $responseData]);
-} ?>
+    /** @var Language $enabledLanguage */
+    foreach (Core::getEnabledSiteLanguages() as $enabledLanguage) {
+        echo '<span class="page-content-flag-item' . ($mainPageContent->language === $enabledLanguage ? ' flag-active' : '') . '" data-language-iso-code="' . $enabledLanguage->value . '">' . $enabledLanguage->getIconFlag() . '</span>' . PHP_EOL;
 
-    <div class="field m-l-1 m-r-1 m-t-2 m-b-2<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::ActionUrl) ? '' : ' null'?>">
-      <label for="actionUrl" class="label"><?=$responseData->getLocalValue('pageContentEditAction')?>:</label>
-      <div class="control">
-        <input id="actionUrl" name="actionUrl" type="url" placeholder="" minlength="0" maxlength="255" value="<?=$pageContent?->actionUrl?>">
-        <p class="help"><span class="is-danger"></span><span><?=$responseData->getLocalValue('pageContentEditActionHelp')?></span></p>
+ } ?>
+    </div>
+    <div class="content-language-wrapper" data-page-content-type-id="<?=$mainPageContent->type->value?>">
+<?php
+    /** @var Language $enabledSiteLanguage */
+    foreach (Core::getEnabledSiteLanguages() as $enabledSiteLanguage) {
+        $isoCode = $enabledSiteLanguage->value;
+        $pageContent = $pageContentByLanguageIsoCode[$isoCode] ?? null;
+?>
+      <div class="content-language-item<?=$isoCode === $mainPageContent->language->value ? ' content-language-active' : ''?>" data-language-iso-code="<?=$enabledSiteLanguage->value?>">
+        <input name="contentId<?=$isoCode?>" class="page-content-id" type="hidden" value="<?=$pageContent?->id?>">
+        <input id="trixEditorContentHtml<?=$isoCode?>" name="pageContentContentHtml<?=$isoCode?>" class="page-content-content-html" type="hidden" value="<?=htmlspecialchars($pageContent?->contentHtml ?? '')?>">
+
+        <label for="pageContentTitle<?=$isoCode?>" class="page-content-before <?=AppPageContentType::displayContent($mainPageContent->type, PageContentSection::Title) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalTitle')?></label>
+        <input id="pageContentTitle<?=$isoCode?>" name="pageContentTitle<?=$isoCode?>" type="text" maxlength="255" class="page-content-title editor-title<?=AppPageContentType::displayContent($mainPageContent->type, PageContentSection::Title) ? '' : ' null'?>" value="<?=$pageContent?->title?>" placeholder="<?=$responseData->getLocalValue('editorTitlePlaceholder')?>" />
+
+        <label for="pageContentSubtitle<?=$isoCode?>" class="page-content-before <?=AppPageContentType::displayContent($mainPageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>"><?=$responseData->getLocalValue('globalSubtitle')?></label>
+        <input id="pageContentSubtitle<?=$isoCode?>" name="pageContentSubtitle<?=$isoCode?>" type="text" maxlength="255" class="page-content-subtitle editor-subtitle<?=AppPageContentType::displayContent($mainPageContent->type, PageContentSection::Subtitle) ? '' : ' null'?>" value="<?=$pageContent?->subtitle?>" placeholder="<?=$responseData->getLocalValue('editorSubtitlePlaceholder')?>"/>
+
+<?php if (AppPageContentType::displayContent($mainPageContent->type, PageContentSection::Content)) { ?>
+        <div class="page-content-before <?=AppPageContentType::displayContent($mainPageContent->type, PageContentSection::Content) ? '' : ' null'?>"><?=$responseData->getLocalValue('navAdminContent')?></div>
+<?php
+    $this->insert('../shared/trix-editor', ['responseData' => $responseData, 'trixEditorInputIdentifier' => 'trixEditorContentHtml' . $isoCode]);
+} ?>
+        <div class="field m-l-1 m-r-1 m-t-2 m-b-2<?=AppPageContentType::displayContent($mainPageContent->type, PageContentSection::ActionUrl) ? '' : ' null'?>">
+          <label for="actionUrl<?=$isoCode?>" class="label"><?=$responseData->getLocalValue('pageContentEditAction')?>:</label>
+          <div class="control">
+            <input id="actionUrl<?=$isoCode?>" name="actionUrl<?=$isoCode?>" class="page-content-action-url" type="url" placeholder="" minlength="0" maxlength="255" value="<?=$pageContent?->actionUrl?>">
+            <p class="help"><span class="is-danger"></span><span><?=$responseData->getLocalValue('pageContentEditActionHelp')?></span></p>
+          </div>
+        </div>
+
       </div>
+<?php } ?>
     </div>
 
-    <div class="field m-l-1 m-r-1 m-b-2<?=AppPageContentType::displayContent($pageContent->type, PageContentSection::MainImage) ? '' : ' null'?>">
+    <div class="field m-l-1 m-r-1 m-b-2<?=AppPageContentType::displayContent($mainPageContent?->type, PageContentSection::MainImage) ? '' : ' null'?>">
       <p class="label m-b-05"><?=$responseData->getLocalValue('editorMainImage')?>:</p>
       <div class="control">
         <div id="page-content-main-image-container">
-<?php if ($pageContent?->mainImage) { ?>
-          <img class="media-item" data-media-id="<?=$pageContent->mainImage->id?>" src="<?=$pageContent->mainImage->getPathWithNameMedium()?>" alt="<?=$pageContent->mainImage->buildAltText()?>">
+<?php if ($mainPageContent?->mainImage) { ?>
+          <img class="media-item" data-media-id="<?=$mainPageContent->mainImage->id?>" src="<?=$mainPageContent->mainImage->getPathWithNameMedium()?>" alt="<?=$mainPageContent->mainImage->buildAltText()?>">
 <?php } ?>
           <div class="main-image-button-container">
-            <a href="#" class="main-image-button main-image-button-red generic-media-delete-js<?=$pageContent?->mainImage ? '' : ' null'?>"><?=CoreIcons::TRASH?></a>
+            <a href="#" class="main-image-button main-image-button-red generic-media-delete-js<?=$mainPageContent?->mainImage ? '' : ' null'?>"><?=CoreIcons::TRASH?></a>
             <a href="#" class="main-image-button select-media-action button-media-add" data-target-container-id="page-content-main-image-container" data-event-listener-action="handleGenericMainMediaClick">
               <?=CoreIcons::IMAGE?>
-              <span><?= $pageContent?->mainImage ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('globalSelectImage') ?></span>
+              <span><?= $mainPageContent?->mainImage ? $responseData->getLocalValue('globalModify') : $responseData->getLocalValue('globalSelectImage') ?></span>
             </a>
           </div>
         </div>
       </div>
     </div>
 
-<?php if ($pageContent->collection) { ?>
+<?php if (AppPageContentType::displayContent($mainPageContent->type, PageContentSection::Collection)) {
+    $identifier = $mainPageContent->collection?->id ?? StringUtil::generateRandomString(10);
+?>
     <div class="field m-l-1 m-r-1 m-t-2 m-b-2">
       <div class="drop-loading null"><img src="/img/loading.gif" class="img-svg img-svg-40" width="40" height="40" alt="<?=$responseData->getLocalValue('globalSaving')?>"></div>
       <p class="label m-b-05"><?=$responseData->getLocalValue('navAdminImages')?>:</p>
-      <div id="collection-item-media-<?=$pageContent->collection->id?>" class="collection-item-media" data-collection-id="<?=$pageContent->collection->id?>">
+      <div id="collection-item-media-<?=$identifier?>" class="collection-item-media" data-collection-id="<?=$mainPageContent->collection?->id?>">
 <?php
         /** @var CollectionMedia $collectionMedia */
         foreach ($responseData->media as $collectionMedia) {
             echo AlbumHtmlGenerator::generateCollectionMediaHtml($collectionMedia, '        ');
         }
 ?>
-        <a href="#" class="button select-media-action button-media-add" data-type-id="<?=MediaType::Image->value?>" data-target-container-id="collection-item-media-<?=$pageContent->collection->id?>" data-event-listener-action="collectionAddMedia">
+        <a href="#" class="button select-media-action button-media-add" data-type-id="<?=MediaType::Image->value?>" data-target-container-id="collection-item-media-<?=$identifier?>" data-event-listener-action="collectionAddMedia">
           <?=CoreIcons::IMAGE?>
           <span><?=$responseData->getLocalValue('globalAdd')?></span>
         </a>
