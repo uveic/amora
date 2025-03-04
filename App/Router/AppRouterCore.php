@@ -12,6 +12,7 @@ class AppRouterCore extends Core
         return self::getInstance(
             className: 'AppPublicHtmlController',
             factory: function () {
+                require_once self::getPathRoot() . '/App/Entity/AppHtmlHomepageResponseData.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicHtmlController.php';
