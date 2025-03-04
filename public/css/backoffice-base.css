@@ -469,7 +469,7 @@
   display: none;
 }
 
-.page-content-wrapper .button-media-add {
+#page-content-main-image-container .button-media-add {
   border: 1px solid var(--color-black);
 }
 
