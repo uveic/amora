@@ -1765,16 +1765,18 @@
   margin: 0;
 }
 
-.drop-loading {
+.drop-loading.loader-spinner {
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
+  top: 1rem;
+  right: 1rem;
+  left: 1rem;
+  bottom: 1rem;
   z-index: 99;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: auto;
+  height: auto;
 }
 
 .button-media-add,

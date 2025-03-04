@@ -113,7 +113,6 @@ final class AlbumHtmlGenerator
         $output = [];
         $output[] = $indentation . '<div class="collection-item" data-collection-id="' . $collection->id . '" data-sequence="' . $collection->sequence . '">';
         $output[] = $indentation . '  <div class="collection-item-content">';
-        $output[] = $indentation . '    <div class="drop-loading null"><img src="/img/loading.gif" class="img-svg img-svg-40" width="40" height="40" alt="' . $localisationUtil->getValue('globalSaving') . '"></div>';
 
         $output[] = $indentation . '    <p class="collection-label null">' . $localisationUtil->getValue('globalTitle') . '</p>';
         $output[] = $indentation . '    <h3 class="collection-title-html" data-before="' . $collection->titleHtml . '">' . ($collection->titleHtml ?: '-') . '</h3>';

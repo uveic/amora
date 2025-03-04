@@ -48,6 +48,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
   </div>
   <form id="form-page-content" action="#" class="page-content-wrapper">
     <input type="hidden" name="languageIsoCode" value="<?=$mainPageContent->language->value?>">
+<?php if (count(Core::getEnabledSiteLanguages()) > 1) { ?>
     <div class="content-flag-wrapper">
 <?php
     /** @var Language $enabledLanguage */
@@ -56,6 +57,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
 
  } ?>
     </div>
+<?php } ?>
     <div class="content-language-wrapper" data-page-content-type-id="<?=$mainPageContent->type->value?>">
 <?php
     /** @var Language $enabledSiteLanguage */
@@ -112,7 +114,6 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     $identifier = $mainPageContent->collection?->id ?? StringUtil::generateRandomString(10);
 ?>
     <div class="field m-l-1 m-r-1 m-t-2 m-b-2">
-      <div class="drop-loading null"><img src="/img/loading.gif" class="img-svg img-svg-40" width="40" height="40" alt="<?=$responseData->getLocalValue('globalSaving')?>"></div>
       <p class="label m-b-05"><?=$responseData->getLocalValue('navAdminImages')?>:</p>
       <div id="collection-item-media-<?=$identifier?>" class="collection-item-media" data-collection-id="<?=$mainPageContent->collection?->id?>">
 <?php

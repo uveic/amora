@@ -1021,7 +1021,7 @@ svg,
   align-items: center;
   justify-content: center;
   border: 1px dashed var(--color-black);
-  background-color: var(--color-light-1);
+  background-color: var(--color-light-0);
   text-transform: uppercase;
   font-weight: 300;
   min-height: 200px;

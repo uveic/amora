@@ -1062,9 +1062,9 @@ function handleAlbumMediaDrop(ev) {
     return;
   }
 
-  const loadingEl = document.querySelector('.drop-loading');
+  const loadingEl = document.createElement('div');
+  loadingEl.className = 'drop-loading loader-spinner';
   draggedEl.parentElement.appendChild(loadingEl);
-  loadingEl.classList.remove('null');
 
   const droppedSequence = Number.parseInt(ev.currentTarget.dataset.sequence);
   const draggedSequence = Number.parseInt(draggedEl.dataset.sequence);
@@ -1103,12 +1103,10 @@ function handleAlbumMediaDrop(ev) {
           mi.dataset.sequence = (cSeq + countDelta).toString();
         }
       });
-      loadingEl.classList.add('null');
-      draggedEl.classList.remove('media-item-grabbing');
     })
     .catch(error => Util.notifyError(error))
     .finally(() => {
-      loadingEl.classList.add('null');
+      loadingEl.parentElement.removeChild(loadingEl);
       draggedEl.classList.remove('media-item-grabbing');
     });
 }
