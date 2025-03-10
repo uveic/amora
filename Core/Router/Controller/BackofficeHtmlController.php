@@ -702,13 +702,21 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             typeIds: [$type->value],
         );
 
+        $collectionId = null;
         $pageContentForLanguage = null;
         $hasCollection = AppPageContentType::displayContent($type, PageContentSection::Collection);
 
         /** @var PageContent $item */
         foreach ($pageContentAll as $item) {
-            if ($item->language === $language) {
+            if (!$pageContentForLanguage && $item->language === $language) {
                 $pageContentForLanguage = $item;
+            }
+
+            if (!$collectionId && $item->collection) {
+                $collectionId = $item->collection->id;
+            }
+
+            if ($pageContentForLanguage && $collectionId) {
                 break;
             }
         }
@@ -716,7 +724,9 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         if (!$pageContentForLanguage) {
             $collection = null;
             if ($hasCollection) {
-                $collection = $this->albumService->storeCollection(Collection::getEmpty());
+                $collection = $collectionId
+                    ? $this->albumService->getCollectionForId($collectionId)
+                    : $this->albumService->storeCollection(Collection::getEmpty());
             }
 
             $pageContentForLanguage = $this->articleService->storePageContent(
@@ -729,12 +739,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             );
         }
 
-        $media = [];
-        if ($pageContentForLanguage->collection) {
-            $media = $this->albumService->filterCollectionMediaBy(
-                collectionIds: [$pageContentForLanguage->collection->id],
-            );
-        }
+        $collectionMedia = $collectionId ? $this->albumService->filterCollectionMediaBy(collectionIds: [$collectionId]) : [];
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
@@ -742,7 +747,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $pageContentForLanguage->type->name),
-                media: $media,
+                media: $collectionMedia,
                 pageContentAll: $pageContentAll,
                 pageContent: $pageContentForLanguage,
             ),

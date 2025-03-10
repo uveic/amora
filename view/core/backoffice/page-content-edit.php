@@ -15,6 +15,9 @@ use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 $mainPageContent = $responseData->pageContent;
+if (!$mainPageContent) {
+    return;
+}
 
 $pageContentByLanguageIsoCode = [];
 /** @var PageContent $item */
@@ -27,8 +30,8 @@ $submitButtonValue = $mainPageContent
     ? $responseData->getLocalValue('globalUpdate')
     : $responseData->getLocalValue('globalSend');
 $publicLink = AppPageContentType::buildRedirectUrl(
-    type: $mainPageContent?->type,
-    language: $responseData->siteLanguage,
+    type: $mainPageContent->type,
+    language: $mainPageContent->language,
 );
 $closeLink = UrlBuilderUtil::buildBackofficeContentListUrl($responseData->siteLanguage);
 
@@ -78,7 +81,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
 <?php if (AppPageContentType::displayContent($mainPageContent->type, PageContentSection::Content)) { ?>
         <div class="page-content-before <?=AppPageContentType::displayContent($mainPageContent->type, PageContentSection::Content) ? '' : ' null'?>"><?=$responseData->getLocalValue('navAdminContent')?></div>
 <?php
-    $this->insert('../shared/trix-editor', ['responseData' => $responseData, 'trixEditorInputIdentifier' => 'trixEditorContentHtml' . $isoCode]);
+    $this->insert('../shared/trix-editor', ['responseData' => $responseData, 'identifier' => $isoCode]);
 } ?>
         <div class="field m-l-1 m-r-1 m-t-2 m-b-2<?=AppPageContentType::displayContent($mainPageContent->type, PageContentSection::ActionUrl) ? '' : ' null'?>">
           <label for="actionUrl<?=$isoCode?>" class="label"><?=$responseData->getLocalValue('pageContentEditAction')?>:</label>

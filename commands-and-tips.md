@@ -54,9 +54,11 @@ Restart nginx: `sudo /etc/init.d/nginx restart`
 Configuring the Nginx Error and Access Logs: https://www.journaldev.com/26756/nginx-access-logs-error-logs
 
 ## vi
-Search forward   => press `/`, type the search pattern and press `Enter`
+Search forward: press `/`, type the search pattern and press `Enter`
 
-Search backwards => press `?`, type the search pattern and press `Enter`
+Find next: press `n` (after the first `Enter`)
+
+Search backwards: press `?`, type the search pattern and press `Enter`
 
 `dd` => Delete line.
 
