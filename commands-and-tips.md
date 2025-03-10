@@ -53,6 +53,16 @@ Restart nginx: `sudo /etc/init.d/nginx restart`
 
 Configuring the Nginx Error and Access Logs: https://www.journaldev.com/26756/nginx-access-logs-error-logs
 
+Increase HTTP response timeout:
+```
+    location ~ \.php$ {
+        send_timeout 180s;
+        fastcgi_read_timeout 180s;
+
+        ...
+    }
+```
+
 ## vi
 Search forward: press `/`, type the search pattern and press `Enter`
 
@@ -60,7 +70,9 @@ Find next: press `n` (after the first `Enter`)
 
 Search backwards: press `?`, type the search pattern and press `Enter`
 
-`dd` => Delete line.
+`dd`: delete line
+
+`:qa!`: quit without saving
 
 ## Ubuntu / Linux
 Reboot: `sudo shutdown -r`
