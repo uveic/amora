@@ -7,8 +7,8 @@ use Amora\Core\Value\CoreIcons;
 
 ?>
   <div class="modal-media modal-wrapper null">
-    <div class="modal-inner modal-bg-dark">
-      <span class="modal-close-button"><?=CoreIcons::CLOSE?></span>
+    <span class="modal-media-close"><?=CoreIcons::CLOSE?></span>
+    <div class="modal-inner modal-bg-transparent">
       <div class="image-wrapper null">
         <div class="loader-media"></div>
         <div class="image-main">
@@ -21,7 +21,7 @@ use Amora\Core\Value\CoreIcons;
           <div>
             <div class="image-summary">
               <span class="image-number"></span>
-              <a href="#" class="modal-media-close-button"><?=CoreIcons::CLOSE?></a>
+              <a href="#" class="image-info-close-button"><?=CoreIcons::CLOSE?></a>
             </div>
             <div class="image-info-data null">
               <div class="image-meta"></div>
@@ -34,12 +34,15 @@ use Amora\Core\Value\CoreIcons;
               </a>
             </div>
           </div>
-          <div class="image-next-wrapper">
-            <a href="#" class="image-previous-action hidden" data-direction="ASC"><?=CoreIcons::CARET_LEFT . strtolower($responseData->getLocalValue('globalNext'))?></a>
-            <a href="#" class="image-random-action" data-direction="RAND()"><?=CoreIcons::SHUFFLE?></a>
-            <a href="#" class="image-next-action" data-direction="DESC"><?=strtolower($responseData->getLocalValue('globalPrevious')) . CoreIcons::CARET_RIGHT?></a>
-          </div>
         </div>
       </div>
+    </div>
+    <div class="image-next-wrapper">
+      <a href="#" class="image-previous-action hidden" data-direction="ASC"><?=CoreIcons::CARET_LEFT?></a>
+      <span>
+          <a href="#" class="image-info-action"><?=CoreIcons::INFO?></a>
+          <a href="#" class="image-random-action" data-direction="RAND()"><?=CoreIcons::SHUFFLE?></a>
+        </span>
+      <a href="#" class="image-next-action" data-direction="DESC"><?=CoreIcons::CARET_RIGHT?></a>
     </div>
   </div>

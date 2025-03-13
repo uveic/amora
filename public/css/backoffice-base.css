@@ -973,15 +973,23 @@
 }
 
 .modal-media .modal-inner {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
   max-width: revert;
   max-height: revert;
   height: 100vh;
 }
 
+.modal-media .modal-media-close svg {
+  fill: var(--color-light-5);
+  stroke: var(--color-light-5);
+}
+
 .image-wrapper {
   display: flex;
   flex-flow: row wrap;
-  background-color: var(--color-black);
   color: var(--color-white);
   min-height: 250px;
   width: 100%;
@@ -1020,10 +1028,14 @@
   flex-shrink: 1;
   background-color: transparent;
   padding: 0;
-  display: flex;
+  display: none;
   flex-flow: column nowrap;
   justify-content: space-between;
   position: relative;
+}
+
+.image-wrapper>.image-info-visible {
+  display: flex;
 }
 
 .image-wrapper .image-summary {
@@ -1038,9 +1050,6 @@
 .image-wrapper .image-summary svg {
   fill: var(--color-white);
   stroke: var(--color-white);
-  max-width: revert;
-  max-height: revert;
-  width: 20px;
 }
 
 .image-wrapper .image-info-data {
@@ -1060,25 +1069,28 @@
   word-wrap: anywhere;
 }
 
-.image-wrapper .image-next-wrapper {
-  display: flex;
-  flex-flow: row wrap;
-  gap: 1rem;
-  justify-content: space-between;
-  padding: 1rem 0.5rem;
-}
-
-.image-wrapper .image-next-wrapper svg {
-  fill: var(--color-white);
-  stroke: var(--color-white);
-}
-
-.image-wrapper .image-next-wrapper a {
+.image-next-wrapper {
   display: flex;
   flex-flow: row nowrap;
-  gap: 0.1rem;
-  color: var(--color-white);
-  line-height: 1;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.image-next-wrapper span {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5rem;
+}
+
+.image-next-wrapper svg {
+  fill: var(--color-light-5);
+  stroke: var(--color-light-5);
 }
 
 .image-wrapper .image-delete {
@@ -1086,12 +1098,12 @@
   flex-flow: row nowrap;
   align-items: center;
   gap: 0.5rem;
-  color: var(--color-failure);
+  color: var(--color-white);
 }
 
 .image-wrapper .image-delete svg {
-  fill: var(--color-failure);
-  stroke: var(--color-failure);
+  fill: var(--color-white);
+  stroke: var(--color-white);
 }
 
 .image-wrapper .image-meta {

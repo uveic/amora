@@ -238,7 +238,7 @@ readonly class MediaService
                     $fileOutput['exifHtml'] = $file->exif?->asHtml(
                         language: $language,
                         media: $file,
-                    ) ?? '<div></div>';
+                    ) ?? '';
                 }
             }
 

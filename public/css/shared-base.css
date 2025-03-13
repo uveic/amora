@@ -338,14 +338,15 @@ pre {
   margin-top: 3rem;
 }
 
-.modal-bg-dark {
-  background-color: var(--color-black);
+.modal-bg-transparent {
+  background-color: transparent;
 }
 
 .modal-inner-no-min-width {
   min-width: revert;
 }
 
+.modal-media-close,
 .modal-close-button {
   position: absolute;
   padding: 0.5rem;
