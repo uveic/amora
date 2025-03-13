@@ -59,8 +59,12 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
     /** @var MenuItem $menuItem */
     foreach ($menuItems as $menuItem) {
         if (empty($menuItem->children)) {
+            $dataset = [];
+            foreach ($menuItem->dataset as $left => $right) {
+                $dataset[] = $left . '="' . $right . '"';
+            }
             $class = $menuItem->class ? ' ' . $menuItem->class : '';
-            echo '        <li><a href="' . $menuItem->path . '" class="nav-dropdown-item' . $class . '">' . $menuItem->text . '</a></li>' . PHP_EOL;
+            echo '        <li><a href="' . $menuItem->path . '" class="nav-dropdown-item' . $class . '"' . ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $menuItem->text . '</a></li>' . PHP_EOL;
             continue;
         }
 ?>
@@ -73,7 +77,11 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
 <?php
     /** @var MenuItem $child */
     foreach ($menuItem->children as $child) {
-        echo '              <li><a class="' . ($child->class ?? '') . '" href="' . $child->path . '">' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
+        $dataset = [];
+        foreach ($child->dataset as $left => $right) {
+            $dataset[] = $left . '="' . $right . '"';
+        }
+        echo '              <li><a class="' . ($child->class ?? '') . '" href="' . $child->path . '"' . ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
     }
 ?>
               </ul>

@@ -11,5 +11,6 @@ readonly class MenuItem
         public array $children = [],
         public int $sequence = 0,
         public ?string $class = null,
+        public array $dataset = [],
     ) {}
 }

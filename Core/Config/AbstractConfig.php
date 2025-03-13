@@ -88,6 +88,7 @@ abstract class AbstractConfig {
         public readonly bool $isRegistrationEnabled,
         public readonly bool $isInvitationEnabled,
         public readonly bool $isSearchEnabled,
+        public readonly bool $prioritiseDefaultLanguageOverBrowserLangage,
 
         public readonly string $siteAdminEmail,
         public readonly string $siteAdminName,
