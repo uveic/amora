@@ -204,15 +204,6 @@ function displayModalImage(image) {
     return;
   }
 
-  const imageLoaded = () => {
-    imageElement.classList.remove('hidden');
-    imageWrapper.classList.remove('filter-opacity');
-    loaderContainer.classList.add('null');
-    imageInfoData.classList.remove('hidden');
-    imageInfoNext.classList.remove('hidden');
-    imageWrapper.scrollIntoView({behavior: 'smooth', block: 'start'});
-  };
-
   const alt = image.caption ?? image.name;
   imageElement.src = image.pathLarge;
   imageElement.alt = alt;
@@ -220,7 +211,14 @@ function displayModalImage(image) {
   imageElement.width = image.width;
   imageElement.height = image.height;
   imageElement.dataset.mediaId = image.id;
-  imageElement.addEventListener('load', imageLoaded);
+  imageElement.addEventListener('load', () => {
+    imageElement.classList.remove('hidden');
+    imageWrapper.classList.remove('filter-opacity');
+    loaderContainer.classList.add('null');
+    imageInfoData.classList.remove('hidden');
+    imageInfoNext.classList.remove('hidden');
+    imageWrapper.scrollIntoView({behavior: 'smooth', block: 'start'});
+  });
 
   // Hide/display image nav buttons
   const firstImageEl = document.querySelector('#images-list .media-item');
@@ -429,7 +427,7 @@ function displayNextImagePopup(e) {
     imageEl.classList.add('hidden');
   }
   imageWrapper.querySelector('.image-info-data').classList.add('hidden');
-  imageWrapper.querySelector('.image-next-wrapper').classList.add('hidden');
+  modalContainer.querySelector('.image-next-wrapper').classList.add('hidden');
 
   modalGetMedia(mediaId, direction)
     .then(mediaObj => {
@@ -1133,6 +1131,33 @@ document.querySelectorAll('.image-next-action, .image-previous-action, .image-ra
   });
 });
 
+document.querySelectorAll('.image-info-action').forEach(iia => {
+  iia.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const imageInfoVisibleEl = document.querySelector('.modal-media .image-info-visible');
+    if (imageInfoVisibleEl) {
+      imageInfoVisibleEl.classList.remove('image-info-visible');
+      return;
+    }
+
+    const imageInfoEl = document.querySelector('.modal-media .image-info');
+    if (imageInfoEl) {
+      imageInfoEl.classList.add('image-info-visible');
+    }
+  });
+});
+
+document.querySelectorAll('.image-info-close-button').forEach(iic => {
+  iic.addEventListener('click', (e) => {
+    e.preventDefault();
+    const imageInfoEl = document.querySelector('.image-wrapper .image-info');
+    if (imageInfoEl) {
+      imageInfoEl.classList.remove('image-info-visible');
+    }
+  });
+});
+
 document.querySelectorAll('.article-save-js').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
@@ -1319,15 +1344,22 @@ document.querySelectorAll('.filter-article-refresh').forEach(a => {
   });
 });
 
+document.querySelectorAll('.modal-media-close').forEach(mm => {
+  mm.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelector('.modal-media').classList.add('null');
+  });
+});
+
 document.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
     return;
   }
 
   if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    document.querySelectorAll('.modal-wrapper').forEach(m => {
+    document.querySelectorAll('.modal-media').forEach(m => {
       if (!m.classList.contains('null')) {
-        const button = m.querySelector('a.image-next-action');
+        const button = m.querySelector('.image-next-action');
         if (button && !button.classList.contains('hidden')) {
           e.preventDefault();
           button.click();
@@ -1335,9 +1367,9 @@ document.addEventListener('keydown', e => {
       }
     });
   } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    document.querySelectorAll('.modal-wrapper').forEach(m => {
+    document.querySelectorAll('.modal-media').forEach(m => {
       if (!m.classList.contains('null')) {
-        const button = m.querySelector('a.image-previous-action');
+        const button = m.querySelector('.image-previous-action');
         if (button && !button.classList.contains('hidden')) {
           e.preventDefault();
           button.click();
@@ -1345,15 +1377,22 @@ document.addEventListener('keydown', e => {
       }
     });
   } else if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-wrapper').forEach(m => {
+    document.querySelectorAll('.modal-media').forEach(m => {
       if (!m.classList.contains('null')) {
-        m.querySelectorAll('a.modal-close-button').forEach(b => b.click());
-        m.querySelectorAll('a.modal-media-close-button').forEach(b => b.click());
+        m.querySelectorAll('.modal-media-close').forEach(b => b.click());
       }
     });
   } else if (e.key.toLowerCase() === 'r') {
-    document.querySelectorAll('.modal-wrapper').forEach(m => {
-      const button = m.querySelector('a.image-random-action');
+    document.querySelectorAll('.modal-media').forEach(m => {
+      const button = m.querySelector('.image-random-action');
+      if (button) {
+        e.preventDefault();
+        button.click();
+      }
+    });
+  } else if (e.key.toLowerCase() === 'i') {
+    document.querySelectorAll('.modal-media').forEach(m => {
+      const button = m.querySelector('.image-info-action');
       if (button) {
         e.preventDefault();
         button.click();

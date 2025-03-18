@@ -178,8 +178,9 @@ final class AlbumHtmlGenerator
 
     public static function generateCollectionMediaHtml(
         CollectionMedia $collectionMedia,
-        string $indentation = '',
         bool $lazyLoading = false,
+        string $bottomHtml = '',
+        string $indentation = '',
     ): string {
         $titleAlt = $collectionMedia->media->buildAltText();
         $lazyLoadingString = $lazyLoading ? ' loading="lazy"' : '';
@@ -193,6 +194,11 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '      <span class="collection-media-delete-js" data-collection-media-id="' . $collectionMedia->id . '" data-media-id="' . $collectionMedia->media->id . '" data-event-listener-action="collectionDeleteMedia" data-target-container-id="collection-item-media-' . $collectionMedia->collectionId . '">' . CoreIcons::TRASH . '</span>';
         $output[] = $indentation . '    </div>';
         $output[] = $indentation . '  </figure>';
+
+        if ($bottomHtml) {
+            $output[] = $indentation . '  <div class="collection-media-info">' . $bottomHtml . '</div>';
+        }
+
         $output[] = $indentation . '</div>';
 
         return implode(PHP_EOL, $output);

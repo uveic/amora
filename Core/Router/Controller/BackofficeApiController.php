@@ -1145,7 +1145,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $existingMedia = $this->albumService->getCollectionMediaForMediaIds(
+        $existingMedia = $this->albumService->getCollectionMediaForMediaId(
             collectionId: $collectionId,
             mediaId: $mediaId,
         );

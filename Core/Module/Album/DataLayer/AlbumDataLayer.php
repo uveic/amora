@@ -216,6 +216,7 @@ class AlbumDataLayer
         array $collectionIds = [],
         array $albumIds = [],
         array $mediaIds = [],
+        array $containMediaIds = [],
         ?string $searchQuery = null,
         bool $includeMedia = false,
         ?QueryOptions $queryOptions = null,
@@ -291,6 +292,11 @@ class AlbumDataLayer
 
         if ($mediaIds) {
             $where .= $this->generateWhereSqlCodeForIds($params, $mediaIds, 'co.main_media_id', 'mainMediaId');
+        }
+
+        if ($containMediaIds) {
+            $where .= ' AND co.id IN (SELECT collection_id FROM ' . self::COLLECTION_MEDIA_TABLE . ' WHERE 1 '
+                . $this->generateWhereSqlCodeForIds($params, $containMediaIds, 'media_id', 'containMediaId') . ')';
         }
 
         if ($searchQuery) {

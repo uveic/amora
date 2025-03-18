@@ -23,6 +23,7 @@
   --color-success-light: #afdbc0;
   --color-success-highlight: #97e294;
   --color-private: #51b320;
+  --color-highlight: #ff9dc0;
 
   --color-light-0: #f4f4f4;
   --color-light-1: #ececec;
@@ -861,6 +862,16 @@ button.is-link.is-light,
 .is-danger {
   color: var(--color-failure) !important;
 }
+
+.background-highlight {
+  animation: backgroundFadeOut 3s ease-out;
+  border-radius: var(--border-radius);
+}
+
+@keyframes backgroundFadeOut {
+  0%   { background-color: var(--color-highlight); }
+  100% { background-color: transparent; }
+}
 /* Form ends here */
 /* Classes for generic use starts here */
 .m-t-0 {margin-top: 0 !important;}
@@ -906,6 +917,7 @@ button.is-link.is-light,
 .light-text-color {color: var(--color-black-light);}
 .no-background {background-color: transparent !important;}
 .flex-no-grow {flex-grow: 0 !important;}
+.flex-grow {flex-grow: 1 !important;}
 .flex-grow-2 {flex-grow: 2 !important;}
 .flex-grow-3 {flex-grow: 3 !important;}
 .flex-grow-4 {flex-grow: 4 !important;}

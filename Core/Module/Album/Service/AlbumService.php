@@ -60,7 +60,7 @@ readonly class AlbumService
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getCollectionMediaForMediaIds(int $collectionId, int $mediaId): ?CollectionMedia
+    public function getCollectionMediaForMediaId(int $collectionId, int $mediaId): ?CollectionMedia
     {
         $res = $this->filterCollectionMediaBy(
             collectionIds: [$collectionId],
@@ -114,6 +114,7 @@ readonly class AlbumService
         array $collectionIds = [],
         array $albumIds = [],
         array $mediaIds = [],
+        array $containMediaIds = [],
         ?string $searchQuery = null,
         bool $includeMedia = false,
         ?QueryOptions $queryOptions = null,
@@ -122,6 +123,7 @@ readonly class AlbumService
             collectionIds: $collectionIds,
             albumIds: $albumIds,
             mediaIds: $mediaIds,
+            containMediaIds: $containMediaIds,
             searchQuery: $searchQuery,
             includeMedia: $includeMedia,
             queryOptions: $queryOptions,

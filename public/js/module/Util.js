@@ -238,8 +238,8 @@ class UtilClass {
   }
 
   highlightElement(el) {
-    el.classList.add('is-highlighted');
-    setTimeout(() => {el.classList.remove('is-highlighted')}, 5000);
+    el.classList.add('background-highlight');
+    setTimeout(() => {el.classList.remove('background-highlight')}, 5000);
   }
 
   dataBase64ToFileObject(dataBase64, filename, lastModified) {
