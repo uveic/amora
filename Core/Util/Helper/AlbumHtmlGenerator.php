@@ -389,7 +389,6 @@ final class AlbumHtmlGenerator
 
         $output[] = $indentation . '  <div class="album-modal-header">';
         $output[] = $indentation . '    <h1 class="album-modal-title">' . $album->titleHtml . '</h1>';
-        $output[] = $indentation . '    <h2 class="album-modal-subtitle">de abril a agosto de 2023, por Víctor González</h2>';
 
         $output[] = $indentation . '    <div class="media-text album-modal-text">';
 
