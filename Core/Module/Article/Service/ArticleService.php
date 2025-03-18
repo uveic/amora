@@ -590,6 +590,11 @@ readonly class ArticleService
             : null;
     }
 
+    public function updatePageContent(PageContent $pageContent): bool
+    {
+        return $this->articleDataLayer->updatePageContent($pageContent);
+    }
+
     public function workflowUpdatePageContent(
         User $user,
         PageContentType|AppPageContentType $contentType,

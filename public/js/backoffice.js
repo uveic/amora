@@ -538,7 +538,6 @@ function collectionAddMedia(e) {
   };
 
   document.querySelector('.select-media-modal').classList.add('null');
-  container.parentElement.scrollIntoView({behavior: 'smooth', block: 'start'});
 
   if (collectionId) {
     Request.post('/back/collection/' + collectionId + '/media', JSON.stringify(payload))

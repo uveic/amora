@@ -200,7 +200,7 @@ class AlbumDataLayer
                         includeMedia: $includeMedia,
                         queryOptions: new QueryOptions(
                             orderBy: [
-                                new QueryOrderBy('order', QueryOrderDirection::ASC),
+                                new QueryOrderBy('sequence', QueryOrderDirection::ASC),
                                 new QueryOrderBy('id', QueryOrderDirection::ASC),
                             ],
                         ),
@@ -225,7 +225,7 @@ class AlbumDataLayer
         }
 
         $orderByMapping = [
-            'order' => 'co.sequence',
+            'sequence' => 'co.sequence',
             'id' => 'co.id',
             'begins_with' => 'begins_with',
             'word_begins_with' => 'word_begins_with',
@@ -317,7 +317,7 @@ class AlbumDataLayer
                         collectionIds: [$item['collection_id']],
                         queryOptions: new QueryOptions(
                             orderBy: [
-                                new QueryOrderBy('order', QueryOrderDirection::ASC),
+                                new QueryOrderBy('sequence', QueryOrderDirection::ASC),
                                 new QueryOrderBy('id', QueryOrderDirection::ASC),
                             ],
                         ),
