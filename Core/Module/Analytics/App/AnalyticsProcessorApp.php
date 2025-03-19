@@ -374,6 +374,7 @@ class AnalyticsProcessorApp extends App
             '.ini',
             '.rb',
             '.md',
+            '.env',
         ];
 
         foreach ($endsWith as $value) {
