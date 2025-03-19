@@ -1,5 +1,5 @@
 const changeMedia = () => {
-  document.querySelectorAll('section.js-content-slider-fade').forEach(s => {
+  document.querySelectorAll('.js-content-slider-fade').forEach(s => {
     const activeImage = s.querySelector('img.media-opacity-active') ?? s.querySelector('img.media-item');
     const nextImage = s.querySelector('img.media-opacity-active + img') ?? s.querySelector('.media-wrapper img');
 
@@ -17,8 +17,8 @@ document.querySelectorAll('.js-media-read-more').forEach(a => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
 
-    const sectionId = a.dataset.sectionId;
-    document.querySelector('#media-text-panel-' + sectionId).classList.remove('null');
+    const collectionId = a.dataset.collectionId;
+    document.querySelector('#media-text-panel-' + collectionId).classList.remove('null');
   });
 });
 
@@ -191,24 +191,24 @@ document.querySelectorAll('.js-navigation-left, .js-navigation-right').forEach(a
 document.querySelectorAll('.dots-nine-wrapper').forEach(b => {
   b.addEventListener('click', e => {
     e.preventDefault();
-    document.querySelector('.album-new-york-sections-modal-js').classList.add('modal-wrapper-open');
+    document.querySelector('.album-new-york-collections-modal-js').classList.add('modal-wrapper-open');
   });
 });
 
 document.querySelectorAll('.modal-close-button').forEach(b => {
   b.addEventListener('click', e => {
     e.preventDefault();
-    document.querySelector('.album-new-york-sections-modal-js').classList.remove('modal-wrapper-open');
+    document.querySelector('.album-new-york-collections-modal-js').classList.remove('modal-wrapper-open');
   });
 });
 
-document.querySelectorAll('.js-section-item').forEach(b => {
+document.querySelectorAll('.js-collection-item').forEach(b => {
   b.addEventListener('click', e => {
     e.preventDefault();
 
-    const sectionId = b.dataset.sectionId;
-    document.querySelector('.album-new-york-sections-modal-js').classList.remove('modal-wrapper-open');
-    document.querySelector('.content-child[data-section-id="' + sectionId + '"]')
+    const collectionId = b.dataset.collectionId;
+    document.querySelector('.album-new-york-collections-modal-js').classList.remove('modal-wrapper-open');
+    document.querySelector('.content-child[data-collection-id="' + collectionId + '"]')
       .scrollIntoView({behavior: 'smooth', block: 'start' });
   });
 });
@@ -218,7 +218,7 @@ document.addEventListener('keydown', e => {
     return;
   }
 
-  const modal = document.querySelector('.album-new-york-sections-modal-js');
+  const modal = document.querySelector('.album-new-york-collections-modal-js');
   if (modal && modal.classList.contains('modal-wrapper-open')) {
     return;
   }
