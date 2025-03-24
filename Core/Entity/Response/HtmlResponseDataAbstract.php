@@ -38,7 +38,7 @@ abstract class HtmlResponseDataAbstract
 
         $this->baseUrl = Core::getConfig()->baseUrl ?: '';
         $this->sitePath = $this->request->path ?: '/';
-        $this->siteUrl = trim($this->baseUrl . '/' . ltrim($this->sitePath, ' /'), ' /');
+        $this->siteUrl = trim(rtrim($this->baseUrl, ' /') . '/' . ltrim($this->sitePath, ' /'), ' /');
         $this->siteLanguage = $request->siteLanguage;
         $this->siteName = $this->localisationUtil->getValue('siteName');
         $this->themeColourHex = Core::getConfig()->themeColourHex;

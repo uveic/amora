@@ -2,14 +2,12 @@
 
 use Amora\App\Value\Language;
 use Amora\Core\Core;
-use Amora\App\Entity\AppHtmlHomepageResponseData;
-use Amora\Core\Entity\Response\HtmlResponseData;
-use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
+use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 use Amora\Core\Util\UrlBuilderUtil;
 
-/** @var HtmlResponseData|AppHtmlHomepageResponseData|HtmlResponseDataAdmin $responseData */
+/** @var HtmlResponseDataAbstract $responseData */
 
-$canonical = '';
+$canonicalUrl = null;
 
 if (isset($responseData->article)) {
     $articleUrl = UrlBuilderUtil::buildPublicArticlePath(
@@ -17,16 +15,16 @@ if (isset($responseData->article)) {
         language: $responseData->siteLanguage,
     );
 
-    $canonical = $responseData->siteUrl === $articleUrl
-        ? ''
-        : '  <link rel="canonical" href="' . $articleUrl . '">' . PHP_EOL;
+    $canonicalUrl = $responseData->siteUrl === $articleUrl ? null : $articleUrl;
 }
 
 $baseUrlWithLanguage = UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage);
 $baseUrlWithoutLanguage = UrlBuilderUtil::buildBaseUrlWithoutLanguage();
 
-if (!$canonical && ($responseData->siteUrl === $baseUrlWithoutLanguage || $responseData->siteUrl === $baseUrlWithLanguage)) {
-    $canonical = '<link rel="canonical" href="' . UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage) . '">' . PHP_EOL;
+if (!$canonicalUrl && ($responseData->siteUrl === $baseUrlWithoutLanguage || $responseData->siteUrl === $baseUrlWithLanguage)) {
+    $canonicalUrl = UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage);
+} else if (!$canonicalUrl) {
+    $canonicalUrl = $responseData->siteUrl;
 }
 
 ?>
@@ -54,21 +52,26 @@ if (!$canonical && ($responseData->siteUrl === $baseUrlWithoutLanguage || $respo
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
   <link rel="icon" href="/favicon.ico">
-  <link rel="manifest" href="/manifest.json">
   <link rel="alternate" type="application/rss+xml" title="<?=$responseData->siteName?>" href="<?=UrlBuilderUtil::buildPublicRssUrl()?>">
   <link rel="alternate" type="application/feed+json" title="<?=$responseData->siteName?>" href="<?=UrlBuilderUtil::buildPublicJsonFeedUrl()?>">
 <?php
+    $pathWithoutLanguage = $responseData->request->getPathWithoutLanguageAsString();
+    if ($pathWithoutLanguage === 'home') {
+        $pathWithoutLanguage = '';
+    }
+
     if ($responseData->siteUrl === $baseUrlWithoutLanguage || $responseData->siteUrl === $baseUrlWithLanguage) {
-
         echo '  <link rel="alternate" href="' . $baseUrlWithoutLanguage . '" hreflang="x-default">' . PHP_EOL;
+    } elseif ($pathWithoutLanguage) {
+        echo '  <link rel="alternate" href="' . $baseUrlWithoutLanguage . '/' . $pathWithoutLanguage . '" hreflang="x-default">' . PHP_EOL;
+    }
 
-        /** @var Language $enabledSiteLanguage */
-        foreach (Core::getEnabledSiteLanguages() as $enabledSiteLanguage) {
-            echo '  <link rel="alternate" href="' . UrlBuilderUtil::buildBaseUrl($enabledSiteLanguage) . '" hreflang="' . strtolower($enabledSiteLanguage->value) . '">' . PHP_EOL;
+    /** @var Language $enabledSiteLanguage */
+    foreach (Core::getEnabledSiteLanguages() as $enabledSiteLanguage) {
+        $url = $baseUrlWithoutLanguage . '/' . strtolower($enabledSiteLanguage->value) . ($pathWithoutLanguage ? '/' . $pathWithoutLanguage : '');
+        if ($url !== $responseData->siteUrl) {
+            echo '  <link rel="alternate" href="' . $url . '" hreflang="' . strtolower($enabledSiteLanguage->value) . '">' . PHP_EOL;
         }
     }
-
-    if ($canonical) {
-        echo '  ' . $canonical;
-    }
 ?>
+  <link rel="canonical" href="<?=$canonicalUrl?>">

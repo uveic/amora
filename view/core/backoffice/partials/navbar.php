@@ -51,6 +51,7 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
     </form>
 <?php } ?>
     <div class="header-right">
+      <label for="mobile-nav" class="null">Menu</label>
       <input type="checkbox" id="mobile-nav" class="mobile-nav">
       <nav class="header-navbar">
         <ul class="header-navbar-ul">
