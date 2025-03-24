@@ -18,12 +18,7 @@ if (isset($responseData->article)) {
     $canonicalUrl = $responseData->siteUrl === $articleUrl ? null : $articleUrl;
 }
 
-$baseUrlWithLanguage = UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage);
-$baseUrlWithoutLanguage = UrlBuilderUtil::buildBaseUrlWithoutLanguage();
-
-if (!$canonicalUrl && ($responseData->siteUrl === $baseUrlWithoutLanguage || $responseData->siteUrl === $baseUrlWithLanguage)) {
-    $canonicalUrl = UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage);
-} else if (!$canonicalUrl) {
+if (!$canonicalUrl) {
     $canonicalUrl = $responseData->siteUrl;
 }
 
@@ -55,6 +50,8 @@ if (!$canonicalUrl && ($responseData->siteUrl === $baseUrlWithoutLanguage || $re
   <link rel="alternate" type="application/rss+xml" title="<?=$responseData->siteName?>" href="<?=UrlBuilderUtil::buildPublicRssUrl()?>">
   <link rel="alternate" type="application/feed+json" title="<?=$responseData->siteName?>" href="<?=UrlBuilderUtil::buildPublicJsonFeedUrl()?>">
 <?php
+    $baseUrlWithLanguage = UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage);
+    $baseUrlWithoutLanguage = UrlBuilderUtil::buildBaseUrlWithoutLanguage();
     $pathWithoutLanguage = $responseData->request->getPathWithoutLanguageAsString();
     if ($pathWithoutLanguage === 'home') {
         $pathWithoutLanguage = '';
