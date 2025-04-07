@@ -85,6 +85,20 @@ Check Ubuntu version: `cat /etc/os-release`
 
 Test automatic renewal: `sudo certbot renew --dry-run`
 
+## MariaDB
+
+List databases: `SHOW DATABASES;`
+
+List users: `SELECT host, user FROM mysql.user;`
+
+User rights: `SELECT user, db, host from mysql.db;`
+
+Create database: `CREATE DATABASE db_name CHARACTER SET = 'utf8mb4' COLLATE = 'utf8mb4_general_ci';`
+
+Create user: `CREATE USER username@localhost IDENTIFIED BY 'userpass';`
+
+Grant permissions to user: `GRANT ALL PRIVILEGES ON db_name.* TO username@localhost;`
+
 ## Other Useful Commands
 Sync files from my local computer to a server through SSH: `rsync -a -e "ssh" --exclude 'path/to/file.txt' --exclude 'path-to-folder/*' --exclude 'README.md' ~/path/to/local/folder/* user@server-ip-address:/path/to/remote/folder/`
 
