@@ -51,7 +51,7 @@ final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
         );
 
         return Response::createHtmlResponse(
-            template: 'app/frontend/public/home',
+            template: 'app/public/home',
             responseData: new AppHtmlHomepageResponseData(
                 request: $request,
                 pagination: $pagination,

@@ -71,7 +71,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         }
 
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/login',
+            template: 'core/public/login',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)
@@ -99,7 +99,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         }
 
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/login-forgot',
+            template: 'core/public/login-forgot',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)
@@ -143,7 +143,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         }
 
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/register',
+            template: 'core/public/register',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)->getValue('navSignUp'),
@@ -203,7 +203,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
         $user = $this->userService->getUserForId($res->userId);
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/password-reset',
+            template: 'core/public/password-reset',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navChangePassword'),
@@ -241,7 +241,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
         $user = $this->userService->getUserForId($res->userId);
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/password-creation',
+            template: 'core/public/password-creation',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navCreatePassword'),
@@ -276,7 +276,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         }
 
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/invite-request',
+            template: 'core/public/invite-request',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: Core::getLocalisationUtil($request->siteLanguage)->getValue('navSignUp'),
@@ -321,7 +321,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         }
 
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/album/' . $album->template->getTemplate(),
+            template: 'core/public/album/' . $album->template->getTemplate(),
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $album->titleHtml,

@@ -7,15 +7,17 @@ use Amora\Core\Value\CoreIcons;
 /** @var HtmlResponseData $responseData */
 
 $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, className: 'logo-on-top');
-$titleHtml = $responseData->getLocalValue('authenticationPasswordCreateSubtitle');
-$subtitleHtml = '';
-$buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink');
+$titleHtml = $responseData->getLocalValue('authenticationPasswordResetSubtitle');
+$subtitleHtml = sprintf(
+    $responseData->getLocalValue('authenticationPasswordResetAlreadyLogin'),
+    UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage),
+);
 
 ?>
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
-<?=$this->insert('../../../app/frontend/public/partials/head', ['responseData' => $responseData])?>
+<?=$this->insert('../../../app/public/partials/head', ['responseData' => $responseData])?>
   <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
   <link href="/css/app/style.css?v=000" rel="stylesheet" type="text/css">
 </head>
@@ -27,7 +29,7 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
     <form method="POST" id="form-password-reset">
       <input class="input" type="hidden" id="userId" name="userId" value="<?=$responseData->passwordUserId?>">
       <input class="input" type="hidden" id="verificationHash" name="verificationHash" value="<?=$responseData->verificationHash?>">
-      <input class="input" type="hidden" id="postUrl" name="postUrl" value="<?= UrlBuilderUtil::PUBLIC_API_PASSWORD_CREATION?>">
+      <input class="input" type="hidden" id="postUrl" name="postUrl" value="<?= UrlBuilderUtil::PUBLIC_API_PASSWORD_RESET?>">
       <div>
         <h1 id="register-title" class="m-b-6"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$titleHtml?></h2>
@@ -36,26 +38,26 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
           <div class="field">
             <p class="control has-icons-left">
               <label for="password" class="null">Password</label>
-              <input class="input" id="password" name="password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>" required>
+              <input class="input" type="password" id="password" name="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>" required>
             </p>
             <p class="help"><span class="is-danger"></span><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
           </div>
           <div class="field">
             <p class="control has-icons-left">
               <label for="passwordConfirmation" class="null">Password confirmation</label>
-              <input class="input" id="passwordConfirmation" name="passwordConfirmation" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>" required>
+              <input class="input" type="password" id="passwordConfirmation" name="passwordConfirmation" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>" required>
             </p>
           </div>
           <div id="login-failure-message" class="is-failure m-t-1 null"></div>
           <div class="field">
             <p class="control">
-              <input class="button is-success" type="submit" value="<?=$responseData->getLocalValue('formPasswordCreateAction')?>">
+              <input class="button is-success" type="submit" value="<?=$responseData->getLocalValue('formPasswordResetAction')?>">
             </p>
           </div>
         </div>
       </div>
       <div id="password-reset-success" class="field null">
-        <p class="m-b-3"><?=$responseData->getLocalValue('authenticationPasswordCreationActionSuccess')?></p>
+        <p class="m-b-3"><?=$responseData->getLocalValue('authenticationPasswordResetActionSuccess')?></p>
         <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('authenticationActionHomeLink')?></a>
       </div>
     </form>

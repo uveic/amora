@@ -108,7 +108,7 @@ class Router
     {
         if ($this->displayEmptyPage($request)) {
             return Response::createHtmlResponse(
-                template: 'core/frontend/public/hidden',
+                template: 'core/public/hidden',
                 responseData: new HtmlResponseData(
                     request: $request,
                 ),
@@ -249,7 +249,7 @@ class Router
         $articleSections = $articleService->getSectionsForArticleId($article->id);
 
         return Response::createHtmlResponse(
-            template: 'app/frontend/public/article-view',
+            template: 'app/public/article-view',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $article->title,
@@ -297,7 +297,7 @@ class Router
             return false;
         }
 
-        if ($request->session?->isAdmin()) {
+        if ($request->session?->isAuthenticated()) {
             return false;
         }
 

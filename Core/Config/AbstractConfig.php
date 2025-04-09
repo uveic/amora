@@ -75,6 +75,9 @@ final readonly class S3Config {
 
 abstract class AbstractConfig {
     public function __construct(
+        public readonly string $sessionIdCookieName,
+        public readonly int $sessionIdCookieValidForSeconds,
+
         public readonly string $appName,
         public readonly Env $env,
         public readonly string $salt,

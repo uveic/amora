@@ -79,12 +79,14 @@ final class Request
 
     public function getGetParam(string $paramName): ?string
     {
-        return  $this->getParams[$paramName] ?? null;
+        $getParams = $this->getParams;
+        return $getParams[$paramName] ?? null;
     }
 
     public function getCookie(string $cookieName): ?string
     {
-        return empty($this->cookies[$cookieName]) ? null : $this->cookies[$cookieName];
+        $cookies = $this->cookies;
+        return empty($cookies[$cookieName]) ? null : $cookies[$cookieName];
     }
 
     public function getBodyParam(string $paramName)
@@ -142,10 +144,6 @@ final class Request
             return $this->session->user->language;
         }
 
-        if (Core::getConfig()->prioritiseDefaultLanguageOverBrowserLangage) {
-            return Core::getDefaultLanguage();
-        }
-
         $parts = $this->clientLanguage ? explode(',', $this->clientLanguage) : [];
 
         foreach ($parts as $part) {
@@ -170,7 +168,7 @@ final class Request
     }
 
     private function loadSession(): ?Session {
-        $sessionId = $this->getCookie('sid');
+        $sessionId = $this->getCookie(Core::getConfig()->sessionIdCookieName);
         return UserCore::getSessionService()->loadSession($sessionId);
     }
 }

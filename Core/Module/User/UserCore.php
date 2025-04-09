@@ -27,30 +27,25 @@ class UserCore extends Core
 
     public static function getUserDataLayer(): UserDataLayer
     {
-        $db = self::getDb();
-        $logger = self::getUserLogger();
-
         return self::getInstance(
             className: 'UserDataLayer',
-            factory: function () use ($db, $logger) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
-                return new UserDataLayer($db, $logger);
+                return new UserDataLayer(
+                    db: self::getDb(),
+                    logger: self::getUserLogger(),
+                );
             },
         );
     }
 
     public static function getUserService(): UserService
     {
-        $logger = self::getUserLogger();
-        $userDataLayer = self::getUserDataLayer();
-        $sessionService = self::getSessionService();
-        $userMailService = self::getUserMailService();
-
         return self::getInstance(
             className: 'UserService',
-            factory: function () use ($logger, $userDataLayer, $sessionService, $userMailService) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
                 require_once self::getPathRoot() . '/App/Value/AppUserRole.php';
@@ -60,36 +55,39 @@ class UserCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserRegistrationRequest.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Service/UserService.php';
-                return new UserService($logger, $userDataLayer, $sessionService, $userMailService);
+                return new UserService(
+                    logger: self::getUserLogger(),
+                    userDataLayer: self::getUserDataLayer(),
+                    sessionService: self::getSessionService(),
+                    userMailService: self::getUserMailService(),
+                );
             },
         );
     }
 
     public static function getSessionDataLayer(): SessionDataLayer
     {
-        $db = self::getDb();
-        $logger = self::getUserLogger();
-
         return self::getInstance(
             className: 'SessionDataLayer',
-            factory: function () use ($db, $logger) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/Session.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/SessionDataLayer.php';
-                return new SessionDataLayer($db, $logger);
+                return new SessionDataLayer(
+                    db: self::getDb(),
+                    logger: self::getUserLogger(),
+                );
             },
         );
     }
 
     public static function getSessionService(): SessionService
     {
-        $dataLayer = self::getSessionDataLayer();
-
         return self::getInstance(
             className: 'SessionService',
-            factory: function () use ($dataLayer) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
                 require_once self::getPathRoot() . '/App/Value/AppUserRole.php';
@@ -97,25 +95,29 @@ class UserCore extends Core
                 require_once self::getPathRoot() . '/Core/Entity/Util/UserAgentInfo.php';
                 require_once self::getPathRoot() . '/Core/Util/UserAgentParserUtil.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Service/SessionService.php';
-                return new SessionService($dataLayer);
+                return new SessionService(
+                    sessionIdCookieName: Core::getConfig()->sessionIdCookieName,
+                    sessionIdCookieValidForSeconds: Core::getConfig()->sessionIdCookieValidForSeconds,
+                    dataLayer:self::getSessionDataLayer(),
+                );
             },
         );
     }
 
     public static function getUserMailService(): UserMailService
     {
-        $dataLayer = self::getUserDataLayer();
-        $mailerService = MailerCore::getMailerService();
-
         return self::getInstance(
             className: 'UserMailService',
-            factory: function () use ($dataLayer, $mailerService) {
+            factory: function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserVerification.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Service/UserMailService.php';
-                return new UserMailService($dataLayer, $mailerService);
+                return new UserMailService(
+                    userDataLayer: self::getUserDataLayer(),
+                    mailerService: MailerCore::getMailerService(),
+                );
             },
         );
     }

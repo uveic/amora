@@ -229,7 +229,7 @@ class Response
         ?HtmlResponseDataAbstract $responseData = null,
     ): Response {
         return Response::createHtmlResponse(
-            template: 'app/frontend/public/404',
+            template: 'app/public/404',
             responseData: $responseData ?? new HtmlResponseData($request),
             httpStatusCode: HttpStatusCode::HTTP_404_NOT_FOUND,
         );

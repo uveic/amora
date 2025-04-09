@@ -14,12 +14,11 @@ use Amora\Core\Util\StringUtil;
 
 class SessionService
 {
-    const SESSION_ID_COOKIE_NAME = 'sid';
-    const SESSION_ID_COOKIE_VALID_FOR_SECONDS = 2592000; // 30 days
-
     private ?Session $session = null;
 
     public function __construct(
+        private readonly string $sessionIdCookieName,
+        private readonly int $sessionIdCookieValidForSeconds,
         private readonly SessionDataLayer $dataLayer,
     ) {}
 
@@ -32,7 +31,7 @@ class SessionService
     {
         return DateTimeImmutable::createFromFormat(
             format: 'U',
-            datetime: time() + self::SESSION_ID_COOKIE_VALID_FOR_SECONDS,
+            datetime: time() + $this->sessionIdCookieValidForSeconds,
         );
     }
 
@@ -88,8 +87,8 @@ class SessionService
             $options['domain'] = parse_url(Core::getConfig()->baseUrl, PHP_URL_HOST);
         }
 
-        setcookie(self::SESSION_ID_COOKIE_NAME, $sid, $options);
-        $_COOKIE[self::SESSION_ID_COOKIE_NAME] = $sid;
+        setcookie($this->sessionIdCookieName, $sid, $options);
+        $_COOKIE[$this->sessionIdCookieName] = $sid;
     }
 
     public function refreshSession(string $sid, int $sessionId): bool

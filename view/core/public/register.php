@@ -12,7 +12,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
-<?=$this->insert('../../../app/frontend/public/partials/head', ['responseData' => $responseData])?>
+<?=$this->insert('../../../app/public/partials/head', ['responseData' => $responseData])?>
   <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
   <link href="/css/app/style.css?v=000" rel="stylesheet" type="text/css">
 </head>
