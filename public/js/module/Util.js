@@ -241,28 +241,6 @@ class UtilClass {
     el.classList.add('background-highlight');
     setTimeout(() => {el.classList.remove('background-highlight')}, 5000);
   }
-
-  dataBase64ToFileObject(dataBase64, filename, lastModified) {
-    const arr = dataBase64.split(',');
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[arr.length - 1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    const options = {
-      type: mime,
-    };
-
-    if (lastModified) {
-      options.lastModified = lastModified;
-    }
-
-    return new File([u8arr], filename, options,);
-  }
 }
 
 export const Util = new UtilClass();

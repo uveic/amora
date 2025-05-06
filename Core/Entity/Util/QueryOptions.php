@@ -16,7 +16,7 @@ readonly class QueryOptions
     {
         return $this->pagination
             ? $this->pagination->itemsPerPage
-            : 10000;
+            : 100000;
     }
 
     public function getOffset(): int
