@@ -1,3 +1,8 @@
+:root {
+  --color-blue: #0077B6;
+  --color-blue-hover: #023E8A;
+}
+
 trix-editor {
   border: 1px solid #bbb;
   border-radius: var(--border-radius);
@@ -292,6 +297,12 @@ trix-editor .attachment__metadata .attachment__name {
 trix-editor .attachment__metadata .attachment__size {
   margin-left: 0.2em;
   white-space: nowrap; }
+trix-editor a, trix-editor a:visited, trix-editor a:active, trix-editor a:focus {
+  color: var(--color-blue);
+}
+trix-editor a:hover {
+  color: var(--color-blue-hover);
+}
 
 .trix-content {
   line-height: 1.5; }

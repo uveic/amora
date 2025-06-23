@@ -2,6 +2,64 @@ import {Request} from "./module/Request.js?v=000";
 import {Global} from "./module/localisation.js?v=000";
 import {Util} from "./module/Util.js?v=000";
 
+const displaySearchResult = (containerEl, results) => {
+  if (!results.length) {
+    return;
+  }
+
+  let previousHeaderTitle = null;
+
+  for (const i in results) {
+    if (results[i].headerTitle.length && previousHeaderTitle !== results[i].headerTitle) {
+      const titleEl = document.createElement('h1');
+      titleEl.className = 'search-result-header';
+      titleEl.textContent = results[i].headerTitle;
+      containerEl.appendChild(titleEl);
+    }
+
+    const resultItem = document.createElement('a');
+    resultItem.className = 'search-result-item';
+    resultItem.dataset.itemId = results[i].id;
+    resultItem.href = results[i].url;
+
+    const resultContent = document.createElement('div');
+    resultContent.className = 'search-result-content';
+
+    if (results[i].media) {
+      const resultMediaContainer = document.createElement('figure');
+      resultMediaContainer.className = 'search-result-media';
+
+      const resultMedia = new Image();
+      resultMedia.src = results[i].media.pathXSmall;
+
+      resultMediaContainer.appendChild(resultMedia);
+      resultItem.appendChild(resultMediaContainer);
+    }
+
+    const resultTitle = document.createElement('div');
+    resultTitle.textContent = results[i].title;
+    resultTitle.className = 'search-result-title';
+    resultContent.appendChild(resultTitle);
+
+    if (results[i].subtitle) {
+      const resultSubtitle = document.createElement('div');
+      resultSubtitle.className = 'search-result-subtitle';
+      resultSubtitle.textContent = results[i].subtitle;
+      resultContent.appendChild(resultSubtitle);
+    }
+
+    resultItem.appendChild(resultContent);
+
+    containerEl.appendChild(resultItem);
+
+    previousHeaderTitle = results[i].headerTitle;
+  }
+
+  if (window.innerWidth <= 800) {
+    document.activeElement.blur();
+  }
+}
+
 function handleSearchKeyDownEvent(event) {
   const searchContainer = document.querySelector('#form-search');
   if (!searchContainer || searchContainer.classList.contains('null')) {
@@ -133,7 +191,7 @@ async function handleSearchRequest(
         return;
       }
 
-      Util.displaySearchResult(resultContainer, response.results);
+      displaySearchResult(resultContainer, response.results);
 
       loadingContainer.classList.add('null');
       resultContainer.classList.remove('null');

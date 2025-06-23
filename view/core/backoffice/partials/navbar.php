@@ -51,8 +51,8 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
     </form>
 <?php } ?>
     <div class="header-right">
-      <label for="mobile-nav" class="null">Menu</label>
       <input type="checkbox" id="mobile-nav" class="mobile-nav">
+      <label for="mobile-nav" class="mobile-nav-label"><span class="null">Mobile menu</span><span></span></label>
       <nav class="header-navbar">
         <ul class="header-navbar-ul">
 <?php
@@ -71,9 +71,8 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
 ?>
           <li>
             <div class="nav-dropdown-menu-wrapper">
-              <label for="nav-dropdown-toggle-<?=$i?>" class="null">Menu</label>
+              <label for="nav-dropdown-toggle-<?=$i?>" class="nav-dropdown-item nav-dropdown-toggle-label"><?=$menuItem->text . ' ' . $menuItem->icon?></label>
               <input type="checkbox" id="nav-dropdown-toggle-<?=$i?>" class="nav-dropdown-toggle">
-              <label for="nav-dropdown-toggle-<?=$i++?>" class="nav-dropdown-item nav-dropdown-toggle-label"><?=$menuItem->text . ' ' . $menuItem->icon?></label>
               <ul class="nav-dropdown-menu">
 <?php
     /** @var MenuItem $child */
@@ -82,16 +81,18 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
         foreach ($child->dataset as $left => $right) {
             $dataset[] = $left . '="' . $right . '"';
         }
-        echo '              <li><a class="' . ($child->class ?? '') . '" href="' . $child->path . '"' . ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
+        echo '                <li><a class="' . ($child->class ?? '') . '" href="' . $child->path . '"' . ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
     }
 ?>
               </ul>
             </div>
           </li>
-<?php } ?>
+<?php
+        $i++;
+    }
+?>
         </ul>
       </nav>
-      <label for="mobile-nav" class="mobile-nav-label"><span class="null">Mobile menu</span><span></span></label>
 <?php if ($isSearchEnabled) {
     echo '      <span class="search-action-js search-icon">' . CoreIcons::MAGNIFYING_GLASS . '</span>' . PHP_EOL;
 } ?>

@@ -55,11 +55,12 @@ class Response
         $allowedUrls = implode(' ', array_merge(["'self'"], Core::getConfig()->allowedUrlsForSrcScript ?? []));
         $connectSrc = 'connect-src ' . $allowedUrls . ';';
         $scriptSrc = 'script-src ' . $allowedUrls . $nonce . ';';
-        $defaultSrc = "default-src 'self'";
+        $defaultSrc = "default-src 'self';";
         if (Core::getConfig()->allowImgSrcData) {
             $allowedDomains[] = 'data: blob:;';
         }
-        $imgSrc = 'img-src ' . implode(' ', $allowedDomains);
+        $imgSrc = 'img-src ' . implode(' ', $allowedDomains) . ';';
+        $mediaSrc = 'media-src ' . implode(' ', $allowedDomains) . ';';
         $styleSrc = "style-src 'self' 'unsafe-inline';";
 
         $insecureRequests = '';
@@ -80,7 +81,7 @@ class Response
                 $httpStatus->value,
                 "Content-Type: $contentType->value",
                 "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate",
-                "Content-Security-Policy: $defaultSrc $connectSrc $scriptSrc $imgSrc $styleSrc" . $insecureRequests,
+                "Content-Security-Policy: $defaultSrc $connectSrc $scriptSrc $imgSrc $mediaSrc $styleSrc" . $insecureRequests,
                 "X-Content-Type-Options: nosniff",
                 "Referrer-Policy: strict-origin-when-cross-origin",
                 "X-Frame-Options: SAMEORIGIN",
