@@ -85,13 +85,14 @@ abstract class AbstractConfig {
         public readonly array $allowedUrlsForSrcScript,
         public readonly array $allowedCorsDomains,
         public readonly bool $allowImgSrcData,
+        public readonly bool $allowYouTubeIFrame,
 
         public readonly bool $isLoggingEnabled,
         public readonly bool $isAnalyticsEnabled,
         public readonly bool $isRegistrationEnabled,
         public readonly bool $isInvitationEnabled,
         public readonly bool $isSearchEnabled,
-        public readonly bool $prioritiseDefaultLanguageOverBrowserLangage,
+        public readonly bool $prioritiseDefaultLanguageOverBrowserLanguage,
 
         public readonly string $siteAdminEmail,
         public readonly string $siteAdminName,

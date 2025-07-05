@@ -2,7 +2,6 @@ import {Util} from './module/Util.js?v=000';
 import {Request} from './module/Request.js?v=000';
 import {Global} from "./module/localisation.js?v=000";
 import {Uploader} from "./module/Uploader.js?v=000";
-import {appAddEventListenerAction} from "./app/back.js?v=000";
 
 window.data = {
   mediaCache: [],
@@ -37,8 +36,6 @@ function addEventListenerAction(media, mediaId, eventListenerAction, targetConta
     media.removeEventListener('click', insertImageInArticle);
     media.removeEventListener('click', handleGenericMainMediaClick);
     media.removeEventListener('click', collectionAddMedia);
-
-    appAddEventListenerAction(media, eventListenerAction);
   }
 
   media.targetContainerId = targetContainerId;
@@ -1526,38 +1523,6 @@ document.querySelectorAll('.page-content-flag-item').forEach(fi => {
         cli.classList.remove('content-language-active');
       }
     });
-  });
-});
-
-document.querySelectorAll('.article-add-section-video').forEach(bu => {
-  bu.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    const videoUrl = window.prompt(Global.get('editorVideoUrlTitle'));
-    if (videoUrl) {
-      const ytVideoId = Util.getYoutubeVideoIdFromUrl(videoUrl);
-      if (!ytVideoId) {
-        return;
-      }
-
-      let videoWrapper = document.createElement('div');
-      videoWrapper.className = 'section-video-youtube';
-      let iframeElement = document.createElement('iframe');
-      iframeElement.width = '560';
-      iframeElement.height = '315';
-      iframeElement.src = 'https://www.youtube-nocookie.com/embed/' + ytVideoId;
-      iframeElement.frameBorder = '0';
-      iframeElement.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      iframeElement.allowFullscreen = true;
-
-      videoWrapper.appendChild(iframeElement);
-
-      const container = document.querySelector('.medium-editor-content');
-      container.appendChild(videoWrapper);
-      const newParagraph = document.createElement('p');
-      newParagraph.innerHTML = '<br>';
-      container.appendChild(newParagraph);
-    }
   });
 });
 

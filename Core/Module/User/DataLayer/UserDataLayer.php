@@ -18,14 +18,14 @@ class UserDataLayer
 {
     use DataLayerTrait;
 
-    const USER_TABLE = 'core_user';
-    const USER_VERIFICATION_TABLE = 'core_user_verification';
-    const USER_VERIFICATION_TYPE_TABLE = 'core_user_verification_type';
-    const USER_REGISTRATION_REQUEST_TABLE = 'core_user_registration_request';
+    const string USER_TABLE = 'core_user';
+    const string USER_VERIFICATION_TABLE = 'core_user_verification';
+    const string USER_VERIFICATION_TYPE_TABLE = 'core_user_verification_type';
+    const string USER_REGISTRATION_REQUEST_TABLE = 'core_user_registration_request';
 
-    const USER_STATUS_TABLE = 'core_user_status';
-    const USER_ROLE_TABLE = 'core_user_role';
-    const USER_JOURNEY_STATUS_TABLE = 'core_user_journey_status';
+    const string USER_STATUS_TABLE = 'core_user_status';
+    const string USER_ROLE_TABLE = 'core_user_role';
+    const string USER_JOURNEY_STATUS_TABLE = 'core_user_journey_status';
 
     public function __construct(
         private readonly MySqlDb $db,

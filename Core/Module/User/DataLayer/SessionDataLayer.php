@@ -16,7 +16,7 @@ class SessionDataLayer
 {
     use DataLayerTrait;
 
-    const SESSION_TABLE_NAME = 'core_session';
+    const string SESSION_TABLE_NAME = 'core_session';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -29,7 +29,6 @@ class SessionDataLayer
         $baseSql = 'SELECT ';
         $fields = [
             's.id AS session_id',
-            's.user_id',
             's.sid AS session_sid',
             's.created_at AS session_created_at',
             's.last_visited_at AS session_last_visited_at',
@@ -39,6 +38,7 @@ class SessionDataLayer
             's.ip AS session_ip',
             's.browser_and_platform AS session_browser_and_platform',
 
+            'u.id AS user_id',
             'u.status_id AS user_status_id',
             'u.language_iso_code AS user_language_iso_code',
             'u.role_id AS user_role_id',

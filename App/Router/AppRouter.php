@@ -9,14 +9,14 @@ use Amora\Core\Entity\Response;
 
 class AppRouter
 {
-    const PUBLIC_HTML_CONTROLLER_ACTIONS = [];
-    const PUBLIC_API_CONTROLLER_ACTIONS = [];
+    const array PUBLIC_HTML_CONTROLLER_ACTIONS = [];
+    const array PUBLIC_API_CONTROLLER_ACTIONS = [];
 
-    const AUTHORISED_HTML_CONTROLLER_ACTIONS = [];
-    const AUTHORISED_API_CONTROLLER_ACTIONS = [];
+    const array AUTHORISED_HTML_CONTROLLER_ACTIONS = [];
+    const array AUTHORISED_API_CONTROLLER_ACTIONS = [];
 
-    const BACKOFFICE_HTML_CONTROLLER_ACTIONS = [];
-    const BACKOFFICE_API_CONTROLLER_ACTIONS = [];
+    const array BACKOFFICE_HTML_CONTROLLER_ACTIONS = [];
+    const array BACKOFFICE_API_CONTROLLER_ACTIONS = [];
 
     public static function getReservedPaths(): array
     {

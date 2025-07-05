@@ -58,7 +58,7 @@ class MediaDataLayer
         $baseSql = 'SELECT ';
         $fields = [
             'm.id AS media_id',
-            'm.user_id',
+            'm.user_id AS media_user_id',
             'm.type_id AS media_type_id',
             'm.status_id AS media_status_id',
             'm.width_original AS media_width_original',
@@ -86,6 +86,7 @@ class MediaDataLayer
             'me.exposure_time AS media_exif_exposure_time',
             'me.iso AS media_exif_iso',
 
+            'u.id AS user_id',
             'u.status_id AS user_status_id',
             'u.language_iso_code AS user_language_iso_code',
             'u.role_id AS user_role_id',

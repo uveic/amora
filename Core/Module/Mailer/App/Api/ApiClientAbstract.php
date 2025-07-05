@@ -6,7 +6,7 @@ use Amora\Core\Util\Logger;
 
 abstract class ApiClientAbstract
 {
-    const TIMEOUT_SECONDS = 60;
+    const int TIMEOUT_SECONDS = 60;
 
     protected Logger $logger;
 

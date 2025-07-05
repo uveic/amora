@@ -15,7 +15,7 @@ use Throwable;
 
 final class DateUtil
 {
-    const MYSQL_DATETIME_FORMAT = 'Y-m-d H:i:s';
+    const string MYSQL_DATETIME_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * Check if the date is a valid ISO8601 date: YYYY-mm-ddTHH:mm:ssZ

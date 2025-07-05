@@ -61,6 +61,7 @@ class Response
         }
         $imgSrc = 'img-src ' . implode(' ', $allowedDomains) . ';';
         $mediaSrc = 'media-src ' . implode(' ', $allowedDomains) . ';';
+        $frameSrc = Core::getConfig()->allowYouTubeIFrame ? "frame-src https://www.youtube-nocookie.com 'self';" : "";
         $styleSrc = "style-src 'self' 'unsafe-inline';";
 
         $insecureRequests = '';
@@ -81,7 +82,7 @@ class Response
                 $httpStatus->value,
                 "Content-Type: $contentType->value",
                 "Cache-Control: private, s-maxage=0, max-age=0, must-revalidate",
-                "Content-Security-Policy: $defaultSrc $connectSrc $scriptSrc $imgSrc $mediaSrc $styleSrc" . $insecureRequests,
+                "Content-Security-Policy: $defaultSrc $connectSrc $scriptSrc $imgSrc $mediaSrc $frameSrc $styleSrc" . $insecureRequests,
                 "X-Content-Type-Options: nosniff",
                 "Referrer-Policy: strict-origin-when-cross-origin",
                 "X-Frame-Options: SAMEORIGIN",

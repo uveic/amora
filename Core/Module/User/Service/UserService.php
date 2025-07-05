@@ -25,8 +25,8 @@ use Amora\App\Value\Language;
 
 class UserService
 {
-    const USER_PASSWORD_MIN_LENGTH = 10;
-    const VERIFICATION_LINK_VALID_FOR_DAYS = 7;
+    const int USER_PASSWORD_MIN_LENGTH = 10;
+    const int VERIFICATION_LINK_VALID_FOR_DAYS = 7;
 
     public function __construct(
         private readonly Logger $logger,

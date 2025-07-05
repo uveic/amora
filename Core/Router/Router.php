@@ -292,7 +292,13 @@ class Router
         $path = '/' . $request->path;
 
         if ($path === UrlBuilderUtil::PUBLIC_HTML_LOGIN ||
-            $path === UrlBuilderUtil::PUBLIC_API_LOGIN
+            $path === UrlBuilderUtil::PUBLIC_API_LOGIN ||
+            $path === UrlBuilderUtil::PUBLIC_HTML_LOGIN_FORGOT ||
+            $path === UrlBuilderUtil::PUBLIC_API_LOGIN_FORGOT ||
+            $path === UrlBuilderUtil::PUBLIC_API_PASSWORD_CREATION ||
+            $path === UrlBuilderUtil::PUBLIC_API_PASSWORD_RESET ||
+            str_contains($path, '/user/reset/') ||
+            str_contains($path, '/user/create/')
         ) {
             return false;
         }

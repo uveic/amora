@@ -211,13 +211,13 @@ return [
         '<p>If you did not make this request, just ignore this email. Otherwise, please click the link below to change you email:</p>' .
         '<p><a href="%s">Confirm Your Email</a></p>' .
         '<p>%s</p>',
-    'emailPasswordChangeSubject' => '%s Password Reset',
+    'emailPasswordChangeSubject' => 'Password Reset',
     'emailPasswordChangeContent' => '<p>Hi there,</p>' .
         '<p>We received a request to change the password for your %s account.</p>' .
         '<p>If you did not make this request, just ignore this email. Otherwise, please click the link below to reset your password:</p>' .
         '<p><a href="%s">Change Password</a></p>' .
         '<p>%s</p>',
-    'emailPasswordCreationSubject' => '%s: Your new account',
+    'emailPasswordCreationSubject' => 'Invite to your new account',
     'emailPasswordCreationContent' => '<p>Hi %s,</p>' .
         '<p>Click the link below to create your password for your new %s account.</p>' .
         '<p>User: %s</p>' .

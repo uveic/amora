@@ -4,9 +4,9 @@ use Amora\Core\Entity\Util\UserAgentInfo;
 
 final class UserAgentParserUtil
 {
-    const PLATFORM = 'platform';
-    const BROWSER  = 'browser';
-    const BROWSER_VERSION = 'version';
+    const string PLATFORM = 'platform';
+    const string BROWSER  = 'browser';
+    const string BROWSER_VERSION = 'version';
 
     /**
      * Parses a user agent string into its important parts

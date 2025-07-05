@@ -23,13 +23,13 @@ class AlbumDataLayer
 {
     use DataLayerTrait;
 
-    const ALBUM_TABLE = 'core_album';
-    const COLLECTION_TABLE = 'core_collection';
-    const COLLECTION_MEDIA_TABLE = 'core_collection_media';
-    const ALBUM_SLUG_TABLE = 'core_album_slug';
+    const string ALBUM_TABLE = 'core_album';
+    const string COLLECTION_TABLE = 'core_collection';
+    const string COLLECTION_MEDIA_TABLE = 'core_collection_media';
+    const string ALBUM_SLUG_TABLE = 'core_album_slug';
 
-    const ALBUM_STATUS_TABLE = 'core_album_status';
-    const ALBUM_TEMPLATE_TABLE = 'core_album_template';
+    const string ALBUM_STATUS_TABLE = 'core_album_status';
+    const string ALBUM_TEMPLATE_TABLE = 'core_album_template';
 
     public function __construct(
         private readonly MySqlDb $db,

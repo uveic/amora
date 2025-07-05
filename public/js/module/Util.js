@@ -71,6 +71,25 @@ class UtilClass {
     return match && match[7].length === 11 ? match[7] : false;
   }
 
+  buildYoutubeIFrameElement(youtubeUrl) {
+    const ytVideoId = this.getYoutubeVideoIdFromUrl(youtubeUrl);
+    if (!ytVideoId) {
+      return null;
+    }
+
+    const iframeElement = document.createElement('iframe');
+    iframeElement.width = '560';
+    iframeElement.height = '315';
+    iframeElement.src = 'https://www.youtube-nocookie.com/embed/' + ytVideoId;
+    iframeElement.title = 'Reprodutor de vídeo de YouTube';
+    iframeElement.frameBorder = '0';
+    iframeElement.allow = 'encrypted-media; picture-in-picture;';
+    iframeElement.referrerpolicy = 'strict-origin-when-cross-origin';
+    iframeElement.allowFullscreen = true;
+
+    return iframeElement;
+  }
+
   getAndCleanHtmlFromElement(element, addParagraph = false) {
     function cleanHtml(html) {
       if (!html || html === '-') {

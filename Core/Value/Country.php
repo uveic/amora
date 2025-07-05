@@ -7,7 +7,7 @@ use Throwable;
 
 final class Country
 {
-    const COUNTRIES = [
+    const array COUNTRIES = [
         'AT' => ['id' => 'AT', 'name' => 'Austria'],
         'BE' => ['id' => 'BE', 'name' => 'Belgium'],
         'BG' => ['id' => 'BG', 'name' => 'Bulgaria'],

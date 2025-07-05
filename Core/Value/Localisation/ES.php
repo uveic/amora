@@ -211,13 +211,13 @@ return [
         '<p>Si no has sido tú el que ha hecho esta petición puedes ignorar este correo. En caso contrario, haz clic en el siguiente enlace para confirmar tu nuevo correo:</p>' .
         '<p><a href="%s">Confirma tu correo electrónico</a></p>' .
         '<p>%s</p>',
-    'emailPasswordChangeSubject' => '%s: cambiar contraseña',
+    'emailPasswordChangeSubject' => 'Solicitude de cambio de contraseña',
     'emailPasswordChangeContent' => '<p>Hola,</p>' .
         '<p>Hemos recibido una petición de cambio de contraseña en tu cuenta de %s.</p>' .
         '<p>Si no has hecho tú esta petición puedes ignorar este correo electrónico. En caso contrario, haz clic en el siguiente enlace para cambiar tu contraseña:</p>' .
         '<p><a href="%s">Cambiar contraseña</a></p>' .
         '<p>%s</p>',
-    'emailPasswordCreationSubject' => 'Tu nueva cuenta en %s',
+    'emailPasswordCreationSubject' => 'Invitación a tu nueva cuenta',
     'emailPasswordCreationContent' => '<p>Hola %s,</p>' .
         '<p>Haz clic en el siguiente enlace para crear tu contraseña de tu nueva cuenta en %s.</p>' .
         '<p>Usuario: %s</p>' .

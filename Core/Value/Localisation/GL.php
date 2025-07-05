@@ -211,13 +211,13 @@ return [
         '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo. En caso contrario, fai clic na seguinte ligazón para verificar o teu novo correo:</p>' .
         '<p><a href="%s">Confirma o teu correo electrónico</a></p>' .
         '<p>%s</p>',
-    'emailPasswordChangeSubject' => '%s: cambiar contrasinal',
+    'emailPasswordChangeSubject' => 'Solicitude de cambio de contrasinal',
     'emailPasswordChangeContent' => '<p>Ola,</p>' .
         '<p>Recibimos unha petición de cambio de contrasinal na túa conta de %s.</p>' .
         '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo electrónico. En caso contrario, fai clic na seguinte ligazón para cambiar o teu contrasinal:</p>' .
         '<p><a href="%s">Cambiar contrasinal</a></p>' .
         '<p>%s</p>',
-    'emailPasswordCreationSubject' => 'A túa nova conta en %s',
+    'emailPasswordCreationSubject' => 'Convite á túa nova conta',
     'emailPasswordCreationContent' => '<p>Ola %s,</p>' .
         '<p>Fai clic na seguinte ligazón para crear un contrasinal na túa nova conta en %s.</p>' .
         '<p>Usuario: %s</p>' .
