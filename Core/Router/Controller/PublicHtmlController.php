@@ -3,7 +3,6 @@
 namespace Amora\Core\Router;
 
 use Amora\App\Router\AppPublicHtmlController;
-use Amora\App\Util\AppUrlBuilderUtil;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
@@ -396,7 +395,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
         /** @var Language $enabledSiteLanguage */
         foreach (Core::getEnabledSiteLanguages() as $enabledSiteLanguage) {
-            $url = AppUrlBuilderUtil::buildPublicHomepageUrl(language: $enabledSiteLanguage);
+            $url = UrlBuilderUtil::buildPublicHomepageUrl(language: $enabledSiteLanguage);
 
             $langItems[] = new FeedItem(
                 uniqueIdentifier: md5($url),

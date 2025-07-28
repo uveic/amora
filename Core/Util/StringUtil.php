@@ -422,4 +422,52 @@ final class StringUtil
 
         return $d;
     }
+
+    public static function getYoutubeVideoIdFromUrl(string $url): ?string
+    {
+        preg_match("#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v/)[^&\n]+(?=\?)|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#", $url, $matches);
+        return $matches[0] ?? null;
+    }
+
+    public static function buildYoutubeIFrameHtml(string $ytVideoId, bool $autoplay = false): ?string {
+        if (!$ytVideoId) {
+            return null;
+        }
+
+        $output = [
+            'width="560"',
+            'height="315"',
+            'src="https://www.youtube-nocookie.com/embed/' . $ytVideoId . ($autoplay ? '?autoplay=1' : '') . '"',
+            'title="Reprodutor de vídeo de YouTube"',
+            'frameBorder="0"',
+            'allow="encrypted-media; picture-in-picture"',
+            'referrerpolicy="strict-origin-when-cross-origin"',
+            'allowFullscreen="true"',
+        ];
+
+        return '<iframe ' . implode(' ', $output) . '></iframe>';
+    }
+
+    public static function storeYoutubeThumbnail(string $ytVideoId): bool
+    {
+        if (!is_dir(Core::getConfig()->mediaBaseDir . '/yt_thumbnail/')) {
+            $resDir = mkdir(Core::getConfig()->mediaBaseDir . '/yt_thumbnail/', 0777, true);
+            if (!$resDir) {
+                return false;
+            }
+        }
+
+        $count = 0;
+        do {
+            $filename = $count < 2 ? 'maxresdefault.jpg' : 'hqdefault.jpg';
+
+            $res = copy(
+                from: 'https://img.youtube.com/vi/' . $ytVideoId . '/' . $filename,
+                to: Core::getConfig()->mediaBaseDir . '/yt_thumbnail/' . $ytVideoId . '.jpg',
+            );
+            $count++;
+        } while (!$res && $count < 4);
+
+        return $res;
+    }
 }

@@ -1038,6 +1038,7 @@ svg,
   text-transform: uppercase;
   font-weight: 300;
   min-height: 200px;
+  width: 100%;
 }
 
 .no-image:hover {
