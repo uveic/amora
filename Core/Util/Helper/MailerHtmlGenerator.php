@@ -55,7 +55,7 @@ final class MailerHtmlGenerator
         $output[] = $indentation . '  <div class="table-item">';
         $output[] = $indentation . '    <span class="light-text-color font-0-9">#' . $mailerItem->id . '</span>';
         $output[] = $indentation . '    ' . $receiverHtml;
-        $output[] = $indentation . '    <span>' . CoreIcons::ENVELOPE_SIMPLE . $mailerItem->subject .'</span>';
+        $output[] = $indentation . '    <span class="icon-one-line">' . CoreIcons::ENVELOPE_SIMPLE . $mailerItem->subject .'</span>';
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '  <div class="table-item flex-end">';
         $output[] = $indentation . '    ' . $templateContent;

@@ -10,6 +10,7 @@ enum MediaType: int
     case Image = 2;
     case CSV = 3;
     case TXT = 4;
+    case SVG = 5;
 
     case Unknown = 1000;
 
@@ -19,7 +20,20 @@ enum MediaType: int
             self::PDF,
             self::Image,
             self::CSV,
+            self::TXT,
+            self::SVG,
             self::Unknown,
+        ];
+    }
+
+    public static function getAllNotImageIds(): array
+    {
+        return [
+            self::PDF->value,
+            self::CSV->value,
+            self::TXT->value,
+            self::SVG->value,
+            self::Unknown->value,
         ];
     }
 
@@ -30,6 +44,7 @@ enum MediaType: int
             'application/pdf' => self::PDF,
             'text/csv' => self::CSV,
             'text/plain', 'text/plain;charset=UTF-8' => self::TXT,
+            'image/svg+xml' => self::SVG,
             default => self::Unknown,
         };
     }
@@ -41,6 +56,7 @@ enum MediaType: int
             self::PDF => CoreIcons::FILE_PDF,
             self::CSV => CoreIcons::FILE_CSV,
             self::TXT => CoreIcons::FILE_TXT,
+            self::SVG => CoreIcons::FILE_SVG,
             default => CoreIcons::FILES,
         };
     }

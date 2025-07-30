@@ -15,8 +15,8 @@ class MailerDataLayer
 {
     use DataLayerTrait;
 
-    const MAILER_QUEUE_TABLE_NAME = 'mailer_queue';
-    const MAILER_LOG_TABLE_NAME = 'mailer_log';
+    const string MAILER_QUEUE_TABLE_NAME = 'mailer_queue';
+    const string MAILER_LOG_TABLE_NAME = 'mailer_log';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -246,20 +246,21 @@ class MailerDataLayer
         int $id,
         string $response,
         ?string $errorMessage = null,
-        $sent = true
+        bool $sent = true,
     ): bool {
         $sql = '
             UPDATE ' . self::MAILER_LOG_TABLE_NAME . '
             SET sent = :sent,
                 response = :response,
-                error_message = :error
+                error_message = :errorMessage
             WHERE id = :id
         ';
+
         $params = [
             ':id' => $id,
             ':response' => $response,
-            ':sent' => $sent,
-            ':error' => $errorMessage
+            ':sent' => $sent ? 1 : 0,
+            ':errorMessage' => $errorMessage
         ];
 
         return $this->db->execute($sql, $params);

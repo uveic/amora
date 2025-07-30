@@ -450,8 +450,8 @@ readonly class MediaService
         return $mediaExtraPath;
     }
 
-    public function getTotalMedia(): array
+    public function getMediaCountByTypeId(): array
     {
-        return $this->mediaDataLayer->getTotalMedia();
+        return $this->mediaDataLayer->getMediaCountByTypeId();
     }
 }

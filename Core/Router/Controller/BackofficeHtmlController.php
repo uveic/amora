@@ -88,7 +88,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         $articlesCount = $this->articleService->getTotalArticles();
-        $mediaCount = $this->mediaService->getTotalMedia();
+        $mediaCountByTypeId = $this->mediaService->getMediaCountByTypeId();
         $userCount = $this->userService->getTotalUsers();
         $albumCount = $this->albumService->getTotalAlbums();
 
@@ -117,8 +117,12 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdministrator'),
                 dashboardCount: new DashboardCount(
-                    images: $mediaCount[MediaType::Image->value] ?? 0,
-                    files: $mediaCount[MediaType::PDF->value] ?? 0,
+                    images: $mediaCountByTypeId[MediaType::Image->value] ?? 0,
+                    files: ($mediaCountByTypeId[MediaType::PDF->value] ?? 0) +
+                        ($mediaCountByTypeId[MediaType::CSV->value] ?? 0) +
+                        ($mediaCountByTypeId[MediaType::TXT->value] ?? 0) +
+                        ($mediaCountByTypeId[MediaType::SVG->value] ?? 0) +
+                        ($mediaCountByTypeId[MediaType::Unknown->value] ?? 0),
                     pages: $articlesCount[ArticleType::Page->value] ?? 0,
                     blogPosts: $articlesCount[ArticleType::Blog->value] ?? 0,
                     users: $userCount,
@@ -486,11 +490,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getMediaPage(Request $request): Response
     {
         $files = $this->mediaService->filterMediaBy(
-            typeIds: [
-                MediaType::PDF->value,
-                MediaType::CSV->value,
-                MediaType::Unknown->value,
-            ],
+            typeIds: MediaType::getAllNotImageIds(),
             statusIds: [MediaStatus::Active->value],
             queryOptions: new QueryOptions(
                 pagination: new Response\Pagination(itemsPerPage: 50),

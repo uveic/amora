@@ -27,6 +27,7 @@ class ApiClient extends ApiClientAbstract
         string $jsonData
     ): ApiResponse {
         $requestHeaders = [
+            'accept: application/json',
             'content-type: application/json',
             'api-key: ' . $this->apiKey,
         ];

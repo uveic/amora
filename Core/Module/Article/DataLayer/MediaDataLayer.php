@@ -271,7 +271,7 @@ class MediaDataLayer
         );
     }
 
-    public function getTotalMedia(): array
+    public function getMediaCountByTypeId(): array
     {
         $output = [];
         $res = $this->db->fetchAll(
