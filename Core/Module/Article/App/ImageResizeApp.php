@@ -80,7 +80,12 @@ class ImageResizeApp extends App
         $this->log('Processing media ID: ' . $existingMedia->id);
 
         if ($existingMedia->widthOriginal) {
-            $this->log('Skipping...');
+            $this->log('Existing width. Skipping...');
+            return true;
+        }
+
+        if (!file_exists($existingMedia->getPathWithNameOriginal())) {
+            $this->log('File not found. Skipping...');
             return true;
         }
 

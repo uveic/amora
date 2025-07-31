@@ -19,6 +19,8 @@ try {
     exit;
 }
 
+require_once Core::getPathRoot() . '/App/Value/AppUserRole.php';
+
 $logger = Core::getDefaultLogger();
 
 if (!Core::isRunningInCli()) {

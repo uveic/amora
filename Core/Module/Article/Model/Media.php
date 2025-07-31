@@ -340,20 +340,18 @@ class Media
     private function buildPath(): string
     {
         $config = Core::getConfig();
-        return $this->uploadedToS3At && $config->s3Config ?
-            ($config->s3Config->originEndpoint . '/' . $config->s3Config->projectFolderName . '/')
-            : ($config->mediaBaseUrl . '/' . $this->path . '/');
+        return $this->uploadedToS3At && $config->s3Config
+            ? ($config->s3Config->originEndpoint . '/' . $config->s3Config->projectFolderName . '/')
+            : ($config->mediaBaseUrl . '/' . ($this->path ? $this->path . '/' : ''));
     }
 
     private function buildSrcset(): string
     {
-        $xSmallPath = $this->widthOriginal <= ImageSize::XSmall->value ?
+        $xSmallPath = $this->widthOriginal && $this->widthOriginal <= ImageSize::XSmall->value ?
             $this->getPathWithNameOriginal() . ' ' . $this->widthOriginal . 'w'
             : $this->getPathWithNameXSmall() . ' ' . ImageSize::XSmall->value . 'w';
 
-        $output = [
-            $xSmallPath,
-        ];
+        $output = [$xSmallPath];
 
         if ($this->filenameSmall) {
             $output[] = $this->getPathWithNameSmall() . ' ' . ImageSize::Small->value . 'w';
@@ -371,7 +369,10 @@ class Media
             $output[] = $this->getPathWithNameXLarge() . ' ' . ImageSize::XLarge->value . 'w';
         }
 
-        if ($this->widthOriginal < ImageSize::XLarge->value && $this->widthOriginal > ImageSize::XSmall) {
+        if ($this->widthOriginal &&
+            $this->widthOriginal < ImageSize::XLarge->value &&
+            $this->widthOriginal > ImageSize::XSmall
+        ) {
             $output[] = $this->getPathWithNameOriginal() . ' ' . $this->widthOriginal . 'w';
         }
 
