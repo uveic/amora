@@ -347,33 +347,30 @@ class Media
 
     private function buildSrcset(): string
     {
-        $xSmallPath = $this->widthOriginal && $this->widthOriginal <= ImageSize::XSmall->value ?
+        if (!$this->widthOriginal) {
+            return '';
+        }
+
+        $xSmallPath = $this->widthOriginal <= ImageSize::XSmall->value ?
             $this->getPathWithNameOriginal() . ' ' . $this->widthOriginal . 'w'
             : $this->getPathWithNameXSmall() . ' ' . ImageSize::XSmall->value . 'w';
 
         $output = [$xSmallPath];
 
-        if ($this->filenameSmall) {
+        if ($this->filenameSmall && $this->widthOriginal >= ImageSize::Small->value) {
             $output[] = $this->getPathWithNameSmall() . ' ' . ImageSize::Small->value . 'w';
         }
 
-        if ($this->filenameMedium) {
+        if ($this->filenameMedium && $this->widthOriginal >= ImageSize::Medium->value) {
             $output[] = $this->getPathWithNameMedium() . ' ' . ImageSize::Medium->value . 'w';
         }
 
-        if ($this->filenameLarge) {
+        if ($this->filenameLarge && $this->widthOriginal >= ImageSize::Large->value) {
             $output[] = $this->getPathWithNameLarge() . ' ' . ImageSize::Large->value . 'w';
         }
 
-        if ($this->filenameXLarge) {
+        if ($this->filenameXLarge && $this->widthOriginal >= ImageSize::XLarge->value) {
             $output[] = $this->getPathWithNameXLarge() . ' ' . ImageSize::XLarge->value . 'w';
-        }
-
-        if ($this->widthOriginal &&
-            $this->widthOriginal < ImageSize::XLarge->value &&
-            $this->widthOriginal > ImageSize::XSmall
-        ) {
-            $output[] = $this->getPathWithNameOriginal() . ' ' . $this->widthOriginal . 'w';
         }
 
         return implode(', ', $output);
