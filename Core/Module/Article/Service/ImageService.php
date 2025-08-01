@@ -327,6 +327,10 @@ readonly class ImageService
     ): void {
         try {
             $outputImage = imagecreatetruecolor($newWidth, $newHeight);
+            imagealphablending($outputImage, false);
+            imagesavealpha($outputImage, true);
+            $transparent = imagecolorallocatealpha($outputImage, 255, 255, 255, 127);
+            imagefilledrectangle($outputImage, 0, 0, $newWidth, $newHeight, $transparent);
 
             imagecopyresampled(
                 $outputImage,
@@ -370,6 +374,10 @@ readonly class ImageService
     ): void {
         try {
             $outputImage = imagecreatetruecolor($newWidth, $newHeight);
+            imagealphablending($outputImage, false);
+            imagesavealpha($outputImage, true);
+            $transparent = imagecolorallocatealpha($outputImage, 255, 255, 255, 127);
+            imagefilledrectangle($outputImage, 0, 0, $newWidth, $newHeight, $transparent);
 
             imagecopyresampled(
                 $outputImage,
