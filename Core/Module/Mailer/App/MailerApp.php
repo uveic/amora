@@ -127,7 +127,7 @@ class MailerApp extends App
                 id: $newLogItemId,
                 response: $res->response,
                 errorMessage: $res->errorMessage,
-                sent: !$res->hasError,
+                sent: $res->hasError ? 0 : 1,
             );
         } catch (Throwable $t) {
             $this->log('Error updating API request - ID: ' . $newLogItemId . ' - Error: ' . $t->getMessage(), true);

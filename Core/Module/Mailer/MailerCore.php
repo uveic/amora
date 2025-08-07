@@ -13,6 +13,8 @@ use Amora\Core\Module\Mailer\App\Api\Brevo\ApiClient as BrevoApiClient;
 use Amora\Core\Module\Mailer\App\Api\Brevo\RequestBuilder as BrevoRequestBuilder;
 use Amora\Core\Module\Mailer\App\Api\Sendgrid\ApiClient as SendGridApiClient;
 use Amora\Core\Module\Mailer\App\Api\Sendgrid\RequestBuilder as SendGridRequestBuilder;
+use Amora\Core\Module\Mailer\App\Api\Lettermint\ApiClient as LettermintGridApiClient;
+use Amora\Core\Module\Mailer\App\Api\Lettermint\RequestBuilder as LettermintRequestBuilder;
 use Amora\Core\Module\Mailer\DataLayer\MailerDataLayer;
 use Amora\Core\Module\Mailer\Service\MailerService;
 
@@ -33,6 +35,7 @@ class MailerCore extends Core
         return match ($mailerClient) {
             MailerClient::SendGrid => self::getSendGridMailerApiClient(),
             MailerClient::Brevo => self::getBrevoMailerApiClient(),
+            MailerClient::Lettermint => self::getLettermintMailerApiClient(),
         };
     }
 
@@ -41,6 +44,7 @@ class MailerCore extends Core
         return match ($mailerClient) {
             MailerClient::SendGrid => self::getSendGridRequestBuilder(),
             MailerClient::Brevo => self::getBrevoRequestBuilder(),
+            MailerClient::Lettermint => self::getLettermintRequestBuilder(),
         };
     }
 
@@ -118,6 +122,24 @@ class MailerCore extends Core
         );
     }
 
+    public static function getLettermintRequestBuilder(): RequestBuilderAbstract
+    {
+        return self::getInstance(
+            className: 'LettermintRequestBuilder',
+            factory: function () {
+                $mailerConfig = self::getConfig()->mailer;
+
+                require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/RequestBuilderAbstract.php';
+                require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/Lettermint/RequestBuilder.php';
+                return new LettermintRequestBuilder(
+                    logger: self::getMailerLogger(),
+                    fromEmail: $mailerConfig->from->email,
+                    fromName: $mailerConfig->from->name,
+                );
+            },
+        );
+    }
+
     public static function getMailerApp(bool $isPersistent = true): MailerApp
     {
         return self::getInstance(
@@ -172,6 +194,26 @@ class MailerCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/Brevo/ApiClient.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiResponse.php';
                 return new BrevoApiClient(
+                    logger: self::getMailerLogger(),
+                    baseApiUrl: $mailerConfig->mailerAuthentication->baseApiUrl,
+                    apiKey: $mailerConfig->mailerAuthentication->apiKey,
+                );
+            },
+            isSingleton: false,
+        );
+    }
+
+    public static function getLettermintMailerApiClient(): ApiClientAbstract
+    {
+        return self::getInstance(
+            className: 'LettermintApiClient',
+            factory: function () {
+                $mailerConfig = self::getConfig()->mailer;
+
+                require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiClientAbstract.php';
+                require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/Lettermint/ApiClient.php';
+                require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiResponse.php';
+                return new LettermintGridApiClient(
                     logger: self::getMailerLogger(),
                     baseApiUrl: $mailerConfig->mailerAuthentication->baseApiUrl,
                     apiKey: $mailerConfig->mailerAuthentication->apiKey,

@@ -48,6 +48,7 @@ enum MailerClient
 {
     case SendGrid;
     case Brevo;
+    case Lettermint;
 }
 
 final readonly class Mailer {
