@@ -106,7 +106,7 @@ readonly class ImageService
 
         if (!$originalWidth || !$originalHeight) {
             $this->logger->logError(
-                'Error getting width and/or height of image' .
+                'Error getting width and/or height for image' .
                 ' - Original full path: ' . $image->getPathWithName()
             );
 

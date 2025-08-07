@@ -64,8 +64,12 @@ if (!$responseData->isUserVerified() && $userRegisteredMoreThan24HoursAgo) { ?>
             foreach ($menuItem->dataset as $left => $right) {
                 $dataset[] = $left . '="' . $right . '"';
             }
-            $class = $menuItem->class ? ' ' . $menuItem->class : '';
-            echo '        <li><a href="' . $menuItem->path . '" class="nav-dropdown-item' . $class . '"' . ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $menuItem->text . '</a></li>' . PHP_EOL;
+            if ($menuItem->path) {
+                $class = $menuItem->class ? ' ' . $menuItem->class : '';
+                echo '        <li><a href="' . $menuItem->path . '" class="nav-dropdown-item' . $class . '"' . ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $menuItem->text . '</a></li>' . PHP_EOL;
+            } else {
+                echo '        <li><span class="' . $menuItem->class . '"' . ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $menuItem->text . '</span></li>' . PHP_EOL;
+            }
             continue;
         }
 ?>
