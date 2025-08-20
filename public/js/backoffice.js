@@ -544,7 +544,8 @@ function collectionAddMedia(e) {
           container.removeChild(container.querySelector('.collection-media-container[data-media-id="' + mediaId + '"]'));
         }
         Util.notifyError(error);
-      }).finally(() => container.removeChild(loadingContainer));
+      })
+      .finally(() => container.removeChild(loadingContainer));
   } else {
     Request.post('/back/collection/media', JSON.stringify(payload))
       .then(response => afterResponse(response, isMainMedia))
@@ -555,7 +556,8 @@ function collectionAddMedia(e) {
           container.removeChild(container.querySelector('.collection-media-container[data-media-id="' + mediaId + '"]'));
         }
         Util.notifyError(error);
-      }).finally(() => container.removeChild(loadingContainer));
+      })
+      .finally(() => container.removeChild(loadingContainer));
   }
 }
 
@@ -972,8 +974,9 @@ function displayImageFromApiCall(container, images, eventListenerAction, targetC
     imageEl.loading = 'lazy';
     addEventListenerAction(imageEl, image.id, eventListenerAction, targetContainerId);
 
+    const loadMoreButton = container.querySelector('.media-load-more');
     figureContainer.appendChild(imageEl);
-    container.appendChild(figureContainer);
+    loadMoreButton.parentElement.insertBefore(figureContainer, loadMoreButton);
   });
 
   if (images.length >= window.data.mediaQueryQty) {
@@ -1403,7 +1406,7 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
     e.preventDefault();
 
     lm.disabled = true;
-    const lastImageEl = document.querySelector('#images-list .image-container:last-child .media-item');
+    const lastImageEl = document.querySelector('#images-list .image-container:last-of-type .media-item');
     const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.mediaId) : null;
     const qty = window.data.mediaQueryQty;
     const typeId = lm.dataset.typeId ? Number.parseInt(lm.dataset.typeId) : '';

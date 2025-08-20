@@ -36,9 +36,9 @@ $displayLoadMore = count($responseData->media) >= 50;
           <?=$media->asHtml()?>
         </div>
 <?php } ?>
+        <a href="#" class="media-load-more media-load-more-js<?=$displayLoadMore ? '' : ' null'?>" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
+          <span><?=$responseData->getLocalValue('globalMore')?></span>
+        </a>
       </div>
-      <a href="#" class="media-load-more media-load-more-js<?=$displayLoadMore ? '' : ' null'?>" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
-        <span><?=$responseData->getLocalValue('globalMore')?></span>
-      </a>
     </div>
   </main>

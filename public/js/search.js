@@ -156,8 +156,10 @@ async function handleSearchRequest(
 
   const form = document.querySelector('#' + formIdentifier);
 
-  const loadingContainer = document.querySelector('.search-result-loading');
-  loadingContainer.classList.remove('null');
+  const loadingContainer = form.querySelector('.search-result-loading');
+  if (loadingContainer) {
+    loadingContainer.classList.remove('null');
+  }
 
   const resultContainer = document.querySelector('.' + resultContainerClass);
   resultContainer.innerHTML = '';
@@ -185,7 +187,9 @@ async function handleSearchRequest(
 
         resultContainer.appendChild(resultNotFound);
 
-        loadingContainer.classList.add('null');
+        if (loadingContainer) {
+          loadingContainer.classList.add('null');
+        }
         resultContainer.classList.remove('null');
 
         return;
@@ -193,12 +197,16 @@ async function handleSearchRequest(
 
       displaySearchResult(resultContainer, response.results);
 
-      loadingContainer.classList.add('null');
+      if (loadingContainer) {
+        loadingContainer.classList.add('null');
+      }
       resultContainer.classList.remove('null');
     })
     .catch(error => {
       Util.notifyError(error);
-      loadingContainer.classList.add('null');
+      if (loadingContainer) {
+        loadingContainer.classList.add('null');
+      }
       resultContainer.classList.add('null');
     });
 }
