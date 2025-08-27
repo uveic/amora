@@ -301,6 +301,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                     name: $name,
                     passwordHash: StringUtil::hashPassword($password),
                     bio: null,
+                    identifier: null,
                     timezone: DateUtil::convertStringToDateTimeZone($timezone),
                 ),
                 verificationType: VerificationType::EmailAddress,

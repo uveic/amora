@@ -193,6 +193,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                     name: $name,
                     passwordHash: null,
                     bio: $bio,
+                    identifier: null,
                     timezone: $timezone,
                 ),
                 verificationType: VerificationType::PasswordCreation,

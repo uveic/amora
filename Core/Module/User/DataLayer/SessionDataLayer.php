@@ -49,6 +49,7 @@ class SessionDataLayer
             'u.name AS user_name',
             'u.password_hash AS user_password_hash',
             'u.bio AS user_bio',
+            'u.identifier AS user_identifier',
             'u.timezone AS user_timezone',
             'u.change_email_to AS user_change_email_to',
         ];

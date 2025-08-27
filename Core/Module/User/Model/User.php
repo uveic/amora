@@ -25,6 +25,7 @@ class User
         public readonly ?string $name,
         public readonly ?string $passwordHash,
         public readonly ?string $bio,
+        public readonly ?string $identifier,
         public readonly DateTimeZone $timezone,
         public readonly ?string $changeEmailAddressTo = null,
     ) {}
@@ -47,6 +48,7 @@ class User
             name: $user['user_name'] ?? ($user['name'] ?? null),
             passwordHash: $user['user_password_hash'] ?? null,
             bio: $user['user_bio'] ?? null,
+            identifier: $user['user_identifier'] ?? null,
             timezone: DateUtil::convertStringToDateTimeZone($user['user_timezone']),
             changeEmailAddressTo: $user['user_change_email_to'] ?? null,
         );
@@ -66,6 +68,7 @@ class User
             'name' => $this->name,
             'password_hash' => $this->passwordHash,
             'bio' => $this->bio,
+            'identifier' => $this->identifier,
             'timezone' => $this->timezone->getName(),
             'change_email_to' => $this->changeEmailAddressTo,
         ];

@@ -37,6 +37,7 @@ class UserDataLayer
         ?int $userId = null,
         ?string $email = null,
         ?string $searchText = null,
+        ?string $identifier = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -63,6 +64,7 @@ class UserDataLayer
             'u.name AS user_name',
             'u.password_hash AS user_password_hash',
             'u.bio AS user_bio',
+            'u.identifier AS user_identifier',
             'u.timezone AS user_timezone',
             'u.change_email_to AS user_change_email_to',
         ];
@@ -88,6 +90,11 @@ class UserDataLayer
         if (isset($searchText)) {
             $where .= " AND (u.email LIKE :searchText OR u.name LIKE :searchText)";
             $params[':searchText'] = '%' . $searchText . '%';
+        }
+
+        if (isset($identifier)) {
+            $where .= ' AND u.identifier = :identifier';
+            $params[':identifier'] = $identifier;
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);

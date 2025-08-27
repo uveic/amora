@@ -69,7 +69,6 @@ final class StringUtil
     public static function sanitiseHtml(?string $html): ?string
     {
         return $html;
-        // ToDo: maybe
 //        if (empty($html)) {
 //            return $html;
 //        }
@@ -119,9 +118,9 @@ final class StringUtil
         return $output;
     }
 
-    public static function generateRandomString(int $length = 24): string
+    public static function generateRandomString(int $length = 24, bool $onlyChars = false): string
     {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $characters = ($onlyChars ? '' : '0123456789') . 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         return substr(
             str_shuffle(

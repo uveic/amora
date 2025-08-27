@@ -88,6 +88,7 @@ $res = UserCore::getUserService()->storeUser(
         name: $name,
         passwordHash: StringUtil::hashPassword($pass),
         bio: null,
+        identifier: null,
         timezone: DateUtil::convertStringToDateTimeZone('Europe/Madrid'),
     )
 );

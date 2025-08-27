@@ -215,6 +215,7 @@ class UserService
         ?int $userId = null,
         ?string $email = null,
         ?string $searchText = null,
+        ?string $identifier = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->userDataLayer->filterUserBy(
@@ -222,6 +223,7 @@ class UserService
             userId: $userId,
             email: $email,
             searchText: $searchText,
+            identifier: $identifier,
             queryOptions: $queryOptions,
         );
     }
@@ -439,6 +441,7 @@ class UserService
                     ? StringUtil::hashPassword($newPassword)
                     : $existingUser->passwordHash,
                 bio: $bio ?? $existingUser->bio,
+                identifier: $existingUser->identifier,
                 timezone: $timezone
                     ? DateUtil::convertStringToDateTimeZone($timezone)
                     : $existingUser->timezone,
@@ -491,5 +494,29 @@ class UserService
     public function getTotalUsers(): int
     {
         return $this->userDataLayer->getTotalUsers();
+    }
+
+    public function generateUniqueIdentifier(): string
+    {
+        $characters = 3;
+        $count = 0;
+        $max = '1' . str_repeat('0', $characters);
+
+        do {
+            if ($count++ > 10) {
+                $characters++;
+                $count = 0;
+
+                $max = '1' . str_repeat('0', $characters);
+            }
+
+            $identifier = StringUtil::generateRandomString($characters, true)
+                . '-'
+                . str_pad(rand(1, ((int)$max)) - 1, $characters, '0', STR_PAD_LEFT);
+
+            $existingUser = $this->filterUserBy(identifier: $identifier);
+        } while($existingUser);
+
+        return $identifier;
     }
 }
