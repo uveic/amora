@@ -39,7 +39,11 @@ document.querySelectorAll('form#form-user-account-update').forEach(f => {
       '/api/user/' + userId.value,
       JSON.stringify(payload),
       Global.get('feedbackAccountUpdated')
-    ).then();
+    ).then(response => {
+      if (response.redirect) {
+        window.location = response.redirect;
+      }
+    });
   });
 });
 

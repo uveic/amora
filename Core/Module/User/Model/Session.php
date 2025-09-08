@@ -22,12 +22,12 @@ class Session
         public readonly ?string $browserAndPlatform = null
     ) {}
 
-    public static function fromArray(array $session, User $user): Session
+    public static function fromArray(array $session): Session
     {
         return new Session(
             id: (int)$session['session_id'],
             sessionId: $session['session_sid'],
-            user: $user,
+            user: User::fromArray($session),
             timezone: DateUtil::convertStringToDateTimeZone($session['session_timezone']),
             createdAt: DateUtil::convertStringToDateTimeImmutable($session['session_created_at']),
             lastVisitedAt: DateUtil::convertStringToDateTimeImmutable($session['session_last_visited_at']),

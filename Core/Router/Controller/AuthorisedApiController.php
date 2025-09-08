@@ -9,6 +9,7 @@ use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
+use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
     AuthorisedApiControllerDestroyFileUnauthorisedResponse,
@@ -264,6 +265,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
         return new AuthorisedApiControllerUpdateUserAccountSuccessResponse(
             success: $updateRes->isSuccess,
+            redirect: $newPassword ? UrlBuilderUtil::buildPublicLoginUrl($request->siteLanguage) : null,
             errorMessage: $updateRes->message,
         );
     }

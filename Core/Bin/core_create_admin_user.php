@@ -81,7 +81,7 @@ $res = UserCore::getUserService()->storeUser(
         status: UserStatus::Enabled,
         language: Core::getDefaultLanguage(),
         role: UserRole::Admin,
-        journeyStatus: UserJourneyStatus::Registration,
+        journeyStatus: UserJourneyStatus::RegistrationComplete,
         createdAt: $now,
         updatedAt: $now,
         email: $email,

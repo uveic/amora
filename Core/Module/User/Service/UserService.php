@@ -339,12 +339,29 @@ class UserService
         return $verification;
     }
 
-    public function updatePassword(int $userId, string $newPassword): bool
+    public function workflowUpdatePassword(int $userId, string $newPassword): bool
     {
-        return $this->userDataLayer->updatePassword(
-            $userId,
-            StringUtil::hashPassword($newPassword)
+        $res = $this->userDataLayer->getDb()->withTransaction(
+            function () use ($userId, $newPassword) {
+                $resUpdate = $this->userDataLayer->updatePassword(
+                    userId: $userId,
+                    hashedPassword: StringUtil::hashPassword($newPassword),
+                );;
+
+                if (!$resUpdate) {
+                    return new Feedback(false);
+                }
+
+                $sessionUpdate = $this->sessionService->expireAllSessionsForUser($userId);
+                if (!$sessionUpdate) {
+                    return new Feedback(false);
+                }
+
+                return new Feedback(true);
+            }
         );
+
+        return $res->isSuccess;
     }
 
     public function workflowCreatePassword(
@@ -377,9 +394,14 @@ class UserService
                     return new Feedback(false);
                 }
 
+                $sessionUpdate = $this->sessionService->expireAllSessionsForUser($user->id);
+                if (!$sessionUpdate) {
+                    return new Feedback(false);
+                }
+
                 $journeyRes = $this->userDataLayer->updateUserJourney(
                     userId: $user->id,
-                    userJourney: UserJourneyStatus::Registration,
+                    userJourney: UserJourneyStatus::RegistrationComplete,
                 );
 
                 return new Feedback($journeyRes);
@@ -452,6 +474,13 @@ class UserService
 
         if (empty($res)) {
             return new Feedback(false, 'Error updating user');
+        }
+
+        if ($newPassword) {
+            $sessionUpdate = $this->sessionService->expireAllSessionsForUser($existingUser->id);
+            if (!$sessionUpdate) {
+                return new Feedback(false, 'Error expiring sessions');
+            }
         }
 
         return $validation;

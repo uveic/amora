@@ -98,7 +98,7 @@ class User
 
     public function isVerified(): bool
     {
-        return $this->journeyStatus === UserJourneyStatus::Registration;
+        return $this->journeyStatus === UserJourneyStatus::RegistrationComplete;
     }
 
     public function isEnabled(): bool

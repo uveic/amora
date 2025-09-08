@@ -294,7 +294,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                     status: UserStatus::Enabled,
                     language: Language::from($languageIsoCode),
                     role: UserRole::User,
-                    journeyStatus: UserJourneyStatus::Registration,
+                    journeyStatus: UserJourneyStatus::RegistrationComplete,
                     createdAt: $now,
                     updatedAt: $now,
                     email: $email,
@@ -372,7 +372,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        $res = $this->userService->updatePassword($userId, $password);
+        $res = $this->userService->workflowUpdatePassword($userId, $password);
         return new PublicApiControllerUserPasswordResetSuccessResponse($res);
     }
 

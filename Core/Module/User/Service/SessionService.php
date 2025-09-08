@@ -70,6 +70,11 @@ class SessionService
         return $this->dataLayer->expireSession($session->id);
     }
 
+    public function expireAllSessionsForUser(int $userId): bool
+    {
+        return $this->dataLayer->expireAllSessionsForUser($userId);
+    }
+
     public function updateBrowserCookie(string $sid, ?DateTimeImmutable $newExpiryDate = null): void
     {
         $newExpiryDate = $newExpiryDate ?? $this->generateNewValidUntil();

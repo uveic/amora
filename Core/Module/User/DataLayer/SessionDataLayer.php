@@ -7,7 +7,6 @@ use Amora\Core\Database\MySqlDb;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\Logger;
 use Amora\Core\Module\User\Model\Session;
-use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -33,7 +32,7 @@ class SessionDataLayer
             's.created_at AS session_created_at',
             's.last_visited_at AS session_last_visited_at',
             's.valid_until AS session_valid_until',
-            's.forced_expiration_at AS session_force_expiration_at',
+            's.forced_expiration_at AS session_forced_expiration_at',
             's.timezone AS session_timezone',
             's.ip AS session_ip',
             's.browser_and_platform AS session_browser_and_platform',
@@ -68,9 +67,7 @@ class SessionDataLayer
             return null;
         }
 
-        $user = User::fromArray($res);
-
-        return Session::fromArray($res, $user);
+        return Session::fromArray($res);
     }
 
     public function refreshSession(int $sessionId, DateTimeImmutable $newExpiryDate): bool
@@ -106,6 +103,22 @@ class SessionDataLayer
         }
 
         return $res;
+    }
+
+    public function expireAllSessionsForUser(int $userId): bool
+    {
+        return $this->db->execute(
+            '
+                UPDATE ' . self::SESSION_TABLE_NAME . '
+                SET `forced_expiration_at` = :forcedExpirationAt
+                WHERE `user_id` = :userId
+                    AND `forced_expiration_at` IS NULL
+            ',
+            [
+                ':forcedExpirationAt' => DateUtil::getCurrentDateForMySql(),
+                ':userId' => $userId,
+            ],
+        );
     }
 
     public function createNewSession(Session $session): ?Session

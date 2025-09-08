@@ -764,9 +764,11 @@
                     false
                   ]
                 },
+                "redirect": {
+                  "type": "string"
+                },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message (if any)"
+                  "type": "string"
                 }
               }
             }
