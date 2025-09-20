@@ -41,11 +41,15 @@ Relevant settings: `catch_workers_output = yes`
 
 ## nginx
 
+Check if apache is installed, uninstall if necessary: `sudo apt-get remove apache2`
+
+Check active connections/ports: `sudo netstat -tulpn`
+
 Path to config file: `/etc/nginx/nginx.conf`
 
 Relevant settings in `nginx.conf`: `client_max_body_size 32M;`, `client_body_buffer_size 32M;`
 
-How to enable a site that is configured in "sites-available": `ln -s /etc/nginx/sites-available/www.example.org.conf /etc/nginx/sites-enabled/`
+Enable a site that is configured in "sites-available": `ln -s /etc/nginx/sites-available/www.example.org.conf /etc/nginx/sites-enabled/`
 
 Test nginx configuration file(s): `sudo nginx -t`
 
@@ -79,13 +83,23 @@ Reboot: `sudo shutdown -r`
 
 Check Ubuntu version: `cat /etc/os-release`
 
+Disable SSH password authentication: Make sure the ssh key-pair is enabled => `/etc/ssh/sshd_config` => `PasswordAuthentication no` => `systemctl restart ssh`
+
 ## Let's Encrypt
 
-`sudo certbot`
+Install: `sudo apt install certbot python3-certbot-nginx`
+
+Check firewall status to allow HTTPS traffic if necessary: `sudo ufw status`
+
+Request a certificate for a domain: `sudo certbot --nginx -d example.com -d www.example.com`
 
 Test automatic renewal: `sudo certbot renew --dry-run`
 
 ## MariaDB
+
+Installing Maria DB: `sudo apt install mariadb-server`
+
+Configuring Maria DB: `sudo mysql_secure_installation`
 
 List databases: `SHOW DATABASES;`
 
@@ -104,5 +118,6 @@ Sync files from my local computer to a server through SSH: `rsync -a -e "ssh" --
 
 Figure out disk space: `du -hx --max-depth=1 /var/www`
 
-How to copy a file(s) from a remote host through ssh: 
-`scp user@server-ip-address:/path/to/remote/file.ext /path/to/local/folder`
+How to copy a file(s) from a remote host through ssh: `scp user@server-ip-address:/path/to/remote/file.ext /path/to/local/folder`
+
+Copy files between two remote hosts: `scp -r user@server-ip-address:/path/to/remote/folder user@server-ip-address:/path/to/folder`
