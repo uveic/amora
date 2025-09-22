@@ -85,6 +85,10 @@ Check Ubuntu version: `cat /etc/os-release`
 
 Disable SSH password authentication: Make sure the ssh key-pair is enabled => `/etc/ssh/sshd_config` => `PasswordAuthentication no` => `systemctl restart ssh`
 
+Set timezone: `sudo timedatectl set-timezone Europe/Madrid`
+
+List valid timezones: `timedatectl list-timezones`
+
 ## Let's Encrypt
 
 Install: `sudo apt install certbot python3-certbot-nginx`
@@ -121,3 +125,5 @@ Figure out disk space: `du -hx --max-depth=1 /var/www`
 How to copy a file(s) from a remote host through ssh: `scp user@server-ip-address:/path/to/remote/file.ext /path/to/local/folder`
 
 Copy files between two remote hosts: `scp -r user@server-ip-address:/path/to/remote/folder user@server-ip-address:/path/to/folder`
+
+Flush DNS caches: `sudo resolvectl flush-caches`
