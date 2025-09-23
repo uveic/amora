@@ -16,20 +16,22 @@ Example: `access_log /var/log/nginx/project-name-access.log;`, `error_log /var/l
 
 ### Package dependency:
 
-`sudo apt-get install php8.2-gd php8.2-mysql php8.2-fpm php8.2-curl php8.2-xml php8.2-cli php8.2-common php8.2-opcache`
+`sudo apt-get install php8.4-gd php8.4-mysql php8.4-fpm php8.4-curl php8.4-xml php8.4-cli php8.4-common php8.4-opcache`
 
-`php8.2-fpm`\
-`php8.2-mysql`\
-`php8.2-curl`\
-`php8.2-gd`\
-`php8.2-cli`\
-`php8.2-common`\
-`php8.2-opcache`\
-`php8.2-mbstring`
+`php8.4-fpm`\
+`php8.4-mysql`\
+`php8.4-curl`\
+`php8.4-gd`\
+`php8.4-cli`\
+`php8.4-common`\
+`php8.4-opcache`\
+`php8.4-mbstring`\
+`php8.4-xml`\
+`php8.4-memcache`
 
 Restart PHP-FPM:\
-`sudo service php8.2-fpm restart`\
-`sudo /etc/init.d/php8.2-fpm restart`
+`sudo service php8.4-fpm restart`\
+`sudo /etc/init.d/php8.4-fpm restart`
 
 PHP-FPM config: `/etc/php/8.2/fpm/php-fpm.conf`
 
@@ -38,6 +40,8 @@ Pool config: `/etc/php/8.2/fpm/pool.d/www.conf`
 Optimizing PHP-FPM for High Performance: https://geekflare.com/php-fpm-optimization/
 
 Relevant settings: `catch_workers_output = yes`
+
+Install Memcache: `sudo apt install memcached`
 
 ## nginx
 
