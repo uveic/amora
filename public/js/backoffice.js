@@ -1712,4 +1712,25 @@ document.querySelectorAll('.generic-media-delete-js').forEach(b => {
   b.addEventListener('click', handleGenericMediaDeleteClick);
 });
 
+document.querySelectorAll('.email-content-js').forEach(ec => {
+  ec.addEventListener('click', e => {
+    e.preventDefault();
+
+    const mailerId = ec.dataset.mailerId;
+
+    Request.get('/back/mail/' + mailerId + '/html')
+      .then(response => {
+        const modal = document.querySelector('.modal-display-html-js');
+        modal.querySelector('.html-container').innerHTML = response.html;
+        modal.classList.remove('null');
+      })
+      .finally(() => {
+        const loadingModal = document.querySelector('.loading-modal');
+        if (loadingModal) {
+          loadingModal.classList.add('null');
+        }
+      });
+  });
+});
+
 export {handleGenericMediaDeleteClick, handleGenericSelectMainMediaClick, addMediaToModalContainer};

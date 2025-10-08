@@ -1,14 +1,33 @@
 import {Request} from './module/Request.js?v=000';
 import {Global} from './module/localisation.js?v=000';
 
-document.querySelectorAll('a.verified-link').forEach(el => {
+document.querySelectorAll('.send-verification-email-js').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
 
-    const userId = el.dataset.userId;
+    const confirmRes = window.confirm(Global.get('feedbackSendVerificationEmailConfirmation'));
+    if (!confirmRes) {
+      return;
+    }
 
-    Request.post('/api/user/' + userId + '/verification-email', null, Global.get('globalSent'))
-      .then();
+    const userId = el.dataset.userId;
+    const verificationTypeId = el.dataset.verificationTypeId;
+
+    if (!userId || !verificationTypeId) {
+      return;
+    }
+
+    const loadingModal = document.querySelector('.loading-modal');
+    if (loadingModal) {
+      loadingModal.classList.remove('null');
+    }
+
+    Request.post('/api/user/' + userId + '/verification-email/' + verificationTypeId, null, Global.get('globalSent'))
+      .finally(() => {
+        if (loadingModal) {
+          loadingModal.classList.add('null');
+        }
+      });
   });
 });
 
