@@ -8,7 +8,7 @@ use Amora\Core\Value\CoreIcons;
 
 ?>
     <section class="page-header">
-      <h3><?=$responseData->getLocalValue('navAdminAlbums')?></h3>
+      <span><?=$responseData->getLocalValue('navAdminAlbums')?></span>
       <div class="links">
         <a href="#" class="filter-open"><?=CoreIcons::FUNNEL?></a>
         <a href="<?=UrlBuilderUtil::buildBackofficeAlbumNewUrl($responseData->siteLanguage)?>" class="button is-link header-button-new"><?=$responseData->getLocalValue('globalNew')?></a>

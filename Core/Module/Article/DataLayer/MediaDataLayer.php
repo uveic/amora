@@ -19,11 +19,11 @@ class MediaDataLayer
 {
     use DataLayerTrait;
 
-    const MEDIA_TABLE = 'core_media';
-    const MEDIA_TYPE_TABLE = 'core_media_type';
-    const MEDIA_STATUS_TABLE = 'core_media_status';
-    const MEDIA_DESTROYED_TABLE = 'core_media_destroyed';
-    const MEDIA_EXIF_TABLE = 'core_media_exif';
+    const string MEDIA_TABLE = 'core_media';
+    const string MEDIA_TYPE_TABLE = 'core_media_type';
+    const string MEDIA_STATUS_TABLE = 'core_media_status';
+    const string MEDIA_DESTROYED_TABLE = 'core_media_destroyed';
+    const string MEDIA_EXIF_TABLE = 'core_media_exif';
 
     public function __construct(
         private readonly MySqlDb $db,

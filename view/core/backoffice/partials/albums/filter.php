@@ -22,7 +22,7 @@ $filterClass = $albumStatus || $albumLanguage ? '' : ' null';
 ?>
     <section class="filter-container<?=$filterClass?>">
       <div class="filter-header">
-        <h3><?=$responseData->getLocalValue('formFilterTitle')?></h3>
+        <span><?=$responseData->getLocalValue('formFilterTitle')?></span>
         <div class="filter-links">
           <a href="#" class="filter-refresh"><?=CoreIcons::ARROW_COUNTER_CLOCKWISE?></a>
           <a href="#" class="filter-close"><?=CoreIcons::CLOSE?></a>

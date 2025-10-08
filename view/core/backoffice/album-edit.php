@@ -28,7 +28,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
   <main>
     <div id="feedback" class="feedback null"></div>
     <section class="page-header">
-      <h3><?=$pageTitle?></h3>
+      <span><?=$pageTitle?></span>
       <div class="links"><?=CoreIcons::CLOSE?></div>
     </section>
       <div class="backoffice-wrapper">

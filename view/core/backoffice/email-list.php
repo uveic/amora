@@ -8,10 +8,11 @@ use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
-$this->layout('base', ['responseData' => $responseData,])
+$this->layout('base', ['responseData' => $responseData]);
 
 ?>
   <main>
+<?=$this->insert('partials/shared/modal-display-html', ['responseData' => $responseData])?>
     <section class="page-header">
       <span><?=$responseData->getLocalValue('mailerListTitle')?></span>
       <div class="links">
@@ -23,7 +24,7 @@ $this->layout('base', ['responseData' => $responseData,])
 <?php
     /** @var MailerItem $mailerItem */
     foreach ($responseData->emails as $mailerItem) {
-        echo MailerHtmlGenerator::generateMailerItemRowHtml($responseData, $mailerItem);
+        echo '        ' . MailerHtmlGenerator::generateMailerItemRowHtml($responseData, $mailerItem) . PHP_EOL;
     }
 ?>
       </div>

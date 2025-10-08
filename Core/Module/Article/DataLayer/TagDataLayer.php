@@ -12,7 +12,7 @@ class TagDataLayer
 {
     use DataLayerTrait;
 
-    const TAG_TABLE_NAME = 'core_tag';
+    const string TAG_TABLE_NAME = 'core_tag';
 
     public function __construct(
         private readonly MySqlDb $db,

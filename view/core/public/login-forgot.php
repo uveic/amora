@@ -20,7 +20,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
   <div id="register-left"></div>
   <div id="register-right">
     <a id="register-close" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
-    <form method="POST" id="form-login-forgot">
+    <form method="POST" id="form-login-forgot" class="form-login-workflow-js">
       <div>
         <h1 id="register-title" class="m-b-3"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?></h2>

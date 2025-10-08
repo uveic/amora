@@ -7,7 +7,6 @@ window.data = {
   mediaCache: [],
   mediaCacheRight: [],
   mediaCacheLeft: [],
-  mediaQueryQty: 100,
 }
 
 function addEventListenerAction(media, mediaId, eventListenerAction, targetContainerId) {
@@ -61,7 +60,7 @@ function handleGenericSelectMainMediaClick(e) {
   modal.querySelector('.add-image-wrapper').classList.remove('null');
   modal.classList.remove('null');
 
-  const qty = window.data.mediaQueryQty;
+  const qty = Number.parseInt(modal.dataset.mediaQueryQty);
   const existingImages = imagesContainer.querySelectorAll('.media-item');
   existingImages.forEach(img => {
     addEventListenerAction(img, img.dataset.mediaId, eventListenerAction, targetContainerId);
@@ -951,6 +950,8 @@ function updateCollectionSequences(sourceSequence, targetSequence) {
 }
 
 function displayImageFromApiCall(container, images, eventListenerAction, targetContainerId) {
+  const loadMoreButton = container.querySelector('.media-load-more');
+
   images.forEach(image => {
     const existingImage = container.querySelector('img[data-media-id="' + image.id + '"]');
     if (existingImage) {
@@ -974,12 +975,13 @@ function displayImageFromApiCall(container, images, eventListenerAction, targetC
     imageEl.loading = 'lazy';
     addEventListenerAction(imageEl, image.id, eventListenerAction, targetContainerId);
 
-    const loadMoreButton = container.querySelector('.media-load-more');
     figureContainer.appendChild(imageEl);
     loadMoreButton.parentElement.insertBefore(figureContainer, loadMoreButton);
   });
 
-  if (images.length >= window.data.mediaQueryQty) {
+  const mediaQueryQty = Number.parseInt(loadMoreButton.dataset.mediaQueryQty);
+
+  if (images.length >= mediaQueryQty) {
     const loadMoreButton = container.parentElement.querySelector('.media-load-more');
     if (loadMoreButton) {
       loadMoreButton.classList.remove('null');
@@ -1408,7 +1410,7 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
     lm.disabled = true;
     const lastImageEl = document.querySelector('#images-list .image-container:last-of-type .media-item');
     const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.mediaId) : null;
-    const qty = window.data.mediaQueryQty;
+    const qty = Number.parseInt(lm.dataset.mediaQueryQty);
     const typeId = lm.dataset.typeId ? Number.parseInt(lm.dataset.typeId) : '';
     const direction = lm.dataset.direction ?? '';
     const eventListenerAction = lm.dataset.eventListenerAction;

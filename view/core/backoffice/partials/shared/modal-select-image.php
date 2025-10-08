@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
+use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Value\CoreIcons;
 use Amora\Core\Value\QueryOrderDirection;
@@ -8,7 +9,7 @@ use Amora\Core\Value\QueryOrderDirection;
 /** @var HtmlResponseDataAbstract $responseData */
 
 ?>
-  <div class="select-media-modal modal-wrapper null">
+  <div class="select-media-modal modal-wrapper null" data-media-query-qty="<?=MediaService::SQL_QUERY_QTY?>">
     <div class="select-media-modal-loading justify-center">
       <img src="/img/loading.gif" class="img-svg img-svg-50" alt="<?=$responseData->getLocalValue('globalLoading')?>">
     </div>
@@ -26,7 +27,7 @@ use Amora\Core\Value\QueryOrderDirection;
         </div>
       </div>
       <div id="images-list" class="null">
-        <a href="#" class="media-load-more media-load-more-js null" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>">
+        <a href="#" class="media-load-more media-load-more-js null" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-media-query-qty="<?=MediaService::SQL_QUERY_QTY?>">
           <span><?=$responseData->getLocalValue('globalMore')?></span>
         </a>
         <div class="image-container-shadow"></div>
