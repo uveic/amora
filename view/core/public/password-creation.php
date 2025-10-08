@@ -24,9 +24,10 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
   <div id="register-left"></div>
   <div id="register-right">
     <a id="register-close" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
-    <form method="POST" id="form-password-reset">
+    <form method="POST" id="form-password-reset" class="form-login-workflow-js">
       <input class="input" type="hidden" id="userId" name="userId" value="<?=$responseData->passwordUserId?>">
-      <input class="input" type="hidden" id="verificationHash" name="verificationHash" value="<?=$responseData->verificationHash?>">
+      <input class="input" type="hidden" id="validationHash" name="validationHash" value="<?=$responseData->validationHash?>">
+      <input class="input" type="hidden" id="verificationIdentifier" name="verificationIdentifier" value="<?=$responseData->userVerification->verificationIdentifier?>">
       <input class="input" type="hidden" id="postUrl" name="postUrl" value="<?= UrlBuilderUtil::PUBLIC_API_PASSWORD_CREATION?>">
       <div>
         <h1 id="register-title" class="m-b-6"><?=$siteLogoHtml?></h1>

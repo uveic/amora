@@ -26,24 +26,24 @@ class ArticleDataLayer
 {
     use DataLayerTrait;
 
-    const ARTICLE_TABLE = 'core_article';
-    const ARTICLE_HISTORY_TABLE = 'core_article_history';
-    const ARTICLE_TYPE_TABLE = 'core_article_type';
-    const ARTICLE_STATUS_TABLE = 'core_article_status';
+    const string ARTICLE_TABLE = 'core_article';
+    const string ARTICLE_HISTORY_TABLE = 'core_article_history';
+    const string ARTICLE_TYPE_TABLE = 'core_article_type';
+    const string ARTICLE_STATUS_TABLE = 'core_article_status';
 
-    const ARTICLE_SECTION_TABLE = 'core_article_section';
-    const ARTICLE_SECTION_TYPE_TABLE = 'core_article_section_type';
-    const ARTICLE_SECTION_IMAGE_TABLE = 'core_article_section_image';
+    const string ARTICLE_SECTION_TABLE = 'core_article_section';
+    const string ARTICLE_SECTION_TYPE_TABLE = 'core_article_section_type';
+    const string ARTICLE_SECTION_IMAGE_TABLE = 'core_article_section_image';
 
-    const ARTICLE_MEDIA_TABLE = 'core_article_media';
+    const string ARTICLE_MEDIA_TABLE = 'core_article_media';
 
-    const ARTICLE_TAG_RELATION_TABLE = 'core_article_tag_relation';
+    const string ARTICLE_TAG_RELATION_TABLE = 'core_article_tag_relation';
 
-    const ARTICLE_PATH_TABLE = 'core_article_path';
+    const string ARTICLE_PATH_TABLE = 'core_article_path';
 
-    const CONTENT_TABLE = 'core_content';
-    const CONTENT_HISTORY_TABLE = 'core_content_history';
-    const CONTENT_TYPE_TABLE = 'core_content_type';
+    const string CONTENT_TABLE = 'core_content';
+    const string CONTENT_HISTORY_TABLE = 'core_content_history';
+    const string CONTENT_TYPE_TABLE = 'core_content_type';
 
     public function __construct(
         private readonly MySqlDb $db,

@@ -44,7 +44,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
   <main>
     <div id="feedback" class="feedback null"></div>
     <section class="page-header">
-      <h3><?=CoreIcons::IMAGES . $album->titleHtml?></h3>
+      <span><?=CoreIcons::IMAGES . $album->titleHtml?></span>
       <div class="links">
         <span class="value"><a href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a></span>
         <span class="number">#<?=$album->id?></span>

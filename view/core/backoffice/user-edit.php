@@ -13,6 +13,7 @@ use Amora\Core\Value\CoreIcons;
 
 $this->layout('base', ['responseData' => $responseData]);
 $timezones = DateTimeZone::listIdentifiers();
+
 $emailHelpCopy = $responseData->user ? '' : $responseData->getLocalValue('formEmailNewUserHelp');
 $defaultTimezone = $responseData->user?->timezone ?? $responseData->request->session->user->timezone;
 $defaultLanguage = $responseData->user?->language ?? $responseData->request->session->user->language;
@@ -40,10 +41,10 @@ if ($responseData->user) {
 }
 
 ?>
-  <section>
+  <main>
     <div id="feedback" class="feedback null"></div>
     <section class="page-header">
-      <span><?=($responseData->user ? $responseData->getLocalValue('globalEdit') : $responseData->getLocalValue('globalNew')) . ' ' . $responseData->getLocalValue('globalUser')?></span>
+      <span><?=$responseData->user ? $responseData->getLocalValue('globalEdit') : ($responseData->getLocalValue('globalNew') . ' ' .  mb_strtolower($responseData->getLocalValue('globalUser'), 'UTF-8'))?></span>
       <div class="links">
         <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
       </div>
@@ -100,7 +101,7 @@ if ($responseData->user) {
           <div class="control">
             <select id="roleId" name="roleId">
 <?php
-    foreach (AppUserRole::getAll() as $role) {
+    foreach (AppUserRole::getAll(true) as $role) {
         $selected = $role === $responseData->user?->role;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$role->value?>"><?=$responseData->getLocalValue('userRole' . $role->name)?></option>
@@ -147,4 +148,4 @@ if ($responseData->user) {
         </div>
       </div>
     </form>
-  </section>
+  </main>

@@ -20,7 +20,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
   <div id="register-left"></div>
   <div id="register-right">
     <a id="register-close" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
-    <form method="POST" id="form-invite-request">
+    <form method="POST" id="form-invite-request" class="form-login-workflow-js">
       <div>
         <div class="div-request-form">
           <h1 id="register-title" class="m-b-3"><?=$siteLogoHtml?></h1>

@@ -209,7 +209,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         $user = $this->userService->getUserForId($verification->userId);
 
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/password-reset',
+            template: 'core/public/password-reset',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navChangePassword'),
@@ -253,7 +253,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
         $user = $this->userService->getUserForId($verification->userId);
         return Response::createHtmlResponse(
-            template: 'core/frontend/public/password-creation',
+            template: 'core/public/password-creation',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navCreatePassword'),

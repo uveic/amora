@@ -27,8 +27,9 @@ use Throwable;
 
 readonly class MediaService
 {
-    const FILE_PERMISSIONS = 0755;
-    const FOLDER_PERMISSIONS = 0755;
+    const int FILE_PERMISSIONS = 0755;
+    const int FOLDER_PERMISSIONS = 0755;
+    const int SQL_QUERY_QTY = 10;
 
     public function __construct(
         private Logger $logger,

@@ -43,6 +43,7 @@ $navBarArguments = [
   <script src="/js/lib/trix.umd.min.js?v=2.0.8" type="text/javascript"></script>
 </head>
 <body>
+  <div class="loading-modal null"><div class="loader"></div></div>
 <?=$this->insert('partials/navbar', $navBarArguments)?>
 <?=$this->section('content')?>
 <?=$this->insert('partials/footer')?>

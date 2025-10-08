@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 use Amora\Core\Value\QueryOrderDirection;
@@ -18,9 +19,9 @@ $displayLoadMore = count($responseData->media) >= 50;
     <section class="page-header">
       <span><?=$responseData->getLocalValue('navAdminMedia')?></span>
       <div class="links">
-        <div>
+        <div class="upload-media-control">
           <input class="null" type="file" id="media" name="media" multiple="" accept="*">
-          <label for="media" class="link-add"><?=CoreIcons::ADD?></label>
+          <label for="media" class="cursor-pointer"><?=CoreIcons::ADD?></label>
         </div>
         <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
       </div>
@@ -36,7 +37,7 @@ $displayLoadMore = count($responseData->media) >= 50;
           <?=$media->asHtml()?>
         </div>
 <?php } ?>
-        <a href="#" class="media-load-more media-load-more-js<?=$displayLoadMore ? '' : ' null'?>" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
+        <a href="#" class="media-load-more media-load-more-js<?=$displayLoadMore ? '' : ' null'?>" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-media-query-qty="<?=MediaService::SQL_QUERY_QTY?>" data-event-listener-action="displayNextImagePopup">
           <span><?=$responseData->getLocalValue('globalMore')?></span>
         </a>
       </div>

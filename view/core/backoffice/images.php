@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\ImageSize;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -39,7 +40,7 @@ $count = 0;
         <?=$image->asHtml(size: ImageSize::Small, lazyLoading: $count > 10) . PHP_EOL?>
       </figure>
 <?php } ?>
-      <a href="#" class="media-load-more media-load-more-js<?=$count >= 50 ? '' : ' null'?>" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-event-listener-action="displayNextImagePopup">
+      <a href="#" class="media-load-more media-load-more-js<?=$count >= MediaService::SQL_QUERY_QTY ? '' : ' null'?>" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-media-query-qty="<?=MediaService::SQL_QUERY_QTY?>" data-event-listener-action="displayNextImagePopup">
         <span><?=$responseData->getLocalValue('globalMore')?></span>
       </a>
       <div class="image-container-shadow"></div>
