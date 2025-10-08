@@ -122,6 +122,7 @@ class RouterCore extends Core
                     tagService: ArticleCore::getTagService(),
                     mediaService: ArticleCore::getMediaService(),
                     albumService: AlbumCore::getAlbumService(),
+                    mailerService: MailerCore::getMailerService(),
                 );
             },
         );

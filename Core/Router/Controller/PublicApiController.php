@@ -36,15 +36,12 @@ use Amora\App\Value\Language;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
 use Amora\Core\Module\User\Service\UserService;
-use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordResetFailureResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordResetSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerUserRegistrationSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordCreationFailureResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordCreationSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerForgotPasswordSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerLogErrorSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerPingSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerRequestRegistrationInviteFailureResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerRequestRegistrationInviteSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerUserLoginSuccessResponse;
 
@@ -218,7 +215,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             return new PublicApiControllerForgotPasswordSuccessResponse(true);
         }
 
-        $res = $this->mailService->sendPasswordResetEmail($existingUser);
+        $res = $this->mailService->workflowSendPasswordResetEmail($existingUser);
         return new PublicApiControllerForgotPasswordSuccessResponse($res);
     }
 
@@ -288,7 +285,8 @@ final class PublicApiController extends PublicApiControllerAbstract
             }
 
             $now = new DateTimeImmutable();
-            $user = $this->userService->storeUser(
+            $user = $this->userService->workflowStoreUserAndSendVerificationEmail(
+                createdByUser: $request->session?->user,
                 user: new User(
                     id: null,
                     status: UserStatus::Enabled,
@@ -334,7 +332,8 @@ final class PublicApiController extends PublicApiControllerAbstract
      * @param int $userId
      * @param string $password
      * @param string $passwordConfirmation
-     * @param string $verificationHash
+     * @param string $validationHash
+     * @param string $verificationIdentifier
      * @param string $languageIsoCode
      * @param Request $request
      * @return Response
@@ -343,7 +342,8 @@ final class PublicApiController extends PublicApiControllerAbstract
         int $userId,
         string $password,
         string $passwordConfirmation,
-        string $verificationHash,
+        string $validationHash,
+        string $verificationIdentifier,
         string $languageIsoCode,
         Request $request
     ): Response {
@@ -354,8 +354,24 @@ final class PublicApiController extends PublicApiControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($language, false);
 
         $user = $this->userService->getUserForId($userId);
-        if (empty($user) || !$user->validateValidationHash($verificationHash)) {
-            return new PublicApiControllerUserPasswordResetFailureResponse();
+        if (empty($user) || !$user->validateValidationHash($validationHash)) {
+            return new PublicApiControllerUserPasswordResetSuccessResponse(
+                success: false,
+                errorMessage: 'User not found',
+            );
+        }
+
+        $verification = $this->userService->getUserVerification(
+            verificationIdentifier: $verificationIdentifier,
+            type: VerificationType::PasswordReset,
+            isEnabled: true,
+        );
+
+        if (!$verification) {
+            return new PublicApiControllerUserPasswordResetSuccessResponse(
+                success: false,
+                errorMessage: 'Verification not found',
+            );
         }
 
         if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
@@ -372,7 +388,12 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        $res = $this->userService->workflowUpdatePassword($userId, $password);
+        $res = $this->userService->workflowUpdatePassword(
+            updatedByUser: $request->session?->user ?? $user,
+            userId: $userId,
+            newPassword: $password,
+            verification: $verification,
+        );
         return new PublicApiControllerUserPasswordResetSuccessResponse($res);
     }
 
@@ -383,7 +404,7 @@ final class PublicApiController extends PublicApiControllerAbstract
      * @param int $userId
      * @param string $password
      * @param string $passwordConfirmation
-     * @param string $verificationHash
+     * @param string $validationHash
      * @param string $verificationIdentifier
      * @param string $languageIsoCode
      * @param Request $request
@@ -393,14 +414,17 @@ final class PublicApiController extends PublicApiControllerAbstract
         int $userId,
         string $password,
         string $passwordConfirmation,
-        string $verificationHash,
+        string $validationHash,
         string $verificationIdentifier,
         string $languageIsoCode,
         Request $request
     ): Response {
         $user = $this->userService->getUserForId($userId);
-        if (empty($user) || !$user->validateValidationHash($verificationHash)) {
-            return new PublicApiControllerUserPasswordCreationFailureResponse();
+        if (empty($user) || !$user->validateValidationHash($validationHash)) {
+            return new PublicApiControllerUserPasswordCreationSuccessResponse(
+                success: false,
+                errorMessage: 'User not found',
+            );
         }
 
         $languageIsoCode = strtoupper($languageIsoCode);
@@ -424,6 +448,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         }
 
         $res = $this->userService->workflowCreatePassword(
+            updatedByUser: $request->session?->user ?? $user,
             user: $user,
             verificationIdentifier: $verificationIdentifier,
             newPassword: $password
@@ -447,11 +472,16 @@ final class PublicApiController extends PublicApiControllerAbstract
     ): Response {
         $isInvitationEnabled = Core::getConfig()->isInvitationEnabled;
         if (!$isInvitationEnabled) {
-            return new PublicApiControllerRequestRegistrationInviteFailureResponse();
+            return new PublicApiControllerRequestRegistrationInviteSuccessResponse(
+                success: false,
+            );
         }
 
         if (!Language::tryFrom(strtoupper($languageIsoCode))) {
-            return new PublicApiControllerRequestRegistrationInviteFailureResponse();
+            return new PublicApiControllerRequestRegistrationInviteSuccessResponse(
+                success: false,
+                errorMessage: 'Language not found',
+            );
         }
 
         $email = StringUtil::sanitiseText($email);

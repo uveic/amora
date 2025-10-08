@@ -9,17 +9,15 @@ use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
+use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
     AuthorisedApiControllerDestroyFileUnauthorisedResponse,
     AuthorisedApiControllerGetFilesFromSuccessResponse,
     AuthorisedApiControllerGetFilesSuccessResponse,
-    AuthorisedApiControllerSendVerificationEmailFailureResponse,
     AuthorisedApiControllerSendVerificationEmailSuccessResponse,
     AuthorisedApiControllerStoreFileSuccessResponse,
-    AuthorisedApiControllerUpdateUserAccountFailureResponse,
-    AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse,
     AuthorisedApiControllerUpdateUserAccountSuccessResponse};
 
 final class AuthorisedApiController extends AuthorisedApiControllerAbstract
@@ -194,24 +192,42 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
     }
 
     /**
-     * Endpoint: /api/user/{userId}/verification-email
+     * Endpoint: /api/user/{userId}/verification-email/{verificationTypeId}
      * Method: POST
      *
      * @param int $userId
+     * @param int $verificationTypeId
      * @param Request $request
      * @return Response
      */
-    protected function sendVerificationEmail(int $userId, Request $request): Response
+    protected function sendVerificationEmail(int $userId, int $verificationTypeId, Request $request): Response
     {
         $user = $this->userService->getUserForId($userId);
-        if (empty($user)) {
-            return new AuthorisedApiControllerSendVerificationEmailFailureResponse();
+        if (!$user) {
+            return new AuthorisedApiControllerSendVerificationEmailSuccessResponse(
+                success: false,
+                errorMessage: 'User not found',
+            );
         }
 
-        $resVerification = $this->userMailService->sendVerificationEmail(
-            user: $user,
-            emailToVerify: $user->email,
-        );
+        if (!VerificationType::tryFrom($verificationTypeId)) {
+            return new AuthorisedApiControllerSendVerificationEmailSuccessResponse(
+                success: false,
+                errorMessage: 'Verification type ID not valid',
+            );
+        }
+
+        $verificationType = VerificationType::tryFrom($verificationTypeId);
+
+        $resVerification = match ($verificationType) {
+            VerificationType::PasswordReset => $this->userMailService->workflowSendPasswordResetEmail($user),
+            VerificationType::PasswordCreation => $this->userMailService->workflowSendPasswordCreationEmail($user),
+            VerificationType::VerifyEmailAddress => $this->userMailService->workflowSendVerificationEmail(
+                user: $user,
+                emailToVerify: $user->changeEmailAddressTo ?: $user->email,
+                verificationType: VerificationType::from($verificationTypeId),
+            ),
+        };
 
         return new AuthorisedApiControllerSendVerificationEmailSuccessResponse($resVerification);
     }
@@ -244,15 +260,22 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
     ): Response {
         $existingUser = $this->userService->getUserForId($userId);
         if (empty($existingUser)) {
-            return new AuthorisedApiControllerUpdateUserAccountFailureResponse();
+            return new AuthorisedApiControllerUpdateUserAccountSuccessResponse(
+                success: false,
+                errorMessage: 'User not found',
+            );
         }
 
         $session = $request->session;
         if ($session->user->id !== $existingUser->id) {
-            return new AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse();
+            return new AuthorisedApiControllerUpdateUserAccountSuccessResponse(
+                success: false,
+                errorMessage: 'Not authorised',
+            );
         }
 
         $updateRes = $this->userService->workflowUpdateUser(
+            updatedByUser: $request->session->user,
             existingUser: $existingUser,
             name: $name,
             email: $email,
@@ -265,7 +288,9 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
         return new AuthorisedApiControllerUpdateUserAccountSuccessResponse(
             success: $updateRes->isSuccess,
-            redirect: $newPassword ? UrlBuilderUtil::buildPublicLoginUrl($request->siteLanguage) : null,
+            redirect: $newPassword
+                ? UrlBuilderUtil::buildPublicLoginUrl($request->siteLanguage)
+                : UrlBuilderUtil::buildAppDashboardUrl($request->siteLanguage),
             errorMessage: $updateRes->message,
         );
     }

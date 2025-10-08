@@ -27,11 +27,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyFileFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerDestroyFileUnauthorisedResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerUpdateUserAccountSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerUpdateUserAccountFailureResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerUpdateUserAccountUnauthorisedResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerSendVerificationEmailSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerSendVerificationEmailFailureResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/AuthorisedApiControllerSendVerificationEmailUnauthorisedResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -119,14 +115,19 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
     ): Response;
 
     /**
-     * Endpoint: /api/user/{userId}/verification-email
+     * Endpoint: /api/user/{userId}/verification-email/{verificationTypeId}
      * Method: POST
      *
      * @param int $userId
+     * @param int $verificationTypeId
      * @param Request $request
      * @return Response
      */
-    abstract protected function sendVerificationEmail(int $userId, Request $request): Response;
+    abstract protected function sendVerificationEmail(
+        int $userId,
+        int $verificationTypeId,
+        Request $request
+    ): Response;
 
     private function validateAndCallGetFiles(Request $request): Response
     {
@@ -400,7 +401,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
     {
         $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
-            ['api', 'user', '{userId}', 'verification-email'],
+            ['api', 'user', '{userId}', 'verification-email', '{verificationTypeId}'],
             $pathParts
         );
         $errors = [];
@@ -422,6 +423,23 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
             }
         }
 
+        $verificationTypeId = null;
+        if (!isset($pathParams['verificationTypeId'])) {
+            $errors[] = [
+                'field' => 'verificationTypeId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['verificationTypeId'])) {
+                $errors[] = [
+                    'field' => 'verificationTypeId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $verificationTypeId = intval($pathParams['verificationTypeId']);
+            }
+        }
+
         if ($errors) {
             return Response::createBadRequestResponse(
                 [
@@ -435,6 +453,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
         try {
             return $this->sendVerificationEmail(
                 $userId,
+                $verificationTypeId,
                 $request
             );
         } catch (Throwable $t) {
@@ -509,9 +528,9 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
         if ($method === 'POST' &&
             $pathParams = $this->pathParamsMatcher(
-                ['api', 'user', '{userId}', 'verification-email'],
+                ['api', 'user', '{userId}', 'verification-email', '{verificationTypeId}'],
                 $pathParts,
-                ['fixed', 'fixed', 'int', 'fixed']
+                ['fixed', 'fixed', 'int', 'fixed', 'int']
             )
         ) {
             return $this->validateAndCallSendVerificationEmail($request);

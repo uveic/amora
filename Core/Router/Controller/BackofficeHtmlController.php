@@ -4,6 +4,7 @@ namespace Amora\Core\Router;
 
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
+use Amora\App\Value\AppUserRole;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
@@ -30,8 +31,11 @@ use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\Article\Value\PageContentSection;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\Mailer\Service\MailerService;
+use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Module\User\Service\UserService;
+use Amora\Core\Module\User\Value\UserRole;
+use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
@@ -52,12 +56,11 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 
     protected function authenticate(Request $request): bool
     {
-        $session = $request->session;
-        if (empty($session) || !$session->isAuthenticated() || !$session->isAdmin()) {
+        if (!$request->session || !$request->session->isAuthenticated() || !$request->session->isAdmin()) {
             return false;
         }
 
-        return $this->sessionService->refreshSession(
+        return $this->sessionService->updateSessionExpiryDateAndValidUntil(
             sid: $request->session->sessionId,
             sessionId: $request->session->id,
         );
@@ -144,13 +147,48 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getUsersAdminPage(Request $request): Response
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        $users = $this->userService->filterUserBy();
+
+        $statusId = $request->getGetParam('sId');
+        $userStatusIds = $statusId && UserStatus::tryFrom($statusId)
+            ? [UserStatus::from($statusId)->value]
+            : [
+                UserStatus::Enabled->value,
+                UserStatus::Disabled->value,
+            ];
+
+        $roleId = $request->getGetParam('rId');
+        $userRoleIds = $roleId && (AppUserRole::tryFrom($roleId) || UserRole::tryFrom($roleId))
+            ? (UserRole::tryFrom($roleId) ? [UserRole::from($roleId)->value] : [AppUserRole::from($roleId)->value])
+            : [];
+
+        $users = $this->userService->filterUserBy(
+            statusIds: $userStatusIds,
+            roleIds: $userRoleIds,
+        );
+
+        $userIds = [];
+        /** @var User $user */
+        foreach ($users as $user) {
+            $userIds[] = $user->id;
+        }
+
+        $sessions = $userIds ? $this->sessionService->filterSessionBy(
+            userIds: $userIds,
+            queryOptions: new QueryOptions(
+                orderBy: [
+                    new QueryOrderBy('user_id', QueryOrderDirection::DESC),
+                    new QueryOrderBy('last_visited_at', QueryOrderDirection::DESC),
+                ],
+            ),
+        ) : [];
+
         return Response::createHtmlResponse(
             template: 'core/backoffice/user-list',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminUsers'),
                 users: $users,
+                sessions: $sessions,
             ),
         );
     }

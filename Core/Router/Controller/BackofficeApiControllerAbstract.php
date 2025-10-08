@@ -48,6 +48,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateCollectionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateCollectionMediaSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDeleteCollectionMediaSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetEmailHtmlSuccessResponse.php';
     }
 
     abstract protected function authenticate(Request $request): bool;
@@ -456,6 +457,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         int $collectionMediaId,
         Request $request
     ): Response;
+
+    /**
+     * Endpoint: /back/mail/{mailId}/html
+     * Method: GET
+     *
+     * @param int $mailId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getEmailHtml(int $mailId, Request $request): Response;
 
     private function validateAndCallGetSession(Request $request): Response
     {
@@ -1962,6 +1973,57 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             return Response::createErrorResponse();
         }
     }
+
+    private function validateAndCallGetEmailHtml(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['back', 'mail', '{mailId}', 'html'],
+            $pathParts
+        );
+        $errors = [];
+
+        $mailId = null;
+        if (!isset($pathParams['mailId'])) {
+            $errors[] = [
+                'field' => 'mailId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['mailId'])) {
+                $errors[] = [
+                    'field' => 'mailId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $mailId = intval($pathParams['mailId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getEmailHtml(
+                $mailId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: getEmailHtml()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
    
     public function route(Request $request): ?Response
     {
@@ -2191,6 +2253,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallDeleteCollectionMedia($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'mail', '{mailId}', 'html'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetEmailHtml($request);
         }
 
         return null;

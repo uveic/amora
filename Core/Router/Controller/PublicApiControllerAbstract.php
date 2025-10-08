@@ -18,17 +18,11 @@ abstract class PublicApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerLogErrorSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerLogCspErrorsSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserLoginSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserLoginFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerForgotPasswordSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerForgotPasswordFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserPasswordResetSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserPasswordResetFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserPasswordCreationSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserPasswordCreationFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserRegistrationSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserRegistrationFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerRequestRegistrationInviteSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerRequestRegistrationInviteFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerGetBlogPostsSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerGetSearchResultsSuccessResponse.php';
     }
@@ -110,7 +104,8 @@ abstract class PublicApiControllerAbstract extends AbstractController
      * @param int $userId
      * @param string $password
      * @param string $passwordConfirmation
-     * @param string $verificationHash
+     * @param string $validationHash
+     * @param string $verificationIdentifier
      * @param string $languageIsoCode
      * @param Request $request
      * @return Response
@@ -119,7 +114,8 @@ abstract class PublicApiControllerAbstract extends AbstractController
         int $userId,
         string $password,
         string $passwordConfirmation,
-        string $verificationHash,
+        string $validationHash,
+        string $verificationIdentifier,
         string $languageIsoCode,
         Request $request
     ): Response;
@@ -131,7 +127,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
      * @param int $userId
      * @param string $password
      * @param string $passwordConfirmation
-     * @param string $verificationHash
+     * @param string $validationHash
      * @param string $verificationIdentifier
      * @param string $languageIsoCode
      * @param Request $request
@@ -141,7 +137,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
         int $userId,
         string $password,
         string $passwordConfirmation,
-        string $verificationHash,
+        string $validationHash,
         string $verificationIdentifier,
         string $languageIsoCode,
         Request $request
@@ -480,14 +476,24 @@ abstract class PublicApiControllerAbstract extends AbstractController
             $passwordConfirmation = $bodyParams['passwordConfirmation'] ?? null;
         }
 
-        $verificationHash = null;
-        if (!isset($bodyParams['verificationHash'])) {
+        $validationHash = null;
+        if (!isset($bodyParams['validationHash'])) {
             $errors[] = [
-                'field' => 'verificationHash',
+                'field' => 'validationHash',
                 'message' => 'required'
             ];
         } else {
-            $verificationHash = $bodyParams['verificationHash'] ?? null;
+            $validationHash = $bodyParams['validationHash'] ?? null;
+        }
+
+        $verificationIdentifier = null;
+        if (!isset($bodyParams['verificationIdentifier'])) {
+            $errors[] = [
+                'field' => 'verificationIdentifier',
+                'message' => 'required'
+            ];
+        } else {
+            $verificationIdentifier = $bodyParams['verificationIdentifier'] ?? null;
         }
 
         $languageIsoCode = null;
@@ -516,7 +522,8 @@ abstract class PublicApiControllerAbstract extends AbstractController
                 $userId,
                 $password,
                 $passwordConfirmation,
-                $verificationHash,
+                $validationHash,
+                $verificationIdentifier,
                 $languageIsoCode,
                 $request
             );
@@ -572,14 +579,14 @@ abstract class PublicApiControllerAbstract extends AbstractController
             $passwordConfirmation = $bodyParams['passwordConfirmation'] ?? null;
         }
 
-        $verificationHash = null;
-        if (!isset($bodyParams['verificationHash'])) {
+        $validationHash = null;
+        if (!isset($bodyParams['validationHash'])) {
             $errors[] = [
-                'field' => 'verificationHash',
+                'field' => 'validationHash',
                 'message' => 'required'
             ];
         } else {
-            $verificationHash = $bodyParams['verificationHash'] ?? null;
+            $validationHash = $bodyParams['validationHash'] ?? null;
         }
 
         $verificationIdentifier = null;
@@ -618,7 +625,7 @@ abstract class PublicApiControllerAbstract extends AbstractController
                 $userId,
                 $password,
                 $passwordConfirmation,
-                $verificationHash,
+                $validationHash,
                 $verificationIdentifier,
                 $languageIsoCode,
                 $request

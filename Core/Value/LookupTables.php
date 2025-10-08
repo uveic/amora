@@ -12,6 +12,7 @@ require_once Core::getPathRoot() . '/Core/Module/Album/DataLayer/AlbumDataLayer.
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
+require_once Core::getPathRoot() . '/Core/Module/User/Value/UserActionType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
@@ -39,6 +40,7 @@ use Amora\Core\Module\Analytics\AnalyticsCore;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Module\User\UserCore;
+use Amora\Core\Module\User\Value\UserActionType;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
@@ -90,6 +92,11 @@ return [
         database: UserCore::getDb(),
         tableName: UserDataLayer::USER_VERIFICATION_TYPE_TABLE,
         tableFieldsToValues: asArray(VerificationType::getAll()),
+    ),
+    new LookupTableSettings(
+        database: UserCore::getDb(),
+        tableName: UserDataLayer::USER_ACTION_TYPE_TABLE,
+        tableFieldsToValues: asArray(UserActionType::getAll()),
     ),
     new LookupTableSettings(
         database: ArticleCore::getDb(),

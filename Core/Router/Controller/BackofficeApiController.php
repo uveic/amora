@@ -2,7 +2,6 @@
 
 namespace Amora\Core\Router;
 
-use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\AppUserRole;
 use Amora\Core\Entity\Util\QueryOptions;
@@ -15,12 +14,14 @@ use Amora\Core\Module\Album\Value\Template;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\PageContentType;
+use Amora\Core\Module\Mailer\Service\MailerService;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerCreateNewCollectionAndstoreMediaSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDeleteCollectionMediaSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyMainMediaForCollectionSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetEmailHtmlSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetSessionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreCollectionSuccessResponse;
@@ -75,6 +76,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         private readonly TagService $tagService,
         private readonly MediaService $mediaService,
         private readonly AlbumService $albumService,
+        private readonly MailerService $mailerService,
     ) {
         parent::__construct();
     }
@@ -180,7 +182,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $isEnabled = $isEnabled ?? true;
 
         try {
-            $newUser = $this->userService->storeUser(
+            $newUser = $this->userService->workflowStoreUserAndSendVerificationEmail(
+                createdByUser: $request->session->user,
                 user: new User(
                     id: null,
                     status: $isEnabled ? UserStatus::Enabled : UserStatus::Disabled,
@@ -303,6 +306,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $updateRes = $this->userService->workflowUpdateUser(
+            updatedByUser: $request->session->user,
             existingUser: $existingUser,
             name: $name,
             email: $email,
@@ -591,7 +595,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 updatedAt: $now,
                 publishOn: $publishOn,
                 title: $title ?? $existingArticle->title,
-                contentHtml: $contentHtml ?? $existingArticle->contentHtml,
+                contentHtml: $contentHtml,
                 mainImageId: $mainImageId ?? $existingArticle->mainImage?->id,
                 mainImage: null,
                 path: $path
@@ -1410,6 +1414,30 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         return new BackofficeApiControllerDeleteCollectionMediaSuccessResponse(
             success: $res,
+        );
+    }
+
+    /**
+     * Endpoint: /back/mail/{mailId}/html
+     * Method: GET
+     *
+     * @param int $mailId
+     * @param Request $request
+     * @return Response
+     */
+    protected function getEmailHtml(int $mailId, Request $request): Response
+    {
+        $mail = $this->mailerService->getMailerItemForId($mailId);
+        if (!$mail) {
+            return new BackofficeApiControllerGetEmailHtmlSuccessResponse(
+                success: false,
+                errorMessage: 'Mailer ID not found',
+            );
+        }
+
+        return new BackofficeApiControllerGetEmailHtmlSuccessResponse(
+            success: true,
+            html: $mail->contentHtml,
         );
     }
 }
