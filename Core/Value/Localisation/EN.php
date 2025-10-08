@@ -69,7 +69,7 @@ return [
     'authenticationInviteRequestHomeLink' => 'Go back to homepage',
     'authenticationInviteRequestFormAction' => 'Request invitation',
     'authenticationVerifyEmailBannerTitle' => 'Verify your email address',
-    'authenticationVerifyEmailBannerContent' => 'Please verify your account following the instructions sent to your email address at <b>%s</b>. If you have not received it, please check your spam folder or <a class="verified-link" data-user-id="%d" href="#">click here</a> and we will send you another one. If necessary you can <a href="/en/account">update your email address here</a>.',
+    'authenticationVerifyEmailBannerContent' => 'Please verify your account following the instructions sent to your email address at <b>%s</b>. If you have not received it, please check your spam folder. If necessary you can <a href="/en/account">update your email address here</a>.',
 
     'formYourAccount' => 'Your Account',
     'formPlaceholderUserName' => 'Name',
@@ -77,7 +77,7 @@ return [
     'formEmail' => 'Your Email Address',
     'formEmailNewUserHelp' => 'An email to create a new password will be sent to the user once created.',
     'formPlaceholderEmail' => 'name@example.com',
-    'formEmailUpdateWarning' => 'Please, verify your new email address (%s) following the indications sent by email.',
+    'formEmailUpdateWarning' => 'Please, verify your new email address (<strong>%s</strong>) following the indications sent by email.',
     'formPlaceholderPassword' => 'Your password',
     'formPlaceholderCreatePassword' => 'Create a password',
     'formPlaceholderPasswordNew' => 'New password',
@@ -167,6 +167,8 @@ return [
     'globalPageNotFoundContent' => '<p>The page you are looking for does not exist (yet).</p><p>You can go back to the <a href="%s">homepage</a>.</p>',
     'globalPageDeactivatedTitle' => 'Temporarily deactivated',
     'globalPageDeactivatedContent' => 'The page you are looking for is temporarily deactivated. You can get in touch at <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Sorry for the inconvenience.',
+    'globalPageNotAuthorisedTitle' => 'Not Authorised :(',
+    'globalPageNotAuthorisedContent' => '<p>You are not authorised to view this page.</p><p><a href="/">Click here to go to the homepage</a>.</p>',
 
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',
@@ -181,7 +183,7 @@ return [
     'formFilterClean' => 'Reset filter',
     'formFilterArticleTypeTitle' => 'Type',
 
-    'pageContentEditTitle' => 'Copy',
+    'pageContentEditTitle' => 'Edit content',
     'pageContentEditTitleHomepage' => 'Homepage',
     'pageContentEditTitleBlogBottom' => 'Text that follows a blog post',
     'pageContentEditAction' => 'Action Link',
@@ -193,12 +195,10 @@ return [
     'userRoleUser' => 'User',
     'userStatusEnabled' => 'Enabled',
     'userStatusDisabled' => 'Disabled',
+    'userStatusDeleted' => 'Deleted',
     'userJourneyRegistration' => 'Registration Complete',
     'userJourneyPendingPasswordCreation' => 'Pending Password Creation',
-
-    'sectionRemove' => 'Remove section',
-    'sectionMoveUp' => 'Move Up',
-    'sectionMoveDown' => 'Move Down',
+    'userJourneyPendingEmailVerification' => 'Pending Email Verification',
 
     'emailConfirmationSubject' => 'Welcome to %s! Confirm Your Email',
     'emailConfirmationContent' => '<p>Welcome!</p>' .
@@ -207,19 +207,19 @@ return [
         '<p>%s</p>',
     'emailUpdateVerificationSubject' => 'Verify Your Email',
     'emailUpdateVerificationContent' => '<p>Hi,</p>' .
-        '<p>We received a request to change you email address for your %s account.</p>' .
+        '<p>We received a request to change you email address.</p>' .
         '<p>If you did not make this request, just ignore this email. Otherwise, please click the link below to change you email:</p>' .
         '<p><a href="%s">Confirm Your Email</a></p>' .
         '<p>%s</p>',
-    'emailPasswordChangeSubject' => 'Password Reset',
+    'emailPasswordChangeSubject' => '%s Password Reset',
     'emailPasswordChangeContent' => '<p>Hi there,</p>' .
-        '<p>We received a request to change the password for your %s account.</p>' .
+        '<p>We received a request to change the password.</p>' .
         '<p>If you did not make this request, just ignore this email. Otherwise, please click the link below to reset your password:</p>' .
         '<p><a href="%s">Change Password</a></p>' .
         '<p>%s</p>',
-    'emailPasswordCreationSubject' => 'Invite to your new account',
+    'emailPasswordCreationSubject' => 'Your new account',
     'emailPasswordCreationContent' => '<p>Hi %s,</p>' .
-        '<p>Click the link below to create your password for your new %s account.</p>' .
+        '<p>Click the link below to create your password.</p>' .
         '<p>User: %s</p>' .
         '<p><a href="%s">Create password</a></p>' .
         '<p>%s</p>',

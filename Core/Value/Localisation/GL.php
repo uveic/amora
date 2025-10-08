@@ -43,7 +43,7 @@ return [
     'authenticationForgotPassword' => 'Esquecíches o teu contrasinal?',
     'authenticationForgotPasswordSubtitle' => 'Non te preocupes, introduce o correo electrónico co que te rexistraches e enviarémosche unha ligazón para restaurar o teu contrasinal.',
     'authenticationForgotPasswordAction' => 'Enviar ligazón de restauración',
-    'authenticationForgotPasswordActionSuccess' => 'Se temos o teu correo (<b><span id="register-feedback-email"></span></b>) na nosa base de datos enviarémosche unha mensaxe con instrucións para restaurar o teu contrasinal nuns intres. Comproba a bandexa de entrada e segue as instrucións.',
+    'authenticationForgotPasswordActionSuccess' => 'Se temos o teu correo (<b><span id="register-feedback-email"></span></b>) na nosa base de datos enviarémosche unha mensaxe con instrucións para restaurar o teu contrasinal. Comproba a bandexa de entrada e segue as instrucións.',
     'authenticationEmailVerified' => 'Correo electrónico verificado correctamente.',
     'authenticationEmailVerifiedError' => 'A ligazón para verificar o teu correo electrónico non é válida.',
     'authenticationEmailVerifiedExpired' => 'A ligazón para verificar o teu correo electrónico caducou. Por favor, inicia o proceso de novo.',
@@ -69,7 +69,7 @@ return [
     'authenticationInviteRequestHomeLink' => 'Volver á páxina principal',
     'authenticationInviteRequestFormAction' => 'Solicitar invitación',
     'authenticationVerifyEmailBannerTitle' => 'Confirma o teu correo',
-    'authenticationVerifyEmailBannerContent' => 'Por favor, verifica a túa conta seguindo as instrucións que che enviamos nun correo a <b>%s</b>. Se non o recibiches revisa a caixa do lixo ou <a class="verified-link" data-user-id="%s" href="#">fai clic aquí</a> e enviarémosche outro. Podes <a href="/gl/account">modificar o teu enderezo</a> se fora necesario.',
+    'authenticationVerifyEmailBannerContent' => 'Por favor, verifica a túa conta seguindo as instrucións que che enviamos nun correo a <b>%s</b>. Se non o recibiches revisa a caixa do lixo. Podes <a href="/gl/account">modificar o teu enderezo</a> se fora necesario.',
 
     'formYourAccount' => 'A túa conta',
     'formPlaceholderUserName' => 'Nome',
@@ -77,7 +77,7 @@ return [
     'formEmail' => 'O teu correo electrónico',
     'formEmailNewUserHelp' => 'Enviaráselle un correo electrónico para crear o contrasinal unha vez gardado.',
     'formPlaceholderEmail' => 'nome@exemplo.com',
-    'formEmailUpdateWarning' => 'Por favor, verifica o teu novo correo electrónico (%s) seguindo as instrucións que che enviamos.',
+    'formEmailUpdateWarning' => 'Por favor, verifica o teu novo correo electrónico (<strong>%s</strong>) seguindo as instrucións que che enviamos.',
     'formPlaceholderPassword' => 'O teu contrasinal',
     'formPlaceholderCreatePassword' => 'Crea un contrasinal',
     'formPlaceholderPasswordNew' => 'Novo contrasinal',
@@ -167,6 +167,8 @@ return [
     'globalPageNotFoundContent' => '<p>Este enderezo non existe (aínda).</p><p>Poida que sexa erro noso, mais tamén pode ser que escribises mal o enderezo, sobre todo se o fixeches manualmente.</p><p>Podes volver á <a href="%s">portada facendo clic aquí</a>.</p>',
     'globalPageDeactivatedTitle' => 'Temporalmente desactivada',
     'globalPageDeactivatedContent' => 'A páxina que buscas está desactivada temporalmente. Se tes algunha consulta podes poñerte en contacto con nós en <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Desculpa as molestias.',
+    'globalPageNotAuthorisedTitle' => 'Non autorizado/a',
+    'globalPageNotAuthorisedContent' => '<p>Non tes permiso para ver esta páxina.</p><p><a href="/">Fai clic aquí para ir á páxina de inicio</a>.</p>',
 
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
@@ -181,7 +183,7 @@ return [
     'formFilterClean' => 'Restaurar filtro',
     'formFilterArticleTypeTitle' => 'Tipo',
 
-    'pageContentEditTitle' => 'Textos',
+    'pageContentEditTitle' => 'Editar contido',
     'pageContentEditTitleHomepage' => 'Portada',
     'pageContentEditTitleBlogBottom' => 'Texto despois dun post do blog',
     'pageContentEditAction' => 'Ligazón',
@@ -191,35 +193,33 @@ return [
 
     'userRoleAdmin' => 'Administrador/a',
     'userRoleUser' => 'Usuario/a',
-    'userStatusEnabled' => 'Activado',
-    'userStatusDisabled' => 'Desactivado',
+    'userStatusEnabled' => 'Activo',
+    'userStatusDisabled' => 'Suspendido',
+    'userStatusDeleted' => 'Eliminado',
     'userJourneyRegistration' => 'Rexistro completo',
     'userJourneyPendingPasswordCreation' => 'Pendente de crear o contrasinal',
-
-    'sectionRemove' => 'Eliminar sección',
-    'sectionMoveUp' => 'Mover para arriba',
-    'sectionMoveDown' => 'Mover para abaixo',
+    'userJourneyPendingEmailVerification' => 'Pendente de verificar o correo electrónico',
 
     'emailConfirmationSubject' => 'Benvido/a a %s! Confirma o teu correo electrónico',
     'emailConfirmationContent' => '<p>¡Benvido/a!</p>' .
-        '<p>Por favor, confirma o teu correo electrónico facendo clic na seguinte ligazón.</p>' .
+        '<p>Por favor, confirma o teu correo electrónico facendo clic na seguinte ligazón:</p>' .
         '<p><a href="%s">Confirmar correo electrónico</a></p>' .
         '<p>%s</p>',
     'emailUpdateVerificationSubject' => 'Verifica o teu correo electrónico',
     'emailUpdateVerificationContent' => '<p>Ola,</p>' .
-        '<p>Recibimos unha petición de cambio de correo electrónico na túa conta de %s.</p>' .
+        '<p>Recibimos unha petición de cambio de correo electrónico.</p>' .
         '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo. En caso contrario, fai clic na seguinte ligazón para verificar o teu novo correo:</p>' .
         '<p><a href="%s">Confirma o teu correo electrónico</a></p>' .
         '<p>%s</p>',
-    'emailPasswordChangeSubject' => 'Solicitude de cambio de contrasinal',
+    'emailPasswordChangeSubject' => '%s: cambiar contrasinal',
     'emailPasswordChangeContent' => '<p>Ola,</p>' .
-        '<p>Recibimos unha petición de cambio de contrasinal na túa conta de %s.</p>' .
+        '<p>Recibimos unha petición de cambio de contrasinal.</p>' .
         '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo electrónico. En caso contrario, fai clic na seguinte ligazón para cambiar o teu contrasinal:</p>' .
         '<p><a href="%s">Cambiar contrasinal</a></p>' .
         '<p>%s</p>',
-    'emailPasswordCreationSubject' => 'Convite á túa nova conta',
+    'emailPasswordCreationSubject' => 'A túa nova conta',
     'emailPasswordCreationContent' => '<p>Ola %s,</p>' .
-        '<p>Fai clic na seguinte ligazón para crear un contrasinal na túa nova conta en %s.</p>' .
+        '<p>Fai clic na seguinte ligazón para crear un contrasinal.</p>' .
         '<p>Usuario: %s</p>' .
         '<p><a href="%s">Crear contrasinal</a></p>' .
         '<p>%s</p>',

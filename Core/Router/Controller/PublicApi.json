@@ -24,9 +24,6 @@
   "paths": {
     "/papi/ping": {
       "get": {
-        "tags": [],
-        "summary": "Ping",
-        "description": "",
         "operationId": "ping",
         "parameters": [],
         "responses": {
@@ -37,7 +34,6 @@
               "properties": {
                 "ok": {
                   "type": "boolean",
-                  "description": "",
                   "enum": [true]
                 }
               }
@@ -48,40 +44,30 @@
     },
     "/papi/log": {
       "post": {
-        "tags": [],
-        "summary": "Log",
-        "description": "",
         "operationId": "logError",
         "parameters": [
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
                 "endpoint": {
-                  "description": "URL",
                   "type": "string"
                 },
                 "method": {
-                  "description": "URL",
                   "type": "string"
                 },
                 "payload": {
-                  "description": "Payload",
                   "type": "string"
                 },
                 "errorMessage": {
-                  "description": "Error message",
                   "type": "string"
                 },
                 "userAgent": {
-                  "description": "User agent",
                   "type": "string"
                 },
                 "pageUrl": {
-                  "description": "Page URL",
                   "type": "string"
                 }
               }
@@ -96,7 +82,6 @@
               "properties": {
                 "ok": {
                   "type": "boolean",
-                  "description": "",
                   "enum": [true]
                 }
               }
@@ -107,9 +92,6 @@
     },
     "/papi/csp": {
       "post": {
-        "tags": [],
-        "summary": "Log",
-        "description": "",
         "operationId": "logCspErrors",
         "parameters": [],
         "responses": {
@@ -120,7 +102,6 @@
               "properties": {
                 "ok": {
                   "type": "boolean",
-                  "description": "",
                   "enum": [true]
                 }
               }
@@ -131,28 +112,21 @@
     },
     "/papi/login": {
       "post": {
-        "tags": [],
-        "summary": "User login",
-        "description": "",
         "operationId": "userLogin",
         "parameters": [
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
                 "user": {
-                  "description": "Username or email",
                   "type": "string"
                 },
                 "password": {
-                  "description": "Password",
                   "type": "string"
                 },
                 "languageIsoCode": {
-                  "description": "Language ISO code",
                   "type": "string",
                   "minLength": 2,
                   "maxLength": 2
@@ -183,49 +157,10 @@
                   ]
                 },
                 "redirect": {
-                  "type": "string",
-                  "description": "Redirect URL (if any)"
+                  "type": "string"
                 },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message (if any)"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -235,20 +170,15 @@
     },
     "/papi/login/forgot": {
       "post": {
-        "tags": [],
-        "summary": "User login - Forgot password",
-        "description": "",
         "operationId": "forgotPassword",
         "parameters": [
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
                 "email": {
-                  "description": "Email address",
                   "type": "string"
                 }
               },
@@ -271,45 +201,7 @@
                   "type": "boolean"
                 },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message (if any)"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -319,150 +211,30 @@
     },
     "/papi/login/password-reset": {
       "post": {
-        "tags": [],
-        "summary": "Change password",
-        "description": "",
         "operationId": "userPasswordReset",
         "parameters": [
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
                 "userId": {
-                  "description": "User ID",
                   "type": "integer"
                 },
                 "password": {
-                  "description": "Password",
                   "type": "string"
                 },
                 "passwordConfirmation": {
-                  "description": "Password Confirmation",
                   "type": "string"
                 },
-                "verificationHash": {
-                  "description": "Verification Hash",
-                  "type": "string"
-                },
-                "languageIsoCode": {
-                  "description": "Language ISO code",
-                  "type": "string",
-                  "minLength": 2,
-                  "maxLength": 2
-                }
-              },
-              "required": [
-                "userId",
-                "password",
-                "passwordConfirmation",
-                "verificationHash",
-                "languageIsoCode"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Password change response",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    true,
-                    false
-                  ]
-                },
-                "errorMessage": {
-                  "type": "string",
-                  "description": "Error message (if any)"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/papi/login/password-creation": {
-      "post": {
-        "tags": [],
-        "summary": "Create password for new account",
-        "description": "",
-        "operationId": "userPasswordCreation",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "payload",
-            "description": "",
-            "required": true,
-            "schema": {
-              "properties": {
-                "userId": {
-                  "description": "User ID",
-                  "type": "integer"
-                },
-                "password": {
-                  "description": "Password",
-                  "type": "string"
-                },
-                "passwordConfirmation": {
-                  "description": "Password Confirmation",
-                  "type": "string"
-                },
-                "verificationHash": {
-                  "description": "Verification Hash",
+                "validationHash": {
                   "type": "string"
                 },
                 "verificationIdentifier": {
-                  "description": "Verification Identifier",
                   "type": "string"
                 },
                 "languageIsoCode": {
-                  "description": "Language ISO code",
                   "type": "string",
                   "minLength": 2,
                   "maxLength": 2
@@ -472,7 +244,7 @@
                 "userId",
                 "password",
                 "passwordConfirmation",
-                "verificationHash",
+                "validationHash",
                 "verificationIdentifier",
                 "languageIsoCode"
               ]
@@ -496,14 +268,59 @@
                   ]
                 },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message (if any)"
+                  "type": "string"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Failure",
+          }
+        }
+      }
+    },
+    "/papi/login/password-creation": {
+      "post": {
+        "operationId": "userPasswordCreation",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": {
+              "properties": {
+                "userId": {
+                  "type": "integer"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "passwordConfirmation": {
+                  "type": "string"
+                },
+                "validationHash": {
+                  "type": "string"
+                },
+                "verificationIdentifier": {
+                  "type": "string"
+                },
+                "languageIsoCode": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 2
+                }
+              },
+              "required": [
+                "userId",
+                "password",
+                "passwordConfirmation",
+                "validationHash",
+                "verificationIdentifier",
+                "languageIsoCode"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password change response",
             "schema": {
               "type": "object",
               "required": [
@@ -513,28 +330,12 @@
                 "success": {
                   "type": "boolean",
                   "enum": [
+                    true,
                     false
                   ]
                 },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
+                "errorMessage": {
+                  "type": "string"
                 }
               }
             }
@@ -544,38 +345,29 @@
     },
     "/papi/register": {
       "post": {
-        "tags": [],
-        "summary": "User registration",
-        "description": "",
         "operationId": "userRegistration",
         "parameters": [
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
                 "languageIsoCode": {
-                  "description": "Language ISO code",
                   "type": "string",
                   "minLength": 2,
                   "maxLength": 2
                 },
                 "email": {
-                  "description": "Email",
                   "type": "string"
                 },
                 "password": {
-                  "description": "Password",
                   "type": "string"
                 },
                 "name": {
-                  "description": "Name",
                   "type": "string"
                 },
                 "timezone": {
-                  "description": "Timezone. Example: 'Europe/Madrid'",
                   "type": "string"
                 }
               },
@@ -606,49 +398,10 @@
                   ]
                 },
                 "redirect": {
-                  "type": "string",
-                  "description": "Redirect URL (if any)"
+                  "type": "string"
                 },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message (if any)"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -658,24 +411,18 @@
     },
     "/papi/invite-request": {
       "post": {
-        "tags": [],
-        "summary": "Request a registration invite",
-        "description": "",
         "operationId": "requestRegistrationInvite",
         "parameters": [
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
                 "email": {
-                  "description": "Email",
                   "type": "string"
                 },
                 "languageIsoCode": {
-                  "description": "Language Iso Code",
                   "type": "string"
                 }
               },
@@ -702,45 +449,7 @@
                   ]
                 },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message (if any)"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -750,22 +459,17 @@
     },
     "/papi/blog/post": {
       "get": {
-        "tags": [],
-        "summary": "Get blog posts",
-        "description": "",
         "operationId": "getBlogPosts",
         "parameters": [
           {
             "name": "offset",
             "in": "query",
-            "description": "Query offset",
             "required": true,
             "type": "integer"
           },
           {
             "name": "itemsPerPage",
             "in": "query",
-            "description": "Items per page",
             "required": false,
             "type": "integer"
           }
@@ -782,23 +486,18 @@
                 },
                 "blogPosts": {
                   "type": "object",
-                  "description": "",
                   "properties": {
                     "icon": {
-                      "type": "string",
-                      "description": "Icon to display if the post is published or not"
+                      "type": "string"
                     },
                     "path": {
-                      "type": "string",
-                      "description": "Blog post path"
+                      "type": "string"
                     },
                     "title": {
-                      "type": "string",
-                      "description": "Post title"
+                      "type": "string"
                     },
                     "publishedOn": {
-                      "type": "string",
-                      "description": "Published On - ISO format"
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -810,15 +509,12 @@
                 },
                 "pagination": {
                   "type": "object",
-                  "description": "Pagination",
                   "properties": {
                     "offset": {
-                      "type": "integer",
-                      "description": "Offset"
+                      "type": "integer"
                     },
                     "itemsPerPage": {
-                      "type": "integer",
-                      "description": "Items per page"
+                      "type": "integer"
                     }
                   },
                   "required": [
@@ -839,27 +535,23 @@
     },
     "/papi/search": {
       "get": {
-        "tags": [],
         "operationId": "getSearchResults",
         "parameters": [
           {
             "name": "q",
             "in": "query",
-            "description": "Query",
             "required": true,
             "type": "string"
           },
           {
             "name": "isPublic",
             "in": "query",
-            "description": "Is a public page?",
             "required": false,
             "type": "string"
           },
           {
             "name": "searchTypeId",
             "in": "query",
-            "description": "Search type ID",
             "required": false,
             "type": "integer"
           }
@@ -872,7 +564,6 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false

@@ -15,6 +15,7 @@ use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
+use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 
@@ -165,8 +166,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     ): Response {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         $feedback = $this->userService->verifyEmailAddress(
-            $verificationIdentifier,
-            $localisationUtil
+            verifiedByUser: $request->session?->user,
+            verificationIdentifier: $verificationIdentifier,
+            localisationUtil: $localisationUtil,
         );
 
         return $this->buildHomepageResponse(
@@ -187,10 +189,14 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         string $verificationIdentifier,
         Request $request
     ): Response {
-        $res = $this->userService->validatePasswordResetVerificationPage($verificationIdentifier);
-        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        $verification = $this->userService->getUserVerification(
+            verificationIdentifier: $verificationIdentifier,
+            type: VerificationType::PasswordReset,
+            isEnabled: true,
+        );
 
-        if (empty($res)) {
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        if (empty($verification) || $verification->hasExpired()) {
             return $this->buildHomepageResponse(
                 request: $request,
                 feedback: new Feedback(
@@ -200,15 +206,17 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        $user = $this->userService->getUserForId($res->userId);
+        $user = $this->userService->getUserForId($verification->userId);
+
         return Response::createHtmlResponse(
-            template: 'core/public/password-reset',
+            template: 'core/frontend/public/password-reset',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navChangePassword'),
                 isPublicPage: true,
-                verificationHash: $user->getValidationHash(),
+                validationHash: $user->getValidationHash(),
                 passwordUserId: $user->id,
+                userVerification: $verification,
             ),
         );
     }
@@ -225,10 +233,15 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         string $verificationIdentifier,
         Request $request
     ): Response {
-        $res = $this->userService->validateCreateUserPasswordPage($verificationIdentifier);
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
-        if (empty($res)) {
+        $verification = $this->userService->getUserVerification(
+            verificationIdentifier: $verificationIdentifier,
+            type: VerificationType::PasswordCreation,
+            isEnabled: true,
+        );
+
+        if (empty($verification) || $verification->hasExpired()) {
             return $this->buildHomepageResponse(
                 request: $request,
                 feedback: new Feedback(
@@ -238,15 +251,16 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        $user = $this->userService->getUserForId($res->userId);
+        $user = $this->userService->getUserForId($verification->userId);
         return Response::createHtmlResponse(
-            template: 'core/public/password-creation',
+            template: 'core/frontend/public/password-creation',
             responseData: new HtmlResponseData(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navCreatePassword'),
                 isPublicPage: true,
-                verificationHash: $user->getValidationHash(),
+                validationHash: $user->getValidationHash(),
                 passwordUserId: $user->id,
+                userVerification: $verification,
             ),
         );
     }
