@@ -428,12 +428,8 @@ pre {
   width: 100%;
   text-align: center;
   color: var(--color-light-1);
-  padding: 1.5rem;
-  font-size: 0.9rem;
-}
-
-#feedback-banner>p {
-  color: var(--color-failure);
+  padding: 1rem;
+  font-size: 1rem;
 }
 /* Feedback style ends here */
 
@@ -879,6 +875,7 @@ button.is-link.is-light,
 .m-t-05 {margin-top: 0.5rem !important;}
 .m-t-075 {margin-top: 0.75rem !important;}
 .m-t-1 {margin-top: 1rem !important;}
+.m-t-15 {margin-top: 1.5rem !important;}
 .m-t-2 {margin-top: 2rem !important;}
 .m-t-3 {margin-top: 3rem !important;}
 .m-t-4 {margin-top: 4rem !important;}
@@ -908,7 +905,10 @@ button.is-link.is-light,
 .no-margin {margin: 0 !important;padding: 0 !important;}
 .no-padding {padding: 0 !important;}
 .p-t-0 {padding-top: 0 !important;}
+.p-t-05 {padding-top: 0.5rem !important;}
 .p-t-1 {padding-top: 1rem !important;}
+.p-t-2 {padding-top: 2rem !important;}
+.p-b-05 {padding-bottom: 0.5rem !important;}
 .p-b-1 {padding-bottom: 1rem !important;}
 .p-b-6 {padding-bottom: 6rem !important;}
 .p-b-10 {padding-bottom: 10rem !important;}
@@ -917,12 +917,16 @@ button.is-link.is-light,
 .light-text-color {color: var(--color-black-light);}
 .no-background {background-color: transparent !important;}
 .flex-no-grow {flex-grow: 0 !important;}
-.flex-grow {flex-grow: 1 !important;}
+.flex-grow-1 {flex-grow: 1 !important;}
 .flex-grow-2 {flex-grow: 2 !important;}
 .flex-grow-3 {flex-grow: 3 !important;}
 .flex-grow-4 {flex-grow: 4 !important;}
+.gap-0 {gap: 0 !important;}
+.gap-025 { gap: 0.25rem !important; }
 .gap-05 { gap: 0.5rem !important; }
+.gap-1 { gap: 1rem !important; }
 .gap-15 { gap: 1.5rem !important; }
+.gap-2 { gap: 2rem !important; }
 .bg-color-dark {background-color: var(--color-black);}
 .no-border {border: none !important;}
 .width-100 {width: 100% !important;}
@@ -930,9 +934,14 @@ button.is-link.is-light,
 .word-break {word-wrap: anywhere;}
 .text-one-line {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .text-nowrap {white-space: nowrap;}
-.text-right {text-align: right;}
+.text-right {text-align: right !important;}
 .width-auto {width: auto;}
 .uppercase {text-transform: uppercase;}
+.min-width-100 {min-width: 100px !important;}
+.min-width-110 {min-width: 110px !important;}
+.min-width-175 {min-width: 175px !important;}
+.border-bottom {border-bottom: 1px solid var(--color-light-2)}
+.position-relative {position: relative !important;}
 
 .null {display: none !important;}
 .hidden {visibility: hidden;}

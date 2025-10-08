@@ -1,39 +1,29 @@
 import {Request} from './module/Request.js?v=000';
 import {Global} from './module/localisation.js?v=000';
 
-const formLogin = document.querySelector('form#form-login');
-const loginFailureFeedback = document.querySelector('#login-failure-message');
-
-const mainImageDivAll = document.querySelectorAll('.home-section-right');
-const rotateMainImage = function () {
-  mainImageDivAll.forEach(el => el.classList.toggle('null'));
-  setTimeout(rotateMainImage, 5000);
-};
-rotateMainImage();
-
-if (loginFailureFeedback) {
-  document.querySelectorAll('input').forEach(el => {
-    el.addEventListener('input', () => {
-      loginFailureFeedback.classList.add('null');
-    });
+document.querySelectorAll('.form-login-workflow-js input').forEach(el => {
+  el.addEventListener('input', () => {
+    document.querySelector('#login-failure-message').classList.add('null');
   });
-}
+});
 
-if (formLogin) {
-  formLogin.addEventListener('submit', e => {
+document.querySelectorAll('form#form-login').forEach(fl => {
+  fl.addEventListener('submit', e => {
     e.preventDefault();
-    loginFailureFeedback.classList.add('null');
 
-    const user = document.querySelector('form#form-login input[name="user"]');
-    const password = document.querySelector('form#form-login input[name="password"]');
+    const loginFailureFeedback = document.querySelector('#login-failure-message');
+    loginFailureFeedback.classList.add('null')
+
+    const user = fl.querySelector('input[name="user"]');
+    const password = fl.querySelector('input[name="password"]');
     const siteLanguage = document.documentElement.lang
       ? document.documentElement.lang.toLowerCase().trim()
       : 'en';
 
     const data = {
-      'user': user.value,
-      'password': password.value,
-      'languageIsoCode': siteLanguage
+      user: user.value,
+      password: password.value,
+      languageIsoCode: siteLanguage
     };
 
     Request.post('/papi/login', JSON.stringify(data))
@@ -44,17 +34,18 @@ if (formLogin) {
         loginFailureFeedback.classList.remove('null');
       });
   });
-}
+});
 
-const formRegister = document.querySelector('form#form-register');
-if (formRegister) {
-  formRegister.addEventListener('submit', e => {
+document.querySelectorAll('form#form-register').forEach(fr => {
+  fr.addEventListener('submit', e => {
     e.preventDefault();
+
+    const loginFailureFeedback = document.querySelector('#login-failure-message');
     loginFailureFeedback.classList.add('null');
 
-    const email = document.querySelector('form#form-register input[name="email"]');
-    const password = document.querySelector('form#form-register input[name="password"]');
-    const name = document.querySelector('form#form-register input[name="name"]');
+    const email = fr.querySelector('input[name="email"]');
+    const password = fr.querySelector('input[name="password"]');
+    const name = fr.querySelector('input[name="name"]');
     const siteLanguage = document.documentElement.lang
       ? document.documentElement.lang.toLowerCase().trim()
       : 'en';
@@ -67,38 +58,41 @@ if (formRegister) {
     }
 
     const data = {
-      'languageIsoCode': siteLanguage,
-      'email': email.value,
-      'password': password.value,
-      'name': name.value,
-      'timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
+      languageIsoCode: siteLanguage,
+      email: email.value,
+      password: password.value,
+      name: name.value,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 
     Request.post('/papi/register', JSON.stringify(data))
-      .then((response) => {
-        window.location = response.redirect;
-      }).catch((error) => {
-      loginFailureFeedback.innerHTML = error.message;
-      loginFailureFeedback.classList.remove('null');
-    });
+      .then((response) => window.location = response.redirect)
+      .catch((error) => {
+        loginFailureFeedback.innerHTML = error.message;
+        loginFailureFeedback.classList.remove('null');
+      });
   });
-}
+});
 
-const formLoginForgot = document.querySelector('form#form-login-forgot');
-if (formLoginForgot) {
-  formLoginForgot.addEventListener('submit', e => {
+document.querySelectorAll('form#form-login-forgot').forEach(flf => {
+  flf.addEventListener('submit', e => {
     e.preventDefault();
+
+    const loginFailureFeedback = document.querySelector('#login-failure-message');
     loginFailureFeedback.classList.add('null');
 
-    const email = document.querySelector('form#form-login-forgot input[name="email"]');
+    const email = flf.querySelector('input[name="email"]').value;
 
     const data = {
-      'email': email.value
+      email: email,
     };
 
     Request.post('/papi/login/forgot', JSON.stringify(data))
       .then(() => {
-        document.querySelector('span#register-feedback-email').textContent = email.value;
+        const emailFeedback = document.querySelector('span#register-feedback-email');
+        if (emailFeedback) {
+          emailFeedback.textContent = email;
+        }
         document.querySelector('div#register-form').classList.add('null');
         document.querySelector('div#register-back-login').classList.remove('null');
       })
@@ -107,20 +101,21 @@ if (formLoginForgot) {
         loginFailureFeedback.classList.remove('null');
       });
   });
-}
+});
 
-const formPasswordReset = document.querySelector('form#form-password-reset');
-if (formPasswordReset) {
-  formPasswordReset.addEventListener('submit', e => {
+document.querySelectorAll('form#form-password-reset').forEach(fpr => {
+  fpr.addEventListener('submit', e => {
     e.preventDefault();
+
+    const loginFailureFeedback = document.querySelector('#login-failure-message');
     loginFailureFeedback.classList.add('null');
 
-    const userId = document.querySelector('form#form-password-reset input[name="userId"]');
-    const password = document.querySelector('form#form-password-reset input[name="password"]');
-    const passwordConfirmation = document.querySelector('form#form-password-reset input[name="passwordConfirmation"]');
-    const verificationHash = document.querySelector('form#form-password-reset input[name="verificationHash"]');
-    const postUrl = document.querySelector('form#form-password-reset input[name="postUrl"]').value;
-    const verificationIdentifier = window.location.pathname.split('/').pop();
+    const userId = fpr.querySelector('input[name="userId"]').value;
+    const password = fpr.querySelector('input[name="password"]');
+    const passwordConfirmation = fpr.querySelector('input[name="passwordConfirmation"]');
+    const validationHash = fpr.querySelector('input[name="validationHash"]').value;
+    const postUrl = fpr.querySelector('input[name="postUrl"]').value;
+    const verificationIdentifier = fpr.querySelector('input[name="verificationIdentifier"]').value;
 
     if (password.value.length < 10) {
       loginFailureFeedback.textContent = Global.get('feedbackPasswordTooShort');
@@ -141,12 +136,12 @@ if (formPasswordReset) {
       : 'en';
 
     const data = {
-      'userId': Number.parseInt(userId.value),
-      'password': password.value,
-      'passwordConfirmation': passwordConfirmation.value,
-      'verificationHash': verificationHash.value,
-      'verificationIdentifier': verificationIdentifier,
-      'languageIsoCode': siteLanguage
+      userId: Number.parseInt(userId),
+      password: password.value,
+      passwordConfirmation: passwordConfirmation.value,
+      validationHash: validationHash,
+      verificationIdentifier: verificationIdentifier,
+      languageIsoCode: siteLanguage
     };
 
     Request.post(postUrl, JSON.stringify(data))
@@ -158,7 +153,7 @@ if (formPasswordReset) {
       loginFailureFeedback.classList.remove('null');
     });
   });
-}
+});
 
 document.querySelectorAll('a.language-picker').forEach(el => {
   el.addEventListener('click', e => {
@@ -183,16 +178,18 @@ document.querySelectorAll('a.language-picker').forEach(el => {
 document.querySelectorAll('form#form-invite-request').forEach(f => {
   f.addEventListener('submit', e => {
     e.preventDefault();
+
+    const loginFailureFeedback = document.querySelector('#login-failure-message');
     loginFailureFeedback.classList.add('null');
 
-    const email = document.querySelector('form#form-invite-request input[name="email"]');
+    const email = f.querySelector('input[name="email"]');
     const siteLanguage = document.documentElement.lang
       ? document.documentElement.lang.toLowerCase().trim()
       : 'en';
 
     const data = {
-      'email': email.value,
-      'languageIsoCode': siteLanguage
+      email: email.value,
+      languageIsoCode: siteLanguage,
     };
 
     Request.post('/papi/invite-request', JSON.stringify(data))
