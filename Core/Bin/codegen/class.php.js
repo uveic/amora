@@ -188,7 +188,7 @@ function renderParamValidator(param) {
   if (param.in === 'body') {
     buffer.push(renderBodyParameterIf(param, param.name));
   } else if (param.required !== 'undefined' && param.required) {
-      buffer.push(renderFormDataRequiredParameterIf(varName, param.type, param.name, param.format));
+    buffer.push(renderFormDataRequiredParameterIf(varName, param.type, param.name, param.format));
   } else {
     buffer.push(renderNotRequiredParameterIf(varName, param.type, param.name));
   }
@@ -282,7 +282,7 @@ function renderParameterTypeValidation(varName, type, name, format) {
 
   if (type === 'boolean') {
     return `
-            $${util.snakeToCamel(name)} = StringUtil::isTrue(${varName});`;
+            $${util.snakeToCamel(name)} = StringUtil::isTrue(${varName} ?? null);`;
   }
 
   return `
@@ -319,7 +319,7 @@ function renderNotRequiredParameterIf(varName, type, name) {
 
   if (type === 'boolean') {
     return `
-        $${util.snakeToCamel(name)} = StringUtil::isTrue(${varName});`;
+        $${util.snakeToCamel(name)} = StringUtil::isTrue(${varName} ?? null);`;
   }
 
   return `
@@ -365,11 +365,11 @@ function renderRouteMatcher(operation) {
       pathVarName = part.slice(1, -1);
       let pathVarType = operation.parameters.find(pathParam => pathParam.name === pathVarName).type;
       switch (pathVarType) {
-          case "integer":
-              pathVarType = "int";
-              break;
-          default:
-              pathVarType = "string";
+        case "integer":
+          pathVarType = "int";
+          break;
+        default:
+          pathVarType = "string";
       }
       pathTypes.push(pathVarType);
     } else {
@@ -378,7 +378,7 @@ function renderRouteMatcher(operation) {
   }
 
   if (pathTypes.length) {
-      pathTypesStr = "'" + pathTypes.join("', '") + "'";
+    pathTypesStr = "'" + pathTypes.join("', '") + "'";
   }
 
   let lineToPrint = `if ($method === '${method.toUpperCase()}' &&
