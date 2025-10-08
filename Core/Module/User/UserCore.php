@@ -51,6 +51,8 @@ class UserCore extends Core
                 require_once self::getPathRoot() . '/App/Value/AppUserRole.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Value/UserActionType.php';
+                require_once self::getPathRoot() . '/Core/Module/User/Model/UserAction.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserVerification.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserRegistrationRequest.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';

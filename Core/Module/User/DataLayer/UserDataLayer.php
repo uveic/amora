@@ -2,7 +2,10 @@
 
 namespace Amora\Core\Module\User\Datalayer;
 
+use Amora\App\Value\AppUserRole;
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Module\User\Model\UserAction;
+use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\Logger;
 use Amora\Core\Entity\Util\QueryOptions;
@@ -27,6 +30,9 @@ class UserDataLayer
     const string USER_ROLE_TABLE = 'core_user_role';
     const string USER_JOURNEY_STATUS_TABLE = 'core_user_journey_status';
 
+    const string USER_ACTION_TABLE = 'core_user_action';
+    const string USER_ACTION_TYPE_TABLE = 'core_user_action_type';
+
     public function __construct(
         private readonly MySqlDb $db,
         private readonly Logger $logger,
@@ -38,6 +44,8 @@ class UserDataLayer
         ?string $email = null,
         ?string $searchText = null,
         ?string $identifier = null,
+        array $statusIds = [],
+        array $roleIds = [],
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -97,6 +105,14 @@ class UserDataLayer
             $params[':identifier'] = $identifier;
         }
 
+        if ($statusIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $statusIds, 'u.status_id', 'userStatusId');
+        }
+
+        if ($roleIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $roleIds, 'u.role_id', 'userRoleId');
+        }
+
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
 
         $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
@@ -116,26 +132,6 @@ class UserDataLayer
         return $this->db;
     }
 
-    public function getUserForId(int $id, $includeDisabled = false): ?User
-    {
-        $res = $this->filterUserBy(
-            includeDisabled: $includeDisabled,
-            userId: $id,
-        );
-
-        return empty($res[0]) ? null : $res[0];
-    }
-
-    public function getUserForEmail(string $email, bool $includeDisabled = false): ?User
-    {
-        $res = $this->filterUserBy(
-            includeDisabled: $includeDisabled,
-            email: $email,
-        );
-
-        return empty($res[0]) ? null : $res[0];
-    }
-
     public function updateUser(User $user, int $userId): ?User
     {
         $userArray = $user->asArray();
@@ -152,15 +148,15 @@ class UserDataLayer
         return $user;
     }
 
-    public function createNewUser(User $user): ?User
+    public function storeUser(User $user): ?User
     {
-        $resUser = $this->db->insert(self::USER_TABLE, $user->asArray());
+        $newId = $this->db->insert(self::USER_TABLE, $user->asArray());
 
-        if (empty($resUser)) {
+        if (empty($newId)) {
             $this->logger->logError('Error inserting user');
         }
 
-        $user->id = (int)$resUser;
+        $user->id = (int)$newId;
 
         return $user;
     }
@@ -184,38 +180,52 @@ class UserDataLayer
         return $data;
     }
 
-    public function disableVerificationDataForUserId(int $userId): bool
+    public function disableAllVerificationsForUserId(int $userId, VerificationType $verificationType): bool
     {
         return $this->db->execute(
             '
                 UPDATE ' . self::USER_VERIFICATION_TABLE . '
                 SET is_enabled = 0
                 WHERE user_id = :userId
+                    AND type_id = :verificationTypeId
             ',
             [
                 ':userId' => $userId,
-            ]
+                ':verificationTypeId' => $verificationType->value,
+            ],
+        );
+    }
+
+    public function markVerificationAsVerified(int $verificationId): bool
+    {
+        return $this->db->update(
+            tableName: self::USER_VERIFICATION_TABLE,
+            id: $verificationId,
+            data: [
+                'is_enabled' => 0,
+                'verified_at' => DateUtil::getCurrentDateForMySql()
+            ],
         );
     }
 
     public function getUserVerification(
         string $verificationIdentifier,
         ?VerificationType $type = null,
-        ?bool $isEnabled = null
+        ?bool $isEnabled = null,
     ): ?UserVerification {
         $sql = '
             SELECT
-                u.id AS user_verification_id,
-                u.user_id,
-                u.type_id,
-                u.email,
-                u.created_at,
-                u.verified_at,
-                u.verification_identifier,
-                u.is_enabled
-            FROM ' . self::USER_VERIFICATION_TABLE . ' AS u
+                uv.id AS user_verification_id,
+                uv.user_id,
+                uv.type_id,
+                uv.email,
+                uv.created_at,
+                uv.verified_at,
+                uv.verification_identifier,
+                uv.is_enabled
+            FROM ' . self::USER_VERIFICATION_TABLE . ' AS uv
             WHERE 1
-                AND u.verification_identifier = :verificationIdentifier
+                AND uv.verification_identifier = :verificationIdentifier
         ';
 
         $params = [
@@ -223,76 +233,18 @@ class UserDataLayer
         ];
 
         if (isset($type)) {
-            $sql .= ' AND u.type_id = :typeId';
+            $sql .= ' AND uv.type_id = :typeId';
             $params[':typeId'] = $type->value;
         }
 
         if (isset($isEnabled)) {
-            $sql .= ' AND u.is_enabled = :isEnabled';
+            $sql .= ' AND uv.is_enabled = :isEnabled';
             $params[':isEnabled'] = $isEnabled ? 1 : 0;
         }
 
         $res = $this->db->fetchOne($sql, $params);
 
         return $res ? UserVerification::fromArray($res) : null;
-    }
-
-    public function markUserAsVerified(User $user, UserVerification $verification): bool
-    {
-        $data = [
-            'updated_at' => DateUtil::getCurrentDateForMySql(),
-            'verified' => 1,
-            'change_email_to' => null
-        ];
-
-        if ($verification->email) {
-            $data['email'] = $verification->email;
-        }
-
-        $res = $this->db->update(self::USER_TABLE, $user->id, $data);
-
-        if (empty($res)) {
-            return false;
-        }
-
-        $res2 = $this->db->update(
-            self::USER_VERIFICATION_TABLE,
-            $verification->id,
-            [
-                'is_enabled' => 0,
-                'verified_at' => DateUtil::getCurrentDateForMySql()
-            ]
-        );
-
-        if (empty($res2)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function updatePassword(int $userId, string $hashedPassword): bool
-    {
-        return $this->db->update(
-            self::USER_TABLE,
-            $userId,
-            [
-                'password_hash' => $hashedPassword,
-                'updated_at' => DateUtil::getCurrentDateForMySql(),
-            ]
-        );
-    }
-
-    public function updateUserJourney(int $userId, UserJourneyStatus $userJourney): bool
-    {
-        return $this->db->update(
-            self::USER_TABLE,
-            $userId,
-            [
-                'journey_id' => $userJourney->value,
-                'updated_at' => DateUtil::getCurrentDateForMySql(),
-            ]
-        );
     }
 
     public function getUserRegistrationRequest(
@@ -363,5 +315,82 @@ class UserDataLayer
                 ':statusEnabled' => UserStatus::Enabled->value,
             ]
         );
+    }
+
+    public function updateUserFields(
+        int $userId,
+        ?UserStatus $newStatus = null,
+        UserRole|AppUserRole|null $newRole = null,
+        ?UserJourneyStatus $newJourneyStatus = null,
+        ?string $newEmail = null,
+        ?string $newChangeEmailTo = null,
+        bool $deleteChangeEmailTo = false,
+        ?string $newHashedPassword = null,
+    ): bool {
+        $params = [];
+        $fields = [];
+
+        if ($newStatus) {
+            $fields[] = 'status_id = :newStatusId';
+            $params[':newStatusId'] = $newStatus->value;
+        }
+
+        if ($newRole) {
+            $fields[] = 'role_id = :newRoleId';
+            $params[':newRoleId'] = $newRole->value;
+        }
+
+        if ($newJourneyStatus) {
+            $fields[] = 'journey_id = :newJourneyStatusId';
+            $params[':newJourneyStatusId'] = $newJourneyStatus->value;
+        }
+
+        if ($newEmail) {
+            $fields[] = 'email = :newEmail';
+            $params[':newEmail'] = $newEmail;
+        }
+
+        if ($deleteChangeEmailTo) {
+            $fields[] = 'change_email_to = :newChangeEmailTo';
+            $params[':newChangeEmailTo'] = null;
+        } elseif ($newChangeEmailTo) {
+            $fields[] = 'change_email_to = :newChangeEmailTo';
+            $params[':newChangeEmailTo'] = $newChangeEmailTo;
+        }
+
+        if ($newHashedPassword) {
+            $fields[] = 'password_hash = :hashedPassword';
+            $params[':hashedPassword'] = $newHashedPassword;
+        }
+
+        if (!$params) {
+            return true;
+        }
+
+        $params[':userId'] = $userId;
+        $params[':updatedAt'] = DateUtil::getCurrentDateForMySql();
+        $fields[] = 'updated_at = :updatedAt';
+
+        $sql = '
+            UPDATE ' . self::USER_TABLE . '
+            SET ' . implode(',', $fields) . '
+            WHERE id = :userId
+        ';
+
+        return $this->db->execute($sql, $params);
+    }
+
+    public function storeUserAction(UserAction $item): ?UserAction
+    {
+        $newId = $this->db->insert(self::USER_ACTION_TABLE, $item->asArray());
+
+        if (!$newId) {
+            $this->logger->logError('Error inserting user action data');
+            return null;
+        }
+
+        $item->id = $newId;
+
+        return $item;
     }
 }

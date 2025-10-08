@@ -304,7 +304,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                     identifier: null,
                     timezone: DateUtil::convertStringToDateTimeZone($timezone),
                 ),
-                verificationType: VerificationType::EmailAddress,
+                verificationType: VerificationType::VerifyEmailAddress,
             );
             $res = !empty($user);
 

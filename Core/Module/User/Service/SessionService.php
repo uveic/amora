@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\User\Service;
 
+use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -21,6 +22,29 @@ class SessionService
         private readonly int $sessionIdCookieValidForSeconds,
         private readonly SessionDataLayer $dataLayer,
     ) {}
+
+    public function filterSessionBy(
+        array $sessionIds = [],
+        array $userIds = [],
+        ?bool $isExpired = null,
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        return $this->dataLayer->filterSessionBy(
+            sessionIds: $sessionIds,
+            userIds: $userIds,
+            isExpired: $isExpired,
+            queryOptions: $queryOptions,
+        );
+    }
+
+    public function getSessionForSessionId(string $sessionId): ?Session
+    {
+        $res = $this->filterSessionBy(
+            sessionIds: [$sessionId],
+        );
+
+        return $res[0] ?? null;
+    }
 
     public function generateSessionId(): string
     {
@@ -96,11 +120,14 @@ class SessionService
         $_COOKIE[$this->sessionIdCookieName] = $sid;
     }
 
-    public function refreshSession(string $sid, int $sessionId): bool
+    public function updateSessionExpiryDateAndValidUntil(string $sid, int $sessionId): bool
     {
         $newExpiryDate = $this->generateNewValidUntil();
         $this->updateBrowserCookie($sid, $newExpiryDate);
-        return $this->dataLayer->refreshSession($sessionId, $newExpiryDate);
+        return $this->dataLayer->updateSessionExpiryDateAndValidUntil(
+            sessionId: $sessionId,
+            newExpiryDate: $newExpiryDate,
+        );
     }
 
     public function loadSession(?string $sessionId, bool $forceReload = false): ?Session
@@ -113,7 +140,7 @@ class SessionService
             return $this->session;
         }
 
-        $this->session = $this->dataLayer->getSessionForSessionId($sessionId);
+        $this->session = $this->getSessionForSessionId($sessionId);
         if ($this->session) {
             Core::updateTimezone($this->session->timezone->getName());
         }

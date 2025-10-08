@@ -6,6 +6,7 @@ use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Entity\Request;
 use Amora\Core\Module\Album\Model\Album;
 use Amora\Core\Module\Article\Model\Article;
+use Amora\Core\Module\User\Model\UserVerification;
 
 class HtmlResponseData extends HtmlResponseDataAbstract
 {
@@ -15,6 +16,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         ?string $pageDescription = null,
         ?string $siteImageUrl = null,
         ?Pagination $pagination = null,
+        ?Feedback $feedback = null,
         bool $isPublicPage = false,
         public readonly ?Article $article = null,
         public readonly array $articles = [],
@@ -24,13 +26,14 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         public readonly array $albums = [],
         public readonly ?Album $album = null,
         public readonly ?PageContent $postBottomContent = null,
-        public readonly ?Feedback $feedback = null,
-        public readonly ?string $verificationHash = null,
+        public readonly ?string $validationHash = null,
         public readonly ?int $passwordUserId = null,
+        public readonly ?UserVerification $userVerification = null,
     ) {
         parent::__construct(
             request: $request,
             pagination: $pagination,
+            feedback: $feedback,
             pageTitle: $pageTitle,
             pageDescription: $pageDescription,
             siteImageUrl: $siteImageUrl,

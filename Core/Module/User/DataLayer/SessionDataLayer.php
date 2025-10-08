@@ -4,6 +4,7 @@
 namespace Amora\Core\Module\User\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\Logger;
 use Amora\Core\Module\User\Model\Session;
@@ -22,12 +23,27 @@ class SessionDataLayer
         private readonly Logger $logger,
     ) {}
 
-    public function getSessionForSessionId(string $sessionId): ?Session
-    {
+    public function filterSessionBy(
+        array $sessionIds = [],
+        array $userIds = [],
+        ?bool $isExpired = null,
+        ?QueryOptions $queryOptions = null,
+    ): array {
+        if (!isset($queryOptions)) {
+            $queryOptions = new QueryOptions();
+        }
+
+        $orderByMapping = [
+            'id' => 's.id',
+            'last_visited_at' => 's.last_visited_at',
+            'user_id' => 's.user_id',
+        ];
+
         $params = [];
         $baseSql = 'SELECT ';
         $fields = [
             's.id AS session_id',
+            's.user_id',
             's.sid AS session_sid',
             's.created_at AS session_created_at',
             's.last_visited_at AS session_last_visited_at',
@@ -37,7 +53,6 @@ class SessionDataLayer
             's.ip AS session_ip',
             's.browser_and_platform AS session_browser_and_platform',
 
-            'u.id AS user_id',
             'u.status_id AS user_status_id',
             'u.language_iso_code AS user_language_iso_code',
             'u.role_id AS user_role_id',
@@ -57,28 +72,43 @@ class SessionDataLayer
         $joins .= ' INNER JOIN ' . UserDataLayer::USER_TABLE . ' AS u ON s.user_id = u.id';
 
         $where = ' WHERE 1';
-        $where .= $this->generateWhereSqlCodeForIds($params, [$sessionId], 's.sid', 'sessionId');
 
-        $sql = $baseSql . implode(', ', $fields) . $joins . $where;
-
-        $res = $this->db->fetchOne($sql, $params);
-
-        if (empty($res)) {
-            return null;
+        if ($sessionIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $sessionIds, 's.sid', 'sessionId');
         }
 
-        return Session::fromArray($res);
+        if ($userIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $userIds, 's.user_id', 'user_id');
+        }
+
+        if (isset($isExpired)) {
+            $params[':now'] = DateUtil::getCurrentDateForMySql();
+            $where .= ' AND s.forced_expiration_at IS NOT NULL OR s.valid_until <= :now';
+        }
+
+        $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
+
+        $sql = $baseSql . implode(', ', $fields) . $joins . $where . $orderByAndLimit;
+
+        $res = $this->db->fetchAll($sql, $params);
+
+        $output = [];
+        foreach ($res as $item) {
+            $output[] = Session::fromArray($item);
+        }
+
+        return $output;
     }
 
-    public function refreshSession(int $sessionId, DateTimeImmutable $newExpiryDate): bool
+    public function updateSessionExpiryDateAndValidUntil(int $sessionId, DateTimeImmutable $newExpiryDate): bool
     {
         $res = $this->db->update(
-            self::SESSION_TABLE_NAME,
-            $sessionId,
-            [
+            tableName: self::SESSION_TABLE_NAME,
+            id: $sessionId,
+            data: [
                 'last_visited_at' => DateUtil::getCurrentDateForMySql(),
                 'valid_until' => $newExpiryDate->format(DateUtil::MYSQL_DATETIME_FORMAT),
-            ]
+            ],
         );
 
         if (!$res) {
@@ -91,11 +121,11 @@ class SessionDataLayer
     public function expireSession(int $sessionId): bool
     {
         $res = $this->db->update(
-            self::SESSION_TABLE_NAME,
-            $sessionId,
-            [
+            tableName: self::SESSION_TABLE_NAME,
+            id: $sessionId,
+            data: [
                 'forced_expiration_at' => DateUtil::getCurrentDateForMySql()
-            ]
+            ],
         );
 
         if (!$res) {
