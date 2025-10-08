@@ -49,4 +49,10 @@ readonly class MailerService
             queryOptions: $queryOptions,
         );
     }
+
+    public function getMailerItemForId(int $id): ?MailerItem
+    {
+        $res = $this->filterMailerItemBy(ids: [$id]);
+        return $res[0] ?? null;
+    }
 }

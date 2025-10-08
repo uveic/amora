@@ -8,6 +8,8 @@ use DateTimeImmutable;
 
 class UserVerification
 {
+    const int VERIFICATION_LINK_VALID_FOR_SECONDS = 172800; // 2 days
+
     public function __construct(
         public ?int $id,
         public readonly int $userId,
@@ -45,7 +47,21 @@ class UserVerification
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'verified_at' => $this->verifiedAt?->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'verification_identifier' => $this->verificationIdentifier,
-            'is_enabled' => $this->isEnabled,
+            'is_enabled' => $this->isEnabled ? 1 : 0,
         ];
+    }
+
+    public function hasExpired(): bool
+    {
+        if (!$this->isEnabled) {
+            return false;
+        }
+
+        if ($this->verifiedAt) {
+            return true;
+        }
+
+        $now = new DateTimeImmutable();
+        return $now->getTimestamp() - $this->createdAt->getTimestamp() > self::VERIFICATION_LINK_VALID_FOR_SECONDS;
     }
 }

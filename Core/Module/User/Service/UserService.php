@@ -5,11 +5,12 @@ namespace Amora\Core\Module\User\Service;
 use Amora\App\Value\AppUserRole;
 use Amora\Core\Core;
 use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Module\User\Model\UserAction;
+use Amora\Core\Module\User\Value\UserActionType;
 use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Util\LocalisationUtil;
-use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Amora\Core\Util\Logger;
@@ -26,7 +27,6 @@ use Amora\App\Value\Language;
 class UserService
 {
     const int USER_PASSWORD_MIN_LENGTH = 10;
-    const int VERIFICATION_LINK_VALID_FOR_DAYS = 7;
 
     public function __construct(
         private readonly Logger $logger,
@@ -35,22 +35,60 @@ class UserService
         private readonly UserMailService $userMailService,
     ) {}
 
-    public function storeUser(User $user, ?VerificationType $verificationType = null): ?User
+    public function storeUser(User $user): ?User
     {
+        return $this->userDataLayer->storeUser($user);
+    }
+
+    public function sendUserVerificationEmail(User $user, VerificationType $verificationType): bool
+    {
+        return match ($verificationType) {
+            VerificationType::PasswordCreation =>
+            $this->userMailService->sendPasswordCreationEmail($user),
+            VerificationType::VerifyEmailAddress =>
+            $this->userMailService->sendVerificationEmail(
+                user: $user,
+                emailToVerify: $user->changeEmailAddressTo ?: $user->email,
+                verificationType: VerificationType::VerifyEmailAddress,
+            ),
+            default => true,
+        };
+    }
+
+    public function workflowStoreUserAndSendVerificationEmail(
+        ?User $createdByUser,
+        User $user,
+        VerificationType $verificationType,
+    ): ?User {
         $res = $this->userDataLayer->getDb()->withTransaction(
-            function () use ($user, $verificationType) {
-                $resUser = $this->userDataLayer->createNewUser($user);
+            function () use ($createdByUser, $user, $verificationType) {
+                $resUser = $this->storeUser($user);
                 if (empty($resUser)) {
+                    return new Feedback(false);
+                }
+
+                $resAction = $this->storeUserAction(
+                    new UserAction(
+                        id: null,
+                        userId: $resUser->id,
+                        createdByUser: $createdByUser,
+                        type: UserActionType::Create,
+                        createdAt: new DateTimeImmutable(),
+                    ),
+                );
+
+                if (!$resAction) {
                     return new Feedback(false);
                 }
 
                 $resEmail = match ($verificationType) {
                     VerificationType::PasswordCreation =>
                     $this->userMailService->sendPasswordCreationEmail($resUser),
-                    VerificationType::EmailAddress =>
+                    VerificationType::VerifyEmailAddress =>
                     $this->userMailService->sendVerificationEmail(
                         user: $resUser,
                         emailToVerify: $resUser->email,
+                        verificationType: VerificationType::VerifyEmailAddress,
                     ),
                     default => true
                 };
@@ -71,48 +109,13 @@ class UserService
         return $this->userDataLayer->deleteUser($user);
     }
 
-    private function updateUser(
-        User $user,
-        bool $updateSessionTimezone = false,
-    ): bool {
-        $res = $this->userDataLayer->getDb()->withTransaction(
-            function() use ($user, $updateSessionTimezone) {
-                $updatedUser = $this->userDataLayer->updateUser($user, $user->id);
-
-                if (empty($updatedUser)) {
-                    return new Feedback(false);
-                }
-
-                if ($user->changeEmailAddressTo) {
-                    $this->userMailService->sendUpdateEmailVerificationEmail(
-                        user: $user,
-                        emailToVerify: $user->changeEmailAddressTo,
-                    );
-                }
-
-                if ($updateSessionTimezone) {
-                    $this->sessionService->updateTimezoneForUserId(
-                        $user->id,
-                        $user->timezone
-                    );
-
-                    Core::updateTimezone($user->timezone->getName());
-                }
-
-                return new Feedback(true);
-            }
-        );
-
-        return $res->isSuccess;
-    }
-
     public function verifyUser(string $email, string $unHashedPassword): ?User
     {
         if (empty($unHashedPassword)) {
             return null;
         }
 
-        $res = $this->userDataLayer->getUserForEmail($email);
+        $res = $this->getUserForEmail($email);
         if (empty($res)) {
             return null;
         }
@@ -154,15 +157,7 @@ class UserService
 
         $localisationUtil = Core::getLocalisationUtil($existingUser->language);
 
-        if (isset($currentPassword) || isset($newPassword) || isset($repeatPassword)) {
-            if (empty($currentPassword) || empty($newPassword) || empty($repeatPassword)) {
-                $this->logger->logError(
-                    'Submitted payload not valid: one of the password fields is empty.'
-                );
-
-                return new Feedback(false);
-            }
-
+        if (isset($currentPassword)) {
             $validPass = StringUtil::verifyPassword(
                 unHashedPassword: $currentPassword,
                 hashedPassword: $existingUser->passwordHash,
@@ -173,6 +168,16 @@ class UserService
                     isSuccess: false,
                     message: $localisationUtil->getValue('authenticationPassNotValid'),
                 );
+            }
+        }
+
+        if (isset($newPassword) || isset($repeatPassword)) {
+            if (empty($newPassword) || empty($repeatPassword)) {
+                $this->logger->logError(
+                    'Submitted payload not valid: one of the password fields is empty.'
+                );
+
+                return new Feedback(false);
             }
 
             if (strlen($newPassword) < self::USER_PASSWORD_MIN_LENGTH) {
@@ -216,6 +221,8 @@ class UserService
         ?string $email = null,
         ?string $searchText = null,
         ?string $identifier = null,
+        array $statusIds = [],
+        array $roleIds = [],
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->userDataLayer->filterUserBy(
@@ -224,62 +231,112 @@ class UserService
             email: $email,
             searchText: $searchText,
             identifier: $identifier,
+            statusIds: $statusIds,
+            roleIds: $roleIds,
             queryOptions: $queryOptions,
         );
     }
 
     public function getUserForId(int $userId, $includeDisabled = false): ?User
     {
-        return $this->userDataLayer->getUserForId($userId, $includeDisabled);
+        $res = $this->filterUserBy(
+            includeDisabled: $includeDisabled,
+            userId: $userId,
+        );
+
+        return empty($res[0]) ? null : $res[0];
     }
 
     public function getUserForEmail(string $email, $includeDisabled = false): ?User
     {
-        return $this->userDataLayer->getUserForEmail($email, $includeDisabled);
+        $res = $this->filterUserBy(
+            includeDisabled: $includeDisabled,
+            email: $email,
+        );
+
+        return empty($res[0]) ? null : $res[0];
+    }
+
+    public function getUserVerification(
+        string $verificationIdentifier,
+        ?VerificationType $type = null,
+        ?bool $isEnabled = null,
+    ): ?UserVerification {
+        return $this->userDataLayer->getUserVerification(
+            verificationIdentifier: $verificationIdentifier,
+            type: $type,
+            isEnabled: $isEnabled,
+        );
     }
 
     public function verifyEmailAddress(
+        ?User $verifiedByUser,
         string $verificationIdentifier,
         LocalisationUtil $localisationUtil
     ): Feedback {
-        $verification = $this->userDataLayer->getUserVerification(
-            $verificationIdentifier,
-            VerificationType::EmailAddress,
+        $verification = $this->getUserVerification(
+            verificationIdentifier: $verificationIdentifier,
+            type: VerificationType::VerifyEmailAddress,
+            isEnabled: true,
         );
 
-        if (empty($verification) || !$verification->isEnabled) {
+        if (!$verification) {
             return new Feedback(
                 isSuccess: false,
-                message: $localisationUtil->getValue('globalGenericError'),
+                message: $localisationUtil->getValue('authenticationEmailVerifiedError'),
             );
         }
 
-        $message = $verification->type === VerificationType::EmailAddress
-            ? $localisationUtil->getValue('authenticationEmailVerifiedExpired')
-            : $localisationUtil->getValue('authenticationEmailVerifiedError');
-
         $user = $this->getUserForId($verification->userId);
-        if (empty($user)) {
+        if (!$user) {
             return new Feedback(
                 isSuccess: false,
                 message: $localisationUtil->getValue('globalGenericError')
             );
         }
 
-        $now = new DateTime();
-        $dateDiff = $now->diff($verification->createdAt);
-        if ($dateDiff->days > self::VERIFICATION_LINK_VALID_FOR_DAYS) {
+        if ($verification->hasExpired() ||
+            ($user->changeEmailAddressTo && $user->changeEmailAddressTo !== $verification->email)
+        ) {
             return new Feedback(
                 isSuccess: false,
-                message: $message,
+                message: $localisationUtil->getValue('authenticationEmailVerifiedExpired')
             );
         }
 
         $res = $this->userDataLayer->getDb()->withTransaction(
-            function () use ($user, $verification) {
-                return new Feedback(
-                    isSuccess: $this->userDataLayer->markUserAsVerified($user, $verification),
+            function () use ($verifiedByUser, $user, $verification) {
+                $resUser = $this->updateUserFields(
+                    userId: $user->id,
+                    newJourneyStatus: UserJourneyStatus::RegistrationComplete,
+                    newEmail: $verification->email,
+                    deleteChangeEmailTo: true,
                 );
+
+                if (empty($resUser)) {
+                    return new Feedback(false);
+                }
+
+                $resVerification = $this->userDataLayer->markVerificationAsVerified($verification->id);
+                if (empty($resVerification)) {
+                    return new Feedback(false);
+                }
+
+                $resAction = $this->storeUserAction(
+                    new UserAction(
+                        id: null,
+                        userId: $user->id,
+                        createdByUser: $verifiedByUser ?? $user,
+                        type: UserActionType::VerifyEmail,
+                        createdAt: new DateTimeImmutable(),
+                    ),
+                );
+
+                if (!$resAction) {
+                    return new Feedback(false);
+                }
+
+                return new Feedback(true);
             }
         );
 
@@ -291,62 +348,18 @@ class UserService
         );
     }
 
-    public function validatePasswordResetVerificationPage(
-        string $verificationIdentifier
-    ): ?UserVerification {
-        $verification = $this->userDataLayer->getUserVerification(
-            verificationIdentifier: $verificationIdentifier,
-            type: VerificationType::PasswordReset,
-            isEnabled: true,
-        );
-
-        if (empty($verification) || !$verification->isEnabled) {
-            return null;
-        }
-
-        $user = $this->getUserForId($verification->userId);
-        if (empty($user)) {
-            return null;
-        }
-
-        $now = new DateTimeImmutable();
-        $secondsSinceCreation = abs($now->getTimestamp() - $verification->createdAt->getTimestamp());
-        if ($secondsSinceCreation > VerificationType::RESET_LINK_VALID_FOR_SECONDS) {
-            return null;
-        }
-
-        return $verification;
-    }
-
-    public function validateCreateUserPasswordPage(
-        string $verificationIdentifier
-    ): ?UserVerification {
-        $verification = $this->userDataLayer->getUserVerification(
-            verificationIdentifier: $verificationIdentifier,
-            type: VerificationType::PasswordCreation,
-            isEnabled: true,
-        );
-
-        if (empty($verification) || !$verification->isEnabled) {
-            return null;
-        }
-
-        $user = $this->getUserForId($verification->userId);
-        if (empty($user)) {
-            return null;
-        }
-
-        return $verification;
-    }
-
-    public function workflowUpdatePassword(int $userId, string $newPassword): bool
-    {
+    public function workflowUpdatePassword(
+        User $updatedByUser,
+        int $userId,
+        string $newPassword,
+        UserVerification $verification
+    ): bool {
         $res = $this->userDataLayer->getDb()->withTransaction(
-            function () use ($userId, $newPassword) {
-                $resUpdate = $this->userDataLayer->updatePassword(
+            function () use ($updatedByUser, $userId, $newPassword, $verification) {
+                $resUpdate = $this->userDataLayer->updateUserFields(
                     userId: $userId,
-                    hashedPassword: StringUtil::hashPassword($newPassword),
-                );;
+                    newHashedPassword: StringUtil::hashPassword($newPassword),
+                );
 
                 if (!$resUpdate) {
                     return new Feedback(false);
@@ -354,6 +367,25 @@ class UserService
 
                 $sessionUpdate = $this->sessionService->expireAllSessionsForUser($userId);
                 if (!$sessionUpdate) {
+                    return new Feedback(false);
+                }
+
+                $resDisable = $this->userDataLayer->markVerificationAsVerified($verification->id);
+                if (!$resDisable) {
+                    return new Feedback(false);
+                }
+
+                $resAction = $this->storeUserAction(
+                    new UserAction(
+                        id: null,
+                        userId: $userId,
+                        createdByUser: $updatedByUser,
+                        type: UserActionType::UpdatePassword,
+                        createdAt: new DateTimeImmutable(),
+                    ),
+                );
+
+                if (!$resAction) {
                     return new Feedback(false);
                 }
 
@@ -365,33 +397,36 @@ class UserService
     }
 
     public function workflowCreatePassword(
+        User $updatedByUser,
         User $user,
         string $verificationIdentifier,
         string $newPassword
     ): bool {
         $res = $this->userDataLayer->getDb()->withTransaction(
-            function () use ($user, $verificationIdentifier, $newPassword) {
-                $updateRes = $this->userDataLayer->updatePassword(
+            function () use ($updatedByUser, $user, $verificationIdentifier, $newPassword) {
+                $updateRes = $this->userDataLayer->updateUserFields(
                     userId: $user->id,
-                    hashedPassword: StringUtil::hashPassword($newPassword),
+                    newJourneyStatus: UserJourneyStatus::RegistrationComplete,
+                    newHashedPassword: StringUtil::hashPassword($newPassword),
                 );
 
                 if (!$updateRes) {
                     return new Feedback(false);
                 }
 
-                $verification = $this->userDataLayer->getUserVerification(
+                $verification = $this->getUserVerification(
                     verificationIdentifier: $verificationIdentifier,
                     type: VerificationType::PasswordCreation,
+                    isEnabled: true,
                 );
 
-                if (empty($verification) || !$verification->isEnabled) {
+                if (!$verification || $verification->hasExpired()) {
                     return new Feedback(false);
                 }
 
-                $markRes = $this->userDataLayer->markUserAsVerified($user, $verification);
-                if (empty($markRes)) {
-                    return new Feedback(false);
+                $resVerification = $this->userDataLayer->markVerificationAsVerified($verification->id);
+                if (empty($resVerification)) {
+                    return false;
                 }
 
                 $sessionUpdate = $this->sessionService->expireAllSessionsForUser($user->id);
@@ -399,12 +434,30 @@ class UserService
                     return new Feedback(false);
                 }
 
-                $journeyRes = $this->userDataLayer->updateUserJourney(
+                $journeyRes = $this->userDataLayer->updateUserFields(
                     userId: $user->id,
-                    userJourney: UserJourneyStatus::RegistrationComplete,
+                    newJourneyStatus: UserJourneyStatus::RegistrationComplete,
                 );
 
-                return new Feedback($journeyRes);
+                if (!$journeyRes) {
+                    return new Feedback(false);
+                }
+
+                $resAction = $this->storeUserAction(
+                    new UserAction(
+                        id: null,
+                        userId: $user->id,
+                        createdByUser: $updatedByUser,
+                        type: UserActionType::PasswordCreation,
+                        createdAt: new DateTimeImmutable(),
+                    ),
+                );
+
+                if (!$resAction) {
+                    return new Feedback(false);
+                }
+
+                return new Feedback(true);
             }
         );
 
@@ -412,6 +465,7 @@ class UserService
     }
 
     public function workflowUpdateUser(
+        User $updatedByUser,
         User $existingUser,
         ?string $name = null,
         ?string $email = null,
@@ -424,66 +478,124 @@ class UserService
         ?UserStatus $userStatus = null,
         UserRole|AppUserRole|null $userRole = null,
     ): Feedback {
-        $name = StringUtil::sanitiseText($name);
-        $email = StringUtil::sanitiseText($email);
-        $bio = StringUtil::sanitiseText($bio);
-        $languageIsoCode = StringUtil::sanitiseText($languageIsoCode);
-        $timezone = StringUtil::sanitiseText($timezone);
+        return $this->userDataLayer->getDb()->withTransaction(
+            function() use (
+                $updatedByUser,
+                $existingUser,
+                $name,
+                $email,
+                $bio,
+                $languageIsoCode,
+                $timezone,
+                $currentPassword,
+                $newPassword,
+                $repeatPassword,
+                $userStatus,
+                $userRole,
+            ) {
+                $name = StringUtil::sanitiseText($name);
+                $email = StringUtil::sanitiseText($email);
+                $bio = StringUtil::sanitiseText($bio);
+                $languageIsoCode = StringUtil::sanitiseText($languageIsoCode);
+                $timezone = StringUtil::sanitiseText($timezone);
 
-        $validation = $this->validateUpdateUserEndpoint(
-            existingUser: $existingUser,
-            email: $email,
-            languageIsoCode: $languageIsoCode,
-            timezone: $timezone,
-            currentPassword: $currentPassword,
-            newPassword: $newPassword,
-            repeatPassword: $repeatPassword,
-        );
+                $validation = $this->validateUpdateUserEndpoint(
+                    existingUser: $existingUser,
+                    email: $email,
+                    languageIsoCode: $languageIsoCode,
+                    timezone: $timezone,
+                    currentPassword: $currentPassword,
+                    newPassword: $newPassword,
+                    repeatPassword: $repeatPassword,
+                );
 
-        if (!$validation->isSuccess) {
-            return $validation;
-        }
+                if (!$validation->isSuccess) {
+                    return $validation;
+                }
 
-        $hasEmailChanged = isset($email)
-            && $existingUser->email !== StringUtil::normaliseEmail($email);
-        $res = $this->updateUser(
-            user: new User(
-                id: $existingUser->id,
-                status: $userStatus ?? $existingUser->status,
-                language: $languageIsoCode
-                    ? Language::from(strtoupper($languageIsoCode))
-                    : $existingUser->language,
-                role: $userRole ?? $existingUser->role,
-                journeyStatus: $existingUser->journeyStatus,
-                createdAt: $existingUser->createdAt,
-                updatedAt: new DateTimeImmutable(),
-                email: $existingUser->email,
-                name: $name ?? $existingUser->name,
-                passwordHash: $newPassword
-                    ? StringUtil::hashPassword($newPassword)
-                    : $existingUser->passwordHash,
-                bio: $bio ?? $existingUser->bio,
-                identifier: $existingUser->identifier,
-                timezone: $timezone
-                    ? DateUtil::convertStringToDateTimeZone($timezone)
-                    : $existingUser->timezone,
-                changeEmailAddressTo: $hasEmailChanged ? StringUtil::normaliseEmail($email) : null,
-            ),
-            updateSessionTimezone: isset($timezone),
-        );
+                $hasEmailChanged = isset($email) && $existingUser->email !== StringUtil::normaliseEmail($email);
+                $updatedUser = new User(
+                    id: $existingUser->id,
+                    status: $userStatus ?? $existingUser->status,
+                    language: $languageIsoCode
+                        ? Language::from(strtoupper($languageIsoCode))
+                        : $existingUser->language,
+                    role: $userRole ?? $existingUser->role,
+                    journeyStatus: $hasEmailChanged
+                        ? UserJourneyStatus::PendingEmailVerification
+                        : $existingUser->journeyStatus,
+                    createdAt: $existingUser->createdAt,
+                    updatedAt: new DateTimeImmutable(),
+                    email: $existingUser->email,
+                    name: $name ?? $existingUser->name,
+                    passwordHash: $newPassword
+                        ? StringUtil::hashPassword($newPassword)
+                        : $existingUser->passwordHash,
+                    bio: $bio ?? $existingUser->bio,
+                    identifier: $existingUser->identifier ?? $this->generateUniqueIdentifier(),
+                    timezone: $timezone
+                        ? DateUtil::convertStringToDateTimeZone($timezone)
+                        : $existingUser->timezone,
+                    changeEmailAddressTo: $hasEmailChanged ? StringUtil::normaliseEmail($email) : null,
+                );
 
-        if (empty($res)) {
-            return new Feedback(false, 'Error updating user');
-        }
+                $updatedUser = $this->userDataLayer->updateUser(
+                    user: $updatedUser,
+                    userId: $existingUser->id,
+                );
 
-        if ($newPassword) {
-            $sessionUpdate = $this->sessionService->expireAllSessionsForUser($existingUser->id);
-            if (!$sessionUpdate) {
-                return new Feedback(false, 'Error expiring sessions');
+                if (empty($updatedUser)) {
+                    return new Feedback(false, 'Error updating user');
+                }
+
+                if ($newPassword) {
+                    $sessionUpdate = $this->sessionService->expireAllSessionsForUser($existingUser->id);
+                    if (!$sessionUpdate) {
+                        return new Feedback(false, 'Error expiring sessions');
+                    }
+                }
+
+                if ($updatedUser->changeEmailAddressTo) {
+                    $resVerificationEmail = $this->userMailService->sendUpdateEmailVerificationEmail(
+                        user: $updatedUser,
+                        emailToVerify: $updatedUser->changeEmailAddressTo,
+                    );
+
+                    if (!$resVerificationEmail) {
+                        return new Feedback(false, 'Error sending verification email');
+                    }
+                }
+
+                if ($timezone) {
+                    $resTimezone = $this->sessionService->updateTimezoneForUserId(
+                        userId: $existingUser->id,
+                        newTimezone: $updatedUser->timezone,
+                    );
+
+                    if (!$resTimezone) {
+                        return new Feedback(false, 'Error updating timezone');
+                    }
+
+                    Core::updateTimezone($updatedUser->timezone->getName());
+                }
+
+                $resAction = $this->storeUserAction(
+                    new UserAction(
+                        id: null,
+                        userId: $updatedUser->id,
+                        createdByUser: $updatedByUser,
+                        type: $actionType ?? ($updatedUser->changeEmailAddressTo ? UserActionType::UpdateEmailRequest : UserActionType::Update),
+                        createdAt: new DateTimeImmutable(),
+                    ),
+                );
+
+                if (!$resAction) {
+                    return new Feedback(false, 'Error storing action');
+                }
+
+                return new Feedback(true);
             }
-        }
-
-        return $validation;
+        );
     }
 
     public function storeRegistrationInviteRequest(
@@ -525,7 +637,7 @@ class UserService
         return $this->userDataLayer->getTotalUsers();
     }
 
-    public function generateUniqueIdentifier(): string
+    public function generateUniqueIdentifier(bool $makeUppercase = true): string
     {
         $characters = 3;
         $count = 0;
@@ -546,6 +658,31 @@ class UserService
             $existingUser = $this->filterUserBy(identifier: $identifier);
         } while($existingUser);
 
-        return $identifier;
+        return $makeUppercase ? strtoupper($identifier) : $identifier;
+    }
+
+    public function updateUserFields(
+        int $userId,
+        ?UserStatus $newStatus = null,
+        UserRole|AppUserRole|null $newRole = null,
+        ?UserJourneyStatus $newJourneyStatus = null,
+        ?string $newEmail = null,
+        ?string $newChangeEmailTo = null,
+        bool $deleteChangeEmailTo = false,
+    ): bool {
+        return $this->userDataLayer->updateUserFields(
+            userId: $userId,
+            newStatus: $newStatus,
+            newRole: $newRole,
+            newJourneyStatus: $newJourneyStatus,
+            newEmail: $newEmail,
+            newChangeEmailTo: $newChangeEmailTo,
+            deleteChangeEmailTo: $deleteChangeEmailTo,
+        );
+    }
+
+    public function storeUserAction(UserAction $item): ?UserAction
+    {
+        return $this->userDataLayer->storeUserAction($item);
     }
 }

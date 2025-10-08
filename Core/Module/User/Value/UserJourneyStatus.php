@@ -2,15 +2,21 @@
 
 namespace Amora\Core\Module\User\Value;
 
+use Amora\App\Value\Language;
+use Amora\Core\Core;
+use Amora\Core\Value\CoreIcons;
+
 enum UserJourneyStatus: int
 {
     case PendingPasswordCreation = 500;
+    case PendingEmailVerification = 501;
     case RegistrationComplete = 1000;
 
     public static function getAll(): array
     {
         return [
             self::PendingPasswordCreation,
+            self::PendingEmailVerification,
             self::RegistrationComplete,
         ];
     }
@@ -19,7 +25,30 @@ enum UserJourneyStatus: int
     {
         return match ($this) {
             UserJourneyStatus::RegistrationComplete => 'status-published',
-            UserJourneyStatus::PendingPasswordCreation => 'status-draft',
+            default => 'status-draft',
         };
+    }
+
+    public function getTitle(Language $language): string {
+        $localisationUtil = Core::getLocalisationUtil($language);
+        return $localisationUtil->getValue('userJourney' . $this->name);
+    }
+
+    public function getVerificationType(): ?VerificationType
+    {
+        return match ($this) {
+            UserJourneyStatus::PendingPasswordCreation => VerificationType::PasswordCreation,
+            UserJourneyStatus::PendingEmailVerification => VerificationType::VerifyEmailAddress,
+            default => null,
+        };
+    }
+
+    public function asHtml(Language $language): string
+    {
+        return '<span class="article-status ' .
+            $this->getClassname() . '">' .
+            CoreIcons::INFO .
+            $this->getTitle($language) .
+            '</span>';
     }
 }

@@ -13,15 +13,16 @@ class AppHtmlHomepageResponseData extends HtmlResponseDataAbstract
     public function __construct(
         Request $request,
         ?Pagination $pagination = null,
+        ?Feedback $feedback = null,
         bool $isPublicPage = false,
         public readonly ?PageContent $pageContent = null,
         public readonly array $homeArticles = [],
         public readonly array $blogArticles = [],
-        public readonly ?Feedback $feedback = null,
     ) {
         parent::__construct(
             request: $request,
             pagination: $pagination,
+            feedback: $feedback,
             isPublicPage: $isPublicPage,
         );
     }

@@ -26,6 +26,7 @@ abstract class HtmlResponseDataAbstract
     public function __construct(
         public readonly Request $request,
         public readonly ?Pagination $pagination = null,
+        public readonly ?Feedback $feedback = null,
         protected ?string $pageTitle = null,
         protected ?string $pageDescription = null,
         ?string $siteImageUrl = null,
@@ -131,22 +132,5 @@ abstract class HtmlResponseDataAbstract
     public function getLocalValue(string $key): string
     {
         return $this->localisationUtil->getValue($key);
-    }
-
-    public function isUserVerified(): bool
-    {
-        if (empty($this->request->session)) {
-            return false;
-        }
-        return $this->request->session->user->isVerified();
-    }
-
-    public function minutesSinceUserRegistration(): int
-    {
-        if (empty($this->request->session)) {
-            return 0;
-        }
-
-        return round((time() - $this->request->session->user->createdAt->getTimestamp()) / 60);
     }
 }

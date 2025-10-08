@@ -13,6 +13,7 @@ class HtmlResponseDataAnalytics extends HtmlResponseDataAbstract
         ?string $pageTitle = null,
         ?string $pageDescription = null,
         ?Pagination $pagination = null,
+        ?Feedback $feedback = null,
         public readonly ?ReportViewCount $reportPageViews = null,
         public readonly ?ReportViewCount $reportVisitors = null,
         public readonly ?EventValue $parameterEventValue = null,
@@ -26,6 +27,7 @@ class HtmlResponseDataAnalytics extends HtmlResponseDataAbstract
         parent::__construct(
             request: $request,
             pagination: $pagination,
+            feedback: $feedback,
             pageTitle: $pageTitle,
             pageDescription: $pageDescription,
         );

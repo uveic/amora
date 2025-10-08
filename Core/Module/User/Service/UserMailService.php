@@ -27,15 +27,23 @@ readonly class UserMailService
         UserVerification $verification,
         MailerItem $mailerItem
     ): bool {
-        $this->userDataLayer->disableVerificationDataForUserId($user->id);
-        $res = $this->userDataLayer->storeUserVerification($verification);
+        $resDisable = $this->userDataLayer->disableAllVerificationsForUserId(
+            userId: $user->id,
+            verificationType: $verification->type,
+        );
 
-        if (empty($res)) {
+        if (!$resDisable) {
             return false;
         }
 
-        $res2 = $this->mailerService->storeMail($mailerItem);
-        return !empty($res2);
+        $resVerification = $this->userDataLayer->storeUserVerification($verification);
+
+        if (!$resVerification) {
+            return false;
+        }
+
+        $resStore = $this->mailerService->storeMail($mailerItem);
+        return (bool)$resStore;
     }
 
     public function sendUpdateEmailVerificationEmail(User $user, string $emailToVerify): bool
@@ -44,7 +52,7 @@ readonly class UserMailService
         $verification = new UserVerification(
             id: null,
             userId: $user->id,
-            type: VerificationType::EmailAddress,
+            type: VerificationType::VerifyEmailAddress,
             email: $emailToVerify,
             createdAt: new DateTimeImmutable(),
             verifiedAt: null,
@@ -57,35 +65,20 @@ readonly class UserMailService
         return $this->sendEmailAndDisablePreviousVerifications($user, $verification, $mailerItem);
     }
 
-    public function sendVerificationEmail(User $user, string $emailToVerify): bool
-    {
+    public function workflowSendVerificationEmail(
+        User $user,
+        string $emailToVerify,
+        VerificationType $verificationType,
+    ): bool {
         $res = $this->userDataLayer->getDb()->withTransaction(
-            function () use ($user, $emailToVerify) {
-                $verificationIdentifier = $this->getUniqueVerificationIdentifier();
-                $verification = new UserVerification(
-                    id: null,
-                    userId: $user->id,
-                    type: VerificationType::EmailAddress,
-                    email: $emailToVerify,
-                    createdAt: new DateTimeImmutable(),
-                    verifiedAt: null,
-                    verificationIdentifier: $verificationIdentifier,
-                    isEnabled: true
+            function () use ($user, $emailToVerify, $verificationType) {
+                $res = $this->sendVerificationEmail(
+                    user: $user,
+                    emailToVerify: $emailToVerify,
+                    verificationType: $verificationType,
                 );
 
-                $mailerItem = $this->buildVerificationEmail(
-                    $user,
-                    $emailToVerify,
-                    $verificationIdentifier
-                );
-
-                $resEmail = $this->sendEmailAndDisablePreviousVerifications(
-                    $user,
-                    $verification,
-                    $mailerItem
-                );
-
-                if (!$resEmail) {
+                if (!$res) {
                     return new Feedback(false);
                 }
 
@@ -96,7 +89,43 @@ readonly class UserMailService
         return $res->isSuccess;
     }
 
-    public function sendPasswordResetEmail(User $user): bool
+    public function sendVerificationEmail(
+        User $user,
+        string $emailToVerify,
+        VerificationType $verificationType,
+    ): bool {
+        $verificationIdentifier = $this->getUniqueVerificationIdentifier();
+        $verification = new UserVerification(
+            id: null,
+            userId: $user->id,
+            type: $verificationType,
+            email: $emailToVerify,
+            createdAt: new DateTimeImmutable(),
+            verifiedAt: null,
+            verificationIdentifier: $verificationIdentifier,
+            isEnabled: true
+        );
+
+        $mailerItem = $this->buildVerificationEmail(
+            $user,
+            $emailToVerify,
+            $verificationIdentifier
+        );
+
+        $resEmail = $this->sendEmailAndDisablePreviousVerifications(
+            $user,
+            $verification,
+            $mailerItem
+        );
+
+        if (!$resEmail) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function workflowSendPasswordResetEmail(User $user): bool
     {
         $res = $this->userDataLayer->getDb()->withTransaction(
             function () use ($user) {
@@ -125,6 +154,18 @@ readonly class UserMailService
                 }
 
                 return new Feedback(true);
+            }
+        );
+
+        return $res->isSuccess;
+    }
+
+    public function workflowSendPasswordCreationEmail(User $user): bool
+    {
+        $res = $this->userDataLayer->getDb()->withTransaction(
+            function () use ($user) {
+                $res = $this->sendPasswordCreationEmail($user);
+                return new Feedback($res);
             }
         );
 
@@ -171,10 +212,12 @@ readonly class UserMailService
             verificationIdentifier: $verificationIdentifier,
         );
         $siteName = $localisationUtil->getValue('siteName');
-        $emailSubject = $localisationUtil->getValue('emailPasswordChangeSubject');
+        $emailSubject = sprintf(
+            $localisationUtil->getValue('emailPasswordChangeSubject'),
+            $siteName
+        );
         $emailContent = sprintf(
             $localisationUtil->getValue('emailPasswordChangeContent'),
-            $siteName,
             $linkUrl,
             $siteName
         );
@@ -196,7 +239,7 @@ readonly class UserMailService
     private function buildVerificationEmail(
         User $user,
         string $emailToVerify,
-        string $verificationIdentifier
+        string $verificationIdentifier,
     ): MailerItem {
         $localisationUtil = Core::getLocalisationUtil($user->language, false);
         $linkUrl = UrlBuilderUtil::buildPublicVerificationEmailUrl(
@@ -205,15 +248,27 @@ readonly class UserMailService
         );
         $siteName = $localisationUtil->getValue('siteName');
 
-        $emailSubject = sprintf(
-            $localisationUtil->getValue('emailConfirmationSubject'),
-            $siteName
-        );
-        $emailContent = sprintf(
-            $localisationUtil->getValue('emailConfirmationContent'),
-            $linkUrl,
-            $siteName
-        );
+        if ($user->changeEmailAddressTo) {
+            $emailSubject = sprintf(
+                $localisationUtil->getValue('emailUpdateVerificationSubject'),
+                $siteName
+            );
+            $emailContent = sprintf(
+                $localisationUtil->getValue('emailUpdateVerificationContent'),
+                $linkUrl,
+                $siteName
+            );
+        } else {
+            $emailSubject = sprintf(
+                $localisationUtil->getValue('emailConfirmationSubject'),
+                $siteName
+            );
+            $emailContent = sprintf(
+                $localisationUtil->getValue('emailConfirmationContent'),
+                $linkUrl,
+                $siteName
+            );
+        }
 
         return new MailerItem(
             id: null,
@@ -244,7 +299,6 @@ readonly class UserMailService
         $emailSubject = $localisationUtil->getValue('emailUpdateVerificationSubject');
         $emailContent = sprintf(
             $localisationUtil->getValue('emailUpdateVerificationContent'),
-            $siteName,
             $linkUrl,
             $siteName,
         );
@@ -278,7 +332,6 @@ readonly class UserMailService
         $emailContent = sprintf(
             $localisationUtil->getValue('emailPasswordCreationContent'),
             $user->name,
-            $siteName,
             $user->email,
             $linkUrl,
             $siteName,
@@ -302,7 +355,7 @@ readonly class UserMailService
     {
         do {
             $verificationIdentifier = StringUtil::generateRandomString(64);
-            $verification = $this->userDataLayer->getUserVerification($verificationIdentifier);
+            $verification = $this->userDataLayer->getUserVerification(verificationIdentifier: $verificationIdentifier);
         } while(!empty($verification));
 
         return $verificationIdentifier;
