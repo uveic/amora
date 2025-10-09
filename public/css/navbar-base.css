@@ -105,7 +105,7 @@
 
 .nav-dropdown-item:hover {
   text-decoration: none;
-  background-color: var(--color-light-1);
+  background-color: var(--color-grey-100);
 }
 
 .mobile-nav {
@@ -257,7 +257,7 @@
 }
 
 .nav-dropdown-menu a:hover {
-  background-color: var(--color-light-1);
+  background-color: var(--color-grey-100);
   color: var(--color-black);
 }
 

@@ -78,6 +78,6 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
             </select>
           </div>
         </div>
-        <input type="submit" class="button is-link filter-button" value="<?=$responseData->getLocalValue('formFilterButton')?>">
+        <input type="submit" class="button filter-button" value="<?=$responseData->getLocalValue('formFilterButton')?>">
       </form>
     </section>
