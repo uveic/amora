@@ -172,7 +172,6 @@ final class PublicApiController extends PublicApiControllerAbstract
         if (empty($user)) {
             return new PublicApiControllerUserLoginSuccessResponse(
                 success: false,
-                redirect: null,
                 errorMessage: $localisationUtil->getValue('authenticationEmailAndOrPassNotValid'),
             );
         }
@@ -187,7 +186,6 @@ final class PublicApiController extends PublicApiControllerAbstract
         if (empty($session)) {
             return new PublicApiControllerUserLoginSuccessResponse(
                 success: false,
-                redirect: null,
                 errorMessage: $localisationUtil->getValue('authenticationEmailAndOrPassNotValid'),
             );
         }

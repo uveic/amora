@@ -1,9 +1,7 @@
 <?php
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
-use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Util\Helper\ArticleHtmlGenerator;
-use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
@@ -11,21 +9,15 @@ $article = $responseData->article;
 
 $articleType = ArticleHtmlGenerator::getArticleType($responseData);
 
-$closeLink = match($articleType) {
-    ArticleType::Page => UrlBuilderUtil::buildBackofficeArticleListUrl($responseData->siteLanguage, ArticleType::Page),
-    ArticleType::Blog => UrlBuilderUtil::buildBackofficeArticleListUrl($responseData->siteLanguage, ArticleType::Blog),
-};
-
 $this->layout('base', ['responseData' => $responseData]);
 $this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
 ?>
 <main>
   <div id="feedback" class="feedback null"></div>
   <div class="page-header">
-    <div></div>
-    <div class="links">
-      <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
-    </div>
+    <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
+    <span><?=$responseData->getLocalValue('globalEdit') . ': ' . $responseData->article->title?></span>
+    <div class="links"></div>
   </div>
 
   <article class="main-wrapper">

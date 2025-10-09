@@ -1293,9 +1293,7 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
     const emailEl = document.querySelector('input#email');
     const bioEl = document.querySelector('textarea#bio');
     const languageIsoCodeEl = document.querySelector('select#languageIsoCode');
-    const roleIdEl = document.querySelector('select#roleId');
     const timezoneEl = document.querySelector('select#timezone');
-    const userStatusEl = document.querySelector('select#userStatusId');
 
     const userId = userIdEl && userIdEl.value ? Number.parseInt(userIdEl.value) : null;
 
@@ -1304,9 +1302,7 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
       email: emailEl.value ?? null,
       bio: bioEl.value.length ? bioEl.value : null,
       languageIsoCode: languageIsoCodeEl.value ?? null,
-      roleId: roleIdEl.value ? Number.parseInt(roleIdEl.value) : null,
       timezone: timezoneEl.value ?? null,
-      userStatusId: Number.parseInt(userStatusEl.value),
     });
 
     if (userId) {
@@ -1315,14 +1311,16 @@ document.querySelectorAll('form#form-user-creation').forEach(f => {
           if (response.redirect) {
             window.location = response.redirect;
           }
-        });
+        })
+        .catch(error => Util.notifyError(error));
     } else {
       Request.post('/back/user', payload)
         .then((response) => {
           if (response.redirect) {
             window.location = response.redirect;
           }
-        });
+        })
+        .catch(error => Util.notifyError(error));
     }
   });
 });
@@ -1429,7 +1427,8 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
         if (response.files.length < qty) {
           lm.classList.add('null');
         }
-      });
+      })
+      .catch(error => Util.notifyError(error));
   });
 });
 
@@ -1461,8 +1460,7 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
   f.addEventListener('submit', e => {
     e.preventDefault();
 
-    const loader = document.querySelector('.loading-modal');
-    loader.classList.remove('null');
+    Util.displayFullPageLoadingModal();
 
     const container = document.querySelector('.content-language-wrapper');
 
@@ -1499,7 +1497,8 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
 
     Request.put('/back/content/' + contentTypeId, JSON.stringify(payload))
       .then((response) => window.location = response.redirect)
-      .finally(() => loader.classList.add('null'));
+      .catch(error => Util.notifyError(error))
+      .finally(() => Util.hideFullPageLoadingModal());
   });
 });
 
@@ -1556,14 +1555,16 @@ document.querySelectorAll('#form-album-edit').forEach(f => {
           if (response.redirect) {
             window.location = response.redirect;
           }
-        });
+        })
+        .catch(error => Util.notifyError(error));
     } else {
       Request.post('/back/album', payload)
         .then((response) => {
           if (response.redirect) {
             window.location = response.redirect;
           }
-        });
+        })
+        .catch(error => Util.notifyError(error));
     }
   });
 });
@@ -1604,9 +1605,8 @@ document.querySelectorAll('.album-add-collection-js').forEach(a => {
         collectionContainer.querySelector('.generic-media-delete-js').addEventListener('click', handleGenericMediaDeleteClick);
         collectionContainer.scrollIntoView({behavior: 'smooth', block: 'start'});
       })
-      .catch(error => {
-        Util.notifyError(error);
-      }).finally(() => Util.hideFullPageLoadingModal());
+      .catch(error => Util.notifyError(error))
+      .finally(() => Util.hideFullPageLoadingModal());
   });
 });
 
@@ -1719,12 +1719,65 @@ document.querySelectorAll('.email-content-js').forEach(ec => {
         modal.querySelector('.html-container').innerHTML = response.html;
         modal.classList.remove('null');
       })
-      .finally(() => {
-        const loadingModal = document.querySelector('.loading-modal');
-        if (loadingModal) {
-          loadingModal.classList.add('null');
-        }
-      });
+      .catch(error => Util.notifyError(error))
+      .finally(() => Util.hideFullPageLoadingModal());
+  });
+});
+
+document.querySelectorAll('.user-status-dd-option').forEach(op => {
+  op.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const userId = op.closest('.dropdown-container').dataset.userId;
+    const statusId = op.dataset.value;
+
+    Request.put('/back/user/' + userId + '/status/' + statusId)
+      .then(() => Util.notifyUser(Global.get('globalSaved')))
+      .catch((error) => Util.notifyError(error));
+  });
+});
+
+document.querySelectorAll('.user-role-dd-option').forEach(op => {
+  op.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const userId = op.closest('.dropdown-container').dataset.userId;
+    const roleId = op.dataset.value;
+
+    Request.put('/back/user/' + userId + '/role/' + roleId)
+      .then(() => {
+        Util.notifyUser(Global.get('globalSaved'));
+        window.location.reload();
+      })
+      .catch((error) => Util.notifyError(error));
+  });
+});
+
+document.querySelectorAll('.filter-user-submit-js').forEach(bu => {
+  bu.addEventListener('click', e => {
+    e.preventDefault();
+
+    const statusId = document.querySelector('select[name="statusId"]').value;
+    const roleId = document.querySelector('select[name="roleId"]').value;
+
+    let query = new URLSearchParams();
+
+    if (statusId.length) {
+      query.append('sId', statusId);
+    }
+
+    if (roleId.length) {
+      query.append('rId', roleId);
+    }
+
+    if (!query.entries()) {
+      document.querySelector('.filter-container').classList.remove('null');
+      return;
+    }
+
+    const queryString = query.entries() ? '?' + query.toString() : '';
+
+    window.location.href = window.location.origin + window.location.pathname + queryString;
   });
 });
 

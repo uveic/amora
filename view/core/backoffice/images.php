@@ -5,7 +5,6 @@ use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\ImageSize;
 use Amora\Core\Module\Article\Value\MediaType;
-use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 use Amora\Core\Value\QueryOrderDirection;
 
@@ -20,16 +19,16 @@ $count = 0;
 ?>
   <div id="feedback" class="feedback null"></div>
   <main>
-    <section class="page-header">
+    <div class="page-header">
+      <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
       <span><?=$responseData->getLocalValue('navAdminImages')?></span>
       <div class="links">
         <div>
           <input class="null" type="file" id="images" name="images" multiple="" accept="image/png, image/jpeg, image/webp">
           <label for="images" class="link-add"><?=CoreIcons::ADD?></label>
         </div>
-        <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
       </div>
-    </section>
+    </div>
     <div id="images-list">
 <?php
     /** @var Media $image */

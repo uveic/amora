@@ -3,7 +3,6 @@
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\MediaService;
-use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 use Amora\Core\Value\QueryOrderDirection;
 
@@ -16,16 +15,16 @@ $displayLoadMore = count($responseData->media) >= 50;
 ?>
   <div id="feedback" class="feedback null"></div>
   <main>
-    <section class="page-header">
+    <div class="page-header">
+      <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
       <span><?=$responseData->getLocalValue('navAdminMedia')?></span>
       <div class="links">
         <div class="upload-media-control">
           <input class="null" type="file" id="media" name="media" multiple="" accept="*">
           <label for="media" class="cursor-pointer"><?=CoreIcons::ADD?></label>
         </div>
-        <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
       </div>
-    </section>
+    </div>
 
     <div class="backoffice-wrapper">
       <div id="media-container">

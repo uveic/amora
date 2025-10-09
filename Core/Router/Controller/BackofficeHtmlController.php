@@ -214,17 +214,53 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     }
 
     /**
-     * Endpoint: /backoffice/users/{userId}/new
+     * Endpoint: /backoffice/users/{userId}
      * Method: GET
      *
      * @param int $userId
      * @param Request $request
      * @return Response
      */
-    protected function getEditUserPage(int $userId, Request $request): Response
+    protected function getUserViewPage(int $userId, Request $request): Response
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        $user = $this->userService->getUserForId($userId, true);
+        $user = $this->userService->getUserForId(userId: $userId, includeDisabled: true);
+        if (empty($user)) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        $sessions = $this->sessionService->filterSessionBy(
+            userIds: [$userId],
+            queryOptions: new QueryOptions(
+                orderBy: [
+                    new QueryOrderBy('last_visited_at', QueryOrderDirection::DESC),
+                ]
+            ),
+        );
+
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/user-view',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('globalUser') . ': ' . $user->name,
+                user: $user,
+                sessions: $sessions,
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/users/{userId}/edit
+     * Method: GET
+     *
+     * @param int $userId
+     * @param Request $request
+     * @return Response
+     */
+    protected function getUserEditPage(int $userId, Request $request): Response
+    {
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        $user = $this->userService->getUserForId(userId: $userId, includeDisabled: true);
         if (empty($user)) {
             return Response::createNotFoundResponse($request);
         }

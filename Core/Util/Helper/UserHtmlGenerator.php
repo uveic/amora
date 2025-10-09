@@ -70,7 +70,7 @@ final class UserHtmlGenerator
             $indentation . '  <ul>',
         ];
 
-        foreach (AppUserRole::getAll() as $item) {
+        foreach (AppUserRole::getAll(true) as $item) {
             $className = $item->getClass();
             $icon = $item->getIcon();
             $output[] = $indentation . '    <li><a data-checked="' . ($user->role === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option ' . $identifier . '-dd-option no-loader ' . $className . '"  data-dropdown-identifier="' . $uniqueDropdownIdentifier . '" href="#">' . $icon . $item->getTitle($language) . '</a></li>';
@@ -95,20 +95,7 @@ final class UserHtmlGenerator
         string $indentation = '        ',
     ): string
     {
-        $userEditUrl = UrlBuilderUtil::buildBackofficeUserUrl(
-            language: $language,
-            userId: $user->id,
-        );
-
-        $userTitleHtml = '<a href="' . $userEditUrl . '">' . $user->getNameOrEmail() . '</a>';
-
-        $sessionLastVisitedString = $session ? DateUtil::getElapsedTimeString(
-            from: $session->lastVisitedAt,
-            includePrefixAndOrSuffix: true,
-            language: $language,
-        ) : '-';
-
-        $sessionLastVisitedTitle = $session ? DateUtil::formatDateShort($session->lastVisitedAt) : null;
+        $userTitleHtml = '<a href="' . UrlBuilderUtil::buildBackofficeUserViewUrl(language: $language, userId: $user->id) . '">' . $user->getNameOrEmail() . '</a>';
 
         $output = [];
         $output[] = $indentation . '<div class="table-row">';
@@ -119,6 +106,16 @@ final class UserHtmlGenerator
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '  <div class="table-item flex-no-grow">';
 
+        if ($session) {
+            $sessionLastVisitedString = $session ? DateUtil::getElapsedTimeString(
+                from: $session->lastVisitedAt,
+                includePrefixAndOrSuffix: true,
+                language: $language,
+            ) : '-';
+
+            $output[] = $indentation . '    <div class="icon-one-line" title="' . DateUtil::formatDateShort($session->lastVisitedAt) . '">' . CoreIcons::SIGN_IN .  $sessionLastVisitedString . '</div>';
+        }
+
         if (!$user->status->isEnabled()) {
             $output[] = $indentation . '    ' . $user->status->asHtml($language);
         }
@@ -127,7 +124,6 @@ final class UserHtmlGenerator
             $output[] = $indentation . '    ' . $user->journeyStatus->asHtml($language);
         }
 
-        $output[] = $indentation . '    <div class="icon-one-line" ' . ($sessionLastVisitedTitle ? ' title="' . $sessionLastVisitedTitle . '"' : '') . '>' . CoreIcons::SIGN_IN .  $sessionLastVisitedString . '</div>';
         $output[] = $indentation . '    ' . $user->role->asHtml($language);
 
         $output[] = $indentation . '  </div>';

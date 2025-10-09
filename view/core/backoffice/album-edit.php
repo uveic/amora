@@ -26,10 +26,11 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
 ?>
   <main>
     <div id="feedback" class="feedback null"></div>
-    <section class="page-header">
+    <div class="page-header">
+      <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
       <span><?=$pageTitle?></span>
-      <div class="links"><?=CoreIcons::CLOSE?></div>
-    </section>
+      <div class="links"></div>
+    </div>
       <div class="backoffice-wrapper">
         <form action="#" method="post" id="form-album-edit" class="form-two-columns-wrapper">
           <div>

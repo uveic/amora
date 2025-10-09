@@ -34,8 +34,6 @@ $publicLinkHtml = $album->status->isPublished()
     ? '<a href="' . $albumPublicLink . '">' . $albumPublicLink . '</a>'
     : $albumPublicLink;
 
-$closeLink = UrlBuilderUtil::buildBackofficeAlbumListUrl($responseData->siteLanguage);
-
 $this->insert('partials/albums/modal-media-caption-edit', ['responseData' => $responseData]);
 $this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
 
@@ -43,14 +41,14 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
 ?>
   <main>
     <div id="feedback" class="feedback null"></div>
-    <section class="page-header">
-      <span><?=CoreIcons::IMAGES . $album->titleHtml?></span>
+    <div class="page-header">
+      <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
+      <span class="icon-one-line"><?=CoreIcons::IMAGES . $album->titleHtml?></span>
+      <span class="number">#<?=$album->id?></span>
       <div class="links">
-        <span class="value"><a href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=$responseData->getLocalValue('globalEdit')?></a></span>
-        <span class="number">#<?=$album->id?></span>
-        <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
+        <span class="value"><a href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=CoreIcons::EDIT?></a></span>
       </div>
-    </section>
+    </div>
     <div class="form-content-container">
       <div class="form-content-wrapper">
         <div class="form-two-columns-wrapper">

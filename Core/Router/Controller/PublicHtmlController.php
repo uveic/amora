@@ -251,7 +251,11 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        $user = $this->userService->getUserForId($verification->userId);
+        $user = $this->userService->getUserForId(userId: $verification->userId, includeDisabled: true);
+        if (!$user->isEnabled()) {
+            return Response::createUnauthorisedHtmlResponse(request: $request);
+        }
+
         return Response::createHtmlResponse(
             template: 'core/public/password-creation',
             responseData: new HtmlResponseData(

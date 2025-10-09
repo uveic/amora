@@ -22,56 +22,8 @@
     "application/json"
   ],
   "paths": {
-    "/back/session": {
-      "get": {
-        "tags": [],
-        "summary": "Get session data",
-        "description": "",
-        "operationId": "getSession",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "user": {
-                  "type": "object",
-                  "description": "",
-                  "properties": {
-                    "userId": {
-                      "type": "integer",
-                      "description": "User ID"
-                    }
-                  },
-                  "required": [
-                    "userId"
-                  ]
-                },
-                "session": {
-                  "type": "object",
-                  "description": "",
-                  "properties": {
-                    "sessionId": {
-                      "type": "integer",
-                      "description": "User ID"
-                    }
-                  },
-                  "required": [
-                    "sessionId"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/back/user": {
       "post": {
-        "tags": [],
-        "summary": "Store/create new user",
-        "description": "",
         "operationId": "storeUser",
         "parameters": [
           {
@@ -97,17 +49,9 @@
                   "description": "Language ISO code",
                   "type": "string"
                 },
-                "roleId": {
-                  "description": "User role ID",
-                  "type": "integer"
-                },
                 "timezone": {
                   "description": "PHP timezone name",
                   "type": "string"
-                },
-                "isEnabled": {
-                  "description": "Is the user enabled?",
-                  "type": "boolean"
                 }
               },
               "required": [
@@ -205,130 +149,46 @@
             }
           }
         }
-      },
-      "get": {
-        "tags": [],
-        "summary": "Get list of users",
-        "description": "Get list of users",
-        "operationId": "getUsers",
-        "parameters": [
-          {
-            "name": "q",
-            "in": "query",
-            "description": "Search text to filter results",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    true,
-                    false
-                  ]
-                },
-                "users": {
-                  "type": "array",
-                  "description": "List of users",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "description": "User ID"
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "User name"
-                      },
-                      "email": {
-                        "type": "string",
-                        "description": "User email address"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "name",
-                      "email"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "success",
-                "users"
-              ]
-            }
-          }
-        }
       }
     },
     "/back/user/{userId}": {
       "put": {
-        "tags": [],
-        "summary": "Update user",
-        "description": "",
         "operationId": "updateUser",
         "parameters": [
           {
             "name": "userId",
             "in": "path",
-            "description": "User ID",
             "required": true,
             "type": "integer"
           },
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
                 "name": {
-                  "description": "User name",
                   "type": "string"
                 },
                 "email": {
-                  "description": "User email address",
                   "type": "string"
                 },
                 "bio": {
-                  "description": "User bio",
                   "type": "string"
                 },
                 "languageIsoCode": {
-                  "description": "Language ISO code",
                   "type": "string"
-                },
-                "roleId": {
-                  "description": "User role ID",
-                  "type": "integer"
                 },
                 "timezone": {
-                  "description": "PHP timezone name",
                   "type": "string"
                 },
-                "userStatusId": {
-                  "description": "Uset status ID",
-                  "type": "integer"
-                },
                 "currentPassword": {
-                  "description": "Current password",
                   "type": "string"
                 },
                 "newPassword": {
-                  "description": "New password",
                   "type": "string"
                 },
                 "repeatPassword": {
-                  "description": "Repeat password",
                   "type": "string"
                 }
               }
@@ -343,74 +203,16 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
                   ]
                 },
                 "redirect": {
-                  "type": "string",
-                  "description": "Redirect URL (if any)"
+                  "type": "string"
                 },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message (if any)"
-                }
-              },
-              "required": [
-                "success"
-              ]
-            }
-          },
-          "401": {
-            "description": "Unauthorised",
-            "schema": {
-              "type": "object",
-              "required": [
-                "success"
-              ],
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
+                  "type": "string"
                 }
               },
               "required": [
@@ -421,15 +223,11 @@
         }
       },
       "delete": {
-        "tags": [],
-        "summary": "Delete user",
-        "description": "",
         "operationId": "destroyUser",
         "parameters": [
           {
             "name": "userId",
             "in": "path",
-            "description": "User ID",
             "required": true,
             "type": "integer"
           }
@@ -442,53 +240,97 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
                   ]
                 },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message (if any)"
+                  "type": "string"
                 }
               },
               "required": [
                 "success"
               ]
             }
+          }
+        }
+      }
+    },
+    "/back/user/{userId}/status/{statusId}": {
+      "put": {
+        "operationId": "updateUserStatus",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
           },
-          "400": {
-            "description": "Failure",
+          {
+            "name": "statusId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
             "schema": {
               "type": "object",
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
+                    true,
                     false
                   ]
                 },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/user/{userId}/role/{roleId}": {
+      "put": {
+        "operationId": "updateUserRole",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
                 }
               },
               "required": [
@@ -501,92 +343,70 @@
     },
     "/back/article": {
       "post": {
-        "tags": [],
-        "summary": "Store article",
-        "description": "Store article",
         "operationId": "storeArticle",
         "parameters": [
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
                 "siteLanguageIsoCode": {
-                  "description": "Language ISO code",
                   "type": "string",
                   "minLength": 2,
                   "maxLength": 2
                 },
                 "articleLanguageIsoCode": {
-                  "description": "Language ISO code",
                   "type": "string",
                   "minLength": 2,
                   "maxLength": 2
                 },
                 "statusId": {
-                  "description": "Article status ID",
                   "type": "integer"
                 },
                 "typeId": {
-                  "description": "Article type ID",
                   "type": "integer"
                 },
                 "title": {
-                  "description": "Article title",
                   "type": "string"
                 },
                 "contentHtml": {
-                  "description": "Article content",
                   "type": "string"
                 },
                 "mainImageId": {
-                  "description": "Article main image Id",
                   "type": "integer"
                 },
                 "publishOn": {
-                  "description": "Publish the article on this date. Format: ISO. Example: 2022-01-01T00:25:00+00:00",
                   "type": "string"
                 },
                 "mediaIds": {
-                  "description": "Array of media IDs used in the article",
                   "type": "array",
                   "items": {
-                    "type": "integer",
-                    "description": "Media ID"
+                    "type": "integer"
                   }
                 },
                 "sections": {
-                  "description": "Array with article's sections",
                   "type": "array",
                   "items": {
                     "type": "object",
-                    "description": "Article's section",
                     "properties": {
                       "id": {
-                        "type": "integer",
-                        "description": "Section ID"
+                        "type": "integer"
                       },
                       "sectionTypeId": {
-                        "type": "integer",
-                        "description": "Section Type ID"
+                        "type": "integer"
                       },
                       "contentHtml": {
-                        "type": "string",
-                        "description": "Content HTML"
+                        "type": "string"
                       },
                       "sequence": {
-                        "type": "integer",
-                        "description": "Section sequence"
+                        "type": "integer"
                       },
                       "imageId": {
-                        "type": "integer",
-                        "description": "Image ID"
+                        "type": "integer"
                       },
                       "imageCaptionHtml": {
-                        "type": "string",
-                        "description": "Image caption"
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -600,15 +420,12 @@
                   "type": "array",
                   "items": {
                     "type": "object",
-                    "description": "Article's tags",
                     "properties": {
                       "id": {
-                        "type": "integer",
-                        "description": "Tag ID"
+                        "type": "integer"
                       },
                       "name": {
-                        "type": "string",
-                        "description": "Section Type ID"
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -637,69 +454,25 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
                   ]
                 },
                 "articleId": {
-                  "type": "integer",
-                  "description": "New article ID"
+                  "type": "integer"
                 },
                 "articleBackofficePath": {
-                  "type": "string",
-                  "description": "Article backoffice path"
+                  "type": "string"
                 },
                 "articleBackofficePathPreview": {
-                  "type": "string",
-                  "description": "Article backoffice path preview"
+                  "type": "string"
                 },
                 "articlePublicUrlHtml": {
-                  "type": "string",
-                  "description": "Article public URL HTML"
+                  "type": "string"
                 },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message"
-                }
-              },
-              "required": [
-                "success"
-              ]
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
+                  "type": "string"
                 }
               },
               "required": [
@@ -712,55 +485,43 @@
     },
     "/back/article/{articleId}": {
       "put": {
-        "tags": [],
-        "summary": "Update existing article",
-        "description": "Update existing article",
         "operationId": "updateArticle",
         "parameters": [
           {
             "name": "articleId",
             "in": "path",
-            "description": "Article ID",
             "required": true,
             "type": "integer"
           },
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
                 "siteLanguageIsoCode": {
-                  "description": "Language ISO code",
                   "type": "string",
                   "minLength": 2,
                   "maxLength": 2
                 },
                 "articleLanguageIsoCode": {
-                  "description": "Language ISO code",
                   "type": "string",
                   "minLength": 2,
                   "maxLength": 2
                 },
                 "statusId": {
-                  "description": "Article status ID",
                   "type": "integer"
                 },
                 "typeId": {
-                  "description": "Article type ID",
                   "type": "integer"
                 },
                 "title": {
-                  "description": "Article title",
                   "type": "string"
                 },
                 "contentHtml": {
-                  "description": "Article content",
                   "type": "string"
                 },
                 "mainImageId": {
-                  "description": "Article main image ID",
                   "type": "integer"
                 },
                 "publishOn": {
@@ -783,28 +544,22 @@
                     "description": "Article's section",
                     "properties": {
                       "id": {
-                        "type": "integer",
-                        "description": "Section ID"
+                        "type": "integer"
                       },
                       "sectionTypeId": {
-                        "type": "integer",
-                        "description": "Section Type ID"
+                        "type": "integer"
                       },
                       "contentHtml": {
-                        "type": "string",
-                        "description": "Content HTML"
+                        "type": "string"
                       },
                       "order": {
-                        "type": "integer",
-                        "description": "Section order"
+                        "type": "integer"
                       },
                       "imageId": {
-                        "type": "integer",
-                        "description": "Image ID"
+                        "type": "integer"
                       },
                       "imageCaptionHtml": {
-                        "type": "string",
-                        "description": "Image caption"
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -821,12 +576,10 @@
                     "description": "Article's tags",
                     "properties": {
                       "id": {
-                        "type": "integer",
-                        "description": "Tag ID"
+                        "type": "integer"
                       },
                       "name": {
-                        "type": "string",
-                        "description": "Section Type ID"
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -856,69 +609,25 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
                   ]
                 },
                 "articleId": {
-                  "type": "integer",
-                  "description": "New article ID"
+                  "type": "integer"
                 },
                 "articleBackofficePath": {
-                  "type": "string",
-                  "description": "Article backoffice path"
+                  "type": "string"
                 },
                 "articleBackofficePathPreview": {
-                  "type": "string",
-                  "description": "Article backoffice path preview"
+                  "type": "string"
                 },
                 "articlePublicUrlHtml": {
-                  "type": "string",
-                  "description": "Article public URL HTML"
+                  "type": "string"
                 },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message"
-                }
-              },
-              "required": [
-                "success"
-              ]
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
+                  "type": "string"
                 }
               },
               "required": [
@@ -929,14 +638,11 @@
         }
       },
       "delete": {
-        "tags": [],
-        "description": "Delete an article",
         "operationId": "destroyArticle",
         "parameters": [
           {
             "name": "articleId",
             "in": "path",
-            "description": "Article ID",
             "required": true,
             "type": "integer"
           }
@@ -1008,20 +714,15 @@
     },
     "/back/tag": {
       "post": {
-        "tags": [],
-        "summary": "Create a new tag",
-        "description": "Create a new tag",
         "operationId": "storeTag",
         "parameters": [
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
                 "name": {
-                  "description": "Tag name",
                   "type": "string"
                 }
               },
@@ -1039,115 +740,17 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
                   ]
                 },
                 "id": {
-                  "type": "integer",
-                  "description": "New tag ID"
+                  "type": "integer"
                 }
               },
               "required": [
                 "success"
-              ]
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "success"
-              ]
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [],
-        "summary": "Get available tags",
-        "description": "Get available tags",
-        "operationId": "getTags",
-        "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "description": "Tag name to filter results",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    true,
-                    false
-                  ]
-                },
-                "tags": {
-                  "type": "array",
-                  "description": "List of tags",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "description": "Tag ID"
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "Tag name"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "name"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "success",
-                "tags"
               ]
             }
           }
@@ -1156,8 +759,6 @@
     },
     "/back/content/{contentTypeId}": {
       "put": {
-        "tags": [],
-        "description": "Update existing page content",
         "operationId": "updatePageContent",
         "parameters": [
           {
@@ -1169,7 +770,6 @@
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
@@ -1288,14 +888,11 @@
     },
     "/back/album": {
       "post": {
-        "tags": [],
-        "description": "Store new album",
         "operationId": "storeAlbum",
         "parameters": [
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
@@ -1343,44 +940,6 @@
                 },
                 "errorMessage": {
                   "type": "string"
-                }
-              },
-              "required": [
-                "success"
-              ]
-            }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
                 }
               },
               "required": [
@@ -1393,21 +952,17 @@
     },
     "/back/album/{albumId}": {
       "put": {
-        "tags": [],
-        "description": "Update album",
         "operationId": "updateAlbum",
         "parameters": [
           {
             "name": "albumId",
             "in": "path",
-            "description": "Album ID",
             "required": true,
             "type": "integer"
           },
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
@@ -1461,65 +1016,23 @@
                 "success"
               ]
             }
-          },
-          "400": {
-            "description": "Failure",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "description": "Success status",
-                  "enum": [
-                    false
-                  ]
-                },
-                "errorInfo": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "field": {
-                        "type": "string",
-                        "description": "Field name"
-                      },
-                      "message": {
-                        "type": "string",
-                        "description": "Error message"
-                      }
-                    },
-                    "required": [
-                      "field",
-                      "message"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "success"
-              ]
-            }
           }
         }
       }
     },
     "/back/album/{albumId}/status/{statusId}": {
       "put": {
-        "tags": [],
-        "description": "Update album status",
         "operationId": "updateAlbumStatus",
         "parameters": [
           {
             "name": "albumId",
             "in": "path",
-            "description": "Album ID",
             "required": true,
             "type": "integer"
           },
           {
             "name": "statusId",
             "in": "path",
-            "description": "Status ID",
             "required": true,
             "type": "integer"
           }
@@ -1532,7 +1045,6 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
@@ -1555,21 +1067,17 @@
     },
     "/back/album/{albumId}/collection": {
       "post": {
-        "tags": [],
-        "description": "Store new album section",
         "operationId": "storeCollection",
         "parameters": [
           {
             "name": "albumId",
             "in": "path",
-            "description": "Album ID",
             "required": true,
             "type": "integer"
           },
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
@@ -1597,7 +1105,6 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
@@ -1623,13 +1130,11 @@
     },
     "/back/collection/media": {
       "post": {
-        "tags": [],
         "operationId": "createNewCollectionAndStoreMedia",
         "parameters": [
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
@@ -1658,7 +1163,6 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
@@ -1684,21 +1188,17 @@
     },
     "/back/collection/{collectionId}/media": {
       "post": {
-        "tags": [],
-        "description": "Store media for album section",
         "operationId": "storeMediaForCollection",
         "parameters": [
           {
             "name": "collectionId",
             "in": "path",
-            "description": "Album section ID",
             "required": true,
             "type": "integer"
           },
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
@@ -1750,13 +1250,11 @@
     },
     "/back/collection/{collectionId}/main-media": {
       "delete": {
-        "tags": [],
         "operationId": "destroyMainMediaForCollection",
         "parameters": [
           {
             "name": "collectionId",
             "in": "path",
-            "description": "Album section ID",
             "required": true,
             "type": "integer"
           }
@@ -1769,7 +1267,6 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
@@ -1789,21 +1286,17 @@
     },
     "/back/collection/{collectionId}/sequence": {
       "put": {
-        "tags": [],
-        "description": "Update media sequence for album section",
         "operationId": "updateMediaSequenceForCollection",
         "parameters": [
           {
             "name": "collectionId",
             "in": "path",
-            "description": "Album section ID",
             "required": true,
             "type": "integer"
           },
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
@@ -1829,7 +1322,6 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
@@ -1849,21 +1341,17 @@
     },
     "/back/collection/{collectionId}": {
       "put": {
-        "tags": [],
-        "description": "Update album section",
         "operationId": "updateCollection",
         "parameters": [
           {
             "name": "collectionId",
             "in": "path",
-            "description": "Album ID",
             "required": true,
             "type": "integer"
           },
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
@@ -1894,7 +1382,6 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false
@@ -1914,21 +1401,17 @@
     },
     "/back/collection-media/{collectionMediaId}": {
       "put": {
-        "tags": [],
-        "description": "Update album section media",
         "operationId": "updateCollectionMedia",
         "parameters": [
           {
             "name": "collectionMediaId",
             "in": "path",
-            "description": "Album section media ID",
             "required": true,
             "type": "integer"
           },
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {
@@ -1968,14 +1451,11 @@
         }
       },
       "delete": {
-        "tags": [],
-        "description": "Delete media for album section",
         "operationId": "deleteCollectionMedia",
         "parameters": [
           {
             "name": "collectionMediaId",
             "in": "path",
-            "description": "Album section media ID",
             "required": true,
             "type": "integer"
           }
@@ -1988,7 +1468,6 @@
               "properties": {
                 "success": {
                   "type": "boolean",
-                  "description": "Success status",
                   "enum": [
                     true,
                     false

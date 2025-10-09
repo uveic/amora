@@ -88,6 +88,12 @@ return [
     'formArticlePath' => 'Path',
     'formArticlePreviousPaths' => 'Previous paths',
     'formTimezone' => 'Timezone',
+    'formNewEmailVerificationPending' => 'New email address (verification pending)',
+    'formUserLastVisit' => 'Last Visit',
+    'formUserActiveSessions' => 'Active Sessions',
+    'formUserExpiredSessions' => 'Total Expired Sessions',
+    'formUserSendEmailAgain' => 'Send Email Again',
+    'errorUserNotEnabled' => 'User is not enabled.',
 
     'dashboardGoTo' => 'Content',
     'dashboardHomepage' => 'Homepage',

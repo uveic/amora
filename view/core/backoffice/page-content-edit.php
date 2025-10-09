@@ -10,7 +10,6 @@ use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\Article\Value\PageContentSection;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Util\StringUtil;
-use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
@@ -33,7 +32,6 @@ $publicLink = AppPageContentType::buildRedirectUrl(
     type: $mainPageContent->type,
     language: $mainPageContent->language,
 );
-$closeLink = UrlBuilderUtil::buildBackofficeContentListUrl($responseData->siteLanguage);
 
 $this->layout('base', ['responseData' => $responseData]);
 
@@ -43,10 +41,10 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
   <div class="loading-modal null"><div class="loader"></div></div>
   <div id="feedback" class="feedback null"></div>
   <div class="page-header">
+    <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
     <span><?=$title?></span>
     <div class="links">
       <a href="<?=$publicLink?>"><?=CoreIcons::ARROW_SQUARE_OUT?></a>
-      <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
     </div>
   </div>
   <form id="form-page-content" action="#" class="page-content-wrapper">
