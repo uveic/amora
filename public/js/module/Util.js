@@ -152,12 +152,31 @@ class UtilClass {
     return element.innerHTML.trim().length ? element.innerHTML.trim() : null;
   }
 
-  createLoadingAnimation() {
-    const loadingAnimation = new Image();
-    loadingAnimation.src = '/img/loading.gif';
-    loadingAnimation.alt = Global.get('globalLoading');
-    loadingAnimation.className = 'img-svg img-svg-50';
-    return loadingAnimation;
+  displayFullPageLoadingModal() {
+    let loadingModal = document.querySelector('.loading-modal');
+    if (loadingModal) {
+      loadingModal.classList.remove('null');
+      return;
+    }
+
+    loadingModal = document.createElement('div');
+    loadingModal.className = 'loading-modal';
+    loadingModal.innerHTML = '<div class="loader"></div>';
+
+    const main = document.querySelector('main');
+    if (main) {
+      main.appendChild(loadingModal);
+      return;
+    }
+
+    document.body.appendChild(loadingModal);
+  }
+
+  hideFullPageLoadingModal() {
+    let loadingModal = document.querySelector('.loading-modal');
+    if (loadingModal) {
+      loadingModal.classList.add('null');
+    }
   }
 
   buildImageLoadingElement(className = '') {

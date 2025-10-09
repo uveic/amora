@@ -131,7 +131,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '        <a href="#" class="main-image-button main-image-button-red generic-media-delete-js' . ($collection->mainMedia ? '' : ' null') . '" data-media-id="' . $collection->mainMedia?->id . '" data-event-listener-action="handleGenericMediaDeleteClick" data-target-container-id="collection-main-media-' . $collection->id . '">';
         $output[] = $indentation . '          ' . CoreIcons::TRASH;
         $output[] = $indentation . '        </a>';
-        $output[] = $indentation . '        <a href="#" class="main-image-button select-media-action" data-type-id="' . MediaType::Image->value . '" data-collection-id="' . $collection->id . '" data-media-id="' . $collection->mainMedia?->id . '" data-event-listener-action="handleGenericMainMediaClick" data-target-container-id="collection-main-media-' . $collection->id . '">';
+        $output[] = $indentation . '        <a href="#" class="main-image-button select-media-action collection-main-media-select-js" data-type-id="' . MediaType::Image->value . '" data-collection-id="' . $collection->id . '" data-media-id="' . $collection->mainMedia?->id . '" data-event-listener-action="handleGenericMainMediaClick" data-target-container-id="collection-main-media-' . $collection->id . '">';
         $output[] = $indentation . '          ' . CoreIcons::IMAGE;
         $output[] = $indentation . '          <span>' . ($collection->mainMedia ? $localisationUtil->getValue('globalModify') : $localisationUtil->getValue('globalSelectImage')) . '</span>';
         $output[] = $indentation . '        </a>';
@@ -161,10 +161,14 @@ final class AlbumHtmlGenerator
 
         /** @var CollectionMedia $collectionMedia */
         foreach ($collection->media as $collectionMedia) {
-            $output[] = self::generateCollectionMediaHtml($collectionMedia, $indentation . '      ', $lazyLoading);
+            $output[] = self::generateCollectionMediaHtml(
+                collectionMedia: $collectionMedia,
+                lazyLoading: $lazyLoading,
+                indentation: $indentation . '      ',
+            );
         }
 
-        $output[] = $indentation . '      <a href="#" class="button select-media-action button-media-add" data-type-id="' . MediaType::Image->value . '" data-target-container-id="collection-item-media-' . $collection->id .'" data-event-listener-action="collectionAddMedia">';
+        $output[] = $indentation . '      <a href="#" class="button select-media-action button-media-add collection-add-media-js" data-type-id="' . MediaType::Image->value . '" data-target-container-id="collection-item-media-' . $collection->id .'" data-event-listener-action="collectionAddMedia">';
         $output[] = $indentation . '        ' . CoreIcons::IMAGE;
         $output[] = $indentation . '        <span>' . $localisationUtil->getValue('globalAdd') . '</span>';
         $output[] = $indentation . '      </a>';

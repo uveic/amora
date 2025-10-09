@@ -10,10 +10,6 @@ use Amora\Core\Value\QueryOrderDirection;
 
 ?>
   <div class="select-media-modal modal-wrapper null" data-media-query-qty="<?=MediaService::SQL_QUERY_QTY?>">
-    <div class="select-media-modal-loading justify-center">
-      <img src="/img/loading.gif" class="img-svg img-svg-50" alt="<?=$responseData->getLocalValue('globalLoading')?>">
-    </div>
-
     <div class="add-image-wrapper">
       <span class="modal-close-button"><?=CoreIcons::CLOSE?></span>
       <div class="add-image-header">

@@ -1,13 +1,13 @@
 import {Request} from './module/Request.js?v=000';
 import {Global} from './module/localisation.js?v=000';
+import {Util} from "./module/Util.js?v=000";
 
 window.addEventListener('DOMContentLoaded', e => {
   document.querySelectorAll('.blog-posts-load-more').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
 
-      const loadingEl = document.querySelector('.loading-blog-posts');
-      loadingEl.classList.remove('null');
+      Util.displayFullPageLoadingModal();
 
       const offset = Number.parseInt(el.dataset.offset);
       const itemsPerPage = Number.parseInt(el.dataset.itemsPerPage);
@@ -62,7 +62,7 @@ window.addEventListener('DOMContentLoaded', e => {
             document.querySelector('.blog-posts-load-more').classList.add('null');
           }
 
-          loadingEl.classList.add('null');
+          Util.hideFullPageLoadingModal();
         });
     });
   });

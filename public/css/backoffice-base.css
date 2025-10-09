@@ -1853,35 +1853,6 @@
 .text-small { font-size: 0.8rem; }
 .m-t-385 { margin-top: 3.85rem !important; }
 
-.loading-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  opacity: 0.75;
-  z-index: 9999;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.loading-modal .loading-info {
-  font-size: 1.2rem;
-  margin-bottom: 0.3rem;
-}
-
-.loading-modal .loader {
-  width: 40%;
-  height: 10px;
-  background: linear-gradient(var(--color-primary) 0 0) left/20px 20px no-repeat var(--color-bg);
-  animation: loaderProgressBar 0.75s infinite linear;
-  border-radius: 2px;
-}
-
 @keyframes loaderProgressBar {
   50% {
     background-position: right

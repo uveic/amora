@@ -60,7 +60,6 @@ foreach ($articles as $article) {
 }
 ?>
     </div>
-    <div class="loading-blog-posts loading null"><img src="/img/loading.gif" class="img-svg img-svg-50" alt="<?=$responseData->getLocalValue('globalLoading')?>"></div>
 <?php if (count($articles) >= $itemsPerPage) { ?>
       <a href="#" class="blog-posts-load-more" data-offset="<?=$offset?>" data-items-per-page="<?=$itemsPerPage?>"><?=$responseData->getLocalValue('globalMore')?></a>
 <?php } ?>

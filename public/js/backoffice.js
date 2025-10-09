@@ -46,8 +46,9 @@ function handleGenericSelectMainMediaClick(e) {
 
   const button = e.currentTarget;
 
+  Util.displayFullPageLoadingModal();
+
   const modal = document.querySelector('.select-media-modal');
-  const loading = modal.querySelector('.select-media-modal-loading');
   const imagesContainer = modal.querySelector('#images-list');
   const loadMoreButton = modal.querySelector('.media-load-more-js');
   const uploadMediaButton = modal.querySelector('input[name="select-media-action-upload"]');
@@ -66,24 +67,23 @@ function handleGenericSelectMainMediaClick(e) {
     addEventListenerAction(img, img.dataset.mediaId, eventListenerAction, targetContainerId);
   });
 
-  if (existingImages.length >= qty) {
+  if (existingImages.length) {
+    Util.hideFullPageLoadingModal();
     return;
   }
 
-  loading.classList.remove('null');
   const typeId = button.dataset.typeId ? Number.parseInt(button.dataset.typeId) : '';
 
   Request.get('/api/file?typeId=' + typeId + '&qty=' + qty)
     .then(response => {
-      loading.classList.add('null');
       imagesContainer.classList.remove('null');
       displayImageFromApiCall(imagesContainer, response.files, eventListenerAction, targetContainerId);
     })
     .catch(error => {
       modal.classList.add('null');
-      loading.classList.add('null');
       Util.notifyError(error);
-    });
+    })
+    .finally(() => Util.hideFullPageLoadingModal());
 }
 
 function handleGenericMainMediaClick(e) {
@@ -518,11 +518,7 @@ function collectionAddMedia(e) {
   const collectionId = container.dataset.collectionId;
   const isMainMedia = Number.parseInt(container.dataset.isMainMedia) === 1;
 
-  const loadingContainer = document.createElement('div');
-  loadingContainer.className = 'album-media-loading';
-  const loadingAnimation = Util.createLoadingAnimation();
-  loadingContainer.appendChild(loadingAnimation);
-  container.insertAdjacentElement('afterbegin', loadingContainer);
+  Util.displayFullPageLoadingModal();
 
   const payload = {
     titleHtml: null,
@@ -544,7 +540,7 @@ function collectionAddMedia(e) {
         }
         Util.notifyError(error);
       })
-      .finally(() => container.removeChild(loadingContainer));
+      .finally(() => Util.hideFullPageLoadingModal());
   } else {
     Request.post('/back/collection/media', JSON.stringify(payload))
       .then(response => afterResponse(response, isMainMedia))
@@ -556,7 +552,7 @@ function collectionAddMedia(e) {
         }
         Util.notifyError(error);
       })
-      .finally(() => container.removeChild(loadingContainer));
+      .finally(() => Util.hideFullPageLoadingModal());
   }
 }
 
@@ -1594,17 +1590,14 @@ document.querySelectorAll('.album-add-collection-js').forEach(a => {
     const container = document.querySelector('.collections-wrapper');
     const albumId = a.dataset.albumId;
 
-    const loadingContainer = document.createElement('div');
-    loadingContainer.className = 'collection-loading';
-    const loadingAnimation = Util.createLoadingAnimation();
-    loadingContainer.appendChild(loadingAnimation);
-    container.appendChild(loadingContainer);
+    Util.displayFullPageLoadingModal();
 
     Request.post('/back/album/' + albumId + '/collection', '')
       .then(response => {
         container.insertAdjacentHTML('beforeend', response.html);
         const collectionContainer = container.querySelector('.collection-item[data-collection-id="' + response.newCollectionId + '"]');
-        collectionContainer.querySelector('.select-media-action').addEventListener('click', handleGenericSelectMainMediaClick);
+        collectionContainer.querySelector('.collection-main-media-select-js').addEventListener('click', handleGenericSelectMainMediaClick);
+        collectionContainer.querySelector('.collection-add-media-js').addEventListener('click', handleGenericSelectMainMediaClick);
         collectionContainer.querySelector('.collection-edit-js').addEventListener('click', editCollection);
         collectionContainer.querySelector('.collection-save-js').addEventListener('click', updateCollection);
         collectionContainer.querySelector('.collection-cancel-js').addEventListener('click', cancelCollectionEdit);
@@ -1613,7 +1606,7 @@ document.querySelectorAll('.album-add-collection-js').forEach(a => {
       })
       .catch(error => {
         Util.notifyError(error);
-      }).finally(() => container.removeChild(loadingContainer));
+      }).finally(() => Util.hideFullPageLoadingModal());
   });
 });
 

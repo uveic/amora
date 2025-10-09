@@ -1113,6 +1113,7 @@ svg,
   bottom: 0;
   left: 0;
   background-color: var(--color-primary);
+  color: var(--color-primary-050);
   opacity: 0.75;
   z-index: 9999;
   display: flex;
@@ -1121,15 +1122,18 @@ svg,
   justify-content: center;
   align-items: center;
   font-weight: 700;
-  color: var(--color-white);
+}
+
+.loading-modal .loading-info {
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
 }
 
 .loading-modal .loader {
   width: 40%;
   height: 10px;
-  background: linear-gradient(var(--color-black) 0 0) left/20px 20px no-repeat var(--color-white);
-  animation: loaderProgressBar 0.75s infinite linear;
-  border-radius: 2px;
+  background: linear-gradient(var(--color-primary-900) 0 0) left/20px 20px no-repeat var(--color-primary-050);
+  animation: loaderProgressBar 1s infinite linear;
 }
 
 @keyframes loaderProgressBar {

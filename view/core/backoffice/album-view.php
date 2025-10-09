@@ -104,7 +104,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
         );
 }?>
         </section>
-        <a href="#" class="album-add-collection-js button button-media-add" data-album-id="<?=$album->id?>">
+        <a href="#" class="album-add-collection-js button button-media-add m-t-1" data-album-id="<?=$album->id?>">
           <?=CoreIcons::IMAGE?>
           <span class="text-one-line"><?=$responseData->getLocalValue('albumAddCollection')?></span>
         </a>
