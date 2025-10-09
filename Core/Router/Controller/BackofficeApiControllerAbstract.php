@@ -14,31 +14,22 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 {
     public function __construct()
     {
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetSessionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreUserSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreUserFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreUserUnauthorisedResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetUsersSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateUserSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateUserFailureResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateUserUnauthorisedResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDestroyUserSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDestroyUserFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateUserStatusSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateUserRoleSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreArticleSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreArticleFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateArticleSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateArticleFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDestroyArticleSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDestroyArticleFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreTagSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreTagFailureResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetTagsSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdatePageContentSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdatePageContentFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreAlbumSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreAlbumFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumStatusSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreCollectionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerCreateNewCollectionAndStoreMediaSuccessResponse.php';
@@ -54,15 +45,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
     abstract protected function authenticate(Request $request): bool;
 
     /**
-     * Endpoint: /back/session
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function getSession(Request $request): Response;
-
-    /**
      * Endpoint: /back/user
      * Method: POST
      *
@@ -70,9 +52,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string $email
      * @param string|null $bio
      * @param string|null $languageIsoCode
-     * @param int|null $roleId
      * @param string|null $timezone
-     * @param bool|null $isEnabled
      * @param Request $request
      * @return Response
      */
@@ -81,21 +61,9 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         string $email,
         ?string $bio,
         ?string $languageIsoCode,
-        ?int $roleId,
         ?string $timezone,
-        ?bool $isEnabled,
         Request $request
     ): Response;
-
-    /**
-     * Endpoint: /back/user
-     * Method: GET
-     *
-     * @param string|null $q
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function getUsers(?string $q, Request $request): Response;
 
     /**
      * Endpoint: /back/user/{userId}
@@ -106,9 +74,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @param string|null $email
      * @param string|null $bio
      * @param string|null $languageIsoCode
-     * @param int|null $roleId
      * @param string|null $timezone
-     * @param int|null $userStatusId
      * @param string|null $currentPassword
      * @param string|null $newPassword
      * @param string|null $repeatPassword
@@ -121,9 +87,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         ?string $email,
         ?string $bio,
         ?string $languageIsoCode,
-        ?int $roleId,
         ?string $timezone,
-        ?int $userStatusId,
         ?string $currentPassword,
         ?string $newPassword,
         ?string $repeatPassword,
@@ -139,6 +103,36 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function destroyUser(int $userId, Request $request): Response;
+
+    /**
+     * Endpoint: /back/user/{userId}/status/{statusId}
+     * Method: PUT
+     *
+     * @param int $userId
+     * @param int $statusId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function updateUserStatus(
+        int $userId,
+        int $statusId,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /back/user/{userId}/role/{roleId}
+     * Method: PUT
+     *
+     * @param int $userId
+     * @param int $roleId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function updateUserRole(
+        int $userId,
+        int $roleId,
+        Request $request
+    ): Response;
 
     /**
      * Endpoint: /back/article
@@ -227,16 +221,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      * @return Response
      */
     abstract protected function storeTag(string $name, Request $request): Response;
-
-    /**
-     * Endpoint: /back/tag
-     * Method: GET
-     *
-     * @param string|null $name
-     * @param Request $request
-     * @return Response
-     */
-    abstract protected function getTags(?string $name, Request $request): Response;
 
     /**
      * Endpoint: /back/content/{contentTypeId}
@@ -468,34 +452,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      */
     abstract protected function getEmailHtml(int $mailId, Request $request): Response;
 
-    private function validateAndCallGetSession(Request $request): Response
-    {
-        $errors = [];
-
-        if ($errors) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->getSession(
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: getSession()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
-
     private function validateAndCallStoreUser(Request $request): Response
     {
         $bodyParams = $request->getBodyPayload();
@@ -530,9 +486,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
 
         $bio = $bodyParams['bio'] ?? null;
         $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
-        $roleId = $bodyParams['roleId'] ?? null;
         $timezone = $bodyParams['timezone'] ?? null;
-        $isEnabled = $bodyParams['isEnabled'] ?? null;
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -550,46 +504,12 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $email,
                 $bio,
                 $languageIsoCode,
-                $roleId,
                 $timezone,
-                $isEnabled,
                 $request
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in BackofficeApiControllerAbstract - Method: storeUser()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
-
-    private function validateAndCallGetUsers(Request $request): Response
-    {
-        $queryParams = $request->getParams;
-        $errors = [];
-
-
-        $q = $queryParams['q'] ?? null;
-        if ($errors) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->getUsers(
-                $q,
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: getUsers()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -635,9 +555,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         $email = $bodyParams['email'] ?? null;
         $bio = $bodyParams['bio'] ?? null;
         $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
-        $roleId = $bodyParams['roleId'] ?? null;
         $timezone = $bodyParams['timezone'] ?? null;
-        $userStatusId = $bodyParams['userStatusId'] ?? null;
         $currentPassword = $bodyParams['currentPassword'] ?? null;
         $newPassword = $bodyParams['newPassword'] ?? null;
         $repeatPassword = $bodyParams['repeatPassword'] ?? null;
@@ -659,9 +577,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                 $email,
                 $bio,
                 $languageIsoCode,
-                $roleId,
                 $timezone,
-                $userStatusId,
                 $currentPassword,
                 $newPassword,
                 $repeatPassword,
@@ -721,6 +637,144 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in BackofficeApiControllerAbstract - Method: destroyUser()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallUpdateUserStatus(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['back', 'user', '{userId}', 'status', '{statusId}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $userId = null;
+        if (!isset($pathParams['userId'])) {
+            $errors[] = [
+                'field' => 'userId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['userId'])) {
+                $errors[] = [
+                    'field' => 'userId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $userId = intval($pathParams['userId']);
+            }
+        }
+
+        $statusId = null;
+        if (!isset($pathParams['statusId'])) {
+            $errors[] = [
+                'field' => 'statusId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['statusId'])) {
+                $errors[] = [
+                    'field' => 'statusId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $statusId = intval($pathParams['statusId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->updateUserStatus(
+                $userId,
+                $statusId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updateUserStatus()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallUpdateUserRole(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['back', 'user', '{userId}', 'role', '{roleId}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $userId = null;
+        if (!isset($pathParams['userId'])) {
+            $errors[] = [
+                'field' => 'userId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['userId'])) {
+                $errors[] = [
+                    'field' => 'userId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $userId = intval($pathParams['userId']);
+            }
+        }
+
+        $roleId = null;
+        if (!isset($pathParams['roleId'])) {
+            $errors[] = [
+                'field' => 'roleId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['roleId'])) {
+                $errors[] = [
+                    'field' => 'roleId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $roleId = intval($pathParams['roleId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->updateUserRole(
+                $userId,
+                $roleId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updateUserRole()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -1078,38 +1132,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in BackofficeApiControllerAbstract - Method: storeTag()' .
-                ' Error: ' . $t->getMessage() .
-                ' Trace: ' . $t->getTraceAsString()
-            );
-            return Response::createErrorResponse();
-        }
-    }
-
-    private function validateAndCallGetTags(Request $request): Response
-    {
-        $queryParams = $request->getParams;
-        $errors = [];
-
-
-        $name = $queryParams['name'] ?? null;
-        if ($errors) {
-            return Response::createBadRequestResponse(
-                [
-                    'success' => false,
-                    'errorMessage' => 'INVALID_PARAMETERS',
-                    'errorInfo' => $errors
-                ]
-            );
-        }
-
-        try {
-            return $this->getTags(
-                $name,
-                $request
-            );
-        } catch (Throwable $t) {
-            Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeApiControllerAbstract - Method: getTags()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -2035,16 +2057,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         $pathParts = $request->pathWithoutLanguage;
         $method = $request->method;
 
-        if ($method === 'GET' &&
-            $this->pathParamsMatcher(
-                ['back', 'session'],
-                $pathParts,
-                ['fixed', 'fixed']
-            )
-        ) {
-            return $this->validateAndCallGetSession($request);
-        }
-
         if ($method === 'POST' &&
             $this->pathParamsMatcher(
                 ['back', 'user'],
@@ -2053,16 +2065,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallStoreUser($request);
-        }
-
-        if ($method === 'GET' &&
-            $this->pathParamsMatcher(
-                ['back', 'user'],
-                $pathParts,
-                ['fixed', 'fixed']
-            )
-        ) {
-            return $this->validateAndCallGetUsers($request);
         }
 
         if ($method === 'PUT' &&
@@ -2083,6 +2085,26 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallDestroyUser($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'user', '{userId}', 'status', '{statusId}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallUpdateUserStatus($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'user', '{userId}', 'role', '{roleId}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallUpdateUserRole($request);
         }
 
         if ($method === 'POST' &&
@@ -2123,16 +2145,6 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallStoreTag($request);
-        }
-
-        if ($method === 'GET' &&
-            $this->pathParamsMatcher(
-                ['back', 'tag'],
-                $pathParts,
-                ['fixed', 'fixed']
-            )
-        ) {
-            return $this->validateAndCallGetTags($request);
         }
 
         if ($method === 'PUT' &&

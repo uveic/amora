@@ -55,7 +55,7 @@ class Response
         $allowedUrls = implode(' ', array_merge(["'self'"], Core::getConfig()->allowedUrlsForSrcScript ?? []));
         $connectSrc = 'connect-src ' . $allowedUrls . ';';
         $scriptSrc = 'script-src ' . $allowedUrls . $nonce . ';';
-        $defaultSrc = "default-src 'self';";
+        $defaultSrc = "default-src 'self'";
         if (Core::getConfig()->allowImgSrcData) {
             $allowedDomains[] = 'data: blob:;';
         }
@@ -253,6 +253,17 @@ class Response
         );
     }
 
+    public static function createUnauthorisedHtmlResponse(
+        Request $request,
+        ?HtmlResponseDataAbstract $responseData = null,
+    ): Response {
+        return Response::createHtmlResponse(
+            template: 'app/public/403',
+            responseData: $responseData ?? new HtmlResponseData($request),
+            httpStatusCode: HttpStatusCode::HTTP_403_FORBIDDEN,
+        );
+    }
+
     public static function createUnauthorizedJsonResponse(): Response
     {
         $response = [
@@ -263,7 +274,7 @@ class Response
         return new Response(
             output: json_encode($response),
             contentType: ContentType::JSON,
-            httpStatus: HttpStatusCode::HTTP_401_UNAUTHORIZED,
+            httpStatus: HttpStatusCode::HTTP_403_FORBIDDEN,
         );
     }
 

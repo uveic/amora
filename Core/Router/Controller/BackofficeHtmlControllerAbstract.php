@@ -63,7 +63,17 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
      * @param Request $request
      * @return Response
      */
-    abstract protected function getEditUserPage(int $userId, Request $request): Response;
+    abstract protected function getUserViewPage(int $userId, Request $request): Response;
+
+    /**
+     * Endpoint: /backoffice/users/{userId}/edit
+     * Method: GET
+     *
+     * @param int $userId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getUserEditPage(int $userId, Request $request): Response;
 
     /**
      * Endpoint: /backoffice/articles
@@ -327,7 +337,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallGetEditUserPage(Request $request): Response
+    private function validateAndCallGetUserViewPage(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
         $pathParams = $this->getPathParams(
@@ -364,13 +374,64 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
         }
 
         try {
-            return $this->getEditUserPage(
+            return $this->getUserViewPage(
                 $userId,
                 $request
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
-                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getEditUserPage()' .
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getUserViewPage()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetUserEditPage(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['backoffice', 'users', '{userId}', 'edit'],
+            $pathParts
+        );
+        $errors = [];
+
+        $userId = null;
+        if (!isset($pathParams['userId'])) {
+            $errors[] = [
+                'field' => 'userId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['userId'])) {
+                $errors[] = [
+                    'field' => 'userId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $userId = intval($pathParams['userId']);
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getUserEditPage(
+                $userId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getUserEditPage()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -988,7 +1049,17 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
                 ['fixed', 'fixed', 'int']
             )
         ) {
-            return $this->validateAndCallGetEditUserPage($request);
+            return $this->validateAndCallGetUserViewPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['backoffice', 'users', '{userId}', 'edit'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetUserEditPage($request);
         }
 
         if ($method === 'GET' &&

@@ -88,6 +88,12 @@ return [
     'formArticlePath' => 'URL',
     'formArticlePreviousPaths' => 'URLs anteriores',
     'formTimezone' => 'Zona horaria',
+    'formNewEmailVerificationPending' => 'Nuevo correo electrónico (pendiente de verificar)',
+    'formUserLastVisit' => 'Última visita',
+    'formUserActiveSessions' => 'Sesiones abiertas',
+    'formUserExpiredSessions' => 'Sesiones caducadas',
+    'formUserSendEmailAgain' => 'Volver a enviar correo',
+    'errorUserNotEnabled' => 'El usuario está desactivado.',
 
     'dashboardGoTo' => 'Contenido',
     'dashboardHomepage' => 'Portada',

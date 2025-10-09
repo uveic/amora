@@ -15,9 +15,10 @@ class UrlBuilderUtil
     // Backoffice URLs
     const string BACKOFFICE_DASHBOARD_URL_PATH = '/backoffice/dashboard';
 
-    const string BACKOFFICE_USERS = '/backoffice/users';
-    const string BACKOFFICE_USER = '/backoffice/users/%d';
-    const string BACKOFFICE_NEW_USER = '/backoffice/users/new';
+    const string BACKOFFICE_USER_LIST = '/backoffice/users';
+    const string BACKOFFICE_USER_VIEW = '/backoffice/users/%d';
+    const string BACKOFFICE_USER_EDIT = '/backoffice/users/%d/edit';
+    const string BACKOFFICE_USER_NEW = '/backoffice/users/new';
 
     const string BACKOFFICE_IMAGES = '/backoffice/images';
     const string BACKOFFICE_MEDIA = '/backoffice/media';
@@ -165,11 +166,6 @@ class UrlBuilderUtil
             . sprintf(self::BACKOFFICE_CONTENT_TYPE_EDIT, $contentType->value, $contentTypeLanguage->value);
     }
 
-    public static function buildBackofficeUserListUrl(Language $language): string
-    {
-        return self::buildBaseUrl($language) . self::BACKOFFICE_USERS;
-    }
-
     public static function buildBackofficeAnalyticsUrl(
         Language $language,
         ?Period $period = null,
@@ -205,14 +201,24 @@ class UrlBuilderUtil
         return self::buildBaseUrl($language) . self::BACKOFFICE_EMAILS;
     }
 
-    public static function buildBackofficeUserUrl(Language $language, int $userId): string
+    public static function buildBackofficeUserListUrl(Language $language): string
     {
-        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_USER, $userId);
+        return self::buildBaseUrl($language) . self::BACKOFFICE_USER_LIST;
+    }
+
+    public static function buildBackofficeUserViewUrl(Language $language, int $userId): string
+    {
+        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_USER_VIEW, $userId);
+    }
+
+    public static function buildBackofficeUserEditUrl(Language $language, int $userId): string
+    {
+        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_USER_EDIT, $userId);
     }
 
     public static function buildBackofficeUserNewUrl(Language $language): string
     {
-        return self::buildBaseUrl($language) . self::BACKOFFICE_NEW_USER;
+        return self::buildBaseUrl($language) . self::BACKOFFICE_USER_NEW;
     }
 
     public static function buildBackofficeAlbumListUrl(Language $language): string

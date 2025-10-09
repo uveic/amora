@@ -25,9 +25,6 @@
   "paths": {
     "/backoffice/php-info": {
       "get": {
-        "tags": [],
-        "summary": "Return phpinfo() HTML page",
-        "description": "",
         "operationId": "getPhpInfoPage",
         "parameters": [],
         "responses": {
@@ -42,9 +39,6 @@
     },
     "/backoffice/dashboard": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the Admin Dashboard",
-        "description": "",
         "operationId": "getAdminDashboard",
         "parameters": [],
         "responses": {
@@ -59,9 +53,6 @@
     },
     "/backoffice/users": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the users admin page",
-        "description": "",
         "operationId": "getUsersAdminPage",
         "parameters": [],
         "responses": {
@@ -76,9 +67,6 @@
     },
     "/backoffice/users/new": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the page to create a new user",
-        "description": "",
         "operationId": "getNewUserPage",
         "parameters": [],
         "responses": {
@@ -93,15 +81,32 @@
     },
     "/backoffice/users/{userId}": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the page to edit an existing user",
-        "description": "",
-        "operationId": "getEditUserPage",
+        "operationId": "getUserViewPage",
         "parameters": [
           {
             "name": "userId",
             "in": "path",
-            "description": "User ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page successfully generated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/backoffice/users/{userId}/edit": {
+      "get": {
+        "operationId": "getUserEditPage",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
             "required": true,
             "type": "integer"
           }
@@ -118,9 +123,6 @@
     },
     "/backoffice/articles": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the articles page",
-        "description": "",
         "operationId": "getArticlesPage",
         "parameters": [],
         "responses": {
@@ -135,9 +137,6 @@
     },
     "/backoffice/articles/new": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the new article page",
-        "description": "",
         "operationId": "getNewArticlePage",
         "parameters": [],
         "responses": {
@@ -152,15 +151,11 @@
     },
     "/backoffice/articles/{articleId}": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the page to edit an existing article",
-        "description": "",
         "operationId": "getEditArticlePage",
         "parameters": [
           {
             "name": "articleId",
             "in": "path",
-            "description": "Article ID",
             "required": true,
             "type": "integer"
           }
@@ -177,15 +172,11 @@
     },
     "/backoffice/articles/{articleId}/preview": {
       "get": {
-        "tags": [],
-        "summary": "Return HTML to render the page",
-        "description": "",
         "operationId": "getArticlePreviewPage",
         "parameters": [
           {
             "name": "articleId",
             "in": "path",
-            "description": "Article ID",
             "required": true,
             "type": "integer"
           }
@@ -202,9 +193,6 @@
     },
     "/backoffice/albums": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the page",
-        "description": "",
         "operationId": "getAlbumsPage",
         "parameters": [],
         "responses": {
@@ -219,15 +207,11 @@
     },
     "/backoffice/albums/{albumId}": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the page",
-        "description": "",
         "operationId": "getViewAlbumPage",
         "parameters": [
           {
             "name": "albumId",
             "in": "path",
-            "description": "Album ID",
             "required": true,
             "type": "integer"
           }
@@ -244,15 +228,11 @@
     },
     "/backoffice/albums/{albumId}/edit": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the page",
-        "description": "",
         "operationId": "getEditAlbumPage",
         "parameters": [
           {
             "name": "albumId",
             "in": "path",
-            "description": "Album ID",
             "required": true,
             "type": "integer"
           }
@@ -269,9 +249,6 @@
     },
     "/backoffice/albums/new": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the page",
-        "description": "",
         "operationId": "getNewAlbumPage",
         "parameters": [],
         "responses": {
@@ -286,9 +263,6 @@
     },
     "/backoffice/images": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the images page",
-        "description": "",
         "operationId": "getImagesPage",
         "parameters": [],
         "responses": {
@@ -303,9 +277,6 @@
     },
     "/backoffice/media": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the media page",
-        "description": "",
         "operationId": "getMediaPage",
         "parameters": [],
         "responses": {
@@ -320,9 +291,6 @@
     },
     "/backoffice/analytics": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the analytics page",
-        "description": "",
         "operationId": "getAnalyticsPage",
         "parameters": [
           {
@@ -377,9 +345,6 @@
     },
     "/backoffice/content": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the backoffice page to view a list of content pages",
-        "description": "",
         "operationId": "getBackofficeContentList",
         "parameters": [],
         "responses": {
@@ -394,22 +359,17 @@
     },
     "/backoffice/content-type/{typeId}/language/{languageIsoCode}": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the backoffice page to edit a content piece",
-        "description": "",
         "operationId": "getBackofficeContentForTypeEdit",
         "parameters": [
           {
             "name": "typeId",
             "in": "path",
-            "description": "Page content type ID",
             "required": true,
             "type": "integer"
           },
           {
             "name": "languageIsoCode",
             "in": "path",
-            "description": "Language ISO code",
             "required": true,
             "type": "string"
           }
@@ -426,9 +386,6 @@
     },
     "/backoffice/emails": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the HTML page",
-        "description": "",
         "operationId": "getEmailsAdminPage",
         "parameters": [],
         "responses": {

@@ -1,8 +1,6 @@
 <?php
 
 use Amora\App\Value\AppPageContentType;
-use Amora\App\Value\Language;
-use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Util\UrlBuilderUtil;
@@ -10,18 +8,15 @@ use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
-$closeLink = UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage);
-
 $this->layout('base', ['responseData' => $responseData]);
 ?>
     <main>
       <div id="feedback" class="feedback null"></div>
-      <section class="page-header">
+      <div class="page-header">
+        <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
         <span><?=$responseData->getLocalValue('pageContentEditTitle')?></span>
-        <div class="links">
-          <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
-        </div>
-      </section>
+        <div class="links"></div>
+      </div>
 
       <div class="backoffice-wrapper">
         <div class="page-content-container">

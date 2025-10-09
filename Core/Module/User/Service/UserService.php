@@ -477,6 +477,7 @@ class UserService
         ?string $repeatPassword = null,
         ?UserStatus $userStatus = null,
         UserRole|AppUserRole|null $userRole = null,
+        ?UserActionType $actionType = null,
     ): Feedback {
         return $this->userDataLayer->getDb()->withTransaction(
             function() use (
@@ -492,6 +493,7 @@ class UserService
                 $repeatPassword,
                 $userStatus,
                 $userRole,
+                $actionType,
             ) {
                 $name = StringUtil::sanitiseText($name);
                 $email = StringUtil::sanitiseText($email);
@@ -679,6 +681,52 @@ class UserService
             newChangeEmailTo: $newChangeEmailTo,
             deleteChangeEmailTo: $deleteChangeEmailTo,
         );
+    }
+
+    public function workflowUpdateUserFields(
+        User $updatedByUser,
+        User $existingUser,
+        UserActionType $userActionType,
+        ?UserStatus $userStatus = null,
+        ?UserRole $userRole = null,
+    ): bool {
+        $res = $this->userDataLayer->getDb()->withTransaction(
+            function () use (
+                $updatedByUser,
+                $existingUser,
+                $userActionType,
+                $userStatus,
+                $userRole,
+            ) {
+                $resUpdate = $this->updateUserFields(
+                    userId: $existingUser->id,
+                    newStatus: $userStatus,
+                    newRole: $userRole,
+                );
+
+                if (!$resUpdate) {
+                    return new Feedback(false);
+                }
+
+                $resAction = $this->storeUserAction(
+                    new UserAction(
+                        id: null,
+                        userId: $existingUser->id,
+                        createdByUser: $updatedByUser,
+                        type: $userActionType,
+                        createdAt: new DateTimeImmutable(),
+                    ),
+                );
+
+                if (!$resAction) {
+                    return new Feedback(false);
+                }
+
+                return new Feedback(true);
+            }
+        );
+
+        return $res->isSuccess;
     }
 
     public function storeUserAction(UserAction $item): ?UserAction

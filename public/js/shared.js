@@ -86,6 +86,13 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.copy-link').forEach(a => {
     a.addEventListener('click', e => Util.handleCopyLink(e, a.href));
   });
+
+  document.querySelectorAll('.back-js').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      window.history.back();
+    });
+  });
 });
 
 export {handleDropdownOptionClick};

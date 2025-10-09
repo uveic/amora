@@ -4,8 +4,6 @@ namespace Amora\Core\Router;
 
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\AppUserRole;
-use Amora\Core\Entity\Util\QueryOptions;
-use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Module\Album\Model\CollectionMedia;
 use Amora\Core\Module\Album\Service\AlbumService;
@@ -15,6 +13,7 @@ use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\Mailer\Service\MailerService;
+use Amora\Core\Module\User\Value\UserActionType;
 use Amora\Core\Module\User\Value\UserRole;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
@@ -22,7 +21,6 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerCreateNewCollec
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDeleteCollectionMediaSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyMainMediaForCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetEmailHtmlSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetSessionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreMediaForCollectionSuccessResponse;
@@ -32,10 +30,11 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateCollectio
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateMediaSequenceForCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserRoleSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserStatusSuccessResponse;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\App\Value\Language;
-use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
@@ -57,8 +56,6 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyArticleF
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyArticleSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyUserFailureResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyUserSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetTagsSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetUsersSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreArticleSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreTagFailureResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreTagSuccessResponse;
@@ -92,32 +89,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     }
 
     /**
-     * Endpoint: /back/session
-     * Method: GET
-     *
-     * @param Request $request
-     * @return Response
-     */
-    protected function getSession(Request $request): Response
-    {
-        $user = $request->session?->user;
-
-        $userArray = [];
-        if ($user) {
-            $userArray = $user->asArray();
-            $userArray['language_name'] = $user->language->name;
-            $userArray['role_name'] = $user->role->name;
-            $userArray['journey_status_name'] = $user->journeyStatus->name;
-            unset($userArray['password_hash']);
-        }
-
-        return new BackofficeApiControllerGetSessionSuccessResponse(
-            user: $userArray,
-            session: $request->session?->asArray(),
-        );
-    }
-
-    /**
      * Endpoint: /back/user
      * Method: POST
      *
@@ -125,9 +96,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string $email
      * @param string|null $bio
      * @param string|null $languageIsoCode
-     * @param int|null $roleId
      * @param string|null $timezone
-     * @param bool|null $isEnabled
      * @param Request $request
      * @return Response
      */
@@ -136,9 +105,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         string $email,
         ?string $bio,
         ?string $languageIsoCode,
-        ?int $roleId,
         ?string $timezone,
-        ?bool $isEnabled,
         Request $request
     ): Response {
         $name = StringUtil::sanitiseText($name);
@@ -168,27 +135,18 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        if ($roleId) {
-            $userRole = UserRole::tryFrom($roleId)
-                ? UserRole::from($roleId)
-                : (AppUserRole::tryFrom($roleId) ? AppUserRole::from($roleId) : UserRole::User);
-        } else {
-            $userRole = UserRole::User;
-        }
-
         $timezone = $timezone
             ? DateUtil::convertStringToDateTimeZone($timezone)
             : $request->session->user->timezone;
-        $isEnabled = $isEnabled ?? true;
 
         try {
             $newUser = $this->userService->workflowStoreUserAndSendVerificationEmail(
                 createdByUser: $request->session->user,
                 user: new User(
                     id: null,
-                    status: $isEnabled ? UserStatus::Enabled : UserStatus::Disabled,
+                    status: UserStatus::Disabled,
                     language: $language,
-                    role: $userRole,
+                    role: UserRole::User,
                     journeyStatus: UserJourneyStatus::PendingPasswordCreation,
                     createdAt: $now,
                     updatedAt: $now,
@@ -217,42 +175,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     }
 
     /**
-     * Endpoint: /back/user
-     * Method: GET
-     *
-     * @param string|null $q
-     * @param Request $request
-     * @return Response
-     */
-    protected function getUsers(?string $q, Request $request): Response
-    {
-        $q = StringUtil::sanitiseText($q);
-
-        $users = $this->userService->filterUserBy(
-            searchText: $q,
-            queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy(field: 'name', direction: QueryOrderDirection::ASC)],
-                pagination: new Response\Pagination(itemsPerPage: 25),
-            ),
-        );
-
-        $output = [];
-        /** @var User $user */
-        foreach ($users as $user) {
-            $output[] = [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ];
-        }
-
-        return new BackofficeApiControllerGetUsersSuccessResponse(
-            success: true,
-            users: $output,
-        );
-    }
-
-    /**
      * Endpoint: /back/user/{userId}
      * Method: PUT
      *
@@ -261,9 +183,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      * @param string|null $email
      * @param string|null $bio
      * @param string|null $languageIsoCode
-     * @param int|null $roleId
      * @param string|null $timezone
-     * @param int|null $userStatusId
      * @param string|null $currentPassword
      * @param string|null $newPassword
      * @param string|null $repeatPassword
@@ -276,9 +196,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $email,
         ?string $bio,
         ?string $languageIsoCode,
-        ?int $roleId,
         ?string $timezone,
-        ?int $userStatusId,
         ?string $currentPassword,
         ?string $newPassword,
         ?string $repeatPassword,
@@ -287,22 +205,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $existingUser = $this->userService->getUserForId($userId, true);
         if (empty($existingUser)) {
             return new BackofficeApiControllerUpdateUserFailureResponse();
-        }
-
-        if ($userStatusId && !UserStatus::tryFrom($userStatusId)) {
-            return new BackofficeApiControllerUpdateUserSuccessResponse(
-                success: false,
-                redirect: null,
-                errorMessage: 'User status ID not valid',
-            );
-        }
-
-        if ($roleId) {
-            $userRole = UserRole::tryFrom($roleId)
-                ? UserRole::from($roleId)
-                : (AppUserRole::tryFrom($roleId) ? AppUserRole::from($roleId) : UserRole::User);
-        } else {
-            $userRole = $existingUser->role;
         }
 
         $updateRes = $this->userService->workflowUpdateUser(
@@ -316,8 +218,8 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             currentPassword: $currentPassword,
             newPassword: $newPassword,
             repeatPassword: $repeatPassword,
-            userStatus: $userStatusId ? UserStatus::from($userStatusId) : null,
-            userRole: $userRole,
+            userStatus: $existingUser->status,
+            userRole: $existingUser->role,
         );
 
         if (!$updateRes->isSuccess) {
@@ -332,6 +234,99 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             success: true,
             redirect: UrlBuilderUtil::buildBackofficeUserListUrl($request->siteLanguage),
         );
+    }
+
+
+    /**
+     * Endpoint: /back/user/{userId}/status/{statusId}
+     * Method: PUT
+     *
+     * @param int $userId
+     * @param int $statusId
+     * @param Request $request
+     * @return Response
+     */
+    protected function updateUserStatus(
+        int $userId,
+        int $statusId,
+        Request $request
+    ): Response {
+        if (!UserStatus::tryFrom($statusId)) {
+            return new BackofficeApiControllerUpdateUserStatusSuccessResponse(
+                success: false,
+                errorMessage: 'User status ID not valid',
+            );
+        }
+
+        $user = $this->userService->getUserForId(userId: $userId, includeDisabled: true);
+
+        if (!$user) {
+            return new BackofficeApiControllerUpdateUserStatusSuccessResponse(
+                success: false,
+                errorMessage: 'User not found',
+            );
+        }
+
+        if ($user->status === UserStatus::from($statusId)) {
+            return new BackofficeApiControllerUpdateUserStatusSuccessResponse(
+                success: true,
+            );
+        }
+
+        $res = $this->userService->workflowUpdateUserFields(
+            updatedByUser: $request->session->user,
+            existingUser: $user,
+            userActionType: UserActionType::UpdateStatus,
+            userStatus: UserStatus::from($statusId),
+        );
+
+        return new BackofficeApiControllerUpdateUserStatusSuccessResponse($res);
+    }
+
+    /**
+     * Endpoint: /back/user/{userId}/role/{roleId}
+     * Method: PUT
+     *
+     * @param int $userId
+     * @param int $roleId
+     * @param Request $request
+     * @return Response
+     */
+    protected function updateUserRole(
+        int $userId,
+        int $roleId,
+        Request $request
+    ): Response {
+        if (!UserRole::tryFrom($roleId) && !AppUserRole::tryFrom($roleId)) {
+            return new BackofficeApiControllerUpdateUserRoleSuccessResponse(
+                success: false,
+                errorMessage: 'User role ID not valid',
+            );
+        }
+
+        $user = $this->userService->getUserForId(userId: $userId, includeDisabled: true);
+        if (!$user) {
+            return new BackofficeApiControllerUpdateUserRoleSuccessResponse(
+                success: false,
+                errorMessage: 'User not found',
+            );
+        }
+
+        $newRole = UserRole::tryFrom($roleId) ? UserRole::from($roleId) : AppUserRole::tryFrom($roleId);
+        if ($user->role === $newRole) {
+            return new BackofficeApiControllerUpdateUserRoleSuccessResponse(
+                success: true,
+            );
+        }
+
+        $res = $this->userService->workflowUpdateUserFields(
+            updatedByUser: $request->session->user,
+            existingUser: $user,
+            userActionType: UserActionType::UpdateRole,
+            userRole: $newRole,
+        );
+
+        return new BackofficeApiControllerUpdateUserRoleSuccessResponse($res);
     }
 
     /**
@@ -694,31 +689,6 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerStoreTagSuccessResponse(
             success: true,
             id: $res->id,
-        );
-    }
-
-    /**
-     * Endpoint: /back/tag
-     * Method: GET
-     *
-     * @param string|null $name
-     * @param Request $request
-     * @return Response
-     */
-    protected function getTags(?string $name, Request $request): Response
-    {
-//        $name = StringUtil::sanitiseText($name);
-
-        $tags = $this->tagService->filterTagsBy();
-        $output = [];
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            $output[] = $tag->asArray();
-        }
-
-        return new BackofficeApiControllerGetTagsSuccessResponse(
-            success: true,
-            tags: $output,
         );
     }
 

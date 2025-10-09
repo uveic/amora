@@ -22,14 +22,14 @@ foreach ($responseData->sessions as $session) {
 ?>
   <main>
 <?=$this->insert('partials/user/filter', ['responseData' => $responseData])?>
-    <section class="page-header">
+    <div class="page-header">
+      <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
       <span><?=$responseData->getLocalValue('navAdminUsers')?></span>
       <div class="links">
         <a href="#" class="filter-open no-loader"><?=CoreIcons::FUNNEL?></a>
         <a href="<?=UrlBuilderUtil::buildBackofficeUserNewUrl($responseData->siteLanguage)?>"><?=CoreIcons::ADD?></a>
-        <a href="<?=UrlBuilderUtil::buildBackofficeDashboardUrl($responseData->siteLanguage)?>"><?=CoreIcons::CLOSE?></a>
       </div>
-    </section>
+    </div>
     <div class="backoffice-wrapper">
 <?=UserHtmlGenerator::generateUserFilterFilterInfoHtml($responseData)?>
       <div class="table">

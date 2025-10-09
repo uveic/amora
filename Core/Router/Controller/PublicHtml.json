@@ -25,9 +25,6 @@
   "paths": {
     "/home": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the homepage",
-        "description": "",
         "operationId": "getHomePage",
         "parameters": [],
         "responses": {
@@ -42,9 +39,6 @@
     },
     "/login": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the login page",
-        "description": "",
         "operationId": "getLoginPage",
         "parameters": [],
         "responses": {
@@ -59,9 +53,6 @@
     },
     "/login/forgot": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the forgot password page",
-        "description": "",
         "operationId": "getForgotPasswordPage",
         "parameters": [],
         "responses": {
@@ -76,9 +67,6 @@
     },
     "/register": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the registration page",
-        "description": "",
         "operationId": "getRegistrationPage",
         "parameters": [],
         "responses": {
@@ -93,9 +81,6 @@
     },
     "/user/verify/{verificationIdentifier}": {
       "get": {
-        "tags": [],
-        "summary": "Verify user email address",
-        "description": "",
         "operationId": "getUserVerifiedHtml",
         "parameters": [
           {
@@ -118,9 +103,6 @@
     },
     "/user/reset/{verificationIdentifier}": {
       "get": {
-        "tags": [],
-        "summary": "Change password",
-        "description": "",
         "operationId": "getPasswordChangeHtml",
         "parameters": [
           {
@@ -143,9 +125,6 @@
     },
     "/user/create/{verificationIdentifier}": {
       "get": {
-        "tags": [],
-        "summary": "Create new password for new user",
-        "description": "",
         "operationId": "getCreateUserPasswordHtml",
         "parameters": [
           {
@@ -168,9 +147,6 @@
     },
     "/invite-request": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the invite request page",
-        "description": "",
         "operationId": "getInviteRequestPage",
         "parameters": [],
         "responses": {
@@ -185,9 +161,6 @@
     },
     "/album/{albumSlug}": {
       "get": {
-        "tags": [],
-        "summary": "Return the HTML to render the page",
-        "description": "",
         "operationId": "getAlbumPage",
         "parameters": [
           {
@@ -210,9 +183,6 @@
     },
     "/json-feed": {
       "get": {
-        "tags": [],
-        "summary": "Return the latest articles in JSON Feed format",
-        "description": "",
         "operationId": "getJsonFeed",
         "parameters": [],
         "responses": {
@@ -227,9 +197,6 @@
     },
     "/rss": {
       "get": {
-        "tags": [],
-        "summary": "Return the latest articles in RSS/XML format",
-        "description": "",
         "operationId": "getRss",
         "parameters": [],
         "responses": {
@@ -245,8 +212,6 @@
     "/sitemap": {
       "get": {
         "tags": [],
-        "summary": "Return sitemap XML format",
-        "description": "",
         "operationId": "getSitemap",
         "parameters": [],
         "responses": {

@@ -70,6 +70,19 @@ class Session
         return $this->validUntil->getTimestamp() > $twoHoursFromNow;
     }
 
+    public function isExpired(): bool
+    {
+        if ($this->forcedExpirationAt) {
+            return true;
+        }
+
+        if ($this->validUntil < new DateTimeImmutable()) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function isAdmin(): bool
     {
         return $this->isAuthenticated() && $this->user->role === UserRole::Admin;

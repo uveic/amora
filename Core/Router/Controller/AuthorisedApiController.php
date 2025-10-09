@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Router;
 
+use Amora\Core\Core;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\User\Service\UserMailService;
@@ -202,7 +203,14 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
      */
     protected function sendVerificationEmail(int $userId, int $verificationTypeId, Request $request): Response
     {
-        $user = $this->userService->getUserForId($userId);
+        if (!VerificationType::tryFrom($verificationTypeId)) {
+            return new AuthorisedApiControllerSendVerificationEmailSuccessResponse(
+                success: false,
+                errorMessage: 'Verification type ID not valid',
+            );
+        }
+
+        $user = $this->userService->getUserForId(userId: $userId, includeDisabled: true);
         if (!$user) {
             return new AuthorisedApiControllerSendVerificationEmailSuccessResponse(
                 success: false,
@@ -210,10 +218,11 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             );
         }
 
-        if (!VerificationType::tryFrom($verificationTypeId)) {
+        if (!$user->isEnabled()) {
+            $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
             return new AuthorisedApiControllerSendVerificationEmailSuccessResponse(
                 success: false,
-                errorMessage: 'Verification type ID not valid',
+                errorMessage: $localisationUtil->getValue('errorUserNotEnabled'),
             );
         }
 
