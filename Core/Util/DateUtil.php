@@ -154,19 +154,15 @@ final class DateUtil
         }
 
         foreach ($string as $key => &$value) {
-            if (!empty($diff[$key])) {
-                $value = $diff[$key]
-                    . ' '
-                    . $value
-                    . ($diff[$key] > 1
-                        ? ($key === 'm' && ($language === Language::Spanish || $language === Language::Galego) ? 'es' : 's')
-                        : ''
-                    );
-            } else {
-                if (count($string) > 1) {
-                    unset($string[$key]);
-                }
+            if (empty($diff[$key]) && count($string) > 1) {
+                unset($string[$key]);
+                continue;
             }
+
+            $value = $diff[$key]
+                . ' '
+                . $value
+                . ($diff[$key] === 1 ? '' : ($key === 'm' && ($language === Language::Spanish || $language === Language::Galego) ? 'es' : 's'));
         }
 
         if (!$full) {
