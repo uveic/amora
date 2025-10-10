@@ -47,7 +47,7 @@ $roleFromQuery = isset($roleParam) && (UserRole::tryFrom($roleParam) || AppUserR
             <option value=""></option>
 <?php
     /** @var AppUserRole $role */
-    foreach (AppUserRole::getAll(true) as $role) {
+    foreach (AppUserRole::getAll() as $role) {
         $selected = $role === $roleFromQuery;
 ?>
             <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$role->value?>"><?=$role->getTitle($responseData->siteLanguage)?></option>

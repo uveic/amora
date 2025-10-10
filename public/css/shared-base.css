@@ -2,7 +2,6 @@
   --color-white: #fcfcfc;
   --color-black: #212529;
   --color-black-hover: #000;
-  --color-black-light: #5d7079;
 
   --color-primary-050: #e9e9ea;
   --color-primary-100: #d3d3d4;
@@ -17,7 +16,7 @@
 
   --color-failure: #ff0000;
   --color-failure-light: #ffdddd;
-  --color-warning: #ECE81A;
+  --color-warning: #fffca6;
   --color-warning-light: #fbfee5;
   --color-success: #2ed06e;
   --color-success-light: #afdbc0;
@@ -457,7 +456,7 @@ pre {
 
 #register-terms {
   text-align: left;
-  color: var(--color-black-light);
+  color: var(--color-grey-200);
   padding: 0.5rem 0;
 }
 
@@ -525,7 +524,7 @@ article>ul {
   padding: 0;
   margin: 0.25rem 1rem 1rem;
   font-size: 0.85rem;
-  color: var(--color-black-light);
+  color: var(--color-grey-200);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -549,7 +548,7 @@ article>ul {
   padding: 0.25rem 1rem;
   margin: 2rem 0;
   font-size: 0.9rem;
-  color: var(--color-black-light);
+  color: var(--color-grey-200);
   border-top: 1px dotted var(--color-grey-400);
 }
 
@@ -576,7 +575,7 @@ article .image-caption {
   padding: 0.1rem 1rem 0.25rem 1rem;
   font-size: 0.8rem;
   line-height: 1.1rem;
-  color: var(--color-black-light);
+  color: var(--color-grey-200);
   outline: 0;
 }
 
@@ -760,7 +759,7 @@ label:not(:last-child) {
 }
 
 .help {
-  color: var(--color-black-light);
+  color: var(--color-grey-200);
   font-size: .75rem;
   margin: 0.25rem 0 1rem;
   text-align: left;
@@ -949,7 +948,7 @@ button.is-link.is-light,
 .p-b-10 {padding-bottom: 10rem !important;}
 .p-r-05 {padding-right: 0.5rem !important;}
 .p-l-05 {padding-left: 0.5rem !important;}
-.light-text-color {color: var(--color-black-light);}
+.light-text-color {color: var(--color-grey-200);}
 .no-background {background-color: transparent !important;}
 .flex-no-grow {flex-grow: 0 !important;}
 .flex-grow-1 {flex-grow: 1 !important;}
@@ -1232,7 +1231,7 @@ svg,
   padding: 0;
   margin: 0;
   font-size: 0.9rem;
-  color: var(--color-black-light);
+  color: var(--color-grey-200);
 }
 
 .home-tag {

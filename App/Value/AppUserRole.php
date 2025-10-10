@@ -7,7 +7,7 @@ use Amora\Core\Module\User\Value\UserRole;
 
 enum AppUserRole: int
 {
-    public static function getAll(bool $includeAdmin = false): array
+    public static function getAll(bool $includeAdmin = true): array
     {
         $output = [
             UserRole::User,

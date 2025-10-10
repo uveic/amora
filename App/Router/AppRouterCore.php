@@ -4,6 +4,7 @@ namespace Amora\App\Router;
 
 use Amora\Core\Core;
 use Amora\Core\Module\Article\ArticleCore;
+use Amora\Core\Module\User\UserCore;
 
 class AppRouterCore extends Core
 {
@@ -31,7 +32,9 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedHtmlController.php';
-                return new AppAuthorisedHtmlController();
+                return new AppAuthorisedHtmlController(
+                    sessionService: UserCore::getSessionService(),
+                );
             },
         );
     }
@@ -44,7 +47,9 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeHtmlController.php';
-                return new AppBackofficeHtmlController();
+                return new AppBackofficeHtmlController(
+                    sessionService: UserCore::getSessionService(),
+                );
             },
         );
     }

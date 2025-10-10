@@ -77,15 +77,15 @@
 .number {
   font-family: monospace;
   font-size: 1rem;
-  color: var(--color-black-light);
+  color: var(--color-grey-200);
   display: flex;
   flex-flow: row nowrap;
   gap: 0.25rem;
 }
 
 .number svg {
-  fill: var(--color-black-light);
-  stroke: var(--color-black-light);
+  fill: var(--color-grey-200);
+  stroke: var(--color-grey-200);
   width: 25px;
   max-width: revert;
 }
@@ -116,7 +116,7 @@
   align-items: center;
   gap: 0.3rem;
   font-size: 1rem;
-  color: var(--color-black-light);
+  color: var(--color-grey-200);
 }
 
 .activity-container .date {
@@ -378,17 +378,16 @@
   justify-content: center;
   align-items: center;
   flex-flow: row nowrap;
-  border-radius: 4px;
-  padding: 0.2rem 0.4rem;
-  font-size: 0.8rem;
-  color: var(--color-white);
   gap: 0.25rem;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.8rem;
+  line-height: 1;
+  border: 1px dashed var(--color-grey-500);
 }
 
 .status-draft,
 .status-draft:hover {
-  background-color: var(--color-black-light);
-  color: var(--color-white) !important;
+  background-color: var(--color-grey-200);
 }
 
 .status-deleted,
@@ -417,21 +416,12 @@
   color: var(--color-black) !important;
 }
 
-.status-draft svg,
 .status-deleted svg,
 .status-published svg,
 .status-private svg {
   fill: var(--color-white);
   stroke: var(--color-white);
 }
-
-.status-disabled svg,
-.status-warning svg {
-  fill: var(--color-black);
-  stroke: var(--color-black);
-}
-
-
 /* Status ends here */
 
 /* Editor starts here */
@@ -1236,7 +1226,7 @@
 }
 
 #media-container .media-info {
-  color: var(--color-black-light);
+  color: var(--color-grey-200);
   font-size: 0.9rem;
   margin-top: 0.5rem;
   display: flex;

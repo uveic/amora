@@ -24,7 +24,7 @@ return [
     new LookupTableSettings(
         database: UserCore::getDb(),
         tableName: UserDataLayer::USER_ROLE_TABLE,
-        tableFieldsToValues: asArray(AppUserRole::getAll(true)),
+        tableFieldsToValues: asArray(AppUserRole::getAll()),
     ),
     new LookupTableSettings(
         database: Core::getCoreDb(),

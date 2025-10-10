@@ -55,11 +55,11 @@ final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
             responseData: new AppHtmlHomepageResponseData(
                 request: $request,
                 pagination: $pagination,
+                feedback: $feedback,
                 isPublicPage: true,
                 pageContent: $pageContent,
                 homeArticles: [],
                 blogArticles: $blogArticles,
-                feedback: $feedback,
             ),
         );
     }

@@ -4,12 +4,14 @@ namespace Amora\App\Router;
 
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
+use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Util\UrlBuilderUtil;
 
 final class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstract
 {
-    public function __construct()
-    {
+    public function __construct(
+        private readonly SessionService $sessionService,
+    ) {
         parent::__construct();
     }
 
@@ -20,7 +22,10 @@ final class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstr
             return false;
         }
 
-        return true;
+        return $this->sessionService->updateSessionExpiryDateAndValidUntil(
+            sid: $request->session->sessionId,
+            sessionId: $request->session->id,
+        );
     }
 
     /**

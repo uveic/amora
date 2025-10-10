@@ -70,7 +70,7 @@ final class UserHtmlGenerator
             $indentation . '  <ul>',
         ];
 
-        foreach (AppUserRole::getAll(true) as $item) {
+        foreach (AppUserRole::getAll() as $item) {
             $className = $item->getClass();
             $icon = $item->getIcon();
             $output[] = $indentation . '    <li><a data-checked="' . ($user->role === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option ' . $identifier . '-dd-option no-loader ' . $className . '"  data-dropdown-identifier="' . $uniqueDropdownIdentifier . '" href="#">' . $icon . $item->getTitle($language) . '</a></li>';
