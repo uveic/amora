@@ -7,7 +7,11 @@ use Amora\Core\Value\CoreIcons;
 
 ?>
   <div class="modal-media modal-wrapper null">
-    <span class="modal-media-close"><?=CoreIcons::CLOSE?></span>
+    <span class="modal-media-close-wrapper flex-end gap-1">
+      <a href="#" class="image-info-action"><?=CoreIcons::INFO?></a>
+      <a href="#" class="image-random-action" data-direction="RAND()"><?=CoreIcons::SHUFFLE?></a>
+      <span class="modal-media-close"><?=CoreIcons::CLOSE?></span>
+    </span>
     <div class="modal-inner modal-bg-transparent">
       <div class="image-wrapper null">
         <div class="loader-media"></div>
@@ -19,9 +23,9 @@ use Amora\Core\Value\CoreIcons;
         </div>
         <div class="image-info">
           <div>
-            <div class="image-summary">
+            <div class="image-summary flex-start space-between gap-1">
+              <a href="#" class="image-info-close-button"><?=CoreIcons::CARET_LEFT?></a>
               <span class="image-number"></span>
-              <a href="#" class="image-info-close-button"><?=CoreIcons::CLOSE?></a>
             </div>
             <div class="image-info-data null">
               <div class="image-meta"></div>
@@ -39,10 +43,6 @@ use Amora\Core\Value\CoreIcons;
     </div>
     <div class="image-next-wrapper">
       <a href="#" class="image-previous-action hidden" data-direction="ASC"><?=CoreIcons::CARET_LEFT?></a>
-      <span>
-          <a href="#" class="image-info-action"><?=CoreIcons::INFO?></a>
-          <a href="#" class="image-random-action" data-direction="RAND()"><?=CoreIcons::SHUFFLE?></a>
-        </span>
       <a href="#" class="image-next-action" data-direction="DESC"><?=CoreIcons::CARET_RIGHT?></a>
     </div>
   </div>
