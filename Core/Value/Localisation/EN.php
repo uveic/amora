@@ -48,7 +48,7 @@ return [
     'authenticationEmailVerifiedError' => 'The link to verify your email address is not valid.',
     'authenticationEmailVerifiedExpired' => 'The link to verify your email address has expired. Please, start the process again.',
     'authenticationPasswordResetLinkError' => 'The link to reset your password is not valid. Please start the process again.',
-    'authenticationPasswordCreationLinkError' => 'The link to create a password is not valid. Please, reset your password or contact the site admin.',
+    'authenticationPasswordCreationLinkError' => 'The link to create a password is not valid. Please, contact the site admin.',
     'authenticationEmailAndOrPassNotValid' => 'Email address and/or password not valid.',
     'authenticationEmailNotValid' => 'Email address not valid.',
     'authenticationUserRegistrationDisabled' => 'The user registration functionality is not enabled. Please, contact the site administrator.',

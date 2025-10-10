@@ -43,6 +43,7 @@ $defaultLanguage = $responseData->user?->language ?? $responseData->request->ses
               <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
             </div>
 
+<?php if ($emailHelpCopy) { ?>
             <div class="field">
               <label for="email" class="label"><?=$responseData->getLocalValue('globalPassword')?></label>
               <div class="control">
@@ -50,7 +51,7 @@ $defaultLanguage = $responseData->user?->language ?? $responseData->request->ses
               </div>
               <p class="help"></p>
             </div>
-
+<?php } ?>
           </div>
         </div>
 

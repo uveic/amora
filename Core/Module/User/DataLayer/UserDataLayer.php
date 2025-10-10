@@ -309,10 +309,11 @@ class UserDataLayer
                 SELECT
                     COUNT(*) AS total
                 FROM ' . self::USER_TABLE . ' AS u
-                WHERE u.status_id IN (:statusEnabled);
+                WHERE u.status_id IN (:statusEnabled, :statusDisabled);
             ',
             [
                 ':statusEnabled' => UserStatus::Enabled->value,
+                ':statusDisabled' => UserStatus::Disabled->value,
             ]
         );
     }

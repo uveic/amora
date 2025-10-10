@@ -48,7 +48,7 @@ return [
     'authenticationEmailVerifiedError' => 'El enlace para verificar tu correo electrónico no es válido.',
     'authenticationEmailVerifiedExpired' => 'El enlace para verificar tu correo electrónico ha caducado. Por favor, inicia el proceso de nuevo.',
     'authenticationPasswordResetLinkError' => 'El enlace para cambiar tu contraseña no es válido. Inicia el proceso de cambio de contraseña de nuevo.',
-    'authenticationPasswordCreationLinkError' => 'El enlace para crear tu contraseña no es válido. Por favor, cambia tu contraseña o contacta con el/la administrador/a de la página.',
+    'authenticationPasswordCreationLinkError' => 'El enlace para crear tu contraseña no es válido. Por favor, contacta con el/la administrador/a de la página.',
     'authenticationEmailAndOrPassNotValid' => 'Correo electrónico y/o contresña no válidos.',
     'authenticationEmailNotValid' => 'Correo electrónico no válido.',
     'authenticationUserRegistrationDisabled' => 'El registro de usuarios no está habilitado. Ponte en contacto con el administrador de la web.',
