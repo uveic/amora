@@ -48,7 +48,7 @@ return [
     'authenticationEmailVerifiedError' => 'A ligazón para verificar o teu correo electrónico non é válida.',
     'authenticationEmailVerifiedExpired' => 'A ligazón para verificar o teu correo electrónico caducou. Por favor, inicia o proceso de novo.',
     'authenticationPasswordResetLinkError' => 'A ligazón para cambiar o teu contrasinal non é válida. Inicia o proceso de cambio de contrasinal de novo.',
-    'authenticationPasswordCreationLinkError' => 'A ligazón para crear o teu contrasinal non é válida. Por favor, cambia o teu contrasinal ou contacta co/a adminstrador/a da páxina.',
+    'authenticationPasswordCreationLinkError' => 'A ligazón para crear o teu contrasinal non é válida. Por favor, contacta co/a adminstrador/a da páxina.',
     'authenticationEmailAndOrPassNotValid' => 'Correo electrónico e/ou contrasinal non válidos.',
     'authenticationEmailNotValid' => 'Correo electrónico non válido.',
     'authenticationUserRegistrationDisabled' => 'O rexistro de usuarios non está habilitado. Ponte en contacto co administrador do sitio web.',
