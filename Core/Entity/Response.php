@@ -55,7 +55,7 @@ class Response
         $allowedUrls = implode(' ', array_merge(["'self'"], Core::getConfig()->allowedUrlsForSrcScript ?? []));
         $connectSrc = 'connect-src ' . $allowedUrls . ';';
         $scriptSrc = 'script-src ' . $allowedUrls . $nonce . ';';
-        $defaultSrc = "default-src 'self'";
+        $defaultSrc = "default-src 'self';";
         if (Core::getConfig()->allowImgSrcData) {
             $allowedDomains[] = 'data: blob:;';
         }
