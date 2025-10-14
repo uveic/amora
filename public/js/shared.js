@@ -1,4 +1,4 @@
-import {Util} from "./module/Util.js?v=000";
+import {Util} from "./module/Util.js?v=205";
 
 function handleDropdownOptionClick(event) {
   event.preventDefault();
@@ -75,11 +75,11 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  document.querySelectorAll('.modal-close-button').forEach(el => {
+  document.querySelectorAll('.modal-close-button, .modal-close-link').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
       document.body.style.overflow = 'auto';
-      el.parentElement.parentElement.classList.add('null');
+      el.closest('.modal-wrapper').classList.add('null');
     });
   });
 

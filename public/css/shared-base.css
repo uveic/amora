@@ -362,6 +362,14 @@ pre {
   width: 25px;
 }
 
+.modal-close-link {
+  color: var(--color-black);
+}
+
+.modal-close-link:hover {
+  color: var(--color-black-hover);
+}
+
 .modal-content {
   padding: 1rem 1.5rem;
   margin: 0;

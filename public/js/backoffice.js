@@ -61,10 +61,13 @@ function handleGenericSelectMainMediaClick(e) {
   modal.querySelector('.add-image-wrapper').classList.remove('null');
   modal.classList.remove('null');
 
-  const qty = Number.parseInt(modal.dataset.mediaQueryQty);
   const existingImages = imagesContainer.querySelectorAll('.media-item');
   existingImages.forEach(img => {
     addEventListenerAction(img, img.dataset.mediaId, eventListenerAction, targetContainerId);
+  });
+
+  modal.querySelectorAll('.media-list-highlight .media-item').forEach(mi => {
+    addEventListenerAction(mi, mi.dataset.mediaId, eventListenerAction, targetContainerId);
   });
 
   if (existingImages.length) {
@@ -72,6 +75,7 @@ function handleGenericSelectMainMediaClick(e) {
     return;
   }
 
+  const qty = Number.parseInt(modal.dataset.mediaQueryQty);
   const typeId = button.dataset.typeId ? Number.parseInt(button.dataset.typeId) : '';
 
   Request.get('/api/file?typeId=' + typeId + '&qty=' + qty)
@@ -144,18 +148,12 @@ function addMediaToModalContainer(existingModalContainer, mediaId) {
     return;
   }
 
-  existingModalContainer.querySelectorAll('figure .null').forEach(i => {
-    i.classList.remove('null');
-  });
+  existingModalContainer.querySelectorAll('figure .null').forEach(i => i.classList.remove('null'));
 
   const existingInModal = existingModalContainer.querySelector('img[data-media-id="' + mediaId + '"]');
   if (existingInModal) {
-    existingModalContainer.parentElement.classList.add('null');
+    return;
   }
-
-  existingModalContainer.querySelectorAll('.media-dynamically-added').forEach(i => {
-    existingModalContainer.removeChild(i.parentElement);
-  });
 
   const figureContainer = document.createElement('figure');
   figureContainer.className = 'image-container';
@@ -166,7 +164,7 @@ function addMediaToModalContainer(existingModalContainer, mediaId) {
   newImage.title = existingMedia.title;
   newImage.dataset.mediaId = mediaId;
   newImage.dataset.pathLarge = existingMedia.src;
-  newImage.className = 'media-item media-dynamically-added';
+  newImage.className = 'media-item';
   figureContainer.appendChild(newImage);
 
   if (existingModalContainer.firstChild) {
