@@ -325,6 +325,7 @@ final class StringUtil
             return '';
         }
 
+        $text = str_replace('&nbsp;', ' ', $text);
         $position = strpos($text, '</p>');
         if ($position) {
             $firstParagraph = trim(strip_tags(substr($text, 0, $position)));
@@ -426,6 +427,11 @@ final class StringUtil
     {
         preg_match("#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v/)[^&\n]+(?=\?)|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#", $url, $matches);
         return $matches[0] ?? null;
+    }
+
+    public static function buildYoutubeThumbnailUrl(string $ytVideoId): ?string
+    {
+        return Core::getConfig()->mediaBaseUrl . '/yt_thumbnail/' . $ytVideoId . '.jpg';
     }
 
     public static function buildYoutubeIFrameHtml(string $ytVideoId, bool $autoplay = false): ?string {

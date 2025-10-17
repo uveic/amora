@@ -1055,10 +1055,6 @@ function handleAlbumMediaDrop(ev) {
     return;
   }
 
-  const loadingEl = document.createElement('div');
-  loadingEl.className = 'drop-loading loader-spinner';
-  draggedEl.parentElement.appendChild(loadingEl);
-
   const droppedSequence = Number.parseInt(ev.currentTarget.dataset.sequence);
   const draggedSequence = Number.parseInt(draggedEl.dataset.sequence);
 
@@ -1099,7 +1095,6 @@ function handleAlbumMediaDrop(ev) {
     })
     .catch(error => Util.notifyError(error))
     .finally(() => {
-      loadingEl.parentElement.removeChild(loadingEl);
       draggedEl.classList.remove('media-item-grabbing');
     });
 }
