@@ -148,7 +148,7 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
             /
             <span class="chart-color-02"><?=$totalVisitors?> <span class="chart-title"><?=$responseData->getLocalValue('analyticsVisitors')?></span></span>
           </h2>
-          <a href="#" class="analytics-controls-event-type analytics-controls-option">
+          <a href="#" class="analytics-controls-event-type analytics-controls-option no-loader">
             <span><?=$eventType?></span>
             <?=CoreIcons::CARET_DOWN?>
           </a>
@@ -186,7 +186,7 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
             <a href="#" class="analytics-controls-next"><?=CoreIcons::CARET_RIGHT?></a>
 <?php } ?>
           </div>
-          <a href="#" class="analytics-controls-more analytics-controls-option">
+          <a href="#" class="analytics-controls-more analytics-controls-option no-loader">
             <span><?=$dateRange?></span>
             <?=CoreIcons::CARET_DOWN?>
           </a>
