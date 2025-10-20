@@ -21,6 +21,8 @@ use Amora\Core\Util\LocalisationUtil;
 
 class Core
 {
+    const int SQL_QUERY_QTY = 100;
+
     private static bool $initiated = false;
     private static AppConfig $config;
     private static array $registry = array();

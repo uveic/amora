@@ -539,7 +539,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             statusIds: [MediaStatus::Active->value],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('id', QueryOrderDirection::DESC)],
-                pagination: new Response\Pagination(itemsPerPage: MediaService::SQL_QUERY_QTY),
+                pagination: new Response\Pagination(itemsPerPage: Core::SQL_QUERY_QTY),
             ),
         );
 
@@ -567,7 +567,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             typeIds: MediaType::getAllNotImageIds(),
             statusIds: [MediaStatus::Active->value],
             queryOptions: new QueryOptions(
-                pagination: new Response\Pagination(itemsPerPage: MediaService::SQL_QUERY_QTY),
+                pagination: new Response\Pagination(itemsPerPage: Core::SQL_QUERY_QTY),
             ),
         );
 

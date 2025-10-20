@@ -1,5 +1,6 @@
 <?php
 
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Media;
 use Amora\Core\Module\Article\Service\MediaService;
@@ -36,7 +37,7 @@ $displayLoadMore = count($responseData->media) >= 50;
           <?=$media->asHtml()?>
         </div>
 <?php } ?>
-        <a href="#" class="media-load-more media-load-more-js<?=$displayLoadMore ? '' : ' null'?>" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-media-query-qty="<?=MediaService::SQL_QUERY_QTY?>" data-event-listener-action="displayNextImagePopup">
+        <a href="#" class="media-load-more media-load-more-js<?=$displayLoadMore ? '' : ' null'?>" data-type-id="" data-direction="<?=QueryOrderDirection::DESC->name?>" data-media-query-qty="<?=Core::SQL_QUERY_QTY?>" data-event-listener-action="displayNextImagePopup">
           <span><?=$responseData->getLocalValue('globalMore')?></span>
         </a>
       </div>
