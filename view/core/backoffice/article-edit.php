@@ -2,6 +2,7 @@
 
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\Helper\ArticleHtmlGenerator;
+use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
@@ -17,7 +18,9 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
   <div class="page-header">
     <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
     <span><?=$responseData->getLocalValue('globalEdit') . ': ' . $responseData->article->title?></span>
-    <div class="links"></div>
+    <div class="links">
+      <a href="<?=UrlBuilderUtil::buildBackofficeArticleListUrl(language: $responseData->siteLanguage)?>"><?=CoreIcons::LIST_BULLETS?></a>
+    </div>
   </div>
 
   <article class="main-wrapper">

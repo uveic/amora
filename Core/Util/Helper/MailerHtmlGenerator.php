@@ -53,11 +53,10 @@ final class MailerHtmlGenerator
         $output = [];
         $output[] = $indentation . '<div class="table-row">';
         $output[] = $indentation . '  <div class="table-item">';
-        $output[] = $indentation . '    <span class="light-text-color font-0-9">#' . $mailerItem->id . '</span>';
         $output[] = $indentation . '    ' . $receiverHtml;
         $output[] = $indentation . '    <span class="icon-one-line">' . CoreIcons::ENVELOPE_SIMPLE . $mailerItem->subject .'</span>';
         $output[] = $indentation . '  </div>';
-        $output[] = $indentation . '  <div class="table-item flex-end">';
+        $output[] = $indentation . '  <div class="flex-end">';
         $output[] = $indentation . '    <a href="#" class="email-content-js" data-mailer-id="' . $mailerItem->id . '">' . CoreIcons::FILE_HTML . '</a>';
         $output[] = $indentation . '    ' . $templateContent;
         $output[] = $indentation . '    ' . $statusContent;

@@ -47,6 +47,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
       <span class="number">#<?=$album->id?></span>
       <div class="links">
         <span class="value"><a href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=CoreIcons::EDIT?></a></span>
+        <a href="<?=UrlBuilderUtil::buildBackofficeAlbumListUrl(language: $responseData->siteLanguage)?>"><?=CoreIcons::LIST_BULLETS?></a>
       </div>
     </div>
     <div>

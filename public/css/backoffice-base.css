@@ -77,15 +77,15 @@
 .number {
   font-family: monospace;
   font-size: 1rem;
-  color: var(--color-grey-200);
+  color: var(--color-grey-700);
   display: flex;
   flex-flow: row nowrap;
   gap: 0.25rem;
 }
 
 .number svg {
-  fill: var(--color-grey-200);
-  stroke: var(--color-grey-200);
+  fill: var(--color-grey-700);
+  stroke: var(--color-grey-700);
   width: 25px;
   max-width: revert;
 }

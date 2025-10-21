@@ -10,6 +10,7 @@ use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\Article\Value\PageContentSection;
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
@@ -45,6 +46,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     <span><?=$title?></span>
     <div class="links">
       <a href="<?=$publicLink?>"><?=CoreIcons::ARROW_SQUARE_OUT?></a>
+      <a href="<?=UrlBuilderUtil::buildBackofficeContentListUrl(language: $responseData->siteLanguage)?>"><?=CoreIcons::LIST_BULLETS?></a>
     </div>
   </div>
   <form id="form-page-content" action="#" class="page-content-wrapper">

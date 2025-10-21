@@ -100,7 +100,6 @@ final class UserHtmlGenerator
         $output = [];
         $output[] = $indentation . '<div class="table-row">';
         $output[] = $indentation . '  <div class="table-item">';
-        $output[] = $indentation . '    <span class="light-text-color font-0-9">#' . $user->id . '</span>';
         $output[] = $indentation . '    ' . $userTitleHtml;
         $output[] = $indentation . '    <span class="icon-one-line">' . CoreIcons::ENVELOPE_SIMPLE . $user->email . '</span>';
         $output[] = $indentation . '  </div>';

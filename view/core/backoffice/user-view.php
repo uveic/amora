@@ -42,6 +42,7 @@ foreach ($responseData->sessions as $session) {
       </span>
       <div class="links small-screen-hidden">
         <a href="<?=UrlBuilderUtil::buildBackofficeUserEditUrl(language: $responseData->siteLanguage, userId:  $responseData->user->id)?>"><?=CoreIcons::EDIT?></a>
+        <a href="<?=UrlBuilderUtil::buildBackofficeUserListUrl(language: $responseData->siteLanguage)?>"><?=CoreIcons::LIST_BULLETS?></a>
       </div>
     </div>
 
@@ -114,12 +115,15 @@ if (!$responseData->user->isVerified()) { ?>
     /** @var Session $session */
     foreach ($openSessions as $session) {
 ?>
-          <div class="card-info-item">
-            <span class="value gap-1">
-              <span><?=DateUtil::formatDateShort($session->createdAt)?></span>
-              <span><?=$session->ip?></span>
-              <span><?=$session->browserAndPlatform?></span>
-            </span>
+          <div class="card-info-item gap-1 width-100">
+            <div>
+              <div class="m-b-05"><?=$session->browserAndPlatform?></div>
+              <div class="number"><?=$session->ip?></div>
+            </div>
+            <div class="flex-column gap-05">
+              <div class="flex-end width-100 icon-one-line gap-05" title="<?=DateUtil::formatDateShort($session->createdAt)?>"><?=DateUtil::getElapsedTimeString(from: $session->createdAt, includePrefixAndOrSuffix: true, language: $responseData->siteLanguage) . CoreIcons::SPARKLE?></div>
+              <div class="flex-end width-100 icon-one-line gap-05" title="<?=DateUtil::formatDateShort($session->lastVisitedAt)?>"><?=DateUtil::getElapsedTimeString(from: $session->lastVisitedAt, includePrefixAndOrSuffix: true, language: $responseData->siteLanguage) . CoreIcons::SIGN_IN?></div>
+            </div>
           </div>
 <?php } ?>
         </div>

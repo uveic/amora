@@ -29,7 +29,9 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     <div class="page-header">
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
       <span><?=$pageTitle?></span>
-      <div class="links"></div>
+      <div class="links">
+        <a href="<?=UrlBuilderUtil::buildBackofficeAlbumViewUrl(language: $responseData->siteLanguage, albumId: $responseData->album->id)?>"><?=CoreIcons::CLOSE?></a>
+      </div>
     </div>
       <div class="backoffice-wrapper">
         <form action="#" method="post" id="form-album-edit" class="form-two-columns-wrapper">

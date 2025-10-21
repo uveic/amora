@@ -143,7 +143,6 @@ final class ArticleHtmlGenerator
         $output[] = $indentation . '<div class="table-row">';
         $output[] = $indentation . '  <div class="table-item table-item-flex-column">';
         $output[] = $indentation . '    <div>';
-        $output[] = $indentation . '      <span class="light-text-color font-0-9">#' . $article->id . '</span>';
         $output[] = $indentation . '      ' . $article->language->getIconFlag('m-l-05 m-r-05');
         $output[] = $indentation . '      ' . $articleTitleHtml;
         $output[] = $indentation . '      ' . $articlePublicLinkHtml;
