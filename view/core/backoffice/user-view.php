@@ -37,9 +37,7 @@ foreach ($responseData->sessions as $session) {
     <div id="feedback" class="feedback null"></div>
     <div class="page-header">
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-      <span class="page-header-expand">
-        <span class="icon-one-line"><?=CoreIcons::USER . $responseData->user->getNameOrEmail()?></span>
-      </span>
+      <span class="icon-one-line width-10-grow"><?=CoreIcons::USER?><span class="ellipsis"><?=$responseData->user->getNameOrEmail()?></span></span>
       <div class="links small-screen-hidden">
         <a href="<?=UrlBuilderUtil::buildBackofficeUserEditUrl(language: $responseData->siteLanguage, userId:  $responseData->user->id)?>"><?=CoreIcons::EDIT?></a>
         <a href="<?=UrlBuilderUtil::buildBackofficeUserListUrl(language: $responseData->siteLanguage)?>"><?=CoreIcons::LIST_BULLETS?></a>

@@ -14,7 +14,7 @@ $this->layout('base', ['responseData' => $responseData]);
       <div id="feedback" class="feedback null"></div>
       <div class="page-header">
         <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-        <span><?=$responseData->getLocalValue('pageContentEditTitle')?></span>
+        <span class="icon-one-line width-10-grow"><?=CoreIcons::ARTICLE?><span class="ellipsis"><?=$responseData->getLocalValue('pageContentEditTitle')?></span></span>
         <div class="links"></div>
       </div>
 

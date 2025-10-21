@@ -25,7 +25,7 @@ $pageTitle = match ($articleType) {
   <main>
     <div class="page-header">
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-      <span><?=$pageTitle?></span>
+      <span class="icon-one-line width-10-grow"><?=CoreIcons::ARTICLE?><span class="ellipsis"><?=$pageTitle?></span></span>
       <div class="links">
         <a href="#" class="filter-open"><?=CoreIcons::FUNNEL?></a>
         <a href="<?=UrlBuilderUtil::buildBackofficeArticleNewUrl($responseData->siteLanguage, $articleType)?>"><?=CoreIcons::ADD?></a>

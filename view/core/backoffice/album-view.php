@@ -43,7 +43,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
     <div id="feedback" class="feedback null"></div>
     <div class="page-header">
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-      <span class="icon-one-line"><?=CoreIcons::IMAGES . $album->titleHtml?></span>
+      <span class="icon-one-line width-10-grow"><?=CoreIcons::IMAGES?><span class="ellipsis"><?=$album->titleHtml?></span></span>
       <span class="number">#<?=$album->id?></span>
       <div class="links">
         <span class="value"><a href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=CoreIcons::EDIT?></a></span>

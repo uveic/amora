@@ -28,7 +28,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
     <div id="feedback" class="feedback null"></div>
     <div class="page-header">
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-      <span><?=$pageTitle?></span>
+      <span class="icon-one-line width-10-grow"><?=CoreIcons::IMAGES?><span class="ellipsis"><?=$pageTitle?></span></span>
       <div class="links">
         <a href="<?=UrlBuilderUtil::buildBackofficeAlbumViewUrl(language: $responseData->siteLanguage, albumId: $responseData->album->id)?>"><?=CoreIcons::CLOSE?></a>
       </div>

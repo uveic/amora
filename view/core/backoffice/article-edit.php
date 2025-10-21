@@ -17,7 +17,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
   <div id="feedback" class="feedback null"></div>
   <div class="page-header">
     <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-    <span><?=$responseData->getLocalValue('globalEdit') . ': ' . $responseData->article->title?></span>
+    <span class="icon-one-line width-10-grow"><?=CoreIcons::ARTICLE?><span class="ellipsis"><?=$responseData->getLocalValue('globalEdit') . ': ' . $responseData->article->title?></span></span>
     <div class="links">
       <a href="<?=UrlBuilderUtil::buildBackofficeArticleListUrl(language: $responseData->siteLanguage)?>"><?=CoreIcons::LIST_BULLETS?></a>
     </div>

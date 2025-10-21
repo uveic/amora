@@ -22,7 +22,7 @@ $count = 0;
   <main>
     <div class="page-header">
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-      <span><?=$responseData->getLocalValue('navAdminImages')?></span>
+      <span class="icon-one-line width-10-grow"><?=CoreIcons::IMAGE?><span class="ellipsis"><?=$responseData->getLocalValue('navAdminImages')?></span></span>
       <div class="links">
         <div>
           <input class="null" type="file" id="images" name="images" multiple="" accept="image/png, image/jpeg, image/webp">
@@ -40,7 +40,7 @@ $count = 0;
         <?=$image->asHtml(size: ImageSize::Small, lazyLoading: $count > 10) . PHP_EOL?>
       </figure>
 <?php } ?>
-      <a href="#" class="media-load-more media-load-more-js<?=$count >= Core::SQL_QUERY_QTY ? '' : ' null'?>" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-media-query-qty="<?=MediaService::SQL_QUERY_QTY?>" data-event-listener-action="displayNextImagePopup">
+      <a href="#" class="media-load-more media-load-more-js<?=$count >= Core::SQL_QUERY_QTY ? '' : ' null'?>" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-media-query-qty="<?=Core::SQL_QUERY_QTY?>" data-event-listener-action="displayNextImagePopup">
         <span><?=$responseData->getLocalValue('globalMore')?></span>
       </a>
       <div class="image-container-shadow"></div>

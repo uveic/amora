@@ -641,6 +641,15 @@ a.link-title:focus {
   max-width: revert;
 }
 
+form input::placeholder {
+  font-weight: 300;
+}
+
+form .page-content-before {
+  font-size: 1rem;
+  color: var(--color-black);
+}
+
 .form-content-wrapper {
   display: flex;
   flex-flow: column nowrap;
@@ -713,10 +722,6 @@ a.link-title:focus {
   padding: 0.25rem 0;
 }
 
-.block-title>h2 {
-  margin: 0;
-}
-
 .dropdown-menu~div>ul a:hover {
   text-decoration: underline;
 }
@@ -759,7 +764,7 @@ label:not(:last-child) {
 }
 
 .help {
-  color: var(--color-grey-200);
+  color: var(--color-grey-600);
   font-size: .75rem;
   margin: 0.25rem 0 1rem;
   text-align: left;
@@ -962,7 +967,9 @@ button.is-link.is-light,
 .gap-2 { gap: 2rem !important; }
 .bg-color-dark {background-color: var(--color-black);}
 .no-border {border: none !important;}
+.width-40 { width: 40%; }
 .width-100 {width: 100% !important;}
+.width-10-grow {width: 10%; flex-grow: 1;}
 .display-block {display: block !important;}
 .word-break {word-wrap: anywhere;}
 .text-one-line {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}

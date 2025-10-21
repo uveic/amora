@@ -14,7 +14,7 @@ $this->layout('base', ['responseData' => $responseData]);
 <?=$this->insert('partials/shared/modal-display-html', ['responseData' => $responseData])?>
     <div class="page-header">
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-      <span><?=$responseData->getLocalValue('mailerListTitle')?></span>
+      <span class="icon-one-line width-10-grow"><?=CoreIcons::ENVELOPE_SIMPLE?><span class="ellipsis"><?=$responseData->getLocalValue('mailerListTitle')?></span></span>
       <div class="links"></div>
     </div>
     <div class="backoffice-wrapper">

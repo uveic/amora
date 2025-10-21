@@ -24,7 +24,7 @@ foreach ($responseData->sessions as $session) {
 <?=$this->insert('partials/user/filter', ['responseData' => $responseData])?>
     <div class="page-header">
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-      <span><?=$responseData->getLocalValue('navAdminUsers')?></span>
+      <span class="icon-one-line width-10-grow"><?=CoreIcons::USERS?><span class="ellipsis"><?=$responseData->getLocalValue('navAdminUsers')?></span></span>
       <div class="links">
         <a href="#" class="filter-open no-loader"><?=CoreIcons::FUNNEL?></a>
         <a href="<?=UrlBuilderUtil::buildBackofficeUserNewUrl($responseData->siteLanguage)?>"><?=CoreIcons::ADD?></a>

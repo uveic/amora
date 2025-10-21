@@ -19,7 +19,7 @@ $defaultLanguage = $responseData->user?->language ?? $responseData->request->ses
     <div id="feedback" class="feedback null"></div>
     <div class="page-header">
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-      <span><?=$responseData->user ? ($responseData->getLocalValue('globalEdit') . ': ' . $responseData->user->name) : ($responseData->getLocalValue('globalNew') . ' ' .  mb_strtolower($responseData->getLocalValue('globalUser'), 'UTF-8'))?></span>
+      <span class="icon-one-line width-10-grow"><?=CoreIcons::USER?><span class="ellipsis"><?=$responseData->user ? ($responseData->getLocalValue('globalEdit') . ': ' . $responseData->user->name) : ($responseData->getLocalValue('globalNew') . ' ' .  mb_strtolower($responseData->getLocalValue('globalUser'), 'UTF-8'))?></span></span>
       <div class="links"></div>
     </div>
     <form action="#" method="post" id="form-user-creation">

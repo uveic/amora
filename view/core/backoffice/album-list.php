@@ -14,7 +14,7 @@ $this->layout('base', ['responseData' => $responseData,]);
   <main>
     <div class="page-header">
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-      <span><?=$responseData->getLocalValue('navAdminAlbums')?></span>
+      <span class="icon-one-line width-10-grow"><?=CoreIcons::IMAGES?><span class="ellipsis"><?=$responseData->getLocalValue('navAdminAlbums')?></span></span>
       <div class="links">
         <a href="#" class="filter-open"><?=CoreIcons::FUNNEL?></a>
         <a href="<?=UrlBuilderUtil::buildBackofficeAlbumNewUrl($responseData->siteLanguage)?>"><?=CoreIcons::ADD?></a>
