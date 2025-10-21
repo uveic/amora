@@ -71,8 +71,7 @@ class UtilClass {
     return match && match[7].length === 11 ? match[7] : false;
   }
 
-  buildYoutubeIFrameElement(youtubeUrl) {
-    const ytVideoId = this.getYoutubeVideoIdFromUrl(youtubeUrl);
+  buildYoutubeIFrameElement(ytVideoId, autoplay = false) {
     if (!ytVideoId) {
       return null;
     }
@@ -80,7 +79,7 @@ class UtilClass {
     const iframeElement = document.createElement('iframe');
     iframeElement.width = '560';
     iframeElement.height = '315';
-    iframeElement.src = 'https://www.youtube-nocookie.com/embed/' + ytVideoId;
+    iframeElement.src = 'https://www.youtube-nocookie.com/embed/' + ytVideoId + (autoplay ? '?autoplay=1' : '');
     iframeElement.title = 'Reprodutor de vídeo de YouTube';
     iframeElement.frameBorder = '0';
     iframeElement.allow = 'encrypted-media; picture-in-picture;';

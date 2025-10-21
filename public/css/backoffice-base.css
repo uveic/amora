@@ -1222,7 +1222,7 @@
 }
 
 #media-container .media-info {
-  color: var(--color-grey-200);
+  color: var(--color-grey-700);
   font-size: 0.9rem;
   margin-top: 0.5rem;
   display: flex;
@@ -1230,6 +1230,11 @@
   align-items: flex-end;
   justify-content: flex-start;
   gap: 1rem;
+}
+
+#media-container .media-info svg {
+  fill: var(--color-grey-700);
+  stroke: var(--color-grey-700);
 }
 
 #media-container .media-header {
@@ -1240,11 +1245,6 @@
 
 #media-container .media-name {
   word-break: break-word;
-}
-
-#media-container .media-id {
-  font-family: monospace;
-  font-size: 0.8rem;
 }
 
 #media-container .media-icon {

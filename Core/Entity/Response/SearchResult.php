@@ -13,6 +13,7 @@ readonly class SearchResult
         public ?string $subtitle = null,
         public ?string $contentHtml = null,
         public ?Media $media = null,
+        public ?string $endpoint = null,
     ) {}
 
     public function asPublicArray(string $headerTitle = ''): array
@@ -25,6 +26,7 @@ readonly class SearchResult
             'subtitle' => $this->subtitle,
             'contentHtml' => $this->contentHtml,
             'media' => $this->media?->asPublicArray(),
+            'endpoint' => $this->endpoint,
         ];
     }
 }

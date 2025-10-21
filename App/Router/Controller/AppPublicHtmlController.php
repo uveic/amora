@@ -12,11 +12,14 @@ use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\PageContentType;
+use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Value\QueryOrderDirection;
+use Throwable;
 
 final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
 {
     public function __construct(
+        private readonly SessionService $sessionService,
         private readonly ArticleService $articleService,
     ) {
         parent::__construct();
@@ -24,6 +27,15 @@ final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
 
     protected function authenticate(Request $request): bool
     {
+        try {
+            if ($request->session) {
+                $this->sessionService->updateSessionExpiryDateAndValidUntil(
+                    sid: $request->session->sessionId,
+                    sessionId: $request->session->id,
+                );
+            }
+        } catch (Throwable) {}
+
         return true;
     }
 

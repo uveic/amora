@@ -166,4 +166,4 @@ if (!$responseData->user->isVerified()) { ?>
       </div>
     </div>
   </main>
-  <script type="module" src="/js/authorised.js?v=132"></script>
+  <script type="module" src="/js/authorised.js?v=000"></script>

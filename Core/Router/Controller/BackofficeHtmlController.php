@@ -56,7 +56,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 
     protected function authenticate(Request $request): bool
     {
-        if (!$request->session || !$request->session->isAuthenticated() || !$request->session->isAdmin()) {
+        if (!$request->session || !$request->session->isAdmin()) {
             return false;
         }
 
@@ -567,6 +567,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
             typeIds: MediaType::getAllNotImageIds(),
             statusIds: [MediaStatus::Active->value],
             queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy('id', QueryOrderDirection::DESC)],
                 pagination: new Response\Pagination(itemsPerPage: Core::SQL_QUERY_QTY),
             ),
         );

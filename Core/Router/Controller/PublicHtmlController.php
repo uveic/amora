@@ -12,12 +12,14 @@ use Amora\Core\Module\Article\Entity\FeedItem;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\FeedService;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
+use Throwable;
 
 final class PublicHtmlController extends PublicHtmlControllerAbstract
 {
@@ -27,12 +29,22 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         private readonly ArticleService $articleService,
         private readonly FeedService $feedService,
         private readonly AlbumService $albumService,
+        private readonly SessionService $sessionService,
     ) {
         parent::__construct();
     }
 
     protected function authenticate(Request $request): bool
     {
+        try {
+            if ($request->session) {
+                $this->sessionService->updateSessionExpiryDateAndValidUntil(
+                    sid: $request->session->sessionId,
+                    sessionId: $request->session->id,
+                );
+            }
+        } catch (Throwable) {}
+
         return true;
     }
 

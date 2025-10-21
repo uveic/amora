@@ -18,6 +18,7 @@ class AppRouterCore extends Core
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicHtmlController.php';
                 return new AppPublicHtmlController(
+                    sessionService: UserCore::getSessionService(),
                     articleService: ArticleCore::getArticleService(),
                 );
             },

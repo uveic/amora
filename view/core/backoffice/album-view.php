@@ -49,7 +49,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
         <span class="value"><a href="<?=UrlBuilderUtil::buildBackofficeAlbumEditUrl($responseData->siteLanguage, $album->id)?>"><?=CoreIcons::EDIT?></a></span>
       </div>
     </div>
-    <div class="form-content-container">
+    <div>
       <div class="form-content-wrapper">
         <div class="form-two-columns-wrapper">
           <div class="flex-child m-b-15">

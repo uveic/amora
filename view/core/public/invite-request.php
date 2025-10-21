@@ -25,7 +25,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
         <div class="div-request-form">
           <h1 id="register-title" class="m-b-3"><?=$siteLogoHtml?></h1>
           <h2 id="register-subtitle"><?=$responseData->getLocalValue('authenticationInviteRequest')?></h2>
-          <p class="light-text-color m-b-2"><?=$responseData->getLocalValue('authenticationInviteRequestSubtitle')?></p>
+          <p class="m-b-2"><?=$responseData->getLocalValue('authenticationInviteRequestSubtitle')?></p>
           <div class="field">
             <p class="control">
               <label for="email" class="null">Email</label>

@@ -1,4 +1,4 @@
-import {Util} from "./module/Util.js?v=205";
+import {Util} from "./module/Util.js?v=000";
 
 function handleDropdownOptionClick(event) {
   event.preventDefault();

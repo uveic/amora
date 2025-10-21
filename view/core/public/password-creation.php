@@ -33,7 +33,7 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
         <h1 id="register-title" class="m-b-6"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$titleHtml?></h2>
         <div id="password-reset-form">
-          <p class="light-text-color m-b-3"><?=$subtitleHtml?></p>
+          <p class="m-b-3"><?=$subtitleHtml?></p>
           <div class="field">
             <p class="control has-icons-left">
               <label for="password" class="null">Password</label>

@@ -25,7 +25,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
         <h1 id="register-title" class="m-b-3"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?></h2>
         <div id="register-form">
-          <p class="light-text-color m-b-3"><?=$this->e($responseData->getLocalValue('authenticationForgotPasswordSubtitle'))?></p>
+          <p class="m-b-3"><?=$this->e($responseData->getLocalValue('authenticationForgotPasswordSubtitle'))?></p>
           <div class="field">
             <p class="control">
               <label for="email" class="null">Email</label>

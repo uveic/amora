@@ -25,7 +25,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
       <div>
         <h1 id="register-title" class="m-b-3"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationRegisterSubtitle'))?></h2>
-        <p class="light-text-color m-b-3"><?=$responseData->getLocalValue('authenticationRegisterAlreadyLogin')?> <a href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navSignIn')?></a>.</p>
+        <p class="m-b-3"><?=$responseData->getLocalValue('authenticationRegisterAlreadyLogin')?> <a href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navSignIn')?></a>.</p>
         <div class="field">
           <div class="control">
             <label for="name" class="null">Name</label>

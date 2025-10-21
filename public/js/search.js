@@ -22,6 +22,10 @@ const displaySearchResult = (containerEl, results) => {
     resultItem.dataset.itemId = results[i].id;
     resultItem.href = results[i].url;
 
+    if (results[i].endpoint) {
+      resultItem.dataset.endpoint = results[i].endpoint;
+    }
+
     const resultContent = document.createElement('div');
     resultContent.className = 'search-result-content';
 
@@ -250,4 +254,4 @@ document.querySelectorAll('.search-fullscreen-shadow').forEach(b => {
   });
 });
 
-export {handleSearchRequest};
+export {handleSearchRequest, displaySearchResult};

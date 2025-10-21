@@ -314,7 +314,6 @@ class Media
             '<span class="media-name">' . $this->filenameSource . '</span>',
             '</div>',
             '<span class="media-info">',
-            '<span class="media-id">#' . $this->id . '</span>',
         ];
 
         if ($this->user?->getNameOrEmail()) {

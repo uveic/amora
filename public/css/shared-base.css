@@ -63,7 +63,7 @@
 }
 
 img {
-  max-width: 100%;
+  width: 100%;
   height: auto;
   display: block;
 }
@@ -641,14 +641,6 @@ a.link-title:focus {
   max-width: revert;
 }
 
-.form-content-container {
-  display: flex;
-  flex-flow: row wrap;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  align-items: flex-start;
-}
-
 .form-content-wrapper {
   display: flex;
   flex-flow: column nowrap;
@@ -1085,7 +1077,6 @@ svg,
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px dashed var(--color-black);
   background-color: var(--color-grey-050);
   text-transform: uppercase;
   font-weight: 300;
@@ -1362,11 +1353,6 @@ svg,
     display: block;
     width: 41.66666667%;
     background: url('/img/roof.webp') center right / cover no-repeat;
-  }
-
-  .form-content-container {
-    gap: 1rem;
-    padding: 1rem;
   }
 
   .form-two-columns-wrapper {
