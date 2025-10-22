@@ -64,7 +64,7 @@ class Collection
             $text = StringUtil::generateRandomString(10);
         }
 
-        return substr(strtolower(StringUtil::cleanString('co' . $this->sequence . $text)), 0, 16);
+        return strtolower(substr(StringUtil::cleanString('co' . $this->sequence . $text), 0, 16));
     }
 
     public static function getEmpty(): self

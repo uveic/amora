@@ -33,6 +33,6 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
       <div class="page-content-before"><?=$responseData->getLocalValue('navAdminContent')?></div>
 <?php $this->insert('../shared/trix-editor', ['responseData' => $responseData]); ?>
     </div>
-<?=$this->insert('partials/article/settings', ['responseData' => $responseData]);?>
+<?=$this->insert('partials/article/settings', ['responseData' => $responseData])?>
   </article>
 </main>

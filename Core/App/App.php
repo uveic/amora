@@ -9,7 +9,11 @@ use Amora\Core\Util\Logger;
 abstract class App
 {
     private LockManager $lockManager;
-    private string $logPrefix;
+    protected string $logPrefix {
+        get {
+            return $this->logPrefix;
+        }
+    }
 
     public function __construct(
         protected readonly Logger $logger,
@@ -62,11 +66,6 @@ abstract class App
         );
     }
 
-    public function getLogPrefix(): string
-    {
-        return $this->logPrefix;
-    }
-
     private function triggerApp(callable $f): void
     {
         while (true) {
@@ -95,15 +94,15 @@ abstract class App
 
     protected function log(string $message, bool $isError = false): void
     {
-        if (!Core::isRunningInLiveEnv() && !$this->isLoggingEnabled) {
+        if (!$this->isLoggingEnabled && !Core::isRunningInLiveEnv()) {
             return;
         }
 
         if ($isError) {
-            $this->logger->logError($this->getLogPrefix() . $message);
+            $this->logger->logError($this->logPrefix . $message);
             return;
         }
 
-        $this->logger->logInfo($this->getLogPrefix() . $message);
+        $this->logger->logInfo($this->logPrefix . $message);
     }
 }

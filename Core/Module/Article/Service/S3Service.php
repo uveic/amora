@@ -40,7 +40,7 @@ readonly class S3Service
                 [
                     'Bucket' => $this->s3Config->bucketName,
                     'Key' => $this->s3Config->projectFolderName . '/' . $filename,
-                    'Body' => fopen($fullPathAndFilename, 'r'),
+                    'Body' => fopen($fullPathAndFilename, 'rb'),
                     'ACL' => 'public-read',
                 ],
             );
@@ -69,7 +69,7 @@ readonly class S3Service
 
             $statusCode = $res['@metadata']['statusCode'] ?? 0;
 
-            return (int)$statusCode === 204;
+            return $statusCode === 204;
         } catch (Throwable $e) {
             $this->logger->logError('Error deleting file from S3: ' . $e->getMessage());
             return false;

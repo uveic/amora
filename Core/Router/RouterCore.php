@@ -27,7 +27,7 @@ class RouterCore extends Core
     {
         return self::getInstance(
             className: 'PublicHtmlController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Entity/Response/HtmlResponseData.php';
                 require_once self::getPathRoot() . '/Core/Entity/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Entity/FeedItem.php';
@@ -57,7 +57,7 @@ class RouterCore extends Core
     {
         return self::getInstance(
             className: 'AuthorisedHtmlController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Util/CsvWriterUtil.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedHtmlControllerAbstract.php';
@@ -77,7 +77,7 @@ class RouterCore extends Core
     {
         return self::getInstance(
             className: 'BackofficeHtmlController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/AlbumHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/UserHtmlGenerator.php';
@@ -110,7 +110,7 @@ class RouterCore extends Core
     {
         return self::getInstance(
             className: 'BackofficeApiController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Entity/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/AlbumHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
@@ -137,7 +137,7 @@ class RouterCore extends Core
     {
         return self::getInstance(
             className: 'AuthorisedApiController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Entity/Response/Feedback.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AuthorisedApiControllerAbstract.php';
@@ -159,7 +159,7 @@ class RouterCore extends Core
     {
         return self::getInstance(
             className: 'PublicApiController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Entity/Response/SearchResult.php';
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';

@@ -1,6 +1,6 @@
 <?php
 
-namespace Amora\Core\Module\Mailer\App\Api\Lettermint;;
+namespace Amora\Core\Module\Mailer\App\Api\Lettermint;
 
 use Throwable;
 use Amora\Core\Util\Logger;

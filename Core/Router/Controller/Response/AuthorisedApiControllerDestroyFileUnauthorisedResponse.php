@@ -13,7 +13,7 @@ class AuthorisedApiControllerDestroyFileUnauthorisedResponse extends Response
             'success' => false,
         ];
 
-        list($output, $contentType) = self::getResponseType($responseData);
+        [$output, $contentType] = self::getResponseType($responseData);
         parent::__construct($output, $contentType, HttpStatusCode::HTTP_401_UNAUTHORIZED);
     }
 }

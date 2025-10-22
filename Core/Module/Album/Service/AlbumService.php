@@ -287,7 +287,7 @@ readonly class AlbumService
         do {
             $validSlug = $slug . ($count > 0 ? '-' . $count : '');
             $existingAlbum = $this->getAlbumForSlug($validSlug);
-            if ($existingSlug && $albumId && $existingAlbum->slug->albumId === $albumId) {
+            if ($existingSlug && $albumId && $existingAlbum && $existingAlbum->slug->albumId === $albumId) {
                 return $existingAlbum->slug;
             }
 
@@ -295,7 +295,7 @@ readonly class AlbumService
                 return $existingSlug;
             }
             $count++;
-        } while(!empty($existingAlbum));
+        } while($existingAlbum !== null);
 
         return $this->albumDataLayer->storeAlbumSlug(
             new AlbumSlug(

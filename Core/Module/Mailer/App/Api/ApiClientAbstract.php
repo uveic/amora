@@ -67,7 +67,7 @@ abstract class ApiClientAbstract
         $this->logger->logInfo($logPrefix . 'API call completed...');
 
         return new ApiResponse(
-            response: $response ?? '',
+            response: $response,
             responseCode: $responseCode,
             hasError: false,
         );

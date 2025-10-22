@@ -20,8 +20,8 @@ use Amora\Core\Module\Analytics\Model\EventRaw;
 
 readonly class AnalyticsService
 {
-    const URL_MAX_LENGTH = 255;
-    const SEARCH_ENDPOINT = 'papi/search';
+    const int URL_MAX_LENGTH = 255;
+    const string SEARCH_ENDPOINT = 'papi/search';
 
     public function __construct(
         private Logger $logger,

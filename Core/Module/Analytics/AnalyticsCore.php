@@ -28,7 +28,7 @@ class AnalyticsCore extends Core
 
         return self::getInstance(
             className: 'AnalyticsDataLayer',
-            factory: function () use ($db) {
+            factory: static function () use ($db) {
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Model/EventRaw.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Model/EventProcessed.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/DataLayer/AnalyticsDataLayer.php';
@@ -41,7 +41,7 @@ class AnalyticsCore extends Core
     {
         return self::getInstance(
             className: 'AnalyticsService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Value/AggregateBy.php';
                 require_once self::getPathRoot() . '/Core/Value/Country.php';
                 require_once self::getPathRoot() . '/Core/Module/Analytics/Entity/ReportViewCount.php';
@@ -66,7 +66,7 @@ class AnalyticsCore extends Core
     {
         return self::getInstance(
             className: 'AnalyticsProcessorApp',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Router/Router.php';
                 require_once self::getPathRoot() . '/App/Router/AppRouter.php';
                 require_once self::getPathRoot() . '/Core/Entity/Util/UserAgentInfo.php';

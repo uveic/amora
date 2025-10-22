@@ -24,20 +24,20 @@ class AnalyticsDataLayer
 {
     use DataLayerTrait;
 
-    const EVENT_RAW_TABLE = 'event_raw';
-    const EVENT_PROCESSED_TABLE = 'event_processed';
-    const EVENT_TYPE_TABLE = 'event_type';
-    const EVENT_SEARCH_TABLE = 'event_search';
+    const string EVENT_RAW_TABLE = 'event_raw';
+    const string EVENT_PROCESSED_TABLE = 'event_processed';
+    const string EVENT_TYPE_TABLE = 'event_type';
+    const string EVENT_SEARCH_TABLE = 'event_search';
 
-    const EVENT_VALUE_LANGUAGE_ISO_CODE = 'event_value_language_iso_code';
-    const EVENT_VALUE_REFERRER = 'event_value_referrer';
-    const EVENT_VALUE_URL = 'event_value_url';
-    const EVENT_VALUE_USER_HASH = 'event_value_user_hash';
-    const EVENT_VALUE_USER_AGENT_PLATFORM = 'event_value_user_agent_platform';
-    const EVENT_VALUE_USER_AGENT_BROWSER = 'event_value_user_agent_browser';
+    const string EVENT_VALUE_LANGUAGE_ISO_CODE = 'event_value_language_iso_code';
+    const string EVENT_VALUE_REFERRER = 'event_value_referrer';
+    const string EVENT_VALUE_URL = 'event_value_url';
+    const string EVENT_VALUE_USER_HASH = 'event_value_user_hash';
+    const string EVENT_VALUE_USER_AGENT_PLATFORM = 'event_value_user_agent_platform';
+    const string EVENT_VALUE_USER_AGENT_BROWSER = 'event_value_user_agent_browser';
 
-    const BOT_PATH_TABLE = 'bot_path';
-    const BOT_USER_AGENT = 'bot_user_agent';
+    const string BOT_PATH_TABLE = 'bot_path';
+    const string BOT_USER_AGENT = 'bot_user_agent';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -47,7 +47,7 @@ class AnalyticsDataLayer
     {
         $res = $this->db->insert(self::EVENT_RAW_TABLE, $event->asArray());
 
-        if (empty($res)) {
+        if (!$res) {
             return null;
         }
 
@@ -449,7 +449,7 @@ class AnalyticsDataLayer
         $paramNames = [];
 
         foreach ($rawIds as $rawId) {
-            if (!is_integer($rawId)) {
+            if (!is_int($rawId)) {
                 continue;
             }
 

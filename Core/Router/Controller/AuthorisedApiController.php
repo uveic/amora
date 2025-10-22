@@ -33,9 +33,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
     public function authenticate(Request $request): bool
     {
-        $session = $request->session;
-
-        if (empty($session) || !$session->isAuthenticated()) {
+        if (!$request->session || !$request->session->isAuthenticated()) {
             return false;
         }
 
@@ -132,15 +130,14 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
     protected function destroyFile(int $id, Request $request): Response
     {
         $file = $this->mediaService->getMediaForId($id);
-        if (empty($file)) {
+        if (!$file) {
             return new AuthorisedApiControllerDestroyFileSuccessResponse(
                 success: false,
                 errorMessage: 'File not found',
             );
         }
 
-        $session = $request->session;
-        if (!$session->isAdmin() && $file->user?->id != $session->user->id) {
+        if ($file->user?->id !== $request->session->user->id && !$request->session->isAdmin()) {
             return new AuthorisedApiControllerDestroyFileUnauthorisedResponse();
         }
 
@@ -268,7 +265,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         Request $request
     ): Response {
         $existingUser = $this->userService->getUserForId($userId);
-        if (empty($existingUser)) {
+        if (!$existingUser) {
             return new AuthorisedApiControllerUpdateUserAccountSuccessResponse(
                 success: false,
                 errorMessage: 'User not found',

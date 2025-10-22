@@ -135,8 +135,7 @@ class UserDataLayer
     public function updateUser(User $user, int $userId): ?User
     {
         $userArray = $user->asArray();
-        unset($userArray['created_at']);
-        unset($userArray['id']);
+        unset($userArray['created_at'], $userArray['id']);
         $res = $this->db->update(self::USER_TABLE, $userId, $userArray);
 
         if (empty($res)) {
@@ -152,7 +151,7 @@ class UserDataLayer
     {
         $newId = $this->db->insert(self::USER_TABLE, $user->asArray());
 
-        if (empty($newId)) {
+        if (!$newId) {
             $this->logger->logError('Error inserting user');
         }
 
@@ -170,7 +169,7 @@ class UserDataLayer
     {
         $res = $this->db->insert(self::USER_VERIFICATION_TABLE, $data->asArray());
 
-        if (empty($res)) {
+        if (!$res) {
             $this->logger->logError('Error inserting user verification data');
             return null;
         }
@@ -293,7 +292,7 @@ class UserDataLayer
     ): UserRegistrationRequest {
         $res = $this->db->insert(self::USER_REGISTRATION_REQUEST_TABLE, $data->asArray());
 
-        if (empty($res)) {
+        if (!$res) {
             $this->logger->logError('Error inserting user registration request data');
         }
 

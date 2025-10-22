@@ -158,7 +158,7 @@ final class Logger
             $msg = $this->getPrefix() . $msg;
 
             if (!Core::isRunningInLiveEnv()) {
-                $f = fopen('php://stdout', 'w');
+                $f = fopen('php://stdout', 'wb');
                 fwrite($f, $msg . PHP_EOL);
                 fclose($f);
 
@@ -176,7 +176,7 @@ final class Logger
             $outPath = '/tmp/' . $this->appName . '_' . date('Ymd') . '.log';
             $fileExists = file_exists($outPath);
 
-            $f = fopen($outPath, 'a');
+            $f = fopen($outPath, 'ab');
 
             if (!$fileExists) {
                 chmod($outPath, 0666);

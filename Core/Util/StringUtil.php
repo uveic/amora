@@ -96,7 +96,7 @@ final class StringUtil
         }
 
         if (is_numeric($value)) {
-            return intval($value) === 1;
+            return (int)$value === 1;
         }
 
         if (is_string($value)) {
@@ -173,8 +173,7 @@ final class StringUtil
 
     public static function stripHtmlTags(string $text): string
     {
-        $text = str_replace('<br>', ' ', $text);
-        $text = str_replace('<br/>', ' ', $text);
+        $text = str_replace(['<br>', '<br/>'], ' ', $text);
         return strip_tags($text);
     }
 
@@ -202,7 +201,7 @@ final class StringUtil
         }
 
         $values = explode(',', $commaSeparatedValues);
-        return array_filter($values, function ($value) {
+        return array_filter($values, static function ($value) {
             return is_numeric($value);
         });
     }
@@ -312,8 +311,7 @@ final class StringUtil
 
     public static function removeHttpFromLink(string $text): string
     {
-        $text = str_replace('http://', '', $text);
-        return str_replace('https://', '', $text);
+        return str_replace(['http://', 'https://'], '', $text);
     }
 
     public static function getFirstParagraphAsPlainText(
@@ -356,8 +354,8 @@ final class StringUtil
     public static function generateSlug(?string $text = null): string
     {
         $slug = $text
-            ? strtolower(StringUtil::cleanString($text))
-            : strtolower(StringUtil::generateRandomString(64));
+            ? strtolower(self::cleanString($text))
+            : strtolower(self::generateRandomString(64));
 
         $count = 0;
         do {

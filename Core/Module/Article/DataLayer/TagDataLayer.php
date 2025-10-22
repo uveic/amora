@@ -82,7 +82,7 @@ class TagDataLayer
     public function storeTag(Tag $tag): Tag {
         $resInsert = $this->db->insert(self::TAG_TABLE_NAME, $tag->asArray());
 
-        if (empty($resInsert)) {
+        if (!$resInsert) {
             $this->logger->logError('Error inserting tag');
         }
 

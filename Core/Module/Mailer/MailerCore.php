@@ -52,7 +52,7 @@ class MailerCore extends Core
     {
         return self::getInstance(
             className: 'MailerDataLayer',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/App/Value/AppMailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerLogItem.php';
@@ -71,7 +71,7 @@ class MailerCore extends Core
     {
         return self::getInstance(
             className: 'MailerService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/App/Value/AppMailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerItem.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Model/MailerLogItem.php';
@@ -90,7 +90,7 @@ class MailerCore extends Core
     {
         return self::getInstance(
             className: 'SendGridRequestBuilder',
-            factory: function () {
+            factory: static function () {
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/RequestBuilderAbstract.php';
@@ -108,7 +108,7 @@ class MailerCore extends Core
     {
         return self::getInstance(
             className: 'BrevoRequestBuilder',
-            factory: function () {
+            factory: static function () {
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/RequestBuilderAbstract.php';
@@ -126,7 +126,7 @@ class MailerCore extends Core
     {
         return self::getInstance(
             className: 'LettermintRequestBuilder',
-            factory: function () {
+            factory: static function () {
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/RequestBuilderAbstract.php';
@@ -144,7 +144,7 @@ class MailerCore extends Core
     {
         return self::getInstance(
             className: 'MailerApp',
-            factory: function () use($isPersistent) {
+            factory: static function () use($isPersistent) {
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Entity/Email.php';
@@ -167,7 +167,7 @@ class MailerCore extends Core
     {
         return self::getInstance(
             className: 'SendGridApiClient',
-            factory: function () {
+            factory: static function () {
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiClientAbstract.php';
@@ -187,7 +187,7 @@ class MailerCore extends Core
     {
         return self::getInstance(
             className: 'BrevoApiClient',
-            factory: function () {
+            factory: static function () {
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiClientAbstract.php';
@@ -207,7 +207,7 @@ class MailerCore extends Core
     {
         return self::getInstance(
             className: 'LettermintApiClient',
-            factory: function () {
+            factory: static function () {
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/App/Api/ApiClientAbstract.php';

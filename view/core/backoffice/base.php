@@ -27,7 +27,7 @@ $navBarArguments = [
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="<?=$this->e($responseData->getPageDescription())?>">
+  <meta name="description" content="<?=$this->e($responseData->pageDescription)?>">
 <?php if ($responseData->themeColourHex) { ?>
   <meta name="theme-color" content="<?=$responseData->themeColourHex?>"/>
 <?php } ?>

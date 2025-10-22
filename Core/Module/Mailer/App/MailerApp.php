@@ -73,7 +73,7 @@ class MailerApp extends App
         $this->log('Sending email ID: ' . $item->id);
         $apiResponse = Core::isRunningInLiveEnv()
             ? $this->apiClient->sendEmail(
-                logPrefix: $this->getLogPrefix(),
+                logPrefix: $this->logPrefix,
                 jsonData: $contentData,
             )
             : new ApiResponse(

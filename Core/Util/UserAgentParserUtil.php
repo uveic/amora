@@ -1,6 +1,7 @@
 <?php
 
 use Amora\Core\Entity\Util\UserAgentInfo;
+use Random\RandomException;
 
 final class UserAgentParserUtil
 {
@@ -47,9 +48,9 @@ REGEX
             }
         }
 
-        if ($platform == 'linux-gnu' || $platform == 'X11') {
+        if ($platform === 'linux-gnu' || $platform === 'X11') {
             $platform = 'Linux';
-        } elseif ($platform == 'CrOS') {
+        } elseif ($platform === 'CrOS') {
             $platform = 'Chrome OS';
         }
 
@@ -59,13 +60,14 @@ TizenBrowser|(?:Headless)?Chrome|YaBrowser|Vivaldi|IEMobile|Opera|OPR|Silk|Midor
 Baiduspider|Applebot|Googlebot|YandexBot|bingbot|Lynx|Version|Wget|curl|
 Valve\ Steam\ Tenfoot|Thunderbird|
 NintendoBrowser|PLAYSTATION\ (\d|Vita)+)
-(?:\)?;?)
-(?:(?:[:/ ])(?P<version>[0-9A-Z.]+)|/(?:[A-Z]*))%ix
+\)?;?
+(?:[:/ ](?P<version>[0-9A-Z.]+)|/[A-Z]*)
+%ix
 REGEX
             , $userAgent, $result);
 
         // If nothing matched, return null (to avoid undefined index errors)
-        if (!isset($result[self::BROWSER][0]) || !isset($result[self::BROWSER_VERSION][0])) {
+        if (!isset($result[self::BROWSER][0], $result[self::BROWSER_VERSION][0])) {
             if (preg_match('%^(?!Mozilla)(?P<browser>[A-Z0-9\-]+)(/(?P<version>[0-9A-Z.]+))?%ix',
                 $userAgent,
                 $result)
@@ -91,11 +93,11 @@ REGEX
 
         $lowerBrowser = array_map('strtolower', $result[self::BROWSER]);
 
-        $find = function ( $search, &$key = null, &$value = null ) use ( $lowerBrowser) {
+        $find = static function ( $search, &$key = null, &$value = null ) use ( $lowerBrowser) {
             $search = (array)$search;
 
             foreach( $search as $val) {
-                $xKey = array_search(strtolower($val), $lowerBrowser);
+                $xKey = array_search(strtolower($val), $lowerBrowser, true);
                 if ($xKey !== false) {
                     $value = $val;
                     $key   = $xKey;
@@ -107,7 +109,7 @@ REGEX
             return false;
         };
 
-        $findT = function ( array $search, &$key = null, &$value = null ) use ( $find) {
+        $findT = static function ( array $search, &$key = null, &$value = null ) use ( $find) {
             $value2 = null;
             if ($find(array_keys($search), $key, $value2)) {
                 $value = $search[$value2];
@@ -126,12 +128,12 @@ REGEX
             $platform = 'PlayStation Vita';
             $browser  = 'Browser';
         } elseif ($find(array( 'Kindle Fire', 'Silk' ), $key, $val)) {
-            $browser  = $val == 'Silk' ? 'Silk' : 'Kindle';
+            $browser  = $val === 'Silk' ? 'Silk' : 'Kindle';
             $platform = 'Kindle Fire';
             if (!($version = $result[self::BROWSER_VERSION][$key]) || !is_numeric($version[0])) {
-                $version = $result[self::BROWSER_VERSION][array_search('Version', $result[self::BROWSER])];
+                $version = $result[self::BROWSER_VERSION][array_search('Version', $result[self::BROWSER], true)];
             }
-        } elseif ($find('NintendoBrowser', $key) || $platform == 'Nintendo 3DS') {
+        } elseif ($platform === 'Nintendo 3DS' || $find('NintendoBrowser', $key)) {
             $browser = 'NintendoBrowser';
             $version = $result[self::BROWSER_VERSION][$key];
         } elseif ($find('Kindle', $key, $platform)) {
@@ -158,13 +160,13 @@ REGEX
         } elseif ($rv_result && $find('Trident')) {
             $browser = 'MSIE';
             $version = $rv_result;
-        } elseif ($browser == 'AppleWebKit') {
-            if ($platform == 'Android') {
+        } elseif ($browser === 'AppleWebKit') {
+            if ($platform === 'Android') {
                 $browser = 'Android Browser';
             } elseif (str_starts_with($platform, 'BB')) {
                 $browser  = 'BlackBerry Browser';
                 $platform = 'BlackBerry';
-            } elseif ($platform == 'BlackBerry' || $platform == 'PlayBook') {
+            } elseif ($platform === 'BlackBerry' || $platform === 'PlayBook') {
                 $browser = 'BlackBerry Browser';
             } else {
                 $find('Safari', $key, $browser) || $find('TizenBrowser', $key, $browser);
@@ -192,6 +194,10 @@ REGEX
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
         ];
 
-        return $agents[rand(0, count($agents) - 1)];
+        try {
+            return $agents[random_int(0, count($agents) - 1)];
+        } catch (RandomException) {
+            return $agents[0];
+        }
     }
 }

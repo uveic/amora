@@ -13,8 +13,7 @@ final class AppBackofficeApiController extends AppBackofficeApiControllerAbstrac
 
     public function authenticate(Request $request): bool
     {
-        $session = $request->session;
-        if (empty($session) || !$session->isAuthenticated() || !$session->isAdmin()) {
+        if (!$request->session || !$request->session->isAdmin()) {
             return false;
         }
 

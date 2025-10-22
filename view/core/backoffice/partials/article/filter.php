@@ -40,7 +40,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
           <div class="control">
             <select id="articleType" name="articleType" data-param-name="atId">
 <?php
-    /** @var \BackedEnum $type */
+    /** @var BackedEnum $type */
     foreach (ArticleType::getAll() as $type) {
 ?>
               <option<?php echo $type === $articleType ? ' selected="selected"' : '';?> value="<?=$type->value?>"><?=$responseData->getLocalValue('articleType' . $type->name)?></option>
@@ -54,7 +54,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
             <select id="articleLanguageIsoCode" name="articleLanguageIsoCode" data-param-name="lang">
               <option<?php echo $articleLanguage ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
-    /** @var \BackedEnum $language */
+    /** @var BackedEnum $language */
     foreach (Core::getEnabledSiteLanguages() as $language) {
         $selected = $language === $articleLanguage;
 ?>
@@ -69,7 +69,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
             <select id="articleStatus" name="articleStatus" data-param-name="status">
               <option<?php echo $articleStatus ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
-    /** @var \BackedEnum $status */
+    /** @var BackedEnum $status */
     foreach (ArticleStatus::getAll() as $status) {
         $selected = $status === $articleStatus;
 ?>

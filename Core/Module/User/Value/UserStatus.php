@@ -24,16 +24,15 @@ enum UserStatus: int
     public function getClassname(): string
     {
         return match ($this) {
-            UserStatus::Enabled => 'status-published',
-            UserStatus::Disabled => 'status-disabled',
-            UserStatus::Deleted => 'status-deleted',
+            self::Enabled => 'status-published',
+            self::Disabled => 'status-disabled',
+            self::Deleted => 'status-deleted',
         };
     }
 
     public function getTitle(Language $language): string
     {
-        $localisationUtil = Core::getLocalisationUtil($language);
-        return $localisationUtil->getValue('userStatus' . $this->name);
+        return Core::getLocalisationUtil($language)->getValue('userStatus' . $this->name);
     }
 
     public function getIcon(): string

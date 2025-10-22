@@ -29,7 +29,7 @@ class UserCore extends Core
     {
         return self::getInstance(
             className: 'UserDataLayer',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
@@ -45,7 +45,7 @@ class UserCore extends Core
     {
         return self::getInstance(
             className: 'UserService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
                 require_once self::getPathRoot() . '/App/Value/AppUserRole.php';
@@ -71,7 +71,7 @@ class UserCore extends Core
     {
         return self::getInstance(
             className: 'SessionDataLayer',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/Session.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
@@ -89,7 +89,7 @@ class UserCore extends Core
     {
         return self::getInstance(
             className: 'SessionService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
                 require_once self::getPathRoot() . '/App/Value/AppUserRole.php';
@@ -110,7 +110,7 @@ class UserCore extends Core
     {
         return self::getInstance(
             className: 'UserMailService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserVerification.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';

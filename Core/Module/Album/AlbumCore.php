@@ -25,7 +25,7 @@ class AlbumCore extends Core
     {
         return self::getInstance(
             className: 'AlbumDataLayer',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/CollectionMedia.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Model/Collection.php';
@@ -47,7 +47,7 @@ class AlbumCore extends Core
     {
         return self::getInstance(
             className: 'AlbumService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Album/Value/AlbumStatus.php';

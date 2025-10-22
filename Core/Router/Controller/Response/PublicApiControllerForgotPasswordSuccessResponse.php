@@ -17,7 +17,7 @@ class PublicApiControllerForgotPasswordSuccessResponse extends Response
             ? null
             : $errorMessage;
 
-        list($output, $contentType) = self::getResponseType($responseData);
+        [$output, $contentType] = self::getResponseType($responseData);
         parent::__construct($output, $contentType, HttpStatusCode::HTTP_200_OK);
     }
 }

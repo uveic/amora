@@ -28,7 +28,7 @@ abstract class HtmlResponseDataAbstract
         public readonly ?Pagination $pagination = null,
         public readonly ?Feedback $feedback = null,
         protected ?string $pageTitle = null,
-        protected ?string $pageDescription = null,
+        public ?string $pageDescription = null,
         ?string $siteImageUrl = null,
         ?int $lastUpdatedTimestamp = null,
         public readonly string $logoClass = '',
@@ -59,11 +59,6 @@ abstract class HtmlResponseDataAbstract
     public function getPageTitle(): string
     {
         return $this->pageTitle ?: $this->siteName;
-    }
-
-    public function getPageDescription(): string
-    {
-        return $this->pageDescription;
     }
 
     public function buildSiteLogoHtml(

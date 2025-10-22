@@ -5,6 +5,7 @@ namespace Amora\Core\Entity;
 use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use DOMDocument;
+use JsonException;
 use League\Plates\Engine;
 use SimpleXMLElement;
 use Amora\Core\Core;
@@ -39,7 +40,11 @@ class Response
         public readonly string $output,
         ContentType $contentType,
         HttpStatusCode $httpStatus,
-        protected array $headers = [],
+        public array $headers = [] {
+            get {
+                return $this->headers;
+            }
+        },
         ?string $nonce = null,
     ) {
         $nonce = $nonce ? " 'nonce-" . $nonce . "'" : '';
@@ -91,17 +96,12 @@ class Response
         );
     }
 
-    public function getHeaders(): array
-    {
-        return $this->headers;
-    }
-
     ///////////////////////////////////////////////////////////////////////////
     // Static helpers for constructing a response
 
     public static function createSuccessResponse($payload): Response
     {
-        list($output, $contentType) = self::getResponseType($payload);
+        [$output, $contentType] = self::getResponseType($payload);
         return new Response(
             output: $output,
             contentType: $contentType,
@@ -111,7 +111,7 @@ class Response
 
     public static function createForbiddenResponse($payload): Response
     {
-        list($output, $contentType) = self::getResponseType($payload);
+        [$output, $contentType] = self::getResponseType($payload);
         return new Response(
             output: $output,
             contentType: $contentType,
@@ -230,7 +230,7 @@ class Response
         Request $request,
         ?HtmlResponseDataAbstract $responseData = null,
     ): Response {
-        return Response::createHtmlResponse(
+        return self::createHtmlResponse(
             template: 'app/public/404',
             responseData: $responseData ?? new HtmlResponseData($request),
             httpStatusCode: HttpStatusCode::HTTP_404_NOT_FOUND,
@@ -248,7 +248,7 @@ class Response
 
     public static function createUnauthorisedRedirectLoginResponse(Language $language): Response
     {
-        return Response::createRedirectResponse(
+        return self::createRedirectResponse(
             url: UrlBuilderUtil::buildPublicLoginUrl($language),
         );
     }
@@ -257,7 +257,7 @@ class Response
         Request $request,
         ?HtmlResponseDataAbstract $responseData = null,
     ): Response {
-        return Response::createHtmlResponse(
+        return self::createHtmlResponse(
             template: 'app/public/403',
             responseData: $responseData ?? new HtmlResponseData($request),
             httpStatusCode: HttpStatusCode::HTTP_403_FORBIDDEN,
@@ -280,7 +280,7 @@ class Response
 
     public static function createBadRequestResponse($payload): Response
     {
-        list($output, $contentType) = self::getResponseType($payload);
+        [$output, $contentType] = self::getResponseType($payload);
         return new Response(
             output: $output,
             contentType: $contentType,
@@ -320,10 +320,19 @@ class Response
     {
         if ($payload instanceof SimpleXMLElement) {
             return [$payload->asXML(), ContentType::XML];
-        } elseif ($payload instanceof DOMDocument) {
+        }
+
+        if ($payload instanceof DOMDocument) {
             return [$payload->saveXML(), ContentType::XML];
-        } elseif (is_array($payload) || is_object($payload)) {
-            return [json_encode($payload), ContentType::JSON];
+        }
+
+        if (is_array($payload) || is_object($payload)) {
+            try {
+                return [json_encode($payload, JSON_THROW_ON_ERROR), ContentType::JSON];
+            } catch (JsonException $e) {
+                Core::getDefaultLogger()->logException($e);
+                return [];
+            }
         }
 
         return [$payload, ContentType::PLAIN];

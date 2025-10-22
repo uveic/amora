@@ -23,5 +23,8 @@
     "ext-iconv": "*",
     "jaybizzle/crawler-detect": "^1.2",
     "aws/aws-sdk-php": "^3.306"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
   }
 }

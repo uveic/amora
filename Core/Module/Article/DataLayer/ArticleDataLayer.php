@@ -180,16 +180,16 @@ class ArticleDataLayer
         }
 
         if ($tagIds) {
-            $joins .= ' JOIN ' . ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE
+            $joins .= ' JOIN ' . self::ARTICLE_TAG_RELATION_TABLE
                 . ' AS at ON at.article_id = a.id';
 
             $where .= $this->generateWhereSqlCodeForIds($params, $tagIds, 'at.tag_id', 'tagId');
         }
 
         if ($imageIds) {
-            $joins .= ' LEFT JOIN ' . ArticleDataLayer::ARTICLE_SECTION_TABLE
+            $joins .= ' LEFT JOIN ' . self::ARTICLE_SECTION_TABLE
                 . ' AS aSec ON aSec.article_id = a.id';
-            $joins .= ' LEFT JOIN ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE
+            $joins .= ' LEFT JOIN ' . self::ARTICLE_SECTION_IMAGE_TABLE
                 . ' AS aSecI ON aSecI.article_section_id = aSec.id';
 
             $where .= $this->generateWhereSqlCodeForIds($params, $imageIds, 'aSecI.media_id', 'imageId');
@@ -496,7 +496,7 @@ class ArticleDataLayer
             data: $article->asArray(),
         );
 
-        if (empty($resInsert)) {
+        if (!$resInsert) {
             $this->logger->logError('Error inserting article');
             return null;
         }
@@ -535,7 +535,7 @@ class ArticleDataLayer
         ];
         $resInsert = $this->db->insert(self::ARTICLE_HISTORY_TABLE, $data);
 
-        if (empty($resInsert)) {
+        if (!$resInsert) {
             $this->logger->logError('Error inserting article history');
             return false;
         }
@@ -684,7 +684,7 @@ class ArticleDataLayer
             self::ARTICLE_SECTION_TABLE, $articleSection->asArray()
         );
 
-        if (empty($resInsert)) {
+        if (!$resInsert) {
             $this->logger->logError('Error inserting article');
             return null;
         }
@@ -726,7 +726,7 @@ class ArticleDataLayer
     ): bool {
         try {
             $this->db->insert(
-                ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE,
+                self::ARTICLE_SECTION_IMAGE_TABLE,
                 [
                     'media_id' => $imageId,
                     'article_section_id' => $articleSectionId,
@@ -735,7 +735,7 @@ class ArticleDataLayer
             );
         } catch (Throwable $t) {
             $this->logger->logError(
-                'Error inserting entry into ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
+                'Error inserting entry into ' . self::ARTICLE_SECTION_IMAGE_TABLE .
                 ' - ImageId: ' . $imageId .
                 ' - ArticleSectionId: ' . $articleSectionId .
                 ' - Error message: ' . $t->getMessage()
@@ -753,7 +753,7 @@ class ArticleDataLayer
     ): bool {
         try {
             $this->db->execute(
-                'UPDATE ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
+                'UPDATE ' . self::ARTICLE_SECTION_IMAGE_TABLE .
                 ' SET caption = :caption' .
                 ' WHERE media_id = :mediaId
                     AND article_section_id = :articleSectionId',
@@ -765,7 +765,7 @@ class ArticleDataLayer
             );
         } catch (Throwable $t) {
             $this->logger->logError(
-                'Error updating entry into ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
+                'Error updating entry into ' . self::ARTICLE_SECTION_IMAGE_TABLE .
                 ' - MediaId: ' . $imageId .
                 ' - ArticleSectionId: ' . $articleSectionId .
                 ' - Error message: ' . $t->getMessage()
@@ -779,7 +779,7 @@ class ArticleDataLayer
     public function deleteArticleSectionImage(int $articleSectionId, int $imageId): bool
     {
         return $this->db->execute(
-            'DELETE FROM ' . ArticleDataLayer::ARTICLE_SECTION_IMAGE_TABLE .
+            'DELETE FROM ' . self::ARTICLE_SECTION_IMAGE_TABLE .
             ' WHERE media_id = :mediaId
                 AND article_section_id = :articleSectionId',
             [
@@ -793,7 +793,7 @@ class ArticleDataLayer
     {
         $resInsert = $this->db->insert(self::CONTENT_TABLE, $pageContent->asArray());
 
-        if (empty($resInsert)) {
+        if (!$resInsert) {
             $this->logger->logError('Error inserting page content');
             return null;
         }
@@ -828,7 +828,7 @@ class ArticleDataLayer
 
         $resInsert = $this->db->insert(self::CONTENT_HISTORY_TABLE, $data);
 
-        if (empty($resInsert)) {
+        if (!$resInsert) {
             $this->logger->logError('Error inserting page content history');
             return false;
         }

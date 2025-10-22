@@ -12,7 +12,7 @@ class AppRouterCore extends Core
     {
         return self::getInstance(
             className: 'AppPublicHtmlController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/App/Entity/AppHtmlHomepageResponseData.php';
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicHtmlControllerAbstract.php';
@@ -29,7 +29,7 @@ class AppRouterCore extends Core
     {
         return self::getInstance(
             className: 'AppAuthorisedHtmlController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedHtmlController.php';
@@ -44,7 +44,7 @@ class AppRouterCore extends Core
     {
         return self::getInstance(
             className: 'AppBackofficeHtmlController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeHtmlControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeHtmlController.php';
@@ -59,7 +59,7 @@ class AppRouterCore extends Core
     {
         return self::getInstance(
             className: 'AppBackofficeApiController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppBackofficeApiController.php';
@@ -72,7 +72,7 @@ class AppRouterCore extends Core
     {
         return self::getInstance(
             className: 'AppAuthorisedApiController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppAuthorisedApiController.php';
@@ -85,7 +85,7 @@ class AppRouterCore extends Core
     {
         return self::getInstance(
             className: 'AppPublicApiController',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Router/Controller/AbstractController.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicApiControllerAbstract.php';
                 require_once self::getPathRoot() . '/App/Router/Controller/AppPublicApiController.php';

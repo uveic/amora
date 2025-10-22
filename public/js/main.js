@@ -2,7 +2,7 @@ import {Request} from './module/Request.js?v=000';
 import {Global} from './module/localisation.js?v=000';
 import {Util} from "./module/Util.js?v=000";
 
-window.addEventListener('DOMContentLoaded', e => {
+window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.blog-posts-load-more').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();

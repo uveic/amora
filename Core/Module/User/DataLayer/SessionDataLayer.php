@@ -157,7 +157,7 @@ class SessionDataLayer
         unset($data['id']);
 
         $res = $this->db->insert(self::SESSION_TABLE_NAME, $data);
-        if (empty($res)) {
+        if (!$res) {
             $this->logger->logError('Error creating new session');
             return null;
         }

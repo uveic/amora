@@ -168,8 +168,8 @@ final class PublicApiController extends PublicApiControllerAbstract
             : Core::getDefaultLanguage();
         $localisationUtil = Core::getLocalisationUtil($language, false);
 
-        $user = $this->userService->verifyUser($user, $password);
-        if (empty($user)) {
+        $user = $this->userService->verifyUser(email: $user, unHashedPassword: $password);
+        if (!$user) {
             return new PublicApiControllerUserLoginSuccessResponse(
                 success: false,
                 errorMessage: $localisationUtil->getValue('authenticationEmailAndOrPassNotValid'),
@@ -183,7 +183,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             userAgent: $request->userAgent,
         );
 
-        if (empty($session)) {
+        if (!$session) {
             return new PublicApiControllerUserLoginSuccessResponse(
                 success: false,
                 errorMessage: $localisationUtil->getValue('authenticationEmailAndOrPassNotValid'),
@@ -209,7 +209,7 @@ final class PublicApiController extends PublicApiControllerAbstract
     protected function forgotPassword(string $email, Request $request): Response
     {
         $existingUser =$this->userService->getUserForEmail($email);
-        if (!$existingUser?->isEnabled()) {
+        if (!$existingUser || !$existingUser->isEnabled()) {
             return new PublicApiControllerForgotPasswordSuccessResponse(true);
         }
 
@@ -243,84 +243,94 @@ final class PublicApiController extends PublicApiControllerAbstract
             : Core::getDefaultLanguage();
         $localisationUtil = Core::getLocalisationUtil($language, false);
 
-        try {
-            if (!Core::getConfig()->isRegistrationEnabled) {
-                return new PublicApiControllerUserRegistrationSuccessResponse(
-                    success: false,
-                    redirect: null,
-                    errorMessage: $localisationUtil->getValue('authenticationUserRegistrationDisabled'),
-                );
-            }
-
-            $email = StringUtil::sanitiseText($email);
-            $name = StringUtil::sanitiseText($name);
-            $timezone = StringUtil::sanitiseText($timezone);
-
-            $email = StringUtil::normaliseEmail($email);
-            if (!StringUtil::isEmailAddressValid($email)) {
-                return new PublicApiControllerUserRegistrationSuccessResponse(
-                    success: false,
-                    redirect: null,
-                    errorMessage: $localisationUtil->getValue('authenticationEmailNotValid'),
-                );
-            }
-
-            if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
-                return new PublicApiControllerUserRegistrationSuccessResponse(
-                    success: false,
-                    redirect: null,
-                    errorMessage: $localisationUtil->getValue('authenticationPasswordTooShort'),
-                );
-            }
-
-            $existingUser =$this->userService->getUserForEmail($email);
-            if (!empty($existingUser)) {
-                return new PublicApiControllerUserRegistrationSuccessResponse(
-                    success: false,
-                    redirect: null,
-                    errorMessage: $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
-                );
-            }
-
-            $now = new DateTimeImmutable();
-            $user = $this->userService->workflowStoreUserAndSendVerificationEmail(
-                createdByUser: $request->session?->user,
-                user: new User(
-                    id: null,
-                    status: UserStatus::Enabled,
-                    language: Language::from($languageIsoCode),
-                    role: UserRole::User,
-                    journeyStatus: UserJourneyStatus::RegistrationComplete,
-                    createdAt: $now,
-                    updatedAt: $now,
-                    email: $email,
-                    name: $name,
-                    passwordHash: StringUtil::hashPassword($password),
-                    bio: null,
-                    identifier: null,
-                    timezone: DateUtil::convertStringToDateTimeZone($timezone),
-                ),
-                verificationType: VerificationType::VerifyEmailAddress,
-            );
-            $res = !empty($user);
-
-            $session = $this->sessionService->login(
-                user: $user,
-                timezone: $user->timezone,
-                ip: $request->sourceIp,
-                userAgent: $request->userAgent,
-            );
-
+        if (!Core::getConfig()->isRegistrationEnabled) {
             return new PublicApiControllerUserRegistrationSuccessResponse(
-                success: $res,
-                redirect: $session->isAdmin()
-                    ? UrlBuilderUtil::buildBackofficeDashboardUrl($language)
-                    : UrlBuilderUtil::buildAppDashboardUrl($language),
+                success: false,
+                redirect: null,
+                errorMessage: $localisationUtil->getValue('authenticationUserRegistrationDisabled'),
             );
-        } catch (Throwable $t) {
-            $this->logger->logError('Error registering user: ' . $t->getMessage());
-            return new PublicApiControllerUserRegistrationSuccessResponse(false);
         }
+
+        $email = StringUtil::sanitiseText($email);
+        $name = StringUtil::sanitiseText($name);
+        $timezone = StringUtil::sanitiseText($timezone);
+
+        $email = StringUtil::normaliseEmail($email);
+        if (!StringUtil::isEmailAddressValid($email)) {
+            return new PublicApiControllerUserRegistrationSuccessResponse(
+                success: false,
+                redirect: null,
+                errorMessage: $localisationUtil->getValue('authenticationEmailNotValid'),
+            );
+        }
+
+        if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
+            return new PublicApiControllerUserRegistrationSuccessResponse(
+                success: false,
+                redirect: null,
+                errorMessage: $localisationUtil->getValue('authenticationPasswordTooShort'),
+            );
+        }
+
+        $existingUser =$this->userService->getUserForEmail($email);
+        if ($existingUser) {
+            return new PublicApiControllerUserRegistrationSuccessResponse(
+                success: false,
+                redirect: null,
+                errorMessage: $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
+            );
+        }
+
+        $now = new DateTimeImmutable();
+        $user = $this->userService->workflowStoreUserAndSendVerificationEmail(
+            createdByUser: $request->session?->user,
+            user: new User(
+                id: null,
+                status: UserStatus::Enabled,
+                language: Language::from($languageIsoCode),
+                role: UserRole::User,
+                journeyStatus: UserJourneyStatus::RegistrationComplete,
+                createdAt: $now,
+                updatedAt: $now,
+                email: $email,
+                name: $name,
+                passwordHash: StringUtil::hashPassword($password),
+                bio: null,
+                identifier: null,
+                timezone: DateUtil::convertStringToDateTimeZone($timezone),
+            ),
+            verificationType: VerificationType::VerifyEmailAddress,
+        );
+
+        if (!$user) {
+            $this->logger->logError('Error storing user');
+            return new PublicApiControllerUserRegistrationSuccessResponse(
+                success: false,
+                errorMessage: 'Error storing user',
+            );
+        }
+
+        $session = $this->sessionService->login(
+            user: $user,
+            timezone: $user->timezone,
+            ip: $request->sourceIp,
+            userAgent: $request->userAgent,
+        );
+
+        if (!$session) {
+            $this->logger->logError('Error storing session');
+            return new PublicApiControllerUserRegistrationSuccessResponse(
+                success: false,
+                errorMessage: 'Error creating session',
+            );
+        }
+
+        return new PublicApiControllerUserRegistrationSuccessResponse(
+            success: true,
+            redirect: $session->isAdmin()
+                ? UrlBuilderUtil::buildBackofficeDashboardUrl($language)
+                : UrlBuilderUtil::buildAppDashboardUrl($language),
+        );
     }
 
     /**
@@ -352,7 +362,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         $localisationUtil = Core::getLocalisationUtil($language, false);
 
         $user = $this->userService->getUserForId($userId);
-        if (empty($user) || !$user->validateValidationHash($validationHash)) {
+        if (!$user || !$user->validateValidationHash($validationHash)) {
             return new PublicApiControllerUserPasswordResetSuccessResponse(
                 success: false,
                 errorMessage: 'User not found',
@@ -418,7 +428,7 @@ final class PublicApiController extends PublicApiControllerAbstract
         Request $request
     ): Response {
         $user = $this->userService->getUserForId($userId);
-        if (empty($user) || !$user->validateValidationHash($validationHash)) {
+        if (!$user || !$user->validateValidationHash($validationHash)) {
             return new PublicApiControllerUserPasswordCreationSuccessResponse(
                 success: false,
                 errorMessage: 'User not found',
@@ -534,10 +544,10 @@ final class PublicApiController extends PublicApiControllerAbstract
         return new PublicApiControllerGetBlogPostsSuccessResponse(
             success: true,
             blogPosts: $output,
-            pagination: (new Pagination(
+            pagination: new Pagination(
                 itemsPerPage: $itemsPerPage,
                 offset: $offset + count($output),
-            ))->asArray(),
+            )->asArray(),
         );
     }
 
@@ -625,7 +635,7 @@ final class PublicApiController extends PublicApiControllerAbstract
                 }
 
                 $existingAlbumIds[$album->id] = true;
-                $totalAlbums += 1;
+                ++$totalAlbums;
                 $albumsOutput[] = $album->asSearchResult(
                     language: $request->siteLanguage,
                     isPublicUrl: $isPublic,

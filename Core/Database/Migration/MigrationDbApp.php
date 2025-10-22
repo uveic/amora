@@ -9,7 +9,7 @@ use Amora\Core\Database\MySqlDb;
 
 final class MigrationDbApp
 {
-    const MIGRATION_TABLE_NAME = 'migration';
+    const string MIGRATION_TABLE_NAME = 'migration';
 
     private array $validArguments = array(
         'install' => true,
@@ -121,10 +121,14 @@ final class MigrationDbApp
         $content .= " */" . PHP_EOL . PHP_EOL;
         $content .= "return \"\";" . PHP_EOL;
 
-        if (! is_dir($this->pathToMigrationFiles)) {
-            mkdir($this->pathToMigrationFiles, "0755", true);
+        if (!is_dir($this->pathToMigrationFiles) &&
+            !mkdir($concurrentDirectory = $this->pathToMigrationFiles, "0755", true) &&
+            !is_dir($concurrentDirectory)
+        ) {
+            $this->printOutput(sprintf('Error creating directory: %s', $concurrentDirectory));
+            return;
         }
-        $fp = fopen($this->pathToMigrationFiles . '/' . $filename . '.php', 'w');
+        $fp = fopen($this->pathToMigrationFiles . '/' . $filename . '.php', 'wb');
         fwrite($fp, $content);
         fclose($fp);
 
@@ -233,11 +237,6 @@ final class MigrationDbApp
         $this->printOutput("Database migrated successfully");
     }
 
-    /**
-     * @param string $filename
-     * @return bool
-     * @throws Exception
-     */
     private function executeFile(string $filename): bool
     {
         $path = $this->pathToMigrationFiles . '/' . $filename;

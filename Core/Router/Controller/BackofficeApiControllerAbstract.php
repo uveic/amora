@@ -540,7 +540,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $userId = intval($pathParams['userId']);
+                $userId = (int)$pathParams['userId'];
             }
         }
 
@@ -615,7 +615,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $userId = intval($pathParams['userId']);
+                $userId = (int)$pathParams['userId'];
             }
         }
 
@@ -666,7 +666,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $userId = intval($pathParams['userId']);
+                $userId = (int)$pathParams['userId'];
             }
         }
 
@@ -683,7 +683,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $statusId = intval($pathParams['statusId']);
+                $statusId = (int)$pathParams['statusId'];
             }
         }
 
@@ -735,7 +735,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $userId = intval($pathParams['userId']);
+                $userId = (int)$pathParams['userId'];
             }
         }
 
@@ -752,7 +752,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $roleId = intval($pathParams['roleId']);
+                $roleId = (int)$pathParams['roleId'];
             }
         }
 
@@ -918,7 +918,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $articleId = intval($pathParams['articleId']);
+                $articleId = (int)$pathParams['articleId'];
             }
         }
 
@@ -1062,7 +1062,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $articleId = intval($pathParams['articleId']);
+                $articleId = (int)$pathParams['articleId'];
             }
         }
 
@@ -1162,7 +1162,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $contentTypeId = intval($pathParams['contentTypeId']);
+                $contentTypeId = (int)$pathParams['contentTypeId'];
             }
         }
 
@@ -1322,7 +1322,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $albumId = intval($pathParams['albumId']);
+                $albumId = (int)$pathParams['albumId'];
             }
         }
 
@@ -1418,7 +1418,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $albumId = intval($pathParams['albumId']);
+                $albumId = (int)$pathParams['albumId'];
             }
         }
 
@@ -1435,7 +1435,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $statusId = intval($pathParams['statusId']);
+                $statusId = (int)$pathParams['statusId'];
             }
         }
 
@@ -1488,7 +1488,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $albumId = intval($pathParams['albumId']);
+                $albumId = (int)$pathParams['albumId'];
             }
         }
 
@@ -1617,7 +1617,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $collectionId = intval($pathParams['collectionId']);
+                $collectionId = (int)$pathParams['collectionId'];
             }
         }
 
@@ -1700,7 +1700,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $collectionId = intval($pathParams['collectionId']);
+                $collectionId = (int)$pathParams['collectionId'];
             }
         }
 
@@ -1752,7 +1752,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $collectionId = intval($pathParams['collectionId']);
+                $collectionId = (int)$pathParams['collectionId'];
             }
         }
 
@@ -1834,7 +1834,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $collectionId = intval($pathParams['collectionId']);
+                $collectionId = (int)$pathParams['collectionId'];
             }
         }
 
@@ -1904,7 +1904,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $collectionMediaId = intval($pathParams['collectionMediaId']);
+                $collectionMediaId = (int)$pathParams['collectionMediaId'];
             }
         }
 
@@ -1967,7 +1967,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $collectionMediaId = intval($pathParams['collectionMediaId']);
+                $collectionMediaId = (int)$pathParams['collectionMediaId'];
             }
         }
 
@@ -2018,7 +2018,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $mailId = intval($pathParams['mailId']);
+                $mailId = (int)$pathParams['mailId'];
             }
         }
 

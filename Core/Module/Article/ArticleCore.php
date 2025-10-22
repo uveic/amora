@@ -35,7 +35,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'ArticleDataLayer',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Model/User.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Article.php';
                 require_once self::getPathRoot() . '/Core/Module/User/DataLayer/UserDataLayer.php';
@@ -55,7 +55,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'ArticleService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Util/Helper/ArticleHtmlGenerator.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/PageContentType.php';
                 require_once self::getPathRoot() . '/App/Value/AppPageContentType.php';
@@ -81,7 +81,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'MediaDataLayer',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/ImageExif.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ImageSize.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Media.php';
@@ -110,7 +110,7 @@ class ArticleCore extends Core
 
         return self::getInstance(
             className: 'MediaService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Entity/RawFile.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
@@ -134,7 +134,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'ImageService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/ImageExif.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ImageSize.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/ImageService.php';
@@ -149,7 +149,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'TagDataLayer',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/DataLayer/TagDataLayer.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Tag.php';
                 return new TagDataLayer(
@@ -164,7 +164,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'TagService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/TagService.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Model/Tag.php';
                 return new TagService(
@@ -179,7 +179,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'FeedService',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/FeedService.php';
                 return new FeedService();
             },
@@ -190,7 +190,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'ImageResizeApp',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserRole.php';
@@ -215,7 +215,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'MediaRemoveApp',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php';
@@ -242,7 +242,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'S3Service',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/Article/Service/S3Service.php';
                 return new S3Service(
                     logger: self::getArticleLogger(),
@@ -256,7 +256,7 @@ class ArticleCore extends Core
     {
         return self::getInstance(
             className: 'S3UploaderApp',
-            factory: function () {
+            factory: static function () {
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserJourneyStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/UserStatus.php';

@@ -4,7 +4,7 @@
 namespace Amora\Core\Bin;
 
 // change working directory
-chdir(dirname(__FILE__));
+chdir(__DIR__);
 
 require_once '../Core.php';
 
@@ -12,7 +12,7 @@ use Throwable;
 use Amora\Core\Core;
 
 try {
-    Core::initiate(realpath(__DIR__ . '/../..'));
+    Core::initiate(dirname(__DIR__, 2));
 } catch (Throwable $t) {
     echo 'Error initiating application: ' . $t->getMessage() . ' ## Aborting...' . PHP_EOL;
     exit;

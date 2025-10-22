@@ -106,11 +106,11 @@ final class UserHtmlGenerator
         $output[] = $indentation . '  <div class="table-item flex-no-grow">';
 
         if ($session) {
-            $sessionLastVisitedString = $session ? DateUtil::getElapsedTimeString(
+            $sessionLastVisitedString = DateUtil::getElapsedTimeString(
                 from: $session->lastVisitedAt,
                 includePrefixAndOrSuffix: true,
                 language: $language,
-            ) : '-';
+            );
 
             $output[] = $indentation . '    <div class="icon-one-line" title="' . DateUtil::formatDateShort($session->lastVisitedAt) . '">' . CoreIcons::SIGN_IN .  $sessionLastVisitedString . '</div>';
         }

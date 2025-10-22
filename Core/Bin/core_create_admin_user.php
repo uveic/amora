@@ -15,12 +15,12 @@ use Amora\Core\Util\StringUtil;
 use Amora\Core\Module\User\Value\UserRole;
 
 // change working directory
-chdir(dirname(__FILE__));
+chdir(__DIR__);
 
 require_once '../Core.php';
 
 try {
-    Core::initiate(realpath(__DIR__ . '/../..'));
+    Core::initiate(dirname(__DIR__, 2));
 } catch (Throwable $t) {
     echo 'Error initiating application: ' . $t->getMessage() . ' ## Aborting...';
     exit;
@@ -48,20 +48,20 @@ if (empty($argv[1])) {
 
 foreach ($argv as $item) {
     if (str_starts_with($item, '--pass=')) {
-        $pass = substr($item, 7, strlen($item) - 7);
+        $pass = substr($item, 7);
         continue;
     }
 
     if (str_starts_with($item, '--password=')) {
-        $pass = substr($item, 11, strlen($item) - 11);
+        $pass = substr($item, 11);
     }
 
     if (str_starts_with($item, '--email=')) {
-        $email = substr($item, 8, strlen($item) - 8);
+        $email = substr($item, 8);
     }
 
     if (str_starts_with($item, '--name=')) {
-        $name = substr($item, 7, strlen($item) - 7);
+        $name = substr($item, 7);
     }
 }
 
@@ -93,7 +93,7 @@ $res = UserCore::getUserService()->storeUser(
     )
 );
 
-if (empty($res)) {
+if (!$res) {
     $logger->logError('Error creating user. Aborting...');
     exit;
 }

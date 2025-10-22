@@ -252,7 +252,7 @@ function renderParameterTypeValidation(varName, type, name, format) {
                     'message' => 'must be an ${type}'
                 ];
             } else {
-                $${util.snakeToCamel(name)} = intval(${varName});
+                $${util.snakeToCamel(name)} = (int)${varName};
             }`;
   }
 
@@ -292,8 +292,8 @@ function renderParameterTypeValidation(varName, type, name, format) {
 function renderNotRequiredParameterIf(varName, type, name) {
   if (type === 'integer') {
     return `
-        if (isset(${varName}) && strlen(${varName}) > 0) {
-            $${util.snakeToCamel(name)} = intval(${varName});
+        if (isset(${varName}) && ${varName} !== '') {
+            $${util.snakeToCamel(name)} = (int)${varName};
         } else {
             $${util.snakeToCamel(name)} = null;
         }`;
@@ -301,7 +301,7 @@ function renderNotRequiredParameterIf(varName, type, name) {
 
   if (type === 'number') {
     return `
-        if (isset(${varName}) && strlen(${varName}) > 0) {
+        if (isset(${varName}) && ${varName} !== '') {
             $${util.snakeToCamel(name)} = floatval(${varName});
         } else {
             $${util.snakeToCamel(name)} = null;

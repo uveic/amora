@@ -8,12 +8,12 @@ use Throwable;
 use Amora\Core\Core;
 
 // change working directory
-chdir(dirname(__FILE__));
+chdir(__DIR__);
 
 require_once '../Core.php';
 
 try {
-    Core::initiate(realpath(__DIR__ . '/../..'));
+    Core::initiate(dirname(__DIR__, 2));
 } catch (Throwable $t) {
     echo 'Error initiating application: ' . $t->getMessage() . ' ## Aborting...';
     exit;
@@ -33,7 +33,7 @@ try {
 
     foreach ($argv as $item) {
         if (str_starts_with($item, '--total-entries=')) {
-            $param = substr($item, 16, strlen($item) - 16);
+            $param = substr($item, 16);
 
             $totalEntries = is_numeric($param) ? (int)$param : null;
         }

@@ -22,7 +22,7 @@ final class CsvWriterUtil
             return false;
         }
 
-        $handle = fopen($fileName, 'w');
+        $handle = fopen($fileName, 'wb');
 
         if ($handle === false) {
             $logger->logError('Failed to open file for writing: ' . $fileName);
@@ -34,11 +34,9 @@ final class CsvWriterUtil
             return false;
         }
 
-        if ($includeArrayKeysAsHeader) {
-            if (false === self::writeLine($handle, array_keys($data[0]))) {
-                $logger->logError('Failed to write CSV data to file: ' . $fileName);
-                return false;
-            }
+        if ($includeArrayKeysAsHeader && false === self::writeLine($handle, array_keys($data[0]))) {
+            $logger->logError('Failed to write CSV data to file: ' . $fileName);
+            return false;
         }
 
         foreach ($data as $datum) {

@@ -24,7 +24,7 @@ final class AppMenu
             $appMenu,
         );
 
-        usort($output, function($a, $b) {
+        usort($output, static function($a, $b) {
             return $a->sequence - $b->sequence;
         });
 
@@ -47,7 +47,7 @@ final class AppMenu
             $appMenu,
         );
 
-        usort($output, function($a, $b) {
+        usort($output, static function($a, $b) {
             return $a->sequence - $b->sequence;
         });
 

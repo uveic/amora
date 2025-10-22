@@ -33,7 +33,7 @@ final class DateUtil
         if ($dateObj === false) {
             // Check if it is from Javascript and it contains milliseconds. Remove milliseconds if found.
             $isoDate = preg_replace(
-                pattern: "/\.[0-9]{3}Z/",
+                pattern: "/\.\d{3}Z/",
                 replacement: 'Z',
                 subject: $isoDate,
             );
@@ -165,6 +165,8 @@ final class DateUtil
                 . ($diff[$key] === 1 ? '' : ($key === 'm' && ($language === Language::Spanish || $language === Language::Galego) ? 'es' : 's'));
         }
 
+        unset($value);
+
         if (!$full) {
             $string = array_slice($string, 0, 1);
         }
@@ -193,7 +195,7 @@ final class DateUtil
     ): DateTimeImmutable {
         try {
             $d = new DateTime(datetime: $date);
-            $timezone = $timezone ?? DateUtil::convertStringToDateTimeZone(Core::getDefaultTimezone());
+            $timezone = $timezone ?? self::convertStringToDateTimeZone(Core::getDefaultTimezone());
             $d->setTimezone($timezone);
 
             return DateTimeImmutable::createFromMutable($d);
@@ -401,17 +403,17 @@ final class DateUtil
 
         if ($seconds >= 60) {
             $minutes = round($seconds / 60, 0, PHP_ROUND_HALF_DOWN);
-            $seconds = $seconds % 60;
+            $seconds %= 60;
         }
 
         if ($minutes >= 60) {
             $hours = round($minutes / 60, 0, PHP_ROUND_HALF_DOWN);
-            $minutes = $minutes % 60;
+            $minutes %= 60;
         }
 
         if ($hours >= 24) {
             $days = round($hours / 24, 0, PHP_ROUND_HALF_DOWN);
-            $hours = $hours % 24;
+            $hours %= 24;
         }
 
         return new DateInterval(

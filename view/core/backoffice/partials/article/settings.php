@@ -42,7 +42,7 @@ $articlePreviewUrl = $article ? UrlBuilderUtil::buildBackofficeArticlePreviewUrl
 )
 : '#';
 
-$articlePublicUrl = $article ? UrlBuilderUtil::buildPublicArticlePath($article?->path, $article->language) : '';
+$articlePublicUrl = $article ? UrlBuilderUtil::buildPublicArticlePath($article->path, $article->language) : '';
 $articlePublicUrlHtml = $articlePublicUrl && $article?->status->isPublic() ?
     '<a href="' . $articlePublicUrl . '">' . $articlePublicUrl . '</a>'
     : $articlePublicUrl;

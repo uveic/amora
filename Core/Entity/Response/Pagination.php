@@ -2,11 +2,11 @@
 
 namespace Amora\Core\Entity\Response;
 
-class Pagination
+readonly class Pagination
 {
     public function __construct(
-        public readonly int $itemsPerPage = 10000,
-        public readonly int $offset = 0,
+        public int $itemsPerPage = 10000,
+        public int $offset = 0,
     ) {}
 
     public function asArray(): array

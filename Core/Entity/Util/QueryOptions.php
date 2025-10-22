@@ -14,15 +14,11 @@ readonly class QueryOptions
 
     public function getItemsPerPage(): int
     {
-        return $this->pagination
-            ? $this->pagination->itemsPerPage
-            : 100000;
+        return $this->pagination->itemsPerPage ?? 100000;
     }
 
     public function getOffset(): int
     {
-        return $this->pagination
-            ? $this->pagination->offset
-            : 0;
+        return $this->pagination->offset ?? 0;
     }
 }

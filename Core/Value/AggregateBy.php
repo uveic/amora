@@ -16,12 +16,12 @@ enum AggregateBy: string
     public function getInterval(): DateInterval
     {
         return match ($this) {
-            AggregateBy::Minute => new DateInterval('P0000-00-00T00:01:00'),
-            AggregateBy::Hour => new DateInterval('P0000-00-00T01:00:00'),
-            AggregateBy::Day => new DateInterval('P0000-00-01T00:00:00'),
-            AggregateBy::Week => new DateInterval('P0000-00-07T00:00:00'),
-            AggregateBy::Month => new DateInterval('P0000-01-00T00:00:00'),
-            AggregateBy::Year => new DateInterval('P0001-00-00T00:00:00'),
+            self::Minute => new DateInterval('P0000-00-00T00:01:00'),
+            self::Hour => new DateInterval('P0000-00-00T01:00:00'),
+            self::Day => new DateInterval('P0000-00-01T00:00:00'),
+            self::Week => new DateInterval('P0000-00-07T00:00:00'),
+            self::Month => new DateInterval('P0000-01-00T00:00:00'),
+            self::Year => new DateInterval('P0001-00-00T00:00:00'),
         };
     }
 }

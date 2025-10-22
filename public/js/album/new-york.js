@@ -59,7 +59,7 @@ const getNextImage = (mediaContainer, goRight = true) => {
     return null;
   }
 
-  if (mediaActiveKey === null || mediaActiveKey === images.length) {
+  if (!mediaActiveKey || mediaActiveKey === images.length) {
     return mediaContainer.querySelector('img.media-item');
   }
 

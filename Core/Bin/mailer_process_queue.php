@@ -8,12 +8,12 @@ use Amora\Core\Core;
 use Amora\Core\Module\Mailer\MailerCore;
 
 // change working directory
-chdir(dirname(__FILE__));
+chdir(__DIR__);
 
 require_once '../Core.php';
 
 try {
-    Core::initiate(realpath(__DIR__ . '/../..'));
+    Core::initiate(dirname(__DIR__, 2));
 
     $app = MailerCore::getMailerApp();
     $appName = $app->appName;

@@ -20,7 +20,7 @@ final readonly class CsvReaderUtil
             return [];
         }
 
-        $handle = fopen($fullPathToFile, 'r');
+        $handle = fopen($fullPathToFile, 'rb');
         if ($handle === false) {
             $logger->logError('Failed to open file for reading: ' . $fullPathToFile);
             return [];

@@ -115,7 +115,7 @@ function renderResponseClass(responseClassName, operationId, httpStatus, schema)
             ? null
             : $${util.snakeToCamel(param.name)};\n`
     ]),
-    `        list($output, $contentType) = self::getResponseType($responseData);`,
+    `        [$output, $contentType] = self::getResponseType($responseData);`,
     `        parent::__construct($output, $contentType, HttpStatusCode::${httpStatus});`,
     `    }`,
     `}`

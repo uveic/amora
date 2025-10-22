@@ -6,10 +6,34 @@ use Amora\Core\Core;
 use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Module\User\UserCore;
 use Amora\App\Value\Language;
+use JsonException;
 
 final class Request
 {
-    private ?array $parsedHeaders = null;
+    private ?array $parsedHeaders = null {
+        get {
+            if (isset($this->parsedHeaders)) {
+                return $this->parsedHeaders;
+            }
+
+            $headers = array();
+            foreach ($this->headers as $key => $value) {
+                if (!str_starts_with($key, 'HTTP_')) {
+                    continue;
+                }
+
+                $header = str_replace(
+                    ' ',
+                    '-',
+                    ucwords(str_replace('_', ' ', strtolower(substr($key, 5))))
+                );
+                $headers[$header] = $value;
+            }
+
+            $this->parsedHeaders = $headers;
+            return $headers;
+        }
+    }
 
     public readonly ?Session $session;
     public readonly Language $siteLanguage;
@@ -48,33 +72,14 @@ final class Request
         return implode('/', $this->pathWithoutLanguage);
     }
 
-    public function getParsedHeaders(): array
-    {
-        if (isset($this->parsedHeaders)) {
-            return $this->parsedHeaders;
-        }
-
-        $headers = array();
-        foreach($this->headers as $key => $value) {
-            if (!str_starts_with($key, 'HTTP_')) {
-                continue;
-            }
-
-            $header = str_replace(
-                ' ',
-                '-',
-                ucwords(str_replace('_', ' ', strtolower(substr($key, 5))))
-            );
-            $headers[$header] = $value;
-        }
-
-        $this->parsedHeaders = $headers;
-        return $headers;
-    }
-
     public function getBodyPayload(): array
     {
-        return empty($this->body) ? [] : json_decode($this->body, true);
+        try {
+            return empty($this->body) ? [] : json_decode($this->body, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            Core::getDefaultLogger()->logException($e);
+            return [];
+        }
     }
 
     public function getGetParam(string $paramName): ?string
@@ -87,12 +92,6 @@ final class Request
     {
         $cookies = $this->cookies;
         return empty($cookies[$cookieName]) ? null : $cookies[$cookieName];
-    }
-
-    public function getBodyParam(string $paramName)
-    {
-        $bodyParams = $this->getBodyPayload();
-        return $bodyParams[$paramName] ?? null;
     }
 
     private function getArrayPathWithoutLanguage(): array
@@ -109,7 +108,7 @@ final class Request
             if (Language::tryFrom($uppercaseLanguage)) {
                 $language = Language::from($uppercaseLanguage);
 
-                if (in_array($language, $enabledLanguages)) {
+                if (in_array($language, $enabledLanguages, true)) {
                     unset($arrayPath[0]);
                 }
             }
@@ -130,13 +129,13 @@ final class Request
             if (Language::tryFrom($uppercaseLanguage)) {
                 $language = Language::from($uppercaseLanguage);
 
-                if (in_array($language, $enabledLanguages)) {
+                if (in_array($language, $enabledLanguages, true)) {
                     return $language;
                 }
             }
         }
 
-        if (count($enabledLanguages) == 1) {
+        if (count($enabledLanguages) === 1) {
             return Core::getDefaultLanguage();
         }
 
@@ -158,7 +157,7 @@ final class Request
 
             if (Language::tryFrom($lang)) {
                 $language = Language::from($lang);
-                if (in_array($language, $enabledLanguages)) {
+                if (in_array($language, $enabledLanguages, true)) {
                     return $language;
                 }
             }

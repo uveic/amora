@@ -341,7 +341,7 @@ class UrlBuilderUtil
         string $path,
         ?Language $language = null,
     ): string {
-        return (empty($language) || count(Core::getEnabledSiteLanguages()) === 1
+        return (!$language || count(Core::getEnabledSiteLanguages()) === 1
                 ? self::buildBaseUrlWithoutLanguage()
                 : self::buildBaseUrl($language)
             )
@@ -352,7 +352,7 @@ class UrlBuilderUtil
         string $slug,
         ?Language $language = null,
     ): string {
-        return (empty($language) || count(Core::getEnabledSiteLanguages()) === 1
+        return (!$language || count(Core::getEnabledSiteLanguages()) === 1
                 ? self::buildBaseUrlWithoutLanguage()
                 : self::buildBaseUrl($language)
             )

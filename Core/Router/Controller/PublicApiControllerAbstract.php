@@ -800,13 +800,13 @@ abstract class PublicApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $offset = intval($queryParams['offset']);
+                $offset = (int)$queryParams['offset'];
             }
         }
 
 
-        if (isset($queryParams['itemsPerPage']) && strlen($queryParams['itemsPerPage']) > 0) {
-            $itemsPerPage = intval($queryParams['itemsPerPage']);
+        if (isset($queryParams['itemsPerPage']) && $queryParams['itemsPerPage'] !== '') {
+            $itemsPerPage = (int)$queryParams['itemsPerPage'];
         } else {
             $itemsPerPage = null;
         }
@@ -854,8 +854,8 @@ abstract class PublicApiControllerAbstract extends AbstractController
 
         $isPublic = $queryParams['isPublic'] ?? null;
 
-        if (isset($queryParams['searchTypeId']) && strlen($queryParams['searchTypeId']) > 0) {
-            $searchTypeId = intval($queryParams['searchTypeId']);
+        if (isset($queryParams['searchTypeId']) && $queryParams['searchTypeId'] !== '') {
+            $searchTypeId = (int)$queryParams['searchTypeId'];
         } else {
             $searchTypeId = null;
         }

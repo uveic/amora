@@ -63,7 +63,7 @@ class UserService
         $res = $this->userDataLayer->getDb()->withTransaction(
             function () use ($createdByUser, $user, $verificationType) {
                 $resUser = $this->storeUser($user);
-                if (empty($resUser)) {
+                if (!$resUser) {
                     return new Feedback(false);
                 }
 
@@ -116,7 +116,7 @@ class UserService
         }
 
         $res = $this->getUserForEmail($email);
-        if (empty($res)) {
+        if (!$res) {
             return null;
         }
 
@@ -145,12 +145,12 @@ class UserService
         ?string $newPassword,
         ?string $repeatPassword
     ): Feedback {
-        if (isset($timezone) && !in_array($timezone, DateTimeZone::listIdentifiers())) {
+        if (isset($timezone) && !in_array($timezone, DateTimeZone::listIdentifiers(), true)) {
             $this->logger->logError('Timezone not valid');
             return new Feedback(false);
         }
 
-        if (isset($languageIsoCode) && Language::tryFrom(strtoupper($languageIsoCode)) === null) {
+        if (isset($languageIsoCode) && !Language::tryFrom(strtoupper($languageIsoCode))) {
             $this->logger->logError('Language ID not valid: ' . $languageIsoCode);
             return new Feedback(false);
         }
@@ -295,8 +295,8 @@ class UserService
             );
         }
 
-        if ($verification->hasExpired() ||
-            ($user->changeEmailAddressTo && $user->changeEmailAddressTo !== $verification->email)
+        if (($user->changeEmailAddressTo && $user->changeEmailAddressTo !== $verification->email) ||
+            $verification->hasExpired()
         ) {
             return new Feedback(
                 isSuccess: false,
@@ -546,7 +546,7 @@ class UserService
                     userId: $existingUser->id,
                 );
 
-                if (empty($updatedUser)) {
+                if (!$updatedUser) {
                     return new Feedback(false, 'Error updating user');
                 }
 
@@ -629,7 +629,7 @@ class UserService
         do {
             $code = StringUtil::generateRandomString(64);
             $res = $this->userDataLayer->getUserRegistrationRequest($code);
-        } while(!empty($res));
+        } while($res);
 
         return $code;
     }
@@ -655,7 +655,7 @@ class UserService
 
             $identifier = StringUtil::generateRandomString($characters, true)
                 . '-'
-                . str_pad(rand(1, ((int)$max)) - 1, $characters, '0', STR_PAD_LEFT);
+                . str_pad(random_int(1, ((int)$max)) - 1, $characters, '0', STR_PAD_LEFT);
 
             $existingUser = $this->filterUserBy(identifier: $identifier);
         } while($existingUser);

@@ -344,10 +344,8 @@ class AnalyticsProcessorApp extends App
             'myadmin',
         ];
 
-        foreach ($startsWith as $value) {
-            if (str_starts_with($item, $value)) {
-                return true;
-            }
+        if (array_any($startsWith, static fn($value) => str_starts_with($item, $value))) {
+            return true;
         }
 
         $endsWith = [
@@ -377,10 +375,8 @@ class AnalyticsProcessorApp extends App
             '.env',
         ];
 
-        foreach ($endsWith as $value) {
-            if (str_ends_with($item, $value)) {
-                return true;
-            }
+        if (array_any($endsWith, static fn($value) => str_ends_with($item, $value))) {
+            return true;
         }
 
         return $this->botPath[$item] ?? false;

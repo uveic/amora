@@ -137,14 +137,14 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
 
         $direction = $queryParams['direction'] ?? null;
 
-        if (isset($queryParams['qty']) && strlen($queryParams['qty']) > 0) {
-            $qty = intval($queryParams['qty']);
+        if (isset($queryParams['qty']) && $queryParams['qty'] !== '') {
+            $qty = (int)$queryParams['qty'];
         } else {
             $qty = null;
         }
 
-        if (isset($queryParams['typeId']) && strlen($queryParams['typeId']) > 0) {
-            $typeId = intval($queryParams['typeId']);
+        if (isset($queryParams['typeId']) && $queryParams['typeId'] !== '') {
+            $typeId = (int)$queryParams['typeId'];
         } else {
             $typeId = null;
         }
@@ -226,21 +226,21 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $id = intval($pathParams['id']);
+                $id = (int)$pathParams['id'];
             }
         }
 
 
         $direction = $queryParams['direction'] ?? null;
 
-        if (isset($queryParams['qty']) && strlen($queryParams['qty']) > 0) {
-            $qty = intval($queryParams['qty']);
+        if (isset($queryParams['qty']) && $queryParams['qty'] !== '') {
+            $qty = (int)$queryParams['qty'];
         } else {
             $qty = null;
         }
 
-        if (isset($queryParams['typeId']) && strlen($queryParams['typeId']) > 0) {
-            $typeId = intval($queryParams['typeId']);
+        if (isset($queryParams['typeId']) && $queryParams['typeId'] !== '') {
+            $typeId = (int)$queryParams['typeId'];
         } else {
             $typeId = null;
         }
@@ -294,7 +294,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $id = intval($pathParams['id']);
+                $id = (int)$pathParams['id'];
             }
         }
 
@@ -346,7 +346,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $userId = intval($pathParams['userId']);
+                $userId = (int)$pathParams['userId'];
             }
         }
 
@@ -419,7 +419,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $userId = intval($pathParams['userId']);
+                $userId = (int)$pathParams['userId'];
             }
         }
 
@@ -436,7 +436,7 @@ abstract class AuthorisedApiControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $verificationTypeId = intval($pathParams['verificationTypeId']);
+                $verificationTypeId = (int)$pathParams['verificationTypeId'];
             }
         }
 

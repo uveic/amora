@@ -35,7 +35,7 @@ readonly class ImageService
         $imageLarge = $this->resizeImage($rawFile, ImageSize::Large, $phpNativeImageType);
         $imageXLarge = $this->resizeImage($rawFile, ImageSize::XLarge, $phpNativeImageType);
 
-        list($widthOriginal, $heightOriginal) = @getimagesize($rawFile->getPathWithName());
+        [$widthOriginal, $heightOriginal] = @getimagesize($rawFile->getPathWithName());
         $now = new DateTimeImmutable();
 
         return new Media(
@@ -102,7 +102,7 @@ readonly class ImageService
         ImageSize $newSize,
         int $phpNativeImageType,
     ): ?string {
-        list($originalWidth, $originalHeight) = @getimagesize($image->getPathWithName());
+        [$originalWidth, $originalHeight] = @getimagesize($image->getPathWithName());
 
         if (!$originalWidth || !$originalHeight) {
             $this->logger->logError(

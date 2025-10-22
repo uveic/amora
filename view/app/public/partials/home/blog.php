@@ -9,7 +9,7 @@ use Amora\Core\Value\CoreIcons;
 
 /** @var AppHtmlHomepageResponseData $responseData */
 
-$isAdmin = $responseData->request->session && $responseData->request->session->isAdmin();
+$isAdmin = $responseData->request->session?->isAdmin() ?? false;
 
 if (!$responseData->blogArticles) {
   return;
@@ -27,7 +27,7 @@ $offset = $responseData->pagination->offset + $itemsPerPage;
 $previousYear = null;
 /** @var Article $article */
 foreach ($articles as $article) {
-    if (!$article->isPublished() && !$isAdmin) {
+    if (!$isAdmin && !$article->isPublished()) {
         continue;
     }
 

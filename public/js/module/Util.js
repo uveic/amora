@@ -81,7 +81,6 @@ class UtilClass {
     iframeElement.height = '315';
     iframeElement.src = 'https://www.youtube-nocookie.com/embed/' + ytVideoId + (autoplay ? '?autoplay=1' : '');
     iframeElement.title = 'Reprodutor de vídeo de YouTube';
-    iframeElement.frameBorder = '0';
     iframeElement.allow = 'encrypted-media; picture-in-picture;';
     iframeElement.referrerpolicy = 'strict-origin-when-cross-origin';
     iframeElement.allowFullscreen = true;

@@ -225,7 +225,7 @@ readonly class ArticleService
                 $res = null;
             }
             $count++;
-        } while(!empty($res));
+        } while($res !== null);
 
         $path = $validPath;
         $count = 0;
@@ -473,42 +473,35 @@ readonly class ArticleService
     ): ?Article {
         $resTransaction = $this->articleDataLayer->getDb()->withTransaction(
             function () use ($article, $sections, $media, $tags, $userIp, $userAgent) {
-                $article = $this->articleDataLayer->storeArticle(
+                $storedArticle = $this->articleDataLayer->storeArticle(
                     article: $article,
                     userIp: $userIp,
                     userAgent: $userAgent,
                 );
 
-                if (empty($article)) {
-                    $this->logger->logError(
-                        'Error creating article. Article ID: ' . $article->id
-                    );
-
+                if (!$storedArticle) {
+                    $this->logger->logError('Error storing article');
                     return new Feedback(false);
                 }
 
                 $resSections = $this->updateCreateOrDeleteArticleSections(
-                    articleId: $article->id,
+                    articleId: $storedArticle->id,
                     sections: $sections,
                     media: $media,
                 );
 
-                $resTags = $this->addOrRemoveTagsToArticle($article->id, $tags);
+                $resTags = $this->addOrRemoveTagsToArticle($storedArticle->id, $tags);
                 if (empty($resTags)) {
-                    $this->logger->logError(
-                        'Error updating article tags. Article ID: ' . $article->id
-                    );
+                    $this->logger->logError('Error updating article tags. Article ID: ' . $storedArticle->id);
                     return new Feedback(false);
                 }
 
                 if (empty($resSections)) {
-                    $this->logger->logError(
-                        'Error updating article sections. Article ID: ' . $article->id
-                    );
+                    $this->logger->logError('Error updating article sections. Article ID: ' . $storedArticle->id);
                     return new Feedback(false);
                 }
 
-                return new Feedback(true, $article);
+                return new Feedback(true, $storedArticle);
             }
         );
 
@@ -519,7 +512,7 @@ readonly class ArticleService
     {
         $res = $this->articleDataLayer->createArticleSection($section);
 
-        if (empty($res)) {
+        if (!$res) {
             return false;
         }
 
@@ -572,7 +565,7 @@ readonly class ArticleService
             function () use($pageContent) {
                 $resOne = $this->articleDataLayer->storePageContent($pageContent);
 
-                if (empty($resOne)) {
+                if (!$resOne) {
                     return new Feedback(false);
                 }
 

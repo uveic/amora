@@ -22,8 +22,7 @@ enum AppUserRole: int
 
     public function getTitle(Language $language): string
     {
-        $localisationUtil = Core::getLocalisationUtil($language);
-        return $localisationUtil->getValue('userRole' . $this->name);
+        return Core::getLocalisationUtil($language)->getValue('userRole' . $this->name);
     }
 
     public function getClass(): string

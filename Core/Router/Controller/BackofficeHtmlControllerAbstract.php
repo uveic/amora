@@ -359,7 +359,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $userId = intval($pathParams['userId']);
+                $userId = (int)$pathParams['userId'];
             }
         }
 
@@ -410,7 +410,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $userId = intval($pathParams['userId']);
+                $userId = (int)$pathParams['userId'];
             }
         }
 
@@ -517,7 +517,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $articleId = intval($pathParams['articleId']);
+                $articleId = (int)$pathParams['articleId'];
             }
         }
 
@@ -568,7 +568,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $articleId = intval($pathParams['articleId']);
+                $articleId = (int)$pathParams['articleId'];
             }
         }
 
@@ -647,7 +647,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $albumId = intval($pathParams['albumId']);
+                $albumId = (int)$pathParams['albumId'];
             }
         }
 
@@ -698,7 +698,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $albumId = intval($pathParams['albumId']);
+                $albumId = (int)$pathParams['albumId'];
             }
         }
 
@@ -821,26 +821,26 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
 
         $date = $queryParams['date'] ?? null;
 
-        if (isset($queryParams['eventTypeId']) && strlen($queryParams['eventTypeId']) > 0) {
-            $eventTypeId = intval($queryParams['eventTypeId']);
+        if (isset($queryParams['eventTypeId']) && $queryParams['eventTypeId'] !== '') {
+            $eventTypeId = (int)$queryParams['eventTypeId'];
         } else {
             $eventTypeId = null;
         }
 
-        if (isset($queryParams['paramId']) && strlen($queryParams['paramId']) > 0) {
-            $paramId = intval($queryParams['paramId']);
+        if (isset($queryParams['paramId']) && $queryParams['paramId'] !== '') {
+            $paramId = (int)$queryParams['paramId'];
         } else {
             $paramId = null;
         }
 
-        if (isset($queryParams['eventId']) && strlen($queryParams['eventId']) > 0) {
-            $eventId = intval($queryParams['eventId']);
+        if (isset($queryParams['eventId']) && $queryParams['eventId'] !== '') {
+            $eventId = (int)$queryParams['eventId'];
         } else {
             $eventId = null;
         }
 
-        if (isset($queryParams['itemsCount']) && strlen($queryParams['itemsCount']) > 0) {
-            $itemsCount = intval($queryParams['itemsCount']);
+        if (isset($queryParams['itemsCount']) && $queryParams['itemsCount'] !== '') {
+            $itemsCount = (int)$queryParams['itemsCount'];
         } else {
             $itemsCount = null;
         }
@@ -924,7 +924,7 @@ abstract class BackofficeHtmlControllerAbstract extends AbstractController
                     'message' => 'must be an integer'
                 ];
             } else {
-                $typeId = intval($pathParams['typeId']);
+                $typeId = (int)$pathParams['typeId'];
             }
         }
 

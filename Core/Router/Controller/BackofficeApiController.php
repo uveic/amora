@@ -81,7 +81,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     public function authenticate(Request $request): bool
     {
         $session = $request->session;
-        if (empty($session) || !$session->isAuthenticated() || !$session->isAdmin()) {
+        if (!$session || !$session->isAuthenticated() || !$session->isAdmin()) {
             return false;
         }
 
@@ -128,7 +128,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $existingUser =$this->userService->getUserForEmail($email);
-        if (!empty($existingUser)) {
+        if (!$existingUser) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
                 success: false,
                 errorMessage: $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
@@ -203,7 +203,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         Request $request
     ): Response {
         $existingUser = $this->userService->getUserForId($userId, true);
-        if (empty($existingUser)) {
+        if (!$existingUser) {
             return new BackofficeApiControllerUpdateUserFailureResponse();
         }
 
@@ -340,7 +340,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     protected function destroyUser(int $userId, Request $request): Response
     {
         $user = $this->userService->getUserForId($userId, true);
-        if (empty($user)) {
+        if (!$user) {
             return new BackofficeApiControllerDestroyUserFailureResponse();
         }
 
@@ -393,7 +393,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        if (!ArticleStatus::tryFrom($statusId) === null) {
+        if (!ArticleStatus::tryFrom($statusId)) {
             return new BackofficeApiControllerStoreArticleSuccessResponse(
                 success: false,
                 errorMessage: 'Invalid article status',
@@ -453,7 +453,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             userAgent: $request->userAgent,
         );
 
-        if (empty($newArticle)) {
+        if (!$newArticle) {
             return new BackofficeApiControllerStoreArticleSuccessResponse(
                 success: false,
                 errorMessage: 'Failed to create article',
@@ -517,7 +517,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        if (!ArticleStatus::tryFrom($statusId) === null) {
+        if (!ArticleStatus::tryFrom($statusId)) {
             return new BackofficeApiControllerUpdateArticleSuccessResponse(
                 success: false,
                 errorMessage: 'Invalid article status',
@@ -633,7 +633,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     public function destroyArticle(int $articleId, Request $request): Response
     {
         $existingArticle = $this->articleService->getArticleForId($articleId);
-        if (empty($existingArticle)) {
+        if (!$existingArticle) {
             return new BackofficeApiControllerDestroyArticleFailureResponse();
         }
 
@@ -682,7 +682,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $res = $this->tagService->storeTag(new Tag(null, $name));
 
-        if (empty($res)) {
+        if (!$res) {
             return new BackofficeApiControllerStoreTagFailureResponse();
         }
 
@@ -1306,9 +1306,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 contentHtml: $contentHtml,
                 createdAt: $existingCollection->createdAt,
                 updatedAt: new DateTimeImmutable(),
-                sequence: $existingCollectionTo
-                    ? $existingCollectionTo->sequence
-                    : $existingCollection->sequence,
+                sequence: $existingCollectionTo->sequence ?? $existingCollection->sequence,
             ),
         );
 

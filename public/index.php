@@ -7,7 +7,7 @@ use Amora\Core\Util\NetworkUtil;
 require_once '../Core/Core.php';
 
 try {
-    Core::initiate(realpath(__DIR__ . '/..'));
+    Core::initiate(dirname(__DIR__));
 } catch (Throwable $t) {
     header('HTTP/1.1 500 Internal Server Error');
     echo 'There was an unexpected error :(';

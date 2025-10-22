@@ -197,7 +197,7 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
           </div>
         </div>
       </div>
-<?=$this->insert('partials/analytics/chart-bar-day', ['responseData' => $responseData]);?>
+<?=$this->insert('partials/analytics/chart-bar-day', ['responseData' => $responseData])?>
     </div>
     <div class="analytics-block">
       <h2><?=$responseData->getLocalValue('analyticsSource')?></h2>
@@ -264,5 +264,5 @@ $eventTypeCrawlerUrl = UrlBuilderUtil::buildBackofficeAnalyticsUrl(
 <?php } ?>
     </div>
   </main>
-<?=$this->insert('partials/analytics/chart-bar-day-js', ['responseData' => $responseData]);?>
+<?=$this->insert('partials/analytics/chart-bar-day-js', ['responseData' => $responseData])?>
   <script type="module" src="/js/analytics.js?v=000"></script>

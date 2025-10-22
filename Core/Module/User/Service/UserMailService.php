@@ -356,7 +356,7 @@ readonly class UserMailService
         do {
             $verificationIdentifier = StringUtil::generateRandomString(64);
             $verification = $this->userDataLayer->getUserVerification(verificationIdentifier: $verificationIdentifier);
-        } while(!empty($verification));
+        } while($verification);
 
         return $verificationIdentifier;
     }

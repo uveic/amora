@@ -101,11 +101,11 @@ function parseSwaggerFile(filename, callback) {
           if (param
             && param.type === 'apiKey'
             && param.in === 'header'
-            && param.name.substr(0,7) === 'cookie-')
+            && param.name.substring(0,7) === 'cookie-')
           {
             globalParams.push(
               {
-                name: param.name.substr(7),
+                name: param.name.substring(7),
                 required: true,
                 in: 'cookie',
                 type: 'string'
@@ -121,7 +121,7 @@ function parseSwaggerFile(filename, callback) {
         for (const [method, operation] of Object.entries(methods)) {
           operation.parameters = operation.parameters || [];
           operation.parameters = globalParams.concat(operation.parameters);
-          operation.path = path.substr(1);
+          operation.path = path.substring(1);
           operation.method = method;
           operations.push(operation);
         }

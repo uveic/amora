@@ -69,7 +69,6 @@ foreach ($responseData->reportVisitors->pageViews as $pageView) {
   <script src="/js/lib/chart.min.js"></script>
   <script nonce="<?=$responseData->nonce?>">
     const ctxChartLineShared = document.getElementById('chart-line-canvas').getContext('2d');
-    let chartLineSharedResponseData = {};
     const chartLineSharedData = {
       labels: [<?=implode(',', $labels)?>],
       datasets: [

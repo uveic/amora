@@ -51,11 +51,9 @@ final class LocalisationUtil
         }
 
         $appFilePath = Core::getPathRoot() . '/App/Value/Localisation/' . $language->value . '.php';
-        if (!file_exists($appFilePath)) {
-            if (!file_exists($coreFilePath)) {
-                $this->logger->logError('Localisation file not found: ' . $appFilePath);
-                $appFilePath = null;
-            }
+        if (!file_exists($appFilePath) && !file_exists($coreFilePath)) {
+            $this->logger->logError('Localisation file not found: ' . $appFilePath);
+            $appFilePath = null;
         }
 
         $coreValues = $coreFilePath ? require $coreFilePath : [];

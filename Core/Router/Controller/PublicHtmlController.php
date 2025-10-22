@@ -208,7 +208,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         );
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        if (empty($verification) || $verification->hasExpired()) {
+        if (!$verification || $verification->hasExpired()) {
             return $this->buildHomepageResponse(
                 request: $request,
                 feedback: new Feedback(
@@ -253,7 +253,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             isEnabled: true,
         );
 
-        if (empty($verification) || $verification->hasExpired()) {
+        if (!$verification || $verification->hasExpired()) {
             return $this->buildHomepageResponse(
                 request: $request,
                 feedback: new Feedback(
@@ -264,7 +264,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         }
 
         $user = $this->userService->getUserForId(userId: $verification->userId, includeDisabled: true);
-        if (!$user->isEnabled()) {
+        if (!$user || !$user->isEnabled()) {
             return Response::createUnauthorisedHtmlResponse(request: $request);
         }
 
@@ -334,6 +334,10 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             $slug = $this->albumService->getAlbumSlugForSlug($albumSlug);
             if ($slug && $slug->albumId) {
                 $albumForSlug = $this->albumService->getAlbumForId($slug->albumId);
+
+                if (!$albumForSlug) {
+                    return Response::createNotFoundResponse($request);
+                }
 
                 return Response::createPermanentRedirectResponse(
                     url: UrlBuilderUtil::buildPublicAlbumUrl(

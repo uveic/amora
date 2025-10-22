@@ -94,7 +94,7 @@ class Core
 
     public static function isRunningInCli(): bool
     {
-        return php_sapi_name() == 'cli';
+        return PHP_SAPI === 'cli';
     }
 
     public static function getConfig(): AppConfig
@@ -181,7 +181,7 @@ class Core
     {
         return self::getInstance(
             className: 'AmoraLogger',
-            factory: function () use ($identifier) {
+            factory: static function () use ($identifier) {
                 return new Logger(
                     identifier: $identifier,
                     isRunningInCli: self::isRunningInCli(),
@@ -199,7 +199,7 @@ class Core
     {
         return self::getInstance(
             className: 'Router',
-            factory: function () {
+            factory: static function () {
                 require_once self::$pathToRoot . '/Core/Entity/Response/HtmlResponseData.php';
                 require_once self::$pathToRoot . '/App/Router/AppRouterCore.php';
                 require_once self::$pathToRoot . '/App/Router/AppRouter.php';
@@ -231,7 +231,7 @@ class Core
     {
         return self::getInstance(
             className: $database->name . 'Database',
-            factory: function () use ($database) {
+            factory: static function () use ($database) {
                 require_once self::$pathToRoot . '/Core/Value/QueryOrderDirection.php';
                 require_once self::$pathToRoot . '/Core/Entity/Util/QueryOrderBy.php';
                 require_once self::$pathToRoot . '/Core/Entity/Util/QueryOptions.php';
@@ -260,7 +260,7 @@ class Core
     ): MigrationDbApp {
         return self::getInstance(
             className: 'MigrationDbApp',
-            factory: function () use ($db, $pathToMigrationFiles) {
+            factory: static function () use ($db, $pathToMigrationFiles) {
                 require_once self::$pathToRoot . '/Core/Database/Migration/MigrationDbApp.php';
                 return new MigrationDbApp(
                     db: $db,
@@ -282,7 +282,7 @@ class Core
     ): DbBackupApp {
         return self::getInstance(
             className: 'DbBackupApp',
-            factory: function () use ($db, $dbBackupConfig) {
+            factory: static function () use ($db, $dbBackupConfig) {
                 require_once self::$pathToRoot . '/Core/App/LockManager.php';
                 require_once self::$pathToRoot . '/Core/App/App.php';
                 require_once self::$pathToRoot . '/Core/Database/DbBackupApp.php';
@@ -307,7 +307,7 @@ class Core
     {
         return self::getInstance(
             className: 'SyncLookupTablesApp',
-            factory: function () {
+            factory: static function () {
                 require_once self::$pathToRoot . '/Core/Entity/Util/LookupTableSettings.php';
                 require_once self::$pathToRoot . '/Core/App/SyncLookupTablesApp.php';
                 return new SyncLookupTablesApp(
@@ -330,7 +330,7 @@ class Core
 
         return self::getInstance(
             className: 'LocalisationUtil',
-            factory: function () use ($logger, $language) {
+            factory: static function () use ($logger, $language) {
                 require_once self::$pathToRoot . '/Core/Module/User/Service/UserService.php';
                 require_once self::$pathToRoot . '/Core/Util/LocalisationUtil.php';
                 return new LocalisationUtil($logger, $language);

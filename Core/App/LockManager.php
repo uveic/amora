@@ -54,11 +54,11 @@ class LockManager
             return false;
         }
 
-        if (!file_exists($this->getLockFolderPath())) {
-            if (false === @mkdir($this->getLockFolderPath())) {
-                $this->logger->logError($this->logPrefix . 'Failed to create lock folder');
-                exit;
-            }
+        if (!file_exists($this->getLockFolderPath()) &&
+            !mkdir($concurrentDirectory = $this->getLockFolderPath()) && !is_dir($concurrentDirectory)
+        ) {
+            $this->logger->logError($this->logPrefix . 'Failed to create lock folder');
+            exit;
         }
 
         file_put_contents($this->getLockFullPath(), time());
@@ -68,11 +68,11 @@ class LockManager
 
     public function updateLock(): bool
     {
-        if (!file_exists($this->getLockFolderPath())) {
-            if (false === @mkdir($this->getLockFolderPath())) {
-                $this->logger->logError($this->logPrefix . 'Failed to create lock folder');
-                exit;
-            }
+        if (!file_exists($this->getLockFolderPath()) &&
+            !mkdir($concurrentDirectory = $this->getLockFolderPath()) && !is_dir($concurrentDirectory)
+        ) {
+            $this->logger->logError($this->logPrefix . 'Failed to create lock folder');
+            exit;
         }
 
         file_put_contents($this->getLockFullPath(), time());
@@ -131,9 +131,9 @@ class LockManager
     {
         if (!file_exists($this->getLockFullPath())) {
             return 0;
-        } else {
-            return (int) time() - filectime($this->getLockFullPath());
         }
+
+        return time() - filectime($this->getLockFullPath());
     }
 
     private function getLockFolderPath(): string

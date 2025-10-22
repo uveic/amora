@@ -92,7 +92,7 @@ class Router
             $response = Response::createErrorResponse();
         }
 
-        foreach ($response->getHeaders() as $header) {
+        foreach ($response->headers as $header) {
             header($header);
         }
 
@@ -158,11 +158,11 @@ class Router
                         return Response::createRedirectResponse(
                             url: '/' . strtolower(Core::getDefaultBackofficeLanguage()->value) . '/' . implode('/', $arrayPath),
                         );
-                    } else {
-                        return Response::createRedirectResponse(
-                            url: UrlBuilderUtil::buildBackofficeDashboardUrl(Core::getDefaultBackofficeLanguage()),
-                        );
                     }
+
+                    return Response::createRedirectResponse(
+                        url: UrlBuilderUtil::buildBackofficeDashboardUrl(Core::getDefaultBackofficeLanguage()),
+                    );
                 }
 
                 return Response::createRedirectResponse(
@@ -227,7 +227,7 @@ class Router
             includePublishedAtInTheFuture: false,
         );
 
-        if (empty($article)) {
+        if (!$article) {
             return Response::createNotFoundResponse($request);
         }
 

@@ -162,7 +162,7 @@ class MediaDataLayer
     {
         $resInsert = $this->db->insert(self::MEDIA_TABLE, $data->asArray());
 
-        if (empty($resInsert)) {
+        if (!$resInsert) {
             $this->logger->logError('Error inserting media');
         }
 
@@ -189,7 +189,7 @@ class MediaDataLayer
     {
         $resInsert = $this->db->insert(self::MEDIA_DESTROYED_TABLE, $data->asArray());
 
-        if (empty($resInsert)) {
+        if (!$resInsert) {
             $this->logger->logError('Error inserting media destroyed');
         }
 

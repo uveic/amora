@@ -20,10 +20,8 @@ $displayLoadMore = count($responseData->media) >= 50;
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
       <span class="icon-one-line width-10-grow"><?=CoreIcons::FILES?><span class="ellipsis"><?=$responseData->getLocalValue('navAdminMedia')?></span></span>
       <div class="links">
-        <div class="upload-media-control">
-          <input class="null" type="file" id="media" name="media" multiple="" accept="*">
-          <label for="media" class="cursor-pointer"><?=CoreIcons::ADD?></label>
-        </div>
+        <input class="null" type="file" id="media" name="media" multiple="" accept="*">
+        <label for="media" class="cursor-pointer"><?=CoreIcons::ADD?></label>
       </div>
     </div>
 

@@ -251,11 +251,7 @@ readonly class FeedService
 
     private function getLastPubDate(?FeedItem $feedItem): DateTimeImmutable
     {
-        if (!$feedItem) {
-            return new DateTimeImmutable('now');
-        }
-
-        return $feedItem->publishedOn;
+        return $feedItem->publishedOn ?? new DateTimeImmutable('now');
     }
 
     private function getBuildDate(array $feedItems): DateTimeImmutable

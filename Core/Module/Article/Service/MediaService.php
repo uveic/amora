@@ -118,50 +118,43 @@ readonly class MediaService
 
     public function destroyMedia(Media $media): bool
     {
-        if (file_exists($media->getDirWithNameOriginal())) {
-            if (!unlink($media->getDirWithNameOriginal())) {
-                return false;
-            }
+        if (file_exists($media->getDirWithNameOriginal()) && !unlink($media->getDirWithNameOriginal())) {
+            return false;
         }
 
-        if ($media->filenameXSmall) {
-            if (file_exists($media->getDirWithNameXSmall())) {
-                if (!unlink($media->getDirWithNameXSmall())) {
-                    return false;
-                }
-            }
+        if ($media->filenameXSmall &&
+            file_exists($media->getDirWithNameXSmall()) &&
+            !unlink($media->getDirWithNameXSmall())
+        ) {
+            return false;
         }
 
-        if ($media->filenameSmall) {
-            if (file_exists($media->getDirWithNameSmall())) {
-                if (!unlink($media->getDirWithNameSmall())) {
-                    return false;
-                }
-            }
+        if ($media->filenameSmall &&
+            file_exists($media->getDirWithNameSmall()) &&
+            !unlink($media->getDirWithNameSmall())
+        ) {
+            return false;
         }
 
-        if ($media->filenameMedium) {
-            if (file_exists($media->getDirWithNameMedium())) {
-                if (!unlink($media->getDirWithNameMedium())) {
-                    return false;
-                }
-            }
+        if ($media->filenameMedium &&
+            file_exists($media->getDirWithNameMedium()) &&
+            !unlink($media->getDirWithNameMedium())
+        ) {
+            return false;
         }
 
-        if ($media->filenameLarge) {
-            if (file_exists($media->getDirWithNameLarge())) {
-                if (!unlink($media->getDirWithNameLarge())) {
-                    return false;
-                }
-            }
+        if ($media->filenameLarge &&
+            file_exists($media->getDirWithNameLarge()) &&
+            !unlink($media->getDirWithNameLarge())
+        ) {
+            return false;
         }
 
-        if ($media->filenameXLarge) {
-            if (file_exists($media->getDirWithNameXLarge())) {
-                if (!unlink($media->getDirWithNameXLarge())) {
-                    return false;
-                }
-            }
+        if ($media->filenameXLarge &&
+            file_exists($media->getDirWithNameXLarge())
+            && !unlink($media->getDirWithNameXLarge())
+        ) {
+            return false;
         }
 
         return $this->mediaDataLayer->destroyMedia($media->id);
@@ -259,7 +252,7 @@ readonly class MediaService
             ) {
                 try {
                     $rawFile = $this->validateAndProcessRawFile($rawFiles);
-                    if (empty($rawFile)) {
+                    if (!$rawFile) {
                         return new Feedback(
                             isSuccess: false,
                             message: 'Raw file not valid',
@@ -271,7 +264,7 @@ readonly class MediaService
                         default => $this->processRawFile($rawFile, $user),
                     };
 
-                    if (empty($processedMedia)) {
+                    if (!$processedMedia) {
                         return new Feedback(
                             isSuccess: false,
                             message: 'File not valid',
@@ -437,7 +430,7 @@ readonly class MediaService
             }
 
             $fullPath = $mediaBasePath . '/' . $mediaExtraPath;
-            if (false === @mkdir(directory: $fullPath, recursive: true)) {
+            if (!mkdir($fullPath, true) && !is_dir($fullPath)) {
                 $this->logger->logError('Failed to create folder: ' . $fullPath);
                 return 'no-folder';
             }

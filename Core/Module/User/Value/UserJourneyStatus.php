@@ -24,21 +24,20 @@ enum UserJourneyStatus: int
     public function getClassname(): string
     {
         return match ($this) {
-            UserJourneyStatus::RegistrationComplete => 'status-published',
+            self::RegistrationComplete => 'status-published',
             default => 'status-draft',
         };
     }
 
     public function getTitle(Language $language): string {
-        $localisationUtil = Core::getLocalisationUtil($language);
-        return $localisationUtil->getValue('userJourney' . $this->name);
+        return Core::getLocalisationUtil($language)->getValue('userJourney' . $this->name);
     }
 
     public function getVerificationType(): ?VerificationType
     {
         return match ($this) {
-            UserJourneyStatus::PendingPasswordCreation => VerificationType::PasswordCreation,
-            UserJourneyStatus::PendingEmailVerification => VerificationType::VerifyEmailAddress,
+            self::PendingPasswordCreation => VerificationType::PasswordCreation,
+            self::PendingEmailVerification => VerificationType::VerifyEmailAddress,
             default => null,
         };
     }
