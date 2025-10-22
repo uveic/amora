@@ -28,7 +28,8 @@ class Album
         public readonly ?string $titleHtml,
         public readonly ?string $contentHtml,
         public readonly array $collections = [],
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data, array $collections = []): self
     {

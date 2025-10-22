@@ -25,6 +25,7 @@
     "aws/aws-sdk-php": "^3.306"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest"
+    "roave/security-advisories": "dev-latest",
+    "squizlabs/php_codesniffer": "^4.0"
   }
 }

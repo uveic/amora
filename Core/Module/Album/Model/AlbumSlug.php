@@ -12,7 +12,8 @@ class AlbumSlug
         public readonly ?int $albumId,
         public readonly string $slug,
         public readonly DateTimeImmutable $createdAt,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $item): self
     {

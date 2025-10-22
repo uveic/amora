@@ -21,7 +21,8 @@ readonly class AlbumService
 {
     public function __construct(
         private AlbumDataLayer $albumDataLayer,
-    ) {}
+    ) {
+    }
 
     public function getAlbumForId(
         int $id,
@@ -295,7 +296,7 @@ readonly class AlbumService
                 return $existingSlug;
             }
             $count++;
-        } while($existingAlbum !== null);
+        } while ($existingAlbum !== null);
 
         return $this->albumDataLayer->storeAlbumSlug(
             new AlbumSlug(
@@ -386,13 +387,12 @@ readonly class AlbumService
     }
 
     public function workflowUpdateCollection(
-        Collection  $collectionFrom,
+        Collection $collectionFrom,
         ?Collection $collectionTo,
-        Collection  $updated,
+        Collection $updated,
     ): bool {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
-            function () use ($collectionFrom, $collectionTo, $updated)
-            {
+            function () use ($collectionFrom, $collectionTo, $updated) {
                 if ($collectionTo && $collectionFrom->sequence !== $collectionTo->sequence) {
                     $resSequence = $this->albumDataLayer->updateCollectionSequenceForAlbum(
                         collectionFrom: $collectionFrom,
@@ -421,8 +421,7 @@ readonly class AlbumService
     public function workflowDeleteMediaForCollection(CollectionMedia $collectionMedia): bool
     {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
-            function () use ($collectionMedia)
-            {
+            function () use ($collectionMedia) {
                 $this->albumDataLayer->updateCollectionSequenceWhenMediaIsDeletedForAlbum($collectionMedia);
 
                 $res = $this->albumDataLayer->deleteMediaForCollection($collectionMedia->id);
@@ -511,7 +510,8 @@ readonly class AlbumService
         );
     }
 
-    public function getTotalAlbums(): int {
+    public function getTotalAlbums(): int
+    {
         return $this->albumDataLayer->getTotalAlbums();
     }
 }

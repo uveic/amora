@@ -23,13 +23,13 @@ class AlbumDataLayer
 {
     use DataLayerTrait;
 
-    const string ALBUM_TABLE = 'core_album';
-    const string COLLECTION_TABLE = 'core_collection';
-    const string COLLECTION_MEDIA_TABLE = 'core_collection_media';
-    const string ALBUM_SLUG_TABLE = 'core_album_slug';
+    private const string ALBUM_TABLE = 'core_album';
+    private const string COLLECTION_TABLE = 'core_collection';
+    private const string COLLECTION_MEDIA_TABLE = 'core_collection_media';
+    private const string ALBUM_SLUG_TABLE = 'core_album_slug';
 
-    const string ALBUM_STATUS_TABLE = 'core_album_status';
-    const string ALBUM_TEMPLATE_TABLE = 'core_album_template';
+    public const string ALBUM_STATUS_TABLE = 'core_album_status';
+    public const string ALBUM_TEMPLATE_TABLE = 'core_album_template';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -629,7 +629,7 @@ class AlbumDataLayer
         CollectionMedia $collectionMediaTo,
     ): bool {
         $resTrans = $this->db->withTransaction(
-            function () use($collectionMediaFrom, $collectionMediaTo) {
+            function () use ($collectionMediaFrom, $collectionMediaTo) {
                 if ($collectionMediaFrom->sequence === $collectionMediaTo->sequence) {
                     return new Feedback(true);
                 }

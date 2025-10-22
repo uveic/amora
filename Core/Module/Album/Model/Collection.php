@@ -20,7 +20,8 @@ class Collection
         public readonly DateTimeImmutable $updatedAt,
         public readonly int $sequence,
         public readonly array $media = [],
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data, array $media = []): self
     {

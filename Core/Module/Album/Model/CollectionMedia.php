@@ -16,7 +16,8 @@ class CollectionMedia
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt,
         public readonly int $sequence,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

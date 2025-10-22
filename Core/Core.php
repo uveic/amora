@@ -21,7 +21,7 @@ use Amora\Core\Util\LocalisationUtil;
 
 class Core
 {
-    const int SQL_QUERY_QTY = 100;
+    public const int SQL_QUERY_QTY = 100;
 
     private static bool $initiated = false;
     private static AppConfig $config;
@@ -132,7 +132,8 @@ class Core
         return self::$config->env === Env::Live;
     }
 
-    public static function updateTimezone(string $newTimezone): void {
+    public static function updateTimezone(string $newTimezone): void
+    {
         if (self::getDefaultTimezone() !== $newTimezone) {
             self::$config->timezone = $newTimezone;
             date_default_timezone_set(self::getDefaultTimezone());
