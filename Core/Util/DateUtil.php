@@ -15,7 +15,7 @@ use Throwable;
 
 final class DateUtil
 {
-    const string MYSQL_DATETIME_FORMAT = 'Y-m-d H:i:s';
+    public const string MYSQL_DATETIME_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * Check if the date is a valid ISO8601 date: YYYY-mm-ddTHH:mm:ssZ
@@ -138,12 +138,14 @@ final class DateUtil
                 break;
         }
 
-        if (!$includeSeconds &&
-            ($diff['y'] > 0
+        if (
+            !$includeSeconds && (
+                $diff['y'] > 0
                 || $diff['m'] > 0
                 || $diff['d'] > 0
                 || $diff['h'] > 0
-                || $diff['i'] > 0)
+                || $diff['i'] > 0
+            )
         ) {
             unset($string['s']);
         }
@@ -314,7 +316,7 @@ final class DateUtil
 
     public static function getMonthName(int $month, Language $lang, bool $shorName = false): string
     {
-        $months = match($lang->value) {
+        $months = match ($lang->value) {
             'ES' => ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
                 'septiembre', 'octubre', 'noviembre', 'diciembre'],
             'GL' => ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo',

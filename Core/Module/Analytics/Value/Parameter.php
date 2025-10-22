@@ -27,7 +27,7 @@ enum Parameter: int
 
     public function getValueTableName(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Url => AnalyticsDataLayer::EVENT_VALUE_URL,
             self::Platform => AnalyticsDataLayer::EVENT_VALUE_USER_AGENT_PLATFORM,
             self::Browser => AnalyticsDataLayer::EVENT_VALUE_USER_AGENT_BROWSER,
@@ -39,7 +39,7 @@ enum Parameter: int
 
     public function getColumnName(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Url => 'url_id',
             self::Platform => 'platform_id',
             self::Browser => 'browser_id',
@@ -49,8 +49,9 @@ enum Parameter: int
         };
     }
 
-    public function getDbColumnMaxLength(): int {
-        return match($this) {
+    public function getDbColumnMaxLength(): int
+    {
+        return match ($this) {
             self::Url => 150,
             self::Platform, self::Browser => 40,
             self::Language => 3,

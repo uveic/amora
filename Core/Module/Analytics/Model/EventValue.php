@@ -7,7 +7,8 @@ class EventValue
     public function __construct(
         public ?int $id,
         public readonly string $value,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

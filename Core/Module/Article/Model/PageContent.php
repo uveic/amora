@@ -26,7 +26,8 @@ class PageContent
         public readonly ?Media $mainImage,
         public readonly ?string $actionUrl,
         public readonly ?Collection $collection,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

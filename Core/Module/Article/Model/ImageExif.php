@@ -18,7 +18,8 @@ readonly class ImageExif
         public ?DateTimeImmutable $takenAt,
         public ?string $exposureTime,
         public ?string $iso,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

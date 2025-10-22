@@ -8,22 +8,15 @@ use Amora\Core\Util\StringUtil;
 
 class LockManager
 {
-    private Logger $logger;
-    private string $lockFolder;
-    private string $lockType;
-    private string $lockName;
-    private int $secondsToRemoveLock;
     private string $logPrefix;
 
     public function __construct(
-        Logger $logger,
-        string $lockName,
-        int $secondsToRemoveLock = 0,
-        string $lockFolder = '/tmp',
-        string $lockType = 'script'
+        private readonly Logger $logger,
+        private string $lockName,
+        private readonly int $secondsToRemoveLock = 0,
+        private readonly string $lockFolder = '/tmp',
+        private readonly string $lockType = 'script'
     ) {
-        $this->logger = $logger;
-
         $cleanLockName = str_replace(' ', '_', StringUtil::cleanString(Core::getConfig()->appName . '-' . $lockName));
 
         if (empty($cleanLockName)) {
@@ -31,10 +24,7 @@ class LockManager
             exit;
         }
 
-        $this->lockFolder = $lockFolder;
-        $this->lockType = $lockType;
         $this->lockName = $cleanLockName;
-        $this->secondsToRemoveLock = $secondsToRemoveLock;
 
         $this->logPrefix = 'LockManager App: ' . $this->lockName . ' ::: ';
     }
@@ -54,7 +44,8 @@ class LockManager
             return false;
         }
 
-        if (!file_exists($this->getLockFolderPath()) &&
+        if (
+            !file_exists($this->getLockFolderPath()) &&
             !mkdir($concurrentDirectory = $this->getLockFolderPath()) && !is_dir($concurrentDirectory)
         ) {
             $this->logger->logError($this->logPrefix . 'Failed to create lock folder');
@@ -68,7 +59,8 @@ class LockManager
 
     public function updateLock(): bool
     {
-        if (!file_exists($this->getLockFolderPath()) &&
+        if (
+            !file_exists($this->getLockFolderPath()) &&
             !mkdir($concurrentDirectory = $this->getLockFolderPath()) && !is_dir($concurrentDirectory)
         ) {
             $this->logger->logError($this->logPrefix . 'Failed to create lock folder');

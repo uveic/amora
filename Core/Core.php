@@ -22,6 +22,7 @@ use Amora\Core\Util\LocalisationUtil;
 class Core
 {
     public const int SQL_QUERY_QTY = 100;
+    public const int USER_PASSWORD_MIN_LENGTH = 10;
 
     private static bool $initiated = false;
     private static AppConfig $config;

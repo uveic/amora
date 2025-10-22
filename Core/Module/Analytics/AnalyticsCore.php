@@ -11,7 +11,6 @@ use Amora\Core\Module\Analytics\Service\AnalyticsService;
 
 class AnalyticsCore extends Core
 {
-
     public static function getDb(): MySqlDb
     {
         return self::getAnalyticsDb();

@@ -17,7 +17,8 @@ final class MySqlDb
         public readonly string $name,
         private ?PDO $connection = null,
         private bool $isInTransactionMode = false,
-    ) {}
+    ) {
+    }
 
     public function updateTimezone(): bool
     {

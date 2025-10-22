@@ -1,13 +1,15 @@
 <?php
 
+namespace Amora\Core\Util;
+
 use Amora\Core\Entity\Util\UserAgentInfo;
 use Random\RandomException;
 
 final class UserAgentParserUtil
 {
-    const string PLATFORM = 'platform';
-    const string BROWSER  = 'browser';
-    const string BROWSER_VERSION = 'version';
+    public const string PLATFORM = 'platform';
+    public const string BROWSER  = 'browser';
+    public const string BROWSER_VERSION = 'version';
 
     /**
      * Parses a user agent string into its important parts
@@ -19,7 +21,8 @@ final class UserAgentParserUtil
      * @author Jesse G. Donat <donatj@gmail.com>
      * @link https://github.com/donatj/PhpUserAgent
      */
-    public static function parse(?string $userAgent): UserAgentInfo {
+    public static function parse(?string $userAgent): UserAgentInfo
+    {
         $platform = '';
 
         if (!$userAgent) {
@@ -68,10 +71,7 @@ REGEX
 
         // If nothing matched, return null (to avoid undefined index errors)
         if (!isset($result[self::BROWSER][0], $result[self::BROWSER_VERSION][0])) {
-            if (preg_match('%^(?!Mozilla)(?P<browser>[A-Z0-9\-]+)(/(?P<version>[0-9A-Z.]+))?%ix',
-                $userAgent,
-                $result)
-            ) {
+            if (preg_match('%^(?!Mozilla)(?P<browser>[A-Z0-9\-]+)(/(?P<version>[0-9A-Z.]+))?%ix', $userAgent, $result)) {
                 return new UserAgentInfo(
                     platform: $platform ?: null,
                     browser: $result[self::BROWSER],
@@ -93,10 +93,10 @@ REGEX
 
         $lowerBrowser = array_map('strtolower', $result[self::BROWSER]);
 
-        $find = static function ( $search, &$key = null, &$value = null ) use ( $lowerBrowser) {
+        $find = static function ($search, &$key = null, &$value = null) use ($lowerBrowser) {
             $search = (array)$search;
 
-            foreach( $search as $val) {
+            foreach ($search as $val) {
                 $xKey = array_search(strtolower($val), $lowerBrowser, true);
                 if ($xKey !== false) {
                     $value = $val;
@@ -109,7 +109,7 @@ REGEX
             return false;
         };
 
-        $findT = static function ( array $search, &$key = null, &$value = null ) use ( $find) {
+        $findT = static function (array $search, &$key = null, &$value = null) use ($find) {
             $value2 = null;
             if ($find(array_keys($search), $key, $value2)) {
                 $value = $search[$value2];

@@ -29,7 +29,8 @@ class Article
         public readonly ?Media $mainImage,
         public readonly string $path,
         public readonly array $tags = [],
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $article): self
     {

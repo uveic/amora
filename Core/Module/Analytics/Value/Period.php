@@ -23,7 +23,7 @@ enum Period: int
 
     public function getFrom(string $date): DateTimeImmutable
     {
-        return match($this) {
+        return match ($this) {
             self::Day => DateUtil::convertPartialDateFormatToFullDate(
                 partialDate: $date,
                 aggregatedBy: AggregateBy::Day,
@@ -62,7 +62,7 @@ enum Period: int
 
     public function getAggregateBy(): AggregateBy
     {
-        return match($this) {
+        return match ($this) {
             self::Day => AggregateBy::Hour,
             self::Month => AggregateBy::Day,
             self::Year => AggregateBy::Month,
@@ -71,7 +71,7 @@ enum Period: int
 
     public function getName(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Day => 'day',
             self::Month => 'month',
             self::Year => 'year',
@@ -80,7 +80,7 @@ enum Period: int
 
     public static function getFromString(?string $name): self
     {
-        return match($name) {
+        return match ($name) {
             'month' => self::Month,
             'year' => self::Year,
             default => self::Day,

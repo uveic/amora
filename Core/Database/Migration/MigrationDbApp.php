@@ -8,7 +8,7 @@ use Amora\Core\Database\MySqlDb;
 
 final class MigrationDbApp
 {
-    const string MIGRATION_TABLE_NAME = 'migration';
+    private const string MIGRATION_TABLE_NAME = 'migration';
 
     private array $validArguments = array(
         'install' => true,
@@ -19,7 +19,8 @@ final class MigrationDbApp
     public function __construct(
         private readonly MySqlDb $db,
         private readonly string $pathToMigrationFiles,
-    ) {}
+    ) {
+    }
 
     public function run($args): void
     {
@@ -120,7 +121,8 @@ final class MigrationDbApp
         $content .= " */" . PHP_EOL . PHP_EOL;
         $content .= "return \"\";" . PHP_EOL;
 
-        if (!is_dir($this->pathToMigrationFiles) &&
+        if (
+            !is_dir($this->pathToMigrationFiles) &&
             !mkdir($concurrentDirectory = $this->pathToMigrationFiles, "0755", true) &&
             !is_dir($concurrentDirectory)
         ) {
@@ -170,7 +172,7 @@ final class MigrationDbApp
 
             foreach ($tables as $value) {
                 $this->printOutput('Removing ' . $value . '...');
-                $this->db->execute('DROP TABLE IF EXISTS '. $value . ';');
+                $this->db->execute('DROP TABLE IF EXISTS ' . $value . ';');
             }
         }
 

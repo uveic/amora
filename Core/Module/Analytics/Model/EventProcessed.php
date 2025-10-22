@@ -18,7 +18,8 @@ readonly class EventProcessed
         public ?int $languageIsoCodeId = null,
         public ?int $platformId = null,
         public ?int $browserId = null,
-    ) {}
+    ) {
+    }
 
     public function asArray(): array
     {

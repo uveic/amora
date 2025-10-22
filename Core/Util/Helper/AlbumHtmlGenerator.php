@@ -168,7 +168,7 @@ final class AlbumHtmlGenerator
             );
         }
 
-        $output[] = $indentation . '      <a href="#" class="button select-media-action button-media-add collection-add-media-js" data-type-id="' . MediaType::Image->value . '" data-target-container-id="collection-item-media-' . $collection->id .'" data-event-listener-action="collectionAddMedia">';
+        $output[] = $indentation . '      <a href="#" class="button select-media-action button-media-add collection-add-media-js" data-type-id="' . MediaType::Image->value . '" data-target-container-id="collection-item-media-' . $collection->id . '" data-event-listener-action="collectionAddMedia">';
         $output[] = $indentation . '        ' . CoreIcons::IMAGE;
         $output[] = $indentation . '        <span>' . $localisationUtil->getValue('globalAdd') . '</span>';
         $output[] = $indentation . '      </a>';
@@ -440,7 +440,7 @@ final class AlbumHtmlGenerator
             $hiddenItemCount = 7;
         }
 
-        for ($i = 0 ;$i <= $hiddenItemCount; $i++) {
+        for ($i = 0; $i <= $hiddenItemCount; $i++) {
             $output[] = $indentation . '  <div class="modal-item hidden"></div>';
         }
 

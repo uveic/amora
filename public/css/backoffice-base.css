@@ -345,6 +345,10 @@
   display: none;
 }
 
+.content-language-active {
+  display: block;
+}
+
 .content-flag-wrapper {
   display: flex;
   flex-flow: row nowrap;

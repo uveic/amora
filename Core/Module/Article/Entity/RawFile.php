@@ -15,7 +15,8 @@ readonly class RawFile
         public MediaType $mediaType,
         public ?int $sizeBytes = null,
         public ?int $error = null,
-    ) {}
+    ) {
+    }
 
     public function getName(): string
     {

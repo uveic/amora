@@ -29,19 +29,20 @@ class AnalyticsDataLayer
     public const string EVENT_TYPE_TABLE = 'event_type';
     private const string EVENT_SEARCH_TABLE = 'event_search';
 
-    private const string EVENT_VALUE_LANGUAGE_ISO_CODE = 'event_value_language_iso_code';
-    private const string EVENT_VALUE_REFERRER = 'event_value_referrer';
-    private const string EVENT_VALUE_URL = 'event_value_url';
-    private const string EVENT_VALUE_USER_HASH = 'event_value_user_hash';
-    private const string EVENT_VALUE_USER_AGENT_PLATFORM = 'event_value_user_agent_platform';
-    private const string EVENT_VALUE_USER_AGENT_BROWSER = 'event_value_user_agent_browser';
+    public const string EVENT_VALUE_LANGUAGE_ISO_CODE = 'event_value_language_iso_code';
+    public const string EVENT_VALUE_REFERRER = 'event_value_referrer';
+    public const string EVENT_VALUE_URL = 'event_value_url';
+    public const string EVENT_VALUE_USER_HASH = 'event_value_user_hash';
+    public const string EVENT_VALUE_USER_AGENT_PLATFORM = 'event_value_user_agent_platform';
+    public const string EVENT_VALUE_USER_AGENT_BROWSER = 'event_value_user_agent_browser';
 
     private const string BOT_PATH_TABLE = 'bot_path';
     private const string BOT_USER_AGENT = 'bot_user_agent';
 
     public function __construct(
         private readonly MySqlDb $db,
-    ) {}
+    ) {
+    }
 
     public function storeEventRaw(EventRaw $event): ?EventRaw
     {

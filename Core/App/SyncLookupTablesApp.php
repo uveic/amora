@@ -23,12 +23,11 @@ use Throwable;
  * - Changes in existing fields will be updated
  */
 
-final class SyncLookupTablesApp
+final readonly class SyncLookupTablesApp
 {
-    private Logger $logger;
-
-    public function __construct(Logger $logger) {
-        $this->logger = $logger;
+    public function __construct(
+        private Logger $logger,
+    ) {
     }
 
     /**
@@ -144,9 +143,10 @@ final class SyncLookupTablesApp
         }
 
         foreach ($configFileValuesByName as $name => $id) {
-            if (!empty($currentValuesInDbTableByName) &&
+            if (
+                !empty($currentValuesInDbTableByName) &&
                 !empty($currentValuesInDbTableByName[$name]) &&
-                $currentValuesInDbTableByName[$name] != $id
+                $currentValuesInDbTableByName[$name] !== $id
             ) {
                 $this->logger->logError(
                     "Incorrect values for lookup table '$tableName' - " .
@@ -213,7 +213,7 @@ final class SyncLookupTablesApp
         }
 
         foreach ($theirs as $fieldName => $fieldValue) {
-            if ($fieldName != 'id' && $ours[$fieldName] != $fieldValue) {
+            if ($fieldName !== 'id' && $ours[$fieldName] !== $fieldValue) {
                 $db->update($tableName, $rowId, [$fieldName => $fieldValue]);
 
                 $this->logger->logInfo(

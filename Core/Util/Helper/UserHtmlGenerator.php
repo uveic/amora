@@ -93,8 +93,7 @@ final class UserHtmlGenerator
         User $user,
         ?Session $session = null,
         string $indentation = '        ',
-    ): string
-    {
+    ): string {
         $userTitleHtml = '<a href="' . UrlBuilderUtil::buildBackofficeUserViewUrl(language: $language, userId: $user->id) . '">' . $user->getNameOrEmail() . '</a>';
 
         $output = [];

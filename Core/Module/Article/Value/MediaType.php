@@ -39,7 +39,7 @@ enum MediaType: int
 
     public static function getTypeFromRawFileType(?string $rawFileType): self
     {
-        return match($rawFileType) {
+        return match ($rawFileType) {
             'image/jpeg', 'image/gif', 'image/png', 'image/webp' => self::Image,
             'application/pdf' => self::PDF,
             'text/csv' => self::CSV,
@@ -51,7 +51,7 @@ enum MediaType: int
 
     public function getIcon(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Image => CoreIcons::IMAGE,
             self::PDF => CoreIcons::FILE_PDF,
             self::CSV => CoreIcons::FILE_CSV,

@@ -329,5 +329,6 @@ class MediaRemoveApp extends App
 
     // ToDo
     private function deleteDestroyedMedia(): void
-    {}
+    {
+    }
 }

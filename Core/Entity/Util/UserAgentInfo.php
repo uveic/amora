@@ -8,7 +8,8 @@ readonly class UserAgentInfo
         public ?string $platform = null,
         public ?string $browser = null,
         public ?string $version = null,
-    ) {}
+    ) {
+    }
 
     public function getBrowserAndPlatform(): string
     {

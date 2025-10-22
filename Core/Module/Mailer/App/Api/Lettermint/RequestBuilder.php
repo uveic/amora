@@ -8,18 +8,6 @@ use Amora\Core\Util\Logger;
 
 class RequestBuilder extends RequestBuilderAbstract
 {
-    public function __construct(
-        Logger $logger,
-        string $fromEmail,
-        string $fromName,
-    ) {
-        parent::__construct(
-            logger: $logger,
-            fromEmail: $fromEmail,
-            fromName: $fromName,
-        );
-    }
-
     public function buildMailRequest(
         array $emailReceivers,
         string $subject,

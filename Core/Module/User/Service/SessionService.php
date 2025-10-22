@@ -21,7 +21,8 @@ class SessionService
         private readonly string $sessionIdCookieName,
         private readonly int $sessionIdCookieValidForSeconds,
         private readonly SessionDataLayer $dataLayer,
-    ) {}
+    ) {
+    }
 
     public function filterSessionBy(
         array $sessionIds = [],

@@ -36,7 +36,8 @@ readonly class ArticleService
         private Logger $logger,
         private ArticleDataLayer $articleDataLayer,
         private TagDataLayer $tagDataLayer,
-    ) {}
+    ) {
+    }
 
     public function getArticleForId(
         int $id,
@@ -225,7 +226,7 @@ readonly class ArticleService
                 $res = null;
             }
             $count++;
-        } while($res !== null);
+        } while ($res !== null);
 
         $path = $validPath;
         $count = 0;
@@ -233,7 +234,7 @@ readonly class ArticleService
             $validPath = $path . ($count > 0 ? '-' . $count : '');
             $res = in_array($validPath, AppRouter::getReservedPaths(), true);
             $count++;
-        } while($res);
+        } while ($res);
 
         return $validPath;
     }
@@ -562,7 +563,7 @@ readonly class ArticleService
     public function storePageContent(PageContent $pageContent): ?PageContent
     {
         $res = $this->articleDataLayer->getDb()->withTransaction(
-            function () use($pageContent) {
+            function () use ($pageContent) {
                 $resOne = $this->articleDataLayer->storePageContent($pageContent);
 
                 if (!$resOne) {
@@ -714,7 +715,8 @@ readonly class ArticleService
         return $feedItems;
     }
 
-    public function getTotalArticles(): array {
+    public function getTotalArticles(): array
+    {
         return $this->articleDataLayer->getTotalArticles();
     }
 }

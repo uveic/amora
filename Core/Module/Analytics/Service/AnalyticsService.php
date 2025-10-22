@@ -20,13 +20,14 @@ use Amora\Core\Module\Analytics\Model\EventRaw;
 
 readonly class AnalyticsService
 {
-    const int URL_MAX_LENGTH = 255;
-    const string SEARCH_ENDPOINT = 'papi/search';
+    private const int URL_MAX_LENGTH = 255;
+    private const string SEARCH_ENDPOINT = 'papi/search';
 
     public function __construct(
         private Logger $logger,
         private AnalyticsDataLayer $analyticsDataLayer,
-    ) {}
+    ) {
+    }
 
     public function logEvent(Request $request): void
     {

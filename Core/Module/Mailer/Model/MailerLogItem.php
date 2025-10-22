@@ -15,7 +15,8 @@ class MailerLogItem
         public readonly ?string $response = null,
         public readonly ?bool $sent = null,
         public readonly ?string $errorMessage = null
-    ) {}
+    ) {
+    }
 
     public function asArray(): array
     {

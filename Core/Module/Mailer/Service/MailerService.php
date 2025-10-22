@@ -13,7 +13,8 @@ readonly class MailerService
         private MailerDataLayer $mailerDataLayer,
         private MailerApp $mailerApp,
         private bool $sendMailSynchronously,
-    ) {}
+    ) {
+    }
 
     public function storeMail(MailerItem $mailerItem): ?MailerItem
     {

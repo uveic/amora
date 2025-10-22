@@ -34,7 +34,8 @@ final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
                     sessionId: $request->session->id,
                 );
             }
-        } catch (Throwable) {}
+        } catch (Throwable) {
+        }
 
         return true;
     }

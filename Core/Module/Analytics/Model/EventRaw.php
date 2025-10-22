@@ -20,7 +20,8 @@ class EventRaw
         public readonly ?string $searchQuery = null,
         public readonly ?DateTimeImmutable $processedAt = null,
         public readonly ?string $lockId = null,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

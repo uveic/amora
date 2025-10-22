@@ -4,28 +4,33 @@ namespace Amora\Core\Config;
 
 use Amora\App\Value\Language;
 
-enum Env {
+enum Env
+{
     case Dev;
     case Live;
     case Staging;
 }
 
-final readonly class Database {
+final readonly class Database
+{
     public function __construct(
         public string $host = 'localhost',
         public string $user = 'user',
         public string $password = 'pass',
         public string $name = 'amora',
-    ) {}
+    ) {
+    }
 }
 
-final readonly class DatabaseBackup {
+final readonly class DatabaseBackup
+{
     public function __construct(
         public string $mysqlCommandPath = 'mysql',
         public string $mysqlDumpCommandPath = 'mysqldump',
         public string $gzipCommandPath = 'gzip',
         public string $folderPath = '/tmp/',
-    ) {}
+    ) {
+    }
 }
 
 final readonly class MailerAuthentication
@@ -33,7 +38,8 @@ final readonly class MailerAuthentication
     public function __construct(
         public string $apiKey,
         public string $baseApiUrl,
-    ) {}
+    ) {
+    }
 }
 
 final readonly class Email
@@ -41,7 +47,8 @@ final readonly class Email
     public function __construct(
         public string $email,
         public string $name,
-    ) {}
+    ) {
+    }
 }
 
 enum MailerClient
@@ -51,17 +58,20 @@ enum MailerClient
     case Lettermint;
 }
 
-final readonly class Mailer {
+final readonly class Mailer
+{
     public function __construct(
         public MailerClient $client,
         public Email $from,
         public Email $replyTo,
         public MailerAuthentication $mailerAuthentication,
         public bool $sendEmailSynchronously = false,
-    ) {}
+    ) {
+    }
 }
 
-final readonly class S3Config {
+final readonly class S3Config
+{
     public function __construct(
         public string $bucketName,
         public string $regionName,
@@ -71,10 +81,12 @@ final readonly class S3Config {
         public string $apiEndpoint,
         public string $originEndpoint,
         public ?string $cdnEndpoint = null,
-    ) {}
+    ) {
+    }
 }
 
-abstract class AbstractConfig {
+abstract class AbstractConfig
+{
     public function __construct(
         public readonly string $sessionIdCookieName,
         public readonly int $sessionIdCookieValidForSeconds,
@@ -123,7 +135,8 @@ abstract class AbstractConfig {
 
         public readonly Mailer $mailer,
         public readonly ?S3Config $s3Config = null,
-    ) {}
+    ) {
+    }
 
     abstract public static function get(): AbstractConfig;
 }

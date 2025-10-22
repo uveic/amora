@@ -260,13 +260,14 @@ final class StringUtil
         }
     }
 
-    public static function encodeURIComponent(string $str): string {
+    public static function encodeURIComponent(string $str): string
+    {
         $revert = [
-            '%21'=>'!',
-            '%2A'=>'*',
-            '%27'=>"'",
-            '%28'=>'(',
-            '%29'=>')',
+            '%21' => '!',
+            '%2A' => '*',
+            '%27' => "'",
+            '%28' => '(',
+            '%29' => ')',
         ];
 
         return strtr(rawurlencode($str), $revert);
@@ -362,7 +363,7 @@ final class StringUtil
             $validSlug = $slug . ($count > 0 ? '-' . $count : '');
             $res = in_array($validSlug, AppRouter::getReservedPaths(), true);
             $count++;
-        } while($res);
+        } while ($res);
 
         return $validSlug;
     }
@@ -374,7 +375,7 @@ final class StringUtil
         }
 
         $tok = strtok($text, ' ');
-        while($tok !== false) {
+        while ($tok !== false) {
             if (strlen($tok) >= $minLength) {
                 return $tok;
             }
@@ -414,7 +415,7 @@ final class StringUtil
             foreach ($d as $k => $v) {
                 $d[$k] = self::convertToUtf8($v);
             }
-        } else if (is_string ($d)) {
+        } elseif (is_string($d)) {
             return mb_convert_encoding($d, 'UTF-8', 'ISO-8859-1');
         }
 
@@ -432,7 +433,8 @@ final class StringUtil
         return Core::getConfig()->mediaBaseUrl . '/yt_thumbnail/' . $ytVideoId . '.jpg';
     }
 
-    public static function buildYoutubeIFrameHtml(string $ytVideoId, bool $autoplay = false): ?string {
+    public static function buildYoutubeIFrameHtml(string $ytVideoId, bool $autoplay = false): ?string
+    {
         if (!$ytVideoId) {
             return null;
         }

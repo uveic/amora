@@ -16,7 +16,8 @@ class UserRegistrationRequest
         public readonly ?DateTimeImmutable $processedAt,
         public readonly string $requestCode,
         public readonly ?int $userId,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $item): self
     {

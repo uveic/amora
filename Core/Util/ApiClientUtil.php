@@ -15,7 +15,8 @@ readonly class ApiResponse
         public int $responseCode,
         public bool $hasError,
         public ?string $errorMessage = null,
-    ) {}
+    ) {
+    }
 }
 
 class ApiClientUtil

@@ -14,7 +14,6 @@ use Amora\Core\Module\User\Service\UserService;
 
 class UserCore extends Core
 {
-
     public static function getDb(): MySqlDb
     {
         return self::getCoreDb();

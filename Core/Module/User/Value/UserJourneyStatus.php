@@ -29,7 +29,8 @@ enum UserJourneyStatus: int
         };
     }
 
-    public function getTitle(Language $language): string {
+    public function getTitle(Language $language): string
+    {
         return Core::getLocalisationUtil($language)->getValue('userJourney' . $this->name);
     }
 

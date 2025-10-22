@@ -40,7 +40,8 @@ final class LocalisationUtil
         return '';
     }
 
-    private function loadValues(Language $language): array {
+    private function loadValues(Language $language): array
+    {
         $coreFilePath = Core::getPathRoot() . '/Core/Value/Localisation/' . $language->value . '.php';
         if (!file_exists($coreFilePath)) {
             $coreFilePath = Core::getPathRoot() . '/Core/Value/Localisation/' . Core::getDefaultLanguage()->value . '.php';

@@ -20,7 +20,8 @@ class Session
         public readonly ?DateTimeImmutable $forcedExpirationAt = null,
         public readonly ?string $ip = null,
         public readonly ?string $browserAndPlatform = null
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $session): Session
     {

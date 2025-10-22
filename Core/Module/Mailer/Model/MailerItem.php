@@ -23,7 +23,8 @@ class MailerItem
         public readonly ?DateTimeImmutable $processedAt = null,
         public readonly ?bool $hasError = null,
         public readonly ?string $lockId = null,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $item): MailerItem
     {

@@ -264,7 +264,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
+        if (strlen($password) < Core::USER_PASSWORD_MIN_LENGTH) {
             return new PublicApiControllerUserRegistrationSuccessResponse(
                 success: false,
                 redirect: null,
@@ -382,7 +382,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
+        if (strlen($password) < Core::USER_PASSWORD_MIN_LENGTH) {
             return new PublicApiControllerUserPasswordResetSuccessResponse(
                 success: false,
                 errorMessage: $localisationUtil->getValue('authenticationPasswordTooShort'),
@@ -441,7 +441,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             : Core::getDefaultLanguage();
         $localisationUtil = Core::getLocalisationUtil($language, false);
 
-        if (strlen($password) < UserService::USER_PASSWORD_MIN_LENGTH) {
+        if (strlen($password) < Core::USER_PASSWORD_MIN_LENGTH) {
             return new PublicApiControllerUserPasswordCreationSuccessResponse(
                 success: false,
                 errorMessage: $localisationUtil->getValue('authenticationPasswordTooShort'),

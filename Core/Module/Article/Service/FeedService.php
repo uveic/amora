@@ -15,7 +15,8 @@ use JsonException;
 readonly class FeedService
 {
     public function __construct()
-    {}
+    {
+    }
 
     public function buildSitemap(array $feedItems): string
     {

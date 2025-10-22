@@ -8,50 +8,25 @@ use Amora\Core\Module\User\UserCore;
 use Amora\App\Value\Language;
 use JsonException;
 
-final class Request
+final readonly class Request
 {
-    private ?array $parsedHeaders = null {
-        get {
-            if (isset($this->parsedHeaders)) {
-                return $this->parsedHeaders;
-            }
-
-            $headers = array();
-            foreach ($this->headers as $key => $value) {
-                if (!str_starts_with($key, 'HTTP_')) {
-                    continue;
-                }
-
-                $header = str_replace(
-                    ' ',
-                    '-',
-                    ucwords(str_replace('_', ' ', strtolower(substr($key, 5))))
-                );
-                $headers[$header] = $value;
-            }
-
-            $this->parsedHeaders = $headers;
-            return $headers;
-        }
-    }
-
-    public readonly ?Session $session;
-    public readonly Language $siteLanguage;
-    public readonly ?string $clientLanguage;
-    public readonly array $pathWithoutLanguage;
+    public ?Session $session;
+    public Language $siteLanguage;
+    public ?string $clientLanguage;
+    public array $pathWithoutLanguage;
 
     public function __construct(
-        public readonly ?string $sourceIp,
-        public readonly ?string $userAgent,
-        public readonly string $method, // The HTTP request verb (GET, POST, PUT, etc.)
-        public readonly string $path, // The request URI
-        public readonly ?string $referrer,
-        public readonly string $body,
-        public readonly array $getParams,
-        public readonly array $postParams,
-        public readonly array $files,
-        private readonly array $cookies,
-        private readonly array $headers,
+        public ?string $sourceIp,
+        public ?string $userAgent,
+        public string $method, // The HTTP request verb (GET, POST, PUT, etc.)
+        public string $path, // The request URI
+        public ?string $referrer,
+        public string $body,
+        public array $getParams,
+        public array $postParams,
+        public array $files,
+        private array $cookies,
+        array $headers,
     ) {
         $this->session = $this->loadSession();
         $this->clientLanguage = $headers['HTTP_ACCEPT_LANGUAGE'] ?? null;
@@ -166,7 +141,8 @@ final class Request
         return Core::getDefaultLanguage();
     }
 
-    private function loadSession(): ?Session {
+    private function loadSession(): ?Session
+    {
         $sessionId = $this->getCookie(Core::getConfig()->sessionIdCookieName);
         return UserCore::getSessionService()->loadSession($sessionId);
     }

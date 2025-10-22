@@ -8,5 +8,6 @@ readonly class PageViewCount
         public int $count,
         public int $id,
         public string $value,
-    ) {}
+    ) {
+    }
 }

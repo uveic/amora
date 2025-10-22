@@ -13,5 +13,6 @@ readonly class DashboardCount
         public int $albums = 0,
         public int $visitorsToday = 0,
         public int $pageViewsToday = 0,
-    ) {}
+    ) {
+    }
 }

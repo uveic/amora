@@ -6,12 +6,11 @@ use Amora\Core\Util\Logger;
 
 abstract class ApiClientAbstract
 {
-    const int TIMEOUT_SECONDS = 60;
+    private const int TIMEOUT_SECONDS = 60;
 
-    protected Logger $logger;
-
-    public function __construct(Logger $logger) {
-        $this->logger = $logger;
+    public function __construct(
+        protected readonly Logger $logger,
+    ) {
     }
 
     abstract public function sendEmail(

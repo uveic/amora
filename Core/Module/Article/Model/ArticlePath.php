@@ -12,7 +12,8 @@ class ArticlePath
         public readonly int $articleId,
         public readonly string $path,
         public readonly DateTimeImmutable $createdAt,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $item): self
     {

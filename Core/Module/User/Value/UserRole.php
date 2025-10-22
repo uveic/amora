@@ -26,7 +26,7 @@ enum UserRole: int
 
     public function getClass(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Admin => 'status-private',
             self::User => 'status-draft',
         };
@@ -34,7 +34,7 @@ enum UserRole: int
 
     public function getIcon(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Admin => CoreIcons::CROWN,
             default => CoreIcons::USER,
         };

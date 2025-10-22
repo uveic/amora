@@ -6,7 +6,8 @@ use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
 use Amora\Core\Util\UrlBuilderUtil;
 
-enum PageContentSection {
+enum PageContentSection
+{
     case Title;
     case Subtitle;
     case Content;

@@ -8,7 +8,7 @@ use DateTimeImmutable;
 
 class UserVerification
 {
-    const int VERIFICATION_LINK_VALID_FOR_SECONDS = 172800; // 2 days
+    private const int VERIFICATION_LINK_VALID_FOR_SECONDS = 172800; // 2 days
 
     public function __construct(
         public ?int $id,
@@ -19,7 +19,8 @@ class UserVerification
         public readonly ?DateTimeImmutable $verifiedAt,
         public readonly string $verificationIdentifier,
         public readonly bool $isEnabled
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $item): self
     {

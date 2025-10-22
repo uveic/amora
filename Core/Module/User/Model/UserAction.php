@@ -14,7 +14,8 @@ class UserAction
         public readonly ?User $createdByUser,
         public readonly UserActionType $type,
         public readonly DateTimeImmutable $createdAt,
-    ) {}
+    ) {
+    }
 
     public function asArray(): array
     {

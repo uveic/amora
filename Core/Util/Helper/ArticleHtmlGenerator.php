@@ -101,8 +101,7 @@ final class ArticleHtmlGenerator
         HtmlResponseDataAdmin $responseData,
         Article $article,
         string $indentation = '        ',
-    ): string
-    {
+    ): string {
         $statusClassname = match ($article->status) {
             ArticleStatus::Published => 'status-published',
             ArticleStatus::Private, ArticleStatus::Unlisted => 'status-private',
@@ -178,12 +177,11 @@ final class ArticleHtmlGenerator
 
         /** @var ArticleSection $section */
         foreach ($articleSections as $section) {
-            $output[] = $indentation .
-                match ($section->type) {
-                    ArticleSectionType::Image => self::generateMediaHtml($section),
-                    ArticleSectionType::TextParagraph => '<p>' . $section->contentHtml . '</p>',
-                    default => $section->contentHtml,
-                };
+            $output[] = $indentation . match ($section->type) {
+                ArticleSectionType::Image => self::generateMediaHtml($section),
+                ArticleSectionType::TextParagraph => '<p>' . $section->contentHtml . '</p>',
+                default => $section->contentHtml,
+            };
         }
 
         return implode(PHP_EOL, $output) . PHP_EOL;

@@ -19,5 +19,6 @@ readonly class ReportViewCount
         public int $total = 0,
         public ?EventType $eventType = null,
         public ?Parameter $parameter = null,
-    ) {}
+    ) {
+    }
 }

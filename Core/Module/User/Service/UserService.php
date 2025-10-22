@@ -24,16 +24,15 @@ use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\App\Value\Language;
 
-class UserService
+readonly class UserService
 {
-    const int USER_PASSWORD_MIN_LENGTH = 10;
-
     public function __construct(
-        private readonly Logger $logger,
-        private readonly UserDataLayer $userDataLayer,
-        private readonly SessionService $sessionService,
-        private readonly UserMailService $userMailService,
-    ) {}
+        private Logger $logger,
+        private UserDataLayer $userDataLayer,
+        private SessionService $sessionService,
+        private UserMailService $userMailService,
+    ) {
+    }
 
     public function storeUser(User $user): ?User
     {
@@ -180,7 +179,7 @@ class UserService
                 return new Feedback(false);
             }
 
-            if (strlen($newPassword) < self::USER_PASSWORD_MIN_LENGTH) {
+            if (strlen($newPassword) < Core::USER_PASSWORD_MIN_LENGTH) {
                 return new Feedback(
                     false,
                     $localisationUtil->getValue('authenticationPasswordTooShort')
@@ -295,7 +294,8 @@ class UserService
             );
         }
 
-        if (($user->changeEmailAddressTo && $user->changeEmailAddressTo !== $verification->email) ||
+        if (
+            ($user->changeEmailAddressTo && $user->changeEmailAddressTo !== $verification->email) ||
             $verification->hasExpired()
         ) {
             return new Feedback(
@@ -480,7 +480,7 @@ class UserService
         ?UserActionType $actionType = null,
     ): Feedback {
         return $this->userDataLayer->getDb()->withTransaction(
-            function() use (
+            function () use (
                 $updatedByUser,
                 $existingUser,
                 $name,
@@ -586,7 +586,11 @@ class UserService
                         id: null,
                         userId: $updatedUser->id,
                         createdByUser: $updatedByUser,
-                        type: $actionType ?? ($updatedUser->changeEmailAddressTo ? UserActionType::UpdateEmailRequest : UserActionType::Update),
+                        type: $actionType ?? (
+                            $updatedUser->changeEmailAddressTo
+                                ? UserActionType::UpdateEmailRequest
+                                : UserActionType::Update
+                        ),
                         createdAt: new DateTimeImmutable(),
                     ),
                 );
@@ -603,8 +607,7 @@ class UserService
     public function storeRegistrationInviteRequest(
         string $email,
         Language $language,
-    ): UserRegistrationRequest
-    {
+    ): UserRegistrationRequest {
         $res = $this->userDataLayer->getUserRegistrationRequest(null, $email);
         if ($res) {
             return $res;
@@ -629,7 +632,7 @@ class UserService
         do {
             $code = StringUtil::generateRandomString(64);
             $res = $this->userDataLayer->getUserRegistrationRequest($code);
-        } while($res);
+        } while ($res);
 
         return $code;
     }
@@ -658,7 +661,7 @@ class UserService
                 . str_pad(random_int(1, ((int)$max)) - 1, $characters, '0', STR_PAD_LEFT);
 
             $existingUser = $this->filterUserBy(identifier: $identifier);
-        } while($existingUser);
+        } while ($existingUser);
 
         return $makeUppercase ? strtoupper($identifier) : $identifier;
     }

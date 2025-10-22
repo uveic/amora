@@ -12,13 +12,13 @@ class TagDataLayer
 {
     use DataLayerTrait;
 
-    const string TAG_TABLE_NAME = 'core_tag';
+    private const string TAG_TABLE_NAME = 'core_tag';
 
     public function __construct(
         private readonly MySqlDb $db,
         private readonly Logger $logger,
-    )
-    {}
+    ) {
+    }
 
     public function filterTagsBy(
         array $tagIds = [],
@@ -79,7 +79,8 @@ class TagDataLayer
         return $this->filterTagsBy(articleIds: [$articleId]);
     }
 
-    public function storeTag(Tag $tag): Tag {
+    public function storeTag(Tag $tag): Tag
+    {
         $resInsert = $this->db->insert(self::TAG_TABLE_NAME, $tag->asArray());
 
         if (!$resInsert) {
@@ -93,7 +94,7 @@ class TagDataLayer
 
     public function destroyTag(int $id): bool
     {
-        $dbRes = $this->db->withTransaction(function() use ($id) {
+        $dbRes = $this->db->withTransaction(function () use ($id) {
             $resAr = $this->db->delete(
                 ArticleDataLayer::ARTICLE_TAG_RELATION_TABLE,
                 ['tag_id' => $id]

@@ -26,31 +26,32 @@ class ArticleDataLayer
 {
     use DataLayerTrait;
 
-    const string ARTICLE_TABLE = 'core_article';
-    const string ARTICLE_HISTORY_TABLE = 'core_article_history';
-    const string ARTICLE_TYPE_TABLE = 'core_article_type';
-    const string ARTICLE_STATUS_TABLE = 'core_article_status';
+    public const string ARTICLE_TABLE = 'core_article';
+    public const string ARTICLE_HISTORY_TABLE = 'core_article_history';
+    public const string ARTICLE_TYPE_TABLE = 'core_article_type';
+    public const string ARTICLE_STATUS_TABLE = 'core_article_status';
 
-    const string ARTICLE_SECTION_TABLE = 'core_article_section';
-    const string ARTICLE_SECTION_TYPE_TABLE = 'core_article_section_type';
-    const string ARTICLE_SECTION_IMAGE_TABLE = 'core_article_section_image';
+    public const string ARTICLE_SECTION_TABLE = 'core_article_section';
+    public const string ARTICLE_SECTION_TYPE_TABLE = 'core_article_section_type';
+    public const string ARTICLE_SECTION_IMAGE_TABLE = 'core_article_section_image';
 
-    const string ARTICLE_MEDIA_TABLE = 'core_article_media';
+    public const string ARTICLE_MEDIA_TABLE = 'core_article_media';
 
-    const string ARTICLE_TAG_RELATION_TABLE = 'core_article_tag_relation';
+    public const string ARTICLE_TAG_RELATION_TABLE = 'core_article_tag_relation';
 
-    const string ARTICLE_PATH_TABLE = 'core_article_path';
+    public const string ARTICLE_PATH_TABLE = 'core_article_path';
 
-    const string CONTENT_TABLE = 'core_content';
-    const string CONTENT_HISTORY_TABLE = 'core_content_history';
-    const string CONTENT_TYPE_TABLE = 'core_content_type';
+    private const string CONTENT_TABLE = 'core_content';
+    private const string CONTENT_HISTORY_TABLE = 'core_content_history';
+    public const string CONTENT_TYPE_TABLE = 'core_content_type';
 
     public function __construct(
         private readonly MySqlDb $db,
         private readonly Logger $logger,
         private readonly MediaDataLayer $mediaDataLayer,
         private readonly TagDataLayer $tagDataLayer,
-    ) {}
+    ) {
+    }
 
     public function getDb(): MySqlDb
     {
@@ -681,7 +682,8 @@ class ArticleDataLayer
     public function createArticleSection(ArticleSection $articleSection): ?ArticleSection
     {
         $resInsert = $this->db->insert(
-            self::ARTICLE_SECTION_TABLE, $articleSection->asArray()
+            tableName: self::ARTICLE_SECTION_TABLE,
+            data: $articleSection->asArray(),
         );
 
         if (!$resInsert) {

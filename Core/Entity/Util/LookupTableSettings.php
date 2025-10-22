@@ -10,7 +10,8 @@ readonly class LookupTableSettings
         private MySqlDb $database,
         private string $tableName,
         private array $tableFieldsToValues,
-    ) {}
+    ) {
+    }
 
     public function getDatabase(): MySqlDb
     {

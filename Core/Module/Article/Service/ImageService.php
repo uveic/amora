@@ -17,7 +17,8 @@ readonly class ImageService
 {
     public function __construct(
         private Logger $logger,
-    ) {}
+    ) {
+    }
 
     public function resizeRawImage(
         RawFile $rawFile,
@@ -116,7 +117,8 @@ readonly class ImageService
         $smallerSize = $newSize->getSmaller();
 
         // The new size and the next smaller size are greater than the original width
-        if ($newSize->value > $originalWidth &&
+        if (
+            $newSize->value > $originalWidth &&
             $smallerSize &&
             $smallerSize->value > $originalWidth
         ) {
@@ -124,7 +126,8 @@ readonly class ImageService
         }
 
         // The original width stands between the new size and the next smaller size
-        if ($newSize->value >= $originalWidth &&
+        if (
+            $newSize->value >= $originalWidth &&
             $smallerSize &&
             $smallerSize->value <= $originalWidth
         ) {
@@ -440,7 +443,7 @@ readonly class ImageService
 
     public function getExtension(int $phpNativeImageType): string
     {
-        return match($phpNativeImageType) {
+        return match ($phpNativeImageType) {
             IMAGETYPE_JPEG => 'jpg',
             IMAGETYPE_WEBP => 'webp',
             IMAGETYPE_PNG => 'png',

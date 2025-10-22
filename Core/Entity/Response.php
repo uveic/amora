@@ -40,11 +40,7 @@ class Response
         public readonly string $output,
         ContentType $contentType,
         HttpStatusCode $httpStatus,
-        public array $headers = [] {
-            get {
-                return $this->headers;
-            }
-        },
+        protected array $headers = [],
         ?string $nonce = null,
     ) {
         $nonce = $nonce ? " 'nonce-" . $nonce . "'" : '';
@@ -94,6 +90,11 @@ class Response
             ],
             $headers,
         );
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -35,7 +35,7 @@ enum AppPageContentType: int
                 PageContentSection::Content => true,
                 default => false,
             },
-            PageContentType::Homepage => match($section) {
+            PageContentType::Homepage => match ($section) {
                 PageContentSection::Title, PageContentSection::Content => true,
                 default => false,
             },
@@ -44,7 +44,7 @@ enum AppPageContentType: int
     }
 
     public static function getTitleVariableName(self|PageContentType $type): string {
-        return match($type) {
+        return match ($type) {
             PageContentType::Homepage => 'pageContentEditTitleHomepage',
             PageContentType::BlogBottom => 'pageContentEditTitleBlogBottom',
             default => 'pageContentEditTitle' . $type->name,

@@ -18,7 +18,8 @@ class ArticleSection
         public readonly DateTimeImmutable $createdAt,
         public readonly DateTimeImmutable $updatedAt,
         public readonly ?Media $media = null,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

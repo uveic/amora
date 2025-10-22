@@ -51,7 +51,8 @@ final class CsvWriterUtil
         return true;
     }
 
-    private static function writeLine($handle, array $data): bool {
+    private static function writeLine($handle, array $data): bool
+    {
         $res = fputcsv(
             stream: $handle,
             fields: array_values($data),

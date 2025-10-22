@@ -12,7 +12,8 @@ class MediaDestroyed
         public readonly int $mediaId,
         public readonly ?string $fullPathWithName,
         public readonly DateTimeImmutable $createdAt,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

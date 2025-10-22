@@ -2,7 +2,8 @@
 
 namespace Amora\Core\Module\Article\Value;
 
-enum ImageSize: int {
+enum ImageSize: int
+{
     case XSmall = 250;
     case Small = 350;
     case Medium = 720;

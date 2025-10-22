@@ -23,8 +23,8 @@ use Throwable;
 
 class S3UploaderApp extends App
 {
-    const int MEDIA_BATCH = 200;
-    const int DAYS_BEFORE_DELETING_MEDIA_LOCALLY = 30;
+    private const int MEDIA_BATCH = 200;
+    private const int DAYS_BEFORE_DELETING_MEDIA_LOCALLY = 30;
 
     public function __construct(
         Logger $logger,

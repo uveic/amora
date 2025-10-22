@@ -144,7 +144,7 @@ class MailerCore extends Core
     {
         return self::getInstance(
             className: 'MailerApp',
-            factory: static function () use($isPersistent) {
+            factory: static function () use ($isPersistent) {
                 $mailerConfig = self::getConfig()->mailer;
 
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Entity/Email.php';

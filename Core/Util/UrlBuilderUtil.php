@@ -13,59 +13,59 @@ use Amora\Core\Module\Article\Value\PageContentType;
 class UrlBuilderUtil
 {
     // Backoffice URLs
-    const string BACKOFFICE_DASHBOARD_URL_PATH = '/backoffice/dashboard';
+    private const string BACKOFFICE_DASHBOARD_URL_PATH = '/backoffice/dashboard';
 
-    const string BACKOFFICE_USER_LIST = '/backoffice/users';
-    const string BACKOFFICE_USER_VIEW = '/backoffice/users/%d';
-    const string BACKOFFICE_USER_EDIT = '/backoffice/users/%d/edit';
-    const string BACKOFFICE_USER_NEW = '/backoffice/users/new';
+    private const string BACKOFFICE_USER_LIST = '/backoffice/users';
+    private const string BACKOFFICE_USER_VIEW = '/backoffice/users/%d';
+    private const string BACKOFFICE_USER_EDIT = '/backoffice/users/%d/edit';
+    private const string BACKOFFICE_USER_NEW = '/backoffice/users/new';
 
-    const string BACKOFFICE_IMAGES = '/backoffice/images';
-    const string BACKOFFICE_MEDIA = '/backoffice/media';
-    const string BACKOFFICE_ANALYTICS = '/backoffice/analytics';
+    private const string BACKOFFICE_IMAGES = '/backoffice/images';
+    private const string BACKOFFICE_MEDIA = '/backoffice/media';
+    private const string BACKOFFICE_ANALYTICS = '/backoffice/analytics';
 
-    const string BACKOFFICE_ARTICLES = '/backoffice/articles';
-    const string BACKOFFICE_ARTICLE = '/backoffice/articles/%d';
-    const string BACKOFFICE_ARTICLE_NEW = '/backoffice/articles/new';
-    const string BACKOFFICE_ARTICLE_PREVIEW = '/backoffice/articles/%d/preview';
+    private const string BACKOFFICE_ARTICLES = '/backoffice/articles';
+    private const string BACKOFFICE_ARTICLE = '/backoffice/articles/%d';
+    private const string BACKOFFICE_ARTICLE_NEW = '/backoffice/articles/new';
+    private const string BACKOFFICE_ARTICLE_PREVIEW = '/backoffice/articles/%d/preview';
 
-    const string BACKOFFICE_ALBUM_LIST = '/backoffice/albums';
-    const string BACKOFFICE_ALBUM_VIEW = '/backoffice/albums/%d';
-    const string BACKOFFICE_ALBUM_EDIT = '/backoffice/albums/%d/edit';
-    const string BACKOFFICE_ALBUM_NEW = '/backoffice/albums/new';
+    private const string BACKOFFICE_ALBUM_LIST = '/backoffice/albums';
+    private const string BACKOFFICE_ALBUM_VIEW = '/backoffice/albums/%d';
+    private const string BACKOFFICE_ALBUM_EDIT = '/backoffice/albums/%d/edit';
+    private const string BACKOFFICE_ALBUM_NEW = '/backoffice/albums/new';
 
-    const string BACKOFFICE_CONTENT = '/backoffice/content';
-    const string BACKOFFICE_CONTENT_TYPE_EDIT = '/backoffice/content-type/%d/language/%s';
+    private const string BACKOFFICE_CONTENT = '/backoffice/content';
+    private const string BACKOFFICE_CONTENT_TYPE_EDIT = '/backoffice/content-type/%d/language/%s';
 
-    const string BACKOFFICE_EMAILS = '/backoffice/emails';
+    private const string BACKOFFICE_EMAILS = '/backoffice/emails';
 
     // Authorised URLs
-    const string AUTHORISED_ACCOUNT = '/account';
-    const string AUTHORISED_ACCOUNT_PASSWORD = '/account/password';
-    const string AUTHORISED_ACCOUNT_DOWNLOAD = '/account/download';
-    const string AUTHORISED_ACCOUNT_DELETE = '/account/delete';
-    const string AUTHORISED_LOGOUT = '/logout';
-    const string APP_DASHBOARD_URL_PATH = '/dashboard';
+    private const string AUTHORISED_ACCOUNT = '/account';
+    private const string AUTHORISED_ACCOUNT_PASSWORD = '/account/password';
+    private const string AUTHORISED_ACCOUNT_DOWNLOAD = '/account/download';
+    private const string AUTHORISED_ACCOUNT_DELETE = '/account/delete';
+    private const string AUTHORISED_LOGOUT = '/logout';
+    private const string APP_DASHBOARD_URL_PATH = '/dashboard';
 
     // Public URLs
-    const string PUBLIC_API_PASSWORD_RESET = '/papi/login/password-reset';
-    const string PUBLIC_API_PASSWORD_CREATION = '/papi/login/password-creation';
+    public const string PUBLIC_API_PASSWORD_RESET = '/papi/login/password-reset';
+    public const string PUBLIC_API_PASSWORD_CREATION = '/papi/login/password-creation';
 
-    const string PUBLIC_HTML_INVITE_REQUEST = '/invite-request';
-    const string PUBLIC_HTML_LOGIN = '/login';
-    const string PUBLIC_HTML_REGISTER = '/register';
-    const string PUBLIC_HTML_LOGIN_FORGOT = '/login/forgot';
-    const string PUBLIC_CREATE_PASSWORD = '/user/create/%s';
-    const string PUBLIC_VERIFY_USER = '/user/verify/%s';
-    const string PUBLIC_RESET_PASSWORD = '/user/reset/%s';
+    private const string PUBLIC_HTML_INVITE_REQUEST = '/invite-request';
+    public const string PUBLIC_HTML_LOGIN = '/login';
+    private const string PUBLIC_HTML_REGISTER = '/register';
+    public const string PUBLIC_HTML_LOGIN_FORGOT = '/login/forgot';
+    private const string PUBLIC_CREATE_PASSWORD = '/user/create/%s';
+    private const string PUBLIC_VERIFY_USER = '/user/verify/%s';
+    private const string PUBLIC_RESET_PASSWORD = '/user/reset/%s';
 
-    const string PUBLIC_ALBUM_VIEW = '/album/%s';
+    private const string PUBLIC_ALBUM_VIEW = '/album/%s';
 
-    const string PUBLIC_RSS = '/rss';
-    const string PUBLIC_JSON_FEED = '/json-feed';
+    private const string PUBLIC_RSS = '/rss';
+    private const string PUBLIC_JSON_FEED = '/json-feed';
 
-    const string PUBLIC_API_LOGIN = '/papi/login';
-    const string PUBLIC_API_LOGIN_FORGOT = '/papi/login/forgot';
+    public const string PUBLIC_API_LOGIN = '/papi/login';
+    public const string PUBLIC_API_LOGIN_FORGOT = '/papi/login/forgot';
 
     public static function buildBaseUrl(Language $siteLanguage, bool $includeHiddenToken = false): string
     {
@@ -331,8 +331,7 @@ class UrlBuilderUtil
     public static function buildPublicPasswordResetUrl(
         Language $language,
         string $verificationIdentifier
-    ): string
-    {
+    ): string {
         return self::buildBaseUrl($language) .
             sprintf(self::PUBLIC_RESET_PASSWORD, $verificationIdentifier);
     }

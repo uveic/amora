@@ -44,7 +44,7 @@ class AnalyticsProcessorApp extends App
 
     public function run(?int $totalEntries = null): void
     {
-        $this->execute(function () use($totalEntries) {
+        $this->execute(function () use ($totalEntries) {
             $timeBefore = microtime(true);
 
             $entries = $this->getEntriesFromQueue($totalEntries ?? 5000);
@@ -66,7 +66,7 @@ class AnalyticsProcessorApp extends App
             /** @var EventRaw $entry */
             foreach ($entries as $entry) {
                 $res = AnalyticsCore::getDb()->withTransaction(
-                    function() use ($entry) {
+                    function () use ($entry) {
                         $rawId = $this->processRawEvent($entry);
 
                         return new Feedback(
@@ -388,7 +388,7 @@ class AnalyticsProcessorApp extends App
             return true;
         }
 
-        $CrawlerDetect = new CrawlerDetect;
+        $CrawlerDetect = new CrawlerDetect();
         if ($CrawlerDetect->isCrawler($userAgentRaw)) {
             return true;
         }
@@ -431,7 +431,7 @@ class AnalyticsProcessorApp extends App
             return $output;
         }
 
-        $CrawlerDetect = new CrawlerDetect;
+        $CrawlerDetect = new CrawlerDetect();
         if ($CrawlerDetect->isCrawler($userAgentRaw)) {
             return new UserAgentInfo(
                 platform: $output->platform,

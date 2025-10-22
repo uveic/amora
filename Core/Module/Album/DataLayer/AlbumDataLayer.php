@@ -23,10 +23,10 @@ class AlbumDataLayer
 {
     use DataLayerTrait;
 
-    private const string ALBUM_TABLE = 'core_album';
-    private const string COLLECTION_TABLE = 'core_collection';
-    private const string COLLECTION_MEDIA_TABLE = 'core_collection_media';
-    private const string ALBUM_SLUG_TABLE = 'core_album_slug';
+    public const string ALBUM_TABLE = 'core_album';
+    public const string COLLECTION_TABLE = 'core_collection';
+    public const string COLLECTION_MEDIA_TABLE = 'core_collection_media';
+    public const string ALBUM_SLUG_TABLE = 'core_album_slug';
 
     public const string ALBUM_STATUS_TABLE = 'core_album_status';
     public const string ALBUM_TEMPLATE_TABLE = 'core_album_template';
@@ -35,7 +35,8 @@ class AlbumDataLayer
         private readonly MySqlDb $db,
         private readonly Logger $logger,
         private readonly MediaDataLayer $mediaDataLayer,
-    ) {}
+    ) {
+    }
 
     public function getDb(): MySqlDb
     {

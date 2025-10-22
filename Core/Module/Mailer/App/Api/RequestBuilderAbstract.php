@@ -10,7 +10,8 @@ abstract class RequestBuilderAbstract
         public readonly Logger $logger,
         public readonly string $fromEmail,
         public readonly string $fromName,
-    ) {}
+    ) {
+    }
 
     abstract public function buildMailRequest(
         array $emailReceivers,

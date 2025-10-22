@@ -9,11 +9,7 @@ use Amora\Core\Util\Logger;
 abstract class App
 {
     private LockManager $lockManager;
-    protected string $logPrefix {
-        get {
-            return $this->logPrefix;
-        }
-    }
+    public string $logPrefix;
 
     public function __construct(
         protected readonly Logger $logger,

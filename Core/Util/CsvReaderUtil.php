@@ -86,7 +86,7 @@ final readonly class CsvReaderUtil
             }
 
             $output[] = $row;
-        } while($data !== false);
+        } while ($data !== false);
 
         fclose($handle);
 

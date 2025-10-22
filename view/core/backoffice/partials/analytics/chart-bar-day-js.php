@@ -23,7 +23,7 @@ $reportPageViews = $responseData->reportPageViews;
 
 /** @var PageView $pageView */
 foreach ($reportPageViews->pageViews as $pageView) {
-    $label = match($reportPageViews->aggregateBy) {
+    $label = match ($reportPageViews->aggregateBy) {
         AggregateBy::Hour => $pageView->date->format('H') . ':00',
         AggregateBy::Day => $pageView->date->format('j'),
         AggregateBy::Month => DateUtil::getMonthName(
@@ -46,7 +46,7 @@ foreach ($reportPageViews->pageViews as $pageView) {
 
 /** @var PageView $pageView */
 foreach ($responseData->reportVisitors->pageViews as $pageView) {
-    $label = match($responseData->reportVisitors->aggregateBy) {
+    $label = match ($responseData->reportVisitors->aggregateBy) {
         AggregateBy::Hour => $pageView->date->format('H') . ':00',
         AggregateBy::Day => $pageView->date->format('j'),
         AggregateBy::Month => DateUtil::getMonthName(

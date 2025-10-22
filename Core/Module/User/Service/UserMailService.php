@@ -20,7 +20,8 @@ readonly class UserMailService
     public function __construct(
         private UserDataLayer $userDataLayer,
         private MailerService $mailerService,
-    ) {}
+    ) {
+    }
 
     private function sendEmailAndDisablePreviousVerifications(
         User $user,
@@ -356,7 +357,7 @@ readonly class UserMailService
         do {
             $verificationIdentifier = StringUtil::generateRandomString(64);
             $verification = $this->userDataLayer->getUserVerification(verificationIdentifier: $verificationIdentifier);
-        } while($verification);
+        } while ($verification);
 
         return $verificationIdentifier;
     }

@@ -20,5 +20,6 @@ readonly class FeedItem
         public ?Media $media = null,
         public ?DateTimeImmutable $updatedAt = null,
         public array $tags = [],
-    ) {}
+    ) {
+    }
 }

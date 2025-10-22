@@ -23,7 +23,7 @@ enum EventType: int
 
     public function deleteAfterProcessing(): bool
     {
-        return match($this) {
+        return match ($this) {
             self::Visitor, self::Bot, self::Crawler => true,
             default => false,
         };

@@ -1,7 +1,7 @@
 <?php
 
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
-use Amora\Core\Module\User\Service\UserService;
 
 /** @var HtmlResponseData $responseData */
 
@@ -22,14 +22,14 @@ $user = $responseData->request->session->user;
           <div class="field">
             <label for="newPassword" class="label"><?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>:</label>
             <div class="control">
-              <input class="input" id="newPassword" name="newPassword" type="password" value="" minlength="<?=$this->e(UserService::USER_PASSWORD_MIN_LENGTH)?>" required>
+              <input class="input" id="newPassword" name="newPassword" type="password" value="" minlength="<?=$this->e(Core::USER_PASSWORD_MIN_LENGTH)?>" required>
             </div>
-            <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span><?=sprintf($responseData->getLocalValue('authenticationRegisterPasswordHelp'), UserService::USER_PASSWORD_MIN_LENGTH)?></p>
+            <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span><?=sprintf($responseData->getLocalValue('authenticationRegisterPasswordHelp'), Core::USER_PASSWORD_MIN_LENGTH)?></p>
           </div>
           <div class="field">
             <label for="repeatPassword" class="label"><?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>:</label>
             <div class="control">
-              <input class="input" id="repeatPassword" name="repeatPassword" type="password" value=""  minlength="<?=$this->e(UserService::USER_PASSWORD_MIN_LENGTH)?>" required>
+              <input class="input" id="repeatPassword" name="repeatPassword" type="password" value=""  minlength="<?=$this->e(Core::USER_PASSWORD_MIN_LENGTH)?>" required>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
           </div>

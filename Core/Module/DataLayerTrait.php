@@ -6,7 +6,8 @@ use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Util\StringUtil;
 
-trait DataLayerTrait {
+trait DataLayerTrait
+{
     public function generateWhereSqlCodeForIds(
         array &$params,
         array $ids,

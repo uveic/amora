@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Amora\Core\Module\User\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
@@ -16,12 +15,13 @@ class SessionDataLayer
 {
     use DataLayerTrait;
 
-    const string SESSION_TABLE_NAME = 'core_session';
+    private const string SESSION_TABLE_NAME = 'core_session';
 
     public function __construct(
         private readonly MySqlDb $db,
         private readonly Logger $logger,
-    ) {}
+    ) {
+    }
 
     public function filterSessionBy(
         array $sessionIds = [],

@@ -34,7 +34,8 @@ class Media
         public readonly ?DateTimeImmutable $uploadedToS3At,
         public readonly ?DateTimeImmutable $deletedLocallyAt,
         public readonly ?ImageExif $exif,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

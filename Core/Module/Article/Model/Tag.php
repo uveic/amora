@@ -7,7 +7,8 @@ class Tag
     public function __construct(
         public ?int $id,
         public readonly string $name
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

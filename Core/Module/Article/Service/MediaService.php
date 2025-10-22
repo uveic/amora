@@ -27,8 +27,8 @@ use Throwable;
 
 readonly class MediaService
 {
-    const int FILE_PERMISSIONS = 0755;
-    const int FOLDER_PERMISSIONS = 0755;
+    public const int FILE_PERMISSIONS = 0755;
+    private const int FOLDER_PERMISSIONS = 0755;
 
     public function __construct(
         private Logger $logger,
@@ -37,7 +37,8 @@ readonly class MediaService
         private ImageService $imageService,
         private AlbumService $albumService,
         private string $mediaBaseDir,
-    ) {}
+    ) {
+    }
 
     public function storeMedia(Media $item): Media
     {
@@ -122,37 +123,42 @@ readonly class MediaService
             return false;
         }
 
-        if ($media->filenameXSmall &&
+        if (
+            $media->filenameXSmall &&
             file_exists($media->getDirWithNameXSmall()) &&
             !unlink($media->getDirWithNameXSmall())
         ) {
             return false;
         }
 
-        if ($media->filenameSmall &&
+        if (
+            $media->filenameSmall &&
             file_exists($media->getDirWithNameSmall()) &&
             !unlink($media->getDirWithNameSmall())
         ) {
             return false;
         }
 
-        if ($media->filenameMedium &&
+        if (
+            $media->filenameMedium &&
             file_exists($media->getDirWithNameMedium()) &&
             !unlink($media->getDirWithNameMedium())
         ) {
             return false;
         }
 
-        if ($media->filenameLarge &&
+        if (
+            $media->filenameLarge &&
             file_exists($media->getDirWithNameLarge()) &&
             !unlink($media->getDirWithNameLarge())
         ) {
             return false;
         }
 
-        if ($media->filenameXLarge &&
-            file_exists($media->getDirWithNameXLarge())
-            && !unlink($media->getDirWithNameXLarge())
+        if (
+            $media->filenameXLarge &&
+            file_exists($media->getDirWithNameXLarge()) &&
+            !unlink($media->getDirWithNameXLarge())
         ) {
             return false;
         }
@@ -278,7 +284,8 @@ readonly class MediaService
                         response: $output,
                     );
                 } catch (Throwable $t) {
-                    $this->logger->logError('Error storing file: '
+                    $this->logger->logError(
+                        'Error storing file: '
                         . $t->getMessage()
                         . ' - Trace: ' . $t->getTraceAsString()
                     );
@@ -436,7 +443,7 @@ readonly class MediaService
             }
 
             $count++;
-        } while(!is_dir($fullPath));
+        } while (!is_dir($fullPath));
 
         chmod($fullPath, self::FOLDER_PERMISSIONS);
 

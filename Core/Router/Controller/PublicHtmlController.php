@@ -43,7 +43,8 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
                     sessionId: $request->session->id,
                 );
             }
-        } catch (Throwable) {}
+        } catch (Throwable) {
+        }
 
         return true;
     }
@@ -219,6 +220,9 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         }
 
         $user = $this->userService->getUserForId($verification->userId);
+        if (!$user) {
+            return Response::createNotFoundResponse($request);
+        }
 
         return Response::createHtmlResponse(
             template: 'core/public/password-reset',

@@ -15,7 +15,7 @@ enum Template: int
 
     public function getTemplate(): string
     {
-        return match($this) {
+        return match ($this) {
             self::NewYork => 'new-york',
         };
     }

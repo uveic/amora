@@ -15,13 +15,14 @@ class MailerDataLayer
 {
     use DataLayerTrait;
 
-    const string MAILER_QUEUE_TABLE_NAME = 'mailer_queue';
-    const string MAILER_LOG_TABLE_NAME = 'mailer_log';
+    private const string MAILER_QUEUE_TABLE_NAME = 'mailer_queue';
+    private const string MAILER_LOG_TABLE_NAME = 'mailer_log';
 
     public function __construct(
         private readonly MySqlDb $db,
         private readonly Logger $logger,
-    ) {}
+    ) {
+    }
 
     public function filterMailerItemBy(
         array $ids = [],

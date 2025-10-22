@@ -28,7 +28,8 @@ class User
         public readonly ?string $identifier,
         public readonly DateTimeZone $timezone,
         public readonly ?string $changeEmailAddressTo = null,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $user): User
     {

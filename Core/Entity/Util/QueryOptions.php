@@ -10,7 +10,8 @@ readonly class QueryOptions
         public array $orderBy = [],
         public ?Pagination $pagination = null,
         public bool $orderRandomly = false,
-    ) {}
+    ) {
+    }
 
     public function getItemsPerPage(): int
     {

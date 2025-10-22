@@ -56,7 +56,8 @@ class Router
 
     public function __construct(
         private readonly AnalyticsService $analyticsService,
-    ) {}
+    ) {
+    }
 
     public static function getReservedPaths(): array
     {
@@ -92,7 +93,7 @@ class Router
             $response = Response::createErrorResponse();
         }
 
-        foreach ($response->headers as $header) {
+        foreach ($response->getHeaders() as $header) {
             header($header);
         }
 
@@ -288,10 +289,12 @@ class Router
         return false;
     }
 
-    private function displayEmptyPage(Request $request): bool {
+    private function displayEmptyPage(Request $request): bool
+    {
         $path = '/' . $request->path;
 
-        if ($path === UrlBuilderUtil::PUBLIC_HTML_LOGIN ||
+        if (
+            $path === UrlBuilderUtil::PUBLIC_HTML_LOGIN ||
             $path === UrlBuilderUtil::PUBLIC_API_LOGIN ||
             $path === UrlBuilderUtil::PUBLIC_HTML_LOGIN_FORGOT ||
             $path === UrlBuilderUtil::PUBLIC_API_LOGIN_FORGOT ||

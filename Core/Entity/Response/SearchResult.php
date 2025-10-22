@@ -14,7 +14,8 @@ readonly class SearchResult
         public ?string $contentHtml = null,
         public ?Media $media = null,
         public ?string $endpoint = null,
-    ) {}
+    ) {
+    }
 
     public function asPublicArray(string $headerTitle = ''): array
     {

@@ -4,6 +4,7 @@ namespace Amora\Core\Util;
 
 use Amora\Core\Core;
 use DateTimeZone;
+use JsonException;
 use Throwable;
 
 enum LogPriority
@@ -40,7 +41,7 @@ final class Logger
 
     public function getCheckpointTime(): float
     {
-        $elapsed = $this->lastCheckpointTime == 0
+        $elapsed = $this->lastCheckpointTime === 0
             ? 0
             : $this->getMicroTime() - $this->lastCheckpointTime;
 
@@ -90,9 +91,13 @@ final class Logger
             return;
         }
 
-        $message = "[WARNING] $msg (" .
-            $this->getCheckpointTime() . ' ms), Metadata: ' .
-            json_encode($metaData);
+        try {
+            $metadataJson = json_encode($metaData, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            $metadataJson = '[Error encoding metadata]';
+        }
+
+        $message = "[WARNING] $msg (" . $this->getCheckpointTime() . ' ms), Metadata: ' . $metadataJson;
         $this->logMessage($message, LogPriority::WARNING);
     }
 

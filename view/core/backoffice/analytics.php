@@ -30,7 +30,7 @@ $totalVisitors = StringUtil::formatNumber(
 $report = $responseData->reportPageViews;
 $now = new DateTimeImmutable();
 
-$dateRange = $label = match($report->period) {
+$dateRange = $label = match ($report->period) {
     Period::Day => DateUtil::formatDate(
         date: $report->from,
         lang: $responseData->siteLanguage,
@@ -48,7 +48,7 @@ $dateRange = $label = match($report->period) {
     Period::Year => $report->from->format('Y'),
 };
 
-$isNextDisabled = match($report->period) {
+$isNextDisabled = match ($report->period) {
     Period::Day => $now->format('Y-m-d') === $report->from->format('Y-m-d'),
     Period::Month => $now->format('Y-m') === $report->from->format('Y-m'),
     Period::Year => $now->format('Y') === $report->from->format('Y'),

@@ -77,8 +77,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
     public function authenticate(Request $request): bool
     {
-        $session = $request->session;
-        if (!$session || !$session->isAdmin()) {
+        if (!$request->session || !$request->session->isAdmin()) {
             return false;
         }
 
@@ -124,7 +123,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $existingUser =$this->userService->getUserForEmail($email);
+        $existingUser = $this->userService->getUserForEmail($email);
         if (!$existingUser) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
                 success: false,

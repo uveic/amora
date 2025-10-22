@@ -7,7 +7,7 @@ use Throwable;
 
 final class Country
 {
-    const array COUNTRIES = [
+    private const array COUNTRIES = [
         'AT' => ['id' => 'AT', 'name' => 'Austria'],
         'BE' => ['id' => 'BE', 'name' => 'Belgium'],
         'BG' => ['id' => 'BG', 'name' => 'Bulgaria'],
@@ -260,7 +260,8 @@ final class Country
         if (strlen($countryIsoCode) !== 2) {
             try {
                 Core::getDefaultLogger()->logError('Country ISO code not valid: ' . $countryIsoCode);
-            } catch (Throwable) {}
+            } catch (Throwable) {
+            }
 
             return '';
         }
@@ -271,9 +272,9 @@ final class Country
 
         try {
             Core::getDefaultLogger()->logError('Country ISO code not found: ' . $countryIsoCode);
-        } catch (Throwable) {}
+        } catch (Throwable) {
+        }
 
         return '';
     }
 }
-

@@ -21,22 +21,23 @@ class UserDataLayer
 {
     use DataLayerTrait;
 
-    const string USER_TABLE = 'core_user';
-    const string USER_VERIFICATION_TABLE = 'core_user_verification';
-    const string USER_VERIFICATION_TYPE_TABLE = 'core_user_verification_type';
-    const string USER_REGISTRATION_REQUEST_TABLE = 'core_user_registration_request';
+    public const string USER_TABLE = 'core_user';
+    private const string USER_VERIFICATION_TABLE = 'core_user_verification';
+    public const string USER_VERIFICATION_TYPE_TABLE = 'core_user_verification_type';
+    private const string USER_REGISTRATION_REQUEST_TABLE = 'core_user_registration_request';
 
-    const string USER_STATUS_TABLE = 'core_user_status';
-    const string USER_ROLE_TABLE = 'core_user_role';
-    const string USER_JOURNEY_STATUS_TABLE = 'core_user_journey_status';
+    public const string USER_STATUS_TABLE = 'core_user_status';
+    public const string USER_ROLE_TABLE = 'core_user_role';
+    public const string USER_JOURNEY_STATUS_TABLE = 'core_user_journey_status';
 
-    const string USER_ACTION_TABLE = 'core_user_action';
-    const string USER_ACTION_TYPE_TABLE = 'core_user_action_type';
+    private const string USER_ACTION_TABLE = 'core_user_action';
+    public const string USER_ACTION_TYPE_TABLE = 'core_user_action_type';
 
     public function __construct(
         private readonly MySqlDb $db,
         private readonly Logger $logger,
-    ) {}
+    ) {
+    }
 
     public function filterUserBy(
         ?bool $includeDisabled = true,

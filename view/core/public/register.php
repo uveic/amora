@@ -1,7 +1,7 @@
 <?php
 
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
-use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
 
@@ -41,7 +41,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
         <div class="field">
           <p class="control has-icons-left">
             <label for="password" class="null">Name</label>
-            <input class="input" id="password" name="password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderCreatePassword')?>" minlength="<?=$this->e(UserService::USER_PASSWORD_MIN_LENGTH)?>">
+            <input class="input" id="password" name="password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderCreatePassword')?>" minlength="<?=$this->e(Core::USER_PASSWORD_MIN_LENGTH)?>">
           </p>
           <p class="help"><span class="is-danger"></span><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
         </div>

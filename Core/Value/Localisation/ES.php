@@ -1,6 +1,6 @@
 <?php
 
-use Amora\Core\Module\User\Service\UserService;
+use Amora\Core\Core;
 
 return [
     'navAuthorisedDashboard' => 'Inicio',
@@ -37,7 +37,7 @@ return [
     'authenticationLoginSubtitle' => '¡Bienvenido/a de nuevo!',
     'authenticationRegisterSubtitle' => 'A un paso.',
     'authenticationRegisterTOS' => 'Al registrarte aceptas los <a href="#">términos de uso</a> y la <a href="#">política de privacidad</a>.',
-    'authenticationRegisterPasswordHelp' => 'Longitud mínima: ' . UserService::USER_PASSWORD_MIN_LENGTH . ' caracteres. Recomenable: letras, números y símbolos.',
+    'authenticationRegisterPasswordHelp' => 'Longitud mínima: ' . Core::USER_PASSWORD_MIN_LENGTH . ' caracteres. Recomenable: letras, números y símbolos.',
     'authenticationRegisterAlreadyLogin' => '¿Ya tienes una cuenta?',
 
     'authenticationForgotPassword' => '¿Olvidaste tu contraseña?',

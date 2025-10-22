@@ -11,7 +11,8 @@ readonly class TagService
     public function __construct(
         private Logger $logger,
         private TagDataLayer $tagDataLayer
-    ) {}
+    ) {
+    }
 
     public function getTagForId(int $id): ?Tag
     {

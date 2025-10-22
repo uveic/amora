@@ -9,5 +9,6 @@ readonly class Feedback
         public mixed $response = null,
         public ?string $message = null,
         public ?int $code = null
-    ) {}
+    ) {
+    }
 }
