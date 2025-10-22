@@ -20,7 +20,7 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 
 class Router
 {
-    private const PUBLIC_HTML_CONTROLLER_ACTIONS = [
+    private const array PUBLIC_HTML_CONTROLLER_ACTIONS = [
         'home' => true,
         'invite-request' => true,
         'login' => true,
@@ -32,25 +32,25 @@ class Router
         'album' => true,
     ];
 
-    private const PUBLIC_API_CONTROLLER_ACTIONS = [
+    private const array PUBLIC_API_CONTROLLER_ACTIONS = [
         'papi' => true
     ];
 
-    private const AUTHORISED_HTML_CONTROLLER_ACTIONS = [
+    private const array AUTHORISED_HTML_CONTROLLER_ACTIONS = [
         'logout' => true,
         'dashboard' => true,
         'account' => true,
     ];
 
-    private const AUTHORISED_API_CONTROLLER_ACTIONS = [
+    private const array AUTHORISED_API_CONTROLLER_ACTIONS = [
         'api' => true
     ];
 
-    private const BACKOFFICE_HTML_CONTROLLER_ACTIONS = [
+    private const array BACKOFFICE_HTML_CONTROLLER_ACTIONS = [
         'backoffice' => true,
     ];
 
-    private const BACKOFFICE_API_CONTROLLER_ACTIONS = [
+    private const array BACKOFFICE_API_CONTROLLER_ACTIONS = [
         'back' => true,
     ];
 

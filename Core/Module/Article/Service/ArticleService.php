@@ -231,7 +231,7 @@ readonly class ArticleService
         $count = 0;
         do {
             $validPath = $path . ($count > 0 ? '-' . $count : '');
-            $res = in_array($validPath, AppRouter::getReservedPaths());
+            $res = in_array($validPath, AppRouter::getReservedPaths(), true);
             $count++;
         } while($res);
 

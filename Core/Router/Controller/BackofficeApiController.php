@@ -54,14 +54,11 @@ use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyArticleFailureResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyArticleSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyUserFailureResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyUserSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreArticleSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreTagFailureResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreTagSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreUserSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateArticleSuccessResponse;
-use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserFailureResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserSuccessResponse;
 
 final class BackofficeApiController extends BackofficeApiControllerAbstract
@@ -81,7 +78,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     public function authenticate(Request $request): bool
     {
         $session = $request->session;
-        if (!$session || !$session->isAuthenticated() || !$session->isAdmin()) {
+        if (!$session || !$session->isAdmin()) {
             return false;
         }
 
@@ -204,7 +201,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     ): Response {
         $existingUser = $this->userService->getUserForId($userId, true);
         if (!$existingUser) {
-            return new BackofficeApiControllerUpdateUserFailureResponse();
+            return new BackofficeApiControllerUpdateUserSuccessResponse(false);
         }
 
         $updateRes = $this->userService->workflowUpdateUser(
@@ -341,7 +338,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
     {
         $user = $this->userService->getUserForId($userId, true);
         if (!$user) {
-            return new BackofficeApiControllerDestroyUserFailureResponse();
+            return new BackofficeApiControllerDestroyUserSuccessResponse(false);
         }
 
         $res = $this->userService->deleteUser($user);
@@ -683,7 +680,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         $res = $this->tagService->storeTag(new Tag(null, $name));
 
         if (!$res) {
-            return new BackofficeApiControllerStoreTagFailureResponse();
+            return new BackofficeApiControllerStoreTagSuccessResponse(false);
         }
 
         return new BackofficeApiControllerStoreTagSuccessResponse(

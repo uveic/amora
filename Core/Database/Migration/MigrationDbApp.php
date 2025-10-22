@@ -4,7 +4,6 @@ namespace Amora\Core\Database\migration;
 
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\Feedback;
-use Exception;
 use Amora\Core\Database\MySqlDb;
 
 final class MigrationDbApp
@@ -56,7 +55,7 @@ final class MigrationDbApp
 
             case 'migrate':
                 $tables = $this->db->getTables();
-                if (!in_array(self::MIGRATION_TABLE_NAME, $tables)) {
+                if (!in_array(self::MIGRATION_TABLE_NAME, $tables, true)) {
                     $this->createMigrationTable();
                 }
 

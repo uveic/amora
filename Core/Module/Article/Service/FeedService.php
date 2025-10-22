@@ -10,6 +10,7 @@ use Amora\Core\Util\LocalisationUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 use DateTimeZone;
+use JsonException;
 
 readonly class FeedService
 {
@@ -68,7 +69,11 @@ readonly class FeedService
         $output = $this->buildJsonFeedHeader($localisationUtil);
         $output['items'] = $this->buildJsonFeedContent($feedItems);
 
-        return json_encode($output);
+        try {
+            return json_encode($output, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            return '';
+        }
     }
 
     private function buildRssHeader(

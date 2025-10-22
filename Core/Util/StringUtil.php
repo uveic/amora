@@ -360,7 +360,7 @@ final class StringUtil
         $count = 0;
         do {
             $validSlug = $slug . ($count > 0 ? '-' . $count : '');
-            $res = in_array($validSlug, AppRouter::getReservedPaths());
+            $res = in_array($validSlug, AppRouter::getReservedPaths(), true);
             $count++;
         } while($res);
 

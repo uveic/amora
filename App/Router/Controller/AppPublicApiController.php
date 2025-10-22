@@ -3,8 +3,6 @@
 namespace Amora\App\Router;
 
 use Amora\Core\Entity\Request;
-use Amora\Core\Module\Album\Service\AlbumService;
-use Amora\Core\Module\Article\Service\ArticleService;
 
 final class AppPublicApiController extends AppPublicApiControllerAbstract
 {

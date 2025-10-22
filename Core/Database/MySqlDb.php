@@ -54,7 +54,7 @@ final class MySqlDb
         return $result[0] ?? null;
     }
 
-    public function fetchColumn(string $sql, array $params = array())
+    public function fetchColumn(string $sql, array $params = [])
     {
         $this->connect();
 
@@ -93,12 +93,12 @@ final class MySqlDb
             $fields = $this->getTableFields($tableName);
 
             $sql = "INSERT INTO " . $tableName . " SET ";
-            $params = array();
+            $params = [];
 
             $i = 0;
             foreach ($data as $key => $value) {
                 $value = is_bool($value) ? ($value ? 1 : 0) : $value;
-                if (in_array($key, $fields['fields'])) {
+                if (in_array($key, $fields['fields'], true)) {
                     if ($i > 0) {
                         $sql .= ', ';
                     }
@@ -127,12 +127,12 @@ final class MySqlDb
         $fields = $this->getTableFields($tableName);
 
         $sql = "UPDATE " . $tableName . " SET ";
-        $params = array();
+        $params = [];
 
         $i = 0;
         foreach ($data as $key => $value) {
             $value = is_bool($value) ? ($value ? 1 : 0) : $value;
-            if (in_array($key, $fields['fields'])) {
+            if (in_array($key, $fields['fields'], true)) {
                 if ($i > 0) {
                     $sql .= ', ';
                 }
@@ -150,8 +150,8 @@ final class MySqlDb
 
     public function select(
         string $tableName,
-        array $fields = array(),
-        array $where = array()
+        array $fields = [],
+        array $where = []
     ): array {
         $this->connect();
 
@@ -171,7 +171,7 @@ final class MySqlDb
         }
 
         $sql .= " FROM $tableName";
-        $params = array();
+        $params = [];
 
         if ($where) {
             $sql .= " WHERE ";
@@ -236,7 +236,7 @@ final class MySqlDb
         foreach ($result as $value) {
             $fields[] = $value['Field'];
 
-            if ($value['Key'] == 'PRI') {
+            if ($value['Key'] === 'PRI') {
                 $primaryKey = $value['Field'];
             }
         }
@@ -251,7 +251,7 @@ final class MySqlDb
     {
         $sql = "SHOW TABLES";
         $tables = $this->fetchAll($sql);
-        $result = array();
+        $result = [];
 
         foreach ($tables as $table) {
             $result[] = array_values($table)[0];
@@ -260,12 +260,6 @@ final class MySqlDb
         return $result;
     }
 
-    /**
-     * Execute a function received as a parameter in transaction mode
-     *
-     * @param Callable $f
-     * @return Feedback
-     */
     public function withTransaction(callable $f): Feedback
     {
         if ($this->isInTransactionMode) {
