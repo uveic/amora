@@ -23,7 +23,7 @@ use Amora\Core\Value\QueryOrderDirection;
         </div>
       </div>
       <div class="media-list-highlight null"></div>
-      <div id="images-list" class="null">
+      <div id="images-list" class="null m-t-1">
         <a href="#" class="media-load-more media-load-more-js null" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-media-query-qty="<?=Core::SQL_QUERY_QTY?>">
           <span><?=$responseData->getLocalValue('globalMore')?></span>
         </a>

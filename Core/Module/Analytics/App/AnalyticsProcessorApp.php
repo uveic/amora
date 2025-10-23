@@ -15,8 +15,8 @@ use Amora\Core\Module\Analytics\Model\EventValue;
 use Amora\Core\Module\Analytics\Value\EventType;
 use Amora\Core\Module\Analytics\Value\Parameter;
 use Amora\Core\Util\Logger;
+use Amora\Core\Util\UserAgentParserUtil;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
-use UserAgentParserUtil;
 
 class AnalyticsProcessorApp extends App
 {

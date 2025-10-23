@@ -83,7 +83,64 @@
   max-width: revert;
 }
 /* Table ends here */
+/* Activity starts here */
+.activity-wrapper {
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1rem;
+}
 
+.activity-container {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0.5rem 0;
+  gap: 1rem;
+}
+
+.activity-container .header {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1rem;
+  color: var(--color-grey-700);
+}
+
+.activity-container .date {
+  font-size: 0.8rem;
+}
+
+.activity-container .item {
+  display: flex;
+  flex-flow: column nowrap;
+  border-bottom: 1px solid var(--color-grey-050);
+}
+
+.activity-container .icon {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.activity-container .comment {
+  padding: 0.5rem 1.8rem;
+  word-break: break-word;
+}
+
+.activity-container .status {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.25rem 0;
+}
+/* Activity ends here */
 /* Dashboard start */
 .backoffice-wrapper {
   display: flex;
@@ -112,6 +169,10 @@
   flex-grow: 1;
 }
 
+.block-title {
+  font-weight: 700;
+}
+
 .dashboard-count {
   display: flex;
   flex-flow: column wrap;
@@ -122,6 +183,16 @@
   flex-grow: 1;
   border: 1px solid var(--color-black);
   padding: 1rem;
+}
+
+.dashboard-card-title,
+.dashboard-card-title:hover,
+.dashboard-card-title:visited,
+.dashboard-card-title:active,
+.dashboard-card-title:focus {
+  color: var(--color-black);
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 .dashboard-cards-wrapper {
@@ -693,7 +764,6 @@
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  padding-top: 1rem;
   min-height: 250px;
 }
 

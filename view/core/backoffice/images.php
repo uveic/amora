@@ -30,7 +30,7 @@ $count = 0;
         </div>
       </div>
     </div>
-    <div id="images-list">
+    <div id="images-list" class="backoffice-wrapper gap-0">
 <?php
     /** @var Media $image */
     foreach ($responseData->media as $image) {

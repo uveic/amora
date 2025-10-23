@@ -93,7 +93,7 @@ class Router
             $response = Response::createErrorResponse();
         }
 
-        foreach ($response->getHeaders() as $header) {
+        foreach ($response->headers as $header) {
             header($header);
         }
 

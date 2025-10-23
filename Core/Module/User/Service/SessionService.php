@@ -6,12 +6,12 @@ use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
 use DateTimeZone;
-use UserAgentParserUtil;
 use Amora\Core\Core;
 use Amora\Core\Module\User\DataLayer\SessionDataLayer;
 use Amora\Core\Module\User\Model\Session;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\StringUtil;
+use Amora\Core\Util\UserAgentParserUtil;
 
 class SessionService
 {

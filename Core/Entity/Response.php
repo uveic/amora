@@ -36,11 +36,13 @@ enum ContentType: string
 
 class Response
 {
+    public readonly array $headers;
+
     public function __construct(
         public readonly string $output,
         ContentType $contentType,
         HttpStatusCode $httpStatus,
-        protected array $headers = [],
+        array $headers = [],
         ?string $nonce = null,
     ) {
         $nonce = $nonce ? " 'nonce-" . $nonce . "'" : '';
@@ -90,11 +92,6 @@ class Response
             ],
             $headers,
         );
-    }
-
-    public function getHeaders(): array
-    {
-        return $this->headers;
     }
 
     ///////////////////////////////////////////////////////////////////////////
