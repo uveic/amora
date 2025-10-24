@@ -219,7 +219,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        $user = $this->userService->getUserForId($verification->userId);
+        $user = $this->userService->getUserForId(userId: $verification->userId, includeDisabled: false);
         if (!$user) {
             return Response::createNotFoundResponse($request);
         }
@@ -267,7 +267,7 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
             );
         }
 
-        $user = $this->userService->getUserForId(userId: $verification->userId, includeDisabled: true);
+        $user = $this->userService->getUserForId(userId: $verification->userId, includeDisabled: false);
         if (!$user || !$user->isEnabled()) {
             return Response::createUnauthorisedHtmlResponse(request: $request);
         }

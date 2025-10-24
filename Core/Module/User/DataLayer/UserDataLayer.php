@@ -34,14 +34,13 @@ class UserDataLayer
     public const string USER_ACTION_TYPE_TABLE = 'core_user_action_type';
 
     public function __construct(
-        private readonly MySqlDb $db,
+        public readonly MySqlDb $db,
         private readonly Logger $logger,
     ) {
     }
 
     public function filterUserBy(
-        ?bool $includeDisabled = true,
-        ?int $userId = null,
+        ?array $userIds = [],
         ?string $email = null,
         ?string $searchText = null,
         ?string $identifier = null,
@@ -81,14 +80,8 @@ class UserDataLayer
         $joins = ' FROM ' . self::USER_TABLE . ' AS u';
         $where = ' WHERE 1';
 
-        if (!$includeDisabled) {
-            $where .= ' AND u.status_id IN (:enabled)';
-            $params[':enabled'] = UserStatus::Enabled->value;
-        }
-
-        if (isset($userId)) {
-            $where .= ' AND u.id = :user_id';
-            $params[':user_id'] = $userId;
+        if ($userIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $userIds, 'u.id', 'userId');
         }
 
         if (isset($email)) {
@@ -126,11 +119,6 @@ class UserDataLayer
         }
 
         return $output;
-    }
-
-    public function getDb(): MySqlDb
-    {
-        return $this->db;
     }
 
     public function updateUser(User $user, int $userId): ?User

@@ -71,7 +71,7 @@ readonly class UserMailService
         string $emailToVerify,
         VerificationType $verificationType,
     ): bool {
-        $res = $this->userDataLayer->getDb()->withTransaction(
+        $res = $this->userDataLayer->db->withTransaction(
             function () use ($user, $emailToVerify, $verificationType) {
                 $res = $this->sendVerificationEmail(
                     user: $user,
@@ -128,7 +128,7 @@ readonly class UserMailService
 
     public function workflowSendPasswordResetEmail(User $user): bool
     {
-        $res = $this->userDataLayer->getDb()->withTransaction(
+        $res = $this->userDataLayer->db->withTransaction(
             function () use ($user) {
                 $verificationIdentifier = $this->getUniqueVerificationIdentifier();
                 $mailerItem = $this->buildPasswordResetEmail($user, $verificationIdentifier);
@@ -163,7 +163,7 @@ readonly class UserMailService
 
     public function workflowSendPasswordCreationEmail(User $user): bool
     {
-        $res = $this->userDataLayer->getDb()->withTransaction(
+        $res = $this->userDataLayer->db->withTransaction(
             function () use ($user) {
                 $res = $this->sendPasswordCreationEmail($user);
                 return new Feedback($res);

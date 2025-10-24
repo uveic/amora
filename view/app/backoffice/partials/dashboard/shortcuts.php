@@ -7,6 +7,10 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var HtmlResponseDataAbstract $responseData */
 
+if (!AppPageContentType::getActive()) {
+    return;
+}
+
 ?>
         <div class="dashboard-count">
           <h3 class="no-margin"><?=$responseData->getLocalValue('navAdminPageContentEdit')?></h3>

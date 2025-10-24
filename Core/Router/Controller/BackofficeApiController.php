@@ -131,7 +131,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $timezone = $timezone
+        $timezoneObj = $timezone
             ? DateUtil::convertStringToDateTimeZone($timezone)
             : $request->session->user->timezone;
 
@@ -151,7 +151,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                     passwordHash: null,
                     bio: $bio,
                     identifier: null,
-                    timezone: $timezone,
+                    timezone: $timezoneObj,
                 ),
                 verificationType: VerificationType::PasswordCreation,
             );
@@ -198,7 +198,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         ?string $repeatPassword,
         Request $request
     ): Response {
-        $existingUser = $this->userService->getUserForId($userId, true);
+        $existingUser = $this->userService->getUserForId(userId: $userId);
         if (!$existingUser) {
             return new BackofficeApiControllerUpdateUserSuccessResponse(false);
         }
@@ -254,7 +254,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $user = $this->userService->getUserForId(userId: $userId, includeDisabled: true);
+        $user = $this->userService->getUserForId(userId: $userId);
 
         if (!$user) {
             return new BackofficeApiControllerUpdateUserStatusSuccessResponse(
@@ -300,7 +300,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             );
         }
 
-        $user = $this->userService->getUserForId(userId: $userId, includeDisabled: true);
+        $user = $this->userService->getUserForId(userId: $userId);
         if (!$user) {
             return new BackofficeApiControllerUpdateUserRoleSuccessResponse(
                 success: false,
@@ -335,7 +335,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
      */
     protected function destroyUser(int $userId, Request $request): Response
     {
-        $user = $this->userService->getUserForId($userId, true);
+        $user = $this->userService->getUserForId(userId: $userId);
         if (!$user) {
             return new BackofficeApiControllerDestroyUserSuccessResponse(false);
         }
@@ -568,7 +568,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         }
 
         $now = new DateTimeImmutable();
-        $publishOn = $publishOn
+        $publishOnObj = $publishOn
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
             : ($existingArticle->publishOn ?? $now);
 
@@ -584,7 +584,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 type: $type,
                 createdAt: $existingArticle->createdAt,
                 updatedAt: $now,
-                publishOn: $publishOn,
+                publishOn: $publishOnObj,
                 title: $title ?? $existingArticle->title,
                 contentHtml: $contentHtml,
                 mainImageId: $mainImageId ?? $existingArticle->mainImage?->id,

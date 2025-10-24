@@ -224,7 +224,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getUserViewPage(int $userId, Request $request): Response
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        $user = $this->userService->getUserForId(userId: $userId, includeDisabled: true);
+        $user = $this->userService->getUserForId(userId: $userId);
         if (!$user) {
             return Response::createNotFoundResponse($request);
         }
@@ -260,7 +260,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
     protected function getUserEditPage(int $userId, Request $request): Response
     {
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
-        $user = $this->userService->getUserForId(userId: $userId, includeDisabled: true);
+        $user = $this->userService->getUserForId(userId: $userId);
         if (!$user) {
             return Response::createNotFoundResponse($request);
         }

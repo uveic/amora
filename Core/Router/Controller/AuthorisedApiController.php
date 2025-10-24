@@ -207,7 +207,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
             );
         }
 
-        $user = $this->userService->getUserForId(userId: $userId, includeDisabled: true);
+        $user = $this->userService->getUserForId(userId: $userId);
         if (!$user) {
             return new AuthorisedApiControllerSendVerificationEmailSuccessResponse(
                 success: false,

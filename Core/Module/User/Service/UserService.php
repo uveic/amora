@@ -59,7 +59,7 @@ readonly class UserService
         User $user,
         VerificationType $verificationType,
     ): ?User {
-        $res = $this->userDataLayer->getDb()->withTransaction(
+        $res = $this->userDataLayer->db->withTransaction(
             function () use ($createdByUser, $user, $verificationType) {
                 $resUser = $this->storeUser($user);
                 if (!$resUser) {
@@ -114,7 +114,7 @@ readonly class UserService
             return null;
         }
 
-        $res = $this->getUserForEmail($email);
+        $res = $this->getUserForEmail(email: $email);
         if (!$res) {
             return null;
         }
@@ -215,8 +215,7 @@ readonly class UserService
     }
 
     public function filterUserBy(
-        ?bool $includeDisabled = true,
-        ?int $userId = null,
+        ?array $userIds = [],
         ?string $email = null,
         ?string $searchText = null,
         ?string $identifier = null,
@@ -225,8 +224,7 @@ readonly class UserService
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->userDataLayer->filterUserBy(
-            includeDisabled: $includeDisabled,
-            userId: $userId,
+            userIds: $userIds,
             email: $email,
             searchText: $searchText,
             identifier: $identifier,
@@ -236,21 +234,21 @@ readonly class UserService
         );
     }
 
-    public function getUserForId(int $userId, $includeDisabled = false): ?User
+    public function getUserForId(int $userId, bool $includeDisabled = true): ?User
     {
         $res = $this->filterUserBy(
-            includeDisabled: $includeDisabled,
-            userId: $userId,
+            userIds: [$userId],
+            statusIds: $includeDisabled ? [] : [UserStatus::Enabled->value],
         );
 
         return empty($res[0]) ? null : $res[0];
     }
 
-    public function getUserForEmail(string $email, $includeDisabled = false): ?User
+    public function getUserForEmail(string $email, bool $includeDisabled = false): ?User
     {
         $res = $this->filterUserBy(
-            includeDisabled: $includeDisabled,
             email: $email,
+            statusIds: $includeDisabled ? [] : [UserStatus::Enabled->value],
         );
 
         return empty($res[0]) ? null : $res[0];
@@ -304,7 +302,7 @@ readonly class UserService
             );
         }
 
-        $res = $this->userDataLayer->getDb()->withTransaction(
+        $res = $this->userDataLayer->db->withTransaction(
             function () use ($verifiedByUser, $user, $verification) {
                 $resUser = $this->updateUserFields(
                     userId: $user->id,
@@ -354,7 +352,7 @@ readonly class UserService
         string $newPassword,
         UserVerification $verification
     ): bool {
-        $res = $this->userDataLayer->getDb()->withTransaction(
+        $res = $this->userDataLayer->db->withTransaction(
             function () use ($updatedByUser, $userId, $newPassword, $verification) {
                 $resUpdate = $this->userDataLayer->updateUserFields(
                     userId: $userId,
@@ -402,7 +400,7 @@ readonly class UserService
         string $verificationIdentifier,
         string $newPassword
     ): bool {
-        $res = $this->userDataLayer->getDb()->withTransaction(
+        $res = $this->userDataLayer->db->withTransaction(
             function () use ($updatedByUser, $user, $verificationIdentifier, $newPassword) {
                 $updateRes = $this->userDataLayer->updateUserFields(
                     userId: $user->id,
@@ -479,7 +477,7 @@ readonly class UserService
         UserRole|AppUserRole|null $userRole = null,
         ?UserActionType $actionType = null,
     ): Feedback {
-        return $this->userDataLayer->getDb()->withTransaction(
+        return $this->userDataLayer->db->withTransaction(
             function () use (
                 $updatedByUser,
                 $existingUser,
@@ -590,7 +588,7 @@ readonly class UserService
                             $updatedUser->changeEmailAddressTo
                                 ? UserActionType::UpdateEmailRequest
                                 : UserActionType::Update
-                        ),
+                            ),
                         createdAt: new DateTimeImmutable(),
                     ),
                 );
@@ -693,7 +691,7 @@ readonly class UserService
         ?UserStatus $userStatus = null,
         ?UserRole $userRole = null,
     ): bool {
-        $res = $this->userDataLayer->getDb()->withTransaction(
+        $res = $this->userDataLayer->db->withTransaction(
             function () use (
                 $updatedByUser,
                 $existingUser,

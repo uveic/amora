@@ -168,8 +168,8 @@ final class PublicApiController extends PublicApiControllerAbstract
             : Core::getDefaultLanguage();
         $localisationUtil = Core::getLocalisationUtil($language, false);
 
-        $user = $this->userService->verifyUser(email: $user, unHashedPassword: $password);
-        if (!$user) {
+        $userObj = $this->userService->verifyUser(email: $user, unHashedPassword: $password);
+        if (!$userObj) {
             return new PublicApiControllerUserLoginSuccessResponse(
                 success: false,
                 errorMessage: $localisationUtil->getValue('authenticationEmailAndOrPassNotValid'),
@@ -177,8 +177,8 @@ final class PublicApiController extends PublicApiControllerAbstract
         }
 
         $session = $this->sessionService->login(
-            user: $user,
-            timezone: $user->timezone,
+            user: $userObj,
+            timezone: $userObj->timezone,
             ip: $request->sourceIp,
             userAgent: $request->userAgent,
         );
@@ -208,7 +208,7 @@ final class PublicApiController extends PublicApiControllerAbstract
      */
     protected function forgotPassword(string $email, Request $request): Response
     {
-        $existingUser =$this->userService->getUserForEmail($email);
+        $existingUser = $this->userService->getUserForEmail($email);
         if (!$existingUser || !$existingUser->isEnabled()) {
             return new PublicApiControllerForgotPasswordSuccessResponse(true);
         }
@@ -272,7 +272,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        $existingUser =$this->userService->getUserForEmail($email);
+        $existingUser = $this->userService->getUserForEmail($email);
         if ($existingUser) {
             return new PublicApiControllerUserRegistrationSuccessResponse(
                 success: false,
@@ -389,7 +389,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        if ($passwordConfirmation != $password) {
+        if ($passwordConfirmation !== $password) {
             return new PublicApiControllerUserPasswordResetSuccessResponse(
                 success: false,
                 errorMessage: $localisationUtil->getValue('authenticationPasswordsDoNotMatch'),
@@ -448,7 +448,7 @@ final class PublicApiController extends PublicApiControllerAbstract
             );
         }
 
-        if ($passwordConfirmation != $password) {
+        if ($passwordConfirmation !== $password) {
             return new PublicApiControllerUserPasswordCreationSuccessResponse(
                 success: false,
                 errorMessage: $localisationUtil->getValue('authenticationPasswordsDoNotMatch'),

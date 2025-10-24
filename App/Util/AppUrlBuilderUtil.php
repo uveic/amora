@@ -7,7 +7,7 @@ use Amora\Core\Util\UrlBuilderUtil;
 
 final class AppUrlBuilderUtil extends UrlBuilderUtil
 {
-    const string AUTHORISED_DASHBOARD = '/dashboard';
+    private const string AUTHORISED_DASHBOARD = '/dashboard';
 
     ////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////
