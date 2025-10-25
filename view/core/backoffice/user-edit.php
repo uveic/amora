@@ -46,7 +46,7 @@ $defaultLanguage = $responseData->user?->language ?? $responseData->request->ses
 <?php if ($emailHelpCopy) { ?>
             <div class="field">
               <label for="email" class="label"><?=$responseData->getLocalValue('globalPassword')?></label>
-              <div class="control">
+              <div class="control m-b-05">
                   <?=$emailHelpCopy?>
               </div>
               <p class="help"></p>

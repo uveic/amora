@@ -42,10 +42,8 @@ readonly class UserService
     public function sendUserVerificationEmail(User $user, VerificationType $verificationType): bool
     {
         return match ($verificationType) {
-            VerificationType::PasswordCreation =>
-            $this->userMailService->sendPasswordCreationEmail($user),
-            VerificationType::VerifyEmailAddress =>
-            $this->userMailService->sendVerificationEmail(
+            VerificationType::PasswordCreation => $this->userMailService->sendPasswordCreationEmail($user),
+            VerificationType::VerifyEmailAddress => $this->userMailService->sendVerificationEmail(
                 user: $user,
                 emailToVerify: $user->changeEmailAddressTo ?: $user->email,
                 verificationType: VerificationType::VerifyEmailAddress,
@@ -80,17 +78,10 @@ readonly class UserService
                     return new Feedback(false);
                 }
 
-                $resEmail = match ($verificationType) {
-                    VerificationType::PasswordCreation =>
-                    $this->userMailService->sendPasswordCreationEmail($resUser),
-                    VerificationType::VerifyEmailAddress =>
-                    $this->userMailService->sendVerificationEmail(
-                        user: $resUser,
-                        emailToVerify: $resUser->email,
-                        verificationType: VerificationType::VerifyEmailAddress,
-                    ),
-                    default => true
-                };
+                $resEmail = $this->sendUserVerificationEmail(
+                    user: $resUser,
+                    verificationType: $verificationType,
+                );
 
                 if (!$resEmail) {
                     return new Feedback(false);
@@ -642,6 +633,8 @@ readonly class UserService
 
     public function generateUniqueIdentifier(bool $makeUppercase = true): string
     {
+        // Identifier format: XXX-000
+
         $characters = 3;
         $count = 0;
         $max = '1' . str_repeat('0', $characters);
@@ -656,7 +649,7 @@ readonly class UserService
 
             $identifier = StringUtil::generateRandomString($characters, true)
                 . '-'
-                . str_pad(random_int(1, ((int)$max)) - 1, $characters, '0', STR_PAD_LEFT);
+                . str_pad(rand(1, ((int)$max)) - 1, $characters, '0', STR_PAD_LEFT);
 
             $existingUser = $this->filterUserBy(identifier: $identifier);
         } while ($existingUser);

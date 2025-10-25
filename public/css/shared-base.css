@@ -820,6 +820,7 @@ button.is-link,
 .position-relative {position: relative !important;}
 .space-between { justify-content: space-between !important; }
 .space-around { justify-content: space-around !important; }
+.cursor-pointer { cursor: pointer; }
 
 .null {display: none !important;}
 .hidden {visibility: hidden;}
@@ -1095,6 +1096,7 @@ svg,
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
+  color: var(--color-black);
 }
 
 .section-404 {
