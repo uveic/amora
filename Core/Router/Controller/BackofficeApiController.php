@@ -28,6 +28,7 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumStat
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateAlbumSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateCollectionMediaSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateCollectionSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateMediaCaptionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateMediaSequenceForCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserRoleSuccessResponse;
@@ -1000,12 +1001,12 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return new BackofficeApiControllerStoreCollectionSuccessResponse(
-            success: true,
-            newCollectionId: $newCollection->id,
-            html: AlbumHtmlGenerator::generateCollectionHtml(
+            success: (bool)$newCollection,
+            newCollectionId: $newCollection?->id,
+            html: $newCollection ? AlbumHtmlGenerator::generateCollectionHtml(
                 collection: $newCollection,
                 localisationUtil: $localisationUtil,
-            ),
+            ) : null,
         );
     }
 
@@ -1054,6 +1055,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerCreateNewCollectionAndstoreMediaSuccessResponse(
             success: (bool)$newCollection,
             collectionId: $newCollection->id,
+            collectionMediaId: $newCollectionMedia?->id,
             html: $isMainMedia ? $newCollection->mainMedia->asHtmlSimple()
                 : AlbumHtmlGenerator::generateCollectionMediaHtml(
                     collectionMedia: $newCollectionMedia,
@@ -1135,8 +1137,16 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             captionHtml: $captionHtml,
         );
 
+        if (!$newCollectionMedia) {
+            return new BackofficeApiControllerStoreMediaForCollectionSuccessResponse(
+                success: false,
+                errorMessage: 'Error storing collection media',
+            );
+        }
+
         return new BackofficeApiControllerStoreMediaForCollectionSuccessResponse(
             success: (bool)$newCollectionMedia,
+            collectionMediaId: $newCollectionMedia->id,
             html: AlbumHtmlGenerator::generateCollectionMediaHtml(
                 collectionMedia: $newCollectionMedia,
             ),
@@ -1379,6 +1389,36 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
         return new BackofficeApiControllerDeleteCollectionMediaSuccessResponse(
             success: $res,
         );
+    }
+
+    /**
+     * Endpoint: /back/media/{mediaId}/caption
+     * Method: PUT
+     *
+     * @param int $mediaId
+     * @param string $captionHtml
+     * @param Request $request
+     * @return Response
+     */
+    protected function updateMediaCaption(
+        int $mediaId,
+        string $captionHtml,
+        Request $request
+    ): Response {
+        $existingMedia = $this->mediaService->getMediaForId($mediaId);
+        if (!$existingMedia) {
+            return new BackofficeApiControllerUpdateMediaCaptionSuccessResponse(
+                success: false,
+                errorMessage: 'Media ID not found',
+            );
+        }
+
+        $res = $this->mediaService->updateMediaFields(
+            mediaId: $mediaId,
+            caption: $captionHtml,
+        );
+
+        return new BackofficeApiControllerUpdateMediaCaptionSuccessResponse(success: $res);
     }
 
     /**

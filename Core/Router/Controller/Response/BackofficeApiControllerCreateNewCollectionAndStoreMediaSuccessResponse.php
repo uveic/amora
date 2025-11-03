@@ -9,6 +9,7 @@ class BackofficeApiControllerCreateNewCollectionAndStoreMediaSuccessResponse ext
     public function __construct(
         bool $success,
         ?int $collectionId = null,
+        ?int $collectionMediaId = null,
         ?string $html = null,
         ?string $errorMessage = null
     ) {
@@ -20,6 +21,10 @@ class BackofficeApiControllerCreateNewCollectionAndStoreMediaSuccessResponse ext
         $responseData['collectionId'] = is_null($collectionId)
             ? null
             : $collectionId;
+
+        $responseData['collectionMediaId'] = is_null($collectionMediaId)
+            ? null
+            : $collectionMediaId;
 
         $responseData['html'] = is_null($html)
             ? null

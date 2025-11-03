@@ -457,51 +457,49 @@ function collectionAddMedia(e) {
   const mediaId = e.currentTarget.mediaId;
   const targetContainerId = e.currentTarget.targetContainerId;
 
-  const afterResponse = (response, isMainMedia) => {
+  const afterResponse = (response, collectionMediaContainer, isMainMedia) => {
     if (response.collectionId) {
-      container.dataset.collectionId = response.collectionId;
-
-      const collectionMediaContainer = document.querySelector('.collection-item-media');
-      if (collectionMediaContainer) {
-        collectionMediaContainer.dataset.collectionId = response.collectionId;
-      }
+      collectionMediaContainer.closest('.collection-container').dataset.collectionId = response.collectionId;
     }
 
     if (response.html) {
       if (isMainMedia) {
-        const existing = container.querySelector('.media-item');
+        const existing = collectionMediaContainer.querySelector('.media-item');
         if (existing) {
-          container.removeChild(existing);
+          collectionMediaContainer.removeChild(existing);
         }
-        container.insertAdjacentHTML('afterbegin', response.html);
-        container.classList.remove('no-image-simple');
-        container.parentElement.querySelector('.collection-main-media-delete-js').classList.remove('null');
-        container.parentElement.querySelector('.button-media-add span').textContent = Global.get('globalModify');
+        collectionMediaContainer.insertAdjacentHTML('afterbegin', response.html);
+        collectionMediaContainer.classList.remove('no-image-simple');
+        collectionMediaContainer.querySelector('.collection-main-media-delete-js').classList.remove('null');
+        collectionMediaContainer.querySelector('.button-media-add span').textContent = Global.get('globalModify');
       } else {
-        const buttonMediaAdd = container.querySelector('.button-media-add');
-        buttonMediaAdd.insertAdjacentHTML('beforebegin', response.html);
+        collectionMediaContainer.querySelector('.button-media-add').insertAdjacentHTML('beforebegin', response.html);
       }
 
-      const countEl = container.parentElement.querySelector('.collection-item-media-header .count');
-      if (countEl) {
-        countEl.textContent = (Number.parseInt(countEl.textContent) + 1).toString();
+      const collectionContainer = collectionMediaContainer.closest('.collection-container');
+      if (collectionContainer) {
+        const countEl = collectionContainer.querySelector('.collection-media-count');
+        if (countEl) {
+          countEl.textContent = (Number.parseInt(countEl.textContent) + 1).toString();
+        }
       }
 
-      const deleteMediaEl = container.querySelector('.collection-media-delete-js[data-media-id="' + mediaId + '"]');
-      if (deleteMediaEl) {
-        deleteMediaEl.targetContainerId = targetContainerId;
-        deleteMediaEl.mediaId = mediaId;
-        deleteMediaEl.addEventListener('click', collectionDeleteMedia);
-      }
+      if (response.collectionMediaId) {
+        const deleteMediaEl = collectionMediaContainer.querySelector('.collection-media-container[data-collection-media-id="' + response.collectionMediaId + '"] .collection-media-delete-js');
+        if (deleteMediaEl) {
+          deleteMediaEl.addEventListener('click', collectionDeleteMedia);
+        }
 
-      const editMediaEl = container.querySelector('.collection-media-caption-js[data-media-id="' + mediaId + '"]');
-      if (editMediaEl) {
-        editMediaEl.mediaId = mediaId;
-        editMediaEl.addEventListener('click', collectionEditMediaCaption);
+        const editMediaEl = collectionMediaContainer.querySelector('.collection-media-container[data-collection-media-id="' + response.collectionMediaId + '"] .collection-media-caption-js');
+        if (editMediaEl) {
+          editMediaEl.addEventListener('click', collectionEditMediaCaption);
+        }
+      } else {
+        collectionMediaContainer.querySelector('.media-caption').textContent = '-';
       }
 
       if (!isMainMedia) {
-        const newMediaEl = container.querySelector('.item-draggable:last-of-type .media-item');
+        const newMediaEl = collectionMediaContainer.querySelector('.item-draggable:last-of-type .media-item');
         newMediaEl.addEventListener('dragstart', handleAlbumMediaDragStart);
         newMediaEl.addEventListener('dragleave', handleAlbumMediaDragLeave);
         newMediaEl.addEventListener('dragend', handleAlbumMediaDragEnd);
@@ -512,9 +510,9 @@ function collectionAddMedia(e) {
     }
   }
 
-  const container = document.querySelector('#' + targetContainerId);
-  const collectionId = container.dataset.collectionId;
-  const isMainMedia = Number.parseInt(container.dataset.isMainMedia) === 1;
+  const collectionMediaContainer = document.querySelector('#' + targetContainerId);
+  const collectionId = collectionMediaContainer.closest('.collection-container').dataset.collectionId;
+  const isMainMedia = Number.parseInt(collectionMediaContainer.dataset.isMainMedia) === 1;
 
   Util.displayFullPageLoadingModal();
 
@@ -529,27 +527,13 @@ function collectionAddMedia(e) {
 
   if (collectionId) {
     Request.post('/back/collection/' + collectionId + '/media', JSON.stringify(payload))
-      .then(response => afterResponse(response, isMainMedia))
-      .catch(error => {
-        if (isMainMedia) {
-          container.removeChild(container.querySelector('.media-item'));
-        } else {
-          container.removeChild(container.querySelector('.collection-media-container[data-media-id="' + mediaId + '"]'));
-        }
-        Util.notifyError(error);
-      })
+      .then(response => afterResponse(response, collectionMediaContainer, isMainMedia))
+      .catch(error => Util.notifyError(error))
       .finally(() => Util.hideFullPageLoadingModal());
   } else {
     Request.post('/back/collection/media', JSON.stringify(payload))
-      .then(response => afterResponse(response, isMainMedia))
-      .catch(error => {
-        if (isMainMedia) {
-          container.removeChild(container.querySelector('.media-item'));
-        } else {
-          container.removeChild(container.querySelector('.collection-media-container[data-media-id="' + mediaId + '"]'));
-        }
-        Util.notifyError(error);
-      })
+      .then(response => afterResponse(response, collectionMediaContainer, isMainMedia))
+      .catch(error => Util.notifyError(error))
       .finally(() => Util.hideFullPageLoadingModal());
   }
 }
@@ -566,7 +550,7 @@ function editCollection(e) {
     }
   });
 
-  const container = document.querySelector('.collection-item[data-collection-id="' + collectionId + '"]');
+  const container = document.querySelector('.collection-container[data-collection-id="' + collectionId + '"]');
   const titleEl = container.querySelector('.collection-title-html');
   const subtitleEl = container.querySelector('.collection-subtitle-html');
   const contentEl = container.querySelector('.collection-content-html');
@@ -627,7 +611,7 @@ function updateCollection(e) {
 
   makeCollectionNonEditable(collectionId);
 
-  const container = document.querySelector('.collection-item[data-collection-id="' + collectionId + '"]');
+  const container = document.querySelector('.collection-container[data-collection-id="' + collectionId + '"]');
 
   const titleHtmlEl = container.querySelector('.collection-title-html');
   const titleHtml = titleHtmlEl.textContent.trim();
@@ -681,7 +665,7 @@ function updateCollection(e) {
 }
 
 function makeCollectionNonEditable(collectionId) {
-  const container = document.querySelector('.collection-item[data-collection-id="' + collectionId + '"]');
+  const container = document.querySelector('.collection-container[data-collection-id="' + collectionId + '"]');
   const titleEl = container.querySelector('.collection-title-html');
   const subtitleEl = container.querySelector('.collection-subtitle-html');
   const contentEl = container.querySelector('.collection-content-html');
@@ -728,7 +712,7 @@ function cancelCollectionEdit(e) {
 
   const collectionId = e.currentTarget.dataset.collectionId;
 
-  const container = document.querySelector('.collection-item[data-collection-id="' + collectionId + '"]');
+  const container = document.querySelector('.collection-container[data-collection-id="' + collectionId + '"]');
   const titleHtmlEl = container.querySelector('.collection-title-html');
   titleHtmlEl.textContent = titleHtmlEl.dataset.before;
   const subtitleHtmlEl = container.querySelector('.collection-subtitle-html');
@@ -781,44 +765,25 @@ function collectionDeleteMedia(e) {
     return;
   }
 
-  const mediaId = e.currentTarget.mediaId;
-  const collectionMediaId = e.currentTarget.dataset.collectionMediaId;
-  const targetContainerId = e.currentTarget.targetContainerId;
+  const collectionMediaContainer = e.currentTarget.closest('.collection-media-container');
+  const collectionMediaId = collectionMediaContainer.dataset.collectionMediaId;
 
-  const container = document.querySelector('#' + targetContainerId);
-  const targetMediaContainer = container.querySelector('img[data-media-id="' + mediaId + '"]');
+  collectionMediaContainer.classList.add('null');
 
-  targetMediaContainer.parentElement.parentElement.classList.add('null');
-
-  const countEl = container.parentElement.querySelector('.collection-item-media-header .count');
+  const collectionContainer = collectionMediaContainer.closest('.collection-container');
+  const countEl = collectionContainer ? collectionContainer.querySelector('.collection-media-count') : null;
   if (countEl) {
     countEl.textContent = (Number.parseInt(countEl.textContent) - 1).toString();
   }
 
-  const deletedMediaSequence = Number.parseInt(targetMediaContainer.dataset.sequence);
-  container.querySelectorAll('.media-item').forEach(mi => {
-    const currentSequence = Number.parseInt(mi.dataset.sequence);
-    if (currentSequence > deletedMediaSequence) {
-      mi.dataset.sequence = (currentSequence - 1).toString();
-    }
-  });
-
   Request.delete('/back/collection-media/' + collectionMediaId)
     .catch(error => {
-      targetMediaContainer.parentElement.parentElement.classList.remove('null');
+      collectionMediaContainer.classList.remove('null');
       Util.notifyError(error);
 
       if (countEl) {
         countEl.textContent = (Number.parseInt(countEl.textContent) + 1).toString();
       }
-
-      container.querySelectorAll('.media-item').forEach(mi => {
-        const currentSequence = Number.parseInt(mi.dataset.sequence);
-        const currentMediaId = mi.dataset.mediaId;
-        if (currentSequence >= deletedMediaSequence && mediaId !== currentMediaId) {
-          mi.dataset.sequence = (currentSequence + 1).toString();
-        }
-      });
     });
 }
 
@@ -830,22 +795,21 @@ function collectionDeleteMainMedia(e) {
     return;
   }
 
-  const collectionId = e.currentTarget.dataset.collectionId;
-  const targetContainerId = e.currentTarget.dataset.targetContainerId;
+  const collectionId = e.currentTarget.closest('.collection-container').dataset.collectionId;
+  const collectionMainMediaContainer = e.currentTarget.closest('.main-image-container');
 
-  const targetContainer = document.querySelector('#' + targetContainerId);
-  const targetMediaContainer = targetContainer.querySelector('.media-item');
-  targetMediaContainer.classList.add('null');
+  const mediaItemEl = collectionMainMediaContainer.querySelector('.media-item');
+  mediaItemEl.classList.add('null');
 
   Request.delete('/back/collection/' + collectionId + '/main-media')
     .then(() => {
-      targetMediaContainer.parentElement.removeChild(targetMediaContainer);
-      targetContainer.classList.add('no-image-simple');
-      targetContainer.parentElement.querySelector('.button-media-add span').textContent = Global.get('globalSelectImage');
-      targetContainer.parentElement.querySelector('.collection-main-media-delete-js').classList.add('null');
+      mediaItemEl.parentElement.removeChild(mediaItemEl);
+      collectionMainMediaContainer.classList.add('no-image-simple');
+      collectionMainMediaContainer.parentElement.querySelector('.button-media-add span').textContent = Global.get('globalSelectImage');
+      collectionMainMediaContainer.parentElement.querySelector('.collection-main-media-delete-js').classList.add('null');
     })
     .catch(error => {
-      targetMediaContainer.classList.remove('null');
+      mediaItemEl.classList.remove('null');
       Util.notifyError(error);
     });
 }
@@ -853,30 +817,32 @@ function collectionDeleteMainMedia(e) {
 function collectionEditMediaCaption(e) {
   e.preventDefault();
 
-  const collectionMediaId = e.currentTarget.dataset.collectionMediaId;
-  const collectionId = e.currentTarget.dataset.collectionId;
-  const mediaId = e.currentTarget.mediaId;
+  const collectionMediaContainer = e.currentTarget.closest('.collection-media-container');
+  const collectionMediaId = collectionMediaContainer ? collectionMediaContainer.dataset.collectionMediaId : '';
+
+  const collectionContainer = e.currentTarget.closest('.collection-container');
+  const collectionId = collectionContainer.dataset.collectionId;
+  const mainMediaEl = collectionContainer.querySelector('.main-image-container .media-item');
+  const mainMediaId = mainMediaEl ? mainMediaEl.dataset.mediaId : '';
+
   const modal = document.querySelector('.album-media-caption-edit-modal-js');
   const mediaContainer = modal.querySelector('.album-media-edit-container');
+
   mediaContainer.querySelectorAll('img').forEach(i => mediaContainer.removeChild(i));
   modal.querySelector('input[name="collectionMediaId"]').value = collectionMediaId;
-  const existingMedia = e.currentTarget.parentElement.parentElement.querySelector('img[data-media-id="' + mediaId + '"]');
-  const collectionContentContainer = document.querySelector(
-    '.collection-item[data-collection-id="' + collectionId + '"]'
-  );
-  const titleText = collectionContentContainer.querySelector('.collection-title-html').textContent;
-  const subtitleText = collectionContentContainer.querySelector('.collection-sequence').textContent +
-    (titleText === '-' ? '' : (' ' + titleText));
+  modal.querySelector('input[name="collectionId"]').value = collectionId;
+  modal.querySelector('input[name="mainMediaId"]').value = mainMediaId;
+
+  const existingMedia = collectionMediaContainer ? collectionMediaContainer.querySelector('img.media-item') : null;
 
   const newMediaEl = new Image();
-  newMediaEl.src = existingMedia.src;
-  newMediaEl.alt = existingMedia.alt;
-  newMediaEl.title = existingMedia.title;
+  newMediaEl.src = existingMedia ? existingMedia.src : mainMediaEl.src;
+  newMediaEl.alt = existingMedia ? existingMedia.alt : mainMediaEl.alt;
+  newMediaEl.title = existingMedia ? existingMedia.title : mainMediaEl.title;
   mediaContainer.appendChild(newMediaEl);
 
   const htmlContainer = modal.querySelector('.media-caption-html');
   htmlContainer.innerHTML = e.currentTarget.textContent === '-' ? '' : e.currentTarget.textContent;
-  modal.querySelector('.modal-header-subtitle').textContent = subtitleText;
 
   modal.classList.remove('null');
   htmlContainer.focus();
@@ -888,16 +854,16 @@ function updateCollectionSequences(sourceSequence, targetSequence) {
   }
 
   const container = document.querySelector('.collections-wrapper');
-  const sourceCollection = container.querySelector('.collection-item[data-sequence="' + sourceSequence + '"]');
-  let targetCollection = container.querySelector('.collection-item[data-sequence="' + targetSequence + '"]');
+  const sourceCollection = container.querySelector('.collection-container[data-sequence="' + sourceSequence + '"]');
+  let targetCollection = container.querySelector('.collection-container[data-sequence="' + targetSequence + '"]');
   if (!targetCollection) {
     let closestSequence = null;
     const sequences = [];
-    container.querySelectorAll('.collection-item').forEach(asi => sequences.push(Number.parseInt(asi.dataset.sequence)));
+    container.querySelectorAll('.collection-container').forEach(asi => sequences.push(Number.parseInt(asi.dataset.sequence)));
 
     targetCollection = closestSequence ?
-      container.querySelector('.collection-item[data-sequence="' + closestSequence + '"]')
-      : container.querySelector('.collection-item:last-of-type');
+      container.querySelector('.collection-container[data-sequence="' + closestSequence + '"]')
+      : container.querySelector('.collection-container:last-of-type');
 
     targetSequence = Number.parseInt(targetCollection.dataset.sequence);
   }
@@ -921,7 +887,7 @@ function updateCollectionSequences(sourceSequence, targetSequence) {
     countDelta = -1;
   }
 
-  container.querySelectorAll('.collection-item').forEach(asi => {
+  container.querySelectorAll('.collection-container').forEach(asi => {
     if (asi.dataset.collectionId === sourceCollection.dataset.collectionId) {
       return;
     }
@@ -1040,7 +1006,7 @@ function handleAlbumMediaDragStart(ev) {
 function handleAlbumMediaDrop(ev) {
   ev.preventDefault();
 
-  const collectionContainer = ev.currentTarget.parentElement.parentElement.parentElement;
+  const collectionContainer = ev.currentTarget.closest('.collection-item-media');
   const draggedId = ev.dataTransfer.getData("text/plain");
   const draggedEl = document.getElementById(draggedId);
 
@@ -1069,12 +1035,12 @@ function handleAlbumMediaDrop(ev) {
     countDelta = -1;
   }
 
-  const collectionId = collectionContainer.dataset.collectionId;
+  const collectionId = collectionContainer.closest('.collection-container').dataset.collectionId;
   const data = {
     sequenceTo: droppedSequence,
-    collectionMediaIdTo: Number.parseInt(ev.currentTarget.dataset.collectionMediaId),
+    collectionMediaIdTo: Number.parseInt(ev.currentTarget.closest('.collection-media-container').dataset.collectionMediaId),
     sequenceFrom: draggedSequence,
-    collectionMediaIdFrom: Number.parseInt(draggedEl.dataset.collectionMediaId),
+    collectionMediaIdFrom: Number.parseInt(draggedEl.closest('.collection-media-container').dataset.collectionMediaId),
     countDelta: countDelta,
   };
 
@@ -1589,7 +1555,7 @@ document.querySelectorAll('.album-add-collection-js').forEach(a => {
     Request.post('/back/album/' + albumId + '/collection', '')
       .then(response => {
         container.insertAdjacentHTML('beforeend', response.html);
-        const collectionContainer = container.querySelector('.collection-item[data-collection-id="' + response.newCollectionId + '"]');
+        const collectionContainer = container.querySelector('.collection-container[data-collection-id="' + response.newCollectionId + '"]');
         collectionContainer.querySelector('.collection-main-media-select-js').addEventListener('click', handleGenericSelectMainMediaClick);
         collectionContainer.querySelector('.collection-add-media-js').addEventListener('click', handleGenericSelectMainMediaClick);
         collectionContainer.querySelector('.collection-edit-js').addEventListener('click', editCollection);
@@ -1644,19 +1610,14 @@ document.querySelectorAll('.generic-media-delete-js').forEach(bu => {
 });
 
 document.querySelectorAll('.collection-media-delete-js').forEach(bu => {
-  bu.targetContainerId = bu.dataset.targetContainerId;
-  bu.mediaId = bu.dataset.mediaId;
   bu.addEventListener('click', collectionDeleteMedia);
 });
 
 document.querySelectorAll('.collection-main-media-delete-js').forEach(bu => {
-  bu.targetContainerId = bu.dataset.targetContainerId;
-  bu.mediaId = bu.dataset.mediaId;
   bu.addEventListener('click', collectionDeleteMainMedia);
 });
 
 document.querySelectorAll('.collection-media-caption-js').forEach(el => {
-  el.mediaId = el.dataset.mediaId;
   el.addEventListener('click', collectionEditMediaCaption);
 });
 
@@ -1664,26 +1625,44 @@ document.querySelectorAll('form#album-media-caption-edit-form-js').forEach(f => 
   f.addEventListener('submit', e => {
     e.preventDefault();
 
-    const collectionMediaId = Number.parseInt(f.querySelector('input[name="collectionMediaId"]').value);
+    const collectionMediaId = f.querySelector('input[name="collectionMediaId"]').value;
+    const mainMediaId = f.querySelector('input[name="mainMediaId"]').value;
     const captionHtml = f.querySelector('.media-caption-html').textContent;
 
-    const targetCaptionHtmlEl = document.querySelector(
-      '.collection-media-caption-js[data-collection-media-id="' + collectionMediaId + '"]'
-    );
-    const captionHtmlBefore = targetCaptionHtmlEl.textContent;
+    let targetCaptionHtmlEl = null;
+    let captionHtmlBefore = '';
+    if (collectionMediaId) {
+      targetCaptionHtmlEl = document.querySelector(
+        '.collection-media-container[data-collection-media-id="' + collectionMediaId + '"] .media-caption'
+      );
+      captionHtmlBefore = targetCaptionHtmlEl.textContent;
+      targetCaptionHtmlEl.textContent = captionHtml;
+    } else if (mainMediaId) {
+      targetCaptionHtmlEl = document.querySelector('.main-image-container .media-caption');
+      captionHtmlBefore = targetCaptionHtmlEl.textContent;
+      targetCaptionHtmlEl.textContent = captionHtml;
+    }
 
-    targetCaptionHtmlEl.textContent = captionHtml;
     document.querySelector('.album-media-caption-edit-modal-js').classList.add('null');
 
     const payload = JSON.stringify({
       captionHtml: captionHtml,
     });
 
-    Request.put('/back/collection-media/' + collectionMediaId, payload)
-      .catch(error => {
-        targetCaptionHtmlEl.textContent = captionHtmlBefore;
-        Util.notifyError(error);
-      });
+    if (collectionMediaId) {
+      Request.put('/back/collection-media/' + collectionMediaId, payload)
+        .catch(error => {
+          targetCaptionHtmlEl.textContent = captionHtmlBefore;
+          Util.notifyError(error);
+        });
+    } else if (mainMediaId) {
+      Request.put('/back/media/' + mainMediaId + '/caption', payload)
+        .catch(error => {
+          targetCaptionHtmlEl.textContent = captionHtmlBefore;
+          Util.notifyError(error);
+        });
+    }
+
   });
 });
 

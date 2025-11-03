@@ -1,5 +1,4 @@
 <?php
-
 namespace Amora\Core\Router\Controller\Response;
 
 use Amora\Core\Entity\Response;

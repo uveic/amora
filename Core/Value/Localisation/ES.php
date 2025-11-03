@@ -263,4 +263,8 @@ return [
     'albumPublicReadMore' => 'Leer más',
     'albumPublicMorePictures' => 'Ver más fotos',
     'albumAddCollection' => 'Añadir colección',
+    'collectionNoImage' => 'Sin imagen',
+    'collectionMediaTitle' => 'Otras imágenes',
+    'collectionDragAndDropToOrder' => 'Arrastrar para (re-)ordenar.',
+    'collectionModalMediaCaptionTitle' => 'Texto, descripción o subtítulo de la imagen',
 ];

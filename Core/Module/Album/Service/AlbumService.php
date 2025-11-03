@@ -326,7 +326,7 @@ readonly class AlbumService
         );
     }
 
-    public function storeCollection(Collection $collection): Collection
+    public function storeCollection(Collection $collection): ?Collection
     {
         return $this->albumDataLayer->storeCollection($collection);
     }
@@ -337,7 +337,7 @@ readonly class AlbumService
         ?string $titleHtml,
         ?string $subtitleHtml,
         ?string $contentHtml,
-    ): Collection {
+    ): ?Collection {
         $resTransaction = $this->albumDataLayer->getDb()->withTransaction(
             function () use (
                 $album,
@@ -363,6 +363,10 @@ readonly class AlbumService
                     ),
                 );
 
+                if (!$resStore) {
+                    return new Feedback(false);
+                }
+
                 return new Feedback(
                     isSuccess: true,
                     response: $resStore,
@@ -370,7 +374,7 @@ readonly class AlbumService
             }
         );
 
-        return $resTransaction->response;
+        return $resTransaction->isSuccess ? $resTransaction->response : null;
     }
 
     public function updateCollection(Collection $item): bool
@@ -467,6 +471,10 @@ readonly class AlbumService
                     ),
                 );
 
+                if (!$newCollection) {
+                    return new Feedback(false);
+                }
+
                 $newCollectionMedia = null;
                 if (!$isMainMedia) {
                     $newCollectionMedia = $this->storeMediaForCollection(
@@ -474,6 +482,10 @@ readonly class AlbumService
                         media: $media,
                         captionHtml: $mediaCaptionHtml,
                     );
+
+                    if (!$newCollectionMedia) {
+                        return new Feedback(false);
+                    }
                 }
 
                 return new Feedback(
@@ -493,7 +505,7 @@ readonly class AlbumService
         Collection $collection,
         Media $media,
         ?string $captionHtml,
-    ): CollectionMedia {
+    ): ?CollectionMedia {
         $sequence = $this->albumDataLayer->getMaxCollectionMediaSequence($collection->id);
 
         $now = new DateTimeImmutable();

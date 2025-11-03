@@ -30,7 +30,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
       <span class="icon-one-line width-10-grow"><?=CoreIcons::IMAGES?><span class="ellipsis"><?=$pageTitle?></span></span>
       <div class="links">
-        <a href="<?=UrlBuilderUtil::buildBackofficeAlbumViewUrl(language: $responseData->siteLanguage, albumId: $responseData->album->id)?>"><?=CoreIcons::CLOSE?></a>
+        <a href="<?=$closeLink?>"><?=CoreIcons::CLOSE?></a>
       </div>
     </div>
       <div class="backoffice-wrapper">

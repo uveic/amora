@@ -263,4 +263,8 @@ return [
     'albumPublicReadMore' => 'Read more',
     'albumPublicMorePictures' => 'More Pictures',
     'albumAddCollection' => 'Add Collection',
+    'collectionNoImage' => 'No Image',
+    'collectionMediaTitle' => 'Media',
+    'collectionDragAndDropToOrder' => 'Sort by drag & drop',
+    'collectionModalMediaCaptionTitle' => 'Image caption',
 ];

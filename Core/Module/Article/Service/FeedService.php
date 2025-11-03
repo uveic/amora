@@ -6,6 +6,7 @@ use Amora\App\Router\AppRouter;
 use Amora\Core\Core;
 use Amora\Core\Module\Article\Entity\FeedItem;
 use Amora\Core\Module\Article\Model\Tag;
+use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\LocalisationUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
@@ -119,6 +120,7 @@ readonly class FeedService
         foreach ($feedItems as $feedItem) {
             $title = $feedItem->title ? htmlspecialchars($feedItem->title) : '';
             $content = $this->getContent($feedItem);
+            $pubDateUTC = $feedItem->publishedOn->setTimezone(DateUtil::convertStringToDateTimeZone('UTC'));
 
             $output[] = '<item>';
             $output[] = '<title>' . $title . '</title>';
@@ -128,7 +130,7 @@ readonly class FeedService
                 $output[] = '<author>' . $feedItem->user->email . ' (' . $feedItem->user->name . ')</author>';
             }
             $output[] = '<description>' . $content . '</description>';
-            $output[] = '<pubDate>' . $feedItem->publishedOn->format('r') . '</pubDate>';
+            $output[] = '<pubDate>' . $pubDateUTC->format('r') . '</pubDate>';
 
             /** @var Tag $tag */
             foreach ($feedItem->tags as $tag) {
@@ -257,7 +259,14 @@ readonly class FeedService
 
     private function getLastPubDate(?FeedItem $feedItem): DateTimeImmutable
     {
-        return $feedItem->publishedOn ?? new DateTimeImmutable('now');
+        if ($feedItem) {
+            return $feedItem->publishedOn->setTimezone(new DateTimeZone('UTC'));
+        }
+
+        return DateUtil::convertStringToDateTimeImmutable(
+            date: 'now',
+            timezone: DateUtil::convertStringToDateTimeZone('UTC'),
+        );
     }
 
     private function getBuildDate(array $feedItems): DateTimeImmutable

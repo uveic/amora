@@ -142,9 +142,10 @@ class UserDataLayer
 
         if (!$newId) {
             $this->logger->logError('Error inserting user');
+            return null;
         }
 
-        $user->id = (int)$newId;
+        $user->id = $newId;
 
         return $user;
     }

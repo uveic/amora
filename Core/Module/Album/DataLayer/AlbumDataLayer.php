@@ -496,14 +496,19 @@ class AlbumDataLayer
         );
     }
 
-    public function storeCollection(Collection $item): Collection
+    public function storeCollection(Collection $item): ?Collection
     {
-        $res = $this->db->insert(
+        $newId = $this->db->insert(
             tableName: self::COLLECTION_TABLE,
             data: $item->asArray(),
         );
 
-        $item->id = $res;
+        if (!$newId) {
+            $this->logger->logError('Error inserting collection');
+            return null;
+        }
+
+        $item->id = $newId;
 
         return $item;
     }
@@ -544,14 +549,19 @@ class AlbumDataLayer
         return $this->db->execute($sql, $params);
     }
 
-    public function storeCollectionMedia(CollectionMedia $item): CollectionMedia
+    public function storeCollectionMedia(CollectionMedia $item): ?CollectionMedia
     {
-        $res = $this->db->insert(
+        $newId = $this->db->insert(
             tableName: self::COLLECTION_MEDIA_TABLE,
             data: $item->asArray(),
         );
 
-        $item->id = $res;
+        if (!$newId) {
+            $this->logger->logError('Error inserting collection media');
+            return null;
+        }
+
+        $item->id = $newId;
 
         return $item;
     }

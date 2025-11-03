@@ -130,7 +130,7 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
           <span><?=$responseData->getLocalValue('globalAdd')?></span>
         </a>
       </div>
-      <div class="collection-media-edit-info">Arrastrar para (re-)ordenar.</div>
+      <div class="collection-media-edit-info"><?=$responseData->getLocalValue('collectionDragAndDropToOrder')?>.</div>
     </div>
 <?php } ?>
 

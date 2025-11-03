@@ -463,9 +463,6 @@
 }
 
 .collection-main-media-delete-js {
-  position: absolute;
-  bottom: 0;
-  right: 0;
   background-color: var(--color-white);
   cursor: pointer;
 }
@@ -686,7 +683,7 @@
   min-height: 50px;
   overflow: clip;
   position: relative;
-  margin: 1rem 0;
+  background-color: var(--color-grey-100);
 }
 
 .main-image-container-full {
@@ -1399,7 +1396,7 @@
   color: var(--color-grey-400);
 }
 
-.collection-item {
+.collection-container {
   display: flex;
   flex-flow: column wrap;
   gap: 0.5rem;
@@ -1408,11 +1405,11 @@
   width: 100%;
 }
 
-.collection-item:first-of-type {
+.collection-container:first-of-type {
   margin-top: 1rem;
 }
 
-.collection-item:last-of-type {
+.collection-container:last-of-type {
   border: none;
 }
 
@@ -1493,8 +1490,7 @@
 .collection-media-container .collection-media-options {
   display: flex;
   flex-flow: row nowrap;
-  gap: 0.25rem;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: flex-end;
   position: absolute;
   bottom: 0;
@@ -1507,15 +1503,18 @@
   background-color: var(--color-white);
 }
 
+
+.collection-main-media-options .media-caption,
 .collection-media-container .media-caption {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 100%;
   display: inline-block;
   font-size: 0.8rem;
-  color: var(--color-white);
+  color: var(--color-black);
   cursor: pointer;
+  background-color: var(--color-white);
+  padding: 0 0.2rem;
 }
 
 .collection-media-container .media-caption p:first-of-type {
@@ -1534,6 +1533,7 @@
   padding: 0;
   aspect-ratio: 1/1;
   flex-grow: 0 !important;
+  background-color: var(--color-grey-100);
 }
 
 .collection-main-image-container img {
@@ -1541,6 +1541,17 @@
   object-position: center;
   width: 100%;
   height: 100%;
+}
+
+.collection-main-media-options {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .collection-media-edit-info {
@@ -1719,7 +1730,7 @@
     width: 500px !important;
   }
 
-  .collection-item {
+  .collection-container {
     flex-flow: row wrap;
   }
 
@@ -1782,7 +1793,7 @@
     width: 10%;
   }
 
-  .collection-item {
+  .collection-container {
     flex-flow: row wrap;
   }
 

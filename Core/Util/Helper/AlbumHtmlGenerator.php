@@ -111,7 +111,7 @@ final class AlbumHtmlGenerator
         $lazyLoading = $collection->sequence > 1;
 
         $output = [];
-        $output[] = $indentation . '<div class="collection-item" data-collection-id="' . $collection->id . '" data-sequence="' . $collection->sequence . '">';
+        $output[] = $indentation . '<div class="collection-container" data-collection-id="' . $collection->id . '" data-sequence="' . $collection->sequence . '">';
         $output[] = $indentation . '  <div class="collection-item-content">';
 
         $output[] = $indentation . '    <p class="collection-label null">' . $localisationUtil->getValue('globalTitle') . '</p>';
@@ -155,7 +155,7 @@ final class AlbumHtmlGenerator
 
         $output[] = $indentation . '  <div class="collection-item-media-wrapper">';
         $output[] = $indentation . '    <div class="collection-item-media-header">';
-        $output[] = $indentation . '      <span class="count">' . count($collection->media) . '</span> ' . $localisationUtil->getValue('globalImages');
+        $output[] = $indentation . '      <span class="collection-media-count">' . count($collection->media) . '</span> ' . $localisationUtil->getValue('globalImages');
         $output[] = $indentation . '    </div>';
         $output[] = $indentation . '    <div id="collection-item-media-' . $collection->id . '" class="collection-item-media" data-collection-id="' . $collection->id . '">';
 
@@ -190,14 +190,14 @@ final class AlbumHtmlGenerator
         $lazyLoadingString = $lazyLoading ? ' loading="lazy"' : '';
 
         $output = [];
-        $output[] = $indentation . '<div class="collection-media-container item-draggable" data-media-id="' . $collectionMedia->media->id . '">';
+        $output[] = $indentation . '<div class="collection-media-container item-draggable" data-collection-media-id="' . $collectionMedia->id . '">';
         $output[] = $indentation . '  <figure>';
-        $output[] = $indentation . '    <img id="collection-media-' . $collectionMedia->id . '" src="' . $collectionMedia->media->getPathWithNameSmall() . '" class="media-item" alt="' . $titleAlt . '" title="' . $titleAlt . '"' . $lazyLoadingString . ' data-media-id="' . $collectionMedia->media->id . '" data-sequence="' . $collectionMedia->sequence . '" data-collection-media-id=' . $collectionMedia->id . ' draggable="true">';
-        $output[] = $indentation . '    <div class="collection-media-options">';
-        $output[] = $indentation . '      <div class="media-caption collection-media-caption-js" data-media-id="' . $collectionMedia->media->id . '" data-collection-id="' . $collectionMedia->collectionId . '" data-collection-media-id="' . $collectionMedia->id . '">' . ($collectionMedia->captionHtml ?: '-') . '</div>';
-        $output[] = $indentation . '      <span class="collection-media-delete-js" data-collection-media-id="' . $collectionMedia->id . '" data-media-id="' . $collectionMedia->media->id . '" data-event-listener-action="collectionDeleteMedia" data-target-container-id="collection-item-media-' . $collectionMedia->collectionId . '">' . CoreIcons::TRASH . '</span>';
-        $output[] = $indentation . '    </div>';
+        $output[] = $indentation . '    <img id="collection-media-' . $collectionMedia->id . '" src="' . $collectionMedia->media->getPathWithNameSmall() . '" class="media-item image-popup-js" alt="' . $titleAlt . '" title="' . $titleAlt . '"' . $lazyLoadingString . ' data-media-id="' . $collectionMedia->media->id . '" data-sequence="' . $collectionMedia->sequence . '" draggable="true">';
         $output[] = $indentation . '  </figure>';
+        $output[] = $indentation . '  <div class="collection-media-options">';
+        $output[] = $indentation . '    <div class="media-caption collection-media-caption-js">' . ($collectionMedia->captionHtml ?: '-') . '</div>';
+        $output[] = $indentation . '    <span class="collection-media-delete-js">' . CoreIcons::TRASH . '</span>';
+        $output[] = $indentation . '  </div>';
 
         if ($bottomHtml) {
             $output[] = $indentation . '  <div class="collection-media-info">' . $bottomHtml . '</div>';

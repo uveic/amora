@@ -227,11 +227,17 @@ class MediaDataLayer
 
     public function updateMediaFields(
         int $mediaId,
+        ?string $caption = null,
         ?DateTimeImmutable $uploadedToS3At = null,
         ?DateTimeImmutable $deletedLocallyAt = null,
     ): bool {
         $params = [];
         $fields = [];
+
+        if ($caption) {
+            $fields[] = 'caption_html = :caption';
+            $params[':caption'] = $caption;
+        }
 
         if ($uploadedToS3At) {
             $fields[] = 'uploaded_to_s3_at = :uploadedToS3At';

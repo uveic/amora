@@ -5,7 +5,11 @@ use Amora\Core\Value\CoreIcons;
 
 /** @var HtmlResponseDataAdmin $responseData */
 
-$album = $responseData->album;
+$album = $album ?? $responseData?->album ?? null;
+$collection = $collection ?? $responseData->collection ?? null;
+
+$title = $album?->titleHtml ?: $responseData->getLocalValue('collectionModalMediaCaptionTitle');
+$subtitle = $album?->titleHtml ? $responseData->getLocalValue('collectionModalMediaCaptionTitle') : '';
 
 ?>
 <div class="album-media-caption-edit-modal-js modal-wrapper null">
@@ -17,14 +21,16 @@ $album = $responseData->album;
         <?=CoreIcons::IMAGE?>
       </div>
       <div class="modal-header-content">
-        <div class="modal-header-title"><?=$album->titleHtml?></div>
-        <div class="modal-header-subtitle"></div>
+        <div class="modal-header-title"><?=$title?></div>
+        <div class="modal-header-subtitle"><?=$subtitle?></div>
       </div>
     </div>
 
     <form action="#" method="post" id="album-media-caption-edit-form-js">
-      <input id="albumId" name="albumId" type="hidden" value="<?=$album->id?>">
+      <input id="albumId" name="albumId" type="hidden" value="<?=$album?->id?>">
+      <input id="collectionId" name="collectionId" type="hidden" value="<?=$collection?->id?>">
       <input id="collectionMediaId" name="collectionMediaId" type="hidden" value="">
+      <input id="mainMediaId" name="mainMediaId" type="hidden" value="">
 
       <div class="form-two-columns-wrapper">
         <div class="album-media-edit-container"></div>
@@ -35,7 +41,6 @@ $album = $responseData->album;
         <input type="submit" class="button is-success" value="<?=$responseData->getLocalValue('globalSend')?>">
       </div>
     </form>
-
 
   </div>
 </div>

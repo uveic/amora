@@ -4,26 +4,14 @@ namespace Amora\Core\Router\Controller\Response;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\HttpStatusCode;
 
-class BackofficeApiControllerStoreMediaForCollectionSuccessResponse extends Response
+class BackofficeApiControllerUpdateMediaCaptionSuccessResponse extends Response
 {
-    public function __construct(
-        bool $success,
-        ?int $collectionMediaId = null,
-        ?string $html = null,
-        ?string $errorMessage = null
-    ) {
+    public function __construct(bool $success, ?string $errorMessage = null)
+    {
         // Required parameters
         $responseData = [
             'success' => $success,
         ];
-
-        $responseData['collectionMediaId'] = is_null($collectionMediaId)
-            ? null
-            : $collectionMediaId;
-
-        $responseData['html'] = is_null($html)
-            ? null
-            : $html;
 
         $responseData['errorMessage'] = is_null($errorMessage)
             ? null

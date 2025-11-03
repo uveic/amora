@@ -57,11 +57,13 @@ readonly class MediaService
 
     public function updateMediaFields(
         int $mediaId,
+        ?string $caption,
         ?DateTimeImmutable $uploadedToS3At = null,
         ?DateTimeImmutable $deletedLocallyAt = null,
     ): bool {
         return $this->mediaDataLayer->updateMediaFields(
             mediaId: $mediaId,
+            caption: $caption,
             uploadedToS3At: $uploadedToS3At,
             deletedLocallyAt: $deletedLocallyAt,
         );

@@ -95,4 +95,32 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+document.querySelectorAll('.image-popup-js').forEach(image => {
+  image.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const modal = document.querySelector('.modal-display-image');
+    if (!modal) {
+      return;
+    }
+
+    const modalInner = modal.querySelector('.modal-inner');
+    const popupImage = modal.querySelector('img.modal-display-item');
+
+    if (popupImage) {
+      popupImage.parentElement.removeChild(popupImage);
+    }
+
+    let modalImage = new Image();
+    modalImage.className = 'modal-display-item';
+    modalImage.src = image.dataset.pathMedium ?? image.src;
+    modalImage.alt = image.alt;
+    modalImage.title = image.title;
+
+    modalInner.appendChild(modalImage);
+
+    modal.classList.remove('null');
+  });
+});
+
 export {handleDropdownOptionClick};

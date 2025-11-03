@@ -39,6 +39,7 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateCollectionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateCollectionMediaSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDeleteCollectionMediaSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateMediaCaptionSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetEmailHtmlSuccessResponse.php';
     }
 
@@ -439,6 +440,21 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
      */
     abstract protected function deleteCollectionMedia(
         int $collectionMediaId,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /back/media/{mediaId}/caption
+     * Method: PUT
+     *
+     * @param int $mediaId
+     * @param string $captionHtml
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function updateMediaCaption(
+        int $mediaId,
+        string $captionHtml,
         Request $request
     ): Response;
 
@@ -1996,6 +2012,77 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
         }
     }
 
+    private function validateAndCallUpdateMediaCaption(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['back', 'media', '{mediaId}', 'caption'],
+            $pathParts
+        );
+        $bodyParams = $request->getBodyPayload();
+        $errors = [];
+
+        $mediaId = null;
+        if (!isset($pathParams['mediaId'])) {
+            $errors[] = [
+                'field' => 'mediaId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['mediaId'])) {
+                $errors[] = [
+                    'field' => 'mediaId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $mediaId = (int)$pathParams['mediaId'];
+            }
+        }
+
+        if (!isset($bodyParams)) {
+            $errors[] = [
+                'field' => 'payload',
+                'message' => 'required'
+            ];
+        }
+
+        $captionHtml = null;
+        if (!isset($bodyParams['captionHtml'])) {
+            $errors[] = [
+                'field' => 'captionHtml',
+                'message' => 'required'
+            ];
+        } else {
+            $captionHtml = $bodyParams['captionHtml'] ?? null;
+        }
+
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->updateMediaCaption(
+                $mediaId,
+                $captionHtml,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updateMediaCaption()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
     private function validateAndCallGetEmailHtml(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
@@ -2265,6 +2352,16 @@ abstract class BackofficeApiControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallDeleteCollectionMedia($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'media', '{mediaId}', 'caption'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallUpdateMediaCaption($request);
         }
 
         if ($method === 'GET' &&

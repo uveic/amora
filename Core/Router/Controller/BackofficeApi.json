@@ -1171,6 +1171,9 @@
                 "collectionId": {
                   "type": "integer"
                 },
+                "collectionMediaId": {
+                  "type": "integer"
+                },
                 "html": {
                   "type": "string"
                 },
@@ -1232,6 +1235,9 @@
                     true,
                     false
                   ]
+                },
+                "collectionMediaId": {
+                  "type": "integer"
                 },
                 "html": {
                   "type": "string"
@@ -1463,6 +1469,57 @@
         "responses": {
           "200": {
             "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/media/{mediaId}/caption": {
+      "put": {
+        "operationId": "updateMediaCaption",
+        "parameters": [
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": {
+              "properties": {
+                "captionHtml": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "captionHtml"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
             "schema": {
               "type": "object",
               "properties": {
