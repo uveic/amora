@@ -308,6 +308,22 @@ pre {
   min-width: revert;
 }
 
+.modal-display-video .modal-inner {
+  min-height: revert;
+  width: 90%;
+  background-color: transparent;
+}
+
+.modal-display-video .modal-media-close svg {
+  fill: var(--color-white);
+  stroke: var(--color-white);
+  width: 30px;
+}
+
+.modal-display-video .youtube-video {
+  background-color: transparent;
+}
+
 .modal-media-close-wrapper,
 .modal-close-button {
   position: absolute;
@@ -606,7 +622,7 @@ form .page-content-before {
   display: flex;
   flex-flow: row wrap;
   gap: 1rem;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
 }
 
@@ -793,17 +809,22 @@ button.is-link,
 .no-margin {margin: 0 !important;padding: 0 !important;}
 .no-padding {padding: 0 !important;}
 .p-t-0 {padding-top: 0 !important;}
+.p-t-025 {padding-top: 0.25rem !important;}
 .p-t-05 {padding-top: 0.5rem !important;}
 .p-t-1 {padding-top: 1rem !important;}
 .p-t-2 {padding-top: 2rem !important;}
+.p-b-025 {padding-bottom: 0.25rem !important;}
 .p-b-05 {padding-bottom: 0.5rem !important;}
 .p-b-1 {padding-bottom: 1rem !important;}
 .p-b-6 {padding-bottom: 6rem !important;}
 .p-b-10 {padding-bottom: 10rem !important;}
+.p-r-025 {padding-right: 0.25rem !important;}
 .p-r-05 {padding-right: 0.5rem !important;}
+.p-l-025 {padding-left: 0.25rem !important;}
 .p-l-05 {padding-left: 0.5rem !important;}
 .no-background {background-color: transparent !important;}
 .flex-no-grow {flex-grow: 0 !important;}
+.flex-no-wrap {flex-wrap: nowrap !important;}
 .flex-grow-1 {flex-grow: 1 !important;}
 .flex-grow-2 {flex-grow: 2 !important;}
 .flex-grow-3 {flex-grow: 3 !important;}
@@ -834,6 +855,7 @@ button.is-link,
 .space-between { justify-content: space-between !important; }
 .space-around { justify-content: space-around !important; }
 .cursor-pointer { cursor: pointer; }
+.rotate-180 {rotate: 180deg;}
 
 .null {display: none !important;}
 .hidden {visibility: hidden;}
@@ -1163,5 +1185,9 @@ svg,
 
   .modal-padding {
     padding: 1rem;
+  }
+
+  .modal-display-video .modal-inner {
+    width: auto;
   }
 }
