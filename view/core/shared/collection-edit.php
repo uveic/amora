@@ -43,7 +43,7 @@ $collectionIdentifier = $collection?->id ?? StringUtil::generateRandomString(10)
         echo AlbumHtmlGenerator::generateCollectionMediaHtml($collectionMediaItem, '                  ') . PHP_EOL;
     }
 ?>
-                <a href="#" class="button select-media-action button-media-add" data-type-id="<?=MediaType::Image->value?>" data-target-container-id="collection-item-media-<?=$collectionIdentifier?>" data-event-listener-action="collectionAddMedia">
+                <a href="#" class="select-media-action button-media-add" data-type-id="<?=MediaType::Image->value?>" data-target-container-id="collection-item-media-<?=$collectionIdentifier?>" data-event-listener-action="collectionAddMedia">
                   <?=CoreIcons::IMAGE?>
                   <span><?=$responseData->getLocalValue('globalAdd')?></span>
                 </a>

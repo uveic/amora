@@ -28,7 +28,7 @@ enum UserRole: int
     {
         return match ($this) {
             self::Admin => 'status-private',
-            self::User => 'status-draft',
+            self::User => '',
         };
     }
 

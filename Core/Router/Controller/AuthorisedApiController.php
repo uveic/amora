@@ -33,11 +33,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
     public function authenticate(Request $request): bool
     {
-        if (!$request->session || !$request->session->isAuthenticated()) {
-            return false;
-        }
-
-        return true;
+        return $request->session?->isAuthenticated() ?? false;
     }
 
     /**
@@ -57,7 +53,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         Request $request,
     ): Response {
         $direction = isset($direction) ? strtoupper(trim($direction)) : QueryOrderDirection::DESC->value;
-        $direction = QueryOrderDirection::tryFrom($direction)
+        $directionEnum = QueryOrderDirection::tryFrom($direction)
             ? QueryOrderDirection::from($direction)
             : QueryOrderDirection::DESC;
 
@@ -66,7 +62,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
         $output = $this->mediaService->workflowGetFiles(
             language: $request->siteLanguage,
-            direction: $direction,
+            direction: $directionEnum,
             qty: $qty,
             mediaType: $mediaType,
             isAdmin: $request->session->isAdmin(),
@@ -164,7 +160,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
         Request $request
     ): Response {
         $direction = isset($direction) ? strtoupper(trim($direction)) : QueryOrderDirection::DESC->value;
-        $direction = QueryOrderDirection::tryFrom($direction)
+        $directionEnum = QueryOrderDirection::tryFrom($direction)
             ? QueryOrderDirection::from($direction)
             : QueryOrderDirection::DESC;
 
@@ -173,7 +169,7 @@ final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 
         $output = $this->mediaService->workflowGetFiles(
             language: $request->siteLanguage,
-            direction: $direction,
+            direction: $directionEnum,
             qty: $qty,
             mediaType: $mediaType,
             isAdmin: $request->session->isAdmin(),

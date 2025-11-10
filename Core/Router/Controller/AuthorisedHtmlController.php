@@ -19,7 +19,7 @@ final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
 
     protected function authenticate(Request $request): bool
     {
-        if (!$request->session || !$request->session->isAuthenticated()) {
+        if (!$request->session?->isAuthenticated()) {
             return false;
         }
 

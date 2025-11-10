@@ -124,7 +124,6 @@ function handleGenericMainMediaClick(e) {
   if (deleteButtonEl) {
     deleteButtonEl.classList.remove('null');
   }
-  mediaContainer.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
 function handleGenericMediaDeleteClick(e) {

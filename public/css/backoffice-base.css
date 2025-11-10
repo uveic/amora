@@ -191,8 +191,8 @@
 .dashboard-card-title:active,
 .dashboard-card-title:focus {
   color: var(--color-black);
-  font-weight: bold;
-  font-size: 1.2rem;
+  font-weight: 500;
+  font-size: 1.1rem;
 }
 
 .dashboard-cards-wrapper {
@@ -1449,7 +1449,7 @@
   width: 100%;
 }
 
-.collection-item-media .button {
+.collection-item-media .button-media-add {
   display: flex;
   flex-flow: column wrap;
   gap: 0.5rem;
@@ -1460,7 +1460,7 @@
 }
 
 .collection-media-container,
-.collection-item-media .button {
+.collection-item-media .button-media-add {
   width: 10%;
   min-width: 100px;
   max-width: 150px;

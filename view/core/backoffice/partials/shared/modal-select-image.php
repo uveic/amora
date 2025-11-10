@@ -14,7 +14,7 @@ use Amora\Core\Value\QueryOrderDirection;
     <div class="add-image-wrapper">
       <div class="add-image-header">
         <h2 class="m-t-0 m-b-0"><?=$responseData->getLocalValue('globalSelectImage')?></h2>
-        <div class="flex-start space-between gap-1">
+        <div class="flex-start flex-align-center space-between gap-1">
           <a href="#" class="modal-close-link"><?=$responseData->getLocalValue('globalCancel')?></a>
           <div>
             <input class="null" type="file" id="select-media-action-upload" name="select-media-action-upload" multiple="" accept="image/png, image/jpeg, image/webp">

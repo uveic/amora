@@ -17,7 +17,7 @@ final class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstr
 
     protected function authenticate(Request $request): bool
     {
-        if (!$request->session || !$request->session->isAuthenticated()) {
+        if (!$request->session?->isAuthenticated()) {
             return false;
         }
 

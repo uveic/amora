@@ -265,6 +265,6 @@ return [
     'albumAddCollection' => 'Add Collection',
     'collectionNoImage' => 'No Image',
     'collectionMediaTitle' => 'Media',
-    'collectionDragAndDropToOrder' => 'Sort by drag & drop',
+    'collectionDragAndDropToOrder' => 'Drag & drop to order',
     'collectionModalMediaCaptionTitle' => 'Image caption',
 ];

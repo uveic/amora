@@ -13,10 +13,6 @@ final class AppAuthorisedApiController extends AppAuthorisedApiControllerAbstrac
 
     protected function authenticate(Request $request): bool
     {
-        if (!$request->session || !$request->session->isAuthenticated()) {
-            return false;
-        }
-
-        return true;
+        return $request->session?->isAuthenticated() ?? false;
     }
 }

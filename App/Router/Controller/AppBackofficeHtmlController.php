@@ -15,7 +15,7 @@ final class AppBackofficeHtmlController extends AppBackofficeHtmlControllerAbstr
 
     protected function authenticate(Request $request): bool
     {
-        if (!$request->session || !$request->session->isAdmin()) {
+        if (!$request->session?->isAdmin()) {
             return false;
         }
 
