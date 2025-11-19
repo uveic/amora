@@ -24,4 +24,16 @@ enum AggregateBy: string
             self::Year => new DateInterval('P0001-00-00T00:00:00'),
         };
     }
+
+    public function getDateFormat(): string
+    {
+        return match ($this) {
+            self::Minute => 'Y-m-d-H-i',
+            self::Hour => 'Y-m-d-H',
+            self::Day => 'Y-m-d',
+            self::Week => 'Y-W',
+            self::Month => 'Y-m',
+            self::Year => 'Y',
+        };
+    }
 }
