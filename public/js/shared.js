@@ -126,33 +126,42 @@ window.addEventListener('DOMContentLoaded', () => {
       window.history.back();
     });
   });
-});
 
-document.querySelectorAll('.image-popup-js').forEach(image => {
-  image.addEventListener('click', (e) => {
-    e.preventDefault();
+  document.querySelectorAll('.event-log-js').forEach(el => {
+    el.addEventListener('click', () => {
+      const identifier = el.dataset.identifier;
+      if (identifier) {
+        fetch('/click/' + identifier).then();
+      }
+    });
+  });
 
-    const modal = document.querySelector('.modal-display-image');
-    if (!modal) {
-      return;
-    }
+  document.querySelectorAll('.image-popup-js').forEach(image => {
+    image.addEventListener('click', (e) => {
+      e.preventDefault();
 
-    const modalInner = modal.querySelector('.modal-inner');
-    const popupImage = modal.querySelector('img.modal-display-item');
+      const modal = document.querySelector('.modal-display-image');
+      if (!modal) {
+        return;
+      }
 
-    if (popupImage) {
-      popupImage.parentElement.removeChild(popupImage);
-    }
+      const modalInner = modal.querySelector('.modal-inner');
+      const popupImage = modal.querySelector('img.modal-display-item');
 
-    let modalImage = new Image();
-    modalImage.className = 'modal-display-item';
-    modalImage.src = image.dataset.pathMedium ?? image.src;
-    modalImage.alt = image.alt;
-    modalImage.title = image.title;
+      if (popupImage) {
+        popupImage.parentElement.removeChild(popupImage);
+      }
 
-    modalInner.appendChild(modalImage);
+      let modalImage = new Image();
+      modalImage.className = 'modal-display-item';
+      modalImage.src = image.dataset.pathMedium ?? image.src;
+      modalImage.alt = image.alt;
+      modalImage.title = image.title;
 
-    modal.classList.remove('null');
+      modalInner.appendChild(modalImage);
+
+      modal.classList.remove('null');
+    });
   });
 });
 

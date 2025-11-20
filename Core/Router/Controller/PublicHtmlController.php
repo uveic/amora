@@ -371,6 +371,19 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
     }
 
     /**
+     * Endpoint: /click/{identifier}
+     * Method: GET
+     *
+     * @param string $identifier
+     * @param Request $request
+     * @return Response
+     */
+    protected function logEventClick(string $identifier, Request $request): Response
+    {
+        return Response::createSuccessJsonResponse('');
+    }
+
+    /**
      * Endpoint: /json-feed
      * Method: GET
      *

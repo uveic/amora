@@ -30,6 +30,7 @@ class Router
         'sitemap' => true,
         'user' => true,
         'album' => true,
+        'click' => true,
     ];
 
     private const array PUBLIC_API_CONTROLLER_ACTIONS = [

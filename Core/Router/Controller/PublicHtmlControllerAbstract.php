@@ -114,6 +114,16 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
     abstract protected function getAlbumPage(string $albumSlug, Request $request): Response;
 
     /**
+     * Endpoint: /click/{identifier}
+     * Method: GET
+     *
+     * @param string $identifier
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function logEventClick(string $identifier, Request $request): Response;
+
+    /**
      * Endpoint: /json-feed
      * Method: GET
      *
@@ -456,6 +466,50 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
         }
     }
 
+    private function validateAndCallLogEventClick(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['click', '{identifier}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $identifier = null;
+        if (!isset($pathParams['identifier'])) {
+            $errors[] = [
+                'field' => 'identifier',
+                'message' => 'required'
+            ];
+        } else {
+            $identifier = $pathParams['identifier'] ?? null;
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->logEventClick(
+                $identifier,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in PublicHtmlControllerAbstract - Method: logEventClick()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
     private function validateAndCallGetJsonFeed(Request $request): Response
     {
         $errors = [];
@@ -638,6 +692,16 @@ abstract class PublicHtmlControllerAbstract extends AbstractController
             )
         ) {
             return $this->validateAndCallGetAlbumPage($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['click', '{identifier}'],
+                $pathParts,
+                ['fixed', 'string']
+            )
+        ) {
+            return $this->validateAndCallLogEventClick($request);
         }
 
         if ($method === 'GET' &&

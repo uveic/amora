@@ -181,6 +181,33 @@
         }
       }
     },
+    "/click/{identifier}": {
+      "get": {
+        "operationId": "logEventClick",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Acknowledgment",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [true]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/json-feed": {
       "get": {
         "operationId": "getJsonFeed",
