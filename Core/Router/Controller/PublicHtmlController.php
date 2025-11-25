@@ -210,12 +210,17 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         if (!$verification || $verification->hasExpired()) {
-            return $this->buildHomepageResponse(
-                request: $request,
-                feedback: new Feedback(
-                    isSuccess: false,
-                    message: $localisationUtil->getValue('authenticationPasswordResetLinkError'),
-                )
+            return Response::createHtmlResponse(
+                template: 'app/public/200-error-message',
+                responseData: new HtmlResponseData(
+                    request: $request,
+                    pageTitle: $localisationUtil->getValue('globalPageGenericErrorTitle'),
+                    feedback: new Feedback(
+                        isSuccess: false,
+                        message: $localisationUtil->getValue('authenticationPasswordResetLinkError'),
+                    ),
+                    isPublicPage: true,
+                ),
             );
         }
 
@@ -258,11 +263,16 @@ final class PublicHtmlController extends PublicHtmlControllerAbstract
         );
 
         if (!$verification || $verification->hasExpired()) {
-            return $this->buildHomepageResponse(
-                request: $request,
-                feedback: new Feedback(
-                    isSuccess: false,
-                    message: $localisationUtil->getValue('authenticationPasswordCreationLinkError'),
+            return Response::createHtmlResponse(
+                template: 'app/public/200-error-message',
+                responseData: new HtmlResponseData(
+                    request: $request,
+                    pageTitle: $localisationUtil->getValue('globalPageGenericErrorTitle'),
+                    feedback: new Feedback(
+                        isSuccess: false,
+                        message: $localisationUtil->getValue('authenticationPasswordCreationLinkError'),
+                    ),
+                    isPublicPage: true,
                 ),
             );
         }

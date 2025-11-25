@@ -170,11 +170,14 @@ return [
 
     'globalGenericError' => 'Something went wrong, please try again.',
     'globalPageNotFoundTitle' => 'Page Not Found :(',
-    'globalPageNotFoundContent' => '<p>The page you are looking for does not exist (yet).</p><p>You can go back to the <a href="%s">homepage</a>.</p>',
+    'globalPageNotFoundContent' => '<p>The page you are looking for does not exist (yet).</p><p>You can go back to the <a href="/">homepage</a>.</p>',
     'globalPageDeactivatedTitle' => 'Temporarily deactivated',
     'globalPageDeactivatedContent' => 'The page you are looking for is temporarily deactivated. You can get in touch at <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Sorry for the inconvenience.',
     'globalPageNotAuthorisedTitle' => 'Not Authorised :(',
     'globalPageNotAuthorisedContent' => '<p>You are not authorised to view this page.</p><p><a href="/">Click here to go to the homepage</a>.</p>',
+    'globalPageGenericErrorTitle' => 'Something Went Wrong',
+    'globalPageGenericErrorContent' => '<p><a href="/">Click here to go to the homepage</a>.</p>',
+
 
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',

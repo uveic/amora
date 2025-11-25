@@ -170,11 +170,13 @@ return [
 
     'globalGenericError' => 'Algo non foi ben, por favor inténtao de novo.',
     'globalPageNotFoundTitle' => 'Vaia, chegaches a unha rúa sen saída...',
-    'globalPageNotFoundContent' => '<p>Este enderezo non existe (aínda).</p><p>Poida que sexa erro noso, mais tamén pode ser que escribises mal o enderezo, sobre todo se o fixeches manualmente.</p><p>Podes volver á <a href="%s">portada facendo clic aquí</a>.</p>',
+    'globalPageNotFoundContent' => '<p>Este enderezo non existe (aínda).</p><p>Poida que sexa erro noso, mais tamén pode ser que escribises mal o enderezo, sobre todo se o fixeches manualmente.</p><p>Podes volver á <a href="/">portada facendo clic aquí</a>.</p>',
     'globalPageDeactivatedTitle' => 'Temporalmente desactivada',
     'globalPageDeactivatedContent' => 'A páxina que buscas está desactivada temporalmente. Se tes algunha consulta podes poñerte en contacto con nós en <a href="mailto:contacto@contame.es">contacto@contame.es</a>. Desculpa as molestias.',
     'globalPageNotAuthorisedTitle' => 'Non autorizado/a',
     'globalPageNotAuthorisedContent' => '<p>Non tes permiso para ver esta páxina.</p><p><a href="/">Fai clic aquí para ir á páxina de inicio</a>.</p>',
+    'globalPageGenericErrorTitle' => 'Algo non foi ben',
+    'globalPageGenericErrorContent' => '<p><a href="/">Fai clic aquí para ir á páxina de inicio</a>.</p>',
 
     'articleStatusDraft' => 'Borrador',
     'articleStatusPublished' => 'Publicado',
