@@ -142,11 +142,14 @@ final class DbBackupApp extends App
                 timezone: $utcTz
             );
 
-            if ($fileDate < $twoMonthsAgo && (int)$fileDate->format('G') === 4) {
+            // Keep it if it is from within the last months days ago and created at 4 am
+            // G: 24-hour format of an hour without leading zeros
+            if ($fileDate > $twoMonthsAgo && ((int)$fileDate->format('G')) === 4) {
                 continue;
             }
 
-            if ($fileDate < $twoDaysAgo) {
+            // Keep it if it is from within the last two days ago
+            if ($fileDate > $twoDaysAgo) {
                 continue;
             }
 
