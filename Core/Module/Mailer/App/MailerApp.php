@@ -11,6 +11,7 @@ use Amora\Core\Module\Mailer\DataLayer\MailerDataLayer;
 use Amora\Core\Module\Mailer\Entity\Email;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Module\Mailer\Model\MailerLogItem;
+use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Logger;
 use DateTimeImmutable;
 use Throwable;
@@ -31,7 +32,8 @@ class MailerApp extends App
         );
     }
 
-    public function run(): void {
+    public function run(): void
+    {
         $this->execute(function () {
             $this->log('Releasing locks...');
             $this->dataLayer->releaseMailerQueueLocksIfNeeded();
@@ -56,6 +58,17 @@ class MailerApp extends App
     public function processMailItem(MailerItem $item, bool $updateProcessedAt = false): bool
     {
         $this->log('Building request for email ID: ' . $item->id);
+
+        $oneDayAgo = DateUtil::convertStringToDateTimeImmutable('-1 day');
+        if ($item->createdAt <= $oneDayAgo) {
+            $this->log("The email is older than 24 hours [ID $item->id]. Skipping...");
+            $this->dataLayer->markMailAsProcessed(
+                mailerItem: $item,
+                hasError: 1,
+                updateProcessedAt: true,
+            );
+            return false;
+        }
 
         $emailReceivers = [new Email($item->receiverEmailAddress, $item->receiverName)];
         $contentData = $this->requestBuilder->buildMailRequest(
