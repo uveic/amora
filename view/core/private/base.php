@@ -47,7 +47,7 @@ $navBarArguments = [
   <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
 </head>
 <body>
-<?=$this->insert('../backoffice/partials/navbar', $navBarArguments)?>
+<?=$this->insert('../shared/navbar', $navBarArguments)?>
 <?=$this->section('content')?>
 <?=$this->insert('partials/footer')?>
 </body>

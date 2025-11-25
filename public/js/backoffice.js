@@ -1433,7 +1433,7 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
 
     const contentTypeId = Number.parseInt(container.dataset.pageContentTypeId);
     const mainImageEl = f.querySelector('.media-item');
-    const collectionEl = f.querySelector('.collection-item-media');
+    const collectionEl = f.querySelector('.collection-container');
     const languageIsoCode = f.querySelector('input[name="languageIsoCode"]').value;
 
     const items = [];

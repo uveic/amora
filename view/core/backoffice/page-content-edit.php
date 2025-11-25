@@ -116,9 +116,9 @@ $this->insert('partials/shared/modal-select-image', ['responseData' => $response
 <?php if (AppPageContentType::displayContent($mainPageContent->type, PageContentSection::Collection)) {
     $identifier = $mainPageContent->collection?->id ?? StringUtil::generateRandomString(10);
 ?>
-    <div class="field m-l-1 m-r-1 m-t-2 m-b-2">
+    <div class="field collection-container m-l-1 m-r-1 m-t-2 m-b-2" data-collection-id="<?=$mainPageContent->collection?->id?>">
       <p class="label m-b-05"><?=$responseData->getLocalValue('navAdminImages')?>:</p>
-      <div id="collection-item-media-<?=$identifier?>" class="collection-item-media" data-collection-id="<?=$mainPageContent->collection?->id?>">
+      <div id="collection-item-media-<?=$identifier?>" class="collection-item-media">
 <?php
         /** @var CollectionMedia $collectionMedia */
         foreach ($responseData->media as $collectionMedia) {

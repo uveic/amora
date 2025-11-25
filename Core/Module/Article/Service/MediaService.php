@@ -380,11 +380,17 @@ readonly class MediaService
         } else {
             $extension = $this->getFileExtension($rawName);
             $rawNameWithoutExtension = trim(str_replace($extension, '', $rawName), '. ');
-            $baseNameWithoutExtension = StringUtil::cleanString($rawNameWithoutExtension) . '-' . $baseNameWithoutExtension;
+            $baseNameWithoutExtension = StringUtil::cleanString($rawNameWithoutExtension) .
+                '-' .
+                $baseNameWithoutExtension;
         }
 
         $basePath = rtrim($this->mediaBaseDir, ' /');
         $extraPath = $this->getOrGenerateMediaFolder($basePath);
+        if (!$extraPath) {
+            return null;
+        }
+
         $targetPath = $basePath . '/' . $extraPath . '/' . $baseNameWithoutExtension . '.' . $extension;
 
         $res = @rename($rawPathWithName, $targetPath);
@@ -422,8 +428,17 @@ readonly class MediaService
         return strtolower(trim($parts[count($parts) - 1]));
     }
 
-    public function getOrGenerateMediaFolder(string $mediaBasePath): string
+    public function getOrGenerateMediaFolder(string $mediaBasePath): ?string
     {
+        if (
+            !is_dir($mediaBasePath) &&
+            !mkdir($mediaBasePath, self::FOLDER_PERMISSIONS, true) &&
+            !is_dir($mediaBasePath)
+        ) {
+            $this->logger->logError('Failed to create folder: ' . $mediaBasePath);
+            return null;
+        }
+
         $now = new DateTimeImmutable();
         $mediaExtraPath = md5($now->format('Y-W'));
         $fullPath = $mediaBasePath . '/' . $mediaExtraPath;
@@ -439,9 +454,9 @@ readonly class MediaService
             }
 
             $fullPath = $mediaBasePath . '/' . $mediaExtraPath;
-            if (!mkdir($fullPath, true) && !is_dir($fullPath)) {
+            if (!mkdir($fullPath, self::FOLDER_PERMISSIONS, true) && !is_dir($fullPath)) {
                 $this->logger->logError('Failed to create folder: ' . $fullPath);
-                return 'no-folder';
+                return null;
             }
 
             $count++;

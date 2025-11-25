@@ -41,7 +41,7 @@ $navBarArguments = [
   <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
 </head>
 <body>
-<?=$this->insert('../../../core/backoffice/partials/navbar', $navBarArguments)?>
+<?=$this->insert('../../../core/shared/navbar', $navBarArguments)?>
   <main>
     <section>
       <div id="feedback" class="feedback null"></div>

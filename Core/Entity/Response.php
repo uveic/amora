@@ -60,11 +60,11 @@ class Response
         $scriptSrc = 'script-src ' . $allowedUrls . $nonce . ';';
         $defaultSrc = "default-src 'self';";
         if (Core::getConfig()->allowImgSrcData) {
-            $allowedDomains[] = 'data: blob:;';
+            $allowedDomains[] = 'data: blob:';
         }
         $imgSrc = 'img-src ' . implode(' ', $allowedDomains) . ';';
         $mediaSrc = 'media-src ' . implode(' ', $allowedDomains) . ';';
-        $frameSrc = Core::getConfig()->allowYouTubeIFrame ? "frame-src https://www.youtube-nocookie.com 'self';" : "";
+        $frameSrc = 'frame-src ' . implode(' ', array_merge(["'self'"], Core::getConfig()->allowedIFrameUrls ?? [])) . ';';
         $styleSrc = "style-src 'self' 'unsafe-inline';";
 
         $insecureRequests = '';

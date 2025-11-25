@@ -47,7 +47,7 @@ $navBarArguments = [
 </head>
 <body>
   <div class="loading-modal null"><div class="loader"></div></div>
-<?=$this->insert('partials/navbar', $navBarArguments)?>
+<?=$this->insert('../shared/navbar', $navBarArguments)?>
 <?=$this->section('content')?>
 <?=$this->insert('partials/footer')?>
 </body>

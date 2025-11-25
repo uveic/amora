@@ -98,7 +98,7 @@ abstract class AbstractConfig
         public readonly array $allowedUrlsForSrcScript,
         public readonly array $allowedCorsDomains,
         public readonly bool $allowImgSrcData,
-        public readonly bool $allowYouTubeIFrame,
+        public readonly array $allowedIFrameUrls,
 
         public readonly bool $isLoggingEnabled,
         public readonly bool $isAnalyticsEnabled,
