@@ -213,10 +213,7 @@ readonly class UserMailService
             verificationIdentifier: $verificationIdentifier,
         );
         $siteName = $localisationUtil->getValue('siteName');
-        $emailSubject = sprintf(
-            $localisationUtil->getValue('emailPasswordChangeSubject'),
-            $siteName
-        );
+        $emailSubject = $localisationUtil->getValue('emailPasswordChangeSubject');
         $emailContent = sprintf(
             $localisationUtil->getValue('emailPasswordChangeContent'),
             $linkUrl,
@@ -260,10 +257,7 @@ readonly class UserMailService
                 $siteName
             );
         } else {
-            $emailSubject = sprintf(
-                $localisationUtil->getValue('emailConfirmationSubject'),
-                $siteName
-            );
+            $emailSubject = $localisationUtil->getValue('emailConfirmationSubject');
             $emailContent = sprintf(
                 $localisationUtil->getValue('emailConfirmationContent'),
                 $linkUrl,

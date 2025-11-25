@@ -206,7 +206,7 @@ return [
     'userJourneyPendingPasswordCreation' => 'Pending Password Creation',
     'userJourneyPendingEmailVerification' => 'Pending Email Verification',
 
-    'emailConfirmationSubject' => 'Welcome to %s! Confirm Your Email',
+    'emailConfirmationSubject' => 'Confirm Your Email',
     'emailConfirmationContent' => '<p>Welcome!</p>' .
         '<p>By clicking on the following link, you are confirming your email address.</p>' .
         '<p><a href="%s">Confirm Your Email</a></p>' .
@@ -217,7 +217,7 @@ return [
         '<p>If you did not make this request, just ignore this email. Otherwise, please click the link below to change you email:</p>' .
         '<p><a href="%s">Confirm Your Email</a></p>' .
         '<p>%s</p>',
-    'emailPasswordChangeSubject' => '%s Password Reset',
+    'emailPasswordChangeSubject' => 'Password Reset',
     'emailPasswordChangeContent' => '<p>Hi there,</p>' .
         '<p>We received a request to change the password.</p>' .
         '<p>If you did not make this request, just ignore this email. Otherwise, please click the link below to reset your password:</p>' .

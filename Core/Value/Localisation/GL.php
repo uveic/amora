@@ -206,7 +206,7 @@ return [
     'userJourneyPendingPasswordCreation' => 'Pendente de crear o contrasinal',
     'userJourneyPendingEmailVerification' => 'Pendente de verificar o correo electrónico',
 
-    'emailConfirmationSubject' => 'Benvido/a a %s! Confirma o teu correo electrónico',
+    'emailConfirmationSubject' => 'Confirma o teu correo electrónico',
     'emailConfirmationContent' => '<p>¡Benvido/a!</p>' .
         '<p>Por favor, confirma o teu correo electrónico facendo clic na seguinte ligazón:</p>' .
         '<p><a href="%s">Confirmar correo electrónico</a></p>' .
@@ -217,7 +217,7 @@ return [
         '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo. En caso contrario, fai clic na seguinte ligazón para verificar o teu novo correo:</p>' .
         '<p><a href="%s">Confirma o teu correo electrónico</a></p>' .
         '<p>%s</p>',
-    'emailPasswordChangeSubject' => '%s: cambiar contrasinal',
+    'emailPasswordChangeSubject' => 'Cambiar contrasinal',
     'emailPasswordChangeContent' => '<p>Ola,</p>' .
         '<p>Recibimos unha petición de cambio de contrasinal.</p>' .
         '<p>Se non fuches ti o que fixeches esta petición podes ignorar este correo electrónico. En caso contrario, fai clic na seguinte ligazón para cambiar o teu contrasinal:</p>' .
