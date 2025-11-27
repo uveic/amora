@@ -4,7 +4,7 @@ namespace Amora\App\Router;
 
 use Amora\Core\Entity\Request;
 
-final class AppPublicApiController extends AppPublicApiControllerAbstract
+final readonly class AppPublicApiController extends AppPublicApiControllerAbstract
 {
     public function __construct()
     {

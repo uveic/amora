@@ -40,16 +40,16 @@ use Amora\Core\Util\DateUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 
-final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
+readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
 {
     public function __construct(
-        private readonly SessionService $sessionService,
-        private readonly UserService $userService,
-        private readonly ArticleService $articleService,
-        private readonly MediaService $mediaService,
-        private readonly AlbumService $albumService,
-        private readonly AnalyticsService $analyticsService,
-        private readonly MailerService $mailerService,
+        private SessionService $sessionService,
+        private UserService $userService,
+        private ArticleService $articleService,
+        private MediaService $mediaService,
+        private AlbumService $albumService,
+        private AnalyticsService $analyticsService,
+        private MailerService $mailerService,
     ) {
         parent::__construct();
     }
@@ -605,14 +605,14 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         ?int $itemsCount,
         Request $request,
     ): Response {
-        $period = Period::getFromString($period);
+        $periodObj = Period::getFromString($period);
         if (!$date || !DateUtil::isValidDateISO8601($date . 'T00:00:00Z')) {
             $now = new DateTimeImmutable();
             $date = $now->format('Y-m-d');
         }
 
-        $from = $period->getFrom($date);
-        $to = $period->getTo($from);
+        $from = $periodObj->getFrom($date);
+        $to = $periodObj->getTo($from);
         $limit = $itemsCount ?: 50;
 
         $eventType = $eventTypeId && EventType::tryFrom($eventTypeId)
@@ -626,7 +626,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $reportPageViews = $this->analyticsService->getReportViewCount(
             from: $from,
             to: $to,
-            period: $period,
+            period: $periodObj,
             eventType: $eventType,
             parameter: $parameter,
             eventId: $eventId,
@@ -635,7 +635,7 @@ final class BackofficeHtmlController extends BackofficeHtmlControllerAbstract
         $reportVisitors = $this->analyticsService->getReportViewCount(
             from: $from,
             to: $to,
-            period: $period,
+            period: $periodObj,
             eventType: $eventType,
             parameter: $parameter,
             eventId: $eventId,

@@ -29,7 +29,7 @@ function renderAbstractClass(jsonFileName, operations, allResponseClassNames, cl
   }).join('\n');
 
   return [
-    `abstract class ${jsonFileName}ControllerAbstract extends AbstractController
+    `readonly abstract class ${jsonFileName}ControllerAbstract extends AbstractController
 {
     public function __construct()
     {

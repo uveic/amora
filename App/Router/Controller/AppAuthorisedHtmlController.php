@@ -7,10 +7,10 @@ use Amora\Core\Entity\Response;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Util\UrlBuilderUtil;
 
-final class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstract
+final readonly class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstract
 {
     public function __construct(
-        private readonly SessionService $sessionService,
+        private SessionService $sessionService,
     ) {
         parent::__construct();
     }
@@ -37,7 +37,9 @@ final class AppAuthorisedHtmlController extends AppAuthorisedHtmlControllerAbstr
     protected function getAppDashboardHtml(Request $request): Response
     {
         return Response::createRedirectResponse(
-            url: UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguage),
+            url: UrlBuilderUtil::buildBackofficeDashboardUrl(
+                $request->siteLanguage,
+            ),
         );
     }
 }

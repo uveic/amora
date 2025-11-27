@@ -62,16 +62,16 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreUserSucces
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateArticleSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserSuccessResponse;
 
-final class BackofficeApiController extends BackofficeApiControllerAbstract
+readonly final class BackofficeApiController extends BackofficeApiControllerAbstract
 {
     public function __construct(
-        private readonly Logger $logger,
-        private readonly UserService $userService,
-        private readonly ArticleService $articleService,
-        private readonly TagService $tagService,
-        private readonly MediaService $mediaService,
-        private readonly AlbumService $albumService,
-        private readonly MailerService $mailerService,
+        private Logger $logger,
+        private UserService $userService,
+        private ArticleService $articleService,
+        private TagService $tagService,
+        private MediaService $mediaService,
+        private AlbumService $albumService,
+        private MailerService $mailerService,
     ) {
         parent::__construct();
     }
@@ -417,7 +417,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
             articleTitle: $title,
             articleStatus: $status,
         );
-        $publishOn = $publishOn
+        $publishOnObj = $publishOn
             ? DateUtil::convertStringToDateTimeImmutable($publishOn)
             : ($status->isPublic() ? $now : null);
         $existingMedia = $this->mediaService->filterMediaBy(ids: $mediaIds);
@@ -431,7 +431,7 @@ final class BackofficeApiController extends BackofficeApiControllerAbstract
                 type: $typeId ? ArticleType::from($typeId) : ArticleType::Page,
                 createdAt: $now,
                 updatedAt: $now,
-                publishOn: $publishOn,
+                publishOn: $publishOnObj,
                 title: $title,
                 contentHtml: $contentHtml,
                 mainImageId: $mainImageId,

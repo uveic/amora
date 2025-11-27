@@ -5,7 +5,7 @@ namespace Amora\Core\Router;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
 
-abstract class AbstractController
+readonly abstract class AbstractController
 {
     abstract public function route(Request $request): ?Response;
 

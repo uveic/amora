@@ -21,15 +21,15 @@ use Amora\Core\Util\UrlBuilderUtil;
 use DateTimeImmutable;
 use Throwable;
 
-final class PublicHtmlController extends PublicHtmlControllerAbstract
+readonly final class PublicHtmlController extends PublicHtmlControllerAbstract
 {
     public function __construct(
-        private readonly AppPublicHtmlController $appPublicHtmlController,
-        private readonly UserService $userService,
-        private readonly ArticleService $articleService,
-        private readonly FeedService $feedService,
-        private readonly AlbumService $albumService,
-        private readonly SessionService $sessionService,
+        private AppPublicHtmlController $appPublicHtmlController,
+        private UserService $userService,
+        private ArticleService $articleService,
+        private FeedService $feedService,
+        private AlbumService $albumService,
+        private SessionService $sessionService,
     ) {
         parent::__construct();
     }

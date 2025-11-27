@@ -45,15 +45,15 @@ use Amora\Core\Router\Controller\Response\PublicApiControllerPingSuccessResponse
 use Amora\Core\Router\Controller\Response\PublicApiControllerRequestRegistrationInviteSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerUserLoginSuccessResponse;
 
-final class PublicApiController extends PublicApiControllerAbstract
+readonly class PublicApiController extends PublicApiControllerAbstract
 {
     public function __construct(
-        private readonly Logger $logger,
-        private readonly UserService $userService,
-        private readonly SessionService $sessionService,
-        private readonly UserMailService $mailService,
-        private readonly ArticleService $articleService,
-        private readonly AlbumService $albumService,
+        private Logger $logger,
+        private UserService $userService,
+        private SessionService $sessionService,
+        private UserMailService $mailService,
+        private ArticleService $articleService,
+        private AlbumService $albumService,
     ) {
         parent::__construct();
     }

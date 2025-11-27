@@ -9,10 +9,10 @@ use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Util\UrlBuilderUtil;
 
-final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
+readonly final class AuthorisedHtmlController extends AuthorisedHtmlControllerAbstract
 {
     public function __construct(
-        private readonly SessionService $sessionService,
+        private SessionService $sessionService,
     ) {
         parent::__construct();
     }

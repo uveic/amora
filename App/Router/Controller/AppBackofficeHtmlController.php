@@ -5,10 +5,10 @@ namespace Amora\App\Router;
 use Amora\Core\Entity\Request;
 use Amora\Core\Module\User\Service\SessionService;
 
-final class AppBackofficeHtmlController extends AppBackofficeHtmlControllerAbstract
+final readonly class AppBackofficeHtmlController extends AppBackofficeHtmlControllerAbstract
 {
     public function __construct(
-        private readonly SessionService $sessionService,
+        private SessionService $sessionService,
     ) {
         parent::__construct();
     }

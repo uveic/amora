@@ -21,12 +21,12 @@ use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuc
     AuthorisedApiControllerStoreFileSuccessResponse,
     AuthorisedApiControllerUpdateUserAccountSuccessResponse};
 
-final class AuthorisedApiController extends AuthorisedApiControllerAbstract
+readonly final class AuthorisedApiController extends AuthorisedApiControllerAbstract
 {
     public function __construct(
-        private readonly MediaService $mediaService,
-        private readonly UserService $userService,
-        private readonly UserMailService $userMailService,
+        private MediaService $mediaService,
+        private UserService $userService,
+        private UserMailService $userMailService,
     ) {
         parent::__construct();
     }

@@ -10,7 +10,7 @@ use Amora\Core\Router\RouterCore;
 use Amora\Core\Util\StringUtil;
 use Throwable;
 
-abstract class AppPublicApiControllerAbstract extends AbstractController
+readonly abstract class AppPublicApiControllerAbstract extends AbstractController
 {
     public function __construct()
     {

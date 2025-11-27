@@ -16,11 +16,11 @@ use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Value\QueryOrderDirection;
 use Throwable;
 
-final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
+final readonly class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
 {
     public function __construct(
-        private readonly SessionService $sessionService,
-        private readonly ArticleService $articleService,
+        private SessionService $sessionService,
+        private ArticleService $articleService,
     ) {
         parent::__construct();
     }
@@ -46,14 +46,23 @@ final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
     ): Response {
         $isAdmin = $request->session && $request->session->isAdmin();
         $statusIds = $isAdmin
-            ? [ArticleStatus::Published->value, ArticleStatus::Unlisted->value, ArticleStatus::Private->value]
+            ? [
+                ArticleStatus::Published->value,
+                ArticleStatus::Unlisted->value,
+                ArticleStatus::Private->value,
+            ]
             : [ArticleStatus::Published->value];
         $pagination = new Response\Pagination(itemsPerPage: 15);
         $blogArticles = $this->articleService->filterArticleBy(
             statusIds: $statusIds,
             typeIds: [ArticleType::Blog->value],
             queryOptions: new QueryOptions(
-                orderBy: [new QueryOrderBy(field: 'published_at', direction: QueryOrderDirection::DESC)],
+                orderBy: [
+                    new QueryOrderBy(
+                        field: "published_at",
+                        direction: QueryOrderDirection::DESC,
+                    ),
+                ],
                 pagination: $pagination,
             ),
         );
@@ -64,7 +73,7 @@ final class AppPublicHtmlController extends AppPublicHtmlControllerAbstract
         );
 
         return Response::createHtmlResponse(
-            template: 'app/public/home',
+            template: "app/public/home",
             responseData: new AppHtmlHomepageResponseData(
                 request: $request,
                 pagination: $pagination,

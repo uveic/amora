@@ -10,7 +10,7 @@ use Amora\Core\Router\RouterCore;
 use Amora\Core\Util\StringUtil;
 use Throwable;
 
-abstract class AppBackofficeHtmlControllerAbstract extends AbstractController
+readonly abstract class AppBackofficeHtmlControllerAbstract extends AbstractController
 {
     public function __construct()
     {
