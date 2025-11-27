@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  document.querySelectorAll('.home-link-scroll').forEach(a => {
+  document.querySelectorAll('.link-scroll-js').forEach(a => {
     a.addEventListener('click', e => {
       if (!a.hash || !a.hash.length) {
         return;

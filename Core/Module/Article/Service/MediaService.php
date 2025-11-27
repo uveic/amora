@@ -57,7 +57,7 @@ readonly class MediaService
 
     public function updateMediaFields(
         int $mediaId,
-        ?string $caption,
+        ?string $caption = null,
         ?DateTimeImmutable $uploadedToS3At = null,
         ?DateTimeImmutable $deletedLocallyAt = null,
     ): bool {
