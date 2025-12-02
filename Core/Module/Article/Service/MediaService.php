@@ -172,6 +172,7 @@ readonly class MediaService
         Language $language,
         QueryOrderDirection $direction,
         int $qty,
+        ?int $page = 0,
         ?MediaType $mediaType = null,
         bool $isAdmin = false,
         bool $includeAppearsOn = false,
@@ -180,11 +181,22 @@ readonly class MediaService
         ?int $userId = null,
         bool $includeExifData = false,
     ): array {
+        if ($mediaType === MediaType::Image) {
+            $mediaTypeIds = [
+                MediaType::Image->value,
+                MediaType::SVG->value,
+            ];
+        } elseif ($mediaType) {
+            $mediaTypeIds = [$mediaType->value];
+        } else {
+            $mediaTypeIds = MediaType::getAllNotImageIds();
+        }
+
         $files = QueryOrderDirection::RAND === $direction
             ? $this->filterMediaBy(
                 ids: $mediaId ? [$mediaId] : [],
                 userIds: $userId ? [$userId] : [],
-                typeIds: $mediaType ? [$mediaType->value] : [],
+                typeIds: $mediaTypeIds,
                 statusIds: [MediaStatus::Active->value],
                 queryOptions: new QueryOptions(
                     pagination: new Response\Pagination(itemsPerPage: $qty),
@@ -194,12 +206,15 @@ readonly class MediaService
             : $this->filterMediaBy(
                 ids: $mediaId ? [$mediaId] : [],
                 userIds: $userId ? [$userId] : [],
-                typeIds: $mediaType ? [$mediaType->value] : [],
+                typeIds: $mediaTypeIds,
                 statusIds: [MediaStatus::Active->value],
                 fromId: $fromId,
                 queryOptions: new QueryOptions(
                     orderBy: [new QueryOrderBy('id', $direction)],
-                    pagination: new Response\Pagination(itemsPerPage: $qty),
+                    pagination: new Response\Pagination(
+                        itemsPerPage: $qty,
+                        offset: $page > 0 ? (($page - 1) * $qty) : 0,
+                    ),
                 ),
             );
 
@@ -470,5 +485,15 @@ readonly class MediaService
     public function getMediaCountByTypeId(): array
     {
         return $this->mediaDataLayer->getMediaCountByTypeId();
+    }
+
+    public function generateModalMediaSelectInnerHtml(int $lastPage): string
+    {
+        $output = '';
+        for ($i = $lastPage; $i >= 1 ; $i--) {
+            $output.= '<option value="' . $i . '"' . ($i === $lastPage ? ' selected' : '') . '>' . $i . '</option>';
+        }
+
+        return $output;
     }
 }

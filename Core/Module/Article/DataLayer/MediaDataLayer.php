@@ -126,7 +126,7 @@ class MediaDataLayer
 
         if (isset($fromId)) {
             $direction = isset($queryOptions->orderBy[0])
-                ? ($queryOptions->orderBy[0]->direction === QueryOrderDirection::ASC ? '>' : '<')
+                ? ($queryOptions->orderBy[0]->direction === QueryOrderDirection::ASC ? '>=' : '<=')
                 : '>';
             $where .= ' AND m.id ' . $direction . ' :fromId';
             $params[':fromId'] = $fromId;

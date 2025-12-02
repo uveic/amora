@@ -32,7 +32,6 @@ enum MediaType: int
             self::PDF->value,
             self::CSV->value,
             self::TXT->value,
-            self::SVG->value,
             self::Unknown->value,
         ];
     }

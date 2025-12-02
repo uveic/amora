@@ -756,11 +756,13 @@
   font-size: 1.2rem;
 }
 
+.media-list-page,
 .media-list-highlight,
-#images-list {
+.media-list-main {
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   min-height: 250px;
 }
 
@@ -768,8 +770,6 @@
   min-height: revert;
 }
 
-.media-list-highlight .image-container,
-.media-list-highlight .image-container-shadow,
 #images-list .image-container,
 #images-list .image-container-shadow,
 #images-list .media-load-more {
@@ -783,13 +783,11 @@
   aspect-ratio: 1/1;
 }
 
-.media-list-highlight .image-container,
 #images-list .image-container,
 #images-list .media-load-more {
   cursor: pointer;
 }
 
-.media-list-highlight .media-item,
 #images-list .media-item {
   object-fit: cover;
   object-position: center;
@@ -868,9 +866,11 @@
 
 .image-wrapper>.image-main img {
   width: auto;
-  height: auto;
-  max-height: 94vh;
+  min-width: 50svw;
   max-width: 100%;
+  height: auto;
+  min-height: 40svh;
+  max-height: 94vh;
 }
 
 .image-wrapper>.image-info {
@@ -1052,6 +1052,12 @@
   border: 1px solid var(--color-black);
 }
 
+.media-load-more-file {
+  aspect-ratio: revert;
+  width: 100%;
+  max-width: revert;
+}
+
 #media-container {
   display: flex;
   flex-flow: row wrap;
@@ -1114,6 +1120,31 @@
   background-color: var(--color-white);
 }
 
+.media-page-wrapper label {
+  font-weight: 400;
+}
+
+.media-page-wrapper select {
+  border: none;
+  padding: 0 1.75rem 0 0.5rem;
+  background-position-y: 10px;
+  background-image: url("/img/svg/caret-down.svg");
+  cursor: pointer;
+  background-color: transparent;
+  text-align: right;
+}
+
+.page-header .media-page-wrapper label {
+  color: var(--color-white);
+}
+
+.page-header .media-page-wrapper select {
+  color: var(--color-white);
+  padding: 0 1.75rem 0 0.5rem;
+  background-position-y: 0px;
+  background-image: url("/img/svg/caret-down-white.svg");
+  min-height: revert;
+}
 /* Media upload style ends here */
 
 /* Analytics style starts here */
@@ -1715,7 +1746,7 @@
   }
 
   .image-wrapper .image-summary {
-    padding: 1rem;
+    padding: 0 1rem;
   }
 
   .image-wrapper .image-summary svg {
@@ -1785,8 +1816,6 @@
     width: 40%;
   }
 
-  .media-list-highlight .image-container,
-  .media-list-highlight .image-container-shadow,
   #images-list .image-container,
   #images-list .image-container-shadow,
   #images-list .media-load-more {

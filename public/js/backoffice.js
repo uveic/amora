@@ -49,25 +49,30 @@ function handleGenericSelectMainMediaClick(e) {
   Util.displayFullPageLoadingModal();
 
   const modal = document.querySelector('.select-media-modal');
-  const imagesContainer = modal.querySelector('#images-list');
   const loadMoreButton = modal.querySelector('.media-load-more-js');
   const uploadMediaButton = modal.querySelector('input[name="select-media-action-upload"]');
-  const eventListenerAction = button.dataset.eventListenerAction;
-  const targetContainerId = button.dataset.targetContainerId ?? null;
-  uploadMediaButton.dataset.eventListenerAction = eventListenerAction;
-  uploadMediaButton.dataset.targetContainerId = targetContainerId;
-  loadMoreButton.dataset.eventListenerAction = eventListenerAction;
-  loadMoreButton.dataset.targetContainerId = targetContainerId;
+  const modalMediaSelectPage = document.querySelector('#modalMediaSelectPage');
+  uploadMediaButton.dataset.eventListenerAction = button.dataset.eventListenerAction;
+  uploadMediaButton.dataset.targetContainerId = button.dataset.targetContainerId;
+  if (loadMoreButton) {
+    loadMoreButton.dataset.eventListenerAction = button.dataset.eventListenerAction;
+    loadMoreButton.dataset.targetContainerId = button.dataset.targetContainerId;
+  }
+  if (modalMediaSelectPage) {
+    modalMediaSelectPage.dataset.eventListenerAction = button.dataset.eventListenerAction;
+    modalMediaSelectPage.dataset.targetContainerId = button.dataset.targetContainerId;
+  }
   modal.querySelector('.add-image-wrapper').classList.remove('null');
   modal.classList.remove('null');
 
-  const existingImages = imagesContainer.querySelectorAll('.media-item');
+  const existingImages = modal.querySelectorAll('#images-list .media-item');
   existingImages.forEach(img => {
-    addEventListenerAction(img, img.dataset.mediaId, eventListenerAction, targetContainerId);
-  });
-
-  modal.querySelectorAll('.media-list-highlight .media-item').forEach(mi => {
-    addEventListenerAction(mi, mi.dataset.mediaId, eventListenerAction, targetContainerId);
+    addEventListenerAction(
+      img,
+      img.dataset.mediaId,
+      button.dataset.eventListenerAction,
+      button.dataset.targetContainerId,
+    );
   });
 
   if (existingImages.length) {
@@ -80,8 +85,18 @@ function handleGenericSelectMainMediaClick(e) {
 
   Request.get('/api/file?typeId=' + typeId + '&qty=' + qty)
     .then(response => {
-      imagesContainer.classList.remove('null');
-      displayImageFromApiCall(imagesContainer, response.files, eventListenerAction, targetContainerId);
+      const imagesContainer = document.querySelector('#images-list .media-list-main');
+      displayImageFromApiCall(
+        imagesContainer,
+        response.files,
+        button.dataset.eventListenerAction,
+        button.dataset.targetContainerId,
+      );
+      updateModalMediaSelectInnerHtml(
+        response.modalMediaSelectInnerHtml,
+        button.dataset.eventListenerAction,
+        button.dataset.targetContainerId,
+      );
     })
     .catch(error => {
       modal.classList.add('null');
@@ -227,7 +242,9 @@ function displayModalImage(image) {
 
   modalContainer.querySelector('.image-number').textContent = '#' + image.id;
   modalContainer.querySelector('.image-caption').textContent = image.caption;
-  modalContainer.querySelector('.image-meta').innerHTML = image.exifHtml;
+  if (image.exifHtml) {
+    modalContainer.querySelector('.image-meta').innerHTML = image.exifHtml;
+  }
 
   const copyLinkEl = modalContainer.querySelector('.image-meta .copy-link');
   if (copyLinkEl) {
@@ -316,11 +333,12 @@ async function modalRetrieveMediaAndAddToCache(mediaId, direction) {
     }
   }
 
-  const qty = direction === 'DESC' || direction === 'ASC' ? 20 : 1;
+  const qty = direction === 'DESC' || direction === 'ASC' ? 25 : 1;
   const typeId = document.querySelector('.media-load-more-js').dataset.typeId;
-  const apiUrl = '/api/file/' + mediaId + '?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty;
 
-  return Request.get(apiUrl)
+  return Request.get(
+    '/api/file/' + mediaId + '?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty + '&includeExifData=1&includeAppearsOn=1'
+  )
     .then(response => {
       updateMediaCache(response.files, direction);
       return direction === 'DESC' || direction === 'ASC' ? (response.files[1] ?? null) : (response.files[0] ?? null);
@@ -350,7 +368,9 @@ async function modalGetMedia(mediaId, direction) {
 
   const typeId = document.querySelector('.media-load-more-js').dataset.typeId;
 
-  return Request.get('/api/file/' + mediaId + '?direction=' + direction + '&typeId=' + typeId + '&qty=20')
+  return Request.get(
+    '/api/file/' + mediaId + '?direction=' + direction + '&typeId=' + typeId + '&qty=20&includeExifData=1&includeAppearsOn=1'
+  )
     .then(response => {
       updateMediaCache(response.files, direction);
       return response.files[0] ?? null;
@@ -944,15 +964,44 @@ function displayImageFromApiCall(container, images, eventListenerAction, targetC
     addEventListenerAction(imageEl, image.id, eventListenerAction, targetContainerId);
 
     figureContainer.appendChild(imageEl);
-    loadMoreButton.parentElement.insertBefore(figureContainer, loadMoreButton);
+    if (loadMoreButton) {
+      loadMoreButton.parentElement.insertBefore(figureContainer, loadMoreButton);
+    } else {
+      container.insertAdjacentElement('beforeend', figureContainer);
+    }
   });
 
-  const mediaQueryQty = Number.parseInt(loadMoreButton.dataset.mediaQueryQty);
+  if (loadMoreButton &&
+    loadMoreButton.dataset.mediaQueryQty &&
+    images.length >= Number.parseInt(loadMoreButton.dataset.mediaQueryQty)
+  ) {
+    loadMoreButton.classList.remove('null');
+  }
+}
 
-  if (images.length >= mediaQueryQty) {
-    const loadMoreButton = container.parentElement.querySelector('.media-load-more');
+function displayFileFromApiCall(container, files) {
+  const loadMoreButton = container.querySelector('.media-load-more');
+
+  files.forEach(f => {
+    if (!f.asHtml) {
+      return;
+    }
+
     if (loadMoreButton) {
-      loadMoreButton.classList.remove('null');
+      loadMoreButton.insertAdjacentHTML('beforebegin', f.asHtml);
+    } else {
+      container.insertAdjacentHTML('beforeend', f.asHtml);
+    }
+  });
+}
+
+function updateModalMediaSelectInnerHtml(selectInnerHtml, eventListenerAction, targetContainerId) {
+  if (selectInnerHtml) {
+    const modalMediaSelectPage = document.querySelector('#modalMediaSelectPage');
+    if (modalMediaSelectPage) {
+      modalMediaSelectPage.dataset.eventListenerAction = eventListenerAction;
+      modalMediaSelectPage.dataset.targetContainerId = targetContainerId;
+      modalMediaSelectPage.innerHTML = selectInnerHtml;
     }
   }
 }
@@ -1214,7 +1263,9 @@ document.querySelectorAll('input#images').forEach(im => {
   im.addEventListener('change', e => {
     e.preventDefault();
 
-    const container = document.querySelector('#images-list');
+    const container = document.querySelector('#images-list .media-list-main');
+    document.querySelectorAll('.media-list-page').forEach(ml => ml.classList.add('null'));
+    container.classList.remove('null');
 
     Uploader.uploadMediaAsync(
       im.files,
@@ -1224,6 +1275,11 @@ document.querySelectorAll('input#images').forEach(im => {
           const newMediaEl = container.querySelector('.media-item[data-media-id="' + response.file.id + '"]');
           newMediaEl.addEventListener('click', displayNextImagePopup);
           newMediaEl.mediaId = response.file.id;
+          updateMediaCache([response.file], null);
+          const imagesMediaSelectPageFirstOption = document.querySelector('select#imagesMediaSelectPage option');
+          if (imagesMediaSelectPageFirstOption) {
+            imagesMediaSelectPageFirstOption.selected = true;
+          }
         }
       },
     )
@@ -1368,34 +1424,43 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
   lm.addEventListener('click', e => {
     e.preventDefault();
 
-    lm.disabled = true;
-    const lastImageEl = document.querySelector('#images-list .image-container:last-of-type .media-item');
-    const lastImageId = lastImageEl ? Number.parseInt(lastImageEl.dataset.mediaId) : null;
+    const lastImageEl = document.querySelector('#images-list .media-list-main .image-container:last-of-type .media-item');
+    const lastFileEl = document.querySelector('#media-container .file-container:last-of-type .media-item');
+    const lastImageId = lastImageEl ? lastImageEl.dataset.mediaId : (lastFileEl ? lastFileEl.dataset.mediaId : null);
+    if (!lastImageId) {
+      Util.notifyError();
+      return;
+    }
+
     const qty = Number.parseInt(lm.dataset.mediaQueryQty);
     const typeId = lm.dataset.typeId ? Number.parseInt(lm.dataset.typeId) : '';
     const direction = lm.dataset.direction ?? '';
-    const eventListenerAction = lm.dataset.eventListenerAction;
-    const targetContainerId = lm.dataset.targetContainerId ?? null;
     const loader = Util.buildImageLoadingElement('loader-container-100');
     lm.parentElement.appendChild(loader);
     lm.classList.add('null');
 
     Request.get('/api/file/' + lastImageId + '?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty)
       .then(response => {
-        const container = document.querySelector('#images-list');
+        if (lastImageEl) {
+          const container = document.querySelector('#images-list .media-list-main');
 
-        displayImageFromApiCall(container, response.files, eventListenerAction, targetContainerId);
-        updateMediaCache(response.files, direction);
+          displayImageFromApiCall(
+            container,
+            response.files,
+            lm.dataset.eventListenerAction,
+            (lm.dataset.targetContainerId ?? null),
+          );
+        } else {
+          const container = document.querySelector('#media-container');
+          displayFileFromApiCall(container, response.files);
+        }
 
-        lm.parentElement.removeChild(loader);
-        lm.classList.remove('null');
-        lm.disabled = false;
-
-        if (response.files.length < qty) {
-          lm.classList.add('null');
+        if (response.files.length >= qty) {
+          lm.classList.remove('null');
         }
       })
-      .catch(error => Util.notifyError(error));
+      .catch(error => Util.notifyError(error))
+      .finally(() => lm.parentElement.removeChild(loader));
   });
 });
 
@@ -1407,15 +1472,18 @@ document.querySelectorAll('input[name="select-media-action-upload"]').forEach(im
   im.addEventListener('change', e => {
     e.preventDefault();
 
-    const container = document.querySelector('#images-list');
-    const eventListenerAction = im.dataset.eventListenerAction;
-    const targetContainerId = im.dataset.targetContainerId;
+    const container = document.querySelector('#images-list .media-list-main');
 
     Uploader.uploadMediaAsync(
       im.files,
       container,
       (response) => {
-        displayImageFromApiCall(container, [response.file], eventListenerAction, targetContainerId);
+        displayImageFromApiCall(
+          container,
+          [response.file],
+          im.dataset.eventListenerAction,
+          im.dataset.targetContainerId,
+        );
       },
     )
       .then()
@@ -1758,6 +1826,64 @@ document.querySelectorAll('.filter-user-submit-js').forEach(bu => {
     const queryString = query.entries() ? '?' + query.toString() : '';
 
     window.location.href = window.location.origin + window.location.pathname + queryString;
+  });
+});
+
+document.querySelectorAll('.media-select-page-js').forEach(s => {
+  s.addEventListener('change', e => {
+    e.preventDefault();
+
+    const mediaListMain = document.querySelector('#images-list .media-list-main');
+    if (mediaListMain) {
+      mediaListMain.classList.add('null');
+    }
+
+    const pageContainerId = 'media-list-page-' + s.value;
+    const pageContainerEl = document.querySelector('#' + pageContainerId);
+    if (pageContainerEl) {
+      pageContainerEl.querySelectorAll('.media-item').forEach(mi => {
+        addEventListenerAction(mi, mi.dataset.mediaId, s.dataset.eventListenerAction, s.dataset.targetContainerId);
+      });
+      pageContainerEl.classList.remove('null');
+      document.querySelectorAll('.media-list-page').forEach(mc => {
+        if (mc.dataset.page !== pageContainerEl.dataset.page) {
+          mc.classList.add('null');
+        }
+      });
+      return;
+    }
+
+    document.querySelectorAll('.media-list-page').forEach(mc => mc.classList.add('null'));
+
+    const divPageContainer = document.createElement('div');
+    divPageContainer.id = pageContainerId;
+    divPageContainer.classList.add('media-list-page');
+    divPageContainer.dataset.page = s.value;
+    document.querySelector('.media-list-page-outer').appendChild(divPageContainer);
+
+    s.disabled = true;
+    const qty = Number.parseInt(s.dataset.mediaQueryQty);
+    const typeId = s.dataset.typeId ? Number.parseInt(s.dataset.typeId) : '';
+    const direction = s.dataset.direction ?? '';
+    Util.displayFullPageLoadingModal();
+
+    Request.get(
+      '/api/file?direction=' + direction + '&typeId=' + typeId + '&qty=' + qty + '&page=' + s.value
+    )
+      .then(response => {
+        displayImageFromApiCall(
+          divPageContainer,
+          response.files,
+          s.dataset.eventListenerAction,
+          s.dataset.targetContainerId,
+        );
+        document.querySelector('.media-list-page-outer').classList.remove('null');
+      })
+      .catch(error => Util.notifyError(error))
+      .finally(() => {
+        s.disabled = false;
+        Util.hideFullPageLoadingModal();
+      });
   });
 });
 

@@ -39,6 +39,9 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
      * @param string|null $direction
      * @param int|null $qty
      * @param int|null $typeId
+     * @param int|null $includeAppearsOn
+     * @param int|null $includeExifData
+     * @param int|null $page
      * @param Request $request
      * @return Response
      */
@@ -46,6 +49,9 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
         ?string $direction,
         ?int $qty,
         ?int $typeId,
+        ?int $includeAppearsOn,
+        ?int $includeExifData,
+        ?int $page,
         Request $request
     ): Response;
 
@@ -66,6 +72,8 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
      * @param string|null $direction
      * @param int|null $qty
      * @param int|null $typeId
+     * @param int|null $includeAppearsOn
+     * @param int|null $includeExifData
      * @param Request $request
      * @return Response
      */
@@ -74,6 +82,8 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
         ?string $direction,
         ?int $qty,
         ?int $typeId,
+        ?int $includeAppearsOn,
+        ?int $includeExifData,
         Request $request
     ): Response;
 
@@ -148,6 +158,24 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
         } else {
             $typeId = null;
         }
+
+        if (isset($queryParams['includeAppearsOn']) && $queryParams['includeAppearsOn'] !== '') {
+            $includeAppearsOn = (int)$queryParams['includeAppearsOn'];
+        } else {
+            $includeAppearsOn = null;
+        }
+
+        if (isset($queryParams['includeExifData']) && $queryParams['includeExifData'] !== '') {
+            $includeExifData = (int)$queryParams['includeExifData'];
+        } else {
+            $includeExifData = null;
+        }
+
+        if (isset($queryParams['page']) && $queryParams['page'] !== '') {
+            $page = (int)$queryParams['page'];
+        } else {
+            $page = null;
+        }
         if ($errors) {
             return Response::createBadRequestResponse(
                 [
@@ -163,6 +191,9 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
                 $direction,
                 $qty,
                 $typeId,
+                $includeAppearsOn,
+                $includeExifData,
+                $page,
                 $request
             );
         } catch (Throwable $t) {
@@ -244,6 +275,18 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
         } else {
             $typeId = null;
         }
+
+        if (isset($queryParams['includeAppearsOn']) && $queryParams['includeAppearsOn'] !== '') {
+            $includeAppearsOn = (int)$queryParams['includeAppearsOn'];
+        } else {
+            $includeAppearsOn = null;
+        }
+
+        if (isset($queryParams['includeExifData']) && $queryParams['includeExifData'] !== '') {
+            $includeExifData = (int)$queryParams['includeExifData'];
+        } else {
+            $includeExifData = null;
+        }
         if ($errors) {
             return Response::createBadRequestResponse(
                 [
@@ -260,6 +303,8 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
                 $direction,
                 $qty,
                 $typeId,
+                $includeAppearsOn,
+                $includeExifData,
                 $request
             );
         } catch (Throwable $t) {

@@ -29,6 +29,7 @@ class HtmlResponseDataAdmin extends HtmlResponseData
         public readonly array $pageContentAll = [],
         public readonly ?PageContent $pageContent = null,
         public readonly ?DashboardCount $dashboardCount = null,
+        public readonly ?int $mediaLastPage = null,
     ) {
         parent::__construct(
             request: $request,

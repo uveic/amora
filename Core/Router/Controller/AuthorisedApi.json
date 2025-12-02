@@ -24,8 +24,6 @@
   "paths": {
     "/api/file": {
       "get": {
-        "tags": [],
-        "description": "Get batch of files",
         "operationId": "getFiles",
         "parameters": [
           {
@@ -38,7 +36,6 @@
           {
             "name": "qty",
             "in": "query",
-            "description": "Number of items",
             "required": false,
             "type": "integer"
           },
@@ -46,6 +43,25 @@
             "name": "typeId",
             "in": "query",
             "description": "Media type ID",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "includeAppearsOn",
+            "in": "query",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "includeExifData",
+            "in": "query",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page: SQL offset",
             "required": false,
             "type": "integer"
           }
@@ -204,9 +220,11 @@
                     ]
                   }
                 },
+                "modalMediaSelectInnerHtml": {
+                  "type": "string"
+                },
                 "errorMessage": {
-                  "type": "string",
-                  "description": "Error message"
+                  "type": "string"
                 }
               }
             }
@@ -269,9 +287,6 @@
         }
       },
       "post": {
-        "tags": [],
-        "summary": "Store a new file",
-        "description": "",
         "operationId": "storeFile",
         "parameters": [],
         "responses": {
@@ -384,9 +399,6 @@
     },
     "/api/file/{id}": {
       "get": {
-        "tags": [],
-        "summary": "Get batch of files",
-        "description": "Get batch of files",
         "operationId": "getFilesFrom",
         "parameters": [
           {
@@ -414,6 +426,18 @@
             "name": "typeId",
             "in": "query",
             "description": "Media type ID",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "includeAppearsOn",
+            "in": "query",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "includeExifData",
+            "in": "query",
             "required": false,
             "type": "integer"
           }
@@ -599,9 +623,6 @@
         }
       },
       "delete": {
-        "tags": [],
-        "summary": "Destroy a file",
-        "description": "Delete file",
         "operationId": "destroyFile",
         "parameters": [
           {
@@ -695,7 +716,6 @@
     },
     "/api/user/{userId}": {
       "put": {
-        "tags": [],
         "operationId": "updateUserAccount",
         "parameters": [
           {

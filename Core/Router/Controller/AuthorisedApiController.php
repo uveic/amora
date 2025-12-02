@@ -11,6 +11,7 @@ use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
 use Amora\Core\Module\User\Value\VerificationType;
+use Amora\Core\Util\StringUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use Amora\Core\Router\Controller\Response\{AuthorisedApiControllerDestroyFileSuccessResponse,
@@ -43,6 +44,9 @@ readonly final class AuthorisedApiController extends AuthorisedApiControllerAbst
      * @param string|null $direction
      * @param int|null $qty
      * @param int|null $typeId
+     * @param int|null $includeAppearsOn
+     * @param int|null $includeExifData
+     * @param int|null $page
      * @param Request $request
      * @return Response
      */
@@ -50,6 +54,9 @@ readonly final class AuthorisedApiController extends AuthorisedApiControllerAbst
         ?string $direction,
         ?int $qty,
         ?int $typeId,
+        ?int $includeAppearsOn,
+        ?int $includeExifData,
+        ?int $page,
         Request $request,
     ): Response {
         $direction = isset($direction) ? strtoupper(trim($direction)) : QueryOrderDirection::DESC->value;
@@ -57,23 +64,46 @@ readonly final class AuthorisedApiController extends AuthorisedApiControllerAbst
             ? QueryOrderDirection::from($direction)
             : QueryOrderDirection::DESC;
 
-        $qty = $qty ?? 1;
+        if (!$qty || $qty < 1) {
+            $qty = 1;
+        }
+
         $mediaType = isset($typeId) && MediaType::tryFrom($typeId) ? MediaType::from($typeId) : null;
 
         $output = $this->mediaService->workflowGetFiles(
             language: $request->siteLanguage,
             direction: $directionEnum,
             qty: $qty,
+            page: $page,
             mediaType: $mediaType,
             isAdmin: $request->session->isAdmin(),
-            includeAppearsOn: true,
+            includeAppearsOn: StringUtil::isTrue($includeAppearsOn),
             userId: $request->session->isAdmin() ? null : $request->session->user->id,
-            includeExifData: true,
+            includeExifData: StringUtil::isTrue($includeExifData),
         );
+
+        $modalMediaSelectInnerHtml = '';
+        if (!$page) {
+            $mediaCountByTypeId = $this->mediaService->getMediaCountByTypeId();
+            $mediaCount = 0;
+            if ($mediaType === MediaType::Image) {
+                $mediaCount += $mediaCountByTypeId[MediaType::Image->value] ?? 0;
+                $mediaCount += $mediaCountByTypeId[MediaType::SVG->value] ?? 0;
+            } else {
+                foreach (MediaType::getAllNotImageIds() as $notImageId) {
+                    $mediaCount += $mediaCountByTypeId[$notImageId] ?? 0;
+                }
+            }
+
+            $modalMediaSelectInnerHtml = $this->mediaService->generateModalMediaSelectInnerHtml(
+                lastPage: (int)ceil($mediaCount / $qty),
+            );
+        }
 
         return new AuthorisedApiControllerGetFilesSuccessResponse(
             success: true,
             files: $output,
+            modalMediaSelectInnerHtml: $modalMediaSelectInnerHtml,
         );
     }
 
@@ -109,9 +139,16 @@ readonly final class AuthorisedApiController extends AuthorisedApiControllerAbst
 
         /** @var Media $newFile */
         $newFile = $res->response;
+
+        $fileOutput = $newFile->asPublicArray();
+        $fileOutput['exifHtml'] = $newFile->exif?->asHtml(
+            language: Core::getDefaultLanguage(),
+            media: $newFile,
+        ) ?? '';
+
         return new AuthorisedApiControllerStoreFileSuccessResponse(
             success: true,
-            file: $newFile->asPublicArray(),
+            file: $fileOutput,
         );
     }
 
@@ -149,6 +186,8 @@ readonly final class AuthorisedApiController extends AuthorisedApiControllerAbst
      * @param string|null $direction
      * @param int|null $qty
      * @param int|null $typeId
+     * @param int|null $includeAppearsOn
+     * @param int|null $includeExifData
      * @param Request $request
      * @return Response
      */
@@ -157,6 +196,8 @@ readonly final class AuthorisedApiController extends AuthorisedApiControllerAbst
         ?string $direction,
         ?int $qty,
         ?int $typeId,
+        ?int $includeAppearsOn,
+        ?int $includeExifData,
         Request $request
     ): Response {
         $direction = isset($direction) ? strtoupper(trim($direction)) : QueryOrderDirection::DESC->value;
@@ -164,7 +205,10 @@ readonly final class AuthorisedApiController extends AuthorisedApiControllerAbst
             ? QueryOrderDirection::from($direction)
             : QueryOrderDirection::DESC;
 
-        $qty = $qty ?? 1;
+        if (!$qty || $qty < 1) {
+            $qty = 1;
+        }
+
         $mediaType = isset($typeId) && MediaType::tryFrom($typeId) ? MediaType::from($typeId) : null;
 
         $output = $this->mediaService->workflowGetFiles(
@@ -173,10 +217,10 @@ readonly final class AuthorisedApiController extends AuthorisedApiControllerAbst
             qty: $qty,
             mediaType: $mediaType,
             isAdmin: $request->session->isAdmin(),
-            includeAppearsOn: true,
+            includeAppearsOn: StringUtil::isTrue($includeAppearsOn),
             fromId: $id,
             userId: $request->session->isAdmin() ? null : $request->session->user->id,
-            includeExifData: true,
+            includeExifData: StringUtil::isTrue($includeExifData),
         );
 
         return new AuthorisedApiControllerGetFilesFromSuccessResponse(

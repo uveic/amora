@@ -2,7 +2,6 @@
 
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
-use Amora\Core\Module\Article\Service\MediaService;
 use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Value\CoreIcons;
 use Amora\Core\Value\QueryOrderDirection;
@@ -15,34 +14,41 @@ use Amora\Core\Value\QueryOrderDirection;
       <div class="add-image-header">
         <h2 class="m-t-0 m-b-0"><?=$responseData->getLocalValue('globalSelectImage')?></h2>
         <div class="flex-start flex-align-center space-between gap-1">
+          <span class="icon-one-line media-page-wrapper">
+            <label for="modalMediaSelectPage"><?=$responseData->getLocalValue('analyticsPage')?></label>
+            <select name="modalMediaSelectPage" id="modalMediaSelectPage" class="media-select-page-js" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::ASC->value?>" data-media-query-qty="<?=Core::SQL_QUERY_QTY?>"></select>
+          </span>
           <a href="#" class="modal-close-link"><?=$responseData->getLocalValue('globalCancel')?></a>
           <div>
-            <input class="null" type="file" id="select-media-action-upload" name="select-media-action-upload" multiple="" accept="image/png, image/jpeg, image/webp">
+            <input class="null" type="file" id="select-media-action-upload" name="select-media-action-upload" multiple="" accept="image/png, image/jpeg, image/webp, image/svg+xml">
             <label class="input-file-label" for="select-media-action-upload"><?=CoreIcons::IMAGE?><span><?=$responseData->getLocalValue('globalAddImage')?></span></label>
           </div>
         </div>
       </div>
-      <div class="media-list-highlight null"></div>
-      <div id="images-list" class="null m-t-1">
-        <a href="#" class="media-load-more media-load-more-js null" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-media-query-qty="<?=Core::SQL_QUERY_QTY?>">
-          <span><?=$responseData->getLocalValue('globalMore')?></span>
-        </a>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
-        <div class="image-container-shadow"></div>
+      <div id="images-list" class="m-t-1 width-100">
+        <div class="media-list-highlight null width-100"></div>
+        <div class="media-list-page-outer null width-100"></div>
+        <div class="media-list-main width-100">
+          <a href="#" class="media-load-more media-load-more-js null" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::DESC->name?>" data-media-query-qty="<?=Core::SQL_QUERY_QTY?>">
+            <span><?=$responseData->getLocalValue('globalMore')?></span>
+          </a>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+          <div class="image-container-shadow"></div>
+        </div>
       </div>
     </div>
   </div>

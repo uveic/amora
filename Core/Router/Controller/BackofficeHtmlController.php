@@ -535,7 +535,10 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
     protected function getImagesPage(Request $request): Response
     {
         $images = $this->mediaService->filterMediaBy(
-            typeIds: [MediaType::Image->value],
+            typeIds: [
+                MediaType::Image->value,
+                MediaType::SVG->value,
+            ],
             statusIds: [MediaStatus::Active->value],
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('id', QueryOrderDirection::DESC)],
@@ -543,13 +546,17 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
             ),
         );
 
+        $mediaCount = $this->mediaService->getMediaCountByTypeId();
+        $imagesCount = ($mediaCount[MediaType::Image->value] ?? 0) + ($mediaCount[MediaType::SVG->value] ?? 0);
+
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(
             template: 'core/backoffice/images',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('navAdminImages'),
-                media: $images
+                media: $images,
+                mediaLastPage: (int)ceil($imagesCount / Core::SQL_QUERY_QTY),
             ),
         );
     }

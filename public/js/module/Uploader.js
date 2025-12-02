@@ -119,6 +119,10 @@ class UploaderClass {
     });
   }
 
+  isImage(mediaName) {
+    return /\.(jpe?g|png|gif|webp|svg)$/i.test(mediaName);
+  }
+
   async uploadMediaAsync(
     files,
     mediaContainer,
@@ -129,9 +133,7 @@ class UploaderClass {
     formData = new FormData(),
   ) {
     for (const media of Array.from(files)) {
-      const isImage = /\.(jpe?g|png|gif|webp)$/i.test(media.name);
-
-      if (isImage) {
+      if (this.isImage(media.name)) {
         this.uploadImageBefore(media, mediaContainer);
       } else {
         this.uploadFileBefore(media, mediaContainer);
@@ -140,11 +142,9 @@ class UploaderClass {
 
     for (const media of Array.from(files)) {
       try {
-        const isImage = /\.(jpe?g|png|gif|webp)$/i.test(media.name);
-
         await this.uploadFile(media, apiUploadEndpoint, formData)
           .then(json => {
-            if (isImage) {
+            if (this.isImage(media.name)) {
               this.uploadImageThen(json, imageClassName);
             } else {
               this.uploadFileThen(json, imageClassName);

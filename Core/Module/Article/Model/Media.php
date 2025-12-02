@@ -227,7 +227,9 @@ class Media
 
     public function asHtmlSimple(): string
     {
-        if ($this->type === MediaType::Image) {
+        if ($this->type === MediaType::Image ||
+            $this->type === MediaType::SVG
+        ) {
             return '<img class="media-item" data-media-id="' . $this->id . '" src="' . $this->getPathWithNameMedium() . '" alt="' . $this->buildAltText() . '">';
         }
 
@@ -242,7 +244,9 @@ class Media
         ?string $title = null,
         ?string $alt = null,
     ): string {
-        if ($this->type === MediaType::Image) {
+        if ($this->type === MediaType::Image ||
+            $this->type === MediaType::SVG
+        ) {
             return $this->imageAsHtml(
                 size: $size,
                 className: $className,
@@ -274,17 +278,20 @@ class Media
 
         $output = [
             'data-media-id="' . $this->id . '"',
-            'data-path-medium="' . $this->getPathWithNameMedium() . '"',
             'src="' . $src . '"',
             'alt="' . ($alt ?? $this->buildAltText()) . '"',
-            'srcset="' . $this->buildSrcset() . '"',
-            'sizes="' . ($sizes ?: $this->buildSizes()) . '"',
-            'width="' . $size->value . '"',
         ];
 
-        if ($this->heightOriginal && $this->widthOriginal) {
-            $ratio = $size->value / $this->widthOriginal;
-            $output[] = 'height="' . (int)round($ratio * $this->heightOriginal) . '"';
+        if ($this->type === MediaType::Image) {
+            $output[] = 'data-path-medium="' . $this->getPathWithNameMedium() . '"';
+            $output[] = 'srcset="' . $this->buildSrcset() . '"';
+            $output[] = 'sizes="' . ($sizes ?: $this->buildSizes()) . '"';
+            $output[] = 'width="' . $size->value . '"';
+
+            if ($this->heightOriginal && $this->widthOriginal) {
+                $ratio = $size->value / $this->widthOriginal;
+                $output[] = 'height="' . (int)round($ratio * $this->heightOriginal) . '"';
+            }
         }
 
         if ($className) {
@@ -347,6 +354,10 @@ class Media
 
     private function buildSrcset(): string
     {
+        if ($this->type !== MediaType::Image) {
+            return '';
+        }
+
         if (!$this->widthOriginal) {
             return '';
         }
@@ -378,6 +389,10 @@ class Media
 
     private function buildSizes(): string
     {
+        if ($this->type !== MediaType::Image) {
+            return '';
+        }
+
         $output = [
             '(min-width: 2960px) 5vw',
             '(min-width: 2660px) calc(2.5vw + 85px)',
