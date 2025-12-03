@@ -866,11 +866,9 @@
 
 .image-wrapper>.image-main img {
   width: auto;
-  min-width: 50svw;
-  max-width: 100%;
   height: auto;
-  min-height: 40svh;
   max-height: 94vh;
+  max-width: 100%;
 }
 
 .image-wrapper>.image-info {
