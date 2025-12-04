@@ -227,7 +227,8 @@ class Media
 
     public function asHtmlSimple(): string
     {
-        if ($this->type === MediaType::Image ||
+        if (
+            $this->type === MediaType::Image ||
             $this->type === MediaType::SVG
         ) {
             return '<img class="media-item" data-media-id="' . $this->id . '" src="' . $this->getPathWithNameMedium() . '" alt="' . $this->buildAltText() . '">';
@@ -244,7 +245,8 @@ class Media
         ?string $title = null,
         ?string $alt = null,
     ): string {
-        if ($this->type === MediaType::Image ||
+        if (
+            $this->type === MediaType::Image ||
             $this->type === MediaType::SVG
         ) {
             return $this->imageAsHtml(
@@ -372,12 +374,24 @@ class Media
             $output[] = $this->getPathWithNameSmall() . ' ' . ImageSize::Small->value . 'w';
         }
 
+        if ($this->widthOriginal < ImageSize::Medium->value && $this->widthOriginal > ImageSize::Small->value) {
+            $output[] = $this->getPathWithNameLarge() . ' ' . $this->widthOriginal . 'w';
+        }
+
         if ($this->filenameMedium && $this->widthOriginal >= ImageSize::Medium->value) {
             $output[] = $this->getPathWithNameMedium() . ' ' . ImageSize::Medium->value . 'w';
         }
 
+        if ($this->widthOriginal < ImageSize::Large->value && $this->widthOriginal > ImageSize::Medium->value) {
+            $output[] = $this->getPathWithNameLarge() . ' ' . $this->widthOriginal . 'w';
+        }
+
         if ($this->filenameLarge && $this->widthOriginal >= ImageSize::Large->value) {
             $output[] = $this->getPathWithNameLarge() . ' ' . ImageSize::Large->value . 'w';
+        }
+
+        if ($this->widthOriginal < ImageSize::XLarge->value && $this->widthOriginal > ImageSize::Large->value) {
+            $output[] = $this->getPathWithNameLarge() . ' ' . $this->widthOriginal . 'w';
         }
 
         if ($this->filenameXLarge && $this->widthOriginal >= ImageSize::XLarge->value) {

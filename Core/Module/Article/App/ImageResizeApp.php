@@ -84,7 +84,7 @@ class ImageResizeApp extends App
             return true;
         }
 
-        if (!file_exists($existingMedia->getPathWithNameOriginal())) {
+        if (!file_exists($existingMedia->getDirWithNameOriginal())) {
             $this->log('File not found. Skipping...');
             return true;
         }
@@ -101,30 +101,30 @@ class ImageResizeApp extends App
             captionHtml: $existingMedia->captionHtml,
         );
 
-        $updatedMedia = new Media(
-            id: $existingMedia->id,
-            type: $existingMedia->type,
-            status: $existingMedia->status,
-            user: $existingMedia->user,
-            widthOriginal: $resizedMedia->widthOriginal,
-            heightOriginal: $resizedMedia->heightOriginal,
-            path: $resizedMedia->path,
-            filename: $existingMedia->filename,
-            filenameSource: $existingMedia->filenameSource,
-            filenameXLarge: $resizedMedia->filenameXLarge,
-            filenameLarge: $resizedMedia->filenameLarge,
-            filenameMedium: $resizedMedia->filenameMedium,
-            filenameSmall: $resizedMedia->filenameSmall,
-            filenameXSmall: $resizedMedia->filenameXSmall,
-            captionHtml: $existingMedia->captionHtml,
-            createdAt: $existingMedia->createdAt,
-            updatedAt: $resizedMedia->updatedAt,
-            uploadedToS3At: $resizedMedia->uploadedToS3At,
-            deletedLocallyAt: $resizedMedia->deletedLocallyAt,
-            exif: $resizedMedia->exif,
+        $this->mediaService->updateMedia(
+            new Media(
+                id: $existingMedia->id,
+                type: $existingMedia->type,
+                status: $existingMedia->status,
+                user: $existingMedia->user,
+                widthOriginal: $resizedMedia->widthOriginal,
+                heightOriginal: $resizedMedia->heightOriginal,
+                path: $resizedMedia->path,
+                filename: $existingMedia->filename,
+                filenameSource: $existingMedia->filenameSource,
+                filenameXLarge: $resizedMedia->filenameXLarge,
+                filenameLarge: $resizedMedia->filenameLarge,
+                filenameMedium: $resizedMedia->filenameMedium,
+                filenameSmall: $resizedMedia->filenameSmall,
+                filenameXSmall: $resizedMedia->filenameXSmall,
+                captionHtml: $existingMedia->captionHtml,
+                createdAt: $existingMedia->createdAt,
+                updatedAt: $resizedMedia->updatedAt,
+                uploadedToS3At: $resizedMedia->uploadedToS3At,
+                deletedLocallyAt: $resizedMedia->deletedLocallyAt,
+                exif: $resizedMedia->exif,
+            ),
         );
-
-        $this->mediaService->updateMedia($updatedMedia);
 
         $now = new DateTimeImmutable();
         $this->mediaService->storeMediaDestroyed(
@@ -185,6 +185,11 @@ class ImageResizeApp extends App
 
         $parts = explode('.', $media->filename);
         $extension = strtolower(trim($parts[count($parts) - 1]));
+
+        if ($extension === 'svg') {
+            return null;
+        }
+
         $baseNameWithoutExtension = trim($parts[count($parts) - 2]);
 
         return new RawFile(

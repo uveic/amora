@@ -1,6 +1,6 @@
 {
   "name": "uveic/amora",
-  "description": "Framework to develop web applications written in PHP 8.4.",
+  "description": "Framework to develop web applications written in PHP 8.5.",
   "authors": [
     {
       "name": "Victor Gonzalez",
@@ -8,7 +8,7 @@
     }
   ],
   "require": {
-    "php": "^8.4",
+    "php": "^8.5",
     "league/plates": "3.*",
     "ext-json": "*",
     "ext-simplexml": "*",

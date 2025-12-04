@@ -308,9 +308,6 @@ readonly class ImageService
             if (!$res) {
                 $this->logger->logError('Error resizing JPG image: ' . $outputFullPath);
             }
-
-            imagedestroy($outputImage);
-            imagedestroy($sourceImage);
         } catch (Throwable $t) {
             $this->logger->logError(
                 'Error resizing JPG image: ' . $sourceFullPath
@@ -355,9 +352,6 @@ readonly class ImageService
             if (!$res) {
                 $this->logger->logError('Error resizing Webp image: ' . $outputFullPath);
             }
-
-            imagedestroy($outputImage);
-            imagedestroy($sourceImage);
         } catch (Throwable $t) {
             $this->logger->logError(
                 'Error resizing Webp image: ' . $sourceFullPath
@@ -400,9 +394,6 @@ readonly class ImageService
             if (!$res) {
                 $this->logger->logError('Error resizing PNG image: ' . $outputFullPath);
             }
-
-            imagedestroy($outputImage);
-            imagedestroy($sourceImage);
         } catch (Throwable $t) {
             $this->logger->logError(
                 'Error resizing PNG image: ' . $sourceFullPath
