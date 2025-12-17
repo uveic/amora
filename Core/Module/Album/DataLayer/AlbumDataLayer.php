@@ -149,7 +149,12 @@ class AlbumDataLayer
         }
 
         if ($languageIsoCodes) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $languageIsoCodes, 'a.language_iso_code', 'languageIsoCode');
+            $where .= $this->generateWhereSqlCodeForIds(
+                params: $params,
+                ids: $languageIsoCodes,
+                dbColumnName: 'a.language_iso_code',
+                keyName: 'languageIsoCode',
+            );
         }
 
         if ($templateIds) {
@@ -808,6 +813,20 @@ class AlbumDataLayer
                 ':draft' => AlbumStatus::Draft->value,
                 ':private' => AlbumStatus::Private->value,
                 ':unlisted' => AlbumStatus::Unlisted->value,
+            ]
+        );
+    }
+
+    public function getMediaCountForCollectionId(int $collectionId): int
+    {
+        return (int)$this->db->fetchColumn(
+            '
+                SELECT COUNT(*)
+                FROM ' . self::COLLECTION_MEDIA_TABLE . '
+                WHERE collection_id = :collectionId;
+            ',
+            [
+                ':collectionId' => $collectionId,
             ]
         );
     }

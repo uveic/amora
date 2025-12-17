@@ -400,10 +400,10 @@ readonly class ArticleService
         }
 
         foreach ($articleSectionsById as $articleSection) {
-            if ($articleSection->mediaId) {
+            if ($articleSection->media?->id) {
                 $this->articleDataLayer->deleteArticleSectionImage(
                     $articleSection->id,
-                    $articleSection->mediaId,
+                    $articleSection->media->id,
                 );
             }
             $this->articleDataLayer->deleteArticleSection($articleSection->id);

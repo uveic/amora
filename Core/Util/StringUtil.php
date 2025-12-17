@@ -352,11 +352,11 @@ final class StringUtil
         return $text;
     }
 
-    public static function generateSlug(?string $text = null): string
+    public static function generateSlug(?string $text = null, int $length = 64): string
     {
         $slug = $text
             ? strtolower(self::cleanString($text))
-            : strtolower(self::generateRandomString(64));
+            : strtolower(self::generateRandomString($length));
 
         $count = 0;
         do {

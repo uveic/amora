@@ -526,4 +526,9 @@ readonly class AlbumService
     {
         return $this->albumDataLayer->getTotalAlbums();
     }
+
+    public function getMediaCountForCollectionId(int $collectionId): int
+    {
+        return $this->albumDataLayer->getMediaCountForCollectionId($collectionId);
+    }
 }
