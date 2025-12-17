@@ -105,8 +105,6 @@ class ApiClientUtil
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $errorMessage = curl_error($ch);
 
-        curl_close($ch);
-
         $logger?->logDebug($logPrefix . 'API Request. URL: ' . $url);
         $logger?->logDebug($logPrefix . 'API Request. Data: ' . $data);
         $logger?->logDebug($logPrefix . 'API Response: ' . $responseCode . ' => ' . $response);

@@ -50,8 +50,6 @@ abstract class ApiClientAbstract
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $errorMessage = curl_error($ch);
 
-        curl_close($ch);
-
         $this->logger->logDebug($logPrefix . 'API Response: ' . $responseCode . ' => ' . $response);
 
         if ($response === false) {

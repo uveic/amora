@@ -221,8 +221,6 @@ final class StringUtil
             $response = curl_exec($ch);
             $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-            curl_close($ch);
-
             if ($response === false) {
                 return null;
             }
