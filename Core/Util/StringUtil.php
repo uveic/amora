@@ -431,6 +431,11 @@ final class StringUtil
         return Core::getConfig()->mediaBaseUrl . '/yt_thumbnail/' . $ytVideoId . '.jpg';
     }
 
+    public static function buildYoutubeThumbnailFullDirWithFilename(string $ytVideoId): ?string
+    {
+        return Core::getConfig()->mediaBaseDir . '/yt_thumbnail/' . $ytVideoId . '.jpg';
+    }
+
     public static function buildYoutubeIFrameHtml(string $ytVideoId, bool $autoplay = false): ?string
     {
         if (!$ytVideoId) {
@@ -460,13 +465,17 @@ final class StringUtil
             }
         }
 
+        if (file_exists(self::buildYoutubeThumbnailFullDirWithFilename($ytVideoId))) {
+            return true;
+        }
+
         $count = 0;
         do {
             $filename = $count < 2 ? 'maxresdefault.jpg' : 'hqdefault.jpg';
 
-            $res = copy(
+            $res = @copy(
                 from: 'https://img.youtube.com/vi/' . $ytVideoId . '/' . $filename,
-                to: Core::getConfig()->mediaBaseDir . '/yt_thumbnail/' . $ytVideoId . '.jpg',
+                to: self::buildYoutubeThumbnailFullDirWithFilename($ytVideoId),
             );
             $count++;
         } while (!$res && $count < 4);
