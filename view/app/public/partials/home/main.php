@@ -1,19 +1,29 @@
 <?php
 
 use Amora\App\Entity\AppHtmlHomepageResponseData;
+use Amora\App\Module\Form\Entity\PageContent;
+use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Util\UrlBuilderUtil;
 
 /** @var AppHtmlHomepageResponseData $responseData */
 
-$pageContent = $responseData->pageContent;
-$editLink = $pageContent && $responseData->request->session?->isAdmin()
-    ? '<p><a class="content-edit-button" href="' . UrlBuilderUtil::buildBackofficeContentEditUrl($responseData->siteLanguage, $pageContent->type, $pageContent->language) . '">' . strtolower($responseData->getLocalValue('globalEdit')) . '</a></p>'
+/** @var PageContent $pageContentHomepage */
+$pageContentHomepage = $responseData->pageContentByTypeId[PageContentType::Homepage->value] ?? null;
+
+$editLink = $pageContentHomepage && $responseData->request->session?->isAdmin()
+    ? '<p><a class="content-edit-button" href="' .
+        UrlBuilderUtil::buildBackofficeContentEditUrl(
+            language: $responseData->siteLanguage,
+            contentType: $pageContentHomepage->type,
+            contentTypeLanguage: $pageContentHomepage->language,
+        ) . '">' . strtolower($responseData->getLocalValue('globalEdit')) .
+        '</a></p>'
     : '';
 ?>
   <article class="home-main">
-<?php if ($pageContent?->title) { ?>
-    <h1><?=$pageContent->title?></h1>
+<?php if ($pageContentHomepage?->title) { ?>
+    <h1><?=$pageContentHomepage->title?></h1>
 <?php } ?>
-    <?=$pageContent?->contentHtml?>
+    <?=$pageContentHomepage?->contentHtml?>
     <?=$editLink?>
   </article>

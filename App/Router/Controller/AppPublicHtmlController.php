@@ -67,9 +67,11 @@ final readonly class AppPublicHtmlController extends AppPublicHtmlControllerAbst
             ),
         );
 
-        $pageContent = $this->articleService->getPageContent(
-            type: PageContentType::Homepage,
+        $pageContentByTypeId = $this->articleService->getPageContentByTypeId(
             language: $request->siteLanguage,
+            typeIds: [
+                PageContentType::Homepage->value,
+            ],
         );
 
         return Response::createHtmlResponse(
@@ -79,7 +81,7 @@ final readonly class AppPublicHtmlController extends AppPublicHtmlControllerAbst
                 pagination: $pagination,
                 feedback: $feedback,
                 isPublicPage: true,
-                pageContent: $pageContent,
+                pageContentByTypeId: $pageContentByTypeId,
                 homeArticles: [],
                 blogArticles: $blogArticles,
             ),

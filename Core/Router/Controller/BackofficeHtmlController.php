@@ -754,7 +754,7 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
     }
 
     /**
-     * Endpoint: /backoffice/content-type/{typeId}
+     * Endpoint: /backoffice/content-type/{typeId}/language/{languageIsoCode}
      * Method: GET
      *
      * @param int $typeId
@@ -821,7 +821,9 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
             );
         }
 
-        $collectionMedia = $collectionId ? $this->albumService->filterCollectionMediaBy(collectionIds: [$collectionId]) : [];
+        $collectionMedia = $collectionId
+            ? $this->albumService->filterCollectionMediaBy(collectionIds: [$collectionId])
+            : [];
 
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
         return Response::createHtmlResponse(

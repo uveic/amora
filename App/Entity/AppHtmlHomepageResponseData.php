@@ -2,7 +2,6 @@
 
 namespace Amora\App\Entity;
 
-use Amora\App\Module\Form\Entity\PageContent;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
@@ -15,7 +14,7 @@ class AppHtmlHomepageResponseData extends HtmlResponseDataAbstract
         ?Pagination $pagination = null,
         ?Feedback $feedback = null,
         bool $isPublicPage = false,
-        public readonly ?PageContent $pageContent = null,
+        public readonly array $pageContentByTypeId = [],
         public readonly array $homeArticles = [],
         public readonly array $blogArticles = [],
     ) {

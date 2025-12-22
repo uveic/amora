@@ -6,6 +6,7 @@ use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Router\AppRouter;
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\Language;
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Module\Article\Entity\FeedItem;
@@ -180,6 +181,41 @@ readonly class ArticleService
         );
     }
 
+    public function getPageContentByTypeId(
+        Language $language,
+        array $typeIds = [],
+        ?Language $fallbackLanguage = null
+    ): array {
+        $items = $this->filterPageContentBy(
+            languageIsoCodes: [
+                $language->value,
+                $fallbackLanguage->value ?? Core::getDefaultLanguage()->value,
+            ],
+            typeIds: $typeIds,
+        );
+
+        $fallbackContentByTypeId = [];
+        $output = [];
+
+        /** @var PageContent $item */
+        foreach ($items as $item) {
+            if ($fallbackLanguage && $item->language !== $language) {
+                $fallbackContentByTypeId[$item->language->value] = $item;
+                continue;
+            }
+
+            $output[$item->type->value] = $item;
+        }
+
+        foreach ($typeIds as $typeId) {
+            if (!isset($output[$typeId]) && $fallbackContentByTypeId[$typeId]) {
+                $output[$typeId] = $fallbackContentByTypeId[$typeId];
+            }
+        }
+
+        return $output;
+    }
+
     public function getSectionsForArticleId(int $articleId): array
     {
         return $this->articleDataLayer->getSectionsForArticleId($articleId);
@@ -346,10 +382,9 @@ readonly class ArticleService
         $newSections = [];
         foreach ($sections as $section) {
             $newSectionId = isset($section['id']) ? (int)$section['id'] : null;
-            $sectionType = isset($section['sectionTypeId'])
-                && ArticleSectionType::tryFrom($section['sectionTypeId'])
-                    ? ArticleSectionType::from($section['sectionTypeId'])
-                    : ArticleSectionType::TextParagraph;
+            $sectionType = isset($section['sectionTypeId']) && ArticleSectionType::tryFrom($section['sectionTypeId'])
+                ? ArticleSectionType::from($section['sectionTypeId'])
+                : ArticleSectionType::TextParagraph;
             $contentHtml = isset($section['contentHtml'])
                 ? html_entity_decode($section['contentHtml'])
                 : '';
