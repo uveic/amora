@@ -462,6 +462,13 @@
   color: var(--color-black-hover);
 }
 
+.page-content-container a.background {
+  font-weight: 700;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border: 1px solid var(--color-black);
+}
+
 .collection-main-media-delete-js {
   background-color: var(--color-white);
   cursor: pointer;

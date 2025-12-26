@@ -69,6 +69,11 @@ class PageContent
         ];
     }
 
+    public function isTextEmpty(): bool
+    {
+        return !$this->title && !$this->subtitle && !$this->contentHtml;
+    }
+
     public static function getEmpty(
         User $user,
         Language $language,

@@ -186,30 +186,37 @@ readonly class ArticleService
         array $typeIds = [],
         ?Language $fallbackLanguage = null
     ): array {
+        if (!$fallbackLanguage) {
+            $fallbackLanguage = Core::getDefaultLanguage();
+        }
+
         $items = $this->filterPageContentBy(
             languageIsoCodes: [
                 $language->value,
-                $fallbackLanguage->value ?? Core::getDefaultLanguage()->value,
+                $fallbackLanguage->value,
             ],
             typeIds: $typeIds,
         );
 
-        $fallbackContentByTypeId = [];
+        $fallbackContentItems = [];
         $output = [];
 
         /** @var PageContent $item */
         foreach ($items as $item) {
-            if ($fallbackLanguage && $item->language !== $language) {
-                $fallbackContentByTypeId[$item->language->value] = $item;
+            if ($item->language === $language && !$item->isTextEmpty()) {
+                $output[$item->type->value] = $item;
                 continue;
             }
 
-            $output[$item->type->value] = $item;
+            if ($item->language === $fallbackLanguage) {
+                $fallbackContentItems[] = $item;
+            }
         }
 
-        foreach ($typeIds as $typeId) {
-            if (!isset($output[$typeId]) && $fallbackContentByTypeId[$typeId]) {
-                $output[$typeId] = $fallbackContentByTypeId[$typeId];
+        /** @var PageContent $fallbackContent */
+        foreach ($fallbackContentItems as $fallbackContent) {
+            if (!isset($output[$fallbackContent->type->value])) {
+                $output[$fallbackContent->type->value] = $fallbackContent;
             }
         }
 
