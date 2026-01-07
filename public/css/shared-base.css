@@ -775,6 +775,22 @@ button.is-link,
 }
 /* Form ends here */
 /* Classes for generic use starts here */
+.icon-one-line {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.25rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.two-columns {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .m-t-0 {margin-top: 0 !important;}
 .m-t-025 {margin-top: 0.25rem !important;}
 .m-t-05 {margin-top: 0.5rem !important;}
@@ -806,7 +822,7 @@ button.is-link,
 .m-l-05 {margin-left: 0.5rem !important;}
 .m-l-1 {margin-left: 1rem !important;}
 .m-l-3 {margin-left: 3rem !important;}
-.no-margin {margin: 0 !important;padding: 0 !important;}
+.no-margin {margin: 0 !important;}
 .no-padding {padding: 0 !important;}
 .p-t-0 {padding-top: 0 !important;}
 .p-t-025 {padding-top: 0.25rem !important;}
@@ -856,7 +872,8 @@ button.is-link,
 .min-width-100 {min-width: 100px !important;}
 .min-width-110 {min-width: 110px !important;}
 .min-width-175 {min-width: 175px !important;}
-.border-bottom {border-bottom: 1px solid var(--color-grey-200)}
+.border-bottom {border-bottom: 1px solid var(--color-grey-200);}
+.border-top {border-top: 1px solid var(--color-grey-200);}
 .position-relative {position: relative !important;}
 .space-between { justify-content: space-between !important; }
 .space-around { justify-content: space-around !important; }
@@ -872,22 +889,6 @@ button.is-link,
   white-space: nowrap;
   text-overflow: ellipsis;
   scrollbar-width: none;
-}
-
-.icon-one-line {
-  display: flex;
-  flex-flow: row nowrap;
-  gap: 0.25rem;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.two-columns {
-  display: flex;
-  flex-flow: row nowrap;
-  gap: 1rem;
-  justify-content: space-between;
-  align-items: center;
 }
 
 svg,

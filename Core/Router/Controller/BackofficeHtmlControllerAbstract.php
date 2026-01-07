@@ -202,16 +202,46 @@ readonly abstract class BackofficeHtmlControllerAbstract extends AbstractControl
     abstract protected function getBackofficeContentList(Request $request): Response;
 
     /**
+     * Endpoint: /backoffice/content-type/{contentTypeId}
+     * Method: GET
+     *
+     * @param int $contentTypeId
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getBackofficeContentForTypeList(
+        int $contentTypeId,
+        Request $request
+    ): Response;
+
+    /**
      * Endpoint: /backoffice/content-type/{typeId}/language/{languageIsoCode}
      * Method: GET
      *
      * @param int $typeId
      * @param string $languageIsoCode
+     * @param int|null $sequence
      * @param Request $request
      * @return Response
      */
     abstract protected function getBackofficeContentForTypeEdit(
         int $typeId,
+        string $languageIsoCode,
+        ?int $sequence,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /backoffice/content-type/{contentTypeId}/language/{languageIsoCode}/sequence
+     * Method: GET
+     *
+     * @param int $contentTypeId
+     * @param string $languageIsoCode
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getBackofficeContentTypeSequenceNew(
+        int $contentTypeId,
         string $languageIsoCode,
         Request $request
     ): Response;
@@ -902,6 +932,57 @@ readonly abstract class BackofficeHtmlControllerAbstract extends AbstractControl
         }
     }
 
+    private function validateAndCallGetBackofficeContentForTypeList(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['backoffice', 'content-type', '{contentTypeId}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $contentTypeId = null;
+        if (!isset($pathParams['contentTypeId'])) {
+            $errors[] = [
+                'field' => 'contentTypeId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['contentTypeId'])) {
+                $errors[] = [
+                    'field' => 'contentTypeId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $contentTypeId = (int)$pathParams['contentTypeId'];
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getBackofficeContentForTypeList(
+                $contentTypeId,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getBackofficeContentForTypeList()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
     private function validateAndCallGetBackofficeContentForTypeEdit(Request $request): Response
     {
         $pathParts = $request->pathWithoutLanguage;
@@ -909,6 +990,7 @@ readonly abstract class BackofficeHtmlControllerAbstract extends AbstractControl
             ['backoffice', 'content-type', '{typeId}', 'language', '{languageIsoCode}'],
             $pathParts
         );
+        $queryParams = $request->getParams;
         $errors = [];
 
         $typeId = null;
@@ -938,6 +1020,12 @@ readonly abstract class BackofficeHtmlControllerAbstract extends AbstractControl
             $languageIsoCode = $pathParams['languageIsoCode'] ?? null;
         }
 
+
+        if (isset($queryParams['sequence']) && $queryParams['sequence'] !== '') {
+            $sequence = (int)$queryParams['sequence'];
+        } else {
+            $sequence = null;
+        }
         if ($errors) {
             return Response::createBadRequestResponse(
                 [
@@ -952,11 +1040,74 @@ readonly abstract class BackofficeHtmlControllerAbstract extends AbstractControl
             return $this->getBackofficeContentForTypeEdit(
                 $typeId,
                 $languageIsoCode,
+                $sequence,
                 $request
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in BackofficeHtmlControllerAbstract - Method: getBackofficeContentForTypeEdit()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetBackofficeContentTypeSequenceNew(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['backoffice', 'content-type', '{contentTypeId}', 'language', '{languageIsoCode}', 'sequence'],
+            $pathParts
+        );
+        $errors = [];
+
+        $contentTypeId = null;
+        if (!isset($pathParams['contentTypeId'])) {
+            $errors[] = [
+                'field' => 'contentTypeId',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['contentTypeId'])) {
+                $errors[] = [
+                    'field' => 'contentTypeId',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $contentTypeId = (int)$pathParams['contentTypeId'];
+            }
+        }
+
+        $languageIsoCode = null;
+        if (!isset($pathParams['languageIsoCode'])) {
+            $errors[] = [
+                'field' => 'languageIsoCode',
+                'message' => 'required'
+            ];
+        } else {
+            $languageIsoCode = $pathParams['languageIsoCode'] ?? null;
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getBackofficeContentTypeSequenceNew(
+                $contentTypeId,
+                $languageIsoCode,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeHtmlControllerAbstract - Method: getBackofficeContentTypeSequenceNew()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -1184,12 +1335,32 @@ readonly abstract class BackofficeHtmlControllerAbstract extends AbstractControl
 
         if ($method === 'GET' &&
             $pathParams = $this->pathParamsMatcher(
+                ['backoffice', 'content-type', '{contentTypeId}'],
+                $pathParts,
+                ['fixed', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallGetBackofficeContentForTypeList($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
                 ['backoffice', 'content-type', '{typeId}', 'language', '{languageIsoCode}'],
                 $pathParts,
                 ['fixed', 'fixed', 'int', 'fixed', 'string']
             )
         ) {
             return $this->validateAndCallGetBackofficeContentForTypeEdit($request);
+        }
+
+        if ($method === 'GET' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['backoffice', 'content-type', '{contentTypeId}', 'language', '{languageIsoCode}', 'sequence'],
+                $pathParts,
+                ['fixed', 'fixed', 'int', 'fixed', 'string', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetBackofficeContentTypeSequenceNew($request);
         }
 
         if ($method === 'GET' &&

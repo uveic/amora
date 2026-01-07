@@ -15,7 +15,6 @@ use Amora\Core\Entity\Response\HtmlResponseDataAnalytics;
 use Amora\Core\Entity\Util\DashboardCount;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Entity\Util\QueryOrderBy;
-use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Module\Album\Service\AlbumService;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Analytics\Service\AnalyticsService;
@@ -28,7 +27,7 @@ use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\Article\Value\MediaType;
-use Amora\Core\Module\Article\Value\PageContentSection;
+use Amora\Core\Module\Article\Value\PageContentStatus;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\Mailer\Service\MailerService;
 use Amora\Core\Module\User\Model\User;
@@ -745,10 +744,61 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
         $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
         return Response::createHtmlResponse(
+            template: 'core/backoffice/page-content-type-list',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('pageContentEditTitle'),
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/content-type/{contentTypeId}
+     * Method: GET
+     *
+     * @param int $contentTypeId
+     * @param Request $request
+     * @return Response
+     */
+    protected function getBackofficeContentForTypeList(
+        int $contentTypeId,
+        Request $request
+    ): Response {
+        if (!PageContentType::tryFrom($contentTypeId) && !AppPageContentType::tryFrom($contentTypeId)) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        $pageContentType = PageContentType::tryFrom($contentTypeId)
+            ? PageContentType::from($contentTypeId)
+            : AppPageContentType::from($contentTypeId);
+
+        $statusId = $request->getGetParam('sId');
+        $statusIds = $statusId && PageContentStatus::tryFrom($statusId)
+            ? [PageContentStatus::from($statusId)->value]
+            : [
+                PageContentStatus::Published->value,
+                PageContentStatus::Draft->value,
+            ];
+
+        $pageContentAll = $this->articleService->filterPageContentBy(
+            typeIds: [$contentTypeId],
+            statusIds: $statusIds,
+            queryOptions: new QueryOptions(
+                orderBy: [
+                    new QueryOrderBy('sequence'),
+                ],
+            ),
+        );
+
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+
+        return Response::createHtmlResponse(
             template: 'core/backoffice/page-content-list',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
                 pageTitle: $localisationUtil->getValue('pageContentEditTitle'),
+                pageContentAll: $pageContentAll,
+                pageContentType: $pageContentType,
             ),
         );
     }
@@ -759,12 +809,14 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
      *
      * @param int $typeId
      * @param string $languageIsoCode
+     * @param int|null $sequence
      * @param Request $request
      * @return Response
      */
     protected function getBackofficeContentForTypeEdit(
         int $typeId,
         string $languageIsoCode,
+        ?int $sequence,
         Request $request
     ): Response {
         if (!AppPageContentType::tryFrom($typeId) && !PageContentType::tryFrom($typeId)) {
@@ -782,11 +834,15 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
         $language = Language::from($languageIsoCode);
         $pageContentAll = $this->articleService->filterPageContentBy(
             typeIds: [$type->value],
+            sequence: $sequence,
         );
+
+        if ($sequence && !$pageContentAll) {
+            return Response::createNotFoundResponse($request);
+        }
 
         $collectionId = null;
         $pageContentForLanguage = null;
-        $hasCollection = AppPageContentType::displayContent($type, PageContentSection::Collection);
 
         /** @var PageContent $item */
         foreach ($pageContentAll as $item) {
@@ -803,24 +859,6 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
             }
         }
 
-        if (!$pageContentForLanguage) {
-            $collection = null;
-            if ($hasCollection) {
-                $collection = $collectionId
-                    ? $this->albumService->getCollectionForId($collectionId)
-                    : $this->albumService->storeCollection(Collection::getEmpty());
-            }
-
-            $pageContentForLanguage = $this->articleService->storePageContent(
-                PageContent::getEmpty(
-                    user: $request->session->user,
-                    language: $language,
-                    type: $type,
-                    collection: $collection,
-                ),
-            );
-        }
-
         $collectionMedia = $collectionId
             ? $this->albumService->filterCollectionMediaBy(collectionIds: [$collectionId])
             : [];
@@ -830,10 +868,53 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
             template: 'core/backoffice/page-content-edit',
             responseData: new HtmlResponseDataAdmin(
                 request: $request,
-                pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $pageContentForLanguage->type->name),
+                pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $pageContentForLanguage?->type->name),
                 media: $collectionMedia,
                 pageContentAll: $pageContentAll,
                 pageContent: $pageContentForLanguage,
+                pageContentType: $type,
+                pageContentLanguage: $language,
+            ),
+        );
+    }
+
+    /**
+     * Endpoint: /backoffice/content-type/{contentTypeId}/language/{languageIsoCode}/sequence
+     * Method: GET
+     *
+     * @param int $contentTypeId
+     * @param string $languageIsoCode
+     * @param Request $request
+     * @return Response
+     */
+    protected function getBackofficeContentTypeSequenceNew(
+        int $contentTypeId,
+        string $languageIsoCode,
+        Request $request
+    ): Response {
+        if (!AppPageContentType::tryFrom($contentTypeId) && !PageContentType::tryFrom($contentTypeId)) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        if (!Language::tryFrom($languageIsoCode)) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        $type = AppPageContentType::tryFrom($contentTypeId)
+            ? AppPageContentType::from($contentTypeId)
+            : PageContentType::from($contentTypeId);
+
+        $sequence = $this->articleService->getPageContentMaxSequence(type: $type);
+
+        $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+        return Response::createHtmlResponse(
+            template: 'core/backoffice/page-content-edit',
+            responseData: new HtmlResponseDataAdmin(
+                request: $request,
+                pageTitle: $localisationUtil->getValue('pageContentEditTitle' . $type->name),
+                pageContentType: $type,
+                pageContentLanguage: Language::from($languageIsoCode),
+                pageContentSequence: ++$sequence,
             ),
         );
     }
@@ -847,7 +928,7 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
      */
     protected function getEmailsAdminPage(Request $request): Response
     {
-        $limit = $request->getGetParam('limit') ?? 50;
+        $limit = $request->getGetParam('limit') ?? '50';
 
         $emails = $this->mailerService->filterMailerItemBy(
             queryOptions: new QueryOptions(

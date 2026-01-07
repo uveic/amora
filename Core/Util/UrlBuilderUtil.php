@@ -36,6 +36,8 @@ class UrlBuilderUtil
 
     private const string BACKOFFICE_CONTENT = '/backoffice/content';
     private const string BACKOFFICE_CONTENT_TYPE_EDIT = '/backoffice/content-type/%d/language/%s';
+    private const string BACKOFFICE_CONTENT_TYPE_SEQUENCE_LIST = '/backoffice/content-type/%d';
+    private const string BACKOFFICE_CONTENT_TYPE_SEQUENCE_NEW = '/backoffice/content-type/%d/language/%s/sequence';
 
     private const string BACKOFFICE_EMAILS = '/backoffice/emails';
 
@@ -161,9 +163,27 @@ class UrlBuilderUtil
         Language $language,
         PageContentType|AppPageContentType $contentType,
         Language $contentTypeLanguage,
+        ?int $sequence = null,
     ): string {
         return self::buildBaseUrl($language)
-            . sprintf(self::BACKOFFICE_CONTENT_TYPE_EDIT, $contentType->value, $contentTypeLanguage->value);
+            . sprintf(self::BACKOFFICE_CONTENT_TYPE_EDIT, $contentType->value, $contentTypeLanguage->value)
+            . ($sequence ? '?sequence=' . $sequence : '');
+    }
+
+    public static function buildBackofficeContentTypeSequenceListUrl(
+        Language $language,
+        PageContentType|AppPageContentType $contentType,
+    ): string {
+        return self::buildBaseUrl($language) . sprintf(self::BACKOFFICE_CONTENT_TYPE_SEQUENCE_LIST, $contentType->value);
+    }
+
+    public static function buildBackofficeContentTypeSequenceNewUrl(
+        Language $language,
+        PageContentType|AppPageContentType $contentType,
+        Language $contentTypeLanguage,
+    ): string {
+        return self::buildBaseUrl($language) .
+            sprintf(self::BACKOFFICE_CONTENT_TYPE_SEQUENCE_NEW, $contentType->value, $contentTypeLanguage->value);
     }
 
     public static function buildBackofficeAnalyticsUrl(

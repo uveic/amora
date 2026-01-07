@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Router;
 
+use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\AppUserRole;
 use Amora\Core\Module\Album\Model\Collection;
@@ -11,6 +12,7 @@ use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Album\Value\Template;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Service\MediaService;
+use Amora\Core\Module\Article\Value\PageContentStatus;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\Mailer\Service\MailerService;
 use Amora\Core\Module\User\Value\UserActionType;
@@ -30,6 +32,7 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateCollectio
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateMediaCaptionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateMediaSequenceForCollectionSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSequenceSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdatePageContentSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserRoleSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserStatusSuccessResponse;
@@ -691,7 +694,9 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
      *
      * @param int $contentTypeId
      * @param array $contentItems
+     * @param int $contentStatusId
      * @param string $languageIsoCode
+     * @param int $sequence
      * @param int|null $mainImageId
      * @param int|null $collectionId
      * @param Request $request
@@ -700,7 +705,9 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
     protected function updatePageContent(
         int $contentTypeId,
         array $contentItems,
+        int $contentStatusId,
         string $languageIsoCode,
+        int $sequence,
         ?int $mainImageId,
         ?int $collectionId,
         Request $request
@@ -718,6 +725,14 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
                 success: false,
                 redirect: null,
                 errorMessage: 'Content type ID ID not valid',
+            );
+        }
+
+        if (!PageContentStatus::tryFrom($contentStatusId)) {
+            return new BackofficeApiControllerUpdatePageContentSuccessResponse(
+                success: false,
+                redirect: null,
+                errorMessage: 'Content status ID ID not valid',
             );
         }
 
@@ -743,9 +758,11 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
             );
         }
 
-        $res = $this->articleService->workflowUpdatePageContent(
+        $res = $this->articleService->workflowStoreOrUpdatePageContent(
             user: $request->session->user,
             contentType: $contentType,
+            contentStatus: PageContentStatus::from($contentStatusId),
+            sequence: $sequence,
             contentItems: $contentItems,
             collection: $collection,
             mainImage: $mainImage,
@@ -758,6 +775,47 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
                 language: Language::from($languageIsoCode),
             ) : null,
             errorMessage: $res->isSuccess ? null : $res->message,
+        );
+    }
+
+    /**
+     * Endpoint: /back/content/sequence/from/{pageContentIdFrom}/to/{pageContentIdTo}
+     * Method: PUT
+     *
+     * @param int $pageContentIdFrom
+     * @param int $pageContentIdTo
+     * @param Request $request
+     * @return Response
+     */
+    protected function updatePageContentSequence(
+        int $pageContentIdFrom,
+        int $pageContentIdTo,
+        Request $request
+    ): Response {
+        $pageContent = $this->articleService->filterPageContentBy(
+            ids: [$pageContentIdFrom, $pageContentIdTo],
+        );
+
+        if (count($pageContent) !== 2) {
+            return new BackofficeApiControllerUpdatePageContentSequenceSuccessResponse(
+                success: false,
+                errorMessage: 'Page content not found.',
+            );
+        }
+
+        /** @var PageContent $pageContentFrom */
+        $pageContentFrom = $pageContent[0]->id === $pageContentIdFrom ? $pageContent[0] : $pageContent[1];
+        /** @var PageContent $pageContentTo */
+        $pageContentTo = $pageContent[0]->id === $pageContentIdTo ? $pageContent[0] : $pageContent[1];
+
+        $res = $this->articleService->updatePageContentSequence(
+            pageContentType: $pageContentFrom->type,
+            sequenceFrom: $pageContentFrom->sequence,
+            sequenceTo: $pageContentTo->sequence,
+        );
+
+        return new BackofficeApiControllerUpdatePageContentSequenceSuccessResponse(
+            success: $res,
         );
     }
 

@@ -18,6 +18,7 @@ require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleStatus.php
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/ArticleSectionType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/MediaType.php';
 require_once Core::getPathRoot() . '/Core/Module/Article/Value/MediaStatus.php';
+require_once Core::getPathRoot() . '/Core/Module/Article/Value/PageContentStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/Analytics/Value/EventType.php';
 require_once Core::getPathRoot() . '/Core/Module/Album/Value/AlbumStatus.php';
 require_once Core::getPathRoot() . '/Core/Module/Album/Value/Template.php';
@@ -38,6 +39,7 @@ use Amora\Core\Module\Article\Value\MediaType;
 use Amora\Core\Module\Analytics\DataLayer\AnalyticsDataLayer;
 use Amora\Core\Module\Analytics\AnalyticsCore;
 use Amora\Core\Module\Analytics\Value\EventType;
+use Amora\Core\Module\Article\Value\PageContentStatus;
 use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Module\User\UserCore;
 use Amora\Core\Module\User\Value\UserActionType;
@@ -122,5 +124,10 @@ return [
         database: AlbumCore::getDb(),
         tableName: AlbumDataLayer::ALBUM_TEMPLATE_TABLE,
         tableFieldsToValues: asArray(Template::getAll()),
+    ),
+    new LookupTableSettings(
+        database: ArticleCore::getDb(),
+        tableName: ArticleDataLayer::CONTENT_STATUS_TABLE,
+        tableFieldsToValues: asArray(PageContentStatus::getAll()),
     ),
 ];

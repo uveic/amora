@@ -153,12 +153,19 @@ class Router
         if (isset($backofficeHtmlControllerActions[$action])) {
             if (!Core::isValidBackofficeLanguage($request->siteLanguage)) {
                 $arrayPath = explode('/', $request->path);
+
+                $getParamsArray = [];
+                foreach ($request->getParams as $paramKey => $paramValue) {
+                    $getParamsArray[] = $paramKey . '=' . $paramValue;
+                }
+                $getParamsString = $getParamsArray ? '?' . implode('/', $getParamsArray) : '';
+
                 if (!empty($arrayPath[0]) && strlen($arrayPath[0]) === 2) {
                     $uppercaseLanguage = strtoupper($arrayPath[0]);
                     if (Language::tryFrom($uppercaseLanguage)) {
                         array_shift($arrayPath);
                         return Response::createRedirectResponse(
-                            url: '/' . strtolower(Core::getDefaultBackofficeLanguage()->value) . '/' . implode('/', $arrayPath),
+                            url: '/' . strtolower(Core::getDefaultBackofficeLanguage()->value) . '/' . implode('/', $arrayPath) . $getParamsString,
                         );
                     }
 
@@ -168,7 +175,7 @@ class Router
                 }
 
                 return Response::createRedirectResponse(
-                    url: '/' . strtolower(Core::getDefaultBackofficeLanguage()->value) . '/' . trim($request->path, ' /'),
+                    url: '/' . strtolower(Core::getDefaultBackofficeLanguage()->value) . '/' . trim($request->path, ' /') . $getParamsString,
                 );
             }
 

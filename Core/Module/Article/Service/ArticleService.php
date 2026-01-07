@@ -12,6 +12,7 @@ use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Module\Article\Entity\FeedItem;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Value\PageContentStatus;
 use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Util\Logger;
@@ -171,12 +172,16 @@ readonly class ArticleService
         array $ids = [],
         array $languageIsoCodes = [],
         array $typeIds = [],
+        array $statusIds = [],
+        ?int $sequence = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->articleDataLayer->filterPageContentBy(
             ids: $ids,
             languageIsoCodes: $languageIsoCodes,
             typeIds: $typeIds,
+            statusIds: $statusIds,
+            sequence: $sequence,
             queryOptions: $queryOptions,
         );
     }
@@ -217,6 +222,55 @@ readonly class ArticleService
         foreach ($fallbackContentItems as $fallbackContent) {
             if (!isset($output[$fallbackContent->type->value])) {
                 $output[$fallbackContent->type->value] = $fallbackContent;
+            }
+        }
+
+        return $output;
+    }
+
+    public function getPageContentWithSequence(
+        Language $language,
+        array $typeIds = [],
+        array $statusIds = [],
+        ?Language $fallbackLanguage = null
+    ): array {
+        if (!$fallbackLanguage) {
+            $fallbackLanguage = Core::getDefaultLanguage();
+        }
+
+        $items = $this->filterPageContentBy(
+            languageIsoCodes: [
+                $language->value,
+                $fallbackLanguage->value,
+            ],
+            typeIds: $typeIds,
+            statusIds: $statusIds,
+            queryOptions: new QueryOptions(
+                orderBy: [
+                    new QueryOrderBy('sequence'),
+                ],
+            ),
+        );
+
+        $itemsBySequenceAndLanguage = [];
+        $output = [];
+
+        /** @var PageContent $item */
+        foreach ($items as $item) {
+            $itemsBySequenceAndLanguage[$item->sequence][$item->language->value] = $item;
+        }
+
+        foreach (array_keys($itemsBySequenceAndLanguage) as $sequence) {
+            $main = $itemsBySequenceAndLanguage[$sequence][$language->value] ?? null;
+            if ($main && !$main->isTextEmpty()) {
+                $output[] = $main;
+                continue;
+            }
+
+            /** @var PageContent $fallback */
+            $fallback = $itemsBySequenceAndLanguage[$sequence][$fallbackLanguage->value] ?? null;
+            if ($fallback && !$fallback->isTextEmpty()) {
+                $output[] = $fallback;
             }
         }
 
@@ -631,33 +685,27 @@ readonly class ArticleService
         return $this->articleDataLayer->updatePageContent($pageContent);
     }
 
-    public function workflowUpdatePageContent(
+    public function workflowStoreOrUpdatePageContent(
         User $user,
         PageContentType|AppPageContentType $contentType,
+        PageContentStatus $contentStatus,
+        int $sequence,
         array $contentItems,
         ?Collection $collection,
         ?Media $mainImage,
     ): Feedback {
         return $this->articleDataLayer->getDb()->withTransaction(
-            function () use ($user, $contentType, $contentItems, $collection, $mainImage) {
+            function () use ($user, $contentType, $contentStatus, $sequence, $contentItems, $collection, $mainImage) {
                 $existingPageContent = $this->filterPageContentBy(
                     typeIds: [$contentType->value],
+                    sequence: $sequence,
                 );
 
-                if (!$existingPageContent) {
-                    return new Feedback(
-                        isSuccess: false,
-                        message: 'Page content ID not found',
-                    );
-                }
-
                 $existingPageContentById = [];
-                $existingPageContentByIsoCode = [];
 
                 /** @var PageContent $item */
                 foreach ($existingPageContent as $item) {
                     $existingPageContentById[$item->id] = $item;
-                    $existingPageContentByIsoCode[$item->language->value] = $item;
                 }
 
                 foreach ($contentItems as $contentItem) {
@@ -670,18 +718,16 @@ readonly class ArticleService
                     $id = isset($contentItem['id']) ? (int)$contentItem['id'] : null;
                     $title = StringUtil::sanitiseText($contentItem['title'] ?? null);
                     $subtitle = StringUtil::sanitiseText($contentItem['subtitle'] ?? null);
+                    $excerpt = StringUtil::sanitiseText($contentItem['excerpt'] ?? null);
                     $contentHtml = StringUtil::sanitiseHtml($contentItem['contentHtml'] ?? null);
                     $actionUrl = StringUtil::sanitiseText($contentItem['actionUrl'] ?? null);
 
-                    if (!$id && isset($existingPageContentByIsoCode[$languageIsoCode])) {
-                        $id = $existingPageContentByIsoCode[$languageIsoCode]->id;
-                    }
-
                     $now = new DateTimeImmutable();
-                    $existingPageContent = $id ? ($existingPageContentById[$id] ?? null) : null;
+                    $existingPageContent = $existingPageContentById[$id ?? -1] ?? null;
 
                     $pageContent = new PageContent(
                         id: $id,
+                        status: $contentStatus,
                         user: $user,
                         language: Language::from($languageIsoCode),
                         type: $contentType,
@@ -689,10 +735,12 @@ readonly class ArticleService
                         updatedAt: $now,
                         title: $title,
                         subtitle: $subtitle,
+                        excerpt: $excerpt,
                         contentHtml: $contentHtml,
                         mainImage: $mainImage,
                         actionUrl: $actionUrl,
                         collection: $collection,
+                        sequence: $sequence,
                     );
 
                     $resUpdate = $id
@@ -718,6 +766,23 @@ readonly class ArticleService
 
                 return new Feedback(true);
             }
+        );
+    }
+
+    public function getPageContentMaxSequence(PageContentType|AppPageContentType $type, ?Language $language = null): int
+    {
+        return $this->articleDataLayer->getPageContentMaxSequence(type: $type, language: $language);
+    }
+
+    public function updatePageContentSequence(
+        PageContentType|AppPageContentType $pageContentType,
+        int $sequenceFrom,
+        int $sequenceTo,
+    ): bool {
+        return $this->articleDataLayer->updatePageContentSequence(
+            pageContentType: $pageContentType,
+            sequenceFrom: $sequenceFrom,
+            sequenceTo: $sequenceTo,
         );
     }
 

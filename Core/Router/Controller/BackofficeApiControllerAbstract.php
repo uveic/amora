@@ -28,6 +28,7 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreTagSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdatePageContentSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdatePageContentFailureResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdatePageContentSequenceSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreAlbumSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateAlbumStatusSuccessResponse.php';
@@ -229,7 +230,9 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
      *
      * @param int $contentTypeId
      * @param array $contentItems
+     * @param int $contentStatusId
      * @param string $languageIsoCode
+     * @param int $sequence
      * @param int|null $mainImageId
      * @param int|null $collectionId
      * @param Request $request
@@ -238,9 +241,26 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
     abstract protected function updatePageContent(
         int $contentTypeId,
         array $contentItems,
+        int $contentStatusId,
         string $languageIsoCode,
+        int $sequence,
         ?int $mainImageId,
         ?int $collectionId,
+        Request $request
+    ): Response;
+
+    /**
+     * Endpoint: /back/content/sequence/from/{pageContentIdFrom}/to/{pageContentIdTo}
+     * Method: PUT
+     *
+     * @param int $pageContentIdFrom
+     * @param int $pageContentIdTo
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function updatePageContentSequence(
+        int $pageContentIdFrom,
+        int $pageContentIdTo,
         Request $request
     ): Response;
 
@@ -1199,6 +1219,16 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
             $contentItems = $bodyParams['contentItems'] ?? null;
         }
 
+        $contentStatusId = null;
+        if (!isset($bodyParams['contentStatusId'])) {
+            $errors[] = [
+                'field' => 'contentStatusId',
+                'message' => 'required'
+            ];
+        } else {
+            $contentStatusId = $bodyParams['contentStatusId'] ?? null;
+        }
+
         $languageIsoCode = null;
         if (!isset($bodyParams['languageIsoCode'])) {
             $errors[] = [
@@ -1207,6 +1237,16 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
             ];
         } else {
             $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
+        }
+
+        $sequence = null;
+        if (!isset($bodyParams['sequence'])) {
+            $errors[] = [
+                'field' => 'sequence',
+                'message' => 'required'
+            ];
+        } else {
+            $sequence = $bodyParams['sequence'] ?? null;
         }
 
         $mainImageId = $bodyParams['mainImageId'] ?? null;
@@ -1226,7 +1266,9 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
             return $this->updatePageContent(
                 $contentTypeId,
                 $contentItems,
+                $contentStatusId,
                 $languageIsoCode,
+                $sequence,
                 $mainImageId,
                 $collectionId,
                 $request
@@ -1234,6 +1276,75 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in BackofficeApiControllerAbstract - Method: updatePageContent()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallUpdatePageContentSequence(Request $request): Response
+    {
+        $pathParts = $request->pathWithoutLanguage;
+        $pathParams = $this->getPathParams(
+            ['back', 'content', 'sequence', 'from', '{pageContentIdFrom}', 'to', '{pageContentIdTo}'],
+            $pathParts
+        );
+        $errors = [];
+
+        $pageContentIdFrom = null;
+        if (!isset($pathParams['pageContentIdFrom'])) {
+            $errors[] = [
+                'field' => 'pageContentIdFrom',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['pageContentIdFrom'])) {
+                $errors[] = [
+                    'field' => 'pageContentIdFrom',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $pageContentIdFrom = (int)$pathParams['pageContentIdFrom'];
+            }
+        }
+
+        $pageContentIdTo = null;
+        if (!isset($pathParams['pageContentIdTo'])) {
+            $errors[] = [
+                'field' => 'pageContentIdTo',
+                'message' => 'required'
+            ];
+        } else {
+            if (!is_numeric($pathParams['pageContentIdTo'])) {
+                $errors[] = [
+                    'field' => 'pageContentIdTo',
+                    'message' => 'must be an integer'
+                ];
+            } else {
+                $pageContentIdTo = (int)$pathParams['pageContentIdTo'];
+            }
+        }
+
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->updatePageContentSequence(
+                $pageContentIdFrom,
+                $pageContentIdTo,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: updatePageContentSequence()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -2242,6 +2353,16 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
             )
         ) {
             return $this->validateAndCallUpdatePageContent($request);
+        }
+
+        if ($method === 'PUT' &&
+            $pathParams = $this->pathParamsMatcher(
+                ['back', 'content', 'sequence', 'from', '{pageContentIdFrom}', 'to', '{pageContentIdTo}'],
+                $pathParts,
+                ['fixed', 'fixed', 'fixed', 'fixed', 'int', 'fixed', 'int']
+            )
+        ) {
+            return $this->validateAndCallUpdatePageContentSequence($request);
         }
 
         if ($method === 'POST' &&

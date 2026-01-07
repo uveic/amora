@@ -59,14 +59,12 @@ final readonly class Request
 
     public function getGetParam(string $paramName): ?string
     {
-        $getParams = $this->getParams;
-        return $getParams[$paramName] ?? null;
+        return $this->getParams[$paramName] ?? null;
     }
 
     public function getCookie(string $cookieName): ?string
     {
-        $cookies = $this->cookies;
-        return empty($cookies[$cookieName]) ? null : $cookies[$cookieName];
+        return $this->cookies[$cookieName] ?? null;
     }
 
     private function getArrayPathWithoutLanguage(): array

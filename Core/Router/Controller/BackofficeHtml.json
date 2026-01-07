@@ -357,12 +357,66 @@
         }
       }
     },
+    "/backoffice/content-type/{contentTypeId}": {
+      "get": {
+        "operationId": "getBackofficeContentForTypeList",
+        "parameters": [
+          {
+            "name": "contentTypeId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return HTML",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "/backoffice/content-type/{typeId}/language/{languageIsoCode}": {
       "get": {
         "operationId": "getBackofficeContentForTypeEdit",
         "parameters": [
           {
             "name": "typeId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "languageIsoCode",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "sequence",
+            "in": "query",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return HTML",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/backoffice/content-type/{contentTypeId}/language/{languageIsoCode}/sequence": {
+      "get": {
+        "operationId": "getBackofficeContentTypeSequenceNew",
+        "parameters": [
+          {
+            "name": "contentTypeId",
             "in": "path",
             "required": true,
             "type": "integer"

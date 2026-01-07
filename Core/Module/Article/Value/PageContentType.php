@@ -10,10 +10,12 @@ enum PageContentSection
 {
     case Title;
     case Subtitle;
+    case Excerpt;
     case Content;
     case MainImage;
     case ActionUrl;
     case Collection;
+    case Status;
 }
 
 enum PageContentType: int

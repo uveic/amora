@@ -3,11 +3,14 @@
 namespace Amora\Core\Module\Article\Datalayer;
 
 use Amora\App\Module\Form\Entity\PageContent;
+use Amora\App\Value\AppPageContentType;
+use Amora\App\Value\Language;
 use Amora\Core\Entity\Response\Feedback;
 use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Album\Datalayer\AlbumDataLayer;
 use Amora\Core\Module\Article\Model\ArticlePath;
 use Amora\Core\Module\Article\Model\Media;
+use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\StringUtil;
@@ -44,6 +47,7 @@ class ArticleDataLayer
     private const string CONTENT_TABLE = 'core_content';
     private const string CONTENT_HISTORY_TABLE = 'core_content_history';
     public const string CONTENT_TYPE_TABLE = 'core_content_type';
+    public const string CONTENT_STATUS_TABLE = 'core_content_status';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -283,6 +287,8 @@ class ArticleDataLayer
         array $ids = [],
         array $languageIsoCodes = [],
         array $typeIds = [],
+        array $statusIds = [],
+        ?int $sequence = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -290,6 +296,9 @@ class ArticleDataLayer
         }
 
         $orderByMapping = [
+            'sequence' => 'c.sequence',
+            'type_id' => 'c.type_id',
+            'language_iso_code' => 'c.language_iso_code',
             'id' => 'c.id',
             'updated_at' => 'c.updated_at',
         ];
@@ -298,15 +307,18 @@ class ArticleDataLayer
         $baseSql = 'SELECT ';
         $fields = [
             'c.id AS page_content_id',
+            'c.status_id AS page_content_status_id',
             'c.language_iso_code AS page_content_language_iso_code',
             'c.type_id AS page_content_type_id',
             'c.created_at AS page_content_created_at',
             'c.updated_at AS page_content_updated_at',
             'c.title AS page_content_title',
             'c.subtitle AS page_content_subtitle',
+            'c.excerpt AS page_content_excerpt',
             'c.content_html AS page_content_html',
             'c.action_url AS page_content_action_url',
             'c.main_image_id',
+            'c.sequence AS page_content_sequence',
 
             'u.id AS user_id',
             'u.status_id AS user_status_id',
@@ -381,6 +393,14 @@ class ArticleDataLayer
 
         if ($typeIds) {
             $where .= $this->generateWhereSqlCodeForIds($params, $typeIds, 'c.type_id', 'typeId');
+        }
+
+        if ($statusIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $statusIds, 'c.status_id', 'statusId');
+        }
+
+        if (isset($sequence)) {
+            $where .= $this->generateWhereSqlCodeForIds($params, [$sequence], 'c.sequence', 'sequence');
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
@@ -836,6 +856,91 @@ class ArticleDataLayer
         }
 
         return true;
+    }
+
+    public function getPageContentMaxSequence(PageContentType|AppPageContentType $type, ?Language $language = null): int
+    {
+        $params = [
+            ':typeId' => $type->value,
+        ];
+
+        if ($language) {
+            $params[':languageIsoCode'] = $language->value;
+        }
+
+        return $this->db->fetchColumn(
+            '
+                SELECT COALESCE(MAX(`sequence`), 0)
+                FROM ' . self::CONTENT_TABLE . '
+                WHERE `type_id` = :typeId
+            ' . ($language ? ' AND `language_iso_code` = :languageIsoCode' : ''),
+            $params,
+        );
+    }
+
+    public function updatePageContentSequence(
+        PageContentType|AppPageContentType $pageContentType,
+        int $sequenceFrom,
+        int $sequenceTo
+    ): bool {
+        $resTrans = $this->db->withTransaction(
+            function () use($pageContentType, $sequenceFrom, $sequenceTo) {
+                $pageContentFromBefore = $this->filterPageContentBy(
+                    typeIds: [$pageContentType->value],
+                    sequence: $sequenceFrom,
+                );
+
+                if ($sequenceFrom > $sequenceTo) {
+                    $sql = "
+                        UPDATE " . self::CONTENT_TABLE . "
+                            SET `sequence` = `sequence` + 1
+                        WHERE `sequence` <= :sequenceFrom
+                            AND `sequence` >= :sequenceTo
+                    ";
+                } else {
+                    $sql = "
+                        UPDATE " . self::CONTENT_TABLE . "
+                            SET `sequence` = `sequence` - 1
+                        WHERE `sequence` >= :sequenceFrom
+                            AND `sequence` <= :sequenceTo
+                    ";
+                }
+
+                $params = [
+                    ':sequenceTo' => $sequenceTo,
+                    ':sequenceFrom' => $sequenceFrom,
+                ];
+
+                $resAgain = $this->db->execute($sql, $params);
+
+                if (empty($resAgain)) {
+                    return new Feedback($resAgain);
+                }
+
+                $params = [
+                    ':sequenceTo' => $sequenceTo,
+                ];
+
+                $allKeys = [];
+                /** @var PageContent $pageContent */
+                foreach ($pageContentFromBefore as $key => $pageContent) {
+                    $currentKey = ':pageContentId' . $key;
+                    $allKeys[] = $currentKey;
+                    $params[$currentKey] = $pageContent->id;
+                }
+
+                $sql = "
+                    UPDATE " . self::CONTENT_TABLE . "
+                        SET `sequence` = :sequenceTo
+                    WHERE `id` IN (" . implode(',', $allKeys) . ")
+                ";
+                $res = $this->db->execute($sql, $params);
+
+                return new Feedback($res);
+            }
+        );
+
+        return $resTrans->isSuccess;
     }
 
     public function getTotalArticles(): array

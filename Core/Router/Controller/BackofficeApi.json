@@ -790,6 +790,9 @@
                       "subtitle": {
                         "type": "string"
                       },
+                      "excerpt": {
+                        "type": "string"
+                      },
                       "contentHtml": {
                         "type": "string"
                       },
@@ -802,8 +805,14 @@
                     ]
                   }
                 },
+                "contentStatusId": {
+                  "type": "integer"
+                },
                 "languageIsoCode": {
                   "type": "string"
+                },
+                "sequence": {
+                  "type": "integer"
                 },
                 "mainImageId": {
                   "type": "integer"
@@ -813,6 +822,8 @@
                 }
               },
               "required": [
+                "contentStatusId",
+                "sequence",
                 "contentItems",
                 "languageIsoCode"
               ]
@@ -876,6 +887,48 @@
                       "message"
                     ]
                   }
+                }
+              },
+              "required": [
+                "success"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/back/content/sequence/from/{pageContentIdFrom}/to/{pageContentIdTo}": {
+      "put": {
+        "operationId": "updatePageContentSequence",
+        "parameters": [
+          {
+            "name": "pageContentIdFrom",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "pageContentIdTo",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Acknowledgment",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
                 }
               },
               "required": [

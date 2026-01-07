@@ -1503,6 +1503,8 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
     const mainImageEl = f.querySelector('.media-item');
     const collectionEl = f.querySelector('.collection-container');
     const languageIsoCode = f.querySelector('input[name="languageIsoCode"]').value;
+    const statusId = Number.parseInt(f.querySelector('.page-content-status-dd-option[data-checked="1"]').dataset.value);
+    const sequence = Number.parseInt(f.querySelector('input[name="sequence"]').value);
 
     const items = [];
 
@@ -1510,6 +1512,7 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
       const contentId = li.querySelector('.page-content-id').value;
       const titleContent = li.querySelector('.page-content-title').value.trim();
       const subtitleContent = li.querySelector('.page-content-subtitle').value.trim();
+      const excerptContent = li.querySelector('.page-content-excerpt').value.trim();
       const contentHtml = li.querySelector('.page-content-content-html').value.trim();
       const actionUrl = li.querySelector('.page-content-action-url').value.trim();
 
@@ -1518,6 +1521,7 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
         languageIsoCode: li.dataset.languageIsoCode,
         title: titleContent.length ? titleContent : null,
         subtitle: subtitleContent.length ? subtitleContent : null,
+        excerpt: excerptContent.length ? excerptContent : null,
         contentHtml: contentHtml.length ? contentHtml : null,
         actionUrl: actionUrl.length ? actionUrl : null,
       });
@@ -1528,6 +1532,8 @@ document.querySelectorAll('form#form-page-content').forEach(f => {
       collectionId: collectionEl && collectionEl.dataset.collectionId ? Number.parseInt(collectionEl.dataset.collectionId) : null,
       mainImageId: mainImageEl && mainImageEl.dataset.mediaId ? Number.parseInt(mainImageEl.dataset.mediaId) : null,
       languageIsoCode: languageIsoCode,
+      contentStatusId: statusId,
+      sequence: sequence,
     };
 
     Request.put('/back/content/' + contentTypeId, JSON.stringify(payload))
@@ -1829,6 +1835,29 @@ document.querySelectorAll('.filter-user-submit-js').forEach(bu => {
   });
 });
 
+document.querySelectorAll('.filter-content-type-submit-js').forEach(bu => {
+  bu.addEventListener('click', e => {
+    e.preventDefault();
+
+    const statusId = document.querySelector('select[name="statusId"]').value;
+
+    let query = new URLSearchParams();
+
+    if (statusId.length) {
+      query.append('sId', statusId);
+    }
+
+    if (!query.entries()) {
+      document.querySelector('.filter-container').classList.remove('null');
+      return;
+    }
+
+    const queryString = query.entries() ? '?' + query.toString() : '';
+
+    window.location.href = window.location.origin + window.location.pathname + queryString;
+  });
+});
+
 document.querySelectorAll('.media-select-page-js').forEach(s => {
   s.addEventListener('change', e => {
     e.preventDefault();
@@ -1885,6 +1914,73 @@ document.querySelectorAll('.media-select-page-js').forEach(s => {
         Util.hideFullPageLoadingModal();
       });
   });
+});
+
+const handlePageContentDragLeave = (ev) => {
+  ev.preventDefault();
+  const itemContainer = ev.currentTarget.closest('.page-content-draggable-container');
+  if (itemContainer) {
+    itemContainer.classList.remove('page-content-grabbing-over');
+  }
+};
+
+const handlePageContentDragStart = (ev) => {
+  ev.dataTransfer.setData("text/plain", ev.target.dataset.pageContentId);
+  ev.dataTransfer.dropEffect = "move";
+  ev.target.classList.add('page-content-grabbing');
+
+  document.querySelectorAll('.page-content-draggable-container').forEach(pc => {
+    if (pc.dataset.pageContentId !== ev.target.dataset.pageContentId) {
+      pc.classList.add('page-content-droppable');
+    }
+  });
+};
+
+const handlePageContentDragEnd = (ev) => {
+  ev.preventDefault();
+  document.querySelectorAll('.page-content-grabbing').forEach(v => v.classList.remove('page-content-grabbing'));
+  document.querySelectorAll('.page-content-grabbing-over').forEach(v => v.classList.remove('page-content-grabbing-over'));
+  document.querySelectorAll('.page-content-droppable').forEach(v => v.classList.remove('page-content-droppable'));
+};
+
+const handlePageContentDragOver = (ev) => {
+  ev.preventDefault();
+  if (ev.currentTarget.dataset.pageContentId !== ev.dataTransfer.getData("text/plain")) {
+    ev.currentTarget.classList.add('page-content-grabbing-over');
+  }
+};
+
+const handlePageContentDrop = (ev) => {
+  ev.preventDefault();
+  const droppedOverPageContentId = ev.currentTarget.dataset.pageContentId;
+  const draggedPageContentId = ev.dataTransfer.getData("text/plain");
+
+  if (!draggedPageContentId || !droppedOverPageContentId) {
+    return;
+  }
+
+  if (draggedPageContentId === droppedOverPageContentId) {
+    return;
+  }
+
+  Util.displayFullPageLoadingModal();
+
+  Request.put(
+    '/back/content/sequence/from/' + draggedPageContentId + '/to/' + droppedOverPageContentId,
+    JSON.stringify(data)
+  )
+    .then(() => window.location.reload())
+    .catch(error => Util.notifyError(error))
+    .finally(() => Util.hideFullPageLoadingModal());
+};
+
+document.querySelectorAll('.page-content-draggable-container').forEach(f => {
+  f.addEventListener('dragenter', (ev) => ev.preventDefault());
+  f.addEventListener('dragleave', handlePageContentDragLeave);
+  f.addEventListener('dragover', handlePageContentDragOver);
+  f.addEventListener('dragend', handlePageContentDragEnd);
+  f.addEventListener('dragstart', handlePageContentDragStart);
+  f.addEventListener('drop', handlePageContentDrop);
 });
 
 export {handleGenericMediaDeleteClick, handleGenericSelectMainMediaClick, addMediaToModalContainer};

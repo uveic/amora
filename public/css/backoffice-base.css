@@ -359,7 +359,6 @@
 /* Editor starts here */
 .editor-title,
 .editor-subtitle {
-  margin: 0 0 2rem 0;
   color: var(--color-input-text);
   background-color: var(--color-input-bg);
   border-top: none;
@@ -367,9 +366,13 @@
   border-right: none;
   border-bottom: 1px solid var(--color-input-border);
   padding: 0.5rem 1rem;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   line-height: 1;
   font-weight: 700;
+}
+
+.editor-subtitle {
+  font-size: 1.2rem;
 }
 
 .editor-content figure {
@@ -417,7 +420,9 @@
 }
 
 .content-language-active {
-  display: block;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 2rem;
 }
 
 .content-flag-wrapper {
@@ -1436,9 +1441,7 @@
   display: flex;
   flex-flow: column wrap;
   gap: 0.5rem;
-  border-bottom: 1px solid var(--color-grey-200);
-  padding: 0 0 2.5rem;
-  width: 100%;
+  padding: 0 0 1rem;
 }
 
 .collection-container:first-of-type {
@@ -1713,6 +1716,29 @@
 
 .mail-receiver-email {
   font-size: 0.9rem;
+}
+
+.page-content-draggable-container {
+  cursor: grab;
+}
+
+.page-content-droppable {
+  outline: 1px dashed var(--color-grey-300);
+  background-color: var(--color-grey-100);
+  padding: 0.8rem 1rem !important;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid transparent;
+}
+
+.page-content-grabbing {
+  opacity: 0.5;
+}
+
+.page-content-grabbing-over {
+  outline: 2px solid var(--color-grey-900);
+  padding: 0.8rem 1rem !important;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid transparent;
 }
 
 @keyframes loaderProgressBar {

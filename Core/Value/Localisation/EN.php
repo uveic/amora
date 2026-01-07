@@ -116,6 +116,7 @@ return [
     'globalModify' => 'Modify',
     'globalTitle' => 'Title',
     'globalSubtitle' => 'Subtitle',
+    'globalExcerpt' => 'Excerpt',
     'globalContent' => 'Content',
     'globalName' => 'Name',
     'globalEmail' => 'Email',
@@ -155,6 +156,7 @@ return [
     'globalMore' => 'More...',
     'globalSequence' => 'Sequence',
     'globalSearch' => 'Search',
+    'globalMaxLength' => 'Max length: %d characters.',
 
     'globalUploadImage' => 'Upload image(s)',
     'globalUploadMedia' => 'Upload file(s)',
@@ -178,7 +180,6 @@ return [
     'globalPageGenericErrorTitle' => 'Something Went Wrong',
     'globalPageGenericErrorContent' => '<p><a href="/">Click here to go to the homepage</a>.</p>',
 
-
     'articleStatusDraft' => 'Draft',
     'articleStatusPublished' => 'Published',
     'articleStatusDeleted' => 'Deleted',
@@ -197,6 +198,7 @@ return [
     'pageContentEditTitleBlogBottom' => 'Text that follows a blog post',
     'pageContentEditAction' => 'Action Link',
     'pageContentEditActionHelp' => 'An action button will be displayed if a link is provided.',
+    'pageContentEditAvailableInLanguages' => 'Available in',
 
     'mediaSelectImageForArticle' => 'Select image to add to article',
 

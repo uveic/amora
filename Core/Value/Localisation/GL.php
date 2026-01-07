@@ -116,6 +116,7 @@ return [
     'globalModify' => 'Modificar',
     'globalTitle' => 'Título',
     'globalSubtitle' => 'Subtítulo',
+    'globalExcerpt' => 'Extracto',
     'globalContent' => 'Contido',
     'globalName' => 'Nome',
     'globalEmail' => 'Correo electrónico',
@@ -155,6 +156,7 @@ return [
     'globalMore' => 'Máis...',
     'globalSequence' => 'Posición',
     'globalSearch' => 'Buscar',
+    'globalMaxLength' => 'Lonxitude máxima: %d caracteres.',
 
     'globalUploadImage' => 'Subir imaxe(s)',
     'globalUploadMedia' => 'Subir arquivo(s)',
@@ -196,6 +198,7 @@ return [
     'pageContentEditTitleBlogBottom' => 'Texto despois dun post do blog',
     'pageContentEditAction' => 'Ligazón',
     'pageContentEditActionHelp' => 'Se se proporciona un enderezo web amosarase un botón que convida a ir visitalo.',
+    'pageContentEditAvailableInLanguages' => 'Dispoñible en',
 
     'mediaSelectImageForArticle' => 'Selecciona unha imaxe para engadir ao artigo',
 

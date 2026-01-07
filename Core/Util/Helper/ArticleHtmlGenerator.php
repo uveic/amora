@@ -2,13 +2,16 @@
 
 namespace Amora\Core\Util\Helper;
 
+use Amora\App\Value\Language;
 use Amora\Core\Core;
+use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Article\Model\Article;
 use Amora\Core\Module\Article\Model\ArticleSection;
 use Amora\Core\Module\Article\Value\ArticleSectionType;
 use Amora\Core\Module\Article\Value\ArticleStatus;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Module\Article\Value\PageContentStatus;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
@@ -35,6 +38,32 @@ final class ArticleHtmlGenerator
         return str_contains($responseData->siteUrl, 'articles')
             ? ArticleType::Page
             : ArticleType::Blog;
+    }
+
+    public static function generateDynamicPageContentStatusHtml(
+        HtmlResponseDataAbstract $responseData,
+        PageContentStatus $status,
+        string $identifier = 'page-content-status',
+        string $indentation = '',
+    ): string {
+        $output = [
+            $indentation . '<input type="checkbox" id="' . $identifier . '-dd-checkbox" class="dropdown-menu">',
+            $indentation . '<div class="dropdown-container ' . $identifier . '-container">',
+            $indentation . '  <ul>',
+        ];
+
+        foreach (PageContentStatus::getAll() as $item) {
+            $output[] = $indentation . '    <li><a data-checked="' . ($status === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option ' . $identifier . '-dd-option no-loader ' . $item->getClass() . '"  data-dropdown-identifier="' . $identifier . '" href="#">' . $responseData->getLocalValue('articleStatus' . $item->name) . '</a></li>';
+        }
+
+        $output[] = $indentation . '  </ul>';
+        $output[] = $indentation . '  <label id="' . $identifier . '-dd-label" for="' . $identifier . '-dd-checkbox" data-value="' . $status->value . '" class="dropdown-menu-label ' . $status->getClass() . '">';
+        $output[] = $indentation . '    <span>' . $responseData->getLocalValue('articleStatus' . $status->name) . '</span>';
+        $output[] = $indentation . '    ' . CoreIcons::CARET_DOWN;
+        $output[] = $indentation . '  </label>';
+        $output[] = $indentation . '</div>';
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
     }
 
     public static function generateArticleStatusDropdownSelectHtml(
@@ -199,5 +228,32 @@ final class ArticleHtmlGenerator
         }
 
         return $html . $captionHtml;
+    }
+
+    public static function generateContentTypeFilterFilterInfoHtml(HtmlResponseDataAbstract $responseData): string
+    {
+        $statusIdParam = $responseData->request->getGetParam('sId');
+
+        if (empty($statusIdParam)) {
+            return '';
+        }
+
+        $output = [];
+        $output[] = '      <div class="filter-by">';
+        $output[] = '        <div class="items">';
+        $output[] = '          <span><b>Filtros:</b></span>';
+
+        if (!empty($statusIdParam) && PageContentStatus::tryFrom($statusIdParam)) {
+            $status = PageContentStatus::from($statusIdParam);
+            $output[] = '          <span class="article-status ' . $status->getClass() . '">' . $status->getIcon() . $responseData->getLocalValue('articleStatus' . $status->name) . '</span>';
+        }
+
+        $output[] = '        </div>';
+        $output[] = '        <div class="filter-links">';
+        $output[] = '          <span class="filter-open">' . CoreIcons::PENCIL_SIMPLE . '</span>';
+        $output[] = '        </div>';
+        $output[] = '      </div>';
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
     }
 }
