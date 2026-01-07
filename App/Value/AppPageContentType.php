@@ -43,7 +43,8 @@ enum AppPageContentType: int
         };
     }
 
-    public static function getTitleVariableName(self|PageContentType $type): string {
+    public static function getTitleVariableName(self|PageContentType $type): string
+    {
         return match ($type) {
             PageContentType::Homepage => 'pageContentEditTitleHomepage',
             PageContentType::BlogBottom => 'pageContentEditTitleBlogBottom',
