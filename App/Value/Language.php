@@ -35,7 +35,7 @@ enum Language: string
         $class = $class ? ' ' . $class : '';
         $loadingString = $lazyLoading ? ' loading="lazy"' : '';
 
-        return'<img class="img-svg' . $class . '" width="20" height="20" src="/img/svg/flags/' . $this->value . '.svg" alt="' . $this->getName() . '"' . $loadingString . '>';
+        return'<img class="img-svg' . $class . '" width="20" height="20" src="/img/svg/flags/' . $this->value . '.svg" alt="' . $this->getName() . '"' . $loadingString . ' draggable="false">';
     }
 
     public function getLocale(): string

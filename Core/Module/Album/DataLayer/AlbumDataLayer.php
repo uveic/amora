@@ -235,6 +235,7 @@ class AlbumDataLayer
         $orderByMapping = [
             'sequence' => 'co.sequence',
             'id' => 'co.id',
+            'title' => 'co.title_html',
             'begins_with' => 'begins_with',
             'word_begins_with' => 'word_begins_with',
             'title_contains' => 'title_contains',
