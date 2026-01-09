@@ -46,4 +46,13 @@ enum Language: string
             self::Spanish => 'es_ES',
         };
     }
+
+    public static function getLanguagePriority(): array
+    {
+        return [
+            self::English,
+            self::Spanish,
+            self::Galego,
+        ];
+    }
 }

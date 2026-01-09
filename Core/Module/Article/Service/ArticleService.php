@@ -196,25 +196,36 @@ readonly class ArticleService
         }
 
         $items = $this->filterPageContentBy(
-            languageIsoCodes: [
-                $language->value,
-                $fallbackLanguage->value,
-            ],
             typeIds: $typeIds,
         );
 
         $fallbackContentItems = [];
+        $fallbackNextContentItems = [];
         $output = [];
 
         /** @var PageContent $item */
         foreach ($items as $item) {
-            if ($item->language === $language && !$item->isTextEmpty()) {
+            if ($item->isTextEmpty()) {
+                continue;
+            }
+
+            if ($item->language === $language) {
                 $output[$item->type->value] = $item;
                 continue;
             }
 
             if ($item->language === $fallbackLanguage) {
                 $fallbackContentItems[] = $item;
+                continue;
+            }
+
+            foreach (Language::getLanguagePriority() as $languagePriority) {
+                if ($languagePriority === $language || $languagePriority === $fallbackLanguage) {
+                    continue;
+                }
+
+                $fallbackNextContentItems[] = $item;
+                break;
             }
         }
 
@@ -222,6 +233,13 @@ readonly class ArticleService
         foreach ($fallbackContentItems as $fallbackContent) {
             if (!isset($output[$fallbackContent->type->value])) {
                 $output[$fallbackContent->type->value] = $fallbackContent;
+            }
+        }
+
+        /** @var PageContent $fallbackNext */
+        foreach ($fallbackNextContentItems as $fallbackNext) {
+            if (!isset($output[$fallbackNext->type->value])) {
+                $output[$fallbackNext->type->value] = $fallbackNext;
             }
         }
 
@@ -239,10 +257,6 @@ readonly class ArticleService
         }
 
         $items = $this->filterPageContentBy(
-            languageIsoCodes: [
-                $language->value,
-                $fallbackLanguage->value,
-            ],
             typeIds: $typeIds,
             statusIds: $statusIds,
             queryOptions: new QueryOptions(
@@ -271,6 +285,19 @@ readonly class ArticleService
             $fallback = $itemsBySequenceAndLanguage[$sequence][$fallbackLanguage->value] ?? null;
             if ($fallback && !$fallback->isTextEmpty()) {
                 $output[] = $fallback;
+                continue;
+            }
+
+            foreach (Language::getLanguagePriority() as $languagePriority) {
+                if ($languagePriority === $language || $languagePriority === $fallbackLanguage) {
+                    continue;
+                }
+
+                $fallback = $itemsBySequenceAndLanguage[$sequence][$languagePriority->value] ?? null;
+                if ($fallback && !$fallback->isTextEmpty()) {
+                    $output[] = $fallback;
+                    break;
+                }
             }
         }
 
