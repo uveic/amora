@@ -262,6 +262,11 @@ class Media
         return $this->fileAsHtml();
     }
 
+    public function ratioIsPortrait(): bool
+    {
+        return $this->heightOriginal > $this->widthOriginal;
+    }
+
     private function imageAsHtml(
         ImageSize $size = ImageSize::XSmall,
         string $className = 'media-item',
