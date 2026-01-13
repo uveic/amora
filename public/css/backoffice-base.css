@@ -101,12 +101,6 @@
 }
 
 .activity-container .header {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 1rem;
   color: var(--color-grey-700);
 }
 
@@ -117,7 +111,8 @@
 .activity-container .item {
   display: flex;
   flex-flow: column nowrap;
-  border-bottom: 1px solid var(--color-grey-050);
+  border-bottom: 1px solid var(--color-grey-100);
+  padding-bottom: 1rem;
 }
 
 .activity-container .icon {
@@ -128,7 +123,7 @@
 }
 
 .activity-container .comment {
-  padding: 0.5rem 1.8rem;
+  padding: 1rem 0 0;
   word-break: break-word;
 }
 
@@ -844,6 +839,7 @@
   max-width: revert;
   max-height: revert;
   height: 100vh;
+  background-color: transparent;
 }
 
 .modal-media-close-wrapper svg {
@@ -1678,6 +1674,17 @@
   background-color: var(--color-white);
 }
 /* Album ends here */
+
+.modal-header-black {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  padding: 1rem;
+}
+
+.modal-header-black .modal-close-button svg {
+  fill: var(--color-white);
+  stroke: var(--color-white);
+}
 
 .modal-header-content {
   display: flex;

@@ -40,7 +40,7 @@ final class StringUtil
             '/[’‘‹›‚]/u'    =>   ' ', // Literally a single quote
             '/[“”«»„]/u'    =>   ' ', // Double quote
             '/["\']/u'      =>   ' ', // Quotes
-            '/ /'           =>   ' ', // nonbreaking space (equiv. to 0x160)
+            '/ /'           =>   ' ', // non-breaking space (equiv. to 0x160)
         );
         $text = preg_replace(array_keys($utf8), array_values($utf8), $text);
 
@@ -422,7 +422,11 @@ final class StringUtil
 
     public static function getYoutubeVideoIdFromUrl(string $url): ?string
     {
-        preg_match("#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v/)[^&\n]+(?=\?)|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#", $url, $matches);
+        preg_match(
+            pattern: "#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v/)[^&\n]+(?=\?)|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#",
+            subject: $url,
+            matches: $matches,
+        );
         return $matches[0] ?? null;
     }
 

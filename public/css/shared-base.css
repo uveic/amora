@@ -277,6 +277,8 @@ pre {
 .modal-wrapper {
   position: fixed;
   top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
   height: 100%;
   width: 100%;
@@ -339,8 +341,13 @@ pre {
 }
 
 .modal-display-image .modal-close-button {
-  padding: 0;
-  background-color: var(--color-white);
+  padding: 0.5rem;
+}
+
+.modal-display-image .modal-close-button svg {
+  width: 30px;
+  fill: var(--color-white);
+  stroke: var(--color-white);
 }
 
 .modal-close-link {
@@ -668,10 +675,6 @@ label {
   width: 100%;
   flex-grow: 1;
   flex-shrink: 1;
-}
-
-label:not(:last-child) {
-  margin-bottom: 0.1em;
 }
 
 .help {
