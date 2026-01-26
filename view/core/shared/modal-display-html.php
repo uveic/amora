@@ -1,9 +1,6 @@
 <?php
 
-use Amora\App\Entity\AppManagerHtmlResponseData;
 use Amora\Core\Value\CoreIcons;
-
-/** @var AppManagerHtmlResponseData $responseData */
 
 ?>
     <div class="modal-display-html-js modal-wrapper null">

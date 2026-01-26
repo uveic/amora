@@ -42,8 +42,8 @@ final class StringUtil
             '/["\']/u'      =>   ' ', // Quotes
             '/ /'           =>   ' ', // non-breaking space (equiv. to 0x160)
         );
-        $text = preg_replace(array_keys($utf8), array_values($utf8), $text);
 
+        $text = preg_replace(array_keys($utf8), array_values($utf8), $text);
         $text = preg_replace('/[^A-Za-z0-9\s-]+/', $replaceWith, $text);
 
         if ($keepSpaces) {
@@ -52,9 +52,7 @@ final class StringUtil
             $text = preg_replace('/\s+/', $replaceWith, $text);
         }
 
-        $text = preg_replace('/' . $replaceWith . '+/', $replaceWith, $text);
-
-        return trim($text, ' ' . $replaceWith);
+        return trim($text ?: '', ' ' . $replaceWith);
     }
 
     public static function sanitiseText(?string $text): ?string

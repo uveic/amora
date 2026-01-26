@@ -95,7 +95,7 @@
 .activity-container .item {
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   gap: 1rem;
   border-bottom: 1px solid var(--color-grey-200);
@@ -104,7 +104,6 @@
 
 .activity-container .header {
   align-items: flex-start;
-  width: 100%;
   gap: 0.5rem;
 }
 
@@ -157,12 +156,24 @@
   flex-basis: 100%;
   background-color: white;
   padding: 0;
-  position: relative;
 }
 
 .backoffice-child-header {
   padding: 0.5rem 1rem;
   background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+.backoffice-child-header svg {
+  fill: var(--color-white);
+  stroke: var(--color-white);
+}
+
+.backoffice-child-header a,
+.backoffice-child-header a:visited,
+.backoffice-child-header a:active,
+.backoffice-child-header a:focus,
+.backoffice-child-header a:hover {
   color: var(--color-white);
 }
 
@@ -184,6 +195,18 @@
   flex-grow: 1;
   border: 1px solid var(--color-black);
   padding: 1rem;
+}
+
+.dashboard-number,
+.dashboard-number:hover,
+.dashboard-number:visited,
+.dashboard-number:active,
+.dashboard-number:focus {
+  border: 1px solid var(--color-grey-200);
+  color: var(--color-black);
+  padding: 0.5rem 1rem;
+  gap: 0.75rem !important;
+  font-weight: 500;
 }
 
 .dashboard-card-title,
@@ -619,7 +642,7 @@
   align-items: center;
   justify-content: space-between;
   margin: 1rem;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .filter-form-wrapper>div {
@@ -640,6 +663,15 @@
   flex-grow: 1;
   background-color: var(--color-black);
   color: var(--color-white);
+  cursor: pointer;
+  display: inline-block;
+  white-space: normal;
+  text-align: center;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  min-height: var(--input-height);
+  padding: 1rem;
 }
 
 .filter-button:hover {
