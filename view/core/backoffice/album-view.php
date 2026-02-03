@@ -35,7 +35,7 @@ $publicLinkHtml = $album->status->isPublished()
     : $albumPublicLink;
 
 $this->insert('partials/albums/modal-media-caption-edit', ['responseData' => $responseData]);
-$this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
+$this->insert('../../core/shared/modal-select-image', ['responseData' => $responseData]);
 
 $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
 ?>

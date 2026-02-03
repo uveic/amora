@@ -215,9 +215,9 @@ class UtilClass {
     return result;
   }
 
-  highlightElement(el) {
+  highlightElement(el, timeoutSeconds = 5) {
     el.classList.add('background-highlight');
-    setTimeout(() => {el.classList.remove('background-highlight')}, 5000);
+    setTimeout(() => {el.classList.remove('background-highlight')}, timeoutSeconds * 1000);
   }
 }
 

@@ -231,7 +231,9 @@ class Media
             $this->type === MediaType::Image ||
             $this->type === MediaType::SVG
         ) {
-            return '<img class="media-item" data-media-id="' . $this->id . '" src="' . $this->getPathWithNameMedium() . '" alt="' . $this->buildAltText() . '">';
+            return '<img class="media-item" data-media-id="' .
+                $this->id . '" src="' . $this->getPathWithNameMedium() .
+                '" alt="' . $this->buildAltText() . '">';
         }
 
         return $this->fileAsHtml();
@@ -316,28 +318,33 @@ class Media
         return '<img ' . implode(' ', $output) . '>';
     }
 
-    private function fileAsHtml(): string
+    public function fileAsHtml(bool $includeMediaInfo = true, ?string $className = null): string
     {
         $dateString = DateUtil::formatDateShort(
             date: $this->createdAt,
         );
 
         $output = [
-            '<a href="' . $this->getPathWithNameOriginal() . '" target="_blank" class="media-item" data-media-id="' . $this->id . '">',
+            '<a href="' . $this->getPathWithNameOriginal() . '" target="_blank"' .
+            ' class="media-item' . ($className ? ' ' . $className : '') . '"' .
+            ' data-media-id="' . $this->id . '">',
             '<div class="media-header">',
             $this->type->getIcon(),
             '<span class="media-name">' . $this->filenameSource . '</span>',
             '</div>',
-            '<span class="media-info">',
         ];
 
-        if ($this->user?->getNameOrEmail()) {
-            $output[] = '<span class="media-icon">' . CoreIcons::USER . $this->user?->getNameOrEmail() . '</span>';
+        if ($includeMediaInfo) {
+            $output[] = '<span class="media-info">';
+
+            if ($this->user?->getNameOrEmail()) {
+                $output[] = '<span class="media-icon">' . CoreIcons::USER . $this->user?->getNameOrEmail() . '</span>';
+            }
+
+            $output[] = '<span class="media-icon">' . CoreIcons::CALENDAR_BLANK . $dateString . '</span>';
+            $output[] = '</span>';
         }
 
-        $output[] = '<span class="media-icon">' . CoreIcons::CALENDAR_BLANK . $dateString . '</span>';
-
-        $output[] = '</span>';
         $output[] = '</a>';
 
         return implode(PHP_EOL, $output);

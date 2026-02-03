@@ -21,7 +21,7 @@ $closeLink = $album
 $albumTitle = $album ? $album->titleHtml : '';
 $albumContent = $album ? $album->contentHtml : '';
 
-$this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
+$this->insert('../../core/shared/modal-select-image', ['responseData' => $responseData]);
 
 ?>
   <main>

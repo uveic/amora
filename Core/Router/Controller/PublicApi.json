@@ -44,7 +44,7 @@
     },
     "/papi/log": {
       "post": {
-        "operationId": "logError",
+        "operationId": "logMessage",
         "parameters": [
           {
             "in": "body",
@@ -52,6 +52,9 @@
             "required": true,
             "schema": {
               "properties": {
+                "isError": {
+                  "type": "boolean"
+                },
                 "endpoint": {
                   "type": "string"
                 },
@@ -70,7 +73,10 @@
                 "pageUrl": {
                   "type": "string"
                 }
-              }
+              },
+              "required": [
+                "isError"
+              ]
             }
           }
         ],

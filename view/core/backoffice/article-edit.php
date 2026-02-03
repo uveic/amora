@@ -11,13 +11,15 @@ $article = $responseData->article;
 $articleType = ArticleHtmlGenerator::getArticleType($responseData);
 
 $this->layout('base', ['responseData' => $responseData]);
-$this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
+$this->insert('../../core/shared/modal-select-image', ['responseData' => $responseData]);
 ?>
 <main>
   <div id="feedback" class="feedback null"></div>
   <div class="page-header">
     <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
-    <span class="icon-one-line width-10-grow"><?=CoreIcons::ARTICLE?><span class="ellipsis"><?=$responseData->getLocalValue('globalEdit') . ': ' . $responseData->article->title?></span></span>
+    <span class="icon-one-line width-10-grow"><?=CoreIcons::ARTICLE?>
+      <span class="ellipsis"><?=$article ? $responseData->getLocalValue('globalEdit') . ': ' . $article?->title : 'New Article'?></span>
+    </span>
     <div class="links">
       <a href="<?=UrlBuilderUtil::buildBackofficeArticleListUrl(language: $responseData->siteLanguage)?>"><?=CoreIcons::LIST_BULLETS?></a>
     </div>

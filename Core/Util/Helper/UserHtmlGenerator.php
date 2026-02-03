@@ -142,7 +142,7 @@ final class UserHtmlGenerator
         $output = [];
         $output[] = '      <div class="filter-by">';
         $output[] = '        <div class="items">';
-        $output[] = '          <span><b>Filtros:</b></span>';
+        $output[] = '          <span><b>Filters:</b></span>';
 
         if (!empty($statusIdParam) && UserStatus::tryFrom($statusIdParam)) {
             $status = UserStatus::from($statusIdParam);

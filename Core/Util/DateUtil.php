@@ -308,7 +308,7 @@ final class DateUtil
                     . ($includeDay ? 'jS ' : '')
                     . ($includeMonth ? ($shortMonthName ? 'M' : 'F') : '')
                     . ($includeYear ? ' Y' : '')
-                    . ($includeTime ? ' \a\t ' . $timeFormat : '');
+                    . ($includeTime ? ($includeDayTimeSeparator ? ' \a\t ' : ' ') . $timeFormat : '');
 
                 return $date->format($format);
         }

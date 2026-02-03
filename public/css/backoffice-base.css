@@ -97,40 +97,34 @@
   flex-flow: row wrap;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 1rem;
+  gap: 0.5rem 1rem;
   border-bottom: 1px solid var(--color-grey-200);
   padding-bottom: 1rem;
 }
 
-.activity-container .header {
-  align-items: flex-start;
-  gap: 0.5rem;
-}
-
 .activity-container .header svg {
-  width: 25px;
+  width: 24px;
 }
 
-.activity-container .comment svg {
-  fill: var(--color-grey-600);
-  stroke: var(--color-grey-600);
-}
-
-.activity-container .metadata {
+.metadata {
   flex-grow: 1;
-  justify-content: flex-end;
   color: var(--color-grey-600);
   font-size: 0.8rem;
 }
 
-.activity-container .metadata svg {
+.metadata svg {
   width: 17px;
   fill: var(--color-grey-600);
   stroke: var(--color-grey-600);
 }
 
+.activity-container .title {
+  font-weight: 500;
+}
+
 .activity-container .comment {
-  word-break: break-word;
+  width: 100%;
+  font-size: 0.9rem;
 }
 /* Activity ends here */
 /* Dashboard start */
@@ -343,18 +337,18 @@
 
 .status-draft,
 .status-draft:hover {
-  background-color: var(--color-grey-200);
+  background-color: var(--color-grey-200) !important;
 }
 
 .status-deleted,
 .status-deleted:hover {
-  background-color: var(--color-failure);
+  background-color: var(--color-failure) !important;
   color: var(--color-white) !important;
 }
 
 .status-published,
 .status-published:hover {
-  background-color: var(--color-success);
+  background-color: var(--color-success) !important;
   color: var(--color-white) !important;
 }
 
@@ -368,7 +362,7 @@
 .status-disabled:hover,
 .status-warning,
 .status-warning:hover {
-  background-color: var(--color-warning);
+  background-color: var(--color-warning) !important;
   color: var(--color-black) !important;
 }
 
@@ -501,6 +495,19 @@
 .collection-main-media-delete-js {
   background-color: var(--color-white);
   cursor: pointer;
+}
+
+.image-container .image-container-delete {
+  background-color: var(--color-white);
+  padding: 0.1rem;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  line-height: 1;
+}
+
+.image-container .image-container-delete svg {
+  width: 15px;
 }
 
 .article-save-js {
@@ -794,7 +801,7 @@
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 0.25rem 1rem;
 }
 
 .add-image-header h2 {
@@ -838,6 +845,14 @@
   object-position: center;
   width: 100%;
   height: 100%;
+}
+
+.media-list-original .media-item {
+  object-fit: contain !important;
+}
+
+.media-list-zoom .image-container {
+  width: 50% !important;
 }
 
 .input-file-label {
@@ -1907,6 +1922,10 @@
   #images-list .image-container-shadow,
   #images-list .media-load-more {
     width: 10%;
+  }
+
+  .media-list-zoom .image-container {
+    width: 25% !important;
   }
 
   .collection-container {

@@ -75,10 +75,3 @@ document.querySelectorAll('.nav-dropdown-toggle-label').forEach(el => {
     });
   });
 });
-
-document.querySelectorAll('.modal-close-button').forEach(el => {
-  el.addEventListener('click', e => {
-    e.preventDefault();
-    el.closest('.modal-wrapper').classList.add('null');
-  });
-});

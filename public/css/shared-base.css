@@ -23,6 +23,7 @@
   --color-success-highlight: #97e294;
   --color-private: #51b320;
   --color-highlight: #ff9dc0;
+  --color-highlight-soft: #ffe2ec;
 
   --color-grey-050: #f6f6f6;
   --color-grey-100: #ededed;
@@ -286,7 +287,7 @@ pre {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 299;
+  z-index: 399;
 }
 
 .modal-inner {
@@ -740,6 +741,7 @@ textarea {
 .button:hover {
   outline: 1px solid var(--color-primary-800);
   background-color: var(--color-primary-800);
+  color: var(--color-white);
 }
 
 button.is-link,
@@ -773,8 +775,14 @@ button.is-link,
 }
 
 @keyframes backgroundFadeOut {
-  0%   { background-color: var(--color-highlight); }
-  100% { background-color: transparent; }
+  0% {
+    background-color: var(--color-highlight);
+    outline: 0.5rem solid var(--color-highlight);
+  }
+  100% {
+    background-color: transparent;
+    outline: none;
+  }
 }
 /* Form ends here */
 /* Classes for generic use starts here */
@@ -853,6 +861,7 @@ button.is-link,
 .flex-grow-4 {flex-grow: 4 !important;}
 .flex-align-start {align-items:flex-start;}
 .flex-align-center {align-items:center;}
+.flex-align-stretch {align-items:stretch;}
 .flex-align-end {align-items:flex-end;}
 .gap-0 {gap: 0 !important;}
 .gap-025 { gap: 0.25rem !important; }
@@ -871,6 +880,7 @@ button.is-link,
 .text-one-line {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .text-nowrap {white-space: nowrap;}
 .text-right {text-align: right !important;}
+.text-strong {font-weight: 700;}
 .width-auto {width: auto;}
 .uppercase {text-transform: uppercase;}
 .min-width-100 {min-width: 100px !important;}
@@ -887,9 +897,10 @@ button.is-link,
 .null {display: none !important;}
 .hidden {visibility: hidden;}
 .filter-opacity {filter: opacity(0.25);}
+.ellipsis-wrapper { width: 10px;flex-grow: 1; }
 .ellipsis {
   display: inline-block;
-  overflow: hidden;
+  overflow: auto;
   white-space: nowrap;
   text-overflow: ellipsis;
   scrollbar-width: none;

@@ -15,7 +15,7 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
     public function __construct()
     {
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerPingSuccessResponse.php';
-        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerLogErrorSuccessResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerLogMessageSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerLogCspErrorsSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerUserLoginSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/PublicApiControllerForgotPasswordSuccessResponse.php';
@@ -42,6 +42,7 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
      * Endpoint: /papi/log
      * Method: POST
      *
+     * @param bool $isError
      * @param string|null $endpoint
      * @param string|null $method
      * @param string|null $payload
@@ -51,7 +52,8 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
      * @param Request $request
      * @return Response
      */
-    abstract protected function logError(
+    abstract protected function logMessage(
+        bool $isError,
         ?string $endpoint,
         ?string $method,
         ?string $payload,
@@ -239,7 +241,7 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
         }
     }
 
-    private function validateAndCallLogError(Request $request): Response
+    private function validateAndCallLogMessage(Request $request): Response
     {
         $bodyParams = $request->getBodyPayload();
         $errors = [];
@@ -249,6 +251,16 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
                 'field' => 'payload',
                 'message' => 'required'
             ];
+        }
+
+        $isError = null;
+        if (!isset($bodyParams['isError'])) {
+            $errors[] = [
+                'field' => 'isError',
+                'message' => 'required'
+            ];
+        } else {
+            $isError = $bodyParams['isError'] ?? null;
         }
 
         $endpoint = $bodyParams['endpoint'] ?? null;
@@ -269,7 +281,8 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
         }
 
         try {
-            return $this->logError(
+            return $this->logMessage(
+                $isError,
                 $endpoint,
                 $method,
                 $payload,
@@ -280,7 +293,7 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
             );
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
-                'Unexpected error in PublicApiControllerAbstract - Method: logError()' .
+                'Unexpected error in PublicApiControllerAbstract - Method: logMessage()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -913,7 +926,7 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
                 ['fixed', 'fixed']
             )
         ) {
-            return $this->validateAndCallLogError($request);
+            return $this->validateAndCallLogMessage($request);
         }
 
         if ($method === 'POST' &&

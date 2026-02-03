@@ -16,9 +16,17 @@ use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Value\UserStatus;
 use Amora\Core\Module\User\Value\VerificationType;
+use Amora\Core\Router\Controller\Response\PublicApiControllerForgotPasswordSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerGetBlogPostsSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerGetSearchResultsSuccessResponse;
 use Amora\Core\Router\Controller\Response\PublicApiControllerLogCspErrorsSuccessResponse;
+use Amora\Core\Router\Controller\Response\PublicApiControllerLogMessageSuccessResponse;
+use Amora\Core\Router\Controller\Response\PublicApiControllerPingSuccessResponse;
+use Amora\Core\Router\Controller\Response\PublicApiControllerRequestRegistrationInviteSuccessResponse;
+use Amora\Core\Router\Controller\Response\PublicApiControllerUserLoginSuccessResponse;
+use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordCreationSuccessResponse;
+use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordResetSuccessResponse;
+use Amora\Core\Router\Controller\Response\PublicApiControllerUserRegistrationSuccessResponse;
 use Amora\Core\Util\DateUtil;
 use Amora\Core\Util\Helper\ArticleHtmlGenerator;
 use Amora\Core\Value\QueryOrderDirection;
@@ -36,14 +44,6 @@ use Amora\App\Value\Language;
 use Amora\Core\Entity\Request;
 use Amora\Core\Entity\Response;
 use Amora\Core\Module\User\Service\UserService;
-use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordResetSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerUserRegistrationSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerUserPasswordCreationSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerForgotPasswordSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerLogErrorSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerPingSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerRequestRegistrationInviteSuccessResponse;
-use Amora\Core\Router\Controller\Response\PublicApiControllerUserLoginSuccessResponse;
 
 readonly class PublicApiController extends PublicApiControllerAbstract
 {
@@ -79,6 +79,7 @@ readonly class PublicApiController extends PublicApiControllerAbstract
      * Endpoint: /papi/log
      * Method: POST
      *
+     * @param bool $isError
      * @param string|null $endpoint
      * @param string|null $method
      * @param string|null $payload
@@ -88,7 +89,8 @@ readonly class PublicApiController extends PublicApiControllerAbstract
      * @param Request $request
      * @return Response
      */
-    protected function logError(
+    protected function logMessage(
+        bool $isError,
         ?string $endpoint,
         ?string $method,
         ?string $payload,
@@ -120,12 +122,16 @@ readonly class PublicApiController extends PublicApiControllerAbstract
                 $logMessage .= ' - User agent: ' . $userAgent;
             }
 
-            $this->logger->logError($logMessage);
+            if ($isError) {
+                $this->logger->logError($logMessage);
+            } else {
+                $this->logger->logInfo($logMessage);
+            }
         } catch (Throwable) {
             // Ignore and move on
         }
 
-        return new PublicApiControllerLogErrorSuccessResponse();
+        return new PublicApiControllerLogMessageSuccessResponse();
     }
 
     /**

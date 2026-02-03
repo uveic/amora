@@ -51,7 +51,7 @@ $bulletsLink = $responseData->request->getGetParam('sequence')
 
 $this->layout('base', ['responseData' => $responseData]);
 
-$this->insert('partials/shared/modal-select-image', ['responseData' => $responseData]);
+$this->insert('../core/shared/modal-select-image', ['responseData' => $responseData]);
 ?>
 <main>
   <div class="loading-modal null"><div class="loader"></div></div>

@@ -27,6 +27,10 @@ $count = 0;
         <span class="ellipsis"><?=$responseData->getLocalValue('navAdminImages')?></span>
       </a>
       <div class="links">
+        <span class="media-original-js cursor-pointer frame"><?=CoreIcons::FRAME_CORNERS?></span>
+        <span class="media-original-js cursor-pointer square null"><?=CoreIcons::SQUARE?></span>
+        <span class="media-zoom-js cursor-pointer plus"><?=CoreIcons::MAGNIFYING_GLASS_PLUS?></span>
+        <span class="media-zoom-js cursor-pointer minus null"><?=CoreIcons::MAGNIFYING_GLASS_MINUS?></span>
         <span class="icon-one-line media-page-wrapper">
           <label for="imagesMediaSelectPage"><?=$responseData->getLocalValue('analyticsPage')?></label>
           <select name="imagesMediaSelectPage" id="imagesMediaSelectPage" class="media-select-page-js" data-type-id="<?=MediaType::Image->value?>" data-direction="<?=QueryOrderDirection::ASC->value?>" data-media-query-qty="<?=Core::SQL_QUERY_QTY?>" data-event-listener-action="displayNextImagePopup" data-target-container-id="images-list-main">

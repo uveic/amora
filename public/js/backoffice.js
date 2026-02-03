@@ -3,6 +3,8 @@ import {Request} from './module/Request.js?v=000';
 import {Global} from "./module/localisation.js?v=000";
 import {Uploader} from "./module/Uploader.js?v=000";
 
+const trashSvgIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>';
+
 window.data = {
   mediaCache: [],
   mediaCacheRight: [],
@@ -14,27 +16,37 @@ function addEventListenerAction(media, mediaId, eventListenerAction, targetConta
     media.addEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
     media.removeEventListener('click', handleGenericMainMediaClick);
+    media.removeEventListener('click', handleGenericImageContainerSelectClick);
     media.removeEventListener('click', collectionAddMedia);
   } else if (eventListenerAction === 'insertImageInArticle') {
     media.removeEventListener('click', displayNextImagePopup);
     media.addEventListener('click', insertImageInArticle);
     media.removeEventListener('click', handleGenericMainMediaClick);
+    media.removeEventListener('click', handleGenericImageContainerSelectClick);
     media.removeEventListener('click', collectionAddMedia);
   } else if (eventListenerAction === 'handleGenericMainMediaClick') {
     media.removeEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
     media.addEventListener('click', handleGenericMainMediaClick);
+    media.removeEventListener('click', handleGenericImageContainerSelectClick);
     media.removeEventListener('click', collectionAddMedia);
   } else if (eventListenerAction === 'collectionAddMedia') {
     media.removeEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
     media.removeEventListener('click', handleGenericMainMediaClick);
+    media.removeEventListener('click', handleGenericImageContainerSelectClick);
     media.addEventListener('click', collectionAddMedia);
+  } else if (eventListenerAction === 'handleGenericImageContainerSelectClick') {
+    media.removeEventListener('click', displayNextImagePopup);
+    media.removeEventListener('click', insertImageInArticle);
+    media.removeEventListener('click', handleGenericMainMediaClick);
+    media.addEventListener('click', handleGenericImageContainerSelectClick);
   } else {
     media.removeEventListener('click', displayNextImagePopup);
     media.removeEventListener('click', insertImageInArticle);
     media.removeEventListener('click', handleGenericMainMediaClick);
     media.removeEventListener('click', collectionAddMedia);
+    media.removeEventListener('click', handleGenericImageContainerSelectClick);
   }
 
   media.targetContainerId = targetContainerId;
@@ -154,6 +166,95 @@ function handleGenericMediaDeleteClick(e) {
   b.parentElement.parentElement.removeChild(b.parentElement.parentElement.querySelector('.media-item'));
   b.classList.add('null');
 }
+
+const handleGenericImageContainerDeleteClick = (e) => {
+  e.preventDefault();
+
+  const delRes = window.confirm(Global.get('feedbackDeleteGeneric'));
+  if (!delRes) {
+    return;
+  }
+
+  e.currentTarget.closest('.image-container').remove();
+};
+
+const handleGenericImageContainerSelectClick = (e) => {
+  e.preventDefault();
+
+  const mediaId = e.currentTarget.mediaId;
+  const targetContainerId = e.currentTarget.targetContainerId;
+
+  const mediaContainer = document.querySelector('#' + targetContainerId);
+  if (!mediaContainer) {
+    return;
+  }
+
+  const existingMedia = mediaContainer.querySelector('.media-item[data-media-id="' + mediaId + '"]');
+  if (existingMedia) {
+    Util.highlightElement(existingMedia.closest('.image-container'));
+    document.querySelector('.select-media-modal').classList.add('null');
+    return;
+  }
+
+  const figureContainer = document.createElement('figure');
+  figureContainer.className = 'image-container';
+
+  const sourceImg = document.querySelector('img[data-media-id="' + mediaId + '"]');
+  const newImage = new Image();
+  newImage.src = sourceImg.src;
+  newImage.alt = sourceImg.alt;
+  newImage.title = sourceImg.title;
+  newImage.dataset.mediaId = sourceImg.dataset.mediaId;
+  newImage.srcset = sourceImg.srcset;
+  newImage.className = 'media-item';
+  figureContainer.appendChild(newImage);
+
+  const aEl = document.createElement('a');
+  aEl.href = '#';
+  aEl.className = 'image-container-delete image-container-delete-js';
+  aEl.dataset.mediaId = mediaId;
+  aEl.innerHTML = trashSvgIcon;
+  aEl.addEventListener('click', handleGenericImageContainerDeleteClick);
+
+  figureContainer.appendChild(aEl);
+  mediaContainer.insertAdjacentElement('afterbegin', figureContainer);
+
+  document.querySelector('.select-media-modal').classList.add('null');
+};
+
+document.querySelectorAll('.media-from-camera-js').forEach(im => {
+  im.addEventListener('change', e => {
+    e.preventDefault();
+
+    const resultContainer = document.querySelector('#' + e.currentTarget.dataset.targetContainerId);
+    if (!resultContainer) {
+      Util.notifyError();
+      return;
+    }
+
+    Uploader.uploadMediaAsync(
+      im.files,
+      resultContainer,
+      (response) => {
+        if (response.file.id) {
+          const aEl = document.createElement('a');
+          aEl.href = '#';
+          aEl.className = 'image-container-delete image-container-delete-js';
+          aEl.dataset.mediaId = response.file.id;
+          aEl.innerHTML = trashSvgIcon;
+          aEl.addEventListener('click', handleGenericImageContainerDeleteClick);
+          const mediaEl = resultContainer.querySelector('.media-item[data-media-id="' + response.file.id + '"]');
+          mediaEl.closest('.image-container').appendChild(aEl);
+        }
+      }
+    )
+      .catch(error => Util.notifyError(error));
+  });
+});
+
+document.querySelectorAll('.image-container-delete-js').forEach(m => {
+  m.addEventListener('click', handleGenericImageContainerDeleteClick);
+});
 
 function addMediaToModalContainer(existingModalContainer, mediaId) {
   const existingMedia = document.querySelector('img[data-media-id="' + mediaId + '"]');
@@ -1855,6 +1956,24 @@ document.querySelectorAll('.filter-content-type-submit-js').forEach(bu => {
     const queryString = query.entries() ? '?' + query.toString() : '';
 
     window.location.href = window.location.origin + window.location.pathname + queryString;
+  });
+});
+
+document.querySelectorAll('.media-zoom-js').forEach(mz => {
+  mz.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelectorAll('#images-list').forEach(il => il.classList.toggle('media-list-zoom'));
+    document.querySelector('.media-zoom-js.minus').classList.toggle('null');
+    document.querySelector('.media-zoom-js.plus').classList.toggle('null');
+  });
+});
+
+document.querySelectorAll('.media-original-js').forEach(mz => {
+  mz.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelectorAll('#images-list').forEach(il => il.classList.toggle('media-list-original'));
+    document.querySelector('.media-original-js.square').classList.toggle('null');
+    document.querySelector('.media-original-js.frame').classList.toggle('null');
   });
 });
 

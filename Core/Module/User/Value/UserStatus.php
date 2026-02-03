@@ -46,7 +46,10 @@ enum UserStatus: int
 
     public function asHtml(Language $language): string
     {
-        return '<span class="article-status ' . $this->getClassname() . '">' . $this->getTitle($language) . '</span>';
+        return '<span class="article-status ' .
+            $this->getClassname() . '">' .
+            $this->getIcon() . $this->getTitle($language) .
+            '</span>';
     }
 
     public function isEnabled(): bool

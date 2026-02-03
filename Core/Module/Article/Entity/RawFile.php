@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Article\Entity;
 
+use Amora\Core\Core;
 use Amora\Core\Module\Article\Value\MediaType;
 
 readonly class RawFile
@@ -31,5 +32,13 @@ readonly class RawFile
     public function getPathWithName(): string
     {
         return $this->getPath() . '/' . $this->getName();
+    }
+
+    public function getPublicPathWithName(): string
+    {
+        return Core::getConfig()->mediaBaseUrl .
+            '/' .
+            ($this->extraPath ? $this->extraPath . '/' : '') .
+            $this->getName();
     }
 }
