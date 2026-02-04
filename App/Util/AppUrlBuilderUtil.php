@@ -5,7 +5,7 @@ namespace Amora\App\Util;
 use Amora\App\Value\Language;
 use Amora\Core\Util\UrlBuilderUtil;
 
-final class AppUrlBuilderUtil extends UrlBuilderUtil
+final readonly class AppUrlBuilderUtil extends UrlBuilderUtil
 {
     private const string AUTHORISED_DASHBOARD = '/dashboard';
 

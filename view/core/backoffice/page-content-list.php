@@ -2,6 +2,7 @@
 
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Util\AppUrlBuilderUtil;
+use Amora\App\Value\AppPageContentType;
 use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Util\Helper\ArticleHtmlGenerator;
@@ -41,6 +42,7 @@ $title = $responseData->getLocalValue('pageContentEditTitle' . $responseData->pa
       <span class="back-js cursor-pointer"><?=CoreIcons::CARET_LEFT?></span>
       <span class="icon-one-line width-10-grow"><?=CoreIcons::ARTICLE?><span class="ellipsis"><?=$title?></span></span>
       <div class="links">
+        <a href="<?=AppPageContentType::buildRedirectUrl(type: $responseData->pageContentType, language: $responseData->siteLanguage)?>"><?=CoreIcons::ARROW_SQUARE_OUT?></a>
         <a href="#" class="filter-open no-loader"><?=CoreIcons::FUNNEL?></a>
         <a href="<?=$newUrl?>"><?=CoreIcons::ADD?></a>
       </div>

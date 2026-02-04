@@ -6,7 +6,7 @@ use Amora\App\Util\AppUrlBuilderUtil;
 use Amora\Core\Entity\Util\MenuItem;
 use Amora\Core\Value\CoreMenu;
 
-final class AppMenu
+final readonly class AppMenu
 {
     public static function getAdmin(
         Language $language,

@@ -261,42 +261,45 @@ readonly class ArticleService
             statusIds: $statusIds,
             queryOptions: new QueryOptions(
                 orderBy: [
+                    new QueryOrderBy('type_id'),
                     new QueryOrderBy('sequence'),
                 ],
             ),
         );
 
-        $itemsBySequenceAndLanguage = [];
+        $itemsByTypeSequenceAndLanguage = [];
         $output = [];
 
         /** @var PageContent $item */
         foreach ($items as $item) {
-            $itemsBySequenceAndLanguage[$item->sequence][$item->language->value] = $item;
+            $itemsByTypeSequenceAndLanguage[$item->type->value][$item->sequence][$item->language->value] = $item;
         }
 
-        foreach (array_keys($itemsBySequenceAndLanguage) as $sequence) {
-            $main = $itemsBySequenceAndLanguage[$sequence][$language->value] ?? null;
-            if ($main && !$main->isTextEmpty()) {
-                $output[] = $main;
-                continue;
-            }
-
-            /** @var PageContent $fallback */
-            $fallback = $itemsBySequenceAndLanguage[$sequence][$fallbackLanguage->value] ?? null;
-            if ($fallback && !$fallback->isTextEmpty()) {
-                $output[] = $fallback;
-                continue;
-            }
-
-            foreach (Language::getLanguagePriority() as $languagePriority) {
-                if ($languagePriority === $language || $languagePriority === $fallbackLanguage) {
+        foreach ($itemsByTypeSequenceAndLanguage as $sequenceContent) {
+            foreach (array_keys($sequenceContent) as $sequence) {
+                $main = $sequenceContent[$sequence][$language->value] ?? null;
+                if ($main && !$main->isTextEmpty()) {
+                    $output[] = $main;
                     continue;
                 }
 
-                $fallback = $itemsBySequenceAndLanguage[$sequence][$languagePriority->value] ?? null;
+                /** @var PageContent $fallback */
+                $fallback = $sequenceContent[$sequence][$fallbackLanguage->value] ?? null;
                 if ($fallback && !$fallback->isTextEmpty()) {
                     $output[] = $fallback;
-                    break;
+                    continue;
+                }
+
+                foreach (Language::getLanguagePriority() as $languagePriority) {
+                    if ($languagePriority === $language || $languagePriority === $fallbackLanguage) {
+                        continue;
+                    }
+
+                    $fallback = $sequenceContent[$sequence][$languagePriority->value] ?? null;
+                    if ($fallback && !$fallback->isTextEmpty()) {
+                        $output[] = $fallback;
+                        break;
+                    }
                 }
             }
         }

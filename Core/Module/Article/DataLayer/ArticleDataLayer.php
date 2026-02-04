@@ -162,7 +162,12 @@ class ArticleDataLayer
         }
 
         if ($languageIsoCodes) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $languageIsoCodes, 'a.language_iso_code', 'languageIsoCode');
+            $where .= $this->generateWhereSqlCodeForIds(
+                params: $params,
+                ids: $languageIsoCodes,
+                dbColumnName: 'a.language_iso_code',
+                keyName: 'languageIsoCode',
+            );
         }
 
         if ($statusIds) {
@@ -388,7 +393,12 @@ class ArticleDataLayer
         }
 
         if ($languageIsoCodes) {
-            $where .= $this->generateWhereSqlCodeForIds($params, $languageIsoCodes, 'c.language_iso_code', 'languageIsoCode');
+            $where .= $this->generateWhereSqlCodeForIds(
+                params: $params,
+                ids: $languageIsoCodes,
+                dbColumnName: 'c.language_iso_code',
+                keyName: 'languageIsoCode',
+            );
         }
 
         if ($typeIds) {
@@ -670,7 +680,12 @@ class ArticleDataLayer
         }
 
         if ($sectionTypeId) {
-            $where .= $this->generateWhereSqlCodeForIds($params, [$sectionTypeId], 'aSec.article_section_type_id', 'articleSectionTypeId');
+            $where .= $this->generateWhereSqlCodeForIds(
+                params: $params,
+                ids: [$sectionTypeId],
+                dbColumnName: 'aSec.article_section_type_id',
+                keyName: 'articleSectionTypeId',
+            );
         }
 
         $orderByAndLimit = $this->generateOrderByAndLimitCode($queryOptions, $orderByMapping);
@@ -884,7 +899,7 @@ class ArticleDataLayer
         int $sequenceTo
     ): bool {
         $resTrans = $this->db->withTransaction(
-            function () use($pageContentType, $sequenceFrom, $sequenceTo) {
+            function () use ($pageContentType, $sequenceFrom, $sequenceTo) {
                 $pageContentFromBefore = $this->filterPageContentBy(
                     typeIds: [$pageContentType->value],
                     sequence: $sequenceFrom,
@@ -896,6 +911,7 @@ class ArticleDataLayer
                             SET `sequence` = `sequence` + 1
                         WHERE `sequence` <= :sequenceFrom
                             AND `sequence` >= :sequenceTo
+                            AND `type_id` = :typeId
                     ";
                 } else {
                     $sql = "
@@ -903,12 +919,14 @@ class ArticleDataLayer
                             SET `sequence` = `sequence` - 1
                         WHERE `sequence` >= :sequenceFrom
                             AND `sequence` <= :sequenceTo
+                            AND `type_id` = :typeId
                     ";
                 }
 
                 $params = [
                     ':sequenceTo' => $sequenceTo,
                     ':sequenceFrom' => $sequenceFrom,
+                    ':typeId' => $pageContentType->value,
                 ];
 
                 $resAgain = $this->db->execute($sql, $params);

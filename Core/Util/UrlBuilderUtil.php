@@ -10,7 +10,7 @@ use Amora\Core\Module\Analytics\Value\Period;
 use Amora\Core\Module\Article\Value\ArticleType;
 use Amora\Core\Module\Article\Value\PageContentType;
 
-class UrlBuilderUtil
+readonly class UrlBuilderUtil
 {
     // Backoffice URLs
     private const string BACKOFFICE_DASHBOARD_URL_PATH = '/backoffice/dashboard';
