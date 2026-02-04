@@ -241,7 +241,7 @@ final class ArticleHtmlGenerator
         $output = [];
         $output[] = '      <div class="filter-by">';
         $output[] = '        <div class="items">';
-        $output[] = '          <span><b>Filters:</b></span>';
+        $output[] = '          <span><b>' . $responseData->getLocalValue('formFilterTitle') . 's:</b></span>';
 
         if (!empty($statusIdParam) && PageContentStatus::tryFrom($statusIdParam)) {
             $status = PageContentStatus::from($statusIdParam);
