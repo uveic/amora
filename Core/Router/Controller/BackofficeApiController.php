@@ -124,7 +124,7 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
         }
 
         $existingUser = $this->userService->getUserForEmail($email);
-        if (!$existingUser) {
+        if ($existingUser) {
             return new BackofficeApiControllerStoreUserSuccessResponse(
                 success: false,
                 errorMessage: $localisationUtil->getValue('authenticationRegistrationErrorExistingEmail'),
