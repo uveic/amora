@@ -5,7 +5,7 @@ namespace Amora\Core\Util;
 use Amora\Core\Entity\Util\UserAgentInfo;
 use Random\RandomException;
 
-final class UserAgentParserUtil
+final readonly class UserAgentParserUtil
 {
     public const string PLATFORM = 'platform';
     public const string BROWSER  = 'browser';

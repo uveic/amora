@@ -7,7 +7,7 @@ use Amora\App\Value\Language;
 use Amora\Core\Core;
 use Throwable;
 
-final class StringUtil
+final readonly class StringUtil
 {
     public static function cleanString(
         string $text,

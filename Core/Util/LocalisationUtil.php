@@ -5,13 +5,13 @@ namespace Amora\Core\Util;
 use Amora\Core\Core;
 use Amora\App\Value\Language;
 
-final class LocalisationUtil
+final readonly class LocalisationUtil
 {
     private array $values;
 
     public function __construct(
-        private readonly Logger $logger,
-        public readonly Language $language,
+        private Logger $logger,
+        public Language $language,
     ) {
         $this->values = $this->loadValues($this->language);
     }

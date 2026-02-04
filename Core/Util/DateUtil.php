@@ -13,7 +13,7 @@ use DateTimeZone;
 use Exception;
 use Throwable;
 
-final class DateUtil
+final readonly class DateUtil
 {
     public const string MYSQL_DATETIME_FORMAT = 'Y-m-d H:i:s';
 

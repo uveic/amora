@@ -19,7 +19,7 @@ readonly class ApiResponse
     }
 }
 
-class ApiClientUtil
+final readonly class ApiClientUtil
 {
     public static function post(
         string $url,

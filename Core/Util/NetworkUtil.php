@@ -2,7 +2,7 @@
 
 namespace Amora\Core\Util;
 
-final class NetworkUtil
+final readonly class NetworkUtil
 {
 //    /**
 //     * @var Reader Cached Reader instance for IP Country lookups

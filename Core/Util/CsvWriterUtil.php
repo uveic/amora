@@ -4,7 +4,7 @@ namespace Amora\Core\Util;
 
 use Amora\Core\Core;
 
-final class CsvWriterUtil
+final readonly class CsvWriterUtil
 {
     public static function write(
         string $fileName,
