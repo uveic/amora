@@ -1110,15 +1110,24 @@ function updateModalMediaSelectInnerHtml(selectInnerHtml, eventListenerAction, t
 function deleteImage(e) {
   e.preventDefault();
 
-  const mediaId = e.currentTarget.dataset.mediaId;
   const delRes = window.confirm(Global.get('feedbackDeleteImageConfirmation'));
   if (!delRes) {
     return;
   }
 
+  const mediaId = Number.parseInt(e.currentTarget.dataset.mediaId);
+
   Request.delete('/api/file/' + mediaId)
     .then(() => {
-      document.querySelector(".media-item[data-media-id='" + mediaId + "']").parentElement.classList.add('null');
+      const mediaEl = document.querySelector(`.media-item[data-media-id="${mediaId}"]`);
+      if (mediaEl) {
+        mediaEl.closest('.image-container').remove();
+      }
+
+      window.data.mediaCacheLeft = [];
+      window.data.mediaCacheRight = [];
+      window.data.mediaCache = [];
+
       document.querySelector('.modal-media').classList.add('null');
     });
 }

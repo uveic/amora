@@ -22,16 +22,16 @@ $navBarArguments = [
 
 ?>
 <!DOCTYPE html>
-<html lang="<?=$this->e(strtolower($responseData->siteLanguage->value))?>">
+<html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="<?=$this->e($responseData->pageDescription)?>">
+  <meta name="description" content="<?=$responseData->pageDescription?>">
 <?php if ($responseData->themeColourHex) { ?>
   <meta name="theme-color" content="<?=$responseData->themeColourHex?>"/>
 <?php } ?>
-  <title><?=$this->e($responseData->getPageTitle())?></title>
+  <title><?=$responseData->getPageTitle()?></title>
   <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/img/favicon/favicon-512x512.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/favicon-192x192.png">

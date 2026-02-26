@@ -725,10 +725,15 @@ textarea {
   min-height: 120px;
 }
 
-.button {
+.button,
+.button:hover,
+.button:visited,
+.button:focus,
+.button:active {
+  width: auto;
+  margin: 0;
   min-width: 80px;
   cursor: pointer;
-  display: inline-block;
   white-space: normal;
   text-align: center;
   -webkit-appearance: none;
@@ -736,6 +741,11 @@ textarea {
   background-color: var(--color-primary-700);
   color: var(--color-white);
   border: none;
+}
+
+.button svg {
+  fill: var(--color-white);
+  stroke: var(--color-white);
 }
 
 .button:hover {
@@ -767,6 +777,11 @@ button.is-link,
 
 .is-danger {
   color: var(--color-failure) !important;
+}
+
+.is-danger svg {
+  fill: var(--color-failure);
+  stroke: var(--color-failure);
 }
 
 .background-highlight {
@@ -863,6 +878,7 @@ button.is-link,
 .flex-align-center {align-items:center;}
 .flex-align-stretch {align-items:stretch;}
 .flex-align-end {align-items:flex-end;}
+.flex-justify-center {justify-content: center;}
 .gap-0 {gap: 0 !important;}
 .gap-025 { gap: 0.25rem !important; }
 .gap-05 { gap: 0.5rem !important; }

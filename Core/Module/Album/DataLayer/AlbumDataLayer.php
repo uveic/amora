@@ -10,6 +10,7 @@ use Amora\Core\Module\Album\Model\CollectionMedia;
 use Amora\Core\Module\Album\Model\AlbumSlug;
 use Amora\Core\Module\Album\Value\AlbumStatus;
 use Amora\Core\Module\Article\Datalayer\MediaDataLayer;
+use Amora\Core\Module\Article\Value\MediaStatus;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Database\MySqlDb;
 use Amora\Core\Util\DateUtil;
@@ -359,7 +360,9 @@ class AlbumDataLayer
             'collection_id' => 'cm.collection_id',
         ];
 
-        $params = [];
+        $params = [
+            ':mediaStatusActiveId' => MediaStatus::Active->value,
+        ];
         $baseSql = 'SELECT ';
         $fields = [
             'cm.id AS collection_media_id',
@@ -401,7 +404,8 @@ class AlbumDataLayer
         ];
 
         $joins = ' FROM ' . self::COLLECTION_MEDIA_TABLE . ' AS cm';
-        $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE . ' AS m ON m.id = cm.media_id';
+        $joins .= ' INNER JOIN ' . MediaDataLayer::MEDIA_TABLE
+            . ' AS m ON m.id = cm.media_id AND m.status_id = :mediaStatusActiveId';
         $joins .= ' LEFT JOIN ' . MediaDataLayer::MEDIA_EXIF_TABLE . ' AS me ON me.media_id = m.id';
 
         $where = ' WHERE 1';
