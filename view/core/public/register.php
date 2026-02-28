@@ -24,7 +24,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
     <form method="POST" id="form-register" class="form-login-workflow-js">
       <div>
         <h1 id="register-title" class="m-b-3"><?=$siteLogoHtml?></h1>
-        <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationRegisterSubtitle'))?></h2>
+        <h2 id="register-subtitle"><?=$responseData->getLocalValue('authenticationRegisterSubtitle')?></h2>
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationRegisterAlreadyLogin')?> <a href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('navSignIn')?></a>.</p>
         <div class="field">
           <div class="control">
@@ -41,7 +41,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
         <div class="field">
           <p class="control has-icons-left">
             <label for="password" class="null">Name</label>
-            <input class="input" id="password" name="password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderCreatePassword')?>" minlength="<?=$this->e(Core::USER_PASSWORD_MIN_LENGTH)?>">
+            <input class="input" id="password" name="password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderCreatePassword')?>" minlength="<?=Core::USER_PASSWORD_MIN_LENGTH?>">
           </p>
           <p class="help"><span class="is-danger"></span><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
         </div>
@@ -51,7 +51,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
         </div>
         <div class="field">
           <p class="control">
-            <input class="button is-success" type="submit" value="<?=$this->e($responseData->getLocalValue('navSignUp'))?>">
+            <input class="button is-success width-100" type="submit" value="<?=$responseData->getLocalValue('navSignUp')?>">
           </p>
         </div>
       </div>

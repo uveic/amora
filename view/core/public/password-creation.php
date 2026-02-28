@@ -37,27 +37,27 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
           <div class="field">
             <p class="control has-icons-left">
               <label for="password" class="null">Password</label>
-              <input class="input" id="password" name="password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>" required>
+              <input class="input" id="password" name="password" type="password" autocomplete="new-password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>" required>
             </p>
             <p class="help"><span class="is-danger"></span><?=$responseData->getLocalValue('authenticationRegisterPasswordHelp')?></p>
           </div>
           <div class="field">
             <p class="control has-icons-left">
               <label for="passwordConfirmation" class="null">Password confirmation</label>
-              <input class="input" id="passwordConfirmation" name="passwordConfirmation" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>" required>
+              <input class="input" id="passwordConfirmation" name="passwordConfirmation" autocomplete="new-password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>" required>
             </p>
           </div>
           <div id="login-failure-message" class="is-failure m-t-1 null"></div>
           <div class="field">
             <p class="control">
-              <input class="button is-success" type="submit" value="<?=$responseData->getLocalValue('formPasswordCreateAction')?>">
+              <input class="button is-success width-100" type="submit" value="<?=$responseData->getLocalValue('formPasswordCreateAction')?>">
             </p>
           </div>
         </div>
       </div>
       <div id="password-reset-success" class="field null">
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationPasswordCreationActionSuccess')?></p>
-        <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('authenticationActionHomeLink')?></a>
+        <a class="button is-success width-100" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('authenticationActionHomeLink')?></a>
       </div>
     </form>
   </div>

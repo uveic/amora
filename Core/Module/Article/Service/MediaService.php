@@ -40,7 +40,7 @@ readonly class MediaService
     ) {
     }
 
-    public function storeMedia(Media $item): Media
+    public function storeMedia(Media $item): ?Media
     {
         return $this->mediaDataLayer->storeMedia($item);
     }
@@ -295,6 +295,12 @@ readonly class MediaService
                     }
 
                     $output = $this->storeMedia($processedMedia);
+                    if (!$output) {
+                        return new Feedback(
+                            isSuccess: false,
+                            message: 'Error storing media',
+                        );
+                    }
 
                     return new Feedback(
                         isSuccess: true,
@@ -490,8 +496,8 @@ readonly class MediaService
     public function generateModalMediaSelectInnerHtml(int $lastPage): string
     {
         $output = '';
-        for ($i = $lastPage; $i >= 1 ; $i--) {
-            $output.= '<option value="' . $i . '"' . ($i === $lastPage ? ' selected' : '') . '>' . $i . '</option>';
+        for ($i = $lastPage; $i >= 1; $i--) {
+            $output .= '<option value="' . $i . '"' . ($i === $lastPage ? ' selected' : '') . '>' . $i . '</option>';
         }
 
         return $output;

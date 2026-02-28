@@ -108,7 +108,7 @@ final class CoreMenu
             $output[] = new MenuItem(
                 path: UrlBuilderUtil::buildAppDashboardUrl($language),
                 text: $localisationUtil->getValue('navAuthorisedDashboard'),
-                sequence: 0,
+                sequence: 101,
             );
         }
 

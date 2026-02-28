@@ -118,6 +118,7 @@ return [
     'globalSubtitle' => 'Subtitle',
     'globalExcerpt' => 'Excerpt',
     'globalContent' => 'Content',
+    'globalDescription' => 'Description',
     'globalName' => 'Name',
     'globalEmail' => 'Email',
     'globalPassword' => 'Password',

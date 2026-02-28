@@ -23,18 +23,18 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
     <form method="POST" id="form-login-forgot" class="form-login-workflow-js">
       <div>
         <h1 id="register-title" class="m-b-3"><?=$siteLogoHtml?></h1>
-        <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationForgotPassword'))?></h2>
+        <h2 id="register-subtitle"><?=$responseData->getLocalValue('authenticationForgotPassword')?></h2>
         <div id="register-form">
-          <p class="m-b-3"><?=$this->e($responseData->getLocalValue('authenticationForgotPasswordSubtitle'))?></p>
+          <p class="m-b-3"><?=$responseData->getLocalValue('authenticationForgotPasswordSubtitle')?></p>
           <div class="field">
             <p class="control">
               <label for="email" class="null">Email</label>
-              <input class="input" id="email" name="email" type="email" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderEmail'))?>" required>
+              <input class="input" id="email" name="email" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" required>
             </p>
           </div>
           <div class="field">
             <p class="control">
-              <input class="button is-success" type="submit" value="<?=$this->e($responseData->getLocalValue('authenticationForgotPasswordAction'))?>">
+              <input class="button is-success width-100" type="submit" value="<?=$responseData->getLocalValue('authenticationForgotPasswordAction')?>">
             </p>
           </div>
         </div>
@@ -42,7 +42,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
       <div id="login-failure-message" class="is-failure m-t-1 null"></div>
       <div id="register-back-login" class="field null">
         <p class="m-b-3"><?=$responseData->getLocalValue('authenticationForgotPasswordActionSuccess')?></p>
-        <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$this->e($responseData->getLocalValue('authenticationActionHomeLink'))?></a>
+        <a class="button is-success" href="<?=UrlBuilderUtil::buildPublicLoginUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('authenticationActionHomeLink')?></a>
       </div>
     </form>
   </div>

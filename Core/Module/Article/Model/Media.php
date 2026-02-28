@@ -318,36 +318,42 @@ class Media
         return '<img ' . implode(' ', $output) . '>';
     }
 
-    public function fileAsHtml(bool $includeMediaInfo = true, ?string $className = null): string
-    {
+    public function fileAsHtml(
+        bool $includeMediaInfo = true,
+        ?string $className = null,
+        string $indentation = '',
+        string $separator = PHP_EOL,
+    ): string {
         $dateString = DateUtil::formatDateShort(
             date: $this->createdAt,
         );
 
         $output = [
-            '<a href="' . $this->getPathWithNameOriginal() . '" target="_blank"' .
-            ' class="media-item' . ($className ? ' ' . $className : '') . '"' .
-            ' data-media-id="' . $this->id . '">',
-            '<div class="media-header">',
-            $this->type->getIcon(),
-            '<span class="media-name">' . $this->filenameSource . '</span>',
-            '</div>',
+            $indentation . '<a href="' . $this->getPathWithNameOriginal() . '" target="_blank"' .
+                ' class="media-item' . ($className ? ' ' . $className : '') . '"' .
+                ' data-media-id="' . $this->id . '">',
+            $indentation . '  <span class="media-header">',
+            $indentation . '    ' . $this->type->getIcon(),
+            $indentation . '    <span class="media-name">' . $this->filenameSource . '</span>',
+            $indentation . '  </span>',
         ];
 
         if ($includeMediaInfo) {
-            $output[] = '<span class="media-info">';
+            $output[] = '  <span class="media-info">';
 
             if ($this->user?->getNameOrEmail()) {
-                $output[] = '<span class="media-icon">' . CoreIcons::USER . $this->user?->getNameOrEmail() . '</span>';
+                $output[] = '    <span class="media-icon">'
+                    . CoreIcons::USER . $this->user?->getNameOrEmail()
+                    . '</span>';
             }
 
-            $output[] = '<span class="media-icon">' . CoreIcons::CALENDAR_BLANK . $dateString . '</span>';
-            $output[] = '</span>';
+            $output[] = '    <span class="media-icon">' . CoreIcons::CALENDAR_BLANK . $dateString . '</span>';
+            $output[] = '  </span>';
         }
 
-        $output[] = '</a>';
+        $output[] = $indentation . '</a>';
 
-        return implode(PHP_EOL, $output);
+        return implode($separator, $output) . $separator;
     }
 
     private function buildDirPath(): string

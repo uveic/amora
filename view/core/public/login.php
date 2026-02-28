@@ -23,24 +23,24 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
     <form method="POST" id="form-login" class="form-login-workflow-js">
       <div>
         <h1 id="register-title" class="m-t-2 m-b-3"><?=$siteLogoHtml?></h1>
-        <h2 id="register-subtitle"><?=$this->e($responseData->getLocalValue('authenticationLoginSubtitle'))?></h2>
+        <h2 id="register-subtitle"><?=$responseData->getLocalValue('authenticationLoginSubtitle')?></h2>
         <p class="m-b-3"></p>
         <div class="field">
           <p class="control">
             <label for="user" class="null">User</label>
-            <input class="input" id="user" name="user" type="email" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderEmail'))?>" required>
+            <input class="input" id="user" name="user" type="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" required>
           </p>
         </div>
         <div class="field">
           <p class="control">
             <label for="password" class="null">Password</label>
-            <input class="input" id="password" name="password" type="password" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderPassword'))?>" required>
+            <input class="input" id="password" name="password" type="password" autocomplete="current-password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPassword')?>" required>
           </p>
         </div>
         <div id="login-failure-message" class="is-failure m-t-1 null"></div>
         <div class="field">
           <p class="control">
-            <input class="button is-success" type="submit" value="<?=$this->e($responseData->getLocalValue('formLoginAction'))?>">
+            <input class="button is-success width-100" type="submit" value="<?=$responseData->getLocalValue('formLoginAction')?>">
           </p>
         </div>
       </div>

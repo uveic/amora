@@ -15,21 +15,21 @@ $user = $responseData->request->session->user;
           <div class="field">
             <label for="currentPassword" class="label"><?=$responseData->getLocalValue('formPlaceholderPassword')?>:</label>
             <div class="control">
-              <input class="input" id="currentPassword" name="currentPassword" type="password" value="" required>
+              <input class="input" id="currentPassword" name="currentPassword" autocomplete="current-password" type="password" value="" required>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
           </div>
           <div class="field">
             <label for="newPassword" class="label"><?=$responseData->getLocalValue('formPlaceholderPasswordNew')?>:</label>
             <div class="control">
-              <input class="input" id="newPassword" name="newPassword" type="password" value="" minlength="<?=$this->e(Core::USER_PASSWORD_MIN_LENGTH)?>" required>
+              <input class="input" id="newPassword" name="newPassword" autocomplete="new-password" type="password" value="" minlength="<?=Core::USER_PASSWORD_MIN_LENGTH?>" required>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span><?=sprintf($responseData->getLocalValue('authenticationRegisterPasswordHelp'), Core::USER_PASSWORD_MIN_LENGTH)?></p>
           </div>
           <div class="field">
             <label for="repeatPassword" class="label"><?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>:</label>
             <div class="control">
-              <input class="input" id="repeatPassword" name="repeatPassword" type="password" value=""  minlength="<?=$this->e(Core::USER_PASSWORD_MIN_LENGTH)?>" required>
+              <input class="input" id="repeatPassword" name="repeatPassword" autocomplete="new-password" type="password" value=""  minlength="<?=Core::USER_PASSWORD_MIN_LENGTH?>" required>
             </div>
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
           </div>

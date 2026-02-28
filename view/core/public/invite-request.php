@@ -29,17 +29,17 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
           <div class="field">
             <p class="control">
               <label for="email" class="null">Email</label>
-              <input class="input" type="email" id="email" name="email" placeholder="<?=$this->e($responseData->getLocalValue('formPlaceholderEmail'))?>" required>
+              <input class="input" type="email" id="email" name="email" placeholder="<?=$responseData->getLocalValue('formPlaceholderEmail')?>" required>
             </p>
           </div>
           <div class="field m-t-1">
-            <input class="button is-success" type="submit" value="<?=$this->e($responseData->getLocalValue('authenticationInviteRequestFormAction'))?>">
+            <input class="button is-success" type="submit" value="<?=$responseData->getLocalValue('authenticationInviteRequestFormAction')?>">
           </div>
         </div>
         <div id="login-failure-message" class="is-failure m-t-1 null"></div>
         <div id="request-form-feedback" class="field null">
           <p class="m-b-3"><?=$responseData->getLocalValue('authenticationInviteRequestActionSuccess')?></p>
-          <a class="button is-success m-t-3" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>"><?=$this->e($responseData->getLocalValue('authenticationInviteRequestHomeLink'))?></a>
+          <a class="button is-success m-t-3 width-100" href="<?=UrlBuilderUtil::buildBaseUrl($responseData->siteLanguage)?>"><?=$responseData->getLocalValue('authenticationInviteRequestHomeLink')?></a>
         </div>
       </div>
     </form>

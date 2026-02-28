@@ -107,6 +107,7 @@
 }
 
 .metadata {
+  width: 100%;
   flex-grow: 1;
   color: var(--color-grey-600);
   font-size: 0.8rem;
@@ -315,6 +316,10 @@
   gap: 1rem;
   align-items: flex-start;
   justify-content: flex-end;
+}
+
+.card-info-item .dropdown-container > label {
+  padding-right: 0;
 }
 
 .dashboard-title-small {
@@ -725,6 +730,7 @@
   display: flex;
   flex-flow: row wrap;
   gap: 0.25rem;
+  min-height: 100px;
 }
 
 .main-image-container {

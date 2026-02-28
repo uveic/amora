@@ -159,15 +159,16 @@ class MediaDataLayer
         return $output;
     }
 
-    public function storeMedia(Media $data): Media
+    public function storeMedia(Media $data): ?Media
     {
         $resInsert = $this->db->insert(self::MEDIA_TABLE, $data->asArray());
 
         if (!$resInsert) {
             $this->logger->logError('Error inserting media');
+            return null;
         }
 
-        $data->id = (int)$resInsert;
+        $data->id = $resInsert;
 
         $this->storeMediaExif($data->id, $data->exif);
 

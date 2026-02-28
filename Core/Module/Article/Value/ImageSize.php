@@ -9,6 +9,8 @@ enum ImageSize: int
     case Medium = 720;
     case Large = 1200;
     case XLarge = 1600;
+//    case X2Large = 2400;
+//    case X3Large = 3200;
 
     public function getSmaller(): ?self
     {
@@ -18,6 +20,8 @@ enum ImageSize: int
             self::Medium => self::Small,
             self::Large => self::Medium,
             self::XLarge => self::Large,
+//            self::X2Large => self::XLarge,
+//            self::X3Large => self::X2Large,
         };
     }
 
@@ -29,6 +33,8 @@ enum ImageSize: int
             self::Medium => 'm',
             self::Large => 'l',
             self::XLarge => 'xl',
+//            self::X2Large => '2xl',
+//            self::X3Large => '3xl',
         };
     }
 }

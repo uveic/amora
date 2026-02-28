@@ -37,6 +37,7 @@ class GlobalClass {
       "globalBy": "by",
       "globalSelectImage": "Add image",
 
+      "feedbackAreYouSure": "Are you sure?",
       "feedbackDeleteGeneric": "Are you sure you want to delete it?",
       "feedbackPasswordsDoNotMatch": "Passwords do not match. Please, fix it and try it again.",
       "feedbackPasswordTooShort": "The password is too short. Please, fix it and try it again.",
@@ -103,6 +104,7 @@ class GlobalClass {
       "globalBy": "por",
       "globalSelectImage": "Seleccionar imagen",
 
+      "feedbackAreYouSure": "¿Estás seguro/a?",
       "feedbackDeleteGeneric": "¿Estás seguro/a de querer borrarlo?",
       "feedbackPasswordsDoNotMatch": "Las contraseñas no coinciden. Corrígelo y vuelve a intentarlo.",
       "feedbackPasswordTooShort": "La contraseña es demasiado corta. Corrígelo y vuelve a intentarlo.",
@@ -169,6 +171,7 @@ class GlobalClass {
       "globalBy": "por",
       "globalSelectImage": "Seleccionar imaxe",
 
+      "feedbackAreYouSure": "Estás seguro/a?",
       "feedbackDeleteGeneric": "Estás seguro/a de querer borralo?",
       "feedbackPasswordsDoNotMatch": "Os contrasinais non coinciden. Corríxeo e volve intentalo.",
       "feedbackPasswordTooShort": "Contrasinal demasiado curto. Corríxeo e volve intentalo.",

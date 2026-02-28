@@ -909,6 +909,7 @@ button.is-link,
 .space-around { justify-content: space-around !important; }
 .cursor-pointer { cursor: pointer; }
 .rotate-180 {rotate: 180deg;}
+.inline-block {display: inline-block !important;}
 
 .null {display: none !important;}
 .hidden {visibility: hidden;}
@@ -933,6 +934,16 @@ svg,
   stroke: var(--color-black);
   flex-shrink: 0;
   flex-grow: 0;
+}
+
+.a-svg svg {
+  fill: var(--color-link);
+  stroke: var(--color-link);
+}
+
+.a-svg:hover svg {
+  fill: var(--color-link-hover);
+  stroke: var(--color-link-hover);
 }
 
 .loader-container {
