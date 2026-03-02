@@ -24,91 +24,15 @@ final class CoreMenu
                 text: $localisationUtil->getValue('navAdministrator'),
                 sequence: 100,
             ),
-            new MenuItem(
-                text: $localisationUtil->getValue('navAdminContent'),
-                icon: CoreIcons::CARET_DOWN,
-                children: [
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildBackofficeContentListUrl($language),
-                        text: $localisationUtil->getValue('navAdminPageContentEdit'),
-                        icon: CoreIcons::ARTICLE,
-                        sequence: 2000,
-                    ),
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildBackofficeAlbumListUrl($language),
-                        text: $localisationUtil->getValue('navAdminAlbums'),
-                        icon: CoreIcons::IMAGES,
-                        sequence: 2010,
-                    ),
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildBackofficeImageListUrl($language),
-                        text: $localisationUtil->getValue('navAdminImages'),
-                        icon: CoreIcons::IMAGE,
-                        sequence: 2020,
-                    ),
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildBackofficeMediaListUrl($language),
-                        text: $localisationUtil->getValue('navAdminMedia'),
-                        icon: CoreIcons::FILES,
-                        sequence: 2030,
-                    ),
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildBackofficeArticleListUrl($language, ArticleType::Page),
-                        text: $localisationUtil->getValue('navAdminArticles'),
-                        icon: CoreIcons::ARTICLE,
-                        sequence: 2040,
-                    ),
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildBackofficeArticleListUrl($language, ArticleType::Blog),
-                        text: $localisationUtil->getValue('navAdminBlogPosts'),
-                        icon: CoreIcons::ARTICLE,
-                        sequence: 2050,
-                    ),
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildBackofficeUserListUrl($language),
-                        text: $localisationUtil->getValue('navAdminUsers'),
-                        icon: CoreIcons::USERS,
-                        sequence: 2060,
-                    ),
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildBackofficeAnalyticsUrl($language, eventType: EventType::Visitor),
-                        text: $localisationUtil->getValue('navAdminAnalytics'),
-                        icon: CoreIcons::CHART_LINE,
-                        sequence: 2070,
-                    ),
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildBackofficeMailsUrl($language),
-                        text: $localisationUtil->getValue('navAdminEmails'),
-                        icon: CoreIcons::ENVELOPE_SIMPLE,
-                        sequence: 2080,
-                    ),
-                ],
-                sequence: 200,
-            ),
-            new MenuItem(
-                text: $username ?? $localisationUtil->getValue('navAccount'),
-                icon: CoreIcons::CARET_DOWN,
-                children: [
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildAuthorisedAccountUrl($language),
-                        text: $localisationUtil->getValue('navAccount'),
-                        icon: CoreIcons::USER,
-                    ),
-                    new MenuItem(
-                        path: UrlBuilderUtil::buildAuthorisedLogoutUrl($language),
-                        text: $localisationUtil->getValue('navSignOut'),
-                        icon: CoreIcons::SIGN_OUT,
-                    ),
-                ],
-                sequence: 9999,
-            ),
+            self::getAdminContentMenuItem(language: $language),
+            self::getAccountMenuItem(language: $language, username: $username),
         ];
 
         if ($includeAuthorisedDashboardLink) {
             $output[] = new MenuItem(
                 path: UrlBuilderUtil::buildAppDashboardUrl($language),
                 text: $localisationUtil->getValue('navAuthorisedDashboard'),
-                sequence: 101,
+                sequence: 201,
             );
         }
 
@@ -119,6 +43,7 @@ final class CoreMenu
         Language $language,
         ?string $username = null,
         bool $includeAdminLink = false,
+        bool $includeAdminContent = false,
     ): array {
         $localisationUtil = Core::getLocalisationUtil($language);
 
@@ -131,27 +56,16 @@ final class CoreMenu
             );
         }
 
+        if ($includeAdminContent) {
+            $output[] = self::getAdminContentMenuItem(language: $language);
+        }
+
         $output[] = new MenuItem(
             path: UrlBuilderUtil::buildAppDashboardUrl($language),
-            text: $localisationUtil->getValue('navAuthorisedDashboard')
+            text: $localisationUtil->getValue('navAuthorisedDashboard'),
+            sequence: 201,
         );
-        $output[] = new MenuItem(
-            text: $username ?? $localisationUtil->getValue('navAccount'),
-            icon: CoreIcons::CARET_DOWN,
-            children: [
-                new MenuItem(
-                    path: UrlBuilderUtil::buildAuthorisedAccountUrl($language),
-                    text: $localisationUtil->getValue('navAccount'),
-                    icon: CoreIcons::USER,
-                ),
-                new MenuItem(
-                    path: UrlBuilderUtil::buildAuthorisedLogoutUrl($language),
-                    text: $localisationUtil->getValue('navSignOut'),
-                    icon: CoreIcons::SIGN_OUT,
-                ),
-            ],
-            sequence: 9999,
-        );
+        $output[] = self::getAccountMenuItem(language: $language, username: $username);
 
         return $output;
     }
@@ -172,5 +86,98 @@ final class CoreMenu
                 class: 'action-register',
             ),
         ];
+    }
+
+    public static function getAccountMenuItem(
+        Language $language,
+        ?string $username = null,
+    ): MenuItem {
+        $localisationUtil = Core::getLocalisationUtil($language);
+
+        return new MenuItem(
+            text: $username ?? $localisationUtil->getValue('navAccount'),
+            icon: CoreIcons::CARET_DOWN,
+            children: [
+                new MenuItem(
+                    path: UrlBuilderUtil::buildAuthorisedAccountUrl($language),
+                    text: $localisationUtil->getValue('navAccount'),
+                    icon: CoreIcons::USER,
+                ),
+                new MenuItem(
+                    path: UrlBuilderUtil::buildAuthorisedLogoutUrl($language),
+                    text: $localisationUtil->getValue('navSignOut'),
+                    icon: CoreIcons::SIGN_OUT,
+                ),
+            ],
+            sequence: 9999,
+        );
+    }
+
+    public static function getAdminContentMenuItem(
+        Language $language,
+    ): MenuItem {
+        $localisationUtil = Core::getLocalisationUtil($language);
+
+        return new MenuItem(
+            text: $localisationUtil->getValue('navAdminContent'),
+            icon: CoreIcons::CARET_DOWN,
+            children: [
+                new MenuItem(
+                    path: UrlBuilderUtil::buildBackofficeContentListUrl($language),
+                    text: $localisationUtil->getValue('navAdminPageContentEdit'),
+                    icon: CoreIcons::ARTICLE,
+                    sequence: 2000,
+                ),
+                new MenuItem(
+                    path: UrlBuilderUtil::buildBackofficeAlbumListUrl($language),
+                    text: $localisationUtil->getValue('navAdminAlbums'),
+                    icon: CoreIcons::IMAGES,
+                    sequence: 2010,
+                ),
+                new MenuItem(
+                    path: UrlBuilderUtil::buildBackofficeImageListUrl($language),
+                    text: $localisationUtil->getValue('navAdminImages'),
+                    icon: CoreIcons::IMAGE,
+                    sequence: 2020,
+                ),
+                new MenuItem(
+                    path: UrlBuilderUtil::buildBackofficeMediaListUrl($language),
+                    text: $localisationUtil->getValue('navAdminMedia'),
+                    icon: CoreIcons::FILES,
+                    sequence: 2030,
+                ),
+                new MenuItem(
+                    path: UrlBuilderUtil::buildBackofficeArticleListUrl($language, ArticleType::Page),
+                    text: $localisationUtil->getValue('navAdminArticles'),
+                    icon: CoreIcons::ARTICLE,
+                    sequence: 2040,
+                ),
+                new MenuItem(
+                    path: UrlBuilderUtil::buildBackofficeArticleListUrl($language, ArticleType::Blog),
+                    text: $localisationUtil->getValue('navAdminBlogPosts'),
+                    icon: CoreIcons::ARTICLE,
+                    sequence: 2050,
+                ),
+                new MenuItem(
+                    path: UrlBuilderUtil::buildBackofficeUserListUrl($language),
+                    text: $localisationUtil->getValue('navAdminUsers'),
+                    icon: CoreIcons::USERS,
+                    sequence: 2060,
+                ),
+                new MenuItem(
+                    path: UrlBuilderUtil::buildBackofficeAnalyticsUrl($language, eventType: EventType::Visitor),
+                    text: $localisationUtil->getValue('navAdminAnalytics'),
+                    icon: CoreIcons::CHART_LINE,
+                    sequence: 2070,
+                ),
+                new MenuItem(
+                    path: UrlBuilderUtil::buildBackofficeMailsUrl($language),
+                    text: $localisationUtil->getValue('navAdminEmails'),
+                    icon: CoreIcons::ENVELOPE_SIMPLE,
+                    sequence: 2080,
+                ),
+            ],
+            sequence: 200,
+        );
     }
 }
