@@ -1123,7 +1123,6 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
      *
      * @param int $collectionId
      * @param int $mediaId
-     * @param string|null $captionHtml
      * @param bool $isMainMedia
      * @param Request $request
      * @return Response
@@ -1131,7 +1130,6 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
     protected function storeMediaForCollection(
         int $collectionId,
         int $mediaId,
-        ?string $captionHtml,
         bool $isMainMedia,
         Request $request
     ): Response {
@@ -1169,6 +1167,7 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
             return new BackofficeApiControllerStoreMediaForCollectionSuccessResponse(
                 success: $res,
                 html: $media->asHtmlSimple(),
+                caption: $media->captionHtml,
             );
         }
 
@@ -1180,15 +1179,14 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
         if ($existingMedia) {
             return new BackofficeApiControllerStoreMediaForCollectionSuccessResponse(
                 success: true,
+                caption: $existingMedia->captionHtml,
             );
         }
-
-        $captionHtml = StringUtil::sanitiseHtml($captionHtml);
 
         $newCollectionMedia = $this->albumService->storeMediaForCollection(
             collection: $existingCollection,
             media: $media,
-            captionHtml: $captionHtml,
+            captionHtml: null,
         );
 
         if (!$newCollectionMedia) {
@@ -1204,6 +1202,7 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
             html: AlbumHtmlGenerator::generateCollectionMediaHtml(
                 collectionMedia: $newCollectionMedia,
             ),
+            caption: $media->captionHtml,
         );
     }
 

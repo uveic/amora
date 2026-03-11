@@ -500,6 +500,12 @@
 .collection-main-media-delete-js {
   background-color: var(--color-white);
   cursor: pointer;
+  padding-left: 0.15rem;
+  line-height: 1;
+}
+
+.collection-main-media-delete-js svg {
+  width: 12px;
 }
 
 .image-container .image-container-delete {
@@ -1595,8 +1601,13 @@
 .collection-media-container .collection-media-delete-js {
   cursor: pointer;
   background-color: var(--color-white);
+  line-height: 1;
+  padding-left: 0.15rem;
 }
 
+.collection-media-container .collection-media-delete-js svg {
+  width: 12px;
+}
 
 .collection-main-media-options .media-caption,
 .collection-media-container .media-caption {
@@ -1608,7 +1619,9 @@
   color: var(--color-black);
   cursor: pointer;
   background-color: var(--color-white);
-  padding: 0 0.2rem;
+  padding-right: 0.15rem;
+  min-height: 16px;
+  margin-right: 0.5rem;
 }
 
 .collection-media-container .media-caption p:first-of-type {

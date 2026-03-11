@@ -367,7 +367,6 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
      *
      * @param int $collectionId
      * @param int $mediaId
-     * @param string|null $captionHtml
      * @param bool $isMainMedia
      * @param Request $request
      * @return Response
@@ -375,7 +374,6 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
     abstract protected function storeMediaForCollection(
         int $collectionId,
         int $mediaId,
-        ?string $captionHtml,
         bool $isMainMedia,
         Request $request
     ): Response;
@@ -1765,7 +1763,6 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
             $mediaId = $bodyParams['mediaId'] ?? null;
         }
 
-        $captionHtml = $bodyParams['captionHtml'] ?? null;
         $isMainMedia = null;
         if (!isset($bodyParams['isMainMedia'])) {
             $errors[] = [
@@ -1791,7 +1788,6 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
             return $this->storeMediaForCollection(
                 $collectionId,
                 $mediaId,
-                $captionHtml,
                 $isMainMedia,
                 $request
             );

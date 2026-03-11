@@ -10,6 +10,7 @@ class BackofficeApiControllerStoreMediaForCollectionSuccessResponse extends Resp
         bool $success,
         ?int $collectionMediaId = null,
         ?string $html = null,
+        ?string $caption = null,
         ?string $errorMessage = null
     ) {
         // Required parameters
@@ -24,6 +25,10 @@ class BackofficeApiControllerStoreMediaForCollectionSuccessResponse extends Resp
         $responseData['html'] = is_null($html)
             ? null
             : $html;
+
+        $responseData['caption'] = is_null($caption)
+            ? null
+            : $caption;
 
         $responseData['errorMessage'] = is_null($errorMessage)
             ? null

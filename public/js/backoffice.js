@@ -584,20 +584,15 @@ function collectionAddMedia(e) {
 
     if (response.html) {
       if (isMainMedia) {
-        const existing = collectionMediaContainer.querySelector('.media-item');
-        if (existing) {
-          collectionMediaContainer.removeChild(existing);
-        }
+        collectionMediaContainer.querySelectorAll('.media-item').forEach(mi => mi.remove());
         collectionMediaContainer.insertAdjacentHTML('afterbegin', response.html);
         collectionMediaContainer.classList.remove('no-image-simple');
-        const collectionDeleteButton = collectionMediaContainer.querySelector('.collection-main-media-delete-js');
-        if (collectionDeleteButton) {
-          collectionDeleteButton.classList.remove('null');
-        }
-        const collectionAddButton = collectionMediaContainer.querySelector('.button-media-add span');
-        if (collectionAddButton) {
-          collectionAddButton.textContent = Global.get('globalModify');
-        }
+        collectionMediaContainer.querySelectorAll('.collection-main-media-delete-js').forEach(md => md.classList.remove('null'));
+        collectionMediaContainer.querySelectorAll('.media-caption').forEach(mc => {
+          mc.classList.remove('null');
+          mc.textContent = response.caption ?? '―';
+        });
+        collectionMediaContainer.querySelectorAll('.button-media-add span').forEach(b => b.textContent = Global.get('globalModify'));
       } else {
         collectionMediaContainer.querySelector('.button-media-add').insertAdjacentHTML('beforebegin', response.html);
       }
@@ -620,11 +615,6 @@ function collectionAddMedia(e) {
         if (editMediaEl) {
           editMediaEl.addEventListener('click', collectionEditMediaCaption);
         }
-      } else {
-        const collectionMediaCaption = collectionMediaContainer.querySelector('.media-caption');
-        if (collectionMediaCaption) {
-          collectionMediaCaption.textContent = '-';
-        }
       }
 
       if (!isMainMedia) {
@@ -646,8 +636,6 @@ function collectionAddMedia(e) {
   Util.displayFullPageLoadingModal();
 
   const payload = {
-    titleHtml: null,
-    contentHtml: null,
     mediaId: mediaId,
     isMainMedia: isMainMedia,
   };
@@ -936,6 +924,7 @@ function collectionDeleteMainMedia(e) {
       collectionMainMediaContainer.classList.add('no-image-simple');
       collectionMainMediaContainer.parentElement.querySelector('.button-media-add span').textContent = Global.get('globalSelectImage');
       collectionMainMediaContainer.parentElement.querySelector('.collection-main-media-delete-js').classList.add('null');
+      collectionMainMediaContainer.querySelectorAll('.media-caption').forEach(mc => mc.classList.add('null'));
     })
     .catch(error => {
       mediaItemEl.classList.remove('null');
@@ -971,7 +960,9 @@ function collectionEditMediaCaption(e) {
   mediaContainer.appendChild(newMediaEl);
 
   const htmlContainer = modal.querySelector('.media-caption-html');
-  htmlContainer.innerHTML = e.currentTarget.textContent === '-' ? '' : e.currentTarget.textContent;
+  htmlContainer.innerHTML = e.currentTarget.textContent === '-' || e.currentTarget.textContent === '―'
+    ? ''
+    : e.currentTarget.textContent;
 
   modal.classList.remove('null');
   htmlContainer.focus();
@@ -1828,11 +1819,11 @@ document.querySelectorAll('form#album-media-caption-edit-form-js').forEach(f => 
         '.collection-media-container[data-collection-media-id="' + collectionMediaId + '"] .media-caption'
       );
       captionHtmlBefore = targetCaptionHtmlEl.textContent;
-      targetCaptionHtmlEl.textContent = captionHtml;
+      targetCaptionHtmlEl.textContent = captionHtml.length ? captionHtml : '―';
     } else if (mainMediaId) {
       targetCaptionHtmlEl = document.querySelector('.main-image-container .media-caption');
       captionHtmlBefore = targetCaptionHtmlEl.textContent;
-      targetCaptionHtmlEl.textContent = captionHtml;
+      targetCaptionHtmlEl.textContent = captionHtml.length ? captionHtml : '―';
     }
 
     document.querySelector('.album-media-caption-edit-modal-js').classList.add('null');

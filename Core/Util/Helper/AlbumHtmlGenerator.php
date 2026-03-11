@@ -195,7 +195,7 @@ final class AlbumHtmlGenerator
         $output[] = $indentation . '    <img id="collection-media-' . $collectionMedia->id . '" src="' . $collectionMedia->media->getPathWithNameSmall() . '" class="media-item image-popup-js" alt="' . $titleAlt . '" title="' . $titleAlt . '"' . $lazyLoadingString . ' data-media-id="' . $collectionMedia->media->id . '" data-sequence="' . $collectionMedia->sequence . '" draggable="true">';
         $output[] = $indentation . '  </figure>';
         $output[] = $indentation . '  <div class="collection-media-options">';
-        $output[] = $indentation . '    <div class="media-caption collection-media-caption-js">' . ($collectionMedia->captionHtml ?: '-') . '</div>';
+        $output[] = $indentation . '    <div class="media-caption collection-media-caption-js">' . ($collectionMedia->captionHtml ?: '―') . '</div>';
         $output[] = $indentation . '    <span class="collection-media-delete-js">' . CoreIcons::TRASH . '</span>';
         $output[] = $indentation . '  </div>';
 

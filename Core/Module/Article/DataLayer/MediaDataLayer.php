@@ -235,9 +235,9 @@ class MediaDataLayer
         $params = [];
         $fields = [];
 
-        if ($caption) {
+        if (isset($caption)) {
             $fields[] = 'caption_html = :caption';
-            $params[':caption'] = $caption;
+            $params[':caption'] = $caption ?: null;
         }
 
         if ($uploadedToS3At) {
