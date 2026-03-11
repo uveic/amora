@@ -587,11 +587,8 @@ function collectionAddMedia(e) {
         collectionMediaContainer.querySelectorAll('.media-item').forEach(mi => mi.remove());
         collectionMediaContainer.insertAdjacentHTML('afterbegin', response.html);
         collectionMediaContainer.classList.remove('no-image-simple');
-        collectionMediaContainer.querySelectorAll('.collection-main-media-delete-js').forEach(md => md.classList.remove('null'));
-        collectionMediaContainer.querySelectorAll('.media-caption').forEach(mc => {
-          mc.classList.remove('null');
-          mc.textContent = response.caption ?? '―';
-        });
+        collectionMediaContainer.querySelectorAll('.collection-main-media-options').forEach(md => md.classList.remove('null'));
+        collectionMediaContainer.querySelectorAll('.media-caption').forEach(mc => mc.textContent = response.caption ?? '―');
         collectionMediaContainer.querySelectorAll('.button-media-add span').forEach(b => b.textContent = Global.get('globalModify'));
       } else {
         collectionMediaContainer.querySelector('.button-media-add').insertAdjacentHTML('beforebegin', response.html);
@@ -923,7 +920,7 @@ function collectionDeleteMainMedia(e) {
       mediaItemEl.parentElement.removeChild(mediaItemEl);
       collectionMainMediaContainer.classList.add('no-image-simple');
       collectionMainMediaContainer.parentElement.querySelector('.button-media-add span').textContent = Global.get('globalSelectImage');
-      collectionMainMediaContainer.parentElement.querySelector('.collection-main-media-delete-js').classList.add('null');
+      collectionMainMediaContainer.parentElement.querySelector('.collection-main-media-options').classList.add('null');
       collectionMainMediaContainer.querySelectorAll('.media-caption').forEach(mc => mc.classList.add('null'));
     })
     .catch(error => {

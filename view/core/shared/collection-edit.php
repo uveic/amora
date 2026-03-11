@@ -30,7 +30,7 @@ $collectionIdentifier = $collection?->id ?? StringUtil::generateRandomString(10)
                 </div>
                 <div class="collection-main-media-options<?=$collection?->mainMedia ? '' : ' null'?>">
                   <span class="media-caption collection-media-caption-js"><?=$collection?->mainMedia?->captionHtml ?: '―'?></span>
-                  <span class="collection-main-media-delete-js<?=$collection?->mainMedia ? '' : ' null'?>"><?=CoreIcons::TRASH?></span>
+                  <span class="collection-main-media-delete-js"><?=CoreIcons::TRASH?></span>
                 </div>
               </div>
             </div>
