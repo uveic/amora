@@ -12,18 +12,4 @@ enum UserActionType: int
     case UpdatePassword = 6;
     case UpdateEmailRequest = 7;
     case VerifyEmail = 8;
-
-    public static function getAll(): array
-    {
-        return [
-            self::Create,
-            self::Update,
-            self::UpdateStatus,
-            self::UpdateRole,
-            self::PasswordCreation,
-            self::UpdatePassword,
-            self::UpdateEmailRequest,
-            self::VerifyEmail,
-        ];
-    }
 }

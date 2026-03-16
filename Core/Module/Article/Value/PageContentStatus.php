@@ -10,15 +10,6 @@ enum PageContentStatus: int
     case Draft = 2;
     case Deleted = 3;
 
-    public static function getAll(): array
-    {
-        return [
-            self::Published,
-            self::Draft,
-            self::Deleted,
-        ];
-    }
-
     public function getIcon(): string
     {
         return match ($this) {

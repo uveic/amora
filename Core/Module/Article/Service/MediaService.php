@@ -69,7 +69,7 @@ readonly class MediaService
         );
     }
 
-    public function storeMediaDestroyed(MediaDestroyed $item): MediaDestroyed
+    public function storeMediaDestroyed(MediaDestroyed $item): ?MediaDestroyed
     {
         return $this->mediaDataLayer->storeMediaDestroyed($item);
     }
@@ -161,6 +161,14 @@ readonly class MediaService
             $media->filenameXLarge &&
             file_exists($media->getDirWithNameXLarge()) &&
             !unlink($media->getDirWithNameXLarge())
+        ) {
+            return false;
+        }
+
+        if (
+            $media->filenameExtraSize &&
+            file_exists($media->getDirWithNameExtraSize()) &&
+            !unlink($media->getDirWithNameExtraSize())
         ) {
             return false;
         }
@@ -267,11 +275,13 @@ readonly class MediaService
     public function workflowStoreFile(
         array $rawFiles,
         ?User $user,
+        ?int $extraSizeWidth,
     ): Feedback {
         return $this->mediaDataLayer->getDb()->withTransaction(
             function () use (
                 $rawFiles,
                 $user,
+                $extraSizeWidth,
             ) {
                 try {
                     $rawFile = $this->validateAndProcessRawFile($rawFiles);
@@ -283,14 +293,21 @@ readonly class MediaService
                     }
 
                     $processedMedia = match ($rawFile->mediaType) {
-                        MediaType::Image => $this->processRawFileImage($rawFile, $user),
-                        default => $this->processRawFile($rawFile, $user),
+                        MediaType::Image => $this->processRawFileImage(
+                            rawFile: $rawFile,
+                            user: $user,
+                            extraSizeWidth: $extraSizeWidth,
+                        ),
+                        default => $this->processRawFile(
+                            rawFile: $rawFile,
+                            user: $user,
+                        ),
                     };
 
                     if (!$processedMedia) {
                         return new Feedback(
                             isSuccess: false,
-                            message: 'File not valid',
+                            message: 'Error processing media',
                         );
                     }
 
@@ -300,6 +317,21 @@ readonly class MediaService
                             isSuccess: false,
                             message: 'Error storing media',
                         );
+                    }
+
+                    if ($processedMedia->extraSizeWidth && $processedMedia->filenameExtraSize) {
+                        $resExtra = $this->mediaDataLayer->storeMediaExtraSize(
+                            mediaId: $output->id,
+                            width: $processedMedia->extraSizeWidth,
+                            filename: $processedMedia->filenameExtraSize,
+                        );
+
+                        if (!$resExtra) {
+                            return new Feedback(
+                                isSuccess: false,
+                                message: 'Error storing media extra size',
+                            );
+                        }
                     }
 
                     return new Feedback(
@@ -327,6 +359,7 @@ readonly class MediaService
         ?User $user,
         ?string $captionHtml = null,
         bool $keepSameImageFormat = false,
+        ?int $extraSizeWidth = null,
     ): ?Media {
         try {
             return $this->imageService->resizeRawImage(
@@ -334,6 +367,7 @@ readonly class MediaService
                 user: $user,
                 captionHtml: $captionHtml,
                 keepSameImageFormat: $keepSameImageFormat,
+                extraSizeWidth: $extraSizeWidth,
             );
         } catch (Throwable $t) {
             $this->logger->logError(
@@ -359,6 +393,8 @@ readonly class MediaService
             path: $rawFile->extraPath,
             filename: $rawFile->getName(),
             filenameSource: $rawFile->originalName,
+            extraSizeWidth: null,
+            filenameExtraSize: null,
             filenameXLarge: null,
             filenameLarge: null,
             filenameMedium: null,
@@ -449,20 +485,24 @@ readonly class MediaService
         return strtolower(trim($parts[count($parts) - 1]));
     }
 
-    public function getOrGenerateMediaFolder(string $mediaBasePath): ?string
+    public function getOrGenerateMediaFolder(?string $mediaBaseDir = null): ?string
     {
+        if (!$mediaBaseDir) {
+            $mediaBaseDir = $this->mediaBaseDir;
+        }
+
         if (
-            !is_dir($mediaBasePath) &&
-            !mkdir($mediaBasePath, self::FOLDER_PERMISSIONS, true) &&
-            !is_dir($mediaBasePath)
+            !is_dir($mediaBaseDir) &&
+            !mkdir($mediaBaseDir, self::FOLDER_PERMISSIONS, true) &&
+            !is_dir($mediaBaseDir)
         ) {
-            $this->logger->logError('Failed to create folder: ' . $mediaBasePath);
+            $this->logger->logError('Failed to create folder: ' . $mediaBaseDir);
             return null;
         }
 
         $now = new DateTimeImmutable();
         $mediaExtraPath = md5($now->format('Y-W'));
-        $fullPath = $mediaBasePath . '/' . $mediaExtraPath;
+        $fullPath = $mediaBaseDir . '/' . $mediaExtraPath;
 
         if (is_dir($fullPath)) {
             return $mediaExtraPath;
@@ -474,7 +514,7 @@ readonly class MediaService
                 $mediaExtraPath .= $count;
             }
 
-            $fullPath = $mediaBasePath . '/' . $mediaExtraPath;
+            $fullPath = $mediaBaseDir . '/' . $mediaExtraPath;
             if (!mkdir($fullPath, self::FOLDER_PERMISSIONS, true) && !is_dir($fullPath)) {
                 $this->logger->logError('Failed to create folder: ' . $fullPath);
                 return null;

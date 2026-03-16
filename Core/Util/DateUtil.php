@@ -305,7 +305,7 @@ final readonly class DateUtil
                 return $weekDay . $day . $month . $year . $time;
             default:
                 $format = ($includeWeekDay ? 'l, ' : '')
-                    . ($includeDay ? 'jS ' : '')
+                    . ($includeDay ? ($includeDayMonthSeparator ? 'jS ' : 'j ') : '')
                     . ($includeMonth ? ($shortMonthName ? 'M' : 'F') : '')
                     . ($includeYear ? ' Y' : '')
                     . ($includeTime ? ($includeDayTimeSeparator ? ' \a\t ' : ' ') . $timeFormat : '');

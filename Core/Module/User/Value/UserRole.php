@@ -11,14 +11,6 @@ enum UserRole: int
     case Admin = 1;
     case User = 10;
 
-    public static function getAll(): array
-    {
-        return [
-            self::Admin,
-            self::User,
-        ];
-    }
-
     public function getTitle(Language $language): string
     {
         return Core::getLocalisationUtil($language)->getValue('userRole' . $this->name);

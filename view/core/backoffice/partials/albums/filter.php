@@ -52,7 +52,7 @@ $filterClass = $albumStatus || $albumLanguage ? '' : ' null';
               <option<?php echo $albumStatus ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
     /** @var BackedEnum $status */
-    foreach (AlbumStatus::getAll() as $status) {
+    foreach (AlbumStatus::cases() as $status) {
         $selected = $status === $albumStatus;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$status->value?>"><?=$responseData->getLocalValue('articleStatus' . $status->name)?></option>

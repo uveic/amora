@@ -14,18 +14,6 @@ enum MediaType: int
 
     case Unknown = 1000;
 
-    public static function getAll(): array
-    {
-        return [
-            self::PDF,
-            self::Image,
-            self::CSV,
-            self::TXT,
-            self::SVG,
-            self::Unknown,
-        ];
-    }
-
     public static function getAllNotImageIds(): array
     {
         return [

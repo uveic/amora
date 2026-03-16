@@ -23,6 +23,8 @@ class Media
         public readonly ?string $path,
         public readonly string $filename,
         public readonly string $filenameSource,
+        public readonly ?int $extraSizeWidth,
+        public readonly ?string $filenameExtraSize,
         public readonly ?string $filenameXLarge,
         public readonly ?string $filenameLarge,
         public readonly ?string $filenameMedium,
@@ -49,6 +51,8 @@ class Media
             path: $data['media_path'] ?? null,
             filename: $data['media_filename'],
             filenameSource: $data['media_filename_source'],
+            extraSizeWidth: isset($data['media_extra_size_width']) ? (int)$data['media_extra_size_width'] : null,
+            filenameExtraSize: $data['media_filename_extra_size'] ?? null,
             filenameXLarge: $data['media_filename_extra_large'] ?? null,
             filenameLarge: $data['media_filename_large'] ?? null,
             filenameMedium: $data['media_filename_medium'] ?? null,
@@ -84,6 +88,8 @@ class Media
             'filename_medium' => $this->filenameMedium,
             'filename_large' => $this->filenameLarge,
             'filename_extra_large' => $this->filenameXLarge,
+            'filename_extra_size' => $this->filenameExtraSize,
+            'extra_size_width' => $this->extraSizeWidth,
             'caption_html' => $this->captionHtml,
             'filename_source' => $this->filenameSource,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
@@ -134,21 +140,21 @@ class Media
     {
         return $this->filenameXSmall
             ? $this->buildDirPath() . $this->filenameXSmall
-            : $this->getDirWithNameSmall();
+            : $this->getDirWithNameOriginal();
     }
 
     public function getDirWithNameSmall(): string
     {
         return $this->filenameSmall
             ? $this->buildDirPath() . $this->filenameSmall
-            : $this->getDirWithNameMedium();
+            : $this->getDirWithNameXSmall();
     }
 
     public function getDirWithNameMedium(): string
     {
         return $this->filenameMedium
             ? $this->buildDirPath() . $this->filenameMedium
-            : $this->getDirWithNameOriginal();
+            : $this->getDirWithNameSmall();
     }
 
     public function getDirWithNameLarge(): string
@@ -163,6 +169,13 @@ class Media
         return $this->filenameXLarge
             ? $this->buildDirPath() . $this->filenameXLarge
             : $this->getDirWithNameLarge();
+    }
+
+    public function getDirWithNameExtraSize(): string
+    {
+        return $this->filenameExtraSize
+            ? $this->buildDirPath() . $this->filenameExtraSize
+            : $this->getDirWithNameXLarge();
     }
 
     public function getPathWithNameOriginal(): string
@@ -225,6 +238,17 @@ class Media
             : $this->getPathWithNameLarge();
     }
 
+    public function getPathWithNameExtraSize(): string
+    {
+        if ($this->type !== MediaType::Image) {
+            return $this->getPathWithNameOriginal();
+        }
+
+        return $this->filenameExtraSize
+            ? $this->buildPath() . $this->filenameExtraSize
+            : $this->getPathWithNameXLarge();
+    }
+
     public function asHtmlSimple(): string
     {
         if (
@@ -283,6 +307,7 @@ class Media
             ImageSize::Medium => $this->getPathWithNameMedium(),
             ImageSize::Large => $this->getPathWithNameLarge(),
             ImageSize::XLarge => $this->getPathWithNameXLarge(),
+            ImageSize::ExtraSize => $this->getPathWithNameExtraSize(),
         };
 
         $output = [
@@ -414,6 +439,10 @@ class Media
 
         if ($this->filenameXLarge && $this->widthOriginal >= ImageSize::XLarge->value) {
             $output[] = $this->getPathWithNameXLarge() . ' ' . ImageSize::XLarge->value . 'w';
+        }
+
+        if ($this->filenameExtraSize && $this->extraSizeWidth && $this->widthOriginal >= $this->extraSizeWidth) {
+            $output[] = $this->getPathWithNameXLarge() . ' ' . $this->extraSizeWidth . 'w';
         }
 
         return implode(', ', $output);

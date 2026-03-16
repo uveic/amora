@@ -25,20 +25,23 @@ readonly class ImageService
         ?User $user,
         ?string $captionHtml = null,
         bool $keepSameImageFormat = false,
-    ): Media {
+        ?int $extraSizeWidth = null,
+    ): ?Media {
         $phpNativeImageType = $keepSameImageFormat
             ? exif_imagetype($rawFile->getPathWithName())
             : IMAGETYPE_WEBP;
 
-        $imageXSmall = $this->resizeImage($rawFile, ImageSize::XSmall, $phpNativeImageType);
-        $imageSmall = $this->resizeImage($rawFile, ImageSize::Small, $phpNativeImageType);
-        $imageMedium = $this->resizeImage($rawFile, ImageSize::Medium, $phpNativeImageType);
-        $imageLarge = $this->resizeImage($rawFile, ImageSize::Large, $phpNativeImageType);
-        $imageXLarge = $this->resizeImage($rawFile, ImageSize::XLarge, $phpNativeImageType);
-
         [$widthOriginal, $heightOriginal] = @getimagesize($rawFile->getPathWithName());
-        $now = new DateTimeImmutable();
 
+        if (!$widthOriginal || !$heightOriginal) {
+            $this->logger->logError(
+                'Error getting width and/or height for image - Original full path: ' . $rawFile->getPathWithName()
+            );
+
+            return null;
+        }
+
+        $now = new DateTimeImmutable();
         return new Media(
             id: null,
             type: $rawFile->mediaType,
@@ -49,11 +52,50 @@ readonly class ImageService
             path: $rawFile->extraPath,
             filename: $rawFile->getName(),
             filenameSource: $rawFile->originalName,
-            filenameXLarge: $imageXLarge,
-            filenameLarge: $imageLarge,
-            filenameMedium: $imageMedium,
-            filenameSmall: $imageSmall,
-            filenameXSmall: $imageXSmall,
+            extraSizeWidth: $extraSizeWidth,
+            filenameExtraSize: $extraSizeWidth ? $this->resizeImage(
+                image: $rawFile,
+                newSize: ImageSize::ExtraSize,
+                phpNativeImageType: $phpNativeImageType,
+                imageWidth: $widthOriginal,
+                imageHeight: $heightOriginal,
+                extraSizeWidth: $extraSizeWidth,
+            ) : null,
+            filenameXLarge: $this->resizeImage(
+                image: $rawFile,
+                newSize: ImageSize::XLarge,
+                phpNativeImageType: $phpNativeImageType,
+                imageWidth: $widthOriginal,
+                imageHeight: $heightOriginal,
+            ),
+            filenameLarge: $this->resizeImage(
+                image: $rawFile,
+                newSize: ImageSize::Large,
+                phpNativeImageType: $phpNativeImageType,
+                imageWidth: $widthOriginal,
+                imageHeight: $heightOriginal,
+            ),
+            filenameMedium: $this->resizeImage(
+                image: $rawFile,
+                newSize: ImageSize::Medium,
+                phpNativeImageType: $phpNativeImageType,
+                imageWidth: $widthOriginal,
+                imageHeight: $heightOriginal,
+            ),
+            filenameSmall: $this->resizeImage(
+                image: $rawFile,
+                newSize: ImageSize::Small,
+                phpNativeImageType: $phpNativeImageType,
+                imageWidth: $widthOriginal,
+                imageHeight: $heightOriginal,
+            ),
+            filenameXSmall: $this->resizeImage(
+                image: $rawFile,
+                newSize: ImageSize::XSmall,
+                phpNativeImageType: $phpNativeImageType,
+                imageWidth: $widthOriginal,
+                imageHeight: $heightOriginal,
+            ),
             captionHtml: $captionHtml,
             createdAt: $now,
             updatedAt: $now,
@@ -85,6 +127,13 @@ readonly class ImageService
             return null;
         }
 
+        $iso = null;
+        if (isset($exif['ISOSpeedRatings'])) {
+            $iso = is_array($exif['ISOSpeedRatings'])
+                ? substr($exif['ISOSpeedRatings'][0], 0, 10)
+                : substr($exif['ISOSpeedRatings'], 0, 10);
+        }
+
         return new ImageExif(
             width: isset($exif['COMPUTED']['Width']) ? (int)$exif['COMPUTED']['Width'] : null,
             height: isset($exif['COMPUTED']['Height']) ? (int)$exif['COMPUTED']['Height'] : null,
@@ -92,9 +141,7 @@ readonly class ImageService
             cameraModel: isset($exif['Model']) ? substr($exif['Model'], 0, 50) : null,
             takenAt: $date ? DateTimeImmutable::createFromFormat('Y:m:d H:i:s', $date) : null,
             exposureTime: isset($exif['ExposureTime']) ? substr($exif['ExposureTime'], 0, 10) : null,
-            iso: isset($exif['ISOSpeedRatings'])
-                ? (is_array($exif['ISOSpeedRatings']) ? substr($exif['ISOSpeedRatings'][0], 0, 10) : substr($exif['ISOSpeedRatings'], 0, 10))
-                : null,
+            iso: $iso,
         );
     }
 
@@ -102,43 +149,36 @@ readonly class ImageService
         RawFile $image,
         ImageSize $newSize,
         int $phpNativeImageType,
+        int $imageWidth,
+        int $imageHeight,
+        ?int $extraSizeWidth = null,
     ): ?string {
-        [$originalWidth, $originalHeight] = @getimagesize($image->getPathWithName());
-
-        if (!$originalWidth || !$originalHeight) {
-            $this->logger->logError(
-                'Error getting width and/or height for image' .
-                ' - Original full path: ' . $image->getPathWithName()
-            );
-
-            return null;
-        }
-
         $smallerSize = $newSize->getSmaller();
+        $newSizeWidth = $newSize === ImageSize::ExtraSize && $extraSizeWidth ? $extraSizeWidth : $newSize->value;
 
         // The new size and the next smaller size are greater than the original width
         if (
-            $newSize->value > $originalWidth &&
+            $newSizeWidth > $imageWidth &&
             $smallerSize &&
-            $smallerSize->value > $originalWidth
+            $smallerSize->value > $imageWidth
         ) {
             return null;
         }
 
         // The original width stands between the new size and the next smaller size
         if (
-            $newSize->value >= $originalWidth &&
+            $newSizeWidth >= $imageWidth &&
             $smallerSize &&
-            $smallerSize->value <= $originalWidth
+            $smallerSize->value <= $imageWidth
         ) {
             $ratio = 1;
-            $newWidth = $originalWidth;
+            $newWidth = $imageWidth;
         } else {
-            $ratio = $newSize->value / $originalWidth;
-            $newWidth = $newSize->value;
+            $ratio = $newSizeWidth / $imageWidth;
+            $newWidth = $newSizeWidth;
         }
 
-        $newHeight = (int)round($originalHeight * $ratio);
+        $newHeight = (int)round($imageHeight * $ratio);
 
         $sourceImage = $this->getImageFromSourcePath($image);
         if (!$sourceImage) {
@@ -161,8 +201,8 @@ readonly class ImageService
             $outputFullPath,
             $newWidth,
             $newHeight,
-            $originalWidth,
-            $originalHeight,
+            $imageWidth,
+            $imageHeight,
         );
 
         if (!file_exists($outputFullPath)) {

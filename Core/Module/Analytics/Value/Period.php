@@ -12,15 +12,6 @@ enum Period: int
     case Month = 2;
     case Year = 3;
 
-    public static function getAll(): array
-    {
-        return [
-            self::Day,
-            self::Month,
-            self::Year,
-        ];
-    }
-
     public function getFrom(string $date): DateTimeImmutable
     {
         return match ($this) {

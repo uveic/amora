@@ -111,10 +111,11 @@ readonly final class AuthorisedApiController extends AuthorisedApiControllerAbst
      * Endpoint: /api/file
      * Method: POST
      *
+     * @param int|null $extraSizeWidth
      * @param Request $request
      * @return Response
      */
-    protected function storeFile(Request $request): Response
+    protected function storeFile(?int $extraSizeWidth, Request $request): Response
     {
         if (!$request->files) {
             return new AuthorisedApiControllerStoreFileSuccessResponse(
@@ -127,6 +128,7 @@ readonly final class AuthorisedApiController extends AuthorisedApiControllerAbst
         $res = $this->mediaService->workflowStoreFile(
             rawFiles: $request->files,
             user: $request->session->user,
+            extraSizeWidth: $extraSizeWidth,
         );
 
         if (!$res->isSuccess) {

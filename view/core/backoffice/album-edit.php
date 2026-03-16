@@ -62,7 +62,7 @@ $this->insert('../../core/shared/modal-select-image', ['responseData' => $respon
                 <select id="albumTemplateId" name="albumTemplateId">
 <?php
     /** @var BackedEnum $city */
-    foreach (Template::getAll() as $template) {
+    foreach (Template::cases() as $template) {
         $selected = $template->value === $album?->template->value;
 ?>
                   <option<?=($selected ? ' selected="selected"' : '')?> value="<?=$template->value?>"><?=$template->name?></option>

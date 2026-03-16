@@ -153,10 +153,21 @@
   padding: 0;
 }
 
+.backoffice-child-container trix-toolbar {
+  background-color: white;
+  padding: 0;
+}
+
+.backoffice-child-container trix-editor {
+  min-height: 150px;
+  border: 1px solid var(--color-input-border);
+}
+
 .backoffice-child-header {
   padding: 0.5rem 1rem;
   background-color: var(--color-black);
   color: var(--color-white);
+  border: 1px solid var(--color-black);
 }
 
 .backoffice-child-header svg {
@@ -1212,7 +1223,7 @@
 .page-header .media-page-wrapper select {
   color: var(--color-white);
   padding: 0 1.75rem 0 0.5rem;
-  background-position-y: 0px;
+  background-position-y: 0;
   background-image: url("/img/svg/caret-down-white.svg");
   min-height: revert;
 }
@@ -1909,14 +1920,14 @@
   }
 
   .backoffice-child-no-header {
-    border-top: 1px solid var(--color-grey-200);
+    border-top: 1px solid var(--color-black);
   }
 
   .backoffice-child-container-inner {
     padding: 1rem;
-    border-right: 1px solid var(--color-grey-200);
-    border-bottom: 1px solid var(--color-grey-200);
-    border-left: 1px solid var(--color-grey-200);
+    border-right: 1px solid var(--color-black);
+    border-bottom: 1px solid var(--color-black);
+    border-left: 1px solid var(--color-black);
   }
 
   .collection-item-content {

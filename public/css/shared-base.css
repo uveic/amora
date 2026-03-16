@@ -754,6 +754,26 @@ textarea {
   color: var(--color-white);
 }
 
+.button-light,
+.button-light:active,
+.button-light:visited,
+.button-light:hover,
+.button-light:focus {
+  background-color: var(--color-grey-050);
+  color: var(--color-black);
+  border: 1px solid var(--color-grey-200);
+  outline: none;
+}
+
+.button-light svg {
+  fill: var(--color-black);
+  stroke: var(--color-black);
+}
+
+.button-light:hover {
+  border: 1px solid var(--color-grey-400);
+}
+
 button.is-link,
 .button.is-link {
   background-color: var(--color-link);
@@ -859,6 +879,7 @@ button.is-link,
 .p-b-025 {padding-bottom: 0.25rem !important;}
 .p-b-05 {padding-bottom: 0.5rem !important;}
 .p-b-1 {padding-bottom: 1rem !important;}
+.p-b-3 {padding-bottom: 3rem !important;}
 .p-b-6 {padding-bottom: 6rem !important;}
 .p-b-10 {padding-bottom: 10rem !important;}
 .p-r-025 {padding-right: 0.25rem !important;}
@@ -897,6 +918,8 @@ button.is-link,
 .text-nowrap {white-space: nowrap;}
 .text-right {text-align: right !important;}
 .text-strong {font-weight: 700;}
+.text-thin {font-weight: 300;}
+.text-small {font-size: 0.8rem;}
 .width-auto {width: auto;}
 .uppercase {text-transform: uppercase;}
 .min-width-100 {min-width: 100px !important;}

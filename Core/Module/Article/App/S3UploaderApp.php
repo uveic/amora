@@ -234,6 +234,10 @@ class S3UploaderApp extends App
             $filenames[$media->filenameXLarge] = $media->getDirWithNameXLarge();
         }
 
+        if ($media->filenameExtraSize) {
+            $filenames[$media->filenameExtraSize] = $media->getDirWithNameExtraSize();
+        }
+
         return $filenames;
     }
 

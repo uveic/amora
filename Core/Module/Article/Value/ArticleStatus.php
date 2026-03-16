@@ -10,17 +10,6 @@ enum ArticleStatus: int
     case Private = 4;
     case Unlisted = 5;
 
-    public static function getAll(): array
-    {
-        return [
-            self::Published,
-            self::Private,
-            self::Unlisted,
-            self::Draft,
-            self::Deleted,
-        ];
-    }
-
     public function isPublic(): bool
     {
         return match ($this) {

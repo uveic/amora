@@ -38,7 +38,7 @@ final class UserHtmlGenerator
             $indentation . '  <ul>',
         ];
 
-        foreach (UserStatus::getAll() as $item) {
+        foreach (UserStatus::cases() as $item) {
             $statusClassname = $item->getClassName();
             $icon = $item->getIcon();
             $output[] = $indentation . '    <li><a data-checked="' . ($user->status === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option ' . $identifier . '-dd-option no-loader ' . $statusClassname . '"  data-dropdown-identifier="' . $uniqueDropdownIdentifier . '" href="#">' . $icon . $item->getTitle($language) . '</a></li>';

@@ -29,7 +29,7 @@ return [
     new LookupTableSettings(
         database: Core::getCoreDb(),
         tableName: 'core_language',
-        tableFieldsToValues: asArray(Language::getAll()),
+        tableFieldsToValues: asArray(Language::cases()),
     ),
     new LookupTableSettings(
         database: Core::getMailerDb(),

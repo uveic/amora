@@ -3,8 +3,6 @@ import {Request} from './module/Request.js?v=000';
 import {Global} from "./module/localisation.js?v=000";
 import {Uploader} from "./module/Uploader.js?v=000";
 
-const trashSvgIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>';
-
 window.data = {
   mediaCache: [],
   mediaCacheRight: [],
@@ -124,26 +122,17 @@ function handleGenericMainMediaClick(e) {
   const targetContainerId = e.currentTarget.targetContainerId;
 
   const mediaContainer = document.querySelector('#' + targetContainerId);
-  const targetImg = mediaContainer.querySelector('.media-item');
+  mediaContainer.querySelectorAll('.media-item').forEach(mi => mi.remove());
   const sourceImg = document.querySelector('img[data-media-id="' + mediaId + '"]');
 
-  if (targetImg) {
-    targetImg.src = sourceImg.dataset.pathLarge;
-    targetImg.alt = sourceImg.alt;
-    targetImg.title = sourceImg.title;
-    targetImg.dataset.mediaId = sourceImg.dataset.mediaId;
-    targetImg.srcset = sourceImg.srcset;
-    targetImg.className = 'media-item';
-  } else {
-    const newImage = new Image();
-    newImage.src = sourceImg.dataset.pathLarge;
-    newImage.alt = sourceImg.alt;
-    newImage.title = sourceImg.title;
-    newImage.dataset.mediaId = sourceImg.dataset.mediaId;
-    newImage.srcset = sourceImg.srcset;
-    newImage.className = 'media-item';
-    mediaContainer.appendChild(newImage);
-  }
+  const newImage = new Image();
+  newImage.src = sourceImg.dataset.pathLarge;
+  newImage.alt = sourceImg.alt;
+  newImage.title = sourceImg.title;
+  newImage.dataset.mediaId = sourceImg.dataset.mediaId;
+  newImage.srcset = sourceImg.srcset;
+  newImage.className = 'media-item';
+  mediaContainer.appendChild(newImage);
 
   e.currentTarget.textContent = Global.get('globalModify');
   document.querySelector('.select-media-modal').classList.add('null');
@@ -156,15 +145,20 @@ function handleGenericMainMediaClick(e) {
 function handleGenericMediaDeleteClick(e) {
   e.preventDefault();
 
-  const b = e.currentTarget;
-
   const delRes = window.confirm(Global.get('feedbackDeleteGeneric'));
   if (!delRes) {
     return;
   }
 
-  b.parentElement.parentElement.removeChild(b.parentElement.parentElement.querySelector('.media-item'));
-  b.classList.add('null');
+  const mediaWrapper = e.currentTarget.closest('.main-media-wrapper, .main-image-wrapper');
+  if (!mediaWrapper) {
+    return;
+  }
+
+  mediaWrapper.querySelectorAll('.image-container').forEach(ic => ic.remove());
+  mediaWrapper.querySelectorAll('.media-item').forEach(mi => mi.remove());
+
+  e.currentTarget.classList.add('null');
 }
 
 const handleGenericImageContainerDeleteClick = (e) => {
@@ -212,8 +206,7 @@ const handleGenericImageContainerSelectClick = (e) => {
   const aEl = document.createElement('a');
   aEl.href = '#';
   aEl.className = 'image-container-delete image-container-delete-js';
-  aEl.dataset.mediaId = mediaId;
-  aEl.innerHTML = trashSvgIcon;
+  aEl.innerHTML = Util.getTrashSvgIcon();
   aEl.addEventListener('click', handleGenericImageContainerDeleteClick);
 
   figureContainer.appendChild(aEl);
@@ -240,8 +233,7 @@ document.querySelectorAll('.media-from-camera-js').forEach(im => {
           const aEl = document.createElement('a');
           aEl.href = '#';
           aEl.className = 'image-container-delete image-container-delete-js';
-          aEl.dataset.mediaId = response.file.id;
-          aEl.innerHTML = trashSvgIcon;
+          aEl.innerHTML = Util.getTrashSvgIcon();
           aEl.addEventListener('click', handleGenericImageContainerDeleteClick);
           const mediaEl = resultContainer.querySelector('.media-item[data-media-id="' + response.file.id + '"]');
           mediaEl.closest('.image-container').appendChild(aEl);
@@ -921,7 +913,6 @@ function collectionDeleteMainMedia(e) {
       collectionMainMediaContainer.classList.add('no-image-simple');
       collectionMainMediaContainer.parentElement.querySelector('.button-media-add span').textContent = Global.get('globalSelectImage');
       collectionMainMediaContainer.parentElement.querySelector('.collection-main-media-options').classList.add('null');
-      collectionMainMediaContainer.querySelectorAll('.media-caption').forEach(mc => mc.classList.add('null'));
     })
     .catch(error => {
       mediaItemEl.classList.remove('null');
@@ -1103,7 +1094,7 @@ function deleteImage(e) {
     return;
   }
 
-  const mediaId = Number.parseInt(e.currentTarget.dataset.mediaId);
+  const mediaId = e.currentTarget.dataset.mediaId;
 
   Request.delete('/api/file/' + mediaId)
     .then(() => {
@@ -2099,4 +2090,9 @@ document.querySelectorAll('.page-content-draggable-container').forEach(f => {
   f.addEventListener('drop', handlePageContentDrop);
 });
 
-export {handleGenericMediaDeleteClick, handleGenericSelectMainMediaClick, addMediaToModalContainer};
+export {
+  handleGenericMediaDeleteClick,
+  handleGenericImageContainerDeleteClick,
+  handleGenericSelectMainMediaClick,
+  addMediaToModalContainer,
+};

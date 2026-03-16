@@ -41,7 +41,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
             <select id="articleType" name="articleType" data-param-name="atId">
 <?php
     /** @var BackedEnum $type */
-    foreach (ArticleType::getAll() as $type) {
+    foreach (ArticleType::cases() as $type) {
 ?>
               <option<?php echo $type === $articleType ? ' selected="selected"' : '';?> value="<?=$type->value?>"><?=$responseData->getLocalValue('articleType' . $type->name)?></option>
 <?php } ?>
@@ -70,7 +70,7 @@ $filterClass = $articleStatus || $articleLanguage ? '' : ' null';
               <option<?php echo $articleStatus ? '' : ' selected="selected"'; ?> value=""></option>
 <?php
     /** @var BackedEnum $status */
-    foreach (ArticleStatus::getAll() as $status) {
+    foreach (ArticleStatus::cases() as $status) {
         $selected = $status === $articleStatus;
 ?>
               <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$status->value?>"><?=$responseData->getLocalValue('articleStatus' . $status->name)?></option>

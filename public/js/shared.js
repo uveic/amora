@@ -1,6 +1,6 @@
 import {Util} from "./module/Util.js?v=000";
 
-function handleDropdownOptionClick(event) {
+const handleDropdownOptionClick = (event) => {
   event.preventDefault();
   const elementOption = event.currentTarget;
   const dropDownIdentifier = elementOption.dataset.dropdownIdentifier;
@@ -24,7 +24,33 @@ function handleDropdownOptionClick(event) {
   document.querySelectorAll('.' + optionClassName).forEach(o => {
     o.dataset.checked = o.dataset.value === elementOption.dataset.value ? '1' : '0';
   });
-}
+};
+
+const handleImagePopupClick = (e) => {
+  e.preventDefault();
+
+  const modal = document.querySelector('.modal-display-image');
+  if (!modal) {
+    return;
+  }
+
+  const modalInner = modal.querySelector('.modal-inner');
+  const popupImage = modal.querySelector('img.modal-display-item');
+
+  if (popupImage) {
+    popupImage.parentElement.removeChild(popupImage);
+  }
+
+  let modalImage = new Image();
+  modalImage.className = 'modal-display-item';
+  modalImage.src = e.currentTarget.dataset.pathMedium ?? e.currentTarget.src;
+  modalImage.alt = e.currentTarget.alt;
+  modalImage.title = e.currentTarget.title;
+
+  modalInner.appendChild(modalImage);
+
+  modal.classList.remove('null');
+};
 
 window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.dropdown-menu-option').forEach(op => {
@@ -137,32 +163,8 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   document.querySelectorAll('.image-popup-js').forEach(image => {
-    image.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const modal = document.querySelector('.modal-display-image');
-      if (!modal) {
-        return;
-      }
-
-      const modalInner = modal.querySelector('.modal-inner');
-      const popupImage = modal.querySelector('img.modal-display-item');
-
-      if (popupImage) {
-        popupImage.parentElement.removeChild(popupImage);
-      }
-
-      let modalImage = new Image();
-      modalImage.className = 'modal-display-item';
-      modalImage.src = image.dataset.pathMedium ?? image.src;
-      modalImage.alt = image.alt;
-      modalImage.title = image.title;
-
-      modalInner.appendChild(modalImage);
-
-      modal.classList.remove('null');
-    });
+    image.addEventListener('click', handleImagePopupClick);
   });
 });
 
-export {handleDropdownOptionClick};
+export {handleDropdownOptionClick, handleImagePopupClick};

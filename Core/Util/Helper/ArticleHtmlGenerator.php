@@ -28,7 +28,7 @@ final class ArticleHtmlGenerator
         $typeIdGetParam = $responseData->request->getGetParam('atId');
         if (!empty($typeIdGetParam)) {
             /** @var BackedEnum $articleType */
-            foreach (ArticleType::getAll() as $articleType) {
+            foreach (ArticleType::cases() as $articleType) {
                 if ((int)$typeIdGetParam === $articleType->value) {
                     return $articleType;
                 }
@@ -52,7 +52,7 @@ final class ArticleHtmlGenerator
             $indentation . '  <ul>',
         ];
 
-        foreach (PageContentStatus::getAll() as $item) {
+        foreach (PageContentStatus::cases() as $item) {
             $output[] = $indentation . '    <li><a data-checked="' . ($status === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option ' . $identifier . '-dd-option no-loader ' . $item->getClass() . '"  data-dropdown-identifier="' . $identifier . '" href="#">' . $responseData->getLocalValue('articleStatus' . $item->name) . '</a></li>';
         }
 
@@ -79,7 +79,7 @@ final class ArticleHtmlGenerator
         $output[] = '        <ul>';
 
         /** @var BackedEnum $status */
-        foreach (ArticleStatus::getAll() as $status) {
+        foreach (ArticleStatus::cases() as $status) {
             $output[] = '          <li><a data-checked="' . ($status === $articleStatus ? '1' : '0') .
                 '" data-value="' . $status->value .
                 '" class="dropdown-menu-option article-status-dd-option ' . $status->getClass() . '"' .

@@ -12,15 +12,6 @@ enum UserStatus: int
     case Disabled = 2;
     case Deleted = 3;
 
-    public static function getAll(): array
-    {
-        return [
-            self::Enabled,
-            self::Disabled,
-            self::Deleted,
-        ];
-    }
-
     public function getClassname(): string
     {
         return match ($this) {

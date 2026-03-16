@@ -59,10 +59,11 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
      * Endpoint: /api/file
      * Method: POST
      *
+     * @param int|null $extraSizeWidth
      * @param Request $request
      * @return Response
      */
-    abstract protected function storeFile(Request $request): Response;
+    abstract protected function storeFile(?int $extraSizeWidth, Request $request): Response;
 
     /**
      * Endpoint: /api/file/{id}
@@ -208,8 +209,15 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
 
     private function validateAndCallStoreFile(Request $request): Response
     {
+        $formDataParams = $request->postParams;
         $errors = [];
 
+
+        if (isset($formDataParams['extraSizeWidth']) && $formDataParams['extraSizeWidth'] !== '') {
+            $extraSizeWidth = (int)$formDataParams['extraSizeWidth'];
+        } else {
+            $extraSizeWidth = null;
+        }
         if ($errors) {
             return Response::createBadRequestResponse(
                 [
@@ -222,6 +230,7 @@ readonly abstract class AuthorisedApiControllerAbstract extends AbstractControll
 
         try {
             return $this->storeFile(
+                $extraSizeWidth,
                 $request
             );
         } catch (Throwable $t) {

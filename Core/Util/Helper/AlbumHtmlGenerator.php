@@ -39,7 +39,7 @@ final class AlbumHtmlGenerator
             $indentation . '  <ul>',
         ];
 
-        foreach (AlbumStatus::getAll() as $item) {
+        foreach (AlbumStatus::cases() as $item) {
             $statusClassname = $item->getClass();
             $icon = $item->getIcon();
             $statusName = $localisationUtil->getValue('articleStatus' . $item->name);

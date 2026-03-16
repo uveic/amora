@@ -29,7 +29,6 @@
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {

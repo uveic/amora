@@ -101,6 +101,11 @@ class ImageResizeApp extends App
             captionHtml: $existingMedia->captionHtml,
         );
 
+        if (!$resizedMedia) {
+            $this->log('Error resizing media. Skipping...', true);
+            return false;
+        }
+
         $this->mediaService->updateMedia(
             new Media(
                 id: $existingMedia->id,
@@ -112,6 +117,8 @@ class ImageResizeApp extends App
                 path: $resizedMedia->path,
                 filename: $existingMedia->filename,
                 filenameSource: $existingMedia->filenameSource,
+                extraSizeWidth: $existingMedia->extraSizeWidth,
+                filenameExtraSize: $existingMedia->filenameExtraSize,
                 filenameXLarge: $resizedMedia->filenameXLarge,
                 filenameLarge: $resizedMedia->filenameLarge,
                 filenameMedium: $resizedMedia->filenameMedium,
@@ -127,50 +134,71 @@ class ImageResizeApp extends App
         );
 
         $now = new DateTimeImmutable();
-        $this->mediaService->storeMediaDestroyed(
-            new MediaDestroyed(
-                id: null,
-                mediaId: $existingMedia->id,
-                fullPathWithName: $existingMedia->getDirWithNameXSmall(),
-                createdAt: $now,
-            ),
-        );
+        if ($existingMedia->filenameXSmall) {
+            $this->mediaService->storeMediaDestroyed(
+                new MediaDestroyed(
+                    id: null,
+                    mediaId: $existingMedia->id,
+                    fullPathWithName: $existingMedia->getDirWithNameXSmall(),
+                    createdAt: $now,
+                ),
+            );
+        }
 
-        $this->mediaService->storeMediaDestroyed(
-            new MediaDestroyed(
-                id: null,
-                mediaId: $existingMedia->id,
-                fullPathWithName: $existingMedia->getDirWithNameSmall(),
-                createdAt: $now,
-            ),
-        );
+        if ($existingMedia->filenameSmall) {
+            $this->mediaService->storeMediaDestroyed(
+                new MediaDestroyed(
+                    id: null,
+                    mediaId: $existingMedia->id,
+                    fullPathWithName: $existingMedia->getDirWithNameSmall(),
+                    createdAt: $now,
+                ),
+            );
+        }
 
-        $this->mediaService->storeMediaDestroyed(
-            new MediaDestroyed(
-                id: null,
-                mediaId: $existingMedia->id,
-                fullPathWithName: $existingMedia->getDirWithNameMedium(),
-                createdAt: $now,
-            ),
-        );
+        if ($existingMedia->filenameMedium) {
+            $this->mediaService->storeMediaDestroyed(
+                new MediaDestroyed(
+                    id: null,
+                    mediaId: $existingMedia->id,
+                    fullPathWithName: $existingMedia->getDirWithNameMedium(),
+                    createdAt: $now,
+                ),
+            );
+        }
 
-        $this->mediaService->storeMediaDestroyed(
-            new MediaDestroyed(
-                id: null,
-                mediaId: $existingMedia->id,
-                fullPathWithName: $existingMedia->getDirWithNameLarge(),
-                createdAt: $now,
-            ),
-        );
+        if ($existingMedia->filenameLarge) {
+            $this->mediaService->storeMediaDestroyed(
+                new MediaDestroyed(
+                    id: null,
+                    mediaId: $existingMedia->id,
+                    fullPathWithName: $existingMedia->getDirWithNameLarge(),
+                    createdAt: $now,
+                ),
+            );
+        }
 
-        $this->mediaService->storeMediaDestroyed(
-            new MediaDestroyed(
-                id: null,
-                mediaId: $existingMedia->id,
-                fullPathWithName: $existingMedia->getDirWithNameXLarge(),
-                createdAt: $now,
-            ),
-        );
+        if ($existingMedia->filenameXLarge) {
+            $this->mediaService->storeMediaDestroyed(
+                new MediaDestroyed(
+                    id: null,
+                    mediaId: $existingMedia->id,
+                    fullPathWithName: $existingMedia->getDirWithNameXLarge(),
+                    createdAt: $now,
+                ),
+            );
+        }
+
+        if ($existingMedia->filenameExtraSize) {
+            $this->mediaService->storeMediaDestroyed(
+                new MediaDestroyed(
+                    id: null,
+                    mediaId: $existingMedia->id,
+                    fullPathWithName: $existingMedia->getDirWithNameExtraSize(),
+                    createdAt: $now,
+                ),
+            );
+        }
 
         $this->log('Media updated. ID: ' . $existingMedia->id);
 

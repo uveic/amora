@@ -288,7 +288,14 @@
       },
       "post": {
         "operationId": "storeFile",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "extraSizeWidth",
+            "in": "formData",
+            "required": false,
+            "type": "integer"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -727,7 +734,6 @@
           {
             "in": "body",
             "name": "payload",
-            "description": "",
             "required": true,
             "schema": {
               "properties": {

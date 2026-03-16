@@ -10,7 +10,7 @@ enum AppPageContentType: int
     public static function getAll(): array
     {
         return array_merge(
-            PageContentType::getAll(),
+            PageContentType::cases(),
             [],
         );
     }

@@ -9,7 +9,7 @@ enum AppMailerTemplate: int
     public static function getAll(): array
     {
         return array_merge(
-            MailerTemplate::getAll(),
+            MailerTemplate::cases(),
             [],
         );
     }

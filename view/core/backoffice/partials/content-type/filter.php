@@ -25,7 +25,7 @@ $statusFromQuery = isset($statusParam) && PageContentStatus::tryFrom($statusPara
           <select id="statusId" name="statusId">
             <option value=""></option>
 <?php
-    foreach (PageContentStatus::getAll() as $status) {
+    foreach (PageContentStatus::cases() as $status) {
         $selected = $status === $statusFromQuery;
 ?>
             <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$status->value?>"><?=$responseData->getLocalValue('articleStatus' . $status->name)?></option>

@@ -8,20 +8,6 @@ enum Language: string
     case Galego = 'GL';
     case Spanish = 'ES';
 
-    public static function getAll(): array
-    {
-        return [
-            self::English,
-            self::Galego,
-            self::Spanish,
-        ];
-    }
-
-    public static function getActive(): array
-    {
-        return self::getAll();
-    }
-
     public function getName(): string
     {
         return match ($this) {

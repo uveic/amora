@@ -12,15 +12,6 @@ enum UserJourneyStatus: int
     case PendingEmailVerification = 501;
     case RegistrationComplete = 1000;
 
-    public static function getAll(): array
-    {
-        return [
-            self::PendingPasswordCreation,
-            self::PendingEmailVerification,
-            self::RegistrationComplete,
-        ];
-    }
-
     public function getClassname(): string
     {
         return match ($this) {

@@ -23,14 +23,6 @@ enum PageContentType: int
     case Homepage = 1;
     case BlogBottom = 2;
 
-    public static function getAll(): array
-    {
-        return [
-            self::Homepage,
-            self::BlogBottom,
-        ];
-    }
-
     public static function buildRedirectUrl(self|AppPageContentType|null $type, Language $language): string
     {
         return match ($type) {

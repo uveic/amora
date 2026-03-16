@@ -20,6 +20,7 @@ class MediaDataLayer
     use DataLayerTrait;
 
     public const string MEDIA_TABLE = 'core_media';
+    public const string MEDIA_EXTRA_SIZE_TABLE = 'core_media_extra_size';
     public const string MEDIA_TYPE_TABLE = 'core_media_type';
     public const string MEDIA_STATUS_TABLE = 'core_media_status';
     public const string MEDIA_DESTROYED_TABLE = 'core_media_destroyed';
@@ -187,17 +188,37 @@ class MediaDataLayer
         );
     }
 
-    public function storeMediaDestroyed(MediaDestroyed $data): MediaDestroyed
+    public function storeMediaDestroyed(MediaDestroyed $data): ?MediaDestroyed
     {
         $resInsert = $this->db->insert(self::MEDIA_DESTROYED_TABLE, $data->asArray());
 
         if (!$resInsert) {
             $this->logger->logError('Error inserting media destroyed');
+            return null;
         }
 
-        $data->id = (int)$resInsert;
+        $data->id = $resInsert;
 
         return $data;
+    }
+
+    public function storeMediaExtraSize(int $mediaId, int $width, string $filename): ?int
+    {
+        $resInsert = $this->db->insert(
+            tableName: self::MEDIA_EXTRA_SIZE_TABLE,
+            data: [
+                'media_id' => $mediaId,
+                'width' => $width,
+                'filename' => $filename,
+            ]
+        );
+
+        if (!$resInsert) {
+            $this->logger->logError('Error inserting media extra size');
+            return null;
+        }
+
+        return $resInsert;
     }
 
     public function markMediaAsDeleted(int $id): bool

@@ -18,6 +18,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
         ?Pagination $pagination = null,
         ?Feedback $feedback = null,
         bool $isPublicPage = false,
+        bool $includeEditor = false,
         public readonly ?Article $article = null,
         public readonly array $articles = [],
         public readonly array $articleSections = [],
@@ -38,6 +39,7 @@ class HtmlResponseData extends HtmlResponseDataAbstract
             pageDescription: $pageDescription,
             siteImageUrl: $siteImageUrl,
             isPublicPage: $isPublicPage,
+            includeEditor: $includeEditor,
         );
     }
 }

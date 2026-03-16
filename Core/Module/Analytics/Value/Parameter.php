@@ -13,18 +13,6 @@ enum Parameter: int
     case Referrer = 6;
     case VisitorHash = 7;
 
-    public static function getAll(): array
-    {
-        return [
-            self::Url,
-            self::Platform,
-            self::Browser,
-            self::Language,
-            self::Referrer,
-            self::VisitorHash,
-        ];
-    }
-
     public function getValueTableName(): string
     {
         return match ($this) {

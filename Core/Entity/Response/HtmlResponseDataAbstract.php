@@ -34,6 +34,7 @@ abstract class HtmlResponseDataAbstract
         public readonly string $logoClass = '',
         public readonly string $menuClass = '',
         public readonly bool $isPublicPage = false,
+        public readonly bool $includeEditor = false,
     ) {
         $this->localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
 
