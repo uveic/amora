@@ -1,5 +1,6 @@
 # IDE/Editor lint
 .idea
+.zed
 .php_cs.cache
 .phpactor.json
 *.iml

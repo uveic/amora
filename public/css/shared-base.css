@@ -934,6 +934,7 @@ svg,
   stroke: var(--color-black);
   flex-shrink: 0;
   flex-grow: 0;
+  line-height: 1;
 }
 
 .a-svg svg {
