@@ -34,12 +34,12 @@ enum ContentType: string
     case PDF = 'application/pdf';
 }
 
-class Response
+final readonly class Response
 {
-    public readonly array $headers;
+    public array $headers;
 
     public function __construct(
-        public readonly string $output,
+        public string $output,
         ContentType $contentType,
         HttpStatusCode $httpStatus,
         array $headers = [],
@@ -97,20 +97,20 @@ class Response
     ///////////////////////////////////////////////////////////////////////////
     // Static helpers for constructing a response
 
-    public static function createSuccessResponse($payload): Response
+    public static function createSuccessResponse($payload): self
     {
         [$output, $contentType] = self::getResponseType($payload);
-        return new Response(
+        return new self(
             output: $output,
             contentType: $contentType,
             httpStatus: HttpStatusCode::HTTP_200_OK,
         );
     }
 
-    public static function createForbiddenResponse($payload): Response
+    public static function createForbiddenResponse($payload): self
     {
         [$output, $contentType] = self::getResponseType($payload);
-        return new Response(
+        return new self(
             output: $output,
             contentType: $contentType,
             httpStatus: HttpStatusCode::HTTP_403_FORBIDDEN,
@@ -121,7 +121,7 @@ class Response
         string $template,
         HtmlResponseDataAbstract $responseData,
         HttpStatusCode $httpStatusCode = HttpStatusCode::HTTP_200_OK,
-    ): Response {
+    ): self {
         $slashPos = strrpos($template, '/');
         if ($slashPos === false) {
             return self::createErrorResponse('Invalid template path: ' . $template);
@@ -137,7 +137,7 @@ class Response
             data: ['responseData' => $responseData],
         );
 
-        return new Response(
+        return new self(
             output: $html,
             contentType: ContentType::HTML,
             httpStatus: $httpStatusCode,
@@ -149,8 +149,8 @@ class Response
         string $localPath,
         string $fileName,
         ContentType $contentType,
-    ): Response {
-        return new Response(
+    ): self {
+        return new self(
             output: file_get_contents($localPath),
             contentType: $contentType,
             httpStatus: HttpStatusCode::HTTP_200_OK,
@@ -163,7 +163,7 @@ class Response
         );
     }
 
-    public static function createCsvDownloadResponse(string $localPath, string $fileName): Response
+    public static function createCsvDownloadResponse(string $localPath, string $fileName): self
     {
         return self::createDownloadResponse(
             localPath: $localPath,
@@ -172,7 +172,7 @@ class Response
         );
     }
 
-    public static function createTextDownloadResponse(string $localPath, string $fileName): Response
+    public static function createTextDownloadResponse(string $localPath, string $fileName): self
     {
         return self::createDownloadResponse(
             localPath: $localPath,
@@ -185,8 +185,8 @@ class Response
         string $url,
         string $localPath,
         string $fileName,
-    ): Response {
-        return new Response(
+    ): self {
+        return new self(
             output: '',
             contentType: ContentType::PDF,
             httpStatus: HttpStatusCode::HTTP_200_OK,
@@ -200,9 +200,9 @@ class Response
         );
     }
 
-    public static function createRedirectResponse(string $url): Response
+    public static function createRedirectResponse(string $url): self
     {
-        return new Response(
+        return new self(
             output: '',
             contentType: ContentType::HTML,
             httpStatus: HttpStatusCode::HTTP_307_TEMPORARY_REDIRECT,
@@ -212,9 +212,9 @@ class Response
         );
     }
 
-    public static function createPermanentRedirectResponse(string $url): Response
+    public static function createPermanentRedirectResponse(string $url): self
     {
-        return new Response(
+        return new self(
             output: '',
             contentType: ContentType::HTML,
             httpStatus: HttpStatusCode::HTTP_301_PERMANENT_REDIRECT,
@@ -227,7 +227,7 @@ class Response
     public static function createNotFoundResponse(
         Request $request,
         ?HtmlResponseDataAbstract $responseData = null,
-    ): Response {
+    ): self {
         return self::createHtmlResponse(
             template: 'app/public/404',
             responseData: $responseData ?? new HtmlResponseData($request),
@@ -235,16 +235,22 @@ class Response
         );
     }
 
-    public static function createJsonNotFoundResponse(): Response
+    public static function createJsonNotFoundResponse(): self
     {
-        return new Response(
-            output: json_encode(['success' => false]),
+        try {
+            $outputJson = json_encode(['success' => false], JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $outputJson = $e->getMessage();
+        }
+
+        return new self(
+            output: $outputJson,
             contentType: ContentType::JSON,
             httpStatus: HttpStatusCode::HTTP_404_NOT_FOUND,
         );
     }
 
-    public static function createUnauthorisedRedirectLoginResponse(Language $language): Response
+    public static function createUnauthorisedRedirectLoginResponse(Language $language): self
     {
         return self::createRedirectResponse(
             url: UrlBuilderUtil::buildPublicLoginUrl($language),
@@ -254,7 +260,7 @@ class Response
     public static function createUnauthorisedHtmlResponse(
         Request $request,
         ?HtmlResponseDataAbstract $responseData = null,
-    ): Response {
+    ): self {
         return self::createHtmlResponse(
             template: 'app/public/403',
             responseData: $responseData ?? new HtmlResponseData($request),
@@ -262,24 +268,30 @@ class Response
         );
     }
 
-    public static function createUnauthorizedJsonResponse(): Response
+    public static function createUnauthorizedJsonResponse(): self
     {
         $response = [
             'success' => false,
             'errorMessage' => 'Whoops! Not authorised...'
         ];
 
-        return new Response(
-            output: json_encode($response),
+        try {
+            $outputJson = json_encode($response, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $outputJson = $e->getMessage();
+        }
+
+        return new self(
+            output: $outputJson,
             contentType: ContentType::JSON,
             httpStatus: HttpStatusCode::HTTP_403_FORBIDDEN,
         );
     }
 
-    public static function createBadRequestResponse($payload): Response
+    public static function createBadRequestResponse($payload): self
     {
         [$output, $contentType] = self::getResponseType($payload);
-        return new Response(
+        return new self(
             output: $output,
             contentType: $contentType,
             httpStatus: HttpStatusCode::HTTP_400_BAD_REQUEST,
@@ -288,26 +300,26 @@ class Response
 
     public static function createErrorResponse(
         string $msg = 'There was an unexpected error :('
-    ): Response {
-        return new Response(
+    ): self {
+        return new self(
             output: $msg,
             contentType: ContentType::HTML,
             httpStatus: HttpStatusCode::HTTP_500_INTERNAL_ERROR,
         );
     }
 
-    public static function createSuccessXmlResponse(string $payload): Response
+    public static function createSuccessXmlResponse(string $payload): self
     {
-        return new Response(
+        return new self(
             output: $payload,
             contentType: ContentType::XML,
             httpStatus: HttpStatusCode::HTTP_200_OK,
         );
     }
 
-    public static function createSuccessJsonResponse(string $payload): Response
+    public static function createSuccessJsonResponse(string $payload): self
     {
-        return new Response(
+        return new self(
             output: $payload,
             contentType: ContentType::JSON,
             httpStatus: HttpStatusCode::HTTP_200_OK,

@@ -4,7 +4,7 @@ namespace Amora\Core\Router\Controller\Response;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\HttpStatusCode;
 
-class BackofficeApiControllerUpdateMediaCaptionSuccessResponse extends Response
+readonly class BackofficeApiControllerUpdateMediaCaptionSuccessResponse extends Response
 {
     public function __construct(bool $success, ?string $errorMessage = null)
     {

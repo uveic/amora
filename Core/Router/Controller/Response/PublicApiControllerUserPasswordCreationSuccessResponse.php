@@ -4,7 +4,7 @@ namespace Amora\Core\Router\Controller\Response;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\HttpStatusCode;
 
-class PublicApiControllerUserPasswordCreationSuccessResponse extends Response
+readonly class PublicApiControllerUserPasswordCreationSuccessResponse extends Response
 {
     public function __construct(bool $success, ?string $errorMessage = null)
     {

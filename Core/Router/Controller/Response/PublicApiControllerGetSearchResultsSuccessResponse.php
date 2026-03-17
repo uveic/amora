@@ -4,7 +4,7 @@ namespace Amora\Core\Router\Controller\Response;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\HttpStatusCode;
 
-class PublicApiControllerGetSearchResultsSuccessResponse extends Response
+readonly class PublicApiControllerGetSearchResultsSuccessResponse extends Response
 {
     public function __construct(bool $success, array $results)
     {

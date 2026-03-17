@@ -4,7 +4,7 @@ namespace Amora\Core\Router\Controller\Response;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\HttpStatusCode;
 
-class BackofficeApiControllerStoreTagSuccessResponse extends Response
+readonly class BackofficeApiControllerStoreTagSuccessResponse extends Response
 {
     public function __construct(bool $success, ?int $id = null)
     {

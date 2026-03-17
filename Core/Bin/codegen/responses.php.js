@@ -78,7 +78,7 @@ function renderResponseClass(responseClassName, operationId, httpStatus, schema)
   }
 
   return [
-    `class ${responseClassName} extends Response
+    `readonly class ${responseClassName} extends Response
 {`,
     params
       .filter(p => p.enum)

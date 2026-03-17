@@ -4,7 +4,7 @@ namespace Amora\Core\Router\Controller\Response;
 use Amora\Core\Entity\Response;
 use Amora\Core\Entity\HttpStatusCode;
 
-class BackofficeApiControllerUpdatePageContentFailureResponse extends Response
+readonly class BackofficeApiControllerUpdatePageContentFailureResponse extends Response
 {
     public function __construct(?array $errorInfo = null)
     {
