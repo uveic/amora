@@ -329,10 +329,6 @@
   justify-content: flex-end;
 }
 
-.card-info-item .dropdown-container > label {
-  padding-right: 0;
-}
-
 .dashboard-title-small {
   font-size: 1rem;
 }

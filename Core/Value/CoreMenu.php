@@ -18,23 +18,23 @@ final class CoreMenu
     ): array {
         $localisationUtil = Core::getLocalisationUtil($language);
 
-        $output = [
-            new MenuItem(
-                path: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
-                text: $localisationUtil->getValue('navAdministrator'),
-                sequence: 100,
-            ),
-            self::getAdminContentMenuItem(language: $language),
-            self::getAccountMenuItem(language: $language, username: $username),
-        ];
-
+        $output = [];
         if ($includeAuthorisedDashboardLink) {
             $output[] = new MenuItem(
                 path: UrlBuilderUtil::buildAppDashboardUrl($language),
                 text: $localisationUtil->getValue('navAuthorisedDashboard'),
-                sequence: 201,
+                sequence: 99,
             );
         }
+
+        $output[] = new MenuItem(
+            path: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
+            text: $localisationUtil->getValue('navAdministrator'),
+            sequence: 100,
+        );
+
+        $output[] = self::getAdminContentMenuItem(language: $language);
+        $output[] = self::getAccountMenuItem(language: $language, username: $username);
 
         return $output;
     }

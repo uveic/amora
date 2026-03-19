@@ -20,8 +20,14 @@ if (!isset($siteLogoHtml)) {
 $isAdmin = $responseData->request->session?->isAdmin() ?? false;
 $isSearchEnabled = $isSearchEnabled ?? Core::getConfig()->isSearchEnabled;
 
-if (!$responseData->feedback && $responseData->request->session?->user && !$responseData->request->session->user->isVerified()) {
-$userRegisteredMoreThan24HoursAgo = round((time() - $responseData->request->session->user->createdAt->getTimestamp()) / 60);
+if (
+    !$responseData->feedback
+    && $responseData->request->session?->user
+    && !$responseData->request->session->user->isVerified()
+) {
+    $userRegisteredMoreThan24HoursAgo = round(
+        (time() - $responseData->request->session->user->createdAt->getTimestamp()) / 60
+    );
 
     if ($userRegisteredMoreThan24HoursAgo > 24 * 60) {
 ?>
