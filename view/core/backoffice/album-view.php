@@ -51,7 +51,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
     </div>
     <div class="backoffice-wrapper">
       <div class="backoffice-child-outer">
-        <div class="backoffice-child-container">
+        <div class="backoffice-child-inner">
           <div class="card-info-item">
             <span class="title"><?=$responseData->getLocalValue('globalStatus')?>:</span>
             <div class="value">
@@ -73,7 +73,7 @@ $localisationUtil = Core::getLocalisationUtil($responseData->siteLanguage);
         </div>
       </div>
       <div class="backoffice-child-outer">
-        <div class="backoffice-child-container">
+        <div class="backoffice-child-inner">
 <?php if ($album->contentHtml) { ?>
           <div class="card-info-item">
             <span class="title"><?=$responseData->getLocalValue('globalContent')?>:</span>

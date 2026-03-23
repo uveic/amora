@@ -46,7 +46,7 @@ foreach ($responseData->sessions as $session) {
 
     <div class="backoffice-wrapper" data-user-id="<?=$responseData->user->id?>">
       <div class="backoffice-child-outer">
-        <div class="backoffice-child-container">
+        <div class="backoffice-child-inner">
           <div class="card-info-item">
             <span class="title"><?=$responseData->getLocalValue('globalStatus')?>:</span>
             <span class="value gap-1">
@@ -105,7 +105,7 @@ if (!$responseData->user->isVerified()) { ?>
 <?php } ?>
         </div>
 
-        <div class="backoffice-child-container">
+        <div class="backoffice-child-inner">
           <div class="card-info-header">
             <span class="title"><?=$responseData->getLocalValue('formUserActiveSessions')?></span>
           </div>
@@ -129,7 +129,7 @@ if (!$responseData->user->isVerified()) { ?>
       </div>
 
       <div class="backoffice-child-outer">
-        <div class="backoffice-child-container">
+        <div class="backoffice-child-inner">
           <div class="card-info-item">
             <span class="title"><?=$responseData->getLocalValue('formUserLastVisit')?>:</span>
             <span class="value" title="<?=$lastVisitAt ? DateUtil::formatDateShort(date: $lastVisitAt) : ''?>"><?=$lastVisitAt ? DateUtil::getElapsedTimeString(from: $lastVisitAt, includePrefixAndOrSuffix: true, language: $responseData->siteLanguage) : '-'?></span>
@@ -151,7 +151,7 @@ if (!$responseData->user->isVerified()) { ?>
           </div>
         </div>
 
-        <div class="backoffice-child-container">
+        <div class="backoffice-child-inner">
           <div class="card-info-item">
             <span class="title"><?=$responseData->getLocalValue('globalLanguage')?>:</span>
             <span class="value"><?=$responseData->user->language->getName()?></span>

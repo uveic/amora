@@ -35,7 +35,6 @@
 
 .table-row.header {
   background-color: var(--color-primary) !important;
-  border-bottom: 0 solid var(--color-primary);
   color: var(--color-white);
   font-weight: bold;
   padding-top: 0.5em;
@@ -143,22 +142,18 @@
   display: flex;
   flex-flow: column nowrap;
   gap: 1rem;
-  flex-basis: 100%;
+  width: 100%;
   flex-grow: 1;
-}
-
-.backoffice-child-container {
-  flex-basis: 100%;
   background-color: white;
   padding: 0;
 }
 
-.backoffice-child-container trix-toolbar {
+.backoffice-child-outer trix-toolbar {
   background-color: white;
   padding: 0;
 }
 
-.backoffice-child-container trix-editor {
+.backoffice-child-outer trix-editor {
   min-height: 150px;
   border: 1px solid var(--color-input-border);
 }
@@ -183,7 +178,7 @@
   color: var(--color-white);
 }
 
-.backoffice-child-container-inner {
+.backoffice-child-inner {
   padding: 1rem;
 }
 
@@ -672,9 +667,10 @@
 
 .filter-form-wrapper>div {
   margin: 0;
-  flex-grow: 1;
   min-width: 250px;
+  max-width: 100%;
   flex-shrink: 0;
+  flex-grow: 1;
 }
 
 .filter-button,
@@ -1906,11 +1902,7 @@
   }
 
   .backoffice-child-outer {
-    flex-basis: 40%;
-  }
-
-  .backoffice-child-container {
-    flex-basis: 40%;
+    width: 40%;
     flex-grow: 1;
     padding: 0;
   }
@@ -1919,7 +1911,7 @@
     border-top: 1px solid var(--color-black);
   }
 
-  .backoffice-child-container-inner {
+  .backoffice-child-inner {
     padding: 1rem;
     border-right: 1px solid var(--color-black);
     border-bottom: 1px solid var(--color-black);
