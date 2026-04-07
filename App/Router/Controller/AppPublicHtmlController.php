@@ -40,10 +40,8 @@ final readonly class AppPublicHtmlController extends AppPublicHtmlControllerAbst
         return true;
     }
 
-    public function buildHomepageResponse(
-        Request $request,
-        ?Feedback $feedback = null,
-    ): Response {
+    public function buildHomepageResponse(Request $request): Response
+    {
         $isAdmin = $request->session && $request->session->isAdmin();
         $statusIds = $isAdmin
             ? [
@@ -79,7 +77,6 @@ final readonly class AppPublicHtmlController extends AppPublicHtmlControllerAbst
             responseData: new AppHtmlHomepageResponseData(
                 request: $request,
                 pagination: $pagination,
-                feedback: $feedback,
                 isPublicPage: true,
                 pageContentByTypeId: $pageContentByTypeId,
                 homeArticles: [],

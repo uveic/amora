@@ -184,10 +184,21 @@ readonly final class PublicHtmlController extends PublicHtmlControllerAbstract
             localisationUtil: $localisationUtil,
         );
 
-        return $this->buildHomepageResponse(
-            request: $request,
-            feedback: $feedback,
-        );
+        if (!$feedback->isSuccess) {
+            $localisationUtil = Core::getLocalisationUtil($request->siteLanguage);
+
+            return Response::createHtmlResponse(
+                template: 'app/public/200-error-message',
+                responseData: new HtmlResponseData(
+                    request: $request,
+                    pageTitle: $localisationUtil->getValue('globalPageGenericErrorTitle'),
+                    feedback: $feedback,
+                    isPublicPage: true,
+                ),
+            );
+        }
+
+        return $this->buildHomepageResponse(request: $request);
     }
 
     /**
@@ -481,13 +492,8 @@ readonly final class PublicHtmlController extends PublicHtmlControllerAbstract
         return Response::createSuccessXmlResponse($xml);
     }
 
-    private function buildHomepageResponse(
-        Request $request,
-        ?Feedback $feedback = null,
-    ): Response {
-        return $this->appPublicHtmlController->buildHomepageResponse(
-            request: $request,
-            feedback: $feedback,
-        );
+    private function buildHomepageResponse(Request $request): Response
+    {
+        return $this->appPublicHtmlController->buildHomepageResponse(request: $request);
     }
 }

@@ -20,23 +20,7 @@ if (!isset($siteLogoHtml)) {
 $isAdmin = $responseData->request->session?->isAdmin() ?? false;
 $isSearchEnabled = $isSearchEnabled ?? Core::getConfig()->isSearchEnabled;
 
-if (
-    !$responseData->feedback
-    && $responseData->request->session?->user
-    && !$responseData->request->session->user->isVerified()
-) {
-    $userRegisteredMoreThan24HoursAgo = round(
-        (time() - $responseData->request->session->user->createdAt->getTimestamp()) / 60
-    );
-
-    if ($userRegisteredMoreThan24HoursAgo > 24 * 60) {
-?>
-  <div id="feedback-banner" class="feedback-success">
-    <h2 class="m-t-0"><?=$responseData->getLocalValue('authenticationVerifyEmailBannerTitle')?></h2>
-    <p><?=sprintf($responseData->getLocalValue('authenticationVerifyEmailBannerContent'), $responseData->request->session->user->changeEmailAddressTo)?></p>
-  </div>
-<?php } } ?>
-<?php if ($isSearchEnabled) { ?>
+if ($isSearchEnabled) { ?>
   <div class="search-fullscreen-shadow null"></div>
 <?php } ?>
   <header id="site-top" class="header-container<?=$responseData->isPublicPage ? '' : ' header-backoffice'?>">

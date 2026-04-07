@@ -413,14 +413,6 @@ pre {
 .feedback-error {
   background-color: var(--color-failure) !important;
 }
-
-#feedback-banner {
-  width: 100%;
-  text-align: center;
-  color: var(--color-grey-100);
-  padding: 1rem;
-  font-size: 1rem;
-}
 /* Feedback style ends here */
 
 /* Register/Login style starts here */
@@ -923,6 +915,7 @@ button.is-link,
 .gap-1 { gap: 1rem !important; }
 .gap-15 { gap: 1.5rem !important; }
 .gap-2 { gap: 2rem !important; }
+.gap-vertical-05 {row-gap: 0.5rem !important; }
 .bg-color-dark {background-color: var(--color-black);}
 .no-border {border: none !important;}
 .width-40 { width: 40%; }
