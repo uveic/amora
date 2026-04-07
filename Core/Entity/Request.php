@@ -26,7 +26,7 @@ final readonly class Request
         public array $postParams,
         public array $files,
         private array $cookies,
-        array $headers,
+        public array $headers,
     ) {
         $this->session = $this->loadSession();
         $this->clientLanguage = $headers['HTTP_ACCEPT_LANGUAGE'] ?? null;

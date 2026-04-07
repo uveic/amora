@@ -59,7 +59,7 @@ $languages = Core::getEnabledSiteLanguages();
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
           </div>
           <div class="control">
-            <input type="submit" class="button is-success m-b-3" value="<?=$responseData->getLocalValue('globalUpdate')?>">
+            <input type="submit" class="button is-success m-b-3 width-100" value="<?=$responseData->getLocalValue('globalUpdate')?>">
           </div>
         </form>
         <div class="field">

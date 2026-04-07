@@ -34,7 +34,7 @@ $user = $responseData->request->session->user;
             <p class="help"><span class="is-danger"><?=$responseData->getLocalValue('globalRequired')?></span></p>
           </div>
           <div class="control">
-            <input type="submit" class="button is-success m-b-3" value="<?=$responseData->getLocalValue('formPasswordResetAction')?>">
+            <input type="submit" class="button is-success m-b-3 width-100" value="<?=$responseData->getLocalValue('formPasswordResetAction')?>">
           </div>
         </form>
       </div>

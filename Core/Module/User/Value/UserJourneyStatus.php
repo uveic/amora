@@ -10,6 +10,8 @@ enum UserJourneyStatus: int
 {
     case PendingPasswordCreation = 500;
     case PendingEmailVerification = 501;
+    case EmailToCreatePasswordNotSent = 502;
+
     case RegistrationComplete = 1000;
 
     public function getClassname(): string
@@ -28,7 +30,8 @@ enum UserJourneyStatus: int
     public function getVerificationType(): ?VerificationType
     {
         return match ($this) {
-            self::PendingPasswordCreation => VerificationType::PasswordCreation,
+            self::PendingPasswordCreation,
+            self::EmailToCreatePasswordNotSent => VerificationType::PasswordCreation,
             self::PendingEmailVerification => VerificationType::VerifyEmailAddress,
             default => null,
         };

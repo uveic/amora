@@ -46,7 +46,7 @@ foreach ($responseData->sessions as $session) {
 
     <div class="backoffice-wrapper" data-user-id="<?=$responseData->user->id?>">
       <div class="backoffice-child-outer">
-        <div class="backoffice-child-inner">
+        <div class="backoffice-child-inner backoffice-child-no-header">
           <div class="card-info-item">
             <span class="title"><?=$responseData->getLocalValue('globalStatus')?>:</span>
             <span class="value gap-1">
@@ -95,41 +95,50 @@ foreach ($responseData->sessions as $session) {
             <span class="value"><?=$responseData->user->changeEmailAddressTo?></span>
           </div>
 <?php }
-if (!$responseData->user->isVerified()) { ?>
+if (!$responseData->user->isVerified() && $responseData->user->journeyStatus->getVerificationType()) { ?>
           <div class="card-info-item">
             <span class="title"></span>
             <span class="value gap-1">
               <span><?=$responseData->user->journeyStatus->asHtml($responseData->siteLanguage)?></span>
               <a href="#" class="send-verification-email-js no-loader" data-user-id="<?=$responseData->user->id?>" data-verification-type-id="<?=$responseData->user->journeyStatus->getVerificationType()?->value?>"><?=$responseData->getLocalValue('formUserSendEmailAgain')?></a>
+            </span>
           </div>
 <?php } ?>
+          <div class="card-info-item">
+            <span class="title"></span>
+            <span class="value">
+              <a href="<?=UrlBuilderUtil::buildBackofficeMailsUrl(language: $responseData->siteLanguage, userId: $responseData->user->id)?>"><?=$responseData->getLocalValue('formUserViewSentEmails')?></a>
+            </span>
+          </div>
         </div>
 
-        <div class="backoffice-child-inner">
-          <div class="card-info-header">
-            <span class="title"><?=$responseData->getLocalValue('formUserActiveSessions')?></span>
-          </div>
+<?php if ($openSessions) { ?>
+        <div>
+          <div class="backoffice-child-header"><?=$responseData->getLocalValue('formUserActiveSessions')?></div>
+          <div class="backoffice-child-inner">
 <?php
     /** @var Session $session */
     foreach ($openSessions as $session) {
 ?>
-          <div class="card-info-item gap-1 width-100">
-            <div>
-              <div class="m-b-05"><?=$session->browserAndPlatform?></div>
-              <div class="number"><?=$session->ip?></div>
+            <div class="card-info-item gap-1 width-100">
+              <div>
+                <div class="m-b-05"><?=$session->browserAndPlatform?></div>
+                <div class="number"><?=$session->ip?></div>
+              </div>
+              <div class="flex-column gap-05">
+                <div class="flex-end width-100 icon-one-line gap-05" title="<?=DateUtil::formatDateShort($session->createdAt)?>"><?=DateUtil::getElapsedTimeString(from: $session->createdAt, includePrefixAndOrSuffix: true, language: $responseData->siteLanguage) . CoreIcons::SPARKLE?></div>
+                <div class="flex-end width-100 icon-one-line gap-05" title="<?=DateUtil::formatDateShort($session->lastVisitedAt)?>"><?=DateUtil::getElapsedTimeString(from: $session->lastVisitedAt, includePrefixAndOrSuffix: true, language: $responseData->siteLanguage) . CoreIcons::SIGN_IN?></div>
+              </div>
             </div>
-            <div class="flex-column gap-05">
-              <div class="flex-end width-100 icon-one-line gap-05" title="<?=DateUtil::formatDateShort($session->createdAt)?>"><?=DateUtil::getElapsedTimeString(from: $session->createdAt, includePrefixAndOrSuffix: true, language: $responseData->siteLanguage) . CoreIcons::SPARKLE?></div>
-              <div class="flex-end width-100 icon-one-line gap-05" title="<?=DateUtil::formatDateShort($session->lastVisitedAt)?>"><?=DateUtil::getElapsedTimeString(from: $session->lastVisitedAt, includePrefixAndOrSuffix: true, language: $responseData->siteLanguage) . CoreIcons::SIGN_IN?></div>
-            </div>
-          </div>
 <?php } ?>
+          </div>
         </div>
+<?php } ?>
 
       </div>
 
       <div class="backoffice-child-outer">
-        <div class="backoffice-child-inner">
+        <div class="backoffice-child-inner backoffice-child-no-header">
           <div class="card-info-item">
             <span class="title"><?=$responseData->getLocalValue('formUserLastVisit')?>:</span>
             <span class="value" title="<?=$lastVisitAt ? DateUtil::formatDateShort(date: $lastVisitAt) : ''?>"><?=$lastVisitAt ? DateUtil::getElapsedTimeString(from: $lastVisitAt, includePrefixAndOrSuffix: true, language: $responseData->siteLanguage) : '-'?></span>
@@ -151,7 +160,7 @@ if (!$responseData->user->isVerified()) { ?>
           </div>
         </div>
 
-        <div class="backoffice-child-inner">
+        <div class="backoffice-child-inner backoffice-child-no-header">
           <div class="card-info-item">
             <span class="title"><?=$responseData->getLocalValue('globalLanguage')?>:</span>
             <span class="value"><?=$responseData->user->language->getName()?></span>

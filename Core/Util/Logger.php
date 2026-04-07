@@ -184,7 +184,7 @@ final class Logger
             $f = fopen($outPath, 'ab');
 
             if (!$fileExists) {
-                chmod($outPath, 0666);
+                chmod($outPath, 0777);
             }
 
             if (empty($f)) {

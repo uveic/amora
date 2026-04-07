@@ -930,7 +930,12 @@ readonly final class BackofficeHtmlController extends BackofficeHtmlControllerAb
     {
         $limit = $request->getGetParam('limit') ?? '50';
 
+        $userId = $request->getGetParam('uId');
+        $userIds = $userId && is_numeric($userId) ? [(int)$userId] : [];
+
         $emails = $this->mailerService->filterMailerItemBy(
+            userIds: $userIds,
+            userEmail: $request->getGetParam('email'),
             queryOptions: new QueryOptions(
                 orderBy: [new QueryOrderBy('id', QueryOrderDirection::DESC)],
                 pagination: new Response\Pagination(itemsPerPage: $limit),

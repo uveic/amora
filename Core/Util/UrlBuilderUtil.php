@@ -216,9 +216,24 @@ readonly class UrlBuilderUtil
         return $baseUrl . ($getParams ? ('?' . implode('&', $getParams)) : '');
     }
 
-    public static function buildBackofficeMailsUrl(Language $language): string
-    {
-        return self::buildBaseUrl($language) . self::BACKOFFICE_EMAILS;
+    public static function buildBackofficeMailsUrl(
+        Language $language,
+        ?int $userId = null,
+        ?string $email = null,
+    ): string {
+        $getParams = [];
+
+        $baseUrl = self::buildBaseUrl($language) . self::BACKOFFICE_EMAILS;
+
+        if ($email) {
+            $getParams[] = 'email=' . $email;
+        }
+
+        if ($userId) {
+            $getParams[] = 'uId=' . $userId;
+        }
+
+        return $baseUrl . ($getParams ? ('?' . implode('&', $getParams)) : '');
     }
 
     public static function buildBackofficeUserListUrl(Language $language): string

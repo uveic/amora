@@ -34,7 +34,7 @@ enum ContentType: string
     case PDF = 'application/pdf';
 }
 
-final readonly class Response
+readonly class Response
 {
     public array $headers;
 

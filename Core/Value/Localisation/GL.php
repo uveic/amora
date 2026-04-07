@@ -93,6 +93,7 @@ return [
     'formUserActiveSessions' => 'Sesións abertas',
     'formUserExpiredSessions' => 'Sesións caducadas',
     'formUserSendEmailAgain' => 'Volver a enviar o correo',
+    'formUserViewSentEmails' => 'Ver correos enviados a este usuario/a',
     'errorUserNotEnabled' => 'O usuario está desactivado.',
 
     'dashboardGoTo' => 'Contido',
@@ -210,6 +211,7 @@ return [
     'userStatusDeleted' => 'Eliminado',
     'userJourneyRegistration' => 'Rexistro completo',
     'userJourneyPendingPasswordCreation' => 'Pendente de crear o contrasinal',
+    'userJourneyEmailToCreatePasswordNotSent' => 'Correo para crear contrasinal non enviado',
     'userJourneyPendingEmailVerification' => 'Pendente de verificar o correo electrónico',
 
     'emailConfirmationSubject' => 'Confirma o teu correo electrónico',

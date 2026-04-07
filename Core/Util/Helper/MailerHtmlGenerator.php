@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Util\Helper;
 
+use Amora\Core\Entity\Response\HtmlResponseDataAbstract;
 use Amora\Core\Entity\Response\HtmlResponseDataAdmin;
 use Amora\Core\Module\Mailer\Model\MailerItem;
 use Amora\Core\Util\DateUtil;
@@ -66,6 +67,36 @@ final class MailerHtmlGenerator
 
         $output[] = $indentation . '  </div>';
         $output[] = $indentation . '</div>';
+
+        return implode(PHP_EOL, $output) . PHP_EOL;
+    }
+
+    public static function generateEmailFilterFilterInfoHtml(HtmlResponseDataAbstract $responseData): string
+    {
+        $email = $responseData->request->getGetParam('email');
+        $userId = $responseData->request->getGetParam('userId');
+
+        if (!$email && !$userId) {
+            return '';
+        }
+
+        $output = [];
+        $output[] = '      <div class="filter-by">';
+        $output[] = '        <div class="items">';
+        $output[] = '          <span><b>' . $responseData->getLocalValue('formFilterTitle') . 's:</b></span>';
+
+        if ($email) {
+            $output[] = '          <span class="icon-one-line">' . CoreIcons::AT . $email . '</span>';
+        }
+
+        if ($userId) {
+            $output[] = '          <span class="icon-one-line">' . CoreIcons::USER . $responseData->getLocalValue('globalUser') . '</span>';
+        }
+
+        $output[] = '        </div>';
+        $output[] = '        <div class="filter-links">';
+        $output[] = '        </div>';
+        $output[] = '      </div>';
 
         return implode(PHP_EOL, $output) . PHP_EOL;
     }

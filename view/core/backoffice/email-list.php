@@ -18,6 +18,7 @@ $this->layout('base', ['responseData' => $responseData]);
       <div class="links"></div>
     </div>
     <div class="backoffice-wrapper">
+<?=MailerHtmlGenerator::generateEmailFilterFilterInfoHtml($responseData)?>
       <div class="table">
 <?php
     /** @var MailerItem $mailerItem */

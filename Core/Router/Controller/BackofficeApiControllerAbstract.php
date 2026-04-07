@@ -17,6 +17,7 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreUserSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreUserFailureResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerStoreUserUnauthorisedResponse.php';
+        require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerGetUsersSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateUserSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerDestroyUserSuccessResponse.php';
         require_once Core::getPathRoot() . '/Core/Router/Controller/Response/BackofficeApiControllerUpdateUserStatusSuccessResponse.php';
@@ -66,6 +67,16 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
         ?string $timezone,
         Request $request
     ): Response;
+
+    /**
+     * Endpoint: /back/user
+     * Method: GET
+     *
+     * @param string|null $q
+     * @param Request $request
+     * @return Response
+     */
+    abstract protected function getUsers(?string $q, Request $request): Response;
 
     /**
      * Endpoint: /back/user/{userId}
@@ -544,6 +555,38 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
         } catch (Throwable $t) {
             Core::getDefaultLogger()->logError(
                 'Unexpected error in BackofficeApiControllerAbstract - Method: storeUser()' .
+                ' Error: ' . $t->getMessage() .
+                ' Trace: ' . $t->getTraceAsString()
+            );
+            return Response::createErrorResponse();
+        }
+    }
+
+    private function validateAndCallGetUsers(Request $request): Response
+    {
+        $queryParams = $request->getParams;
+        $errors = [];
+
+
+        $q = $queryParams['q'] ?? null;
+        if ($errors) {
+            return Response::createBadRequestResponse(
+                [
+                    'success' => false,
+                    'errorMessage' => 'INVALID_PARAMETERS',
+                    'errorInfo' => $errors
+                ]
+            );
+        }
+
+        try {
+            return $this->getUsers(
+                $q,
+                $request
+            );
+        } catch (Throwable $t) {
+            Core::getDefaultLogger()->logError(
+                'Unexpected error in BackofficeApiControllerAbstract - Method: getUsers()' .
                 ' Error: ' . $t->getMessage() .
                 ' Trace: ' . $t->getTraceAsString()
             );
@@ -2259,6 +2302,16 @@ readonly abstract class BackofficeApiControllerAbstract extends AbstractControll
             )
         ) {
             return $this->validateAndCallStoreUser($request);
+        }
+
+        if ($method === 'GET' &&
+            $this->pathParamsMatcher(
+                ['back', 'user'],
+                $pathParts,
+                ['fixed', 'fixed']
+            )
+        ) {
+            return $this->validateAndCallGetUsers($request);
         }
 
         if ($method === 'PUT' &&

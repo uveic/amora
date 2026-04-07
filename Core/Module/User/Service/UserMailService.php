@@ -222,6 +222,7 @@ readonly class UserMailService
 
         return new MailerItem(
             id: null,
+            userId: $user->id,
             template: MailerTemplate::PasswordReset,
             replyToEmailAddress: Core::getConfig()->mailer->replyTo->email,
             senderName: null,
@@ -267,6 +268,7 @@ readonly class UserMailService
 
         return new MailerItem(
             id: null,
+            userId: $user->id,
             template: MailerTemplate::AccountVerification,
             replyToEmailAddress: Core::getConfig()->mailer->replyTo->email,
             senderName: null,
@@ -300,6 +302,7 @@ readonly class UserMailService
 
         return new MailerItem(
             id: null,
+            userId: $user->id,
             template: MailerTemplate::AccountVerification,
             replyToEmailAddress: Core::getConfig()->mailer->replyTo->email,
             senderName: null,
@@ -334,6 +337,7 @@ readonly class UserMailService
 
         return new MailerItem(
             id: null,
+            userId: $user->id,
             template: MailerTemplate::PasswordCreation,
             replyToEmailAddress: Core::getConfig()->mailer->replyTo->email,
             senderName: null,

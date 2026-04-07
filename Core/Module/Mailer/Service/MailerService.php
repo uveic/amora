@@ -39,14 +39,18 @@ readonly class MailerService
 
     public function filterMailerItemBy(
         array $ids = [],
+        array $userIds = [],
         array $templateIds = [],
         ?bool $hasError = null,
+        ?string $userEmail = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->mailerDataLayer->filterMailerItemBy(
             ids: $ids,
+            userIds: $userIds,
             templateIds: $templateIds,
             hasError: $hasError,
+            userEmail: $userEmail,
             queryOptions: $queryOptions,
         );
     }

@@ -1,5 +1,6 @@
 import {Request} from './module/Request.js?v=000';
 import {Global} from './module/localisation.js?v=000';
+import {Util} from "./module/Util.js?v=000";
 
 document.querySelectorAll('.send-verification-email-js').forEach(el => {
   el.addEventListener('click', e => {
@@ -14,6 +15,7 @@ document.querySelectorAll('.send-verification-email-js').forEach(el => {
     const verificationTypeId = el.dataset.verificationTypeId;
 
     if (!userId || !verificationTypeId) {
+      Util.notifyError(new Error('Verification Type is missing'));
       return;
     }
 

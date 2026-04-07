@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Mailer\Datalayer;
 
 use Amora\Core\Database\MySqlDb;
+use Amora\Core\Entity\Response\Pagination;
 use Amora\Core\Entity\Util\QueryOptions;
 use Amora\Core\Module\DataLayerTrait;
 use Amora\Core\Module\Mailer\Model\MailerItem;
@@ -26,8 +27,11 @@ class MailerDataLayer
 
     public function filterMailerItemBy(
         array $ids = [],
+        array $userIds = [],
         array $templateIds = [],
         ?bool $hasError = null,
+        ?string $userEmail = null,
+        ?string $lockId = null,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -43,6 +47,7 @@ class MailerDataLayer
         $baseSql = 'SELECT ';
         $fields = [
             'q.id AS mailer_item_id',
+            'q.user_id AS mailer_item_user_id',
             'q.template_id AS mailer_item_template_id',
             'q.reply_to_email AS mailer_item_reply_to_email',
             'q.sender_name AS mailer_item_sender_name',
@@ -64,8 +69,21 @@ class MailerDataLayer
             $where .= $this->generateWhereSqlCodeForIds($params, $ids, 'q.id', 'mailerItemId');
         }
 
+        if ($userIds) {
+            $where .= $this->generateWhereSqlCodeForIds($params, $userIds, 'q.user_id', 'mailerUserId');
+        }
+
+        if ($userEmail) {
+            $where .= $this->generateWhereSqlCodeForIds($params, [$userEmail], 'q.receiver_email', 'receiverEmail');
+        }
+
         if ($templateIds) {
             $where .= $this->generateWhereSqlCodeForIds($params, $templateIds, 'q.template_id', 'templateId');
+        }
+
+        if ($lockId) {
+            $where .= ' AND q.lock_id = :lockId';
+            $params[':lockId'] = $lockId;
         }
 
         if (isset($hasError)) {
@@ -87,56 +105,6 @@ class MailerDataLayer
         return $output;
     }
 
-    private function getMailerQueue(
-        ?string $lockId = null,
-        ?int $limit = null,
-        string $orderDirection = 'ASC'
-    ): array {
-        if ($orderDirection != 'ASC' || $orderDirection != 'DESC') {
-            $orderDirection = 'ASC';
-        }
-
-        $params = [];
-        $sql = '
-            SELECT
-                q.id AS mailer_item_id,
-                q.template_id AS mailer_item_template_id,
-                q.reply_to_email AS mailer_item_reply_to_email,
-                q.sender_name AS mailer_item_sender_name,
-                q.receiver_email AS mailer_item_receiver_email,
-                q.receiver_name AS mailer_item_receiver_name,
-                q.subject AS mailer_item_subject,
-                q.content_html AS mailer_item_content_html,
-                q.fields_json AS mailer_item_fields_json,
-                q.created_at AS mailer_item_created_at,
-                q.processed_at AS mailer_item_processed_at,
-                q.has_error AS mailer_item_has_error,
-                q.lock_id AS mailer_item_lock_id
-            FROM ' . self::MAILER_QUEUE_TABLE_NAME . ' AS q
-            WHERE 1
-        ';
-
-        if ($lockId) {
-            $sql .= ' AND q.lock_id = :lock_id';
-            $params[':lock_id'] = $lockId;
-        }
-
-        $sql .= ' ORDER BY q.id ' . $orderDirection;
-
-        if (isset($limit)) {
-            $sql .= ' LIMIT ' . $limit;
-        }
-
-        $res = $this->db->fetchAll($sql, $params);
-
-        $output = [];
-        foreach ($res as $item) {
-            $output[] = MailerItem::fromArray($item);
-        }
-
-        return $output;
-    }
-
     public function storeMail(MailerItem $mailerItem): ?MailerItem
     {
         $res = $this->db->insert(self::MAILER_QUEUE_TABLE_NAME, $mailerItem->asArray());
@@ -147,12 +115,18 @@ class MailerDataLayer
         }
 
         $mailerItem->id = $res;
+
         return $mailerItem;
     }
 
     public function getMailsFromQueue(string $lockId, int $qty = 1000): array
     {
-        return $this->getMailerQueue($lockId, $qty, 'DESC');
+        return $this->filterMailerItemBy(
+            lockId: $lockId,
+            queryOptions: new QueryOptions(
+                pagination: new Pagination(itemsPerPage: $qty),
+            ),
+        );
     }
 
     public function lockMailsInQueue(string $lockId, int $qty = 1000): bool

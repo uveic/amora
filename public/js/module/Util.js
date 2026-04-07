@@ -35,13 +35,7 @@ class UtilClass {
       feedbackDiv = document.createElement('div');
       feedbackDiv.id = 'feedback';
       feedbackDiv.className = 'feedback null';
-      const main = document.querySelector('main');
-      if (main) {
-        main.insertAdjacentElement('afterbegin', feedbackDiv);
-      } else {
-        const bodyEl = document.querySelector('body');
-        bodyEl.insertAdjacentElement('afterbegin', feedbackDiv);
-      }
+      document.querySelector('body').insertAdjacentElement('afterbegin', feedbackDiv);
     }
 
     if (!feedbackDiv) {
@@ -56,9 +50,14 @@ class UtilClass {
   }
 
   notifyUser(message) {
-    const feedbackDiv = document.querySelector('#feedback');
+    let feedbackDiv = document.querySelector('#feedback');
 
-    if (!feedbackDiv) return;
+    if (!feedbackDiv) {
+      feedbackDiv = document.createElement('div');
+      feedbackDiv.id = 'feedback';
+      feedbackDiv.className = 'feedback null';
+      document.querySelector('body').insertAdjacentElement('afterbegin', feedbackDiv);
+    }
 
     feedbackDiv.textContent = message;
     feedbackDiv.classList.add('feedback-success');

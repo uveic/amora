@@ -5,6 +5,8 @@ namespace Amora\Core\Router;
 use Amora\App\Module\Form\Entity\PageContent;
 use Amora\App\Value\AppPageContentType;
 use Amora\App\Value\AppUserRole;
+use Amora\Core\Entity\Util\QueryOptions;
+use Amora\Core\Entity\Util\QueryOrderBy;
 use Amora\Core\Module\Album\Model\Collection;
 use Amora\Core\Module\Album\Model\CollectionMedia;
 use Amora\Core\Module\Album\Service\AlbumService;
@@ -23,6 +25,7 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerCreateNewCollec
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDeleteCollectionMediaSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerDestroyMainMediaForCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetEmailHtmlSuccessResponse;
+use Amora\Core\Router\Controller\Response\BackofficeApiControllerGetUsersSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreAlbumSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreCollectionSuccessResponse;
 use Amora\Core\Router\Controller\Response\BackofficeApiControllerStoreMediaForCollectionSuccessResponse;
@@ -39,6 +42,7 @@ use Amora\Core\Router\Controller\Response\BackofficeApiControllerUpdateUserStatu
 use Amora\Core\Util\Helper\AlbumHtmlGenerator;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\App\Value\Language;
+use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Core;
@@ -167,6 +171,42 @@ readonly final class BackofficeApiController extends BackofficeApiControllerAbst
             success: true,
             id: $newUser?->id,
             redirect: UrlBuilderUtil::buildBackofficeUserListUrl($request->siteLanguage),
+        );
+    }
+
+    /**
+     * Endpoint: /back/user
+     * Method: GET
+     *
+     * @param string|null $q
+     * @param Request $request
+     * @return Response
+     */
+    protected function getUsers(?string $q, Request $request): Response
+    {
+        $q = StringUtil::sanitiseText($q);
+
+        $users = $this->userService->filterUserBy(
+            searchText: $q,
+            queryOptions: new QueryOptions(
+                orderBy: [new QueryOrderBy(field: 'name', direction: QueryOrderDirection::ASC)],
+                pagination: new Response\Pagination(itemsPerPage: 25),
+            ),
+        );
+
+        $output = [];
+        /** @var User $user */
+        foreach ($users as $user) {
+            $output[] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ];
+        }
+
+        return new BackofficeApiControllerGetUsersSuccessResponse(
+            success: true,
+            users: $output,
         );
     }
 

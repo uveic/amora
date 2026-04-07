@@ -678,6 +678,11 @@ label {
   flex-shrink: 1;
 }
 
+.label-checkbox {
+  width: revert;
+  font-weight: 400;
+}
+
 .help {
   color: var(--color-grey-600);
   font-size: .75rem;
@@ -709,6 +714,14 @@ button,
   color: var(--color-input-text);
   background-color: var(--color-input-bg);
   min-height: var(--input-height);
+}
+
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  min-height: revert;
 }
 
 select {

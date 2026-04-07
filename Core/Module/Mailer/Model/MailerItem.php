@@ -11,6 +11,7 @@ class MailerItem
 {
     public function __construct(
         public ?int $id,
+        public readonly ?int $userId,
         public readonly MailerTemplate|AppMailerTemplate $template,
         public readonly ?string $replyToEmailAddress,
         public readonly ?string $senderName,
@@ -26,7 +27,7 @@ class MailerItem
     ) {
     }
 
-    public static function fromArray(array $item): MailerItem
+    public static function fromArray(array $item): self
     {
         $template = AppMailerTemplate::tryfrom($item['mailer_item_template_id'])
             ? AppMailerTemplate::from($item['mailer_item_template_id'])
@@ -34,6 +35,7 @@ class MailerItem
 
         return new MailerItem(
             id: (int)$item['mailer_item_id'],
+            userId: (int)$item['mailer_item_user_id'],
             template: $template,
             replyToEmailAddress: $item['mailer_item_reply_to_email'] ?? null,
             senderName: $item['mailer_item_sender_name'] ?? null,
@@ -55,6 +57,7 @@ class MailerItem
     {
         return [
             'id' => $this->id,
+            'user_id' => $this->userId,
             'template_id' => $this->template->value,
             'reply_to_email' => $this->replyToEmailAddress,
             'sender_name' => $this->senderName,
@@ -65,7 +68,7 @@ class MailerItem
             'fields_json' => $this->fieldsJson,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'processed_at' => $this->processedAt?->format(DateUtil::MYSQL_DATETIME_FORMAT),
-            'has_error' => $this->hasError,
+            'has_error' => $this->hasError ? 1 : 0,
             'lock_id' => $this->lockId,
         ];
     }

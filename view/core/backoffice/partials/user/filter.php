@@ -31,9 +31,9 @@ $roleFromQuery = isset($roleParam) && (UserRole::tryFrom($roleParam) || AppUserR
           <select id="statusId" name="statusId">
             <option value=""></option>
 <?php
-    foreach (UserStatus::cases() as $status) {
-        $selected = $status === $statusFromQuery;
-?>
+foreach (UserStatus::cases() as $status) {
+    $selected = $status === $statusFromQuery;
+    ?>
             <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$status->value?>"><?=$status->getTitle($responseData->siteLanguage)?></option>
 <?php } ?>
           </select>
@@ -46,10 +46,9 @@ $roleFromQuery = isset($roleParam) && (UserRole::tryFrom($roleParam) || AppUserR
           <select id="roleId" name="roleId">
             <option value=""></option>
 <?php
-    /** @var AppUserRole $role */
-    foreach (AppUserRole::getAll() as $role) {
-        $selected = $role === $roleFromQuery;
-?>
+foreach (AppUserRole::cases() as $role) {
+    $selected = $role === $roleFromQuery;
+    ?>
             <option<?php echo $selected ? ' selected="selected"' : ''; ?> value="<?=$role->value?>"><?=$role->getTitle($responseData->siteLanguage)?></option>
 <?php } ?>
           </select>

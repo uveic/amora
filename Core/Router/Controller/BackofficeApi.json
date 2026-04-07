@@ -148,6 +148,65 @@
             }
           }
         }
+      },
+      "get": {
+        "operationId": "getUsers",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search text to filter results",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "enum": [
+                    true,
+                    false
+                  ]
+                },
+                "users": {
+                  "type": "array",
+                  "description": "List of users",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "User ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "User name"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "User email address"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "email"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "success",
+                "users"
+              ]
+            }
+          }
+        }
       }
     },
     "/back/user/{userId}": {
