@@ -39,16 +39,12 @@ final class UserHtmlGenerator
         ];
 
         foreach (UserStatus::cases() as $item) {
-            $statusClassname = $item->getClassName();
-            $icon = $item->getIcon();
-            $output[] = $indentation . '    <li><a data-checked="' . ($user->status === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option ' . $identifier . '-dd-option no-loader ' . $statusClassname . '"  data-dropdown-identifier="' . $uniqueDropdownIdentifier . '" href="#">' . $icon . $item->getTitle($language) . '</a></li>';
+            $output[] = $indentation . '    <li><a data-checked="' . ($user->status === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option ' . $identifier . '-dd-option no-loader ' . $item->getClassName() . '"  data-dropdown-identifier="' . $uniqueDropdownIdentifier . '" href="#">' . $item->getIcon() . $item->getTitle($language) . '</a></li>';
         }
 
-        $icon = $user->status->getIcon();
-        $selectedStatusClassname = $user->status->getClassName();
         $output[] = $indentation . '  </ul>';
-        $output[] = $indentation . '  <label id="' . $uniqueDropdownIdentifier . '-dd-label" for="' . $uniqueDropdownIdentifier . '-dd-checkbox" data-value="' . $user->status->value . '" class="dropdown-menu-label ' . $selectedStatusClassname . '">';
-        $output[] = $indentation . '    <span>' . $icon . $user->status->getTitle($language) . '</span>';
+        $output[] = $indentation . '  <label id="' . $uniqueDropdownIdentifier . '-dd-label" for="' . $uniqueDropdownIdentifier . '-dd-checkbox" data-value="' . $user->status->value . '" class="dropdown-menu-label ' . $user->status->getClassName() . '">';
+        $output[] = $indentation . '    <span>' . $user->status->getIcon() . $user->status->getTitle($language) . '</span>';
         $output[] = $indentation . '    ' . CoreIcons::CARET_DOWN;
         $output[] = $indentation . '  </label>';
         $output[] = $indentation . '</div>';
@@ -70,17 +66,13 @@ final class UserHtmlGenerator
             $indentation . '  <ul>',
         ];
 
-        foreach (AppUserRole::cases() as $item) {
-            $className = $item->getClass();
-            $icon = $item->getIcon();
-            $output[] = $indentation . '    <li><a data-checked="' . ($user->role === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option ' . $identifier . '-dd-option no-loader ' . $className . '"  data-dropdown-identifier="' . $uniqueDropdownIdentifier . '" href="#">' . $icon . $item->getTitle($language) . '</a></li>';
+        foreach (AppUserRole::getAll() as $item) {
+            $output[] = $indentation . '    <li><a data-checked="' . ($user->role === $item ? '1' : '0') . '" data-value="' . $item->value . '" class="dropdown-menu-option ' . $identifier . '-dd-option no-loader ' . $item->getClass() . '"  data-dropdown-identifier="' . $uniqueDropdownIdentifier . '" href="#">' . $item->getIcon() . $item->getTitle($language) . '</a></li>';
         }
 
-        $icon = $user->role->getIcon();
-        $selectedRoleClassname = $user->role->getClass();
         $output[] = $indentation . '  </ul>';
-        $output[] = $indentation . '  <label id="' . $uniqueDropdownIdentifier . '-dd-label" for="' . $uniqueDropdownIdentifier . '-dd-checkbox" data-value="' . $user->role->value . '" class="dropdown-menu-label ' . $selectedRoleClassname . '">';
-        $output[] = $indentation . '    <span>' . $icon . $user->role->getTitle($language) . '</span>';
+        $output[] = $indentation . '  <label id="' . $uniqueDropdownIdentifier . '-dd-label" for="' . $uniqueDropdownIdentifier . '-dd-checkbox" data-value="' . $user->role->value . '" class="dropdown-menu-label ' . $user->role->getClass() . '">';
+        $output[] = $indentation . '    <span>' . $user->role->getIcon() . $user->role->getTitle($language) . '</span>';
         $output[] = $indentation . '    ' . CoreIcons::CARET_DOWN;
         $output[] = $indentation . '  </label>';
         $output[] = $indentation . '</div>';
