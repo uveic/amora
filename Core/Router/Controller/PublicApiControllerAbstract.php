@@ -132,6 +132,7 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
      * @param string $validationHash
      * @param string $verificationIdentifier
      * @param string $languageIsoCode
+     * @param bool|null $termsAndConditions
      * @param Request $request
      * @return Response
      */
@@ -142,6 +143,7 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
         string $validationHash,
         string $verificationIdentifier,
         string $languageIsoCode,
+        ?bool $termsAndConditions,
         Request $request
     ): Response;
 
@@ -622,6 +624,7 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
             $languageIsoCode = $bodyParams['languageIsoCode'] ?? null;
         }
 
+        $termsAndConditions = $bodyParams['termsAndConditions'] ?? null;
 
         if ($errors) {
             return Response::createBadRequestResponse(
@@ -641,6 +644,7 @@ readonly abstract class PublicApiControllerAbstract extends AbstractController
                 $validationHash,
                 $verificationIdentifier,
                 $languageIsoCode,
+                $termsAndConditions,
                 $request
             );
         } catch (Throwable $t) {

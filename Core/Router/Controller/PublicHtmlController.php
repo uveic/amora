@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Router;
 
+use Amora\App\Entity\AppHtmlHomepageResponseData;
 use Amora\App\Router\AppPublicHtmlController;
 use Amora\App\Value\Language;
 use Amora\Core\Core;
@@ -12,6 +13,7 @@ use Amora\Core\Module\Article\Entity\FeedItem;
 use Amora\Core\Module\Article\Service\ArticleService;
 use Amora\Core\Module\Article\Service\FeedService;
 use Amora\Core\Module\Article\Value\ArticleType;
+use Amora\Core\Module\Article\Value\PageContentType;
 use Amora\Core\Module\User\Service\SessionService;
 use Amora\Core\Module\User\Service\UserService;
 use Amora\Core\Entity\Request;
@@ -59,6 +61,35 @@ readonly final class PublicHtmlController extends PublicHtmlControllerAbstract
     protected function getHomePage(Request $request): Response
     {
         return $this->buildHomepageResponse($request);
+    }
+
+    /**
+     * Endpoint: /terms
+     * Method: GET
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function getTermsAndConditionsHtml(Request $request): Response
+    {
+        $pageContent = $this->articleService->getPageContent(
+            type: PageContentType::TermsAndConditions,
+            language: $request->siteLanguage,
+        );
+
+        if (!$pageContent) {
+            return Response::createNotFoundResponse($request);
+        }
+
+        return Response::createHtmlResponse(
+            template: 'app/public/page-content',
+            responseData: new AppHtmlHomepageResponseData(
+                request: $request,
+                pageTitle: $pageContent->title,
+                isPublicPage: true,
+                pageContent: $pageContent,
+            ),
+        );
     }
 
     /**

@@ -413,6 +413,14 @@ pre {
 .feedback-error {
   background-color: var(--color-failure) !important;
 }
+
+#feedback-banner {
+  width: 100%;
+  text-align: center;
+  color: var(--color-grey-100);
+  padding: 1rem;
+  font-size: 1rem;
+}
 /* Feedback style ends here */
 
 /* Register/Login style starts here */
@@ -711,6 +719,7 @@ button,
 input[type="checkbox"] {
   width: 20px;
   height: 20px;
+  aspect-ratio: 1;
   margin: 0;
   padding: 0;
   min-height: revert;

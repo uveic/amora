@@ -114,6 +114,8 @@ class UserCore extends Core
                 require_once self::getPathRoot() . '/Core/Module/User/Model/UserVerification.php';
                 require_once self::getPathRoot() . '/Core/Module/Mailer/Value/MailerTemplate.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Value/VerificationType.php';
+                require_once self::getPathRoot() . '/Core/Util/EmailBuilderUtil.php';
+                require_once self::getPathRoot() . '/App/Util/AppEmailBuilderUtil.php';
                 require_once self::getPathRoot() . '/Core/Module/User/Service/UserMailService.php';
                 return new UserMailService(
                     userDataLayer: self::getUserDataLayer(),

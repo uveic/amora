@@ -47,6 +47,7 @@ class GlobalClass {
       "feedbackImageDeleted": "Image deleted",
       "feedbackErrorNotAnImage": "is not an image",
       "feedbackAccountUpdated": "Account data updated",
+      "feedbackAcceptTermsAndConditions": "Terms & Conditions must be accepted.",
 
       "editorBold": "Bold",
       "editorItalic": "Italic",
@@ -114,6 +115,7 @@ class GlobalClass {
       "feedbackImageDeleted": "Imagen borrada",
       "feedbackErrorNotAnImage": "no es una imagen",
       "feedbackAccountUpdated": "Datos de la cuenta actualizados",
+      "feedbackAcceptTermsAndConditions": "Debes aceptar las condiciones de uso y política de privacidad",
 
       "editorBold": "Negrita",
       "editorItalic": "Cursiva",
@@ -181,6 +183,7 @@ class GlobalClass {
       "feedbackImageDeleted": "Imaxe borrada",
       "feedbackErrorNotAnImage": "non é unha imaxe",
       "feedbackAccountUpdated": "Datos da conta actualizados",
+      "feedbackAcceptTermsAndConditions": "Debes aceptar as condicións de uso e política de privacidade",
 
       "editorBold": "Letra grosa",
       "editorItalic": "Cursiva",

@@ -31,14 +31,9 @@ enum AppPageContentType: int
     public static function displayContent(self|PageContentType $type, PageContentSection $section): bool
     {
         return match ($type) {
-            PageContentType::BlogBottom => match ($section) {
-                PageContentSection::Content => true,
-                default => false,
-            },
-            PageContentType::Homepage => match ($section) {
-                PageContentSection::Title, PageContentSection::Content => true,
-                default => false,
-            },
+            PageContentType::BlogBottom,
+            PageContentType::Homepage,
+            PageContentType::TermsAndConditions => $type->displayContent($section),
             default => true,
         };
     }

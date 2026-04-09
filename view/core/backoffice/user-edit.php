@@ -26,7 +26,7 @@ $defaultLanguage = $responseData->user?->language ?? $responseData->request->ses
       <input id="userId" class="input" name="userId" type="hidden" value="<?=$responseData->user?->id?>">
       <div class="backoffice-wrapper">
         <div class="backoffice-child-outer">
-          <div class="backoffice-child-inner">
+          <div class="backoffice-child-inner backoffice-child-no-header">
             <div class="field">
               <label for="name" class="label"><?=$responseData->getLocalValue('globalName')?></label>
               <div class="control">
@@ -56,7 +56,7 @@ $defaultLanguage = $responseData->user?->language ?? $responseData->request->ses
         </div>
 
         <div class="backoffice-child-outer">
-          <div class="backoffice-child-inner">
+          <div class="backoffice-child-inner backoffice-child-no-header">
             <div class="field">
               <label for="bio" class="label"><?=$responseData->getLocalValue('globalBio')?></label>
               <div class="control">
@@ -97,7 +97,7 @@ $defaultLanguage = $responseData->user?->language ?? $responseData->request->ses
             </div>
           </div>
         </div>
-        <input type="submit" class="button m-t-2 is-success" value="<?=$responseData->user ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
+        <input type="submit" class="button m-t-1 width-100" value="<?=$responseData->user ? $responseData->getLocalValue('globalUpdate') : $responseData->getLocalValue('globalSave')?>">
       </div>
     </form>
   </main>

@@ -116,6 +116,7 @@ document.querySelectorAll('form#form-password-reset').forEach(fpr => {
     const validationHash = fpr.querySelector('input[name="validationHash"]').value;
     const postUrl = fpr.querySelector('input[name="postUrl"]').value;
     const verificationIdentifier = fpr.querySelector('input[name="verificationIdentifier"]').value;
+    const acceptTermsAndConditions = fpr.querySelector('input[name="termsAndConditions"]');
 
     if (password.value.length < 10) {
       loginFailureFeedback.textContent = Global.get('feedbackPasswordTooShort');
@@ -131,6 +132,12 @@ document.querySelectorAll('form#form-password-reset').forEach(fpr => {
       return;
     }
 
+    if (acceptTermsAndConditions && !acceptTermsAndConditions.checked) {
+      loginFailureFeedback.textContent = Global.get('feedbackAcceptTermsAndConditions');
+      loginFailureFeedback.classList.remove('null');
+      return;
+    }
+
     const siteLanguage = document.documentElement.lang
       ? document.documentElement.lang.toLowerCase().trim()
       : 'en';
@@ -141,7 +148,8 @@ document.querySelectorAll('form#form-password-reset').forEach(fpr => {
       passwordConfirmation: passwordConfirmation.value,
       validationHash: validationHash,
       verificationIdentifier: verificationIdentifier,
-      languageIsoCode: siteLanguage
+      languageIsoCode: siteLanguage,
+      termsAndConditions: acceptTermsAndConditions ? acceptTermsAndConditions.checked : null,
     };
 
     Request.post(postUrl, JSON.stringify(data))

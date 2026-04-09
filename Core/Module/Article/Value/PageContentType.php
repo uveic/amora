@@ -22,13 +22,31 @@ enum PageContentType: int
 {
     case Homepage = 1;
     case BlogBottom = 2;
+    case TermsAndConditions = 3;
 
     public static function buildRedirectUrl(self|AppPageContentType|null $type, Language $language): string
     {
         return match ($type) {
             self::BlogBottom => UrlBuilderUtil::buildBackofficeDashboardUrl($language),
             self::Homepage => UrlBuilderUtil::buildBaseUrl($language),
+            self::TermsAndConditions => UrlBuilderUtil::buildPublicTermsUrl($language),
             default => UrlBuilderUtil::buildBackofficeContentListUrl($language),
+        };
+    }
+
+    public function displayContent(PageContentSection $section): bool
+    {
+        return match ($this) {
+            self::BlogBottom => match ($section) {
+                PageContentSection::Content => true,
+                default => false,
+            },
+            self::Homepage,
+            self::TermsAndConditions => match ($section) {
+                PageContentSection::Title, PageContentSection::Content => true,
+                default => false,
+            },
+            default => true,
         };
     }
 }

@@ -34,13 +34,19 @@ class ApiClient extends ApiClientAbstract
 
         try {
             $res = $this->apiPostCall(
-                $logPrefix,
-                $this->baseApiUrl,
-                $jsonData,
-                $requestHeaders
+                logPrefix: $logPrefix,
+                url: $this->baseApiUrl,
+                data: $jsonData,
+                headers: $requestHeaders,
             );
         } catch (Throwable $t) {
-            $res = new ApiResponse('', 500, true);
+            $res = new ApiResponse(
+                response: '',
+                responseCode: 500,
+                hasError: true,
+                errorMessage: $t->getMessage(),
+            );
+
             $this->logger->logException($t);
         }
 

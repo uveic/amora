@@ -14,6 +14,7 @@ class MailerItem
         public readonly ?int $userId,
         public readonly MailerTemplate|AppMailerTemplate $template,
         public readonly ?string $replyToEmailAddress,
+        public readonly ?string $senderEmailAddress,
         public readonly ?string $senderName,
         public readonly string $receiverEmailAddress,
         public readonly ?string $receiverName,
@@ -38,6 +39,7 @@ class MailerItem
             userId: (int)$item['mailer_item_user_id'],
             template: $template,
             replyToEmailAddress: $item['mailer_item_reply_to_email'] ?? null,
+            senderEmailAddress: $item['mailer_item_sender_email'] ?? null,
             senderName: $item['mailer_item_sender_name'] ?? null,
             receiverEmailAddress: $item['mailer_item_receiver_email'],
             receiverName: $item['mailer_item_receiver_name'] ?? null,
@@ -60,6 +62,7 @@ class MailerItem
             'user_id' => $this->userId,
             'template_id' => $this->template->value,
             'reply_to_email' => $this->replyToEmailAddress,
+            'sender_email' => $this->senderEmailAddress,
             'sender_name' => $this->senderName,
             'receiver_email' => $this->receiverEmailAddress,
             'receiver_name' => $this->receiverName,
@@ -68,7 +71,7 @@ class MailerItem
             'fields_json' => $this->fieldsJson,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'processed_at' => $this->processedAt?->format(DateUtil::MYSQL_DATETIME_FORMAT),
-            'has_error' => $this->hasError ? 1 : 0,
+            'has_error' => $this->hasError,
             'lock_id' => $this->lockId,
         ];
     }

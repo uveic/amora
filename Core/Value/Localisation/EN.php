@@ -56,6 +56,7 @@ return [
     'authenticationPasswordsDoNotMatch' => 'The passwords do not match. Please, fix it and try it again.',
     'authenticationRegistrationErrorExistingEmail' => 'There is another account with the same email address. Please, log in to your account.',
     'authenticationPassNotValid' => 'Current password not valid.',
+    'authenticationTermsAndConditions' => 'Terms & Conditions must be accepted',
 
     'authenticationPasswordResetSubtitle' => 'Change your password',
     'authenticationPasswordResetActionSuccess' => 'Password changed successfully.',
@@ -198,6 +199,7 @@ return [
     'pageContentEditTitle' => 'Edit content',
     'pageContentEditTitleHomepage' => 'Homepage',
     'pageContentEditTitleBlogBottom' => 'Text that follows a blog post',
+    'pageContentEditTitleTermsAndConditions' => 'Terms & Conditions',
     'pageContentEditAction' => 'Action Link',
     'pageContentEditActionHelp' => 'An action button will be displayed if a link is provided.',
     'pageContentEditAvailableInLanguages' => 'Available in',
@@ -275,4 +277,6 @@ return [
     'collectionMediaTitle' => 'Media',
     'collectionDragAndDropToOrder' => 'Drag & drop to order',
     'collectionModalMediaCaptionTitle' => 'Image caption',
+
+    'pageTermsAndConditionsHtml' => 'Accept <a href="%s" target="_blank">Terms and Conditions</a>.',
 ];

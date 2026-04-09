@@ -121,8 +121,10 @@ class MailerApp extends App
                 new MailerLogItem(
                     id: null,
                     mailerQueueId: $mailerQueueId,
+                    mailerClient: Core::getConfig()->mailer->client,
                     createdAt: new DateTimeImmutable(),
                     request: $requestData,
+                    errorMessage: null,
                 )
             );
         } catch (Throwable $t) {

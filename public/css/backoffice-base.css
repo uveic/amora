@@ -1823,6 +1823,10 @@
   border-bottom: 1px solid transparent;
 }
 
+.html-container img {
+  max-width: 140px;
+}
+
 @keyframes loaderProgressBar {
   50% {
     background-position: right

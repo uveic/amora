@@ -36,6 +36,20 @@
         }
       }
     },
+    "/terms": {
+      "get": {
+        "operationId": "getTermsAndConditionsHtml",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return HTML",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "/login": {
       "get": {
         "operationId": "getLoginPage",

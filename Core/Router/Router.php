@@ -31,6 +31,7 @@ class Router
         'user' => true,
         'album' => true,
         'click' => true,
+        'terms' => true,
     ];
 
     private const array PUBLIC_API_CONTROLLER_ACTIONS = [

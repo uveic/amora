@@ -3,6 +3,7 @@
 namespace Amora\Core\Config;
 
 use Amora\App\Value\Language;
+use Amora\Core\Module\Mailer\Value\MailerClient;
 
 enum Env
 {
@@ -51,19 +52,12 @@ final readonly class Email
     }
 }
 
-enum MailerClient
-{
-    case SendGrid;
-    case Brevo;
-    case Lettermint;
-}
-
 final readonly class Mailer
 {
     public function __construct(
         public MailerClient $client,
         public Email $from,
-        public Email $replyTo,
+        public ?Email $replyTo,
         public MailerAuthentication $mailerAuthentication,
         public bool $sendEmailSynchronously = false,
     ) {
@@ -101,6 +95,7 @@ abstract class AbstractConfig
         public readonly array $allowedIFrameUrls,
 
         public readonly bool $isLoggingEnabled,
+        public readonly bool $mustAcceptTermsAndConditions,
         public readonly bool $isAnalyticsEnabled,
         public readonly bool $isRegistrationEnabled,
         public readonly bool $isInvitationEnabled,

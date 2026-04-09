@@ -2,21 +2,21 @@
 
 namespace Amora\Core\Module\mailer;
 
-use Amora\Core\Config\MailerClient;
 use Amora\Core\Core;
 use Amora\Core\Database\MySqlDb;
-use Amora\Core\Util\Logger;
-use Amora\Core\Module\Mailer\App\MailerApp;
 use Amora\Core\Module\Mailer\App\Api\ApiClientAbstract;
-use Amora\Core\Module\Mailer\App\Api\RequestBuilderAbstract;
 use Amora\Core\Module\Mailer\App\Api\Brevo\ApiClient as BrevoApiClient;
 use Amora\Core\Module\Mailer\App\Api\Brevo\RequestBuilder as BrevoRequestBuilder;
-use Amora\Core\Module\Mailer\App\Api\Sendgrid\ApiClient as SendGridApiClient;
-use Amora\Core\Module\Mailer\App\Api\Sendgrid\RequestBuilder as SendGridRequestBuilder;
 use Amora\Core\Module\Mailer\App\Api\Lettermint\ApiClient as LettermintGridApiClient;
 use Amora\Core\Module\Mailer\App\Api\Lettermint\RequestBuilder as LettermintRequestBuilder;
+use Amora\Core\Module\Mailer\App\Api\RequestBuilderAbstract;
+use Amora\Core\Module\Mailer\App\Api\Sendgrid\ApiClient as SendGridApiClient;
+use Amora\Core\Module\Mailer\App\Api\Sendgrid\RequestBuilder as SendGridRequestBuilder;
+use Amora\Core\Module\Mailer\App\MailerApp;
 use Amora\Core\Module\Mailer\DataLayer\MailerDataLayer;
 use Amora\Core\Module\Mailer\Service\MailerService;
+use Amora\Core\Module\Mailer\Value\MailerClient;
+use Amora\Core\Util\Logger;
 
 class MailerCore extends Core
 {

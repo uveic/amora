@@ -56,6 +56,7 @@ class Core
         require_once self::$pathToRoot . '/Core/Util/UrlBuilderUtil.php';
 
         require_once self::$pathToRoot . '/Core/Module/Article/Value/ArticleType.php';
+        require_once self::$pathToRoot . '/Core/Module/Mailer/Value/MailerClient.php';
         require_once self::$pathToRoot . '/Core/Value/CoreMenu.php';
         require_once self::$pathToRoot . '/Core/Value/CoreIcons.php';
         require_once self::$pathToRoot . '/Core/Module/DataLayerTrait.php';

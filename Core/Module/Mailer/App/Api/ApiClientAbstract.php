@@ -3,6 +3,7 @@
 namespace Amora\Core\Module\Mailer\App\Api;
 
 use Amora\Core\Util\Logger;
+use Throwable;
 
 abstract class ApiClientAbstract
 {
@@ -44,7 +45,7 @@ abstract class ApiClientAbstract
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
         curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT_SECONDS);
-        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
 
         $response = curl_exec($ch);
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -57,8 +58,30 @@ abstract class ApiClientAbstract
         }
 
         if ($responseCode < 200 || $responseCode > 299) {
+            $responseAsArray = null;
+            try {
+                $responseAsArray = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+            } catch (Throwable $t) {
+                $errorMessage = $t->getMessage();
+            }
+
+            if (!$errorMessage && $responseAsArray) {
+                if (isset($responseAsArray['error']['message']) && is_string($responseAsArray['error']['message'])) {
+                    $errorMessage = $responseAsArray['error']['message'];
+                } elseif (isset($responseAsArray['errors'][0]['message']) && is_string($responseAsArray['errors'][0]['message'])) {
+                    $errorMessage = $responseAsArray['errors'][0]['message'];
+                } elseif (isset($responseAsArray['error']) && is_string($responseAsArray['error'])) {
+                    $errorMessage = $responseAsArray['error'];
+                }
+            }
+
             $this->logger->logError($logPrefix . 'API error response code: ' . $responseCode);
-            return new ApiResponse($response, $responseCode, true, $errorMessage);
+            return new ApiResponse(
+                response: $response,
+                responseCode: $responseCode,
+                hasError: true,
+                errorMessage: $errorMessage,
+            );
         }
 
         $this->logger->logInfo($logPrefix . 'API call completed...');

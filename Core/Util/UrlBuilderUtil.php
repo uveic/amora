@@ -57,9 +57,10 @@ readonly class UrlBuilderUtil
     public const string PUBLIC_HTML_LOGIN = '/login';
     private const string PUBLIC_HTML_REGISTER = '/register';
     public const string PUBLIC_HTML_LOGIN_FORGOT = '/login/forgot';
-    private const string PUBLIC_CREATE_PASSWORD = '/user/create/%s';
-    private const string PUBLIC_VERIFY_USER = '/user/verify/%s';
-    private const string PUBLIC_RESET_PASSWORD = '/user/reset/%s';
+    private const string PUBLIC_HTML_CREATE_PASSWORD = '/user/create/%s';
+    private const string PUBLIC_HTML_VERIFY_USER = '/user/verify/%s';
+    private const string PUBLIC_HTML_RESET_PASSWORD = '/user/reset/%s';
+    private const string PUBLIC_HTML_TERMS = '/terms';
 
     private const string PUBLIC_ALBUM_VIEW = '/album/%s';
 
@@ -344,7 +345,7 @@ readonly class UrlBuilderUtil
         string $verificationIdentifier
     ): string {
         return self::buildBaseUrl($language) .
-            sprintf(self::PUBLIC_CREATE_PASSWORD, $verificationIdentifier);
+            sprintf(self::PUBLIC_HTML_CREATE_PASSWORD, $verificationIdentifier);
     }
 
     public static function buildPublicEmailUpdateUrl(
@@ -352,7 +353,7 @@ readonly class UrlBuilderUtil
         string $verificationIdentifier
     ): string {
         return self::buildBaseUrl($language) .
-            sprintf(self::PUBLIC_VERIFY_USER, $verificationIdentifier);
+            sprintf(self::PUBLIC_HTML_VERIFY_USER, $verificationIdentifier);
     }
 
     public static function buildPublicVerificationEmailUrl(
@@ -360,7 +361,7 @@ readonly class UrlBuilderUtil
         string $verificationIdentifier
     ): string {
         return self::buildBaseUrl($language) .
-            sprintf(self::PUBLIC_VERIFY_USER, $verificationIdentifier);
+            sprintf(self::PUBLIC_HTML_VERIFY_USER, $verificationIdentifier);
     }
 
     public static function buildPublicPasswordResetUrl(
@@ -368,7 +369,7 @@ readonly class UrlBuilderUtil
         string $verificationIdentifier
     ): string {
         return self::buildBaseUrl($language) .
-            sprintf(self::PUBLIC_RESET_PASSWORD, $verificationIdentifier);
+            sprintf(self::PUBLIC_HTML_RESET_PASSWORD, $verificationIdentifier);
     }
 
     public static function buildPublicArticlePath(
@@ -391,6 +392,11 @@ readonly class UrlBuilderUtil
                 : self::buildBaseUrl($language)
             )
             . sprintf(self::PUBLIC_ALBUM_VIEW, $slug);
+    }
+
+    public static function buildPublicTermsUrl(Language $language): string
+    {
+        return self::buildBaseUrl($language) . self::PUBLIC_HTML_TERMS;
     }
 
     public static function buildPublicRssUrl(): string

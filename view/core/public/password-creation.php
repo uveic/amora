@@ -1,5 +1,6 @@
 <?php
 
+use Amora\Core\Core;
 use Amora\Core\Entity\Response\HtmlResponseData;
 use Amora\Core\Util\UrlBuilderUtil;
 use Amora\Core\Value\CoreIcons;
@@ -8,17 +9,11 @@ use Amora\Core\Value\CoreIcons;
 
 $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, className: 'logo-on-top');
 $titleHtml = $responseData->getLocalValue('authenticationPasswordCreateSubtitle');
-$subtitleHtml = '';
-$buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink');
 
 ?>
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
-<head>
 <?=$this->insert('../../app/public/partials/head', ['responseData' => $responseData])?>
-  <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
-  <link href="/css/app/style.css?v=000" rel="stylesheet" type="text/css">
-</head>
 <body>
 <main class="main-split-screen">
   <div id="register-left"></div>
@@ -32,8 +27,7 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
       <div>
         <h1 id="register-title" class="m-b-6"><?=$siteLogoHtml?></h1>
         <h2 id="register-subtitle"><?=$titleHtml?></h2>
-        <div id="password-reset-form">
-          <p class="m-b-3"><?=$subtitleHtml?></p>
+        <div id="password-reset-form" class="m-t-3">
           <div class="field">
             <p class="control has-icons-left">
               <label for="password" class="null">Password</label>
@@ -47,6 +41,14 @@ $buttonActionText = $responseData->getLocalValue('authenticationActionHomeLink')
               <input class="input" id="passwordConfirmation" name="passwordConfirmation" autocomplete="new-password" type="password" placeholder="<?=$responseData->getLocalValue('formPlaceholderPasswordConfirmation')?>" required>
             </p>
           </div>
+<?php if (Core::getConfig()->mustAcceptTermsAndConditions) { ?>
+          <div class="field m-t-2">
+            <div class="control flex-start flex-no-wrap gap-05">
+              <input id="termsAndConditions" name="termsAndConditions" type="checkbox" class="m-t-025" required>
+              <label for="termsAndConditions" class="label-checkbox"><?=sprintf($responseData->getLocalValue('pageTermsAndConditionsHtml'), UrlBuilderUtil::buildPublicTermsUrl($responseData->siteLanguage))?></label>
+            </div>
+          </div>
+<?php } ?>
           <div id="login-failure-message" class="is-failure m-t-1 null"></div>
           <div class="field">
             <p class="control">

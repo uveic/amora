@@ -56,6 +56,7 @@ return [
     'authenticationPasswordsDoNotMatch' => 'Las contraseñas no coinciden. Corrígelo e inténtalo de nuevo.',
     'authenticationRegistrationErrorExistingEmail' => 'Ya existe otra cuenta con el mismo correo electrónico. Por favor, identifícate.',
     'authenticationPassNotValid' => 'La contraseña actual no es correcta.',
+    'authenticationTermsAndConditions' => 'Debes aceptar las condiciones de uso y política de privacidad',
 
     'authenticationPasswordResetSubtitle' => 'Cambia tu contraseña',
     'authenticationPasswordResetActionSuccess' => 'Se ha cambiado la contraseña correctamente.',
@@ -198,6 +199,7 @@ return [
     'pageContentEditTitle' => 'Editar contenido',
     'pageContentEditTitleHomepage' => 'Portada',
     'pageContentEditTitleBlogBottom' => 'Texto que se muestra después de un post del blog',
+    'pageContentEditTitleTermsAndConditions' => 'Condiciones de uso',
     'pageContentEditAction' => 'Enlace',
     'pageContentEditActionHelp' => 'Se mostrará un botón invitando a visitar la dirección web proporcionada.',
     'pageContentEditAvailableInLanguages' => 'Disponible en',
@@ -275,4 +277,6 @@ return [
     'collectionMediaTitle' => 'Otras imágenes',
     'collectionDragAndDropToOrder' => 'Arrastrar para (re-)ordenar.',
     'collectionModalMediaCaptionTitle' => 'Texto, descripción o subtítulo de la imagen',
+
+    'pageTermsAndConditionsHtml' => 'Al crear tu contraseña aceptas las <a href="%s" target="_blank">condiciones de uso y política de privacidad</a>.',
 ];

@@ -56,6 +56,7 @@ return [
     'authenticationPasswordsDoNotMatch' => 'Os contrasinais non coinciden. Corríxeo e inténtao outra vez.',
     'authenticationRegistrationErrorExistingEmail' => 'Xa hai outra conta co mesmo email. Por favor, identifícate.',
     'authenticationPassNotValid' => 'O contrasinal actual non é válido.',
+    'authenticationTermsAndConditions' => 'Debes aceptar as condicións de uso e política de privacidade',
 
     'authenticationPasswordResetSubtitle' => 'Cambia o contrasinal',
     'authenticationPasswordResetActionSuccess' => 'Cambiouse o contrasinal correctamente.',
@@ -198,6 +199,7 @@ return [
     'pageContentEditTitle' => 'Editar contido',
     'pageContentEditTitleHomepage' => 'Portada',
     'pageContentEditTitleBlogBottom' => 'Texto despois dun post do blog',
+    'pageContentEditTitleTermsAndConditions' => 'Condicións de uso',
     'pageContentEditAction' => 'Ligazón',
     'pageContentEditActionHelp' => 'Se se proporciona un enderezo web amosarase un botón que convida a ir visitalo.',
     'pageContentEditAvailableInLanguages' => 'Dispoñible en',
@@ -275,4 +277,6 @@ return [
     'collectionMediaTitle' => 'Outras imaxes',
     'collectionDragAndDropToOrder' => 'Arrastrar para (re-)ordenar',
     'collectionModalMediaCaptionTitle' => 'Texto, descrición ou subtítulo da imaxe',
+
+    'pageTermsAndConditionsHtml' => 'Ao creares o teu contrasinal aceptas as <a href="%s" target="_blank">condicións de uso e política de privacidade</a>.',
 ];

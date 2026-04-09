@@ -2,6 +2,7 @@
 
 namespace Amora\Core\Module\Mailer\Model;
 
+use Amora\Core\Module\Mailer\Value\MailerClient;
 use Amora\Core\Util\DateUtil;
 use DateTimeImmutable;
 
@@ -10,6 +11,7 @@ class MailerLogItem
     public function __construct(
         public ?int $id,
         public readonly int $mailerQueueId,
+        public readonly ?MailerClient $mailerClient,
         public readonly DateTimeImmutable $createdAt,
         public readonly string $request,
         public readonly ?string $response = null,
@@ -23,6 +25,7 @@ class MailerLogItem
         return [
             'id' => $this->id,
             'mailer_queue_id' => $this->mailerQueueId,
+            'client_id' => $this->mailerClient->value,
             'created_at' => $this->createdAt->format(DateUtil::MYSQL_DATETIME_FORMAT),
             'request' => $this->request,
             'response' => $this->response,

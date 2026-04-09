@@ -18,6 +18,7 @@ class MailerDataLayer
 
     private const string MAILER_QUEUE_TABLE_NAME = 'mailer_queue';
     private const string MAILER_LOG_TABLE_NAME = 'mailer_log';
+    public const string MAILER_CLIENT_TABLE = 'mailer_client';
 
     public function __construct(
         private readonly MySqlDb $db,
@@ -50,6 +51,7 @@ class MailerDataLayer
             'q.user_id AS mailer_item_user_id',
             'q.template_id AS mailer_item_template_id',
             'q.reply_to_email AS mailer_item_reply_to_email',
+            'q.sender_email AS mailer_item_sender_email',
             'q.sender_name AS mailer_item_sender_name',
             'q.receiver_email AS mailer_item_receiver_email',
             'q.receiver_name AS mailer_item_receiver_name',
@@ -199,7 +201,7 @@ class MailerDataLayer
         ';
         $params = [
             ':id' => $mailerItem->id,
-            ':error' => empty($hasError) ? 0 : 1
+            ':error' => empty($hasError) ? 0 : 1,
         ];
 
         if ($updateProcessedAt) {

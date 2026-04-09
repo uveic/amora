@@ -421,6 +421,7 @@ readonly class PublicApiController extends PublicApiControllerAbstract
      * @param string $validationHash
      * @param string $verificationIdentifier
      * @param string $languageIsoCode
+     * @param bool|null $termsAndConditions
      * @param Request $request
      * @return Response
      */
@@ -431,6 +432,7 @@ readonly class PublicApiController extends PublicApiControllerAbstract
         string $validationHash,
         string $verificationIdentifier,
         string $languageIsoCode,
+        ?bool $termsAndConditions,
         Request $request
     ): Response {
         $user = $this->userService->getUserForId($userId);
@@ -458,6 +460,13 @@ readonly class PublicApiController extends PublicApiControllerAbstract
             return new PublicApiControllerUserPasswordCreationSuccessResponse(
                 success: false,
                 errorMessage: $localisationUtil->getValue('authenticationPasswordsDoNotMatch'),
+            );
+        }
+
+        if (!$termsAndConditions && Core::getConfig()->mustAcceptTermsAndConditions) {
+            return new PublicApiControllerUserPasswordCreationSuccessResponse(
+                success: false,
+                errorMessage: $localisationUtil->getValue('authenticationTermsAndConditions'),
             );
         }
 
