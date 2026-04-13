@@ -348,11 +348,13 @@ final readonly class StringUtil
         return $text;
     }
 
-    public static function generateSlug(?string $text = null, int $length = 64): string
+    public static function generateSlug(?string $text = null, int $length = 64, bool $makeLowerCase = false): string
     {
-        $slug = $text
-            ? strtolower(self::cleanString($text))
-            : strtolower(self::generateRandomString($length));
+        $slug = $text ? self::cleanString($text) : self::generateRandomString($length);
+
+        if ($makeLowerCase) {
+            $slug = strtolower($slug);
+        }
 
         $count = 0;
         do {
