@@ -823,6 +823,17 @@ button.is-link,
   border-radius: var(--border-radius);
 }
 
+.metadata {
+  width: 100%;
+  flex-grow: 1;
+  color: var(--color-grey-600);
+  font-size: 0.8rem;
+}
+
+.metadata svg {
+  width: 17px;
+}
+
 @keyframes backgroundFadeOut {
   0% {
     background-color: var(--color-highlight);
@@ -972,8 +983,8 @@ svg,
   height: auto;
   vertical-align: middle;
   margin: 0;
-  fill: var(--color-black);
-  stroke: var(--color-black);
+  fill: currentColor;
+  stroke: currentColor;
   flex-shrink: 0;
   flex-grow: 0;
   line-height: 1;

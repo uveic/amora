@@ -109,6 +109,7 @@ return [
     'globalSettings' => 'Configuración',
     'globalClose' => 'Cerrar',
     'globalRemove' => 'Eliminar',
+    'globalDelete' => 'Eliminar',
     'globalFormat' => 'Formato',
     'globalRequired' => 'Obligatorio',
     'globalCreate' => 'Crear',
