@@ -302,7 +302,7 @@ final readonly class StringUtil
             return $str;
         }
 
-        $url = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([^\s.]+[^\s]*)+[^,.\s])@';
+        $url = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([\S.]+\S*)+[^,.\s])@';
         return preg_replace($url, '<a href="http$2://$4" title="$0">$0</a>', $str);
     }
 
@@ -382,6 +382,24 @@ final readonly class StringUtil
         }
 
         return '';
+    }
+
+    public static function buildAcronym(string $from, int $maxLength = 3): string
+    {
+        $name = self::cleanString($from, charsToBeRemoved: '-', replaceWith: '', keepSpaces: true);
+        $words = explode(" ", $name);
+        $acronym = "";
+
+        foreach ($words as $w) {
+            if (is_numeric($w)) {
+                $acronym .= $w;
+                continue;
+            }
+
+            $acronym .= mb_substr($w, 0, 1);
+        }
+
+        return mb_strtoupper(substr($acronym, 0, $maxLength), 'UTF-8');
     }
 
     public static function cleanSearchQuery(string $searchQuery, array $wordsToRemove = []): string

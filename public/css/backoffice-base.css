@@ -105,19 +105,6 @@
   width: 24px;
 }
 
-.metadata {
-  width: 100%;
-  flex-grow: 1;
-  color: var(--color-grey-600);
-  font-size: 0.8rem;
-}
-
-.metadata svg {
-  width: 17px;
-  fill: var(--color-grey-600);
-  stroke: var(--color-grey-600);
-}
-
 .activity-container .title {
   font-weight: 500;
 }
@@ -649,6 +636,11 @@
   flex-flow: row wrap;
   align-items: center;
   gap: 1rem;
+}
+
+.filter-links svg {
+  fill: var(--color-black);
+  stroke: var(--color-black);
 }
 
 .filter-container .filter-header svg {
