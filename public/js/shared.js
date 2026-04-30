@@ -140,6 +140,10 @@ window.addEventListener('DOMContentLoaded', () => {
     if (modalCloseEl) {
       modalCloseEl.click();
     }
+
+    if (e.key === 'Escape') {
+      Util.hideFullPageLoadingModal();
+    }
   });
 
   document.querySelectorAll('.copy-link').forEach(a => {
