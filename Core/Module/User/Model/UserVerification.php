@@ -8,7 +8,7 @@ use DateTimeImmutable;
 
 class UserVerification
 {
-    private const int VERIFICATION_LINK_VALID_FOR_SECONDS = 172800; // 2 days
+    private const int VERIFICATION_LINK_VALID_FOR_SECONDS = 5184000; // 60 days
 
     public function __construct(
         public ?int $id,

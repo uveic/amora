@@ -9,6 +9,7 @@ use Amora\Core\Module\Mailer\Service\MailerService;
 use Amora\Core\Module\User\DataLayer\UserDataLayer;
 use Amora\Core\Module\User\Model\User;
 use Amora\Core\Module\User\Model\UserVerification;
+use Amora\Core\Module\User\Value\UserJourneyStatus;
 use Amora\Core\Module\User\Value\VerificationType;
 use Amora\Core\Util\StringUtil;
 use DateTimeImmutable;
@@ -152,7 +153,22 @@ readonly class UserMailService
         $res = $this->userDataLayer->db->withTransaction(
             function () use ($user) {
                 $res = $this->sendPasswordCreationEmail($user);
-                return new Feedback($res);
+                if (!$res) {
+                    return new Feedback(false);
+                }
+
+                if ($user->journeyStatus === UserJourneyStatus::EmailToCreatePasswordNotSent) {
+                    $res = $this->userDataLayer->updateUserFields(
+                        userId: $user->id,
+                        newJourneyStatus: UserJourneyStatus::PendingPasswordCreation,
+                    );
+
+                    if (!$res) {
+                        return new Feedback(false);
+                    }
+                }
+
+                return new Feedback(true);
             }
         );
 
