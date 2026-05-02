@@ -322,6 +322,11 @@ final readonly class StringUtil
 
         $text = str_replace('&nbsp;', ' ', $text);
         $position = strpos($text, '</p>');
+
+        if (!$position) {
+            $position = strpos($text, '<br>');
+        }
+
         if ($position) {
             $firstParagraph = trim(strip_tags(substr($text, 0, $position)));
 
