@@ -78,8 +78,8 @@ class UtilClass {
     }
 
     const iframeElement = document.createElement('iframe');
-    iframeElement.width = '560';
-    iframeElement.height = '315';
+    iframeElement.width = '640';
+    iframeElement.height = '390';
     iframeElement.src = 'https://www.youtube-nocookie.com/embed/' + ytVideoId + (autoplay ? '?autoplay=1' : '');
     iframeElement.title = 'Reprodutor de vídeo de YouTube';
     iframeElement.allow = 'encrypted-media; picture-in-picture;';
