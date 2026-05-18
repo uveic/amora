@@ -49,6 +49,7 @@ const handleImagePopupClick = (e) => {
 
   modalInner.appendChild(modalImage);
 
+  document.body.style.overflow = 'hidden';
   modal.classList.remove('null');
 };
 

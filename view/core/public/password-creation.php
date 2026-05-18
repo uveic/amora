@@ -13,7 +13,11 @@ $titleHtml = $responseData->getLocalValue('authenticationPasswordCreateSubtitle'
 ?>
 <!DOCTYPE html>
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
+<head>
 <?=$this->insert('../../app/public/partials/head', ['responseData' => $responseData])?>
+  <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
+  <link href="/css/app/style.css?v=000" rel="stylesheet" type="text/css">
+</head>
 <body>
 <main class="main-split-screen">
   <div id="register-left"></div>
@@ -25,7 +29,7 @@ $titleHtml = $responseData->getLocalValue('authenticationPasswordCreateSubtitle'
       <input class="input" type="hidden" id="verificationIdentifier" name="verificationIdentifier" value="<?=$responseData->userVerification->verificationIdentifier?>">
       <input class="input" type="hidden" id="postUrl" name="postUrl" value="<?= UrlBuilderUtil::PUBLIC_API_PASSWORD_CREATION?>">
       <div>
-        <h1 id="register-title" class="m-b-6"><?=$siteLogoHtml?></h1>
+        <div class="m-b-6"><?=$siteLogoHtml?></div>
         <h2 id="register-subtitle"><?=$titleHtml?></h2>
         <div id="password-reset-form" class="m-t-3">
           <div class="field">
