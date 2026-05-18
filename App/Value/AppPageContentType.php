@@ -30,12 +30,10 @@ enum AppPageContentType: int
 
     public static function displayContent(self|PageContentType $type, PageContentSection $section): bool
     {
-        return match ($type) {
-            PageContentType::BlogBottom,
-            PageContentType::Homepage,
-            PageContentType::TermsAndConditions => $type->displayContent($section),
-            default => true,
-        };
+        return $type->displayContent($section);
+//        return match ($type) {
+//            default => $type->displayContent($section),
+//        };
     }
 
     public static function getTitleVariableName(self|PageContentType $type): string
