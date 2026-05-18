@@ -6,7 +6,7 @@ Display path to php.ini: `php --ini`
 
 List all installed modules: `php -m`
 
-Path to `php.ini`: `/etc/php/8.2/fpm/php.ini`
+Path to `php.ini`: `/etc/php/8.5/fpm/php.ini` and/or `/etc/php/8.5/cli/php.ini`
 
 Important settings in `php.ini`: `display_errors = off`, `error_reporting = E_ALL`, `upload_max_filesize=32M`, `post_max_size=32M`, `max_execution_time = 300`, `zend.multibyte = On`
 
@@ -16,26 +16,26 @@ Example: `access_log /var/log/nginx/project-name-access.log;`, `error_log /var/l
 
 ### Package dependency:
 
-`sudo apt-get install php8.4-gd php8.4-mysql php8.4-fpm php8.4-curl php8.4-xml php8.4-cli php8.4-common php8.4-opcache`
+`sudo apt-get install php8.5-gd php8.5-mysql php8.5-fpm php8.5-curl php8.5-xml php8.5-cli php8.5-common php8.5-opcache`
 
-`php8.4-fpm`\
-`php8.4-mysql`\
-`php8.4-curl`\
-`php8.4-gd`\
-`php8.4-cli`\
-`php8.4-common`\
-`php8.4-opcache`\
-`php8.4-mbstring`\
-`php8.4-xml`\
-`php8.4-memcache`
+`php8.5-fpm`\
+`php8.5-mysql`\
+`php8.5-curl`\
+`php8.5-gd`\
+`php8.5-cli`\
+`php8.5-common`\
+`php8.5-opcache`\
+`php8.5-mbstring`\
+`php8.5-xml`\
+`php8.5-memcache`
 
 Restart PHP-FPM:\
-`sudo service php8.4-fpm restart`\
-`sudo /etc/init.d/php8.4-fpm restart`
+`sudo service php8.5-fpm restart`\
+`sudo /etc/init.d/php8.5-fpm restart`
 
-PHP-FPM config: `/etc/php/8.2/fpm/php-fpm.conf`
+PHP-FPM config: `/etc/php/8.5/fpm/php-fpm.conf`
 
-Pool config: `/etc/php/8.2/fpm/pool.d/www.conf`
+Pool config: `/etc/php/8.5/fpm/pool.d/www.conf`
 
 Optimizing PHP-FPM for High Performance: https://geekflare.com/php-fpm-optimization/
 
