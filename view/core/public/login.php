@@ -12,8 +12,6 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
 <?=$this->insert('../../app/public/partials/head', ['responseData' => $responseData])?>
-  <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
-  <link href="/css/app/style.css?v=000" rel="stylesheet" type="text/css">
 </head>
 <body>
 <main class="main-split-screen">
@@ -40,7 +38,7 @@ $siteLogoHtml = $responseData->buildSiteLogoHtml($responseData->siteLanguage, cl
         <div id="login-failure-message" class="is-failure m-t-1 null"></div>
         <div class="field">
           <p class="control">
-            <input class="button is-success width-100" type="submit" value="<?=$responseData->getLocalValue('formLoginAction')?>">
+            <input class="button width-100" type="submit" value="<?=$responseData->getLocalValue('formLoginAction')?>">
           </p>
         </div>
       </div>

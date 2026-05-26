@@ -43,7 +43,7 @@ const handleImagePopupClick = (e) => {
 
   let modalImage = new Image();
   modalImage.className = 'modal-display-item';
-  modalImage.src = e.currentTarget.dataset.pathMedium ?? e.currentTarget.src;
+  modalImage.src = e.currentTarget.dataset.pathLarge ?? e.currentTarget.dataset.pathMedium ?? e.currentTarget.src;
   modalImage.alt = e.currentTarget.alt;
   modalImage.title = e.currentTarget.title;
 

@@ -19,6 +19,7 @@
   --color-warning: #fffca6;
   --color-warning-light: #fbfee5;
   --color-success: #2ed06e;
+  --color-success-hover: #23954d;
   --color-success-light: #afdbc0;
   --color-success-highlight: #97e294;
   --color-private: #51b320;
@@ -454,6 +455,7 @@ pre {
   top: 30px;
   right: 30px;
   font-size: 1.5rem;
+  color: var(--color-black);
 }
 /* Register/Login style ends here */
 
@@ -591,7 +593,6 @@ a.link-title:focus {
   display: flex;
   flex-flow: column wrap;
   gap: 1.5rem;
-  max-width: var(--content-max-width-form);
   margin: 0 auto;
   padding-top: 1rem;
 }
@@ -934,6 +935,7 @@ button.is-link,
 .flex-grow-2 {flex-grow: 2 !important;}
 .flex-grow-3 {flex-grow: 3 !important;}
 .flex-grow-4 {flex-grow: 4 !important;}
+.flex-shrink {flex-shrink: 1 !important;}
 .flex-align-start {align-items:flex-start;}
 .flex-align-center {align-items:center;}
 .flex-align-stretch {align-items:stretch;}
@@ -951,7 +953,7 @@ button.is-link,
 .no-border {border: none !important;}
 .width-40 { width: 40%; }
 .width-100 {width: 100% !important;}
-.width-10-grow {width: 10%; flex-grow: 1;}
+.width-10-grow {width: 10% !important; flex-grow: 1;}
 .display-block {display: block !important;}
 .word-break {word-wrap: anywhere;}
 .text-one-line {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
@@ -961,6 +963,7 @@ button.is-link,
 .text-strong {font-weight: 700;}
 .text-thin {font-weight: 300;}
 .text-small {font-size: 0.8rem;}
+.text-large {font-size: 1.5rem;}
 .width-auto {width: auto;}
 .uppercase {text-transform: uppercase;}
 .min-width-100 {min-width: 100px !important;}
@@ -1297,6 +1300,7 @@ svg,
     display: block;
     width: 41.66666667%;
     background: url('/img/roof.webp') center right / cover no-repeat;
+    flex-grow: 1;
   }
 
   .form-two-columns-wrapper {

@@ -46,6 +46,9 @@ if (!$canonicalUrl) {
   <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+  <link href="/css/navbar-base.css?v=000" rel="stylesheet" type="text/css">
+  <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
+  <link href="/css/app/style.css?v=000" rel="stylesheet" type="text/css">
   <link rel="alternate" type="application/rss+xml" title="<?=$responseData->siteName?>" href="<?=UrlBuilderUtil::buildPublicRssUrl()?>">
   <link rel="alternate" type="application/feed+json" title="<?=$responseData->siteName?>" href="<?=UrlBuilderUtil::buildPublicJsonFeedUrl()?>">
 <?php

@@ -9,7 +9,6 @@ use Amora\App\Entity\AppHtmlHomepageResponseData;
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
 <?=$this->insert('partials/head', ['responseData' => $responseData])?>
-  <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
   <script type="module" src="/js/main.js?v=000"></script>
 </head>
 <body>

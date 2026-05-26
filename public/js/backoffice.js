@@ -1452,13 +1452,6 @@ document.querySelectorAll('.filter-article-refresh').forEach(a => {
   });
 });
 
-document.querySelectorAll('.modal-media-close').forEach(mm => {
-  mm.addEventListener('click', (e) => {
-    e.preventDefault();
-    document.querySelector('.modal-media').classList.add('null');
-  });
-});
-
 document.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
     return;

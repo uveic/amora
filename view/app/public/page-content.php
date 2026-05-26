@@ -22,7 +22,6 @@ $contentEditUrl = AppUrlBuilderUtil::buildBackofficeContentEditUrl(
 <html lang="<?=strtolower($responseData->siteLanguage->value)?>">
 <head>
 <?=$this->insert('partials/head', ['responseData' => $responseData])?>
-  <link href="/css/shared-base.css?v=000" rel="stylesheet" type="text/css">
 </head>
 <body>
   <header class="page-content-header">

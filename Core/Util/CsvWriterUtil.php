@@ -56,6 +56,7 @@ final readonly class CsvWriterUtil
         $res = fputcsv(
             stream: $handle,
             fields: array_values($data),
+            escape: '\\',
         );
 
         return !(false === $res);

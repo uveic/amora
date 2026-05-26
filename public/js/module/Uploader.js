@@ -54,11 +54,19 @@ class UploaderClass {
 
     const media = new Image();
     media.className = imageClassName;
-    media.src = json.file.pathSmall;
-    media.sizes = json.file.sizes;
-    media.srcset = json.file.srcset;
+    if (json.file.sizes) {
+      media.sizes = json.file.sizes;
+    }
+    if (json.file.srcset) {
+      media.srcset = json.file.srcset;
+      media.src = json.file.pathSmall;
+    } else {
+      media.src = json.file.pathMedium;
+    }
     media.dataset.mediaId = json.file.id;
-    media.dataset.pathLarge = json.file.pathLarge;
+    if (json.file.pathLarge) {
+      media.dataset.pathLarge = json.file.pathLarge;
+    }
     media.alt = json.file.caption ?? json.file.name;
 
     figureContainer.appendChild(media);
@@ -96,7 +104,11 @@ class UploaderClass {
       const xhr = new XMLHttpRequest();
       xhr.addEventListener('load', () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
-          resolve(JSON.parse(xhr.response));
+          try {
+            resolve(JSON.parse(xhr.response));
+          } catch (e) {
+            reject(e);
+          }
         } else {
           reject(new Error(xhr.statusText));
         }
@@ -147,7 +159,7 @@ class UploaderClass {
             if (this.isImage(media.name)) {
               this.uploadImageThen(json, imageClassName);
             } else {
-              this.uploadFileThen(json, imageClassName);
+              this.uploadFileThen(json);
             }
 
             then(json);
