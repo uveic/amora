@@ -23,11 +23,14 @@ fi
 BACKUP_FILENAME="backup_${REMOTE_DATABASE_NAME}_${FILENAME_DATE}"
 COMPRESSED_FILENAME="${BACKUP_FILENAME}.sql.gz"
 
-echo "Getting latest database backup: ${REMOTE_FILEPATH}${COMPRESSED_FILENAME}"
-if ! scp ${REMOTE_HOST}:${REMOTE_FILEPATH}"${COMPRESSED_FILENAME}" "${LOCAL_FILEPATH}${COMPRESSED_FILENAME}"
+if  [ ! -f "${LOCAL_FILEPATH}${COMPRESSED_FILENAME}" ]
 then
-  echo "Error retrieving latest database backup. Aborting..."
-  exit
+  echo "Getting latest database backup: ${REMOTE_FILEPATH}${COMPRESSED_FILENAME}"
+  if ! scp ${REMOTE_HOST}:${REMOTE_FILEPATH}"${COMPRESSED_FILENAME}" "${LOCAL_FILEPATH}${COMPRESSED_FILENAME}"
+  then
+    echo "Error retrieving latest database backup. Aborting..."
+    exit
+  fi
 fi
 
 echo "Decompressing database backup..."
