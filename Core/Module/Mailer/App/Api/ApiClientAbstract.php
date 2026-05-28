@@ -72,6 +72,8 @@ abstract class ApiClientAbstract
                     $errorMessage = $responseAsArray['errors'][0]['message'];
                 } elseif (isset($responseAsArray['error']) && is_string($responseAsArray['error'])) {
                     $errorMessage = $responseAsArray['error'];
+                } elseif (isset($responseAsArray['message']) && is_string($responseAsArray['message'])) {
+                    $errorMessage = $responseAsArray['message'];
                 }
             }
 
