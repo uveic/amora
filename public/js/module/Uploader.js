@@ -14,77 +14,63 @@ class UploaderClass {
     return loaderContainer;
   }
 
-  uploadImageBefore(media, mediaContainer) {
+  uploadMediaBefore(media, mediaContainer) {
+    const isImage = this.isImage(media.name);
+
     const loaderEl = Util.buildImageLoadingElement();
-    const figureContainer = document.createElement('figure');
-    figureContainer.className = 'image-container';
-    figureContainer.id = 'item' + Util.cleanString(media.name);
+    const container = document.createElement(isImage ? 'figure' : 'div');
+    container.className = isImage ? 'image-container' : 'file-container';
+    container.id = 'item' + Util.cleanString(media.name);
 
-    figureContainer.appendChild(loaderEl);
+    container.appendChild(loaderEl);
 
-    mediaContainer.appendChild(figureContainer);
+    mediaContainer.appendChild(container);
     if (mediaContainer.firstChild) {
-      mediaContainer.insertBefore(figureContainer, mediaContainer.firstChild);
+      mediaContainer.insertBefore(container, mediaContainer.firstChild);
     } else {
-      mediaContainer.appendChild(figureContainer);
+      mediaContainer.appendChild(container);
     }
   }
 
-  uploadFileBefore(media, mediaContainer) {
-    const loaderEl = Util.buildImageLoadingElement();
-    const fileContainer = document.createElement('div');
-    fileContainer.className = 'file-container';
-    fileContainer.id = 'item' + Util.cleanString(media.name);
-    fileContainer.appendChild(loaderEl);
-
-    mediaContainer.appendChild(fileContainer);
-    if (mediaContainer.firstChild) {
-      mediaContainer.insertBefore(fileContainer, mediaContainer.firstChild);
-    } else {
-      mediaContainer.appendChild(fileContainer);
-    }
-  }
-
-  uploadImageThen(json, imageClassName) {
+  uploadMediaThen(json, imageClassName, isImage) {
     if (!json.success || !json.file) {
       throw new Error(json.errorMessage ?? Global.get('genericError'));
     }
 
-    const figureContainer = document.querySelector('#item' + Util.cleanString(json.file.sourceName));
-
-    const media = new Image();
-    media.className = imageClassName;
-    if (json.file.sizes) {
-      media.sizes = json.file.sizes;
+    const container = document.querySelector('#item' + Util.cleanString(json.file.sourceName));
+    if (!container) {
+      return;
     }
-    if (json.file.srcset) {
-      media.srcset = json.file.srcset;
-      media.src = json.file.pathSmall;
+
+    if (isImage) {
+      const media = new Image();
+      media.dataset.mediaId = json.file.id;
+      media.className = imageClassName;
+      media.alt = json.file.caption ?? json.file.name;
+
+      if (json.file.sizes) {
+        media.sizes = json.file.sizes;
+      }
+      if (json.file.srcset) {
+        media.srcset = json.file.srcset;
+        media.src = json.file.pathSmall;
+      } else {
+        media.src = json.file.pathMedium;
+      }
+      if (json.file.pathLarge) {
+        media.dataset.pathLarge = json.file.pathLarge;
+      }
+
+      container.appendChild(media);
     } else {
-      media.src = json.file.pathMedium;
+      container.innerHTML = json.file.asHtml;
     }
-    media.dataset.mediaId = json.file.id;
-    if (json.file.pathLarge) {
-      media.dataset.pathLarge = json.file.pathLarge;
-    }
-    media.alt = json.file.caption ?? json.file.name;
 
-    figureContainer.appendChild(media);
-    figureContainer.removeChild(figureContainer.querySelector('.loader-container'));
-    figureContainer.removeAttribute('id');
+    container.querySelectorAll('.loader-container').forEach(lc => lc.remove());
+    container.removeAttribute('id');
   }
 
-  uploadFileThen(json) {
-    if (!json.success || !json.file) {
-      throw new Error(json.errorMessage ?? Global.get('genericError'));
-    }
-
-    const fileContainer = document.querySelector('#item' + Util.cleanString(json.file.sourceName));
-    fileContainer.removeChild(fileContainer.querySelector('.loader-container'));
-    fileContainer.innerHTML = json.file.asHtml;
-  }
-
-  async uploadFile (
+  async uploadMedia (
     media,
     apiUploadEndpoint = '/api/file',
     formData = new FormData(),
@@ -95,7 +81,6 @@ class UploaderClass {
       const progressEl = progressBarContainer.querySelector('progress');
       if (itemContainer) {
         itemContainer.appendChild(progressBarContainer);
-        itemContainer.removeChild(itemContainer.querySelector('.loader-container'));
       }
 
       formData.delete('files[]');
@@ -120,7 +105,7 @@ class UploaderClass {
 
         if (progressValue >= 95) {
           if (itemContainer) {
-            itemContainer.removeChild(progressBarContainer);
+            progressBarContainer.remove();
             itemContainer.appendChild(Util.buildImageLoadingElement());
           }
         }
@@ -145,31 +130,18 @@ class UploaderClass {
     formData = new FormData(),
   ) {
     for (const media of Array.from(files)) {
-      if (this.isImage(media.name)) {
-        this.uploadImageBefore(media, mediaContainer);
-      } else {
-        this.uploadFileBefore(media, mediaContainer);
-      }
+      this.uploadMediaBefore(media, mediaContainer);
     }
 
     for (const media of Array.from(files)) {
       try {
-        await this.uploadFile(media, apiUploadEndpoint, formData)
+        await this.uploadMedia(media, apiUploadEndpoint, formData)
           .then(json => {
-            if (this.isImage(media.name)) {
-              this.uploadImageThen(json, imageClassName);
-            } else {
-              this.uploadFileThen(json);
-            }
-
+            this.uploadMediaThen(json, imageClassName, this.isImage(media.name));
             then(json);
           })
           .catch(error => {
-            const figureContainer = document.querySelector('#item' + Util.cleanString(media.name));
-            if (figureContainer) {
-              mediaContainer.removeChild(figureContainer);
-            }
-
+            document.querySelectorAll('#item' + Util.cleanString(media.name)).forEach(i => i.remove());
             Util.notifyError(error);
             catchError(error);
           });

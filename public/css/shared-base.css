@@ -336,10 +336,32 @@ pre {
   right: 0;
   z-index: 299;
   cursor: pointer;
+  color: var(--color-white);
 }
 
 .modal-close-button svg {
   width: 25px;
+}
+
+.modal-display-image .modal-inner {
+  max-width: 100%;
+  max-height: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 2rem;
+  margin: auto;
+  overflow: auto;
+  position: fixed;
+  background-color: transparent;
+}
+
+.modal-display-image .modal-inner img {
+  object-fit: contain;
+  object-position: center;
+  width: 100%;
+  height: 100%;
 }
 
 .modal-display-image .modal-close-button {
