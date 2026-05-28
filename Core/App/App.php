@@ -3,12 +3,15 @@
 namespace Amora\Core\App;
 
 use Amora\Core\Core;
+use Amora\Core\Util\DateUtil;
+use DateTimeImmutable;
 use Throwable;
 use Amora\Core\Util\Logger;
 
 abstract class App
 {
-    private LockManager $lockManager;
+    private readonly LockManager $lockManager;
+    private readonly int $persistentAppStartedAtTimestamp;
     public readonly string $logPrefix;
 
     public function __construct(
@@ -18,6 +21,7 @@ abstract class App
         int $lockMaxTimeSinceLastSyncSeconds = 30,
         private readonly bool $isPersistent = true,
         private readonly bool $isLoggingEnabled = true,
+        private readonly bool $forceRestartOfPersistentAppOnceADay = true,
     ) {
         if (empty($appName)) {
             $this->log('Empty App name. Aborting...', true);
@@ -31,6 +35,7 @@ abstract class App
         );
 
         $this->logPrefix = $this->appName . ' ::: ';
+        $this->persistentAppStartedAtTimestamp = time();
     }
 
     public function execute(callable $f): void
@@ -80,6 +85,21 @@ abstract class App
 
     private function runApp(callable $f): void
     {
+        if ($this->isPersistent && $this->forceRestartOfPersistentAppOnceADay) {
+            $now = new DateTimeImmutable();
+            $twoAM = DateUtil::convertStringToDateTimeImmutable($now->format('Y-m-d 02:00:00'));
+            $sixAM = DateUtil::convertStringToDateTimeImmutable($now->format('Y-m-d 06:00:00'));
+
+            if (
+                $now > $twoAM &&
+                $now < $sixAM &&
+                $now->getTimestamp() - $this->persistentAppStartedAtTimestamp > 86400 // 24 hours
+            ) {
+                $this->lockManager->removeLock();
+                exit(1);
+            }
+        }
+
         $this->log('Running...');
         $f();
 
