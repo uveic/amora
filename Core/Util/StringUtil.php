@@ -450,7 +450,13 @@ final readonly class StringUtil
             subject: $url,
             matches: $matches,
         );
-        return $matches[0] ?? null;
+
+        $videoId = $matches[0] ?? null;
+        if ($videoId && str_contains($videoId, '?')) {
+            $videoId = substr($videoId, 0, strpos($videoId, '?'));
+        }
+
+        return $videoId ?? null;
     }
 
     public static function buildYoutubeThumbnailUrl(string $ytVideoId): ?string
