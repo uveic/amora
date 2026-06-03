@@ -19,7 +19,7 @@ abstract class App
         public readonly string $appName,
         private readonly int $appFrequencySeconds = 5,
         int $lockMaxTimeSinceLastSyncSeconds = 30,
-        private readonly bool $isPersistent = true,
+        private readonly bool $isPersistent = false,
         private readonly bool $isLoggingEnabled = true,
         private readonly bool $forceRestartOfPersistentAppOnceADay = true,
     ) {
