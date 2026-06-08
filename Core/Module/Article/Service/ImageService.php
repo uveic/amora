@@ -57,44 +57,44 @@ readonly class ImageService
                 image: $rawFile,
                 newSize: ImageSize::ExtraSize,
                 phpNativeImageType: $phpNativeImageType,
-                imageWidth: $widthOriginal,
-                imageHeight: $heightOriginal,
+                originalWidth: $widthOriginal,
+                originalHeight: $heightOriginal,
                 extraSizeWidth: $extraSizeWidth,
             ) : null,
             filenameXLarge: $this->resizeImage(
                 image: $rawFile,
                 newSize: ImageSize::XLarge,
                 phpNativeImageType: $phpNativeImageType,
-                imageWidth: $widthOriginal,
-                imageHeight: $heightOriginal,
+                originalWidth: $widthOriginal,
+                originalHeight: $heightOriginal,
             ),
             filenameLarge: $this->resizeImage(
                 image: $rawFile,
                 newSize: ImageSize::Large,
                 phpNativeImageType: $phpNativeImageType,
-                imageWidth: $widthOriginal,
-                imageHeight: $heightOriginal,
+                originalWidth: $widthOriginal,
+                originalHeight: $heightOriginal,
             ),
             filenameMedium: $this->resizeImage(
                 image: $rawFile,
                 newSize: ImageSize::Medium,
                 phpNativeImageType: $phpNativeImageType,
-                imageWidth: $widthOriginal,
-                imageHeight: $heightOriginal,
+                originalWidth: $widthOriginal,
+                originalHeight: $heightOriginal,
             ),
             filenameSmall: $this->resizeImage(
                 image: $rawFile,
                 newSize: ImageSize::Small,
                 phpNativeImageType: $phpNativeImageType,
-                imageWidth: $widthOriginal,
-                imageHeight: $heightOriginal,
+                originalWidth: $widthOriginal,
+                originalHeight: $heightOriginal,
             ),
             filenameXSmall: $this->resizeImage(
                 image: $rawFile,
                 newSize: ImageSize::XSmall,
                 phpNativeImageType: $phpNativeImageType,
-                imageWidth: $widthOriginal,
-                imageHeight: $heightOriginal,
+                originalWidth: $widthOriginal,
+                originalHeight: $heightOriginal,
             ),
             captionHtml: $captionHtml,
             createdAt: $now,
@@ -149,8 +149,8 @@ readonly class ImageService
         RawFile $image,
         ImageSize $newSize,
         int $phpNativeImageType,
-        int $imageWidth,
-        int $imageHeight,
+        int $originalWidth,
+        int $originalHeight,
         ?int $extraSizeWidth = null,
     ): ?string {
         $smallerSize = $newSize->getSmaller();
@@ -158,27 +158,27 @@ readonly class ImageService
 
         // The new size and the next smaller size are greater than the original width
         if (
-            $newSizeWidth > $imageWidth &&
+            $newSizeWidth > $originalWidth &&
             $smallerSize &&
-            $smallerSize->value > $imageWidth
+            $smallerSize->value > $originalWidth
         ) {
             return null;
         }
 
         // The original width stands between the new size and the next smaller size
         if (
-            $newSizeWidth >= $imageWidth &&
+            $newSizeWidth >= $originalWidth &&
             $smallerSize &&
-            $smallerSize->value <= $imageWidth
+            $smallerSize->value <= $originalWidth
         ) {
             $ratio = 1;
-            $newWidth = $imageWidth;
+            $newWidth = $originalWidth;
         } else {
-            $ratio = $newSizeWidth / $imageWidth;
+            $ratio = $newSizeWidth / $originalWidth;
             $newWidth = $newSizeWidth;
         }
 
-        $newHeight = (int)round($imageHeight * $ratio);
+        $newHeight = (int)round($originalHeight * $ratio);
 
         $sourceImage = $this->getImageFromSourcePath($image);
         if (!$sourceImage) {
@@ -201,8 +201,8 @@ readonly class ImageService
             $outputFullPath,
             $newWidth,
             $newHeight,
-            $imageWidth,
-            $imageHeight,
+            $originalWidth,
+            $originalHeight,
         );
 
         if (!file_exists($outputFullPath)) {

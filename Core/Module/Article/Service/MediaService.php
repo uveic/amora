@@ -23,6 +23,7 @@ use Amora\Core\Module\Article\DataLayer\MediaDataLayer;
 use Amora\Core\Util\StringUtil;
 use Amora\Core\Value\QueryOrderDirection;
 use DateTimeImmutable;
+use Imagick;
 use Throwable;
 
 readonly class MediaService
@@ -276,20 +277,38 @@ readonly class MediaService
         array $rawFiles,
         ?User $user,
         ?int $extraSizeWidth,
+        bool $keepOriginalNameAsPrefix = true,
+        bool $convertPdfToImage = false,
     ): Feedback {
         return $this->mediaDataLayer->getDb()->withTransaction(
             function () use (
                 $rawFiles,
                 $user,
                 $extraSizeWidth,
+                $keepOriginalNameAsPrefix,
+                $convertPdfToImage,
             ) {
                 try {
-                    $rawFile = $this->validateAndProcessRawFile($rawFiles);
+                    $rawFile = $this->validateAndProcessRawFile(
+                        rawFiles: $rawFiles,
+                        keepOriginalNameAsPrefix: $keepOriginalNameAsPrefix,
+                    );
+
                     if (!$rawFile) {
                         return new Feedback(
                             isSuccess: false,
                             message: 'Raw file not valid',
                         );
+                    }
+
+                    if ($rawFile->mediaType === MediaType::PDF && $convertPdfToImage) {
+                        $resConvert = $this->convertPdfToImage($rawFile);
+
+                        if (!$resConvert->isSuccess) {
+                            return $resConvert;
+                        }
+
+                        $rawFile = $resConvert->response;
                     }
 
                     $processedMedia = match ($rawFile->mediaType) {
@@ -409,7 +428,7 @@ readonly class MediaService
         );
     }
 
-    public function validateAndProcessRawFile(array $rawFiles): ?RawFile
+    public function validateAndProcessRawFile(array $rawFiles, bool $keepOriginalNameAsPrefix = true): ?RawFile
     {
         if (empty($rawFiles['files']['name'][0])) {
             $this->logger->logError('Raw file name is empty');
@@ -436,10 +455,12 @@ readonly class MediaService
             $extension = $this->imageService->getExtension($phpNativeImageType);
         } else {
             $extension = $this->getFileExtension($rawName);
-            $rawNameWithoutExtension = trim(str_replace($extension, '', $rawName), '. ');
-            $baseNameWithoutExtension = StringUtil::cleanString($rawNameWithoutExtension) .
-                '-' .
-                $baseNameWithoutExtension;
+            if ($keepOriginalNameAsPrefix) {
+                $rawNameWithoutExtension = trim(str_replace($extension, '', $rawName), '. ');
+                $baseNameWithoutExtension = StringUtil::cleanString($rawNameWithoutExtension) .
+                    '-' .
+                    $baseNameWithoutExtension;
+            }
         }
 
         $basePath = rtrim($this->mediaBaseDir, ' /');
@@ -541,5 +562,67 @@ readonly class MediaService
         }
 
         return $output;
+    }
+
+    public function convertPdfToImage(RawFile $rawFile, bool $deletePdf = true): Feedback
+    {
+        try {
+            $newImagePathWithName = $rawFile->getPath() . '/' . $rawFile->baseNameWithoutExtension . '.webp';
+
+            $image = new Imagick();
+            $image->setResolution(300, 300);
+            $res = $image->readImage($rawFile->getPathWithName());
+            if (!$res) {
+                return new Feedback(
+                    isSuccess: false,
+                    message: 'Error reading image: ' . $rawFile->getPathWithName(),
+                );
+            }
+
+            // If the PDF has more than one page get the first one
+            if ($image->getNumberImages() > 1) {
+                $image->readImage($rawFile->getPathWithName() . '[0]');
+            }
+
+            $image->setImageFormat('webp');
+            $image->setImageCompressionQuality(85);
+            $image->setOption('webp:lossless', 'false');
+            $image->setImageBackgroundColor('#ffffff');
+            $image->setImageAlphaChannel(Imagick::ALPHACHANNEL_REMOVE);
+            $image = $image->mergeImageLayers(Imagick::LAYERMETHOD_FLATTEN);
+            $res = $image->writeImage($newImagePathWithName);
+
+            if (!$res) {
+                $this->logger->logError('Error writing image: ' . $rawFile->baseNameWithoutExtension . '.webp');
+                return new Feedback(
+                    isSuccess: false,
+                    message: 'Error writing image: ' . $rawFile->baseNameWithoutExtension . '.webp',
+                );
+            }
+
+            if ($deletePdf && file_exists($rawFile->getPathWithName())) {
+                unlink($rawFile->getPathWithName());
+            }
+
+            return new Feedback(
+                isSuccess: true,
+                response: new RawFile(
+                    originalName: $rawFile->originalName,
+                    baseNameWithoutExtension: $rawFile->baseNameWithoutExtension,
+                    extension: 'webp',
+                    basePath: $rawFile->basePath,
+                    extraPath: $rawFile->extraPath,
+                    mediaType: MediaType::Image,
+                    sizeBytes: filesize($newImagePathWithName),
+                    error: null,
+                ),
+            );
+        } catch (Throwable $t) {
+            $this->logger->logError('Failed to convert pdf to image: ' . $t->getMessage());
+            return new Feedback(
+                isSuccess: false,
+                message: 'Failed to convert pdf to image: ' . $t->getMessage(),
+            );
+        }
     }
 }
