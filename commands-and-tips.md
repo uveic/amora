@@ -27,6 +27,7 @@ Example: `access_log /var/log/nginx/project-name-access.log;`, `error_log /var/l
 `php8.5-opcache`\
 `php8.5-mbstring`\
 `php8.5-xml`\
+`php8.5-imagick`\
 `php8.5-memcache`
 
 Restart PHP-FPM:\

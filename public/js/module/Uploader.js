@@ -14,7 +14,7 @@ class UploaderClass {
     return loaderContainer;
   }
 
-  uploadMediaBefore(media, mediaContainer) {
+  uploadMediaBefore(media, mediaContainer, insertAtTheEnd = false) {
     const isImage = this.isImage(media.name);
 
     const loaderEl = Util.buildImageLoadingElement();
@@ -25,10 +25,15 @@ class UploaderClass {
     container.appendChild(loaderEl);
 
     mediaContainer.appendChild(container);
-    if (mediaContainer.firstChild) {
-      mediaContainer.insertBefore(container, mediaContainer.firstChild);
+    if (insertAtTheEnd) {
+      const uploadPlaceholder = mediaContainer.querySelector('.upload-placeholder');
+      if (uploadPlaceholder) {
+        uploadPlaceholder.insertAdjacentElement('beforebegin', container);
+      } else {
+        mediaContainer.insertAdjacentElement('beforeend', container);
+      }
     } else {
-      mediaContainer.appendChild(container);
+      mediaContainer.insertAdjacentElement('afterbegin', container);
     }
   }
 
@@ -128,9 +133,10 @@ class UploaderClass {
     imageClassName = 'media-item',
     apiUploadEndpoint = '/api/file',
     formData = new FormData(),
+    insertAtTheEnd = false,
   ) {
     for (const media of Array.from(files)) {
-      this.uploadMediaBefore(media, mediaContainer);
+      this.uploadMediaBefore(media, mediaContainer, insertAtTheEnd);
     }
 
     for (const media of Array.from(files)) {

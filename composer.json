@@ -23,6 +23,7 @@
     "ext-calendar": "*",
     "ext-iconv": "*",
     "ext-openssl": "*",
+    "ext-imagick": "*",
     "jaybizzle/crawler-detect": "^1.2",
     "aws/aws-sdk-php": "^3.306"
   },
