@@ -21,8 +21,8 @@ $toolbarIdentifier = 'trixEditorToolbar' . $identifier;
           <button type="button" class="trix-button trix-button--icon" data-trix-attribute="code" title="Code"><?=CoreIcons::CODE?></button>
           <button type="button" class="trix-button trix-button--icon" data-trix-attribute="bullet" title="Bullets"><?=CoreIcons::LIST_BULLETS?></button>
           <button type="button" class="trix-button trix-button--icon" data-trix-attribute="number" title="Numbers"><?=CoreIcons::LIST_NUMBERS?></button>
-          <button type="button" class="trix-button trix-button--icon" data-trix-action="decreaseNestingLevel" title="Decrease Level" disabled><?=CoreIcons::TEXT_INDENT?></button>
-          <button type="button" class="trix-button trix-button--icon" data-trix-action="increaseNestingLevel" title="Increase Level" disabled><?=CoreIcons::TEXT_OUTDENT?></button>
+          <button type="button" class="trix-button trix-button--icon" data-trix-action="decreaseNestingLevel" title="Decrease Level" disabled><?=CoreIcons::TEXT_OUTDENT?></button>
+          <button type="button" class="trix-button trix-button--icon" data-trix-action="increaseNestingLevel" title="Increase Level" disabled><?=CoreIcons::TEXT_INDENT?></button>
         </div>
         <span class="trix-button-group-spacer"></span>
         <div class="trix-button-group" data-trix-button-group="history-tools">

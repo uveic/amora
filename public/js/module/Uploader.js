@@ -122,7 +122,7 @@ class UploaderClass {
   }
 
   isImage(mediaName) {
-    return /\.(jpe?g|png|gif|webp|svg)$/i.test(mediaName);
+    return /\.(jpe?g|png|webp|svg)$/i.test(mediaName);
   }
 
   async uploadMediaAsync(

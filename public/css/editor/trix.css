@@ -85,7 +85,7 @@ trix-toolbar .trix-button.trix-active {
 trix-toolbar .trix-button:not(:disabled) {
   cursor: pointer; }
 trix-toolbar .trix-button:disabled {
-  color: rgba(0, 0, 0, 0.125); }
+  color: rgba(0, 0, 0); }
 @media (max-width: 768px) {
   trix-toolbar .trix-button {
     letter-spacing: -0.01em;
@@ -95,7 +95,7 @@ trix-toolbar .trix-button--icon {}
 trix-toolbar .trix-button--icon.trix-active {
   opacity: 1; }
 trix-toolbar .trix-button--icon:disabled {
-  opacity: 0.125; }
+  opacity: 0.3; }
 
 trix-toolbar .trix-button--icon-attach::before {
   top: 8%;
