@@ -31,7 +31,9 @@ readonly class ImageService
             ? exif_imagetype($rawFile->getPathWithName())
             : IMAGETYPE_WEBP;
 
-        [$widthOriginal, $heightOriginal] = @getimagesize($rawFile->getPathWithName());
+        $imageSize = @getimagesize($rawFile->getPathWithName());
+        $widthOriginal = $imageSize[0] ?? null;
+        $heightOriginal = $imageSize[1] ?? null;
 
         if (!$widthOriginal || !$heightOriginal) {
             $this->logger->logError(
@@ -134,12 +136,13 @@ readonly class ImageService
                 : substr($exif['ISOSpeedRatings'], 0, 10);
         }
 
+        $takenAt = $date ? DateTimeImmutable::createFromFormat('Y:m:d H:i:s', $date) : null;
         return new ImageExif(
             width: isset($exif['COMPUTED']['Width']) ? (int)$exif['COMPUTED']['Width'] : null,
             height: isset($exif['COMPUTED']['Height']) ? (int)$exif['COMPUTED']['Height'] : null,
             sizeBytes: isset($exif['FileSize']) ? (int)$exif['FileSize'] : null,
             cameraModel: isset($exif['Model']) ? substr($exif['Model'], 0, 50) : null,
-            takenAt: $date ? DateTimeImmutable::createFromFormat('Y:m:d H:i:s', $date) : null,
+            takenAt: !$takenAt ? null : $takenAt,
             exposureTime: isset($exif['ExposureTime']) ? substr($exif['ExposureTime'], 0, 10) : null,
             iso: $iso,
         );
