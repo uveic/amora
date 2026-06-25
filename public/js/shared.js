@@ -38,10 +38,10 @@ const handleImagePopupClick = (e) => {
   const popupImage = modal.querySelector('img.modal-display-item');
 
   if (popupImage) {
-    popupImage.parentElement.removeChild(popupImage);
+    popupImage.remove();
   }
 
-  let modalImage = new Image();
+  const modalImage = new Image();
   modalImage.className = 'modal-display-item';
   if (e.currentTarget.srcset) {
     modalImage.srcset = e.currentTarget.srcset;
@@ -111,6 +111,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.modal-close-button, .modal-close-link').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
+      Util.hideFullPageLoadingModal();
       document.body.style.overflow = 'auto';
       el.closest('.modal-wrapper').classList.add('null');
     });
