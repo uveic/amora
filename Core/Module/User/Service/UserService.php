@@ -212,6 +212,7 @@ readonly class UserService
         ?string $identifier = null,
         array $statusIds = [],
         array $roleIds = [],
+        bool $groupById = false,
         ?QueryOptions $queryOptions = null,
     ): array {
         return $this->userDataLayer->filterUserBy(
@@ -221,6 +222,7 @@ readonly class UserService
             identifier: $identifier,
             statusIds: $statusIds,
             roleIds: $roleIds,
+            groupById: $groupById,
             queryOptions: $queryOptions,
         );
     }

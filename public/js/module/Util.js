@@ -160,7 +160,7 @@ class UtilClass {
 
     loadingModal = document.createElement('div');
     loadingModal.className = 'loading-modal';
-    loadingModal.innerHTML = '<div class="loader"></div>';
+    loadingModal.innerHTML = '<div class="loading-text">' + Global.get('globalLoading') + '</div>';
 
     const main = document.querySelector('main');
     if (main) {

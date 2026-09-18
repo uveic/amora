@@ -27,12 +27,6 @@ final class CoreMenu
             );
         }
 
-        $output[] = new MenuItem(
-            path: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
-            text: $localisationUtil->getValue('navAdministrator'),
-            sequence: 100,
-        );
-
         $output[] = self::getAdminContentMenuItem(language: $language);
         $output[] = self::getAccountMenuItem(language: $language, username: $username);
 
@@ -43,20 +37,11 @@ final class CoreMenu
         Language $language,
         ?string $username = null,
         bool $includeAdminLink = false,
-        bool $includeAdminContent = false,
     ): array {
         $localisationUtil = Core::getLocalisationUtil($language);
 
         $output = [];
         if ($includeAdminLink) {
-            $output[] = new MenuItem(
-                path: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
-                text: $localisationUtil->getValue('navAdministrator'),
-                sequence: 0,
-            );
-        }
-
-        if ($includeAdminContent) {
             $output[] = self::getAdminContentMenuItem(language: $language);
         }
 
@@ -119,7 +104,8 @@ final class CoreMenu
         $localisationUtil = Core::getLocalisationUtil($language);
 
         return new MenuItem(
-            text: $localisationUtil->getValue('navAdminContent'),
+            path: UrlBuilderUtil::buildBackofficeDashboardUrl($language),
+            text: $localisationUtil->getValue('navAdministrator'),
             icon: CoreIcons::CARET_DOWN,
             children: [
                 new MenuItem(

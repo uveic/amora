@@ -94,7 +94,7 @@ return [
     'formUserActiveSessions' => 'Active Sessions',
     'formUserExpiredSessions' => 'Total Expired Sessions',
     'formUserSendEmailAgain' => 'Send Email Again',
-    'formUserViewSentEmails' => 'View sent emails to this user',
+    'formUserViewSentEmails' => 'View emails sent to this user',
     'errorUserNotEnabled' => 'User is not enabled.',
 
     'dashboardGoTo' => 'Content',
@@ -212,7 +212,7 @@ return [
     'userStatusEnabled' => 'Enabled',
     'userStatusDisabled' => 'Disabled',
     'userStatusDeleted' => 'Deleted',
-    'userJourneyRegistration' => 'Registration Complete',
+    'userJourneyRegistrationComplete' => 'Registration Complete',
     'userJourneyPendingPasswordCreation' => 'Pending Password Creation',
     'userJourneyEmailToCreatePasswordNotSent' => 'Email to Create Password Not Sent',
     'userJourneyPendingEmailVerification' => 'Pending Email Verification',

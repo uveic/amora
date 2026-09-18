@@ -99,7 +99,7 @@ class Media
         ];
     }
 
-    public function asPublicArray(): array
+    public function asPublicArray(?string $sizes = null): array
     {
         return [
             'id' => $this->id,
@@ -116,9 +116,11 @@ class Media
             'createdAt' => $this->createdAt->format('c'),
             'userId' => $this->user?->id,
             'userName' => $this->user?->getNameOrEmail(),
-            'sizes' => $this->buildSizes(),
+            'sizes' => $sizes ?? $this->buildSizes(),
             'srcset' => $this->buildSrcset(),
-            'asHtml' => $this->asHtml(),
+            'asHtml' => $this->asHtml(
+                sizes: $sizes ?? $this->buildSizes(),
+            ),
         ];
     }
 
@@ -397,7 +399,7 @@ class Media
             : ($config->mediaBaseUrl . '/' . ($this->path ? $this->path . '/' : ''));
     }
 
-    private function buildSrcset(): string
+    public function buildSrcset(): string
     {
         if ($this->type !== MediaType::Image) {
             return '';

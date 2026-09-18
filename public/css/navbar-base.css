@@ -175,6 +175,27 @@
   position: relative;
 }
 
+.nav-menu-main-link {
+  display: block;
+  text-wrap: nowrap;
+}
+
+.nav-menu-main-link a,
+.nav-menu-main-link a:visited,
+.nav-menu-main-link a:active,
+.nav-menu-main-link a:focus,
+.nav-menu-main-link a:hover {
+  color: var(--color-black);
+}
+
+.nav-menu-main-link a:hover {
+  color: var(--color-black-hover);
+}
+
+.nav-menu-main-link .text-desktop {
+  display: none;
+}
+
 .nav-dropdown-menu {
   display: none;
   background-color: var(--color-white);
@@ -525,5 +546,20 @@
     right: revert;
     width: auto;
     padding: 0 0.5rem;
+  }
+
+  .nav-menu-main-link {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+
+  .nav-menu-main-link .text-desktop {
+    display: block;
+    padding-left: 0.75rem;
+  }
+
+  .nav-menu-main-link .text-mobile {
+    display: none;
   }
 }

@@ -84,7 +84,7 @@ $res = UserCore::getUserService()->storeUser(
         journeyStatus: UserJourneyStatus::RegistrationComplete,
         createdAt: $now,
         updatedAt: $now,
-        email: $email,
+        email: StringUtil::normaliseEmail($email),
         name: $name,
         passwordHash: StringUtil::hashPassword($pass),
         bio: null,

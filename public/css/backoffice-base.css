@@ -118,7 +118,7 @@
 .backoffice-wrapper {
   display: flex;
   flex-flow: row wrap;
-  gap: 1rem;
+  gap: 2rem;
   align-items: flex-start;
   justify-content: flex-start;
   padding: 1rem 0.5rem;
@@ -131,7 +131,6 @@
   gap: 1rem;
   width: 100%;
   flex-grow: 1;
-  background-color: white;
   padding: 0;
 }
 
@@ -146,23 +145,19 @@
 }
 
 .backoffice-child-header {
-  padding: 0.5rem 1rem;
-  background-color: var(--color-black);
-  color: var(--color-white);
-  border: 1px solid var(--color-black);
+  padding: 0 1rem 0.5rem 1rem;
 }
 
-.backoffice-child-header svg {
-  fill: var(--color-white);
-  stroke: var(--color-white);
-}
-
+.backoffice-child-header,
 .backoffice-child-header a,
 .backoffice-child-header a:visited,
 .backoffice-child-header a:active,
 .backoffice-child-header a:focus,
 .backoffice-child-header a:hover {
-  color: var(--color-white);
+  color: var(--color-black);
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .backoffice-child-inner {
@@ -1746,7 +1741,7 @@
 .modal-header-black {
   background-color: var(--color-black);
   color: var(--color-white);
-  padding: 1rem;
+  padding: 0.7rem 1rem;
 }
 
 .modal-header-black svg {
@@ -1895,6 +1890,7 @@
   }
 
   .backoffice-wrapper {
+    gap: 1rem;
     padding: 1rem;
   }
 
@@ -1905,14 +1901,18 @@
   }
 
   .backoffice-child-no-header {
-    border-top: 1px solid var(--color-black);
+    border: 1px solid var(--color-black);
+    border-radius: 0.2rem;
   }
 
-  .backoffice-child-inner {
-    padding: 1rem;
-    border-right: 1px solid var(--color-black);
-    border-bottom: 1px solid var(--color-black);
-    border-left: 1px solid var(--color-black);
+  .backoffice-child-header {
+    padding: 1rem 1rem 0.5rem 1rem;
+  }
+
+  .backoffice-child-border {
+    background-color: white;
+    border: 1px solid var(--color-grey-200);
+    border-radius: 0.2rem;
   }
 
   .collection-item-content {

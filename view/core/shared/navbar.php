@@ -49,26 +49,35 @@ if ($isSearchEnabled) { ?>
       <nav class="header-navbar">
         <ul class="header-navbar-ul">
 <?php
-    $i = 0;
-    /** @var MenuItem $menuItem */
-    foreach ($menuItems as $menuItem) {
-        if (empty($menuItem->children)) {
-            $dataset = [];
-            foreach ($menuItem->dataset as $left => $right) {
-                $dataset[] = $left . '="' . $right . '"';
-            }
-            if ($menuItem->path) {
-                $class = $menuItem->class ? ' ' . $menuItem->class : '';
-                echo '        <li><a href="' . $menuItem->path . '" class="nav-dropdown-item' . $class . '"' . ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $menuItem->text . '</a></li>' . PHP_EOL;
-            } else {
-                echo '        <li><span class="' . $menuItem->class . '"' . ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $menuItem->text . '</span></li>' . PHP_EOL;
-            }
-            continue;
+$i = 0;
+/** @var MenuItem $menuItem */
+foreach ($menuItems as $menuItem) {
+    if (empty($menuItem->children)) {
+        $dataset = [];
+        foreach ($menuItem->dataset as $left => $right) {
+            $dataset[] = $left . '="' . $right . '"';
         }
+
+        if ($menuItem->path) {
+            $class = $menuItem->class ? ' ' . $menuItem->class : '';
+            echo '        <li><a href="' . $menuItem->path . '" class="nav-dropdown-item' . $class . '"' .
+                ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $menuItem->text . '</a></li>' . PHP_EOL;
+        } else {
+            echo '        <li><span class="' . $menuItem->class . '"' .
+                ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $menuItem->text . '</span></li>' . PHP_EOL;
+        }
+
+        continue;
+    }
 ?>
           <li>
-            <div class="nav-dropdown-menu-wrapper">
-              <label for="nav-dropdown-toggle-<?=$i?>" class="nav-dropdown-item nav-dropdown-toggle-label"><?=$menuItem->text . ' ' . $menuItem->icon?></label>
+            <div class="nav-dropdown-menu-wrapper<?=$menuItem->text && $menuItem->path ? ' nav-menu-main-link' : ''?>">
+<?php if ($menuItem->text && $menuItem->path) { ?>
+              <a class="text-desktop" href="<?=$menuItem->path?>"><?=$menuItem->text?></a>
+<?php } ?>
+              <label for="nav-dropdown-toggle-<?=$i?>" class="nav-dropdown-item nav-dropdown-toggle-label">
+                <span class="text-mobile"><?=$menuItem->text . ' '?></span><?=$menuItem->icon?>
+              </label>
               <input type="checkbox" id="nav-dropdown-toggle-<?=$i?>" class="nav-dropdown-toggle">
               <ul class="nav-dropdown-menu">
 <?php
@@ -78,7 +87,9 @@ if ($isSearchEnabled) { ?>
         foreach ($child->dataset as $left => $right) {
             $dataset[] = $left . '="' . $right . '"';
         }
-        echo '                <li><a class="' . ($child->class ?? '') . '" href="' . $child->path . '"' . ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $child->icon . $child->text . '</a></li>' . PHP_EOL;
+        echo '                <li><a class="' . ($child->class ?? '') . '" href="' . $child->path . '"' .
+            ($dataset ? (' ' . implode(' ', $dataset)) : '') . '>' . $child->icon . $child->text . '</a></li>' .
+            PHP_EOL;
     }
 ?>
               </ul>

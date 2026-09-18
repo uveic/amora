@@ -183,6 +183,7 @@ const handleGenericImageContainerSelectClick = (e) => {
     return;
   }
 
+  mediaContainer.classList.remove('null');
   const existingMedia = mediaContainer.querySelector('.media-item[data-media-id="' + mediaId + '"]');
   if (existingMedia) {
     Util.highlightElement(existingMedia.closest('.image-container'));
@@ -1542,7 +1543,10 @@ document.querySelectorAll('.media-load-more-js').forEach(lm => {
         }
       })
       .catch(error => Util.notifyError(error))
-      .finally(() => lm.parentElement.removeChild(loader));
+      .finally(() => {
+        lm.parentElement.removeChild(loader);
+        Util.hideFullPageLoadingModal();
+      });
   });
 });
 

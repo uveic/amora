@@ -33,6 +33,8 @@ trix-toolbar button {
   margin: 0;
   min-height: revert;
   aspect-ratio: 1/1;
+  max-width: 33px;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {

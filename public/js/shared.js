@@ -45,9 +45,7 @@ const handleImagePopupClick = (e) => {
   modalImage.className = 'modal-display-item';
   if (e.currentTarget.srcset) {
     modalImage.srcset = e.currentTarget.srcset;
-  }
-  if (e.currentTarget.sizes) {
-    modalImage.sizes = e.currentTarget.sizes;
+    modalImage.sizes = '(min-width: 380px) calc(39.69vw - 45px), calc(3.33vw + 86px)';
   }
   modalImage.src = e.currentTarget.dataset.pathLarge ?? e.currentTarget.dataset.pathMedium ?? e.currentTarget.src;
   modalImage.alt = e.currentTarget.alt;
@@ -112,8 +110,10 @@ window.addEventListener('DOMContentLoaded', () => {
     el.addEventListener('click', e => {
       e.preventDefault();
       Util.hideFullPageLoadingModal();
-      document.body.style.overflow = 'auto';
       el.closest('.modal-wrapper').classList.add('null');
+      if (!document.querySelector('.modal-wrapper:not(.null)')) {
+        document.body.style.overflow = 'auto';
+      }
     });
   });
 
@@ -138,16 +138,8 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.key !== 'Escape' || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
       return;
     }
-
-    const modalMediaCloseEl = document.querySelector('.modal-media .modal-media-close');
-    if (modalMediaCloseEl) {
-      modalMediaCloseEl.click();
-    }
-
-    const modalCloseEl = document.querySelector('.modal-wrapper .modal-close-button');
-    if (modalCloseEl) {
-      modalCloseEl.click();
-    }
+    document.querySelectorAll('.modal-media .modal-media-close').forEach(m => m.dispatchEvent(new Event('click')));
+    document.querySelectorAll('.modal-wrapper .modal-close-button').forEach(m => m.dispatchEvent(new Event('click')));
 
     if (e.key === 'Escape') {
       Util.hideFullPageLoadingModal();

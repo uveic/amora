@@ -350,7 +350,7 @@ pre {
   left: 0;
   right: 0;
   top: 0;
-  padding: 2rem;
+  padding: 0;
   margin: auto;
   overflow: auto;
   position: fixed;
@@ -362,6 +362,7 @@ pre {
   object-position: center;
   width: 100%;
   height: 100%;
+  background-color: var(--color-grey-100);
 }
 
 .modal-display-image .modal-close-button {
@@ -864,8 +865,8 @@ button.is-link,
 .metadata {
   width: 100%;
   flex-grow: 1;
-  color: var(--color-grey-600);
-  font-size: 0.8rem;
+  color: var(--color-grey-700);
+  font-size: 0.9rem;
 }
 
 .metadata svg {

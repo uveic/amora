@@ -212,7 +212,7 @@ return [
     'userStatusEnabled' => 'Activo',
     'userStatusDisabled' => 'Suspendido',
     'userStatusDeleted' => 'Eliminado',
-    'userJourneyRegistration' => 'Registro completo',
+    'userJourneyRegistrationComplete' => 'Registro completo',
     'userJourneyPendingPasswordCreation' => 'Pendiente de crear la contraseña',
     'userJourneyEmailToCreatePasswordNotSent' => 'Correo para crear contraseña no enviado',
     'userJourneyPendingEmailVerification' => 'Pendiente de verificar correo electrónico',

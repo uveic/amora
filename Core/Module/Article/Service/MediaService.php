@@ -581,7 +581,13 @@ readonly class MediaService
 
             // If the PDF has more than one page get the first one
             if ($image->getNumberImages() > 1) {
-                $image->readImage($rawFile->getPathWithName() . '[0]');
+                $res = $image->readImage($rawFile->getPathWithName() . '[0]');
+                if (!$res) {
+                    return new Feedback(
+                        isSuccess: false,
+                        message: 'Error reading first image: ' . $rawFile->getPathWithName(),
+                    );
+                }
             }
 
             $image->setImageFormat('webp');
@@ -618,6 +624,10 @@ readonly class MediaService
                 ),
             );
         } catch (Throwable $t) {
+            if (file_exists($rawFile->getPathWithName())) {
+                unlink($rawFile->getPathWithName());
+            }
+
             $this->logger->logError('Failed to convert pdf to image: ' . $t->getMessage());
             return new Feedback(
                 isSuccess: false,

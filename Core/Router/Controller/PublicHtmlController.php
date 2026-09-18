@@ -101,14 +101,7 @@ readonly final class PublicHtmlController extends PublicHtmlControllerAbstract
      */
     protected function getLoginPage(Request $request): Response
     {
-        $session = $request->session;
-        if ($session && $session->isAdmin()) {
-            return Response::createRedirectResponse(
-                url: UrlBuilderUtil::buildBackofficeDashboardUrl($request->siteLanguage),
-            );
-        }
-
-        if ($session && $session->isAuthenticated()) {
+        if ($request->session && $request->session->isAuthenticated()) {
             return Response::createRedirectResponse(
                 url: UrlBuilderUtil::buildAppDashboardUrl($request->siteLanguage),
             );

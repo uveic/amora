@@ -46,6 +46,7 @@ class UserDataLayer
         ?string $identifier = null,
         array $statusIds = [],
         array $roleIds = [],
+        bool $groupById = false,
         ?QueryOptions $queryOptions = null,
     ): array {
         if (!isset($queryOptions)) {
@@ -115,7 +116,11 @@ class UserDataLayer
 
         $output = [];
         foreach ($res as $item) {
-            $output[] = User::fromArray($item);
+            if ($groupById) {
+                $output[$item['user_id']] = User::fromArray($item);
+            } else {
+                $output[] = User::fromArray($item);
+            }
         }
 
         return $output;
