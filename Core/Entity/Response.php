@@ -32,6 +32,7 @@ enum ContentType: string
     case HTML = 'text/html;charset=UTF-8';
     case CSV = 'text/csv';
     case PDF = 'application/pdf';
+    case ZIP = 'application/zip';
 }
 
 readonly class Response
@@ -170,6 +171,15 @@ readonly class Response
             localPath: $localPath,
             fileName: $fileName,
             contentType: ContentType::CSV,
+        );
+    }
+
+    public static function createZipDownloadResponse(string $localPath, string $fileName): self
+    {
+        return self::createDownloadResponse(
+            localPath: $localPath,
+            fileName: $fileName,
+            contentType: ContentType::ZIP,
         );
     }
 
