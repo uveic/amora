@@ -327,8 +327,14 @@ final readonly class StringUtil
             $position = strpos($text, '<br>');
         }
 
+        if (!$position) {
+            $position = strpos($text, "\n");
+        }
+
         if ($position) {
-            $firstParagraph = trim(strip_tags(substr($text, 0, $position)));
+            $firstParagraph = substr($text, 0, $position)
+                    |> strip_tags(...)
+                    |> trim(...);
 
             if (strlen($firstParagraph) > $maxLength) {
                 if ($trimToFirstSentence) {
@@ -342,6 +348,13 @@ final readonly class StringUtil
             }
 
             return $firstParagraph;
+        }
+
+        if ($trimToFirstSentence) {
+            $position = strpos($text, '. ');
+            if ($position) {
+                return trim(substr($text, 0, $position)) . '.';
+            }
         }
 
         $text = trim(strip_tags($text));
