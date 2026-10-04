@@ -4,8 +4,16 @@ const handleDropdownOptionClick = (event) => {
   event.preventDefault();
   const elementOption = event.currentTarget;
   const dropDownIdentifier = elementOption.dataset.dropdownIdentifier;
+  if (!dropDownIdentifier) {
+    return;
+  }
+
   const elementLabel = document.querySelector('#' + dropDownIdentifier + '-dd-label');
   const elementCheckbox = document.querySelector('#' + dropDownIdentifier + '-dd-checkbox');
+  if (!elementLabel || !elementCheckbox) {
+    return;
+  }
+
   const optionClassName = dropDownIdentifier + '-dd-option';
 
   elementLabel.classList.forEach(cl => {
@@ -18,7 +26,11 @@ const handleDropdownOptionClick = (event) => {
   if (newClassName) {
     elementLabel.classList.add(newClassName);
   }
-  elementLabel.querySelector('span').innerHTML = elementOption.innerHTML;
+
+  const spanContent = elementLabel.querySelector('span');
+  if (spanContent) {
+    spanContent.innerHTML = elementOption.innerHTML;
+  }
   elementCheckbox.checked = false;
 
   document.querySelectorAll('.' + optionClassName).forEach(o => {
