@@ -24,7 +24,7 @@ Example:\
 
 ### Package dependency:
 
-`sudo apt-get install php8.6-fpm php8.6-mysql php8.6-curl php8.6-gd php8.6-cli php8.6-common php8.6-mbstring php8.6-xml php8.6-imagick php8.6-memcache php8.6-zip`
+`sudo apt-get install php8.6-fpm php8.6-mysql php8.6-curl php8.6-gd php8.6-cli php8.6-common php8.6-mbstring php8.6-xml php8.6-imagick php8.6-memcache php8.6-zip php8.6-intl`
 
 `php8.6-fpm`\
 `php8.6-mysql`\
@@ -36,7 +36,8 @@ Example:\
 `php8.6-xml`\
 `php8.6-imagick`\
 `php8.6-memcache`\
-`php8.6-zip`
+`php8.6-zip`\
+`php8.6-intl`
 
 Restart PHP-FPM:\
 `sudo service php8.6-fpm restart`\
@@ -66,7 +67,8 @@ Enable a site that is configured in "sites-available": `ln -s /etc/nginx/sites-a
 
 Test nginx configuration file(s): `sudo nginx -t`
 
-Restart nginx: `sudo /etc/init.d/nginx restart`
+Restart nginx:\
+`sudo /etc/init.d/nginx restart` or `sudo systemctl restart nginx`
 
 Configuring the Nginx Error and Access Logs: https://www.journaldev.com/26756/nginx-access-logs-error-logs
 
