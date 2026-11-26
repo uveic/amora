@@ -494,6 +494,7 @@
 
 .image-container .image-container-delete {
   background-color: var(--color-white);
+  color: var(--color-black);
   padding: 0.1rem;
   position: absolute;
   right: 0;

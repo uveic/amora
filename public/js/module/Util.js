@@ -204,6 +204,28 @@ class UtilClass {
       .catch(error => this.notifyError(error, Global.get('feedbackCopyLinkError')));
   }
 
+  handleShareLink(href, title = null, text = null) {
+    if (!navigator.canShare) {
+      this.notifyError(new Error('Not available'));
+      return;
+    }
+
+    if (!href) {
+      this.notifyError(new Error('No URL found'));
+      return;
+    }
+
+    try {
+      navigator.share({
+        title: title ?? '',
+        text: text ?? '',
+        url: href,
+      }).then();
+    } catch (err) {
+      this.notifyError(err);
+    }
+  }
+
   generateRandomString(length = 16) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
