@@ -132,6 +132,16 @@ Create user: `CREATE USER username@localhost IDENTIFIED BY 'userpass';`
 
 Grant permissions to user: `GRANT ALL PRIVILEGES ON db_name.* TO username@localhost;`
 
+Get sizes of tables:
+```
+SELECT
+    table_name AS `table`,
+    round(((data_length + index_length) / 1024 / 1024), 2) AS `size_MB`
+FROM information_schema.TABLES
+WHERE table_schema = 'DB_NAME'
+ORDER BY size_MB DESC;
+```
+
 ## Other Useful Commands
 Sync files from my local computer to a server through SSH: `rsync -a -e "ssh" --exclude 'path/to/file.txt' --exclude 'path-to-folder/*' --exclude 'README.md' ~/path/to/local/folder/* user@server-ip-address:/path/to/remote/folder/`
 
