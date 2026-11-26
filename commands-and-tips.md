@@ -6,39 +6,47 @@ Display path to php.ini: `php --ini`
 
 List all installed modules: `php -m`
 
-Path to `php.ini`: `/etc/php/8.5/fpm/php.ini` and/or `/etc/php/8.5/cli/php.ini`
+Path to `php.ini`: `/etc/php/8.6/fpm/php.ini` and/or `/etc/php/8.6/cli/php.ini`
 
-Important settings in `php.ini`: `display_errors = off`, `error_reporting = E_ALL`, `upload_max_filesize=32M`, `post_max_size=32M`, `max_execution_time = 300`, `zend.multibyte = On`
+Important settings in `php.ini`:\
+`display_errors = off`\
+`error_reporting = E_ALL`\
+`upload_max_filesize=32M`\
+`post_max_size=32M`\
+`max_execution_time = 300`\
+`zend.multibyte = On`
 
 Error/access logs (setup in nginx config file in `/etc/nginx/sites-available/site-name.conf`):
 
-Example: `access_log /var/log/nginx/project-name-access.log;`, `error_log /var/log/nginx/project-name-error.log warn;`
+Example:\
+`access_log /var/log/nginx/project-name-access.log;`\
+`error_log /var/log/nginx/project-name-error.log warn;`
 
 ### Package dependency:
 
-`sudo apt-get install php8.5-gd php8.5-mysql php8.5-fpm php8.5-curl php8.5-xml php8.5-cli php8.5-common php8.5-opcache`
+`sudo apt-get install php8.6-fpm php8.6-mysql php8.6-curl php8.6-gd php8.6-cli php8.6-common php8.6-mbstring php8.6-xml php8.6-imagick php8.6-memcache php8.6-zip`
 
-`php8.5-fpm`\
-`php8.5-mysql`\
-`php8.5-curl`\
-`php8.5-gd`\
-`php8.5-cli`\
-`php8.5-common`\
-`php8.5-opcache`\
-`php8.5-mbstring`\
-`php8.5-xml`\
-`php8.5-imagick`\
-`php8.5-memcache`
+`php8.6-fpm`\
+`php8.6-mysql`\
+`php8.6-curl`\
+`php8.6-gd`\
+`php8.6-cli`\
+`php8.6-common`\
+`php8.6-mbstring`\
+`php8.6-xml`\
+`php8.6-imagick`\
+`php8.6-memcache`\
+`php8.6-zip`
 
 Restart PHP-FPM:\
-`sudo service php8.5-fpm restart`\
-`sudo /etc/init.d/php8.5-fpm restart`
+`sudo service php8.6-fpm restart`\
+`sudo /etc/init.d/php8.6-fpm restart`
 
-PHP-FPM config: `/etc/php/8.5/fpm/php-fpm.conf`
+PHP-FPM config: `/etc/php/8.6/fpm/php-fpm.conf`
 
-Pool config: `/etc/php/8.5/fpm/pool.d/www.conf`
+Pool config: `/etc/php/8.6/fpm/pool.d/www.conf`
 
-Optimizing PHP-FPM for High Performance: https://geekflare.com/php-fpm-optimization/
+Optimising PHP-FPM for High Performance: https://geekflare.com/php-fpm-optimization/
 
 Relevant settings: `catch_workers_output = yes`
 
